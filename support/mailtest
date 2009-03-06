@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby 
+
+# A simple SMTP mailer. 
+# You can use this to test mail configuration between machines. 
+
+# Usage: mailtest hostname email 
+
+require 'net/smtp'
+
+unless ARGV.size == 2
+  puts "Usage: mailtest HOSTNAME EMAIL"
+  exit 1
+end
+
+HOSTNAME = ARGV[0]
+EMAIL = ARGV[1]
+
+def send_email(from, from_alias, to, to_alias, subject, message)
+  msg = <<END_OF_MESSAGE
+From: #{from_alias} <#{from}>
+To: #{to_alias} <#{to}>
+Subject: #{subject}
+
+#{message}
+END_OF_MESSAGE
+
+  Net::SMTP.start(HOSTNAME) do |smtp|
+    smtp.send_message msg, from, to
+  end
+end
+
+begin
+  spice = sprintf("%.3f", rand)
+  send_email(HOSTNAME, "Rudy", EMAIL, "Rudy's Friend", "Mail config (#{spice})", "You received this email via #{HOSTNAME}")
+rescue => ex
+  puts "ERROR: #{ex.message}"
+  exit 1
+end
+
+puts "Success!"

@@ -1,0 +1,3 @@
+
+module Rudy::AWS
+end

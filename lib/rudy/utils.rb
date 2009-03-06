@@ -1,0 +1,64 @@
+
+require 'socket'
+require 'open-uri'
+require 'date'
+
+require 'timeout'
+
+module Rudy
+  
+  # A motley collection of methods that Rudy loves to call!
+  module Utils
+    extend self
+    include Socket::Constants
+    
+    # Return the external IP address (the one seen by the internet)
+    def external_ip_address
+      ip = nil
+      %w{solutious.com/ip myip.dk/ whatismyip.com }.each do |sponge| # w/ backup
+        break unless ip.nil?
+        ip = (open("http://#{sponge}") { |f| /([0-9]{1,3}\.){3}[0-9]{1,3}/.match(f.read) }).to_s rescue nil
+      end
+      ip += "/32" if ip
+      ip
+    end
+    
+    # Return the local IP address which receives external traffic
+    # from: http://coderrr.wordpress.com/2008/05/28/get-your-local-ip-address/
+    # NOTE: This <em>does not</em> open a connection to the IP address. 
+    def internal_ip_address
+      # turn off reverse DNS resolution temporarily 
+      orig, Socket.do_not_reverse_lookup = Socket.do_not_reverse_lookup, true   
+      ip = UDPSocket.open {|s| s.connect('75.101.137.7', 1); s.addr.last } # Solutious IP
+      ip += "/24" if ip
+      ip
+    ensure  
+      Socket.do_not_reverse_lookup = orig
+    end
+    
+    # Generates a canonical tag name in the form:
+    #     rudy-2009-12-31-r1
+    # where r1 refers to the revision number that day
+    def generate_tag(revision=1)
+      n = DateTime.now
+      y = n.year.to_s.rjust(4, "20")
+      m = n.month.to_s.rjust(2, "0")
+      d = n.mday.to_s.rjust(2, "0")
+      "rudy-%4s-%2s-%2s-r%s" % [y, m, d, revision.to_s.rjust(2, "0")] 
+    end
+    
+    
+    def service_available?(host, port, wait=3)
+      begin
+        status = Timeout::timeout(wait) do
+          socket = Socket.new( AF_INET, SOCK_STREAM, 0 )
+          sockaddr = Socket.pack_sockaddr_in( port, host )
+          socket.connect( sockaddr )
+        end
+        true
+      rescue Errno::EAFNOSUPPORT, Errno::ECONNREFUSED, SocketError, Timeout::Error => ex
+        false
+      end
+    end
+  end
+end

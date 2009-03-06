@@ -1,0 +1,45 @@
+RUDY, CHANGES
+
+#### 0.4 (2009-03-??)
+
+NOTE: This is a moderate re-write from 0.3
+
+* CHANGE: Mostly re-written bin/ruby, moving validation to Command classes 
+          (a la Drydock 0.5)
+* UPGRADE: Drydock 0.5
+
+
+#### 0.3 (2009-02-26)
+
+NOTE: This is a significant re-write from 0.2
+
+* NEW: More functionality for disks and backups
+* NEW: config commands
+* CHANGE: Re-written support/rudy-ec2-startup
+* NEW: Per machine configuration (via ~/.rudy)
+* UPGRADE: Drydock 0.4
+
+
+#### 0.2 (2009-02-23) ###############################
+
+NOTE: This is a complete re-write from 0.1
+
+* NEW: All time references are converted to UTC
+* NEW: Safer "Are you sure?". Number of characters to enter is 
+       commiserate with amount of danger.  
+* NEW: Commands: myaddress, addresses, images, instances, 
+       disks, connect, copy, stage, backups, volumes
+* NEW: Metadata storage to SimpleDB for disks, backups
+* NEW: Creates EBS volumes based on startup from metadata
+* NEW: Automated release process
+* NEW: Automated creation of machine images
+* NEW: Partial support for regions and zones
+* NEW: Manage system based on security groups. 
+* NEW: "rudy groups" overhaul. Display, creates, destroys groups. 
+* CHANGE: Added Environment variables
+* UPGRADE: drydock 0.3.3
+
+
+#### 0.1 (2009-02-06) ###############################
+
+* Initial release

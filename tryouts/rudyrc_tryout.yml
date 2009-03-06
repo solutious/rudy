@@ -1,0 +1,69 @@
+
+
+
+
+-----------------------
+
+AWS_ACCOUNT_NUMBER 
+AWS_ACCESS_KEY 
+AWS_SECRET_KEY
+
+EC2_PRIVATE_KEY 
+EC2_CERT 
+EC2_HOME
+
+~/.rudy config
+# scm-svn-base: http://...
+
+aws-account: 11111
+aws-access-key: 123123
+aws-secret-key: 187634
+aws-private-key: ~/path/pk.pem
+aws-cert: ~/path/cert.pm
+
+us-rudy-domain: rudy-state
+
+us-ami-bucket: project-ami-us
+us-east-1b-prod-app-ami: ami-1029384
+us-east-1b-prod-app-caution: high
+
+us-east-1b-prod-app-root-keypair: ~/file/path
+us-east-1b-prod-app-root-rscript: /path
+us-east-1b-prod-app-rudy-keypair: ~/file/path
+us-east-1b-prod-app-rudy-rscript: /path
+
+us-east-1b-prod-app-userdata:
+  dbpassword: 101029
+
+
+  
+------------------------------
+#     scm:
+#      svn-base: http://...
+
+aws:
+  account: 11111
+  access-key: 123123
+  secret-key: 187634
+  private-key: ~/path/pk.pem
+  cert: ~/path/cert.pem
+
+us:
+  rudy-domain: rudy-state
+  ami-bucket: project-ami-us
+  
+us-east-1b-prod-app:
+  ami: ami-1029384
+  caution: high
+  root:
+    keypair: ~/file/path
+    rscript: /path
+    userdata:
+      dbpassword: 101029
+  rudy:
+    keypair: ~/file/path
+    rscript: /path
+    userdata:
+      dbpassword: 101029
+
+----------------------

@@ -1,0 +1,32 @@
+= Rudy - v0.3 BETA!
+
+Rudy is a handy staging and deployment tool for EC2.
+
+NOTE: Rudy will be ready for general consumption in Q2 2009.
+
+== Installation
+
+# Soon!
+# ruby -ropenssl -e 'puts OpenSSL::OPENSSL_VERSION' (See net/ssh docs)
+
+== More Info
+
+* GitHub[http://github.com/solutious/rudy]
+* RubyForge[http://rubyforge.org/projects/rudy]
+* Inspiration[http://www.youtube.com/watch?v=CgaiIW5Rzes]
+
+
+== Credits
+
+* Delano Mandelbaum (delano@solutious.com)
+* Keshia Knight Pulliam (rudy@solutious.com)
+
+
+== Thanks
+
+* The Rilli[http://rilli.com/] team, for the initial use case, ongoing support and good times!
+
+
+== License
+
+See: LICENSE.txt

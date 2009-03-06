@@ -1,0 +1,265 @@
+#!/usr/bin/ruby
+
+# Rudy -- Your friend in staging and deploying to EC2
+#
+#   See rudy -h for usage
+# 
+
+#
+# No Ruby 1.9.1 support. Only 1.8.x for now :[
+unless RUBY_VERSION < "1.9"
+  puts "Sorry! We're using the right_aws gem and it doesn't support Ruby 1.9."
+  exit 1
+else
+ require 'rubygems'
+end
+
+RUDY_HOME = File.join(File.dirname(__FILE__), '..')
+RUDY_LIB = File.join(RUDY_HOME, 'lib')
+$:.unshift RUDY_LIB # Put our local lib in first place
+
+require 'drydock'
+extend Drydock
+
+project "Rudy"  # This also runs require 'ruby'
+
+debug :on
+
+capture :stderr       
+
+global :A, :accesskey, String, "AWS Access Key"
+global :S, :secretkey, String, "AWS Secret Access Key"
+global :R, :region, String, "Connect to a specific EC2 region (default: #{Rudy::DEFAULT_REGION})"
+global :f, :config, String, "Specify another configuration file to read (default: #{Rudy::RUDY_CONFIG_FILE})"
+global :z, :zone, String, "Connect to a specific EC2 zone (default: #{Rudy::DEFAULT_ZONE})"
+global :e, :environment, String, "Connect to the specified environment (default: #{Rudy::DEFAULT_ENVIRONMENT})"
+global :r, :role, String, "Connect to a machine with the specified role (defalt: #{Rudy::DEFAULT_ROLE})"
+global :p, :position, String, "Position in the machine in its group (default: #{Rudy::DEFAULT_POSITION})"
+global :u, :user, String, "Provide a username (default: #{Rudy::DEFAULT_USER})"
+global :q, :quiet, "Run with less output"
+global :v, :verbose, "Increase verbosity of output (i.e. -v or -vv or -vvv)" do
+  @verbose ||= 0
+  @verbose += 1
+end
+global :V, :version, "Display version number" do
+  puts "Rudy version: #{Rudy::VERSION}"
+  exit 0
+end
+
+desc "Run this the first time you use Rudy (it's immutable so running it again does no harm)."
+command :setup => Rudy::Command::Metadata
+
+
+# ------------------------------------  RUDY INFO COMMANDS  --------
+# ------------------------------------------------------------------
+
+usage "rudy info"
+desc "Displays info about the current Rudy configuration"
+command :info => Rudy::Command::Metadata
+
+#desc "Display status information on a machine group"
+#command :status => Rudy::Command::Metadata
+
+usage "rudy [-f config-file] config [param-name]"
+desc "Check Rudy configuration."
+option :l, :all, "Display config settings for all machines"
+option :d, :defaults, "Display the default value for the supplied parameter"
+argv :name
+command :config => Rudy::Command::Config
+command_alias :config, :configs
+
+usage "rudy myaddress [-i] [-e]"
+desc "Displays you current internal and external IP addresses"
+option :e, :external, "Display only external IP address"
+option :i, :internal, "Display only internal IP address"
+command :myaddress do |obj|
+  ea = Rudy::Utils::external_ip_address || '' 
+  ia = Rudy::Utils::internal_ip_address || ''
+  if obj.global.quiet
+    puts ia unless obj.option.external && !obj.option.internal
+    puts ea unless obj.option.internal && !obj.option.external
+  else
+    puts "%10s: %s" % ['Internal', ia] unless obj.option.external && !obj.option.internal
+    puts "%10s: %s" % ['External', ea] unless obj.option.internal && !obj.option.external
+  end
+end
+
+
+
+# -----------------------------  RUDY MAINTENANCE COMMANDS  --------
+# ------------------------------------------------------------------
+
+usage "#{$/} [global options] disks [-C -p path -d device -s size] [-A] [-D] [disk name]"
+desc "Manage Disks"
+option :l, :all, "Display all disk definitions"
+option :p, :path, String, "The filesystem path to use as the mount point"
+option :d, :device, String, "The device id (default: /dev/sdh)"
+option :s, :size, Integer, "The size of disk (in GB)"
+action :C, :create, "Create a disk definition"
+action :D, :destroy, "Destroy a disk definition"
+action :A, :attach, "Attach a disk"
+action :N, :unattach, "Unattach a disk"
+argv :diskname
+command :disks => Rudy::Command::Disks
+
+
+usage "rudy [global options] backups [-C] [disk name]"
+desc "Manage Backups"
+option :s, :snapshot, String, "Create a backup entry from an existing snapshot"
+action :Z, :synchronize, "Check for and delete backup metadata with no snapshot. DOES NOT delete snapshots."
+#action :T, :tidy, "Tidy existing backups"
+action :D, :destroy, "Destroy a backup"
+action :C, :create, "Create a backup"
+argv :disk
+command :backups => Rudy::Command::Backups
+command_alias :backups, :backup
+
+
+usage "rudy [global options] machines [-D -S -U]"
+desc "Manage Rudy Machines"
+action :U, :update, "Update Rudy on the given machine"
+command :machines => Rudy::Command::Machines
+command_alias :machines, :machine
+
+
+# --------------------------------  RUDY WORKFLOW COMMANDS  --------
+# ------------------------------------------------------------------
+
+desc "Release to your staging environment"
+option :s, :switch, "Switch to the release branch/tag"
+action :U, :update, "Update the current release tag"
+command :release => Rudy::Command::Release
+
+
+#desc "Deploy disk snapshots from one machine to another"
+#command :deploy => Rudy::Command::Deploy
+
+
+
+
+# -----------------------------  RUDY INTERACTION COMMANDS  --------
+# ------------------------------------------------------------------
+
+usage "rudy [-e env] [-u user] connect [-p] [cmd]"
+desc "Open an SSH connection"
+option :p, :print, "Only print the SSH command, don't connect"
+argv :cmd
+command :connect => Rudy::Command::Environment 
+command_alias :connect, :ssh
+
+
+usage "rudy [-e env] [-u user] copy [-p] -r [from path] [to path]"
+desc "Copy files to or from EC2. NOTE: You must use quotes when using a tilda for your remote dir ('~/')."
+option :r, :remote, "Copy FROM the remote machine to the local machine"
+option :p, :print, "Only print the SSH command, don't connect"
+argv :from, :to
+command :copy => Rudy::Command::Environment
+command_alias :copy, :scp
+command_alias :copy, :upload
+command_alias :copy, :download
+
+
+
+
+# -----------------------------------  AMAZON EC2 COMMANDS  --------
+# ------------------------------------------------------------------
+
+usage "rudy [global options] addresses [-A -i instance ID] [address]"
+desc "Manage Amazon Elastic IP addresses"
+argv :address, :instanceid
+action :A, :associate, "Associate an address to a running instance"
+command :addresses => Rudy::Command::Addresses
+command_alias :addresses, :address
+
+
+usage "rudy images [-C -i name [-b bucket -a account]] [-D AMI-ID]"
+desc "Manage EC2 Machine Images (AMIs)"
+option :a, :account, String, "Your Amazon Account Number"
+option :i, :image_name, String, "The name of the image"
+option :b, :bucket_name, String, "The name of the bucket that will store the image"
+action :C, :create, "Create an image"
+#action :P, :prepare, "Prepare a running instance to be used as an image"
+action :D, :destroy, "Deregister an image (currently _does not_ remove images files from S3)"
+argv :ami
+command :images => Rudy::Command::Images
+command_alias :images, :image
+
+
+desc "Manage EC2 Volumes"
+action :D, :destroy, "Destroy a volume"
+argv :vol
+command :volumes => Rudy::Command::Volumes
+command_alias :volumes, :volume
+
+
+usage "rudy [global options] instances [-D] [-S -i image ID] [instance ID OR group name]"
+desc "Manage EC2 Instances"
+option :all, "Display all instances"
+option :a, :address, String, "Amazon elastic IP"
+option :i, :image, String, "Amazon machine image ID (ami)"
+#option :v, :volume, String, "Amazon volume ID"
+action :D, :destroy, "Destroy the given instance IDs. All data will be lost!"
+action :S, :start, "Start an instance"
+action :R, :restart, "Restart an instance"
+argv :filter
+command :instances => Rudy::Command::Instances
+command_alias :instances, :instance
+
+
+usage "rudy [global options] groups [-C] [-a IP addresses] [-p ports] [group name]"
+desc "Manage EC2 Security Groups"
+option :all, "Display all security groups"
+option :r, :protocols, Array, "Comma-separated list of protocols. One of: tcp (default), udp, icmp"
+option :p, :ports, Array, "List of comma-separated ports to authorize (default: 22,80,443)"
+option :a, :addresses, Array, "List of comma-separated IP addresses to authorize (default: your external IP)"
+action :C, :create, "Create a security group"
+action :D, :destroy, "Destroy a security group"
+action :M, :modify, "Modify a security group"
+argv :group
+command :groups => Rudy::Command::Groups
+command_alias :groups, :group
+
+
+
+
+
+# -----------------------------------  RUDY DEBUG COMMANDS  --------
+# ------------------------------------------------------------------
+
+usage "rudy [global options] metadata instance-ID"
+desc "Display Rudy metadata."
+command :metadata => Rudy::Command::Metadata
+
+
+
+
+__END__
+RUDY v0.5                                   UTC: 2009-02-27 15:39:57
+
+       [z:us-east-1b   e:stage   r:app   p:01]
+
+
+# Create the SimpleDB domain for storing metadata. Check environment variables. 
+rudy setup
+rudy group -C -a address -i ami-1111111 -v vol-2222222
+
+# Connect to stage-app-01 as root
+rudy --user root connect
+
+# Zone, environment, role and position are implied. 
+rudy disks -C -p /rilli/app -d /dev/sdh -s 100
+rudy disks -D disk-us-east-1b-stage-app-01-rilli-db222
+
+# Create an image from an existing instance
+rudy -e prod images -C -b rilli-ami-us -i rilli-app-32-r3
+
+# Create an instance 
+rudy -e prod instances -S -i ami-11111
+
+# Push current working directory to stage
+rudy stage
+
+rudy -e prod backups 
+
+
+

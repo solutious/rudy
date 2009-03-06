@@ -1,0 +1,46 @@
+#!/usr/bin/ruby
+
+# Rudy -- Your friend in staging and deploying to EC2
+#
+#   See rudy -h for usage
+# 
+
+#
+# No Ruby 1.9.1 support. Only 1.8.x for now :[
+#unless RUBY_VERSION < "1.9"
+#  puts "Sorry! We're using the right_aws gem and it doesn't support Ruby 1.9."
+#  exit 1
+#else
+  require 'rubygems'
+#end
+
+RUDY_HOME = File.join(File.dirname(__FILE__), '..')
+RUDY_LIB = File.join(RUDY_HOME, 'lib')
+$:.unshift RUDY_LIB # Put our local lib in first place
+
+require 'drydock'
+extend Drydock
+
+project "Rudy"  # This also runs require 'ruby'
+
+debug :on
+
+# Trap all errors. You can find the output in Drydock.captured. 
+# Rudy does this to suppress the SSL warning from right_aws/http_connection
+capture :stderr       
+
+global :A, :accesskey, String, "AWS Access Key"
+global :S, :secretkey, String, "AWS Secret Access Key"
+global :R, :region, String, "Connect to a specific EC2 region (default: #{Rudy::DEFAULT_REGION})"
+global :z, :zone, String, "Connect to a specific EC2 zone (default: #{Rudy::DEFAULT_ZONE})"
+global :q, :quiet, "Run with less output"
+global :v, :verbose, "Increase verbosity of output (i.e. -v or -vv or -vvv)" do
+  @verbose ||= 0
+  @verbose += 1
+end
+global :V, :version, "Display version number" do
+  puts "Rudy version: #{Rudy::VERSION}"
+  exit 0
+end
+
+

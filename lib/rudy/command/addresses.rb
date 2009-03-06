@@ -11,7 +11,7 @@ module Rudy
         raise "You did not supply an instance ID" unless @argv.instanceid
         
         @inst = @ec2.instances.get(@argv.instanceid)
-        raise "Instance #{inst[:aws_instance_id]} does not exist!" unless inst
+        raise "Instance #{@inst[:aws_instance_id]} does not exist!" unless @inst
         
         raise "That's not an elastic IP you own!" unless @ec2.addresses.valid?(@argv.address)
         raise "#{@argv.address} is already associated!" if @ec2.addresses.associated?(@argv.address)
@@ -20,12 +20,12 @@ module Rudy
       end
       
       def associate_addresses
-        puts "Associating #{address} to #{@inst[:aws_groups]}: #{@inst[:dns_name]}"
-        @ec2.addresses.associate(inst[:aws_instance_id], @argv.address)
+        puts "Associating #{@argv.address} to #{@inst[:aws_groups]}: #{@inst[:dns_name]}"
+        @ec2.addresses.associate(@inst[:aws_instance_id], @argv.address)
         puts "Done!"
         puts
         
-        print_addresses
+        addresses
       end
       
       def addresses

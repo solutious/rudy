@@ -118,6 +118,8 @@ command_alias :backups, :backup
 usage "rudy [global options] machines [-D -S -U]"
 desc "Manage Rudy Machines"
 action :U, :update, "Update Rudy on the given machine"
+action :R, :restart, "Restart the given machine"
+action :S, :start, "Start the given machine"
 command :machines => Rudy::Command::Machines
 command_alias :machines, :machine
 
@@ -127,6 +129,7 @@ command_alias :machines, :machine
 
 desc "Release to your staging environment"
 option :s, :switch, "Switch to the release branch/tag"
+option :m, :msg, String, "A short release note"
 action :U, :update, "Update the current release tag"
 command :release => Rudy::Command::Release
 
@@ -164,7 +167,7 @@ command_alias :copy, :download
 # -----------------------------------  AMAZON EC2 COMMANDS  --------
 # ------------------------------------------------------------------
 
-usage "rudy [global options] addresses [-A -i instance ID] [address]"
+usage "rudy [global options] addresses [-A address instance ID]"
 desc "Manage Amazon Elastic IP addresses"
 argv :address, :instanceid
 action :A, :associate, "Associate an address to a running instance"
@@ -199,8 +202,8 @@ option :a, :address, String, "Amazon elastic IP"
 option :i, :image, String, "Amazon machine image ID (ami)"
 #option :v, :volume, String, "Amazon volume ID"
 action :D, :destroy, "Destroy the given instance IDs. All data will be lost!"
-action :S, :start, "Start an instance"
-action :R, :restart, "Restart an instance"
+#action :S, :start, "Start an instance"
+#action :R, :restart, "Restart an instance"
 argv :filter
 command :instances => Rudy::Command::Instances
 command_alias :instances, :instance
@@ -237,29 +240,6 @@ __END__
 RUDY v0.5                                   UTC: 2009-02-27 15:39:57
 
        [z:us-east-1b   e:stage   r:app   p:01]
-
-
-# Create the SimpleDB domain for storing metadata. Check environment variables. 
-rudy setup
-rudy group -C -a address -i ami-1111111 -v vol-2222222
-
-# Connect to stage-app-01 as root
-rudy --user root connect
-
-# Zone, environment, role and position are implied. 
-rudy disks -C -p /rilli/app -d /dev/sdh -s 100
-rudy disks -D disk-us-east-1b-stage-app-01-rilli-db222
-
-# Create an image from an existing instance
-rudy -e prod images -C -b rilli-ami-us -i rilli-app-32-r3
-
-# Create an instance 
-rudy -e prod instances -S -i ami-11111
-
-# Push current working directory to stage
-rudy stage
-
-rudy -e prod backups 
 
 
 

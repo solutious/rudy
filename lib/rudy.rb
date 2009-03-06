@@ -4,6 +4,7 @@ require 'stringio'
 require 'ostruct'
 require 'yaml'
 require 'socket'
+require 'tempfile'
 
 require 'console'
 require 'storable'
@@ -29,6 +30,8 @@ module Rudy #:nodoc:
   
   DEFAULT_USER = 'rudy'
   
+  SUPPORTED_SCM_NAMES = [:svn, :git]
+  
   module VERSION #:nodoc:
     MAJOR = 0.freeze unless defined? MAJOR
     MINOR = 3.freeze unless defined? MINOR
@@ -50,7 +53,6 @@ module Rudy #:nodoc:
   def self.in_situ?
     File.exists?('/etc/ec2/instance-id')
   end
-  
 end
 
 require 'rudy/aws'
@@ -94,6 +96,13 @@ def capture(stream)
   result
 end
 
+
+def write_to_file(filename, content, type)
+  type = (type == :append) ? 'a' : 'w'
+  f = File.open(filename,type)
+  f.puts content
+  f.close
+end
 
 def are_you_sure?(len=3)
   if Drydock.debug?

@@ -37,7 +37,7 @@ module Rudy
         mon = now.mon.to_s.rjust(2, '0')
         day = now.day.to_s.rjust(2, '0')
         rev = "r01"
-        criteria = ['rudy', now.year, mon, day, rev]
+        criteria = ['rel', now.year, mon, day, rev]
         criteria.insert(-2, username) if username
         tag = criteria.join(RUDY_DELIM)
         # Keep incrementing the revision number until we find the next one.

@@ -45,7 +45,7 @@ module Rudy
         @global.local_user = ENV['USER'] || :user
         @global.local_hostname = Socket.gethostname || :host
 
-        @scm = load_scm
+        
         
         if @global.verbose > 1 && Drydock.debug?
           puts "GLOBALS:"
@@ -73,24 +73,22 @@ module Rudy
       end
       protected :init
       
-      def load_scm
-        env, rol, att = @global.environment, @global.role
+      def machine_data
+        machine_data = {
+          # Give the machine an identity
+          :zone => @global.zone,
+          :environment => @global.environment,
+          :role => @global.role,
+          :position => @global.position,
+          
+          # Add hosts to the /etc/hosts file
+          :hosts => {
+            :dbmaster => "127.0.0.1",
+          }
+        } 
         
-        # Look for the source control engine, checking all known scm values.
-        # The available one will look like [environment][role][svn][base]
-        base = nil
-        scm = nil
-        [:svn, :git].each do |v|
-          scm = v
-          base = @config.machinegroup.find_deferred(env, rol, [scm, :base])
-          break if base
-        end
-        if base
-          klass = eval "Rudy::SCM::#{scm.to_s.upcase}"
-          klass.new(:base => base)
-        end
+        machine_data.to_hash
       end
-      private :load_scm
       
       
       # Raises exceptions if the requested user does 
@@ -208,6 +206,10 @@ module Rudy
         ami
       end
       
+      def machine_address
+        @config.machinegroup.find_deferred(@global.environment, @global.role, :address)
+      end
+      
       # TODO: fix machine_group to include zone
       def machine_name
         [@global.zone, machine_group, @global.position].join(RUDY_DELIM)
@@ -234,10 +236,7 @@ module Rudy
         puts "-"*30
         puts "Disk: #{disk.name} (path: #{disk.path}, device: #{disk.device})"
         puts 
-        
-        if @ec2.instances.attached_volume?(machine[:aws_instance_id], disk.device)
-          raise "#{disk.device} is already in use on #{machine[:aws_instance_id]}! (Try umounting it)"
-        end
+
         
         if !disk.awsid || (disk.awsid && !@ec2.volumes.exists?(disk.awsid))
           disk = Rudy::MetaData::Disk.update_volume(@sdb, @ec2, disk, machine)
@@ -245,10 +244,15 @@ module Rudy
         
         raise "Unknown error creating volume! #{disk.awsid}" unless disk && disk.awsid
         
-        puts "Attaching #{disk.awsid} to #{machine[:aws_instance_id]}"
-        @ec2.volumes.attach(machine[:aws_instance_id], disk.awsid, disk.device)
-        sleep 2
         
+        if @ec2.instances.attached_volume?(machine[:aws_instance_id], disk.device)
+          puts "#{disk.device} is already in use on #{machine[:aws_instance_id]}! Continuing..."
+        else
+          puts "Attaching #{disk.awsid} to #{machine[:aws_instance_id]}"
+          @ec2.volumes.attach(machine[:aws_instance_id], disk.awsid, disk.device)
+          sleep 2
+        end
+
         @global.user = "root"
         
         if disk.raw_volume

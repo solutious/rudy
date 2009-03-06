@@ -14,7 +14,6 @@ module Rudy
   module Command
     class Instances < Rudy::Command::Base
       
-      
       def restart_instances_valid?
         raise "No instance ID provided" if @argv.filter.nil?
         raise "No EC2 .pem keys provided" unless has_pem_keys?
@@ -30,7 +29,6 @@ module Rudy
         exit unless are_you_sure?(5)
         true
       end
-      
       def restart_instances
         puts "Restarting #{@argv.filter}!"
         @ec2.instances.restart @argv.filter
@@ -81,95 +79,6 @@ module Rudy
         @ec2.instances.destroy instance
       end
 
-      def start_instances_valid?
-        exit unless are_you_sure?  
-        rig = @ec2.instances.list(machine_group)
-        #raise "There is already an instance running in #{machine_group}" unless rig.empty?
-        raise "No SSH key provided for #{keypairname}!" unless has_keypair?
-        true
-      end
-        
-      def start_instances
-        
-        @option.image ||= machine_image
-        
-        @global.user = "root"
-        
-        
-        machine_data = {
-          # Give the machine an identity
-          :zone => @global.zone,
-          :environment => @global.environment,
-          :role => @global.role,
-          :position => @global.position,
-          
-          # Add hosts to the /etc/hosts file
-          :hosts => {
-            :dbmaster => "127.0.0.1",
-          },
-          
-          :userdata => {}
-        } 
-        
-        users = @config.machinegroup.find_deferred(@global.environment, @global.role, :users) || {}
-        
-        # Populate userdata with settings from ~/.rudy
-        unless users.empty?
-          # Build a set of parameters for each user on the requested
-          # machine. Set default values first and overwrite. (TODO)
-          users.each_pair do |user,hash|
-            machine_data[:userdata][user] = hash[:userdata].to_hash if hash[:userdata]
-          end
-        end
-        puts "Starting an instance in #{machine_group}"
-        puts "with machine data:", machine_data.to_yaml
-
-        instances = @ec2.instances.create(@option.image, machine_group.to_s, File.basename(keypairpath), machine_data.to_yaml, @global.zone)
-        inst = instances.first
-        id, state = inst[:aws_instance_id], inst[:aws_state]
-        
-        if @option.address
-          puts "Associating #{@option.address} to #{id}"
-          @ec2.addresses.associate(id, @option.address)
-        end
-        
-        print "Waiting for #{id} to become available"
-        
-        while @ec2.instances.pending?(id)
-          sleep 2
-          print '.'
-          STDOUT.flush
-        end
-        
-        machine = @ec2.instances.get(id)
-        
-        puts " It's up!\a\a\a" # with bells
-        print "Waiting for SSH daemon at #{machine[:dns_name]}"
-        while !Rudy::Utils.service_available?(machine[:dns_name], 22)
-          print '.'
-          STDOUT.flush
-        end
-        puts " It's up!"
-        
-        print "Looking for disk metadata for #{machine[:aws_availability_zone]}... "
-        disks = Rudy::MetaData::Disk.list(@sdb, machine[:aws_availability_zone], @global.environment, @global.role, @global.position)
-        
-        if disks.empty?
-          puts "None"
-        else
-          puts "#{disks.size} disk(s)."
-          disks.each do |disk|
-            
-            do_dirty_disk_volume_deeds(disk, machine)
-          end
-        end
-        
-        puts
-        ssh_command machine[:dns_name], keypairpath, @global.user, "df -h" # Display current mounts
-        puts 
-        puts "Done!"
-      end
-      
     end
   end
 end

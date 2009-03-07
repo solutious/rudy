@@ -295,15 +295,58 @@ module Rudy
       end
       
       def execute_startup_routines
+        config = @config.machinegroup.find_deferred(@global.environment, @global.role, :config) || {}
+        config[:global] = @global.marshal_dump
+        config[:global].reject! { |n,v| n == :cert || n == :privatekey }
+      
         # NOTE: INCOMPLETE / NOT-FUNCTIONAL
-        disks = @config.machinegroup.find_deferred(@global.environment, @global.role, :startup, :disks) || []
-        disks.each_pair do |action,disk|
-          todo = disk.is_a?(Array) ? disk : [disk]
-          todo.each do |item|
-            p item
-#            disk = Rudy::MetaData::Disk.get(@sdb, name)
+        #disks = @config.machinegroup.find_deferred(@global.environment, @global.role, :startup, :disks) || []
+        #disks.each_pair do |action,disk|
+        #  todo = disk.is_a?(Array) ? disk : [disk]
+        #  todo.each do |item|
+        #    #p item
+        #     disk = Rudy::MetaData::Disk.get(@sdb, name)
+        #  end
+        #end
+        
+       
+        tf = Tempfile.new('startup-config')
+        write_to_file(tf.path, config.to_hash.to_yaml, 'w')
+
+        
+        machine = @list.values.first # NOTE: we're assuming there's only one machine
+        
+        rscripts = @config.machinegroup.find_deferred(@global.environment, @global.role, :startup, :after) || []
+        rscripts = [rscripts] unless rscripts.is_a?(Array)
+        rscripts.each do |rscript|
+          user, script = rscript.shift
+          script &&= script
+          
+          switch_user(user) # scp and ssh will run as this user
+          
+          puts "Transfering startup-config.yaml..."
+          scp do |scp|
+            # The startup-config.yaml file contains settings from ~/.rudy/config 
+            scp.upload!(tf.path, "~/startup-config.yaml") do |ch, name, sent, total|
+              puts "#{name}: #{sent}/#{total}"
+            end
+          end
+          ssh do |session|
+            puts "Running #{script}..."
+            session.exec!("chmod 700 #{script}")
+            puts session.exec!("#{script}")
+            
+            puts "Cleaning up..."
+            session.exec!("rm ~/startup-config.yaml")
           end
         end
+        
+        
+        tf.delete    # remove release-config.yaml
+        
+        switch_user # return to the requested user
+        
+        
       end
       
       
@@ -321,7 +364,7 @@ module Rudy
         
         
         if @ec2.instances.attached_volume?(machine[:aws_instance_id], disk.device)
-          puts "#{disk.device} is already in use on #{machine[:aws_instance_id]}! Continuing..."
+          puts "#{disk.device} is already attached to #{machine[:aws_instance_id]}! Continuing..."
         else
           puts "Attaching #{disk.awsid} to #{machine[:aws_instance_id]}"
           @ec2.volumes.attach(machine[:aws_instance_id], disk.awsid, disk.device)

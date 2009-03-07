@@ -65,9 +65,9 @@ module Rudy
       def restart
         puts "Restarting #{machine_group}: #{@list.keys.join(', ')}"
         
-        puts "This command will also destroy the volumes attached to the instances!"
         exit unless are_you_sure?(5)
         
+        puts "Running shutdown routines..."
         execute_shutdown_routines
         
         @ec2.instances.restart @list.keys
@@ -76,6 +76,9 @@ module Rudy
         @list.keys.each do |id|
           wait_to_attach_disks(id)
         end
+        
+        puts "Running Startup routines..."
+        execute_startup_routines
         
         puts "Done!"
       end

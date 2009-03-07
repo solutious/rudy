@@ -42,7 +42,7 @@ module Rudy
 
         exit unless are_you_sure?
 
-        tag = @scm.create_release(@global.local_user)        
+        tag = @scm.create_release(@global.local_user, @option.msg)        
         puts "Done! (#{tag})"
         
         if @option.switch

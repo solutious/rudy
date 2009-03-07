@@ -10,17 +10,14 @@ module Rudy
         @base_uri = args[:base]
       end
       
-      def create_release(username=nil)
-        raise "#{Dir.pwd} is not a working copy" unless svn_dir?(Dir.pwd)
-        raise "There are local changes. Please revert or check them in." unless everything_checked_in?
-        raise "Invalid base URI (#{@base_uri})." unless valid_uri?(@base_uri)
-        
+      def create_release(username=nil, msg=nil)
         local_uri, local_revision = local_info
         rtag = generate_release_tag_name(username)
         release_uri = "#{@base_uri}/#{rtag}"
-        cmd = "svn copy -m 'Another Release by Rudy!' #{local_uri} #{release_uri}"
+        msg ||= 'Another Release by Rudy!'
+        msg.tr!("'", "\\'")
+        cmd = "svn copy -m '#{msg}' #{local_uri} #{release_uri}"
         
-        #puts "disabled svn copy"
         `#{cmd} 2>&1`
         
         release_uri
@@ -36,7 +33,7 @@ module Rudy
         now = Time.now
         mon = now.mon.to_s.rjust(2, '0')
         day = now.day.to_s.rjust(2, '0')
-        rev = "r01"
+        rev = "01"
         criteria = ['rel', now.year, mon, day, rev]
         criteria.insert(-2, username) if username
         tag = criteria.join(RUDY_DELIM)

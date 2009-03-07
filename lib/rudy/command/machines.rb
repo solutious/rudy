@@ -5,26 +5,69 @@ module Rudy
     class Machines < Rudy::Command::Base
       
 
-      
-      
-      def restart_machines_valid?
+      def destroy_machines_valid?
         raise "No EC2 .pem keys provided" unless has_pem_keys?
         raise "No SSH key provided for #{@global.user}!" unless has_keypair?
         raise "No SSH key provided for root!" unless has_keypair?(:root)
         
         @list = @ec2.instances.list(machine_group)
-        raise "No machines to restart in #{machine_group}" unless @list
+        raise "No machines running in #{machine_group}" unless @list
         
-        raise "I will not help you destroy production!" if @global.environment == "prod" # TODO: use_caution?, locked?
+        raise "I will not help you ruin production!" if @global.environment == "prod" # TODO: use_caution?, locked?
         
+        puts "This command will also destroy the volumes attached to the instances!"
         exit unless are_you_sure?(5)
         true
       end
+      
+      def destroy_machines
+        puts "Destroying #{machine_group}: #{@list.keys.join(', ')}"
+
+        puts "Running shutdown routines..."
+        execute_shutdown_routines
+        
+        puts "Terminating instances..."
+        @ec2.instances.destroy @list.keys
+        sleep 5
+        
+        puts "Destroying volumes..."
+        criteria = [@global.zone, @global.environment, @global.role]
+        Rudy::MetaData::Disk.list(@sdb, *criteria).each do |disk|
+          next unless disk.path == "/rilli/app" # This is a hack until the disks DSL is ready.
+                                                # We can't copy the db disks from production.
+                                                # so we need to keep them available
+          
+          puts "  -> #{disk.name} (#{disk.awsid})"
+          begin
+            @ec2.volumes.detach(disk.awsid)  if @ec2.volumes.attached?(disk.awsid)
+          rescue => ex
+            puts "Error detaching volume: #{ex.message}"
+          end
+          
+          sleep 2
+          
+          begin
+            @ec2.volumes.destroy(disk.awsid) if @ec2.volumes.available?(disk.awsid)
+          rescue => ex
+            puts "Error deleting volume: #{ex.message}"
+          end
+          
+        end
+        
+        
+        puts "Done!"
+      end
+      
+      def restart_machines_valid?
+        destroy_machines_valid?
+      end
       def restart_machines
-        @list = @ec2.instances.list(machine_group)
         puts "Restarting #{machine_group}: #{@list.keys.join(', ')}"
-        #@ec2.instances.restart @list.keys
-        #sleep 5
+        
+        execute_shutdown_routines
+        
+        @ec2.instances.restart @list.keys
+        sleep 10
         
         @list.keys.each do |id|
           wait_to_attach_disks(id)
@@ -48,8 +91,7 @@ module Rudy
         @global.user = "root"
         
         puts "Starting an instance in #{machine_group}"
-        puts "with machine data:", machine_data.to_yaml
-
+        
         instances = @ec2.instances.create(@option.image, machine_group.to_s, File.basename(keypairpath), machine_data.to_yaml, @global.zone)
         inst = instances.first
         id, state = inst[:aws_instance_id], inst[:aws_state]
@@ -65,43 +107,20 @@ module Rudy
       end
 
       
-      def wait_to_attach_disks(id)
+      def machines_valid?
+        raise "No EC2 .pem keys provided" unless has_pem_keys?
+        raise "No SSH key provided for #{@global.user}!" unless has_keypair?
+        raise "No SSH key provided for root!" unless has_keypair?(:root)
         
-        print "Waiting for #{id} to become available"
-        STDOUT.flush
-        
-        while @ec2.instances.pending?(id)
-          sleep 2
-          print '.'
-          STDOUT.flush
+        @list = @ec2.instances.list(machine_group)
+        raise "No machines running in #{machine_group}" unless @list
+        true
+      end
+      def machines
+        puts "There are no machines running in #{machine_group}" if @list.empty?
+        @list.each_pair do |id, inst|
+          print_instance inst
         end
-        
-        machine = @ec2.instances.get(id)
-        
-        puts " It's up!\a\a\a" # with bells
-        print "Waiting for SSH daemon at #{machine[:dns_name]}"
-        while !Rudy::Utils.service_available?(machine[:dns_name], 22)
-          print '.'
-          STDOUT.flush
-        end
-        puts " It's up!"
-        
-        print "Looking for disk metadata for #{machine[:aws_availability_zone]}... "
-        disks = Rudy::MetaData::Disk.list(@sdb, machine[:aws_availability_zone], @global.environment, @global.role, @global.position)
-        
-        if disks.empty?
-          puts "None"
-        else
-          puts "#{disks.size} disk(s)."
-          disks.each do |disk|
-            
-            do_dirty_disk_volume_deeds(disk, machine)
-          end
-        end
-        
-        puts
-        ssh_command machine[:dns_name], keypairpath, @global.user, "df -h" # Display current mounts
-        puts
       end
       
       
@@ -137,6 +156,7 @@ module Rudy
           puts session.exec!("gem install --no-ri --no-rdoc solutious-rudy -v #{Rudy::VERSION}")
         end
       end
+      
       
     end
   end

@@ -4,6 +4,9 @@ module Rudy
   module Command
     class Release < Rudy::Command::Base
       
+      
+
+      
       def release_valid?
         raise "No EC2 .pem keys provided" unless has_pem_keys?
         raise "No SSH key provided for #{@global.user}!" unless has_keypair?
@@ -15,35 +18,38 @@ module Rudy
         exit unless are_you_sure?
         
         @scm, @scm_params = find_scm
+                
+        raise "#{Dir.pwd} is not a working copy" unless @scm.svn_dir?(Dir.pwd)
+        raise "There are local changes. Please revert or check them in." unless @scm.everything_checked_in?
+        raise "Invalid base URI (#{@scm_params[:base]})." unless @scm.valid_uri?(@scm_params[:base])
         
         true
       end
         
       def release
 
-       # @option.image ||= machine_image
-       # 
-       # @global.user = "root"
-       # 
-       # puts "Starting an instance in #{machine_group}"
-       # puts "with machine data:", machine_data.to_yaml
-       #
-       # instances = @ec2.instances.create(@option.image, machine_group.to_s, File.basename(keypairpath), machine_data.to_yaml, @global.zone)
-       # inst = instances.first
-       # id, state = inst[:aws_instance_id], inst[:aws_state]
-       # 
-       # if @option.address ||= machine_address
-       #   puts "Associating #{@option.address} to #{id}"
-       #   @ec2.addresses.associate(id, @option.address)
-       # end
-       # 
-       # wait_to_attach_disks(id)
-       #
-       # 
-       # # TODO: store metadata about release with local username and hostname
+        @option.image ||= machine_image
+        
+        @global.user = "root"
+        
+        puts "Starting an instance in #{machine_group}"
+        
+        instances = @ec2.instances.create(@option.image, machine_group.to_s, File.basename(keypairpath), machine_data.to_yaml, @global.zone)
+        inst = instances.first
+        id, state = inst[:aws_instance_id], inst[:aws_state]
+        
+        if @option.address ||= machine_address
+          puts "Associating #{@option.address} to #{id}"
+          @ec2.addresses.associate(id, @option.address)
+        end
+        
+        wait_to_attach_disks(id)
+       
+        
+        # TODO: store metadata about release with local username and hostname
         puts "Creating release from working copy"
-        #tag = @scm.create_release(@global.local_user)
-       tag = "http://rilli.unfuddle.com/svn/rilli_rilli/tags/rudy-2009-03-06-delano-r01"
+        tag = @scm.create_release(@global.local_user)
+        
         puts "Done! (#{tag})"
         
         if @option.switch
@@ -56,14 +62,14 @@ module Rudy
           ssh do |session|
             cmd = "svn #{@scm_params[:command]} #{tag} #{@scm_params[:path]}"
             puts "Running #{cmd}"
-            #puts session.exec!(cmd)
+            puts session.exec!(cmd)
           end
           
         end
         
         
         
-        config = @config.machinegroup.find_deferred(@global.environment, @global.role, :release, :config) || {}
+        config = @config.machinegroup.find_deferred(@global.environment, @global.role, :config) || {}
         
         config[:global] = @global.marshal_dump
         config[:global].reject! { |n,v| n == :cert || n == :privatekey }
@@ -96,7 +102,6 @@ module Rudy
             
             puts "Cleaning up..."
             session.exec!("rm ~/release-config.yaml")
-            session.exec!("rm #{script}")
           end
         end
         

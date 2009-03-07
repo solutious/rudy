@@ -59,7 +59,7 @@ module Rudy
       
       def destroy_backups_valid?
         raise "No backup specified" if argv.empty?
-        exit unless are_you_sure?
+        exit unless are_you_sure?(5)
         true
       end
       

@@ -86,7 +86,26 @@ module Rudy::AWS
         false
       end
       
+      def get(vol_id)
+        list = @aws.describe_volumes(vol_id) || []
+        list.first
+      end
       
+      def deleting?(vol_id)
+        vol = get(vol_id)
+        (vol && vol[:aws_status] == "deleting")
+      end
+      
+      def available?(vol_id)
+        vol = get(vol_id)
+        (vol && vol[:aws_status] == "available")
+      end
+      
+      def attached?(vol_id)
+        vol = get(vol_id)
+        (vol && vol[:aws_status] == "in-use")
+      end
+        
     end
     
     class Instances
@@ -142,6 +161,7 @@ module Rudy::AWS
       end
       
       def get(inst_id)
+        # This is ridiculous. Send inst_id to describe volumes
         instance = {}
         list.each_pair do |id, hash|
           next unless inst_id == id

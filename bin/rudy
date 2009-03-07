@@ -108,7 +108,7 @@ desc "Manage Backups"
 option :s, :snapshot, String, "Create a backup entry from an existing snapshot"
 action :Z, :synchronize, "Check for and delete backup metadata with no snapshot. DOES NOT delete snapshots."
 #action :T, :tidy, "Tidy existing backups"
-action :D, :destroy, "Destroy a backup"
+action :D, :destroy, "Destroy a backup and DELETE its snapshots."
 action :C, :create, "Create a backup"
 argv :disk
 command :backups => Rudy::Command::Backups
@@ -119,7 +119,8 @@ usage "rudy [global options] machines [-D -S -U]"
 desc "Manage Rudy Machines"
 action :U, :update, "Update Rudy on the given machine"
 action :R, :restart, "Restart the given machine"
-action :S, :start, "Start the given machine"
+action :S, :start, "Start a machine group"
+action :D, :destroy, "Destroy a machine group"
 command :machines => Rudy::Command::Machines
 command_alias :machines, :machine
 
@@ -127,12 +128,13 @@ command_alias :machines, :machine
 # --------------------------------  RUDY WORKFLOW COMMANDS  --------
 # ------------------------------------------------------------------
 
-desc "Release to your staging environment"
+desc "Release to a machine group"
 option :s, :switch, "Switch to the release branch/tag"
 option :m, :msg, String, "A short release note"
-action :U, :update, "Update the current release tag"
 command :release => Rudy::Command::Release
 
+desc "Update the release currently running machine group"
+command :rerelease => Rudy::Command::Release
 
 #desc "Deploy disk snapshots from one machine to another"
 #command :deploy => Rudy::Command::Deploy

@@ -20,6 +20,9 @@ module Rudy
       
       def init
         
+        
+        raise "PRODUCTION ACCESS IS DISABLED IN DEBUG MODE" if @global.environment == "prod" && Drydock.debug?
+        
         @config = Rudy::Config.new(:path => @global.config || RUDY_CONFIG_FILE, :verbose => (@global.verbose > 0) )
         
         raise "There is no machine group configured" if @config.machinegroup.nil?
@@ -229,6 +232,78 @@ module Rudy
       
       def snapshot_id?(id=nil)
         (id && id[0,5] == "snap-")
+      end
+      
+      
+      def wait_to_attach_disks(id)
+        
+        print "Waiting for #{id} to become available"
+        STDOUT.flush
+        
+        while @ec2.instances.pending?(id)
+          sleep 2
+          print '.'
+          STDOUT.flush
+        end
+        
+        machine = @ec2.instances.get(id)
+        
+        puts " It's up!\a\a\a" # with bells
+        print "Waiting for SSH daemon at #{machine[:dns_name]}"
+        while !Rudy::Utils.service_available?(machine[:dns_name], 22)
+          print '.'
+          STDOUT.flush
+        end
+        puts " It's up!"
+        
+        print "Looking for disk metadata for #{machine[:aws_availability_zone]}... "
+        disks = Rudy::MetaData::Disk.list(@sdb, machine[:aws_availability_zone], @global.environment, @global.role, @global.position)
+        
+        if disks.empty?
+          puts "None"
+        else
+          puts "#{disks.size} disk(s)."
+          disks.each do |disk|
+            
+            do_dirty_disk_volume_deeds(disk, machine)
+          end
+        end
+        
+        puts
+        ssh_command machine[:dns_name], keypairpath, @global.user, "df -h" # Display current mounts
+        puts
+      end
+      
+      
+    
+      def execute_shutdown_routines
+        before = @config.machinegroup.find_deferred(@global.environment, @global.role, :shutdown, :before) || []
+        before = [before] unless before.is_a?(Array)
+        before.each do |rscript|
+          user, script = rscript.shift
+          switch_user(user) # scp and ssh will run as this user
+          
+          ssh do |session|
+            puts "Running #{script}..."
+            session.exec!("chmod 700 #{script}")
+            puts session.exec!("#{script}")
+            
+            puts "Cleaning up..."
+          end
+        end
+        switch_user # return to the requested user
+      end
+      
+      def execute_startup_routines
+        # NOTE: INCOMPLETE / NOT-FUNCTIONAL
+        disks = @config.machinegroup.find_deferred(@global.environment, @global.role, :startup, :disks) || []
+        disks.each_pair do |action,disk|
+          todo = disk.is_a?(Array) ? disk : [disk]
+          todo.each do |item|
+            p item
+#            disk = Rudy::MetaData::Disk.get(@sdb, name)
+          end
+        end
       end
       
       

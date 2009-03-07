@@ -4,7 +4,7 @@ module Rudy
   module Command
     class Disks < Rudy::Command::Base
       
-      def disks
+      def disk
         criteria = [@global.zone]
         criteria += [@global.environment, @global.role] unless @option.all
         Rudy::MetaData::Disk.list(@sdb, *criteria).each do |disk|
@@ -13,13 +13,13 @@ module Rudy
         end
       end
 
-      def create_disks_valid?
+      def create_disk_valid?
         raise "No filesystem path specified" unless @option.path
         raise "No size specified" unless @option.size
         true
       end
       
-      def create_disks
+      def create_disk
         disk = Rudy::MetaData::Disk.new
         [:environment, :role, :position, :path, :device, :size].each do |n|
           disk.send("#{n}=", @option.send(n)) if @option.send(n)
@@ -36,13 +36,13 @@ module Rudy
       
       
 
-      def unattach_disks_valid?
+      def unattach_disk_valid?
         raise "No disk specified" if argv.empty?
         exit unless are_you_sure?(4)
         true
       end
       
-      def unattach_disks
+      def unattach_disk
         name = argv.first
         puts "Looking for #{name}"
         disk = Rudy::MetaData::Disk.get(@sdb, name)
@@ -67,12 +67,12 @@ module Rudy
         puts "Done!"
       end
       
-      def attach_disks_valid?
+      def attach_disk_valid?
         raise "No disk specified" if argv.empty?
         true
       end
         
-      def attach_disks
+      def attach_disk
         name = @argv.first
         puts "Looking for #{name}"
         disk = Rudy::MetaData::Disk.get(@sdb, name)
@@ -92,12 +92,12 @@ module Rudy
       end
       
       
-      def destroy_disks_valid?
+      def destroy_disk_valid?
         raise "No disk specified" if argv.empty?
         exit unless are_you_sure?(5)
       end
       
-      def destroy_disks
+      def destroy_disk
         name = @argv.first
         puts "Destroying #{name}"
         @sdb.destroy(RUDY_DOMAIN, name)

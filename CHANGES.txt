@@ -1,29 +1,45 @@
 RUDY, CHANGES
 
-#### 0.4 (2009-03-??)
 
-NOTE: This is a moderate re-write from 0.3
+#### 0.4 (2009-03-07) ###############################
+
+NOTE: This is a significant re-write from 0.3
 
 * CHANGE: Mostly re-written bin/ruby, moving validation to Command classes 
-          (a la Drydock 0.5)
-* UPGRADE: Drydock 0.5
+* CHANGE: upgrade to Drydock 0.5
+* CHANGE: Moved generic EC2 commands to bin/rudy-ec2
+* CHANGE: Removed ambiguity of pluralized command names.
+OLD: backups, disks, configs
+NEW: backup, disk, config
+* NEW: ssh and scp commands for connecting to and copying files to/from machines
+* NEW: New dependencies (trying out net-ssh)
+* NEW: Domain specific language for configuration
+* NEW: "Routines" for handling common actions. Starting, stopping, releasing, deploying. 
+* NEW: "rudy release" will create a release from the current working copy, start an instance, 
+checkout the release, run routines. It needs some work still, but this already functions as
+a single command release process. 
+* NEW: "rudy start|destroy|restart|update|status". Routines allow us to have generic commands 
+that can be used for any machine group. These commands relate to starting new instances.
+* NEW: Extra caution when running destructive commands
 
 
-#### 0.3 (2009-02-26)
+#### 0.3 (2009-02-26) ###############################
 
 NOTE: This is a significant re-write from 0.2
 
+* CHANGE: Re-written support/rudy-ec2-startup
+* CHANGE: upgrade to Drydock 0.4
 * NEW: More functionality for disks and backups
 * NEW: config commands
-* CHANGE: Re-written support/rudy-ec2-startup
 * NEW: Per machine configuration (via ~/.rudy)
-* UPGRADE: Drydock 0.4
 
 
 #### 0.2 (2009-02-23) ###############################
 
 NOTE: This is a complete re-write from 0.1
 
+* CHANGE: Added Environment variables
+* CHANGE: upgrade to drydock 0.3.3
 * NEW: All time references are converted to UTC
 * NEW: Safer "Are you sure?". Number of characters to enter is 
        commiserate with amount of danger.  
@@ -36,10 +52,9 @@ NOTE: This is a complete re-write from 0.1
 * NEW: Partial support for regions and zones
 * NEW: Manage system based on security groups. 
 * NEW: "rudy groups" overhaul. Display, creates, destroys groups. 
-* CHANGE: Added Environment variables
-* UPGRADE: drydock 0.3.3
+
 
 
 #### 0.1 (2009-02-06) ###############################
 
-* Initial release
+* Initial public release

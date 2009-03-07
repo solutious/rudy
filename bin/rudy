@@ -8,7 +8,7 @@
 #
 # No Ruby 1.9.1 support. Only 1.8.x for now :[
 unless RUBY_VERSION < "1.9"
-  puts "Sorry! We're using the right_aws gem and it doesn't support Ruby 1.9."
+  puts "Sorry! We're using the right_aws gem and it doesn't support Ruby 1.9 (md5 error)."
   exit 1
 else
  require 'rubygems'
@@ -23,7 +23,7 @@ extend Drydock
 
 project "Rudy"  # This also runs require 'ruby'
 
-debug :on
+debug :off
 
 capture :stderr       
 
@@ -53,12 +53,9 @@ command :setup => Rudy::Command::Metadata
 # ------------------------------------  RUDY INFO COMMANDS  --------
 # ------------------------------------------------------------------
 
-usage "rudy info"
-desc "Displays info about the current Rudy configuration"
-command :info => Rudy::Command::Metadata
-
-#desc "Display status information on a machine group"
-#command :status => Rudy::Command::Metadata
+#usage "rudy info"
+#desc "Displays info about the current Rudy configuration"
+#command :info => Rudy::Command::Metadata
 
 usage "rudy [-f config-file] config [param-name]"
 desc "Check Rudy configuration."
@@ -66,7 +63,6 @@ option :l, :all, "Display config settings for all machines"
 option :d, :defaults, "Display the default value for the supplied parameter"
 argv :name
 command :config => Rudy::Command::Config
-command_alias :config, :configs
 
 usage "rudy myaddress [-i] [-e]"
 desc "Displays you current internal and external IP addresses"
@@ -100,7 +96,8 @@ action :D, :destroy, "Destroy a disk definition"
 action :A, :attach, "Attach a disk"
 action :N, :unattach, "Unattach a disk"
 argv :diskname
-command :disks => Rudy::Command::Disks
+command :'disk-metadata' => Rudy::Command::Disks
+command_alias :'disk-metadata', :disk_md
 
 
 usage "rudy [global options] backups [-C] [disk name]"
@@ -111,18 +108,50 @@ action :Z, :synchronize, "Check for and delete backup metadata with no snapshot.
 action :D, :destroy, "Destroy a backup and DELETE its snapshots."
 action :C, :create, "Create a backup"
 argv :disk
-command :backups => Rudy::Command::Backups
-command_alias :backups, :backup
+command :'backup-metadata' => Rudy::Command::Backups
+command_alias :'backup-metadata', :backup_md
 
 
-usage "rudy [global options] machines [-D -S -U]"
-desc "Manage Rudy Machines"
-action :U, :update, "Update Rudy on the given machine"
-action :R, :restart, "Restart the given machine"
-action :S, :start, "Start a machine group"
-action :D, :destroy, "Destroy a machine group"
-command :machines => Rudy::Command::Machines
-command_alias :machines, :machine
+#usage "rudy [global options] metadata instance-ID"
+#desc "Display Rudy metadata."
+#command :metadata => Rudy::Command::Metadata
+#command_alias :metadata, :md
+
+
+# ----------------------------------  RUDY ACTION COMMANDS  --------
+# ------------------------------------------------------------------
+
+desc "Machine Group Status"
+command :status => Rudy::Command::Machines
+
+desc "Destroy a Machine Group"
+command :destroy => Rudy::Command::Machines
+
+desc "Start a Machine Group"
+command :start => Rudy::Command::Machines
+
+desc "Restart a Machine Group"
+command :restart => Rudy::Command::Machines
+
+#desc "Update a Machine Group with the current version of Rudy"
+#command :update => Rudy::Command::Machines
+
+usage "rudy [-e env] [-u user] connect [-p] [cmd]"
+desc "Open an SSH connection"
+option :p, :print, "Only print the SSH command, don't connect"
+argv :cmd
+command :connect => Rudy::Command::Environment 
+command_alias :connect, :ssh
+
+usage "rudy [-e env] [-u user] copy [-p] -r [from path] [to path]"
+desc "Copy files to or from machines. NOTE: You must use quotes when using a tilda for your remote dir ('~/')."
+option :r, :remote, "Copy FROM the remote machine to the local machine"
+option :p, :print, "Only print the SSH command, don't connect"
+argv :from, :to
+command :copy => Rudy::Command::Environment
+command_alias :copy, :scp
+command_alias :copy, :upload
+command_alias :copy, :download
 
 
 # --------------------------------  RUDY WORKFLOW COMMANDS  --------
@@ -133,107 +162,12 @@ option :s, :switch, "Switch to the release branch/tag"
 option :m, :msg, String, "A short release note"
 command :release => Rudy::Command::Release
 
-desc "Update the release currently running machine group"
-command :rerelease => Rudy::Command::Release
+#desc "Update the release currently running machine group"
+#command :rerelease => Rudy::Command::Release
 
 #desc "Deploy disk snapshots from one machine to another"
 #command :deploy => Rudy::Command::Deploy
 
-
-
-
-# -----------------------------  RUDY INTERACTION COMMANDS  --------
-# ------------------------------------------------------------------
-
-usage "rudy [-e env] [-u user] connect [-p] [cmd]"
-desc "Open an SSH connection"
-option :p, :print, "Only print the SSH command, don't connect"
-argv :cmd
-command :connect => Rudy::Command::Environment 
-command_alias :connect, :ssh
-
-
-usage "rudy [-e env] [-u user] copy [-p] -r [from path] [to path]"
-desc "Copy files to or from EC2. NOTE: You must use quotes when using a tilda for your remote dir ('~/')."
-option :r, :remote, "Copy FROM the remote machine to the local machine"
-option :p, :print, "Only print the SSH command, don't connect"
-argv :from, :to
-command :copy => Rudy::Command::Environment
-command_alias :copy, :scp
-command_alias :copy, :upload
-command_alias :copy, :download
-
-
-
-
-# -----------------------------------  AMAZON EC2 COMMANDS  --------
-# ------------------------------------------------------------------
-
-usage "rudy [global options] addresses [-A address instance ID]"
-desc "Manage Amazon Elastic IP addresses"
-argv :address, :instanceid
-action :A, :associate, "Associate an address to a running instance"
-command :addresses => Rudy::Command::Addresses
-command_alias :addresses, :address
-
-
-usage "rudy images [-C -i name [-b bucket -a account]] [-D AMI-ID]"
-desc "Manage EC2 Machine Images (AMIs)"
-option :a, :account, String, "Your Amazon Account Number"
-option :i, :image_name, String, "The name of the image"
-option :b, :bucket_name, String, "The name of the bucket that will store the image"
-action :C, :create, "Create an image"
-#action :P, :prepare, "Prepare a running instance to be used as an image"
-action :D, :destroy, "Deregister an image (currently _does not_ remove images files from S3)"
-argv :ami
-command :images => Rudy::Command::Images
-command_alias :images, :image
-
-
-desc "Manage EC2 Volumes"
-action :D, :destroy, "Destroy a volume"
-argv :vol
-command :volumes => Rudy::Command::Volumes
-command_alias :volumes, :volume
-
-
-usage "rudy [global options] instances [-D] [-S -i image ID] [instance ID OR group name]"
-desc "Manage EC2 Instances"
-option :all, "Display all instances"
-option :a, :address, String, "Amazon elastic IP"
-option :i, :image, String, "Amazon machine image ID (ami)"
-#option :v, :volume, String, "Amazon volume ID"
-action :D, :destroy, "Destroy the given instance IDs. All data will be lost!"
-#action :S, :start, "Start an instance"
-#action :R, :restart, "Restart an instance"
-argv :filter
-command :instances => Rudy::Command::Instances
-command_alias :instances, :instance
-
-
-usage "rudy [global options] groups [-C] [-a IP addresses] [-p ports] [group name]"
-desc "Manage EC2 Security Groups"
-option :all, "Display all security groups"
-option :r, :protocols, Array, "Comma-separated list of protocols. One of: tcp (default), udp, icmp"
-option :p, :ports, Array, "List of comma-separated ports to authorize (default: 22,80,443)"
-option :a, :addresses, Array, "List of comma-separated IP addresses to authorize (default: your external IP)"
-action :C, :create, "Create a security group"
-action :D, :destroy, "Destroy a security group"
-action :M, :modify, "Modify a security group"
-argv :group
-command :groups => Rudy::Command::Groups
-command_alias :groups, :group
-
-
-
-
-
-# -----------------------------------  RUDY DEBUG COMMANDS  --------
-# ------------------------------------------------------------------
-
-usage "rudy [global options] metadata instance-ID"
-desc "Display Rudy metadata."
-command :metadata => Rudy::Command::Metadata
 
 
 

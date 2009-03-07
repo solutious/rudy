@@ -5,7 +5,7 @@ module Rudy
     class Machines < Rudy::Command::Base
       
 
-      def destroy_machines_valid?
+      def destroy_valid?
         raise "No EC2 .pem keys provided" unless has_pem_keys?
         raise "No SSH key provided for #{@global.user}!" unless has_keypair?
         raise "No SSH key provided for root!" unless has_keypair?(:root)
@@ -15,14 +15,15 @@ module Rudy
         
         raise "I will not help you ruin production!" if @global.environment == "prod" # TODO: use_caution?, locked?
         
-        puts "This command will also destroy the volumes attached to the instances!"
-        exit unless are_you_sure?(5)
         true
       end
       
-      def destroy_machines
+      def destroy
         puts "Destroying #{machine_group}: #{@list.keys.join(', ')}"
 
+        puts "This command will also destroy the volumes attached to the instances!"
+        exit unless are_you_sure?(5)
+        
         puts "Running shutdown routines..."
         execute_shutdown_routines
         
@@ -58,16 +59,19 @@ module Rudy
         puts "Done!"
       end
       
-      def restart_machines_valid?
-        destroy_machines_valid?
+      def restart_valid?
+        destroy_valid?
       end
-      def restart_machines
+      def restart
         puts "Restarting #{machine_group}: #{@list.keys.join(', ')}"
+        
+        puts "This command will also destroy the volumes attached to the instances!"
+        exit unless are_you_sure?(5)
         
         execute_shutdown_routines
         
         @ec2.instances.restart @list.keys
-        sleep 10
+        sleep 10 # Wait for state to change
         
         @list.keys.each do |id|
           wait_to_attach_disks(id)
@@ -77,14 +81,14 @@ module Rudy
       end
       
       
-      def start_machines_valid?
+      def start_valid?
         exit unless are_you_sure?  
         rig = @ec2.instances.list(machine_group)
         #raise "There is already an instance running in #{machine_group}" unless rig.empty?
         raise "No SSH key provided for #{keypairname}!" unless has_keypair?
         true
       end
-      def start_machines
+      def start
         
         @option.image ||= machine_image
         
@@ -107,7 +111,7 @@ module Rudy
       end
 
       
-      def machines_valid?
+      def status_valid?
         raise "No EC2 .pem keys provided" unless has_pem_keys?
         raise "No SSH key provided for #{@global.user}!" unless has_keypair?
         raise "No SSH key provided for root!" unless has_keypair?(:root)
@@ -116,7 +120,7 @@ module Rudy
         raise "No machines running in #{machine_group}" unless @list
         true
       end
-      def machines
+      def status
         puts "There are no machines running in #{machine_group}" if @list.empty?
         @list.each_pair do |id, inst|
           print_instance inst
@@ -124,7 +128,7 @@ module Rudy
       end
       
       
-      def update_machines_valid?
+      def update_valid?
         raise "No EC2 .pem keys provided" unless has_pem_keys?
         raise "No SSH key provided for #{@global.user}!" unless has_keypair?
         raise "No SSH key provided for root!" unless has_keypair?(:root)
@@ -139,7 +143,7 @@ module Rudy
       end
       
 
-      def update_machines
+      def update
         switch_user("root")
         
         scp do |scp|

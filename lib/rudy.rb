@@ -1,18 +1,26 @@
 
-require 'right_aws'
-require 'stringio'
-require 'ostruct'
-require 'yaml'
-require 'socket'
-require 'tempfile'
+begin
+  require 'digest/md5'
+  require 'right_aws'
+  require 'stringio'
+  require 'ostruct'
+  require 'yaml'
+  require 'socket'
+  require 'tempfile'
 
-require 'console'
-require 'storable'
+  require 'console'
+  require 'storable'
 
-require 'net/ssh'
-require 'net/ssh/gateway'
-require 'net/ssh/multi'
-require 'net/scp'
+  require 'net/ssh'
+  require 'net/ssh/gateway'
+  require 'net/ssh/multi'
+  require 'net/scp'
+  
+rescue LoadError => ex
+  puts "Problem requiring: #{ex.message}"
+  exit 1
+end
+
 
 
 module Rudy #:nodoc:

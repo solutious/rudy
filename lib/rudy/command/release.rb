@@ -8,14 +8,20 @@ module Rudy
 
       
       def release_valid?
+        
+        relroutine = @config.machinegroup.find_deferred(@global.environment, @global.role, :release)
+        raise "No release routines defined for #{machine_group}" if relroutine.nil?
+        
         raise "No EC2 .pem keys provided" unless has_pem_keys?
-        raise "No SSH key provided for #{@global.user}!" unless has_keypair?
-        raise "No SSH key provided for root!" unless has_keypair?(:root)
+        raise "No SSH key provided for #{@global.user} in #{machine_group}!" unless has_keypair?
+        raise "No SSH key provided for root in #{machine_group}!" unless has_keypair?(:root)
         
         @list = @ec2.instances.list(machine_group)
-        #raise "Please start an instance in #{machine_group} before releasing! (rudy -e stage instances --start)" if @list.empty?
-        puts "TODO: check running instances"
-        exit unless are_you_sure?
+        unless @list.empty?
+          msg = "#{machine_group} is in use, probably with another release. #{$/}"
+          msg << 'Sort it out and run "rudy destroy" before continuing.' 
+          raise msg
+        end
         
         @scm, @scm_params = find_scm
                 
@@ -26,11 +32,27 @@ module Rudy
         true
       end
         
+      # <li>Creates a release tag based on the working copy on your machine</li>
+      # <li>Starts a new stage instance</li>
+      # <li>Executes startup routines</li>
+      # <li>Executes release routines</li>
       def release
+        # TODO: store metadata about release with local username and hostname
+        puts "Creating release from working copy"
 
+        exit unless are_you_sure?
+
+        tag = @scm.create_release(@global.local_user)        
+        puts "Done! (#{tag})"
+        
+        if @option.switch
+          puts "Switching working copy to new tag"
+          @scm.switch_working_copy(tag)
+        end
+        
         @option.image ||= machine_image
         
-        @global.user = "root"
+        switch_user("root")
         
         puts "Starting an instance in #{machine_group}"
         
@@ -45,17 +67,6 @@ module Rudy
         
         wait_to_attach_disks(id)
        
-        
-        # TODO: store metadata about release with local username and hostname
-        puts "Creating release from working copy"
-        tag = @scm.create_release(@global.local_user)
-        
-        puts "Done! (#{tag})"
-        
-        if @option.switch
-          puts "Switching working copy to new tag"
-          @scm.switch_working_copy(tag)
-        end
         
         if @scm && @scm_params[:command]
           

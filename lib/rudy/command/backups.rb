@@ -7,7 +7,7 @@ module Rudy
     class Backups < Rudy::Command::Base
       
       
-      def backups
+      def backup
         criteria = [@global.zone]
         criteria += [@global.environment, @global.role] unless @option.all
         
@@ -17,7 +17,7 @@ module Rudy
       end
       
       # Check for backups pointing to snapshots that don't exist. 
-      def sync_backups
+      def sync_backup
         unless argv.empty?
           puts "The disk you specified will be ignored."
           argv.clear
@@ -57,13 +57,13 @@ module Rudy
         puts "Done!"
       end
       
-      def destroy_backups_valid?
+      def destroy_backup_valid?
         raise "No backup specified" if argv.empty?
         exit unless are_you_sure?(5)
         true
       end
       
-      def destroy_backups
+      def destroy_backup
         name = @argv.first
         puts "Destroying #{name}"
         begin
@@ -87,7 +87,7 @@ module Rudy
         puts "Done."
       end
       
-      def create_backups
+      def create_backup
         diskname = @argv.first
         
         machine = find_current_machine

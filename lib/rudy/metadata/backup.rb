@@ -50,7 +50,7 @@ module Rudy
       end
       
       def valid?
-        @zone && @environment && @role && @position && @path && @date && @time && @sec
+        @zone && @environment && @role && @position && @path && @date && @time && @second
       end
       
       def time_stamp

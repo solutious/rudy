@@ -137,28 +137,29 @@ module Rudy
             raise "No disk associated to volume #{volume[:aws_id]}" unless disk 
           
             backup.volume = volume[:aws_id]
-          
-            snap = @ec2.snapshots.create(volume[:aws_id])
-          
-            backup.awsid = snap[:aws_id]
-            
-            if !snap || !snap.is_a?(Hash)
-              puts "There was an unknown problem creating #{backup.name}. Continuing with the next volume..."
-              next
-            end
-            
-            backup.time_stamp
 
             # Populate machine infos
             [:zone, :environment, :role, :position].each do |n|
-              backup.send("#{n}=", @option.send(n)) if @option.send(n)
+              backup.send("#{n}=", @global.send(n)) if @global.send(n)
             end
 
             # Populate disk infos
             [:path, :size].each do |n|
               backup.send("#{n}=", disk.send(n)) if disk.send(n)
             end
-
+            
+            backup.time_stamp
+            
+            raise "There was a problem creating the backup metadata" unless backup.valid?
+            
+            snap = @ec2.snapshots.create(volume[:aws_id])
+          
+            if !snap || !snap.is_a?(Hash)
+              puts "There was an unknown problem creating #{backup.name}. Continuing with the next volume..."
+              next
+            end
+            
+            backup.awsid = snap[:aws_id]
 
             Rudy::MetaData::Backup.save(@sdb, backup)
 

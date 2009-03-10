@@ -2,22 +2,30 @@
 
 module Rudy
   require 'caesars'
-  
-  class MachineGroup < Caesars
-    def valid?
-      true
-    end
-  end
+
   class AWSInfo < Caesars
     def valid?
       (!account.nil? && !accesskey.nil? && !secretkey.nil?) &&
       (!account.empty? && !accesskey.empty? && !secretkey.empty?) 
     end
   end
+
+  class Defaults < Caesars
+    def valid?
+      true
+    end
+  end
+  
+  class MachineGroup < Caesars
+    def valid?
+      true
+    end
+  end
   
   class Config < Caesars::Config
-    dsl Rudy::MachineGroup::DSL
     dsl Rudy::AWSInfo::DSL
+    dsl Rudy::Defaults::DSL
+    dsl Rudy::MachineGroup::DSL
     
     def postprocess
       # TODO: give caesar attributes setter methods

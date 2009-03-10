@@ -18,6 +18,7 @@ module Rudy
         true
       end
       
+      
       def destroy
         puts "Destroying #{machine_group}: #{@list.keys.join(', ')}"
 
@@ -99,6 +100,11 @@ module Rudy
         
         puts "Starting an instance in #{machine_group}"
         
+        
+        puts "Running disk routines..."
+        execute_disk_routines(:startup)
+        return
+        
         instances = @ec2.instances.create(@option.image, machine_group.to_s, File.basename(keypairpath), machine_data.to_yaml, @global.zone)
         inst = instances.first
         id, state = inst[:aws_instance_id], inst[:aws_state]
@@ -109,6 +115,10 @@ module Rudy
         end
         
         wait_to_attach_disks(id)
+        
+        
+        puts "Running Startup routines..."
+        execute_startup_routines
         
         puts "Done!"
       end

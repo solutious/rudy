@@ -73,11 +73,7 @@ class Caesars
     att = criteria.pop
     val = nil
     while !criteria.empty?
-      str = criteria.collect { |v| "[:'#{v}']" if v }.join
-      if att
-        str << (att.is_a?(Array) ? att.collect { |v| "[:'#{v}']" if v }.join : "[:'#{att}']")
-      end
-      val = eval "@caesars_properties#{str} if defined?(@caesars_properties#{str})"
+      val = find(criteria, att)
       break if val
       criteria.pop
     end
@@ -85,7 +81,20 @@ class Caesars
     val = @caesars_properties[att.to_sym] if defined?(@caesars_properties[att.to_sym]) && !val
     val
   end
-
+  
+  # Looks for the specific attribute specified. 
+  # +criteria+ is an array of attribute names, orders according to their
+  # relationship. The last element is considered to the desired attribute.
+  # It can be an array.
+  #
+  # Unlike find_deferred, it will return only the value specified, otherwise nil. 
+  def find(*criteria)
+    criteria.flatten! if criteria.first.is_a?(Array)
+    str = criteria.collect { |v| "[:'#{v}']" if v }.join
+    val = eval "@caesars_properties#{str} if defined?(@caesars_properties#{str})"
+    val
+  end
+  
   # Act a bit like a hash for the case:
   # @subclass[:property]
   def [](name)

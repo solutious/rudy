@@ -29,7 +29,7 @@ module Rudy
         raise "There is no AWS info configured" if @config.awsinfo.nil?
         
         @global.accesskey ||= @config.awsinfo.accesskey || ENV['AWS_ACCESS_KEY']
-        @global.secretkey ||= @config.awsinfo.secretkey || ENV['AWS_SECRET_KEY']
+        @global.secretkey ||= @config.awsinfo.secretkey || ENV['AWS_SECRET_KEY'] || ENV['AWS_SECRET_ACCESS_KEY']
         @global.account ||= @config.awsinfo.account || ENV['AWS_ACCOUNT_NUMBER'] 
         
         @global.cert ||= @config.awsinfo.cert || ENV['EC2_CERT']
@@ -38,26 +38,26 @@ module Rudy
         @global.cert = File.expand_path(@global.cert || '')
         @global.privatekey = File.expand_path(@global.privatekey || '')
         
-        @global.region ||= @config.machinegroup.default_region || DEFAULT_REGION
-        @global.zone ||= @config.machinegroup.default_zone || DEFAULT_ZONE
-        @global.environment ||= @config.machinegroup.default_environment || DEFAULT_ENVIRONMENT
-        @global.role ||= @config.machinegroup.default_role || DEFAULT_ROLE
-        @global.position ||= @config.machinegroup.default_position || DEFAULT_POSITION
-        @global.user ||= @config.machinegroup.default_user || DEFAULT_USER
+        @global.region ||= @config.defaults.region || DEFAULT_REGION
+        @global.zone ||= @config.defaults.zone || DEFAULT_ZONE
+        @global.environment ||= @config.defaults.environment || DEFAULT_ENVIRONMENT
+        @global.role ||= @config.defaults.role || DEFAULT_ROLE
+        @global.position ||= @config.defaults.position || DEFAULT_POSITION
+        @global.user ||= @config.defaults.user || DEFAULT_USER
         
         @global.local_user = ENV['USER'] || :user
         @global.local_hostname = Socket.gethostname || :host
 
         
         
-        if @global.verbose > 1 && Drydock.debug?
+        if @global.verbose > 1
           puts "GLOBALS:"
           @global.marshal_dump.each_pair do |n,v|
             puts "#{n}: #{v}"
           end
           puts "#{$/}CONFIG ([#{@global.environment}][#{@global.role}]):"
           val = @config.machinegroup.find_deferred(@global.environment, @global.role)
-          y val
+          y val.to_hash
           puts
         end
         
@@ -174,7 +174,7 @@ module Rudy
         if name == nil && @switch_user_previous
           @global.user = @switch_user_previous
         elsif @global.user != name
-          puts "Switching to #{name} user"
+          puts "Remote commands will be run as #{name} user"
           @switch_user_previous = @global.user
           @global.user = name
         end
@@ -283,6 +283,8 @@ module Rudy
           user, script = rscript.shift
           switch_user(user) # scp and ssh will run as this user
           
+          # TODO: Send configs! See startup_routines
+          
           ssh do |session|
             puts "Running #{script}..."
             session.exec!("chmod 700 #{script}")
@@ -294,22 +296,26 @@ module Rudy
         switch_user # return to the requested user
       end
       
+      # +action+ is one of: :shutdown, :startup, :deploy
+      def execute_disk_routines(action)
+        disks = @config.machinegroup.find_deferred(@global.environment, @global.role, action, :disks) || {}
+        #disks.each_pair do |action,disk|
+        #  todo = disk.is_a?(Array) ? disk : [disk]
+        #  p disk
+        #end
+        if disks.create
+          p disks.create
+        end
+      end
+      
+      
       def execute_startup_routines
         config = @config.machinegroup.find_deferred(@global.environment, @global.role, :config) || {}
         config[:global] = @global.marshal_dump
         config[:global].reject! { |n,v| n == :cert || n == :privatekey }
-      
-        # NOTE: INCOMPLETE / NOT-FUNCTIONAL
-        #disks = @config.machinegroup.find_deferred(@global.environment, @global.role, :startup, :disks) || []
-        #disks.each_pair do |action,disk|
-        #  todo = disk.is_a?(Array) ? disk : [disk]
-        #  todo.each do |item|
-        #    #p item
-        #     disk = Rudy::MetaData::Disk.get(@sdb, name)
-        #  end
-        #end
+
+        execute_disk_routines(:startup)
         
-       
         tf = Tempfile.new('startup-config')
         write_to_file(tf.path, config.to_hash.to_yaml, 'w')
 

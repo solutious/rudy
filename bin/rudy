@@ -23,7 +23,7 @@ extend Drydock
 
 project "Rudy"  # This also runs require 'ruby'
 
-debug :off
+debug :on
 
 capture :stderr       
 
@@ -96,20 +96,20 @@ action :D, :destroy, "Destroy a disk definition"
 action :A, :attach, "Attach a disk"
 action :N, :unattach, "Unattach a disk"
 argv :diskname
-command :'disk-metadata' => Rudy::Command::Disks
-command_alias :'disk-metadata', :disk_md
+command :disk => Rudy::Command::Disks
+command_alias :disk, :di
 
 
 usage "rudy [global options] backups [-C] [disk name]"
 desc "Manage Backups"
 option :s, :snapshot, String, "Create a backup entry from an existing snapshot"
-action :Z, :synchronize, "Check for and delete backup metadata with no snapshot. DOES NOT delete snapshots."
+action :Z, :sync, "Check for and delete backup metadata with no snapshot. DOES NOT delete snapshots."
 #action :T, :tidy, "Tidy existing backups"
 action :D, :destroy, "Destroy a backup and DELETE its snapshots."
 action :C, :create, "Create a backup"
 argv :disk
-command :'backup-metadata' => Rudy::Command::Backups
-command_alias :'backup-metadata', :backup_md
+command :'backup' => Rudy::Command::Backups
+command_alias :backup, :bu
 
 
 #usage "rudy [global options] metadata instance-ID"

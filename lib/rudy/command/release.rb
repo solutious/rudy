@@ -42,7 +42,8 @@ module Rudy
 
         exit unless are_you_sure?
 
-        tag = @scm.create_release(@global.local_user, @option.msg)        
+        #tag = @scm.create_release(@global.local_user, @option.msg)        
+        tag = "http://rilli.unfuddle.com/svn/rilli_rilli/tags/rel-2009-03-07-delano-03"
         puts "Done! (#{tag})"
         
         if @option.switch
@@ -127,7 +128,7 @@ module Rudy
         env, rol, att = @global.environment, @global.role
         
         # Look for the source control engine, checking all known scm values.
-        # The available one will look like [environment][role][svn]
+        # The available one will look like [environment][role][release][svn]
         params = nil
         scm = nil
         SUPPORTED_SCM_NAMES.each do |v|
@@ -140,7 +141,9 @@ module Rudy
           scm = klass.new(:base => params[:base])
         end
         
+        
         [scm, params]
+        
       end
       private :find_scm
       

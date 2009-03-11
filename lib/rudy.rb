@@ -187,6 +187,13 @@ def scp_command(host, keypair, user, paths, to_path, to_local=false, verbose=fal
 end
 
 
+# Returns +str+ with the average leading indentation removed. 
+# Useful for keeping inline codeblocks spaced with code. 
+def without_indent(str)
+  lines = str.split($/)
+  lspaces = (lines.inject(0) {|total,line| total += (line.scan(/^\s+/).first || '').size } / lines.size) + 1
+  lines.collect { |line| line.gsub(/^\s{#{lspaces}}/, '') }.join($/)
+end
 
 
 

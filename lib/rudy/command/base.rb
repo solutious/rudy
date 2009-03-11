@@ -25,11 +25,16 @@ module Rudy
         
         @global.config ||= RUDY_CONFIG_FILE
         
+        unless File.exists?(@global.config)
+          init_config_dir
+        end
+        
         @config = Rudy::Config.new(@global.config, {:verbose => (@global.verbose > 0)} )
         @config.look_and_load
         
         raise "There is no machine group configured" if @config.machines.nil?
         raise "There is no AWS info configured" if @config.awsinfo.nil?
+        
         
         @global.accesskey ||= @config.awsinfo.accesskey || ENV['AWS_ACCESS_KEY']
         @global.secretkey ||= @config.awsinfo.secretkey || ENV['AWS_SECRET_KEY'] || ENV['AWS_SECRET_ACCESS_KEY']
@@ -51,7 +56,7 @@ module Rudy
         @global.local_user = ENV['USER'] || :user
         @global.local_hostname = Socket.gethostname || :host
 
-        
+        check_keys
         
         if @global.verbose > 1
           puts "GLOBALS:"
@@ -102,8 +107,8 @@ module Rudy
       # Raises exceptions if the requested user does 
       # not have a valid keypair configured. (See: EC2_KEYPAIR_*)
       def check_keys
-        raise "No SSH key provided for #{keypairname}!" unless has_keypair?
-        raise "SSH key provided but cannot be found! (#{keypairname}: #{keypairpath})" unless File.exists?(keypairpath)
+        raise "No SSH key provided for #{@global.user}! (check #{RUDY_CONFIG_FILE})" unless has_keypair?
+        raise "SSH key provided but cannot be found! (check #{RUDY_CONFIG_FILE})" unless File.exists?(keypairpath)
       end  
       
       def has_pem_keys?
@@ -112,11 +117,12 @@ module Rudy
       end
        
       def has_keys?
-        (@global.accesskey && @global.secretkey)
+        (@global.accesskey && !@global.accesskey.empty? && @global.secretkey && !@global.secretkey.empty?)
       end
       
       def keypairpath(name=nil)
         name ||= @global.user
+        raise "No default user configured" unless name
         kp = @config.machines.find_deferred(@global.environment, @global.role, :users, name, :keypair)
         kp &&= File.expand_path(kp)
         kp
@@ -571,34 +577,52 @@ module Rudy
           end
         end
         
-      
+        def init_config_dir
+          unless File.exists?(RUDY_CONFIG_DIR)
+            puts "Creating #{RUDY_CONFIG_DIR}"
+            Dir.mkdir(RUDY_CONFIG_DIR, 0700)
+          end
+
+          unless File.exists?(RUDY_CONFIG_FILE)
+            puts "Creating #{RUDY_CONFIG_FILE}"
+            rudy_config = without_indent %Q{
+              # Amazon Web Services 
+              # Account access indentifiers.
+              awsinfo do
+                account ""
+                accesskey ""
+                secretkey ""
+                privatekey "~/path/2/pk-xxxx.pem"
+                cert "~/path/2/cert-xxxx.pem"
+              end
+
+              # Global Defaults 
+              # Define the values to use unless otherwise specified on the command-line. 
+              defaults do
+                region "us-east-1" 
+                zone "us-east-1b"
+                environment "stage"
+                role "app"
+                position "01"
+                user ENV['USER']
+              end
+
+              # Routine Configuration
+              # Define stuff here that you don't want to be stored in version control. 
+              routines do
+                config do 
+                  # ...
+                end
+              end
+            }
+            write_to_file(RUDY_CONFIG_FILE, rudy_config, 'w')
+          end
+
+          #puts "Creating SimpleDB domain called #{RUDY_DOMAIN}"
+          #@sdb.domains.create(RUDY_DOMAIN)
+        end
     end
   end
 end
 
 
-__END__
-
-@keypairs = {}
-ENV.keys.select { |key| key.match /EC2_KEYPAIR/i }.each do |key|
-  ec2, keypair, env, role, user = key.split '_' # EC2_KEYPAIR_STAGE_APP_RUDY
-  raise "#{key} is malformed." unless env && role && user
-  new_key = "#{env}-#{role}-#{user}".downcase
-  @keypairs[new_key] = ENV[key]
-end
-
-@rscripts = {}
-ENV.keys.select { |key| key.match /RUDY_RSCRIPT/i }.each do |key|
-  rudy, rscript, env, role, user = key.split '_' # RUDY_RSCRIPT_STAGE_APP_ROOT
-  raise "#{key} is malformed." unless env && role && user
-  new_key = "#{env}-#{role}-#{user}".downcase
-  @rscripts[new_key] = ENV[key]
-end
-
-@machine_images = {}
-ENV.keys.select { |key| key.match /EC2_AMI_/i }.each do |key|
-  ec2, ami, env, role = key.split '_' # RUDY_RSCRIPT_STAGE_APP_ROOT
-  raise "#{key} is malformed." unless env && role
-  new_key = "#{env}-#{role}".downcase
-  @machine_images[new_key] = ENV[key]
-end

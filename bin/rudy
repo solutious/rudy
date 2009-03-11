@@ -46,8 +46,8 @@ global :V, :version, "Display version number" do
   exit 0
 end
 
-desc "Run this the first time you use Rudy (it's immutable so running it again does no harm)."
-command :setup => Rudy::Command::Metadata
+#desc "Run this the first time you use Rudy (it's immutable so running it again does no harm)."
+#command :setup => Rudy::Command::Metadata
 
 
 # ------------------------------------  RUDY INFO COMMANDS  --------

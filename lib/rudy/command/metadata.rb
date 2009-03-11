@@ -21,18 +21,7 @@ module Rudy
         @sdb.domains.destroy(RUDY_DOMAIN)
       end
       
-      def setup
-        unless File.exists?(RUDY_CONFIG_DIR)
-          puts "Creating #{RUDY_CONFIG_DIR}"
-          Dir.mkdir(RUDY_CONFIG_DIR, 0700)
-        end
-        
-        
-        check_environment
-        
-        puts "Creating SimpleDB domain called #{RUDY_DOMAIN}"
-        #@sdb.domains.create(RUDY_DOMAIN)
-      end
+      
       
       def info
         domains = @sdb.domains.list[:domains]
@@ -42,10 +31,10 @@ module Rudy
     private
       def check_environment
         raise "No Amazon keys provided!" unless has_keys?
-        raise "No SSH keypairs provided!" unless has_keypairs?
+        raise "No SSH keypairs provided!" unless has_keypair?
         true
       end
-        
+      
     end
   end
 end

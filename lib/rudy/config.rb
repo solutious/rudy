@@ -74,13 +74,13 @@ module Rudy
       # TODO: give caesar attributes setter methods
       self.awsinfo.cert &&= File.expand_path(self.awsinfo.cert)
       self.awsinfo.privatekey &&= File.expand_path(self.awsinfo.privatekey)
+      
     end
     
     def look_and_load
       cwd = Dir.pwd
       files = Dir.glob(File.join(cwd, 'config', 'rudy', '*.rb')) || []
       @paths += files unless files.empty?
-      @verbose = true
       refresh
     end
     

@@ -9,8 +9,8 @@ NOTE: This is a significant re-write from 0.3
 * CHANGE: upgrade to Drydock 0.5
 * CHANGE: Moved generic EC2 commands to bin/rudy-ec2
 * CHANGE: Removed ambiguity of pluralized command names.
-OLD: backups, disks, configs
-NEW: backup, disk, config
+  * OLD: backups, disks, configs
+  * NEW: backup, disk, config
 * NEW: ssh and scp commands for connecting to and copying files to/from machines
 * NEW: New dependencies (trying out net-ssh)
 * NEW: Domain specific language for configuration
@@ -21,7 +21,7 @@ a single command release process.
 * NEW: "rudy start|destroy|restart|update|status". Routines allow us to have generic commands 
 that can be used for any machine group. These commands relate to starting new instances.
 * NEW: Extra caution when running destructive commands
-
+* NEW: Default ~/.rudy/config created if it doesn't exist. 
 
 #### 0.3 (2009-02-26) ###############################
 

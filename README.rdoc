@@ -1,4 +1,4 @@
-= Rudy - v0.3 BETA!
+= Rudy - v0.4 BETA!
 
 Rudy is a handy staging and deployment tool for EC2.
 
@@ -24,7 +24,7 @@ NOTE: Rudy will be ready for general consumption in Q2 2009.
 
 == Thanks
 
-* The Rilli[http://rilli.com/] team, for the initial use case, ongoing support and good times!
+* The Rilli.com team -- Adam Bognar, Andrew Simpson, Caleb Buxton, Colin Brumelle -- for the initial use case, the ongoing feedback and support, and the good times!
 
 
 == License

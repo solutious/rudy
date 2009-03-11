@@ -164,8 +164,8 @@ module Rudy
       #
       def scp(host=nil, &b)
         host ||= machine_hostname
-        raise "No host provided for SCP" unless host
-        raise "No block provided for SCP" unless b
+        raise "No host provided for scp" unless host
+        raise "No block provided for scp" unless b
         
         Net::SCP.start(host, @global.user, :keys => [keypairpath]) do |scp|
           b.call(scp)

@@ -42,8 +42,8 @@ module Rudy #:nodoc:
   
   module VERSION #:nodoc:
     MAJOR = 0.freeze unless defined? MAJOR
-    MINOR = 3.freeze unless defined? MINOR
-    TINY  = 5.freeze unless defined? TINY
+    MINOR = 4.freeze unless defined? MINOR
+    TINY  = 0.freeze unless defined? TINY
     def self.to_s
       [MAJOR, MINOR, TINY].join('.')
     end

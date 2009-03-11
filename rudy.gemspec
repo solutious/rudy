@@ -1,7 +1,7 @@
 @spec = Gem::Specification.new do |s|
 	s.name = "rudy"
-	s.version = "0.3.5"
-	s.summary = "Rudy is your friend in staging and deploying with EC2."
+	s.version = "0.4.0"
+	s.summary = "Your friend in staging and deploying with EC2."
 	s.description = s.summary
 	s.author = "Delano Mandelbaum"
 	s.email = "delano@solutious.com"
@@ -20,7 +20,6 @@
   lib/aws_sdb/error.rb
   lib/aws_sdb/service.rb
   lib/console.rb
-  lib/drydock.rb
   lib/rudy.rb
   lib/rudy/aws.rb
   lib/rudy/aws/ec2.rb
@@ -43,9 +42,7 @@
   lib/rudy/config.rb
   lib/rudy/metadata.rb
   lib/rudy/metadata/backup.rb
-  lib/rudy/metadata/config.rb
   lib/rudy/metadata/disk.rb
-  lib/rudy/metadata/environment.rb
   lib/rudy/scm/svn.rb
   lib/rudy/utils.rb
   lib/storable.rb
@@ -53,17 +50,13 @@
   rudy.gemspec
   support/mailtest
   support/rudy-ec2-startup
-  tryouts/config_tryout.rb
   tryouts/console_tryout.rb
-  tryouts/rudyrc_tryout.rb
-  tryouts/rudyrc_tryout.yml
-
   )
   s.executables = %w[rudy]
   
   s.extra_rdoc_files = %w[README.rdoc LICENSE.txt]
   s.has_rdoc = true
-  s.rdoc_options = ["--line-numbers", "--inline-source", "--title", "Rudy: Your friend in staging and deploying with EC2", "--main", "README.rdoc"]
+  s.rdoc_options = ["--line-numbers", "--inline-source", "--title", "Rudy: #{s.summary}", "--main", "README.rdoc"]
   s.require_paths = %w[lib]
   s.rubygems_version = '1.1.1'
 

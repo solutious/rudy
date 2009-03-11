@@ -103,12 +103,19 @@ class Caesars
     return @caesars_properties[name] if @caesars_properties.has_key?(name)
     return @caesars_properties[name.to_sym] if @caesars_properties.has_key?(name.to_sym)
   end
-
+  
+  # Act a bit like a hash for the case:
+  # @subclass[:property] = value
+  def []=(name, value)
+    @caesars_properties[name] = value
+  end
+  
   # This method handles all of the attributes that do not contain blocks. 
   # It's used in the DSL for handling attributes dyanamically (that weren't defined
   # previously) and also in subclasses of Caesar for returning the appropriate
   # attribute values. 
   def method_missing(meth, *args, &b)
+    #return @caesars_properties[meth] = args.first if @caesars_properties.has_key?(meth) && meth.to_s =~ /\*/
     return @caesars_properties[meth] if @caesars_properties.has_key?(meth) && args.empty? && b.nil?
     return nil if args.empty? && b.nil?
     
@@ -153,50 +160,6 @@ class Caesars
     nil
   end
   
-# ---
-# Handle the case:
-#     disks do
-#       create "/some/path" do
-#         size 100
-#       end
-#     end
-# where disks[:create]["/some/path"] == {:size => 100}
-#
-#  def self.tabasco(caesars_meth)
-#    module_eval %Q{
-#      def #{caesars_meth}(*caesars_names,&b)
-#        # caesars.toplevel.unnamed_chilled_attribute
-#        return @caesars_properties[:'#{caesars_meth}'] if @caesars_properties.has_key?(caesars_meth) && caesars_names.empty? && b.nil?
-#        return nil if caesars_names.empty? && b.nil?
-#        
-#        caesars_name = :'#{caesars_meth}'
-#        
-#        if b
-#          prev = caesars_pointer
-#          
-#           # (@caesars_pointer[caesars_name] ||= []) << Caesars::Hash.new
-#           # @caesars_pointer = @caesars_pointer[caesars_name].last
-#          
-#           # @caesars_pointer[caesars_names.first] = 100
-#           # @caesars_pointer = @caesars_pointer[caesars_names.first] 
-#          
-#           # @caesars_pointer[:val] = caesars_name
-#           # b.call if b
-#         
-#           @caesars_pointer = prev
-#          # NOTE: Not tested (copied from method_missing)
-#          # elsif @caesars_pointer.kind_of?(Hash) && @caesars_pointer[caesars_name]
-#          # 
-#          #   @caesars_pointer[caesars_name] = [@caesars_pointer[caesars_name]] unless @caesars_pointer[caesars_name].is_a?(Array)
-#          #   @caesars_pointer[caesars_name] += args
-#          # elsif !caesars_names.empty?
-#          #   @caesars_pointer[caesars_name] = caesars_names.size == 1 ? caesars_names.first : caesars_names
-#         end
-#      end
-#    }
-#  end
-# +++
- 
   
   # Executes automatically when Caesars is subclassed. This creates the
   # YourClass::DSL module which contains a single method named after YourClass 
@@ -217,16 +180,16 @@ class Caesars
           name = !args.empty? ? args.first.to_s : nil
           varname = "@#{meth.to_s}"
           varname << "_\#{name}" if name
+          inst = instance_variable_get(varname)
           
           # When the top level DSL method is called without a block
           # it will return the appropriate instance variable name
-          if b.nil?
-            i = instance_variable_get(varname)
-          else
-            i = instance_variable_set(varname, #{modname.to_s}.new(name))
-            i.instance_eval(&b)
-          end
-          i
+          return inst if b.nil?
+          
+          # Add to existing instance, if it exists. Otherwise create one anew.
+          inst = instance_variable_set(varname, inst || #{modname.to_s}.new(name))
+          inst.instance_eval(&b)
+          inst
         end
         
         def self.methname
@@ -252,18 +215,80 @@ end
 #      p @config.staff    # => <Staff:0x7ea450 ... >
 #
 class Caesars::Config
-  attr_accessor :path 
+  attr_accessor :paths
+  attr_accessor :options
   attr_accessor :verbose
   
   @@glasses = []
   
-  def initialize(args={:path=>'', :verbose=>false})
-    args.each_pair do |n,v|
-      self.send("#{n}=", v)
-    end
+  # +args+ is a last of config file paths to load into this instance.
+  # If the last argument is a hash, it's assumed to be a list of 
+  # options. The available options are:
+  #
+  # <li>:verbose => true or false</li>
+  #
+  def initialize(*args)
+    # We store the options hash b/c we reapply them when we refresh.
+    @options = args.last.is_a?(Hash) ? args.pop : {}
+    @paths = args.empty? ? [] : args
     
     refresh
   end
+  
+  def init
+    # Remove instance variables used to populate DSL data
+    instance_variables.each do |varname|
+      next if varname == '@options' || varname == '@paths'
+      instance_variable_set(varname, nil)
+    end
+    
+    # Re-apply options
+    @options.each_pair do |n,v|
+      self.send("#{n}=", v) if respond_to?("#{n}=")
+    end
+    
+    check_paths     # make sure files exist
+  end
+  
+  # This method is a stub. It gets called by refresh after the 
+  # config file has be loaded. You can use it to do some post 
+  # processing on the configuration before it's used elsewhere. 
+  def postprocess
+  end
+  
+  def refresh
+    init 
+    
+    @paths.each do |path|
+      puts "Loading config from #{path}" if @verbose 
+      
+      begin
+        @@glasses.each { |glass| extend glass }
+        dsl = File.read path
+        
+        # We're using eval so the DSL code can be executed in this
+        # namespace.
+        eval %Q{
+          #{dsl}
+        }, binding, __FILE__, __LINE__
+        
+        postprocess
+        
+      rescue SyntaxError => ex
+        puts "Syntax error in #{path}."
+        puts ex.message
+        exit 1
+      end
+    end
+  end
+  
+  def check_paths
+    @paths.each do |path|
+      raise "You provided a nil value" unless path
+      raise "Config file #{path} does not exist!" unless File.exists?(path)
+    end
+  end
+  
   
   def empty?
     keys.each do |obj|
@@ -284,39 +309,6 @@ class Caesars::Config
     @@glasses.collect { |glass| glass.methname }
   end
   
-  # This method is a stub. It gets called by refresh after the 
-  # config file has be loaded. You can use it to do some post 
-  # processing on the configuration before it's used elsewhere. 
-  def postprocess
-  end
-  
-  def refresh
-    
-    if exists?
-      puts "Loading config from #{@path}" if @verbose 
-      
-      begin
-        @@glasses.each { |glass| extend glass }
-        dsl = File.read @path
-        
-        # We're using eval so the DSL code can be executed in this
-        # namespace.
-        eval %Q{
-          #{dsl}
-        }, binding, __FILE__, __LINE__
-        
-        postprocess
-        
-      rescue SyntaxError => ex
-        puts "Syntax error in #{@path}."
-        exit 1
-      end
-    end
-  end
-  
-  def exists?
-    File.exists?(@path)
-  end
 end
 
 

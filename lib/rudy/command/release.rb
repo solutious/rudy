@@ -9,7 +9,7 @@ module Rudy
       
       def release_valid?
         
-        relroutine = @config.machinegroup.find_deferred(@global.environment, @global.role, :release)
+        relroutine = @config.machines.find_deferred(@global.environment, @global.role, :release)
         raise "No release routines defined for #{machine_group}" if relroutine.nil?
         
         raise "No EC2 .pem keys provided" unless has_pem_keys?
@@ -81,7 +81,7 @@ module Rudy
         
         
         
-        config = @config.machinegroup.find_deferred(@global.environment, @global.role, :config) || {}
+        config = @config.machines.find_deferred(@global.environment, @global.role, :config) || {}
         
         config[:global] = @global.marshal_dump
         config[:global].reject! { |n,v| n == :cert || n == :privatekey }
@@ -92,7 +92,7 @@ module Rudy
         
         machine = @list.values.first # NOTE: we're assuming there's only one machine
         
-        rscripts = @config.machinegroup.find_deferred(@global.environment, @global.role, :release, :after) || []
+        rscripts = @config.machines.find_deferred(@global.environment, @global.role, :release, :after) || []
         rscripts = [rscripts] unless rscripts.is_a?(Array)
         rscripts.each do |rscript|
           user, script = rscript.shift
@@ -133,7 +133,7 @@ module Rudy
         scm = nil
         SUPPORTED_SCM_NAMES.each do |v|
           scm = v
-          params = @config.machinegroup.find_deferred(env, rol, :release, scm)
+          params = @config.machines.find_deferred(env, rol, :release, scm)
           break if params
         end
         if params

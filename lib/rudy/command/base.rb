@@ -23,9 +23,12 @@ module Rudy
         
         raise "PRODUCTION ACCESS IS DISABLED IN DEBUG MODE" if @global.environment == "prod" && Drydock.debug?
         
-        @config = Rudy::Config.new(:path => @global.config || RUDY_CONFIG_FILE, :verbose => (@global.verbose > 0) )
+        @global.config ||= RUDY_CONFIG_FILE
         
-        raise "There is no machine group configured" if @config.machinegroup.nil?
+        @config = Rudy::Config.new(@global.config, {:verbose => (@global.verbose > 0)} )
+        @config.look_and_load
+        
+        raise "There is no machine group configured" if @config.machines.nil?
         raise "There is no AWS info configured" if @config.awsinfo.nil?
         
         @global.accesskey ||= @config.awsinfo.accesskey || ENV['AWS_ACCESS_KEY']
@@ -55,9 +58,11 @@ module Rudy
           @global.marshal_dump.each_pair do |n,v|
             puts "#{n}: #{v}"
           end
-          puts "#{$/}CONFIG ([#{@global.environment}][#{@global.role}]):"
-          val = @config.machinegroup.find_deferred(@global.environment, @global.role)
-          y val.to_hash
+          ["machines", "routines"].each do |type|
+            puts "#{$/*2}#{type.upcase}:"
+            val = @config.send(type).find_deferred(@global.environment, @global.role)
+            puts val.to_hash.to_yaml
+          end
           puts
         end
         
@@ -112,7 +117,7 @@ module Rudy
       
       def keypairpath(name=nil)
         name ||= @global.user
-        kp = @config.machinegroup.find_deferred(@global.environment, @global.role, :users, name, :keypair)
+        kp = @config.machines.find_deferred(@global.environment, @global.role, :users, name, :keypair)
         kp &&= File.expand_path(kp)
         kp
       end
@@ -204,13 +209,13 @@ module Rudy
       end
       
       def machine_image
-        ami = @config.machinegroup.find_deferred(@global.environment, @global.role, :ami)
+        ami = @config.machines.find_deferred(@global.environment, @global.role, :ami)
         raise "There is no AMI configured for #{machine_group}" unless ami
         ami
       end
       
       def machine_address
-        @config.machinegroup.find_deferred(@global.environment, @global.role, :address)
+        @config.machines.find_deferred(@global.environment, @global.role, :address)
       end
       
       # TODO: fix machine_group to include zone
@@ -264,10 +269,10 @@ module Rudy
     
       def execute_shutdown_routines(machines)
         machines = [machines] unless machines.is_a?( Array)
-        before = @config.machinegroup.find_deferred(@global.environment, @global.role, :shutdown, :before) || []
+        before = @config.machines.find_deferred(@global.environment, @global.role, :shutdown, :before) || []
         before = [before] unless before.is_a?(Array)
         machines.each do |machine|
-          puts "Shutdown routine for #{machine[:dns_name]}"
+          puts "Shutdown routine for #{machine_group}"
           
           execute_disk_routines(:shutdown, machine)
           
@@ -297,14 +302,14 @@ module Rudy
       
       # +action+ is one of: :shutdown, :startup, :deploy
       def execute_disk_routines(action, machine)
-        disks = @config.machinegroup.find_deferred(@global.environment, @global.role, action, :disks) || {}
+        disks = @config.machines.find_deferred(@global.environment, @global.role, action, :disks)
         #disks.each_pair do |action,disk|
         #  todo = disk.is_a?(Array) ? disk : [disk]
         #  p disk
         #end
         
-        if disks.destroy
-          disk_paths = disks.destroy.collect { |d| d[:path] }
+        if disks && disks.destroy
+          disk_paths = disks.destroy.keys.collect { |d| d[:path] }
           vols = @ec2.instances.volumes(machine[:aws_instance_id])
           vols.each do |vol|
             disk = Rudy::MetaData::Disk.find_from_volume(@sdb, vol[:aws_id])
@@ -333,19 +338,21 @@ module Rudy
           
         end
         
-        if disks.create
-          disks.create.each do |dconf|
+        if disks && disks.create
+          disks.create.each_pair do |path,dconf|
             
             disk = Rudy::MetaData::Disk.new
             [:region, :zone, :environment, :role, :position].each do |n|
               disk.send("#{n}=", @global.send(n)) if @global.send(n)
             end
             [:path, :device, :size].each do |n|
-              disk.send("#{n}=", dconf[n]) if dconf[n]
+              disk.send("#{n}=", dconf[n]) if dconf.has_key?(n)
             end
             
             if Rudy::MetaData::Disk.is_defined?(@sdb, disk)
-              puts "The disk #{disk.name} already exists. Run: rudy disks --sync"
+              puts "The disk #{disk.name} already exists."
+              puts "You probably need to define when to destroy the disk."
+              puts "Skipping..."
               next
             end
             
@@ -403,7 +410,7 @@ module Rudy
       
       def execute_startup_routines(machines)
         machines = [machines] unless machines.is_a?( Array)
-        config = @config.machinegroup.find_deferred(@global.environment, @global.role, :config) || {}
+        config = @config.machines.find_deferred(@global.environment, @global.role, :config) || {}
         config[:global] = @global.marshal_dump
         config[:global].reject! { |n,v| n == :cert || n == :privatekey }
 
@@ -412,14 +419,14 @@ module Rudy
         write_to_file(tf.path, config.to_hash.to_yaml, 'w')
 
         machines.each do |machine|
-          puts "Startup routine for #{machine[:dns_name]}"
+          puts "Startup routine for #{machine_group}"
           
           execute_disk_routines(:startup, machine)
           
           puts "SKIPPING"
           next 
           
-          rscripts = @config.machinegroup.find_deferred(@global.environment, @global.role, :startup, :after) || []
+          rscripts = @config.machines.find_deferred(@global.environment, @global.role, :startup, :after) || []
           rscripts = [rscripts] unless rscripts.is_a?(Array)
           rscripts.each do |rscript|
             user, script = rscript.shift

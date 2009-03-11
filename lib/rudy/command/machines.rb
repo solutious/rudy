@@ -5,7 +5,7 @@ module Rudy
     class Machines < Rudy::Command::Base
       
 
-      def destroy_valid?
+      def shutdown_valid?
         raise "No EC2 .pem keys provided" unless has_pem_keys?
         raise "No SSH key provided for #{@global.user}!" unless has_keypair?
         raise "No SSH key provided for root!" unless has_keypair?(:root)
@@ -19,8 +19,8 @@ module Rudy
       end
       
       
-      def destroy
-        puts "Destroying #{machine_group}: #{@list.keys.join(', ')}"
+      def shutdown
+        puts "Shutting down #{machine_group}: #{@list.keys.join(', ')}"
 
         puts "This command will also destroy the volumes attached to the instances!"
         exit unless are_you_sure?(5)

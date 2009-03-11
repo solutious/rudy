@@ -117,21 +117,6 @@ command :metadata => Rudy::Command::Metadata
 command_alias :metadata, :md
 
 
-# ----------------------------------  RUDY ACTION COMMANDS  --------
-# ------------------------------------------------------------------
-
-desc "Machine Group Status"
-command :status => Rudy::Command::Machines
-
-desc "Destroy a Machine Group"
-command :destroy => Rudy::Command::Machines
-
-desc "Start a Machine Group"
-command :start => Rudy::Command::Machines
-
-desc "Restart a Machine Group"
-command :restart => Rudy::Command::Machines
-
 #desc "Update a Machine Group with the current version of Rudy"
 #command :update => Rudy::Command::Machines
 
@@ -152,9 +137,20 @@ command_alias :copy, :scp
 command_alias :copy, :upload
 command_alias :copy, :download
 
+desc "Machine Group Status"
+command :status => Rudy::Command::Machines
 
-# --------------------------------  RUDY WORKFLOW COMMANDS  --------
+# --------------------------------  RUDY ROUTINES COMMANDS  --------
 # ------------------------------------------------------------------
+
+desc "Shutdown a Machine Group"
+command :shutdown => Rudy::Command::Machines
+
+desc "Start a Machine Group"
+command :start => Rudy::Command::Machines
+
+desc "Restart a Machine Group"
+command :restart => Rudy::Command::Machines
 
 desc "Release to a machine group"
 option :s, :switch, "Switch to the release branch/tag"
@@ -166,6 +162,8 @@ command :release => Rudy::Command::Release
 
 #desc "Deploy disk snapshots from one machine to another"
 #command :deploy => Rudy::Command::Deploy
+
+
 
 
 

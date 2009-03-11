@@ -106,6 +106,16 @@ module Rudy
       end
       
       
+      def Disk.find_from_path(sdb, path)
+        query = "['path' = '#{path}']"
+        res = sdb.query_with_attributes(RUDY_DOMAIN, query)
+        if res.empty?
+          nil
+        else
+          disk = Rudy::MetaData::Disk.from_hash(res.values.first)
+        end
+      end
+      
       def Disk.list(sdb, zon, env=nil, rol=nil, pos=nil)
         query = ''
         query << "['rtype' = '#{@@rtype}']" if zon

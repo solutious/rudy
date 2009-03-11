@@ -235,7 +235,7 @@ module Rudy
       end
       
       
-      def wait_to_attach_disks(id)
+      def wait_for_machine(id)
         
         print "Waiting for #{id} to become available"
         STDOUT.flush
@@ -248,105 +248,202 @@ module Rudy
         
         machine = @ec2.instances.get(id)
         
-        puts " It's up!\a\a\a" # with bells
+        puts " It's up!\a\a" # with bells
         print "Waiting for SSH daemon at #{machine[:dns_name]}"
+        STDOUT.flush
+        
         while !Rudy::Utils.service_available?(machine[:dns_name], 22)
           print '.'
           STDOUT.flush
         end
-        puts " It's up!"
-        
-        print "Looking for disk metadata for #{machine[:aws_availability_zone]}... "
-        disks = Rudy::MetaData::Disk.list(@sdb, machine[:aws_availability_zone], @global.environment, @global.role, @global.position)
-        
-        if disks.empty?
-          puts "None"
-        else
-          puts "#{disks.size} disk(s)."
-          disks.each do |disk|
-            
-            do_dirty_disk_volume_deeds(disk, machine)
-          end
-        end
-        
-        puts
-        ssh_command machine[:dns_name], keypairpath, @global.user, "df -h" # Display current mounts
-        puts
+        puts " It's up!\a\a\a"
+
       end
       
       
     
-      def execute_shutdown_routines
+      def execute_shutdown_routines(machines)
+        machines = [machines] unless machines.is_a?( Array)
         before = @config.machinegroup.find_deferred(@global.environment, @global.role, :shutdown, :before) || []
         before = [before] unless before.is_a?(Array)
-        before.each do |rscript|
-          user, script = rscript.shift
-          switch_user(user) # scp and ssh will run as this user
+        machines.each do |machine|
+          puts "Shutdown routine for #{machine[:dns_name]}"
           
-          # TODO: Send configs! See startup_routines
+          execute_disk_routines(:shutdown, machine)
           
-          ssh do |session|
-            puts "Running #{script}..."
-            session.exec!("chmod 700 #{script}")
-            puts session.exec!("#{script}")
-            
-            puts "Cleaning up..."
+          before.each do |rscript|
+            user, script = rscript.shift
+            switch_user(user) # scp and ssh will run as this user
+          
+            # TODO: Send configs! See startup_routines
+          
+            ssh machine[:dns_name] do |session|
+              puts "Running #{script}..."
+              session.exec!("chmod 700 #{script}")
+              puts session.exec!("#{script}")
+              
+            end
           end
         end
         switch_user # return to the requested user
       end
       
+      def device_to_path(machine, device)
+        # /dev/sdr            10321208    154232   9642688   2% /rilli/app
+        dfoutput = ssh_command(machine[:dns_name], keypairpath, @global.user, "df #{device} | tail -1").chomp
+        dfvals = dfoutput.scan(/(#{device}).+\s(.+?)$/).flatten  # ["/dev/sdr", "/rilli/app"]
+        dfvals.last
+      end
+      
       # +action+ is one of: :shutdown, :startup, :deploy
-      def execute_disk_routines(action)
+      def execute_disk_routines(action, machine)
         disks = @config.machinegroup.find_deferred(@global.environment, @global.role, action, :disks) || {}
         #disks.each_pair do |action,disk|
         #  todo = disk.is_a?(Array) ? disk : [disk]
         #  p disk
         #end
+        
+        if disks.destroy
+          disk_paths = disks.destroy.collect { |d| d[:path] }
+          vols = @ec2.instances.volumes(machine[:aws_instance_id])
+          vols.each do |vol|
+            disk = Rudy::MetaData::Disk.find_from_volume(@sdb, vol[:aws_id])
+            if disk
+              this_path = disk.path
+            else
+              puts "No disk metadata for volume #{vol[:aws_id]}. Going old school..."
+              this_path = device_to_path(machine, vol[:aws_device])
+            end
+            puts "PATH: #{this_path}"
+            if disk_paths.member?(this_path) 
+              
+              puts "Unmounting #{this_path}..."
+              ssh_command machine[:dns_name], keypairpath, @global.user, "umount #{this_path}"
+              sleep 1
+              
+              puts "Detaching #{vol[:aws_id]}"
+              @ec2.volumes.detach(vol[:aws_id])
+              
+              puts "Destroying #{this_path} (#{vol[:aws_id]})"
+              @ec2.volumes.destroy(vol[:aws_id])
+              Rudy::MetaData::Disk.destroy(@sdb, disk) if disk
+            end
+            
+          end
+          
+        end
+        
         if disks.create
-          p disks.create
+          disks.create.each do |dconf|
+            
+            disk = Rudy::MetaData::Disk.new
+            [:region, :zone, :environment, :role, :position].each do |n|
+              disk.send("#{n}=", @global.send(n)) if @global.send(n)
+            end
+            [:path, :device, :size].each do |n|
+              disk.send("#{n}=", dconf[n]) if dconf[n]
+            end
+            
+            if Rudy::MetaData::Disk.is_defined?(@sdb, disk)
+              puts "The disk #{disk.name} already exists. Run: rudy disks --sync"
+              next
+            end
+            
+            if @ec2.instances.attached_volume?(machine[:aws_instance_id], disk.device)
+              puts "Skipping disk for #{disk.path} (device #{disk.device} is in use)"
+              next
+            end
+            
+            # NOTE: It's important to use Caesars' hash syntax b/c the disk property
+            # "size" conflicts with Hash#size which is what we'll get if there's no 
+            # size defined. 
+            unless disk.size.kind_of?(Integer)
+              puts "Skipping disk for #{disk.path} (size not defined)"
+              next
+            end
+            
+            if disk.path.nil?
+              puts "Skipping disk for #{disk.path} (no path defined)"
+              next
+            end
+            
+            unless disk.valid?
+              puts "Skipping #{disk.name} (not enough info)"
+              next
+            end
+                        
+            puts "Creating volume... (#{disk.size}GB in #{@global.zone})"
+            # NOTE: It's important to use Caesars' hash syntax b/c the disk property
+            # "size" conflicts with Hash#size which is what we'll get if there's no 
+            # size defined.
+            volume = @ec2.volumes.create(@global.zone, disk.size)
+            
+            puts "Attaching #{volume[:aws_id]} to #{machine[:aws_instance_id]}"
+            @ec2.volumes.attach(machine[:aws_instance_id], volume[:aws_id], disk.device)
+            
+            puts "Creating disk metadata for #{disk.name}"
+            disk.awsid = volume[:aws_id]
+            Rudy::MetaData::Disk.save(@sdb, disk)
+            
+            puts "Creating the filesystem (mkfs.ext3 -F #{disk.device})"
+            capture(:stdout) do
+              ssh_command machine[:dns_name], keypairpath, @global.user, "mkfs.ext3 -F #{disk.device}"
+            end
+            
+            puts "Mounting #{disk.device} to #{disk.path}"
+            capture(:stdout) do
+              ssh_command machine[:dns_name], keypairpath, @global.user, "mkdir -p #{disk.path} && mount -t ext3 #{disk.device} #{disk.path}"
+            end
+            sleep 1
+            
+          end
         end
       end
       
       
-      def execute_startup_routines
+      def execute_startup_routines(machines)
+        machines = [machines] unless machines.is_a?( Array)
         config = @config.machinegroup.find_deferred(@global.environment, @global.role, :config) || {}
         config[:global] = @global.marshal_dump
         config[:global].reject! { |n,v| n == :cert || n == :privatekey }
 
-        execute_disk_routines(:startup)
         
         tf = Tempfile.new('startup-config')
         write_to_file(tf.path, config.to_hash.to_yaml, 'w')
 
-        
-        machine = @list.values.first # NOTE: we're assuming there's only one machine
-        
-        rscripts = @config.machinegroup.find_deferred(@global.environment, @global.role, :startup, :after) || []
-        rscripts = [rscripts] unless rscripts.is_a?(Array)
-        rscripts.each do |rscript|
-          user, script = rscript.shift
-          script &&= script
+        machines.each do |machine|
+          puts "Startup routine for #{machine[:dns_name]}"
           
-          switch_user(user) # scp and ssh will run as this user
+          execute_disk_routines(:startup, machine)
           
-          puts "Transfering startup-config.yaml..."
-          scp do |scp|
-            # The startup-config.yaml file contains settings from ~/.rudy/config 
-            scp.upload!(tf.path, "~/startup-config.yaml") do |ch, name, sent, total|
-              puts "#{name}: #{sent}/#{total}"
+          puts "SKIPPING"
+          next 
+          
+          rscripts = @config.machinegroup.find_deferred(@global.environment, @global.role, :startup, :after) || []
+          rscripts = [rscripts] unless rscripts.is_a?(Array)
+          rscripts.each do |rscript|
+            user, script = rscript.shift
+            script &&= script
+          
+            switch_user(user) # scp and ssh will run as this user
+          
+            puts "Transfering startup-config.yaml..."
+            scp do |scp|
+              # The startup-config.yaml file contains settings from ~/.rudy/config 
+              scp.upload!(tf.path, "~/startup-config.yaml") do |ch, name, sent, total|
+                puts "#{name}: #{sent}/#{total}"
+              end
+            end
+            ssh do |session|
+              puts "Running #{script}..."
+              session.exec!("chmod 700 #{script}")
+              puts session.exec!("#{script}")
+            
+              session.exec!("rm ~/startup-config.yaml")
             end
           end
-          ssh do |session|
-            puts "Running #{script}..."
-            session.exec!("chmod 700 #{script}")
-            puts session.exec!("#{script}")
-            
-            puts "Cleaning up..."
-            session.exec!("rm ~/startup-config.yaml")
-          end
-        end
         
+        end
         
         tf.delete    # remove release-config.yaml
         
@@ -355,50 +452,6 @@ module Rudy
         
       end
       
-      
-      def do_dirty_disk_volume_deeds(disk, machine)
-        puts "-"*30
-        puts "Disk: #{disk.name} (path: #{disk.path}, device: #{disk.device})"
-        puts 
-
-        
-        if !disk.awsid || (disk.awsid && !@ec2.volumes.exists?(disk.awsid))
-          disk = Rudy::MetaData::Disk.update_volume(@sdb, @ec2, disk, machine)
-        end
-        
-        raise "Unknown error creating volume! #{disk.awsid}" unless disk && disk.awsid
-        
-        
-        if @ec2.instances.attached_volume?(machine[:aws_instance_id], disk.device)
-          puts "#{disk.device} is already attached to #{machine[:aws_instance_id]}! Continuing..."
-        else
-          puts "Attaching #{disk.awsid} to #{machine[:aws_instance_id]}"
-          @ec2.volumes.attach(machine[:aws_instance_id], disk.awsid, disk.device)
-          sleep 2
-        end
-
-        @global.user = "root"
-        
-        if disk.raw_volume
-          puts "Creating the filesystem (mkfs.ext3 -F #{disk.device})"
-          capture(:stdout) do
-            ssh_command machine[:dns_name], keypairpath, @global.user, "mkfs.ext3 -F #{disk.device}"
-          end
-          
-          puts "Saving disk metadata"
-          disk.raw_volume = false
-          Rudy::MetaData::Disk.save(@sdb, disk)
-          
-          sleep 2
-        end
-        
-        puts "Mounting #{disk.device} to #{disk.path}"
-        capture(:stdout) do
-          ssh_command machine[:dns_name], keypairpath, @global.user, "mkdir -p #{disk.path} && mount -t ext3 #{disk.device} #{disk.path}"
-        end
-        sleep 1
-        
-      end
       
       
       
@@ -411,10 +464,11 @@ module Rudy
         [:zone, :environment, :role, :position].each do |n|
           val = @global.send(n)
           next unless val
-          criteria << "#{n.to_s.att :normal}:#{val.att :bright}"
+          criteria << "#{n.to_s.slice(0,1).att :normal}:#{val.att :bright}"
         end
-        puts '%s -- %s' % [title, criteria.join(", ")] unless @global.quiet
-
+        puts '%s -- %s' % [title, now_utc] unless @global.quiet
+        puts '[%s]' % criteria.join("  ") unless @global.quiet
+        
         puts unless @global.quiet
         
         if (@global.environment == "prod") 

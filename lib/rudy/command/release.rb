@@ -66,7 +66,7 @@ module Rudy
           @ec2.addresses.associate(id, @option.address)
         end
         
-        wait_to_attach_disks(id)
+        wait_for_machine(id)
        
         
         if @scm && @scm_params[:command]

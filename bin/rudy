@@ -97,7 +97,6 @@ action :A, :attach, "Attach a disk"
 action :N, :unattach, "Unattach a disk"
 argv :diskname
 command :disk => Rudy::Command::Disks
-command_alias :disk, :di
 
 
 usage "rudy [global options] backups [-C] [disk name]"
@@ -112,10 +111,10 @@ command :'backup' => Rudy::Command::Backups
 command_alias :backup, :bu
 
 
-#usage "rudy [global options] metadata instance-ID"
-#desc "Display Rudy metadata."
-#command :metadata => Rudy::Command::Metadata
-#command_alias :metadata, :md
+usage "rudy [global options] metadata instance-ID"
+desc "Display Rudy metadata."
+command :metadata => Rudy::Command::Metadata
+command_alias :metadata, :md
 
 
 # ----------------------------------  RUDY ACTION COMMANDS  --------

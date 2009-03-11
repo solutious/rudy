@@ -66,27 +66,32 @@ module Rudy
       def restart
         puts "Restarting #{machine_group}: #{@list.keys.join(', ')}"
         
+        switch_user("root")
+        
         exit unless are_you_sure?(5)
         
         puts "Running shutdown routines..."
-        execute_shutdown_routines
+        @list.each do |id, inst|
+          execute_shutdown_routines(inst)
+        end
         
-        @ec2.instances.restart @list.keys
-        sleep 10 # Wait for state to change
+        #@ec2.instances.restart @list.keys
+        #sleep 10 # Wait for state to change
         
         @list.keys.each do |id|
-          wait_to_attach_disks(id)
+          #wait_for_machine(id)
         end
         
         puts "Running Startup routines..."
-        execute_startup_routines
+        @list.each do |id, inst|
+          execute_startup_routines(inst)
+        end
         
         puts "Done!"
       end
       
       
       def start_valid?
-        exit unless are_you_sure?  
         rig = @ec2.instances.list(machine_group)
         #raise "There is already an instance running in #{machine_group}" unless rig.empty?
         raise "No SSH key provided for #{keypairname}!" unless has_keypair?
@@ -98,12 +103,9 @@ module Rudy
         
         @global.user = "root"
         
-        puts "Starting an instance in #{machine_group}"
+        puts "Starting a machine in #{machine_group}"
         
-        
-        puts "Running disk routines..."
-        execute_disk_routines(:startup)
-        return
+        exit unless are_you_sure?
         
         instances = @ec2.instances.create(@option.image, machine_group.to_s, File.basename(keypairpath), machine_data.to_yaml, @global.zone)
         inst = instances.first
@@ -114,11 +116,11 @@ module Rudy
           @ec2.addresses.associate(id, @option.address)
         end
         
-        wait_to_attach_disks(id)
+        wait_for_machine(id)
         
         
         puts "Running Startup routines..."
-        execute_startup_routines
+        execute_startup_routines(inst)
         
         puts "Done!"
       end

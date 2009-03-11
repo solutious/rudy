@@ -14,7 +14,7 @@ module Rudy
         
       def destroy_volumes
         id = @argv.first
-        disk = Rudy::MetaData::Disk.from_volume(@sdb, id)
+        disk = Rudy::MetaData::Disk.find_from_volume(@sdb, id)
         puts "Destroying #{id}!"
         @ec2.volumes.destroy id
         
@@ -41,7 +41,7 @@ module Rudy
           env = (machine[:aws_groups]) ? machine[:aws_groups] : "Not-attached"
           puts "Environment: #{env}"
           hash[:volumes].each do |vol|
-            disk = Rudy::MetaData::Disk.from_volume(@sdb, vol[:aws_id])
+            disk = Rudy::MetaData::Disk.find_from_volume(@sdb, vol[:aws_id])
             print_volume(vol, disk)
           end
         end

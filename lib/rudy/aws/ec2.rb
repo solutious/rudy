@@ -57,7 +57,16 @@ module Rudy::AWS
     class Volumes
       include Rudy::AWS::ObjectBase
       
-      
+      # [{:aws_device=>"/dev/sdr",
+      # :aws_attachment_status=>"attached",
+      # :snapshot_id=>nil,
+      # :aws_id=>"vol-6811f601",
+      # :aws_attached_at=>Wed Mar 11 07:06:44 UTC 2009,
+      # :aws_status=>"in-use",
+      # :aws_instance_id=>"i-0b2ab662",
+      # :aws_created_at=>Tue Mar 10 18:55:18 UTC 2009,
+      # :zone=>"us-east-1b",
+      # :aws_size=>10}]
       def list
         list = @aws.describe_volumes() || []
         list.select { |v| v[:aws_status] != "deleting" }
@@ -136,6 +145,10 @@ module Rudy::AWS
         list.select { |v| v[:aws_status] != "deleting" && v[:aws_instance_id] === id }
       end
       
+      def device_volume(id, device)
+        volumes.select { |v| v[:aws_device] === device }
+      end
+      
       def create(ami, group, keypair_name, user_data, zone)
         @aws.run_instances(ami, 1, 1, [group], keypair_name, user_data, 'public', nil, nil, nil, zone)
       end
@@ -144,6 +157,24 @@ module Rudy::AWS
       # that matches +filter+. 
       # Returns a hash. The keys are instance IDs and the values are a hash
       # of attributes associated to that instance. 
+      # {:aws_state_code=>"16",
+      # :private_dns_name=>"domU-12-31-38-00-51-F1.compute-1.internal",
+      # :aws_instance_type=>"m1.small",
+      # :aws_reason=>"",
+      # :ami_launch_index=>"0",
+      # :aws_owner=>"207436219441",
+      # :aws_launch_time=>"2009-03-11T06:55:00.000Z",
+      # :aws_kernel_id=>"aki-a71cf9ce",
+      # :ssh_key_name=>"rilli-sexytime",
+      # :aws_reservation_id=>"r-66f5710f",
+      # :aws_state=>"running",
+      # :aws_ramdisk_id=>"ari-a51cf9cc",
+      # :aws_instance_id=>"i-0b2ab662",
+      # :aws_groups=>["rudydev-app"],
+      # :aws_availability_zone=>"us-east-1b",
+      # :aws_image_id=>"ami-daca2db3",
+      # :aws_product_codes=>[],
+      # :dns_name=>"ec2-67-202-9-30.compute-1.amazonaws.com"}
       def list(filter='.')
         filter = filter.to_s.downcase.tr('_|-', '.') # treat dashes, underscores as one
         # Returns an array of hashes with the following keys:
@@ -202,8 +233,8 @@ module Rudy::AWS
       
       # Create a new EC2 security group
       # Returns true/false whether successful
-      def create(name, desc='')
-        @aws.create_security_group(name, desc)
+      def create(name, desc=nil)
+        @aws.create_security_group(name, desc || "Group #{name}")
       end
       
       # Delete an EC2 security group

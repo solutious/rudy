@@ -130,7 +130,7 @@ module Rudy
         
           volumes.each do |volume|
             print "Volume #{volume[:aws_id]}... "
-            disk = Rudy::MetaData::Disk.from_volume(@sdb, volume[:aws_id])
+            disk = Rudy::MetaData::Disk.find_from_volume(@sdb, volume[:aws_id])
             backup = Rudy::MetaData::Backup.new
           
             # TODO: Look for the disk based on the machine

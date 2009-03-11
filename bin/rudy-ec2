@@ -23,7 +23,7 @@ extend Drydock
 
 project "Rudy"  # This also runs require 'ruby'
 
-debug :off
+debug :on
 
 capture :stderr       
 

@@ -7,7 +7,7 @@
 # See bin/example
 #
 class Caesars
-  VERSION = "0.4.2"
+  VERSION = "0.5.0"
   # A subclass of ::Hash that provides method names for hash parameters.
   # It's like a lightweight OpenStruct. 
   #     ch = Caesars::Hash[:tabasco => :lots!]
@@ -20,10 +20,14 @@ class Caesars
     
     # Returns a clone of itself and all children cast as ::Hash objects
     def to_hash(hash=self)
+      return hash unless hash.is_a?(Caesars::Hash) # nothing to do
       target = ::Hash[dup]
       hash.keys.each do |key|
         if hash[key].is_a? Caesars::Hash
           target[key] = hash[key].to_hash
+          next
+        elsif hash[key].is_a? Array
+          target[key] = hash[key].collect { |h| to_hash(h) }  
           next
         end
         target[key] = hash[key]
@@ -35,8 +39,6 @@ class Caesars
 
     # An instance of Caesars::Hash which contains the data specified by your DSL
   attr_accessor :caesars_properties
-  
-  @@caesars_chilled = []
   
   
   def initialize(name=nil)
@@ -132,29 +134,70 @@ class Caesars
   
   end
 
-  def self.chill(meth)
+  def self.chill(caesars_meth)
     module_eval %Q{
-      def #{meth}(*names,&b)
-        # caesar.toplevel.unnamed_chilled_attribute
-        return @caesars_pointer[:'#{meth}'] if names.empty? && b.nil?
+      def #{caesars_meth}(*caesars_names,&b)
+        # caesars.toplevel.unnamed_chilled_attribute
+        return @caesars_properties[:'#{caesars_meth}'] if @caesars_properties.has_key?(caesars_meth) && caesars_names.empty? && b.nil?
         
         # Use the name of the bloody method if no name is supplied. 
-        names << :'#{meth}' if names.empty?
-        #{}all = instance_variable_get("@" << #{meth}.to_s) || []
+        caesars_names << :'#{caesars_meth}' if caesars_names.empty?
         
-        names.each do |name|
-          #(@caesars_pointer[:"#{meth}_values"] ||= []) << name
+        caesars_names.each do |name|
           @caesars_pointer[name] = b
         end
       
-        @caesars_pointer[:'#{meth}']
+        @caesars_pointer[:'#{caesars_meth}']
       end
     }
-    define_method(:"#{meth}_values") do
-      instance_variable_get("@" << meth.to_s) || []
-    end
     nil
   end
+  
+# ---
+# Handle the case:
+#     disks do
+#       create "/some/path" do
+#         size 100
+#       end
+#     end
+# where disks[:create]["/some/path"] == {:size => 100}
+#
+#  def self.tabasco(caesars_meth)
+#    module_eval %Q{
+#      def #{caesars_meth}(*caesars_names,&b)
+#        # caesars.toplevel.unnamed_chilled_attribute
+#        return @caesars_properties[:'#{caesars_meth}'] if @caesars_properties.has_key?(caesars_meth) && caesars_names.empty? && b.nil?
+#        return nil if caesars_names.empty? && b.nil?
+#        
+#        caesars_name = :'#{caesars_meth}'
+#        
+#        if b
+#          prev = caesars_pointer
+#          
+#           # (@caesars_pointer[caesars_name] ||= []) << Caesars::Hash.new
+#           # @caesars_pointer = @caesars_pointer[caesars_name].last
+#          
+#           # @caesars_pointer[caesars_names.first] = 100
+#           # @caesars_pointer = @caesars_pointer[caesars_names.first] 
+#          
+#           # @caesars_pointer[:val] = caesars_name
+#           # b.call if b
+#         
+#           @caesars_pointer = prev
+#          # NOTE: Not tested (copied from method_missing)
+#          # elsif @caesars_pointer.kind_of?(Hash) && @caesars_pointer[caesars_name]
+#          # 
+#          #   @caesars_pointer[caesars_name] = [@caesars_pointer[caesars_name]] unless @caesars_pointer[caesars_name].is_a?(Array)
+#          #   @caesars_pointer[caesars_name] += args
+#          # elsif !caesars_names.empty?
+#          #   @caesars_pointer[caesars_name] = caesars_names.size == 1 ? caesars_names.first : caesars_names
+#         end
+#      end
+#    }
+#  end
+# +++
+ 
+  
   # Executes automatically when Caesars is subclassed. This creates the
   # YourClass::DSL module which contains a single method named after YourClass 
   # that is used to catch the top level DSL method. 
@@ -260,7 +303,7 @@ class Caesars::Config
         # namespace.
         eval %Q{
           #{dsl}
-        }
+        }, binding, __FILE__, __LINE__
         
         postprocess
         

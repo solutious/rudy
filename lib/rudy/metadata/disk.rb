@@ -26,9 +26,6 @@ module Rudy
       field :size
       
       def initialize
-        @device = "/dev/sdh"
-        @zone = DEFAULT_ZONE
-        @region = DEFAULT_REGION
         @backups = []
         @rtype = @@rtype.to_s
         @raw_volume = false
@@ -46,7 +43,7 @@ module Rudy
       end
       
       def valid?
-        @zone && @environment && @role && @position && @path 
+        @zone && @environment && @role && @position && @path && @size && @device
       end
       
       def to_query(more=[], remove=[])
@@ -81,9 +78,9 @@ module Rudy
         Rudy::MetaData::Disk.from_hash(disk[:attributes])
       end
       
-      def Disk.destroy(sdb, name)
-        disk = Disk.get(sdb, name) # get raises an exception if the disk doesn't exist
-        sdb.destroy(RUDY_DOMAIN, name)
+      def Disk.destroy(sdb, disk)
+        disk = Disk.get(sdb, disk) if disk.is_a?(String) # get raises an exception if the disk doesn't exist
+        sdb.destroy(RUDY_DOMAIN, disk.name)
         true # wtf: RightAws::SimpleDB doesn't tell us whether it succeeds. We'll assume!
       end
       
@@ -98,7 +95,7 @@ module Rudy
         !sdb.query_with_attributes(RUDY_DOMAIN, query).empty?
       end
       
-      def Disk.from_volume(sdb, vol_id)
+      def Disk.find_from_volume(sdb, vol_id)
         query = "['awsid' = '#{vol_id}']"
         res = sdb.query_with_attributes(RUDY_DOMAIN, query)
         if res.empty?
@@ -108,48 +105,6 @@ module Rudy
         end
       end
       
-      def Disk.update_volume(sdb, ec2, disk, machine)
-        
-        disk = Disk.get(sdb, disk) if disk.is_a?(String)
-        raise "You must provide a disk name or obect" unless disk.is_a?(Rudy::MetaData::Disk)
-        
-        
-        # Make sure the volume is still running
-        disk.awsid = nil if disk.awsid && !ec2.volumes.exists?(disk.awsid)
-        
-        
-        # Otherwise we need to start one
-        unless disk.awsid
-          puts "No active EBS volume found for #{disk.name}"
-          
-          # TODO: pull actual backups
-          backups = Rudy::MetaData::Backup.for_disk(sdb, disk, 2)
-          
-          if backups.is_a?(Array) && !backups.empty?
-            backup = backups.first
-            if ec2.snapshots.exists?(backup.awsid)
-              puts "We'll use the most recent backup (#{backup.awsid})..."
-              volume = ec2.volumes.create(disk.zone, disk.size, backup.awsid)
-            else
-              puts "The backup refers to a snapshot that doesn't exist."
-              puts backup.name, backup.awsid
-              puts "You need to delete this backup metadata before continuing."
-              exit 1
-            end
-          else
-            puts "We'll create one from scratch..."
-            volume = ec2.volumes.create(disk.zone, disk.size, nil)
-            disk.raw_volume = true
-          end
-          
-          puts "Saving disk metadata"
-          disk.awsid = volume[:aws_id]
-          Disk.save(sdb, disk)
-          puts ""
-        end
-        
-        disk
-      end
       
       def Disk.list(sdb, zon, env=nil, rol=nil, pos=nil)
         query = ''

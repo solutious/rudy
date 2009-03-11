@@ -6,12 +6,11 @@ module Rudy
       
       
       # Print Rudy's metadata to STDOUT
-      def metadata(instances=[])
-        puts group_metadata.keys
-        #query = "['instances' = '#{instances.first}'] union ['group' = '#{machine}']"
-        #
-        # p @sdb.get_attributes(RUDY_DOMAIN, "instances_#{machine}")
-        # p @sdb.query(RUDY_DOMAIN, query)
+      def metadata
+        group_metadata.each_pair do |n,h|
+          puts n.att(:bright)
+          puts h.inspect, ""
+        end
       end
       
       def destroy_metadata_valid?

@@ -115,7 +115,11 @@ class Caesars
   # previously) and also in subclasses of Caesar for returning the appropriate
   # attribute values. 
   def method_missing(meth, *args, &b)
-    #return @caesars_properties[meth] = args.first if @caesars_properties.has_key?(meth) && meth.to_s =~ /\*/
+    # Handle the setter, attribute=
+    if meth.to_s =~ /=$/ && @caesars_properties.has_key?(meth.to_s.chop.to_sym)
+      return @caesars_properties[meth.to_s.chop.to_sym] = (args.size == 1) ? args.first : args
+    end
+    
     return @caesars_properties[meth] if @caesars_properties.has_key?(meth) && args.empty? && b.nil?
     return nil if args.empty? && b.nil?
     

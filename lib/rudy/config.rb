@@ -72,9 +72,8 @@ module Rudy
     
     def postprocess
       # TODO: give caesar attributes setter methods
-      self.awsinfo.cert = File.expand_path(self.awsinfo.cert) if self.awsinfo.cert
-      #self.awsinfo.privatekey = File.expand_path(self.awsinfo.privatekey) if self.awsinfo.privatekey
-      self.defaults.region = "POOP"
+      self.awsinfo.cert &&= File.expand_path(self.awsinfo.cert)
+      self.awsinfo.privatekey &&= File.expand_path(self.awsinfo.privatekey)
     end
     
     def look_and_load

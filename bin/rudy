@@ -162,7 +162,7 @@ command_alias :rerelease, :rere
 
 # -------------------------------------------  UGLY STUFFS  --------
 # ------------------------------------------------------------------
-debug :on
+debug :off
 capture :stderr       
 before do
   @start = Time.now

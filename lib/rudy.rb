@@ -152,13 +152,15 @@ def sh(command, chdir=false, verbose=false)
   Dir.chdir prevdir if chdir
 end
 
-def ssh_command(host, keypair, user, command=false, chdir=false, verbose=false, printonly=false)
+def ssh_command(host, keypair, user, command=false, printonly=false, verbose=false)
   #puts "CONNECTING TO #{host}..."
   cmd = "ssh -q -i #{keypair} #{user}@#{host} "
-  command = "cd #{chdir} && #{command}" if chdir 
   cmd += " '#{command}'" if command
   puts cmd if verbose
-  printonly ? (puts cmd) : `#{cmd}`
+  return cmd if printonly
+  # backticks returns STDOUT
+  # exec replaces current process (it's just like running ssh)
+  (command) ? `#{cmd}` : Kernel.exec(cmd)
 end
 
 

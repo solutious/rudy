@@ -278,9 +278,6 @@ module Rudy
         before = @config.machines.find_deferred(@global.environment, @global.role, :shutdown, :before) || []
         before = [before] unless before.is_a?(Array)
         machines.each do |machine|
-          puts "Shutdown routine for #{machine_group}"
-          
-          execute_disk_routines(:shutdown, machine)
           
           before.each do |rscript|
             user, script = rscript.shift
@@ -295,6 +292,11 @@ module Rudy
               
             end
           end
+          
+          switch_user("root")
+          puts "Shutdown disk routines for #{machine_group}"
+          execute_disk_routines(:shutdown, machine)
+          
         end
         switch_user # return to the requested user
       end
@@ -306,17 +308,16 @@ module Rudy
         dfvals.last
       end
       
-      # +action+ is one of: :shutdown, :startup, :deploy
+      # +action+ is one of: :shutdown, :start, :deploy
+      # +machine+ is a right_aws machine instance hash
       def execute_disk_routines(action, machine)
-        disks = @config.machines.find_deferred(@global.environment, @global.role, action, :disks)
-        #disks.each_pair do |action,disk|
-        #  todo = disk.is_a?(Array) ? disk : [disk]
-        #  p disk
-        #end
+        disks = @config.machines.find(@global.environment, @global.role, :disks)
+        routines = @config.routines.find(@global.environment, @global.role, action, :disks)
         
-        if disks && disks.destroy
-          disk_paths = disks.destroy.keys.collect { |d| d[:path] }
-          vols = @ec2.instances.volumes(machine[:aws_instance_id])
+        if routines && routines.destroy
+          disk_paths = routines.destroy.keys
+          vols = @ec2.instances.volumes(machine[:aws_instance_id]) || []
+          puts "No volumes to destroy for (#{machine[:aws_instance_id]})" if vols.empty?
           vols.each do |vol|
             disk = Rudy::MetaData::Disk.find_from_volume(@sdb, vol[:aws_id])
             if disk
@@ -325,7 +326,7 @@ module Rudy
               puts "No disk metadata for volume #{vol[:aws_id]}. Going old school..."
               this_path = device_to_path(machine, vol[:aws_device])
             end
-            puts "PATH: #{this_path}"
+            puts "PATH: #{this_path} (#{disk_paths.join(',')})"
             if disk_paths.member?(this_path) 
               
               puts "Unmounting #{this_path}..."
@@ -344,8 +345,8 @@ module Rudy
           
         end
         
-        if disks && disks.create
-          disks.create.each_pair do |path,dconf|
+        if routines && routines.create
+          routines.create.each_pair do |path,dconf|
             
             disk = Rudy::MetaData::Disk.new
             [:region, :zone, :environment, :role, :position].each do |n|
@@ -485,11 +486,12 @@ module Rudy
         puts unless @global.quiet
         
         if (@global.environment == "prod") 
-          msg = %q(=======================================================
-=======================================================
-!!!!!!!!!   YOU ARE PLAYING WITH PRODUCTION   !!!!!!!!!
-=======================================================
-=======================================================)
+          msg = without_indent %q(
+          =======================================================
+          =======================================================
+          !!!!!!!!!   YOU ARE PLAYING WITH PRODUCTION   !!!!!!!!!
+          =======================================================
+          =======================================================)
           puts msg.colour(:red).bgcolour(:white).att(:bright), $/  unless @global.quiet
           
         end
@@ -596,6 +598,14 @@ module Rudy
                 cert "~/path/2/cert-xxxx.pem"
               end
 
+              # Routine Configuration
+              # Define stuff here that you don't want to be stored in version control. 
+              routines do
+                config do 
+                  # ...
+                end
+              end
+
               # Global Defaults 
               # Define the values to use unless otherwise specified on the command-line. 
               defaults do
@@ -605,14 +615,6 @@ module Rudy
                 role "app"
                 position "01"
                 user ENV['USER']
-              end
-
-              # Routine Configuration
-              # Define stuff here that you don't want to be stored in version control. 
-              routines do
-                config do 
-                  # ...
-                end
               end
             }
             write_to_file(RUDY_CONFIG_FILE, rudy_config, 'w')

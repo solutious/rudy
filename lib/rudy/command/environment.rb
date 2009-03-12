@@ -15,12 +15,12 @@ module Rudy
         machine = find_current_machine
         if @argv.cmd
           cmd = @argv.cmd.is_a?(Array) ? @argv.cmd.join(' ') : @argv.cmd
-          Net::SSH.start(machine[:dns_name], @global.user, :keys => [keypairpath]) do |ssh|
-            ssh.exec(cmd)
-          end
         else
-          ssh_command machine[:dns_name], keypairpath, @global.user, false, false, false, @option.print
+          cmd = false
         end
+        
+        puts ssh_command(machine[:dns_name], keypairpath, @global.user, cmd, @option.print)
+        
       end
       
       def copy_valid?
@@ -44,7 +44,7 @@ module Rudy
         @option.remote = true if @alias == 'download'
         @option.remote = false if @alias == 'upload'
         
-        if @alias == 'scp'
+        if @alias == 'scp' || @alias == 'copy'
           @alias = 'download' if @option.remote
           @alias = 'upload' unless @option.remote
         end

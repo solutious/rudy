@@ -26,69 +26,44 @@ module Rudy
         exit unless are_you_sure?(5)
         
         puts "Running shutdown routines..."
-        execute_shutdown_routines
+        execute_shutdown_routines(@list.values)
         
-        puts "Terminating instances..."
-        @ec2.instances.destroy @list.keys
-        sleep 5
-        
-        puts "Destroying volumes..."
-        criteria = [@global.zone, @global.environment, @global.role]
-        Rudy::MetaData::Disk.list(@sdb, *criteria).each do |disk|
-          next unless disk.path == "/rilli/app" # This is a hack until the disks DSL is ready.
-                                                # We can't copy the db disks from production.
-                                                # so we need to keep them available
-          
-          puts "  -> #{disk.name} (#{disk.awsid})"
-          begin
-            @ec2.volumes.detach(disk.awsid)  if @ec2.volumes.attached?(disk.awsid)
-          rescue => ex
-            puts "Error detaching volume: #{ex.message}"
-          end
-          
-          sleep 2
-          
-          begin
-            @ec2.volumes.destroy(disk.awsid) if @ec2.volumes.available?(disk.awsid)
-          rescue => ex
-            puts "Error deleting volume: #{ex.message}"
-          end
-          
-        end
-        
+        #puts "Terminating instances..."
+        #@ec2.instances.destroy @list.keys
+        #sleep 5
         
         puts "Done!"
       end
       
-      def restart_valid?
-        destroy_valid?
-      end
-      def restart
-        puts "Restarting #{machine_group}: #{@list.keys.join(', ')}"
-        
-        switch_user("root")
-        
-        exit unless are_you_sure?(5)
-        
-        puts "Running shutdown routines..."
-        @list.each do |id, inst|
-          execute_shutdown_routines(inst)
-        end
-        
-        #@ec2.instances.restart @list.keys
-        #sleep 10 # Wait for state to change
-        
-        @list.keys.each do |id|
-          #wait_for_machine(id)
-        end
-        
-        puts "Running Startup routines..."
-        @list.each do |id, inst|
-          execute_startup_routines(inst)
-        end
-        
-        puts "Done!"
-      end
+      #def restart_valid?
+      #  shutdown_valid?
+      #end
+      #def restart
+      #  puts "Restarting #{machine_group}: #{@list.keys.join(', ')}"
+      #  
+      #  switch_user("root")
+      #  
+      #  exit unless are_you_sure?(5)
+      #  
+      #  puts "Running Restart before routines..."
+      #  @list.each do |id, inst|
+      #    execute_restart_routines(:before, inst)
+      #  end
+      #  
+      #  #@ec2.instances.restart @list.keys
+      #  #sleep 10 # Wait for state to change
+      #  
+      #  @list.keys.each do |id|
+      #    #wait_for_machine(id)
+      #  end
+      #  
+      #  puts "Running Startup routines..."
+      #  @list.each do |id, inst|
+      #    execute_startup_routines(inst)
+      #  end
+      #  
+      #  puts "Done!"
+      #end
       
       
       def start_valid?

@@ -11,23 +11,10 @@ module Rudy
   end
 
   class Defaults < Caesars
-    def valid?
-      true
-    end
   end
   
   
   class Routines < Caesars
-    def valid?
-      true
-    end
-  end
-  
-  class Machines < Caesars
-    def valid?
-      true
-    end
-    
     
     def create(*args, &b)
       list_handler(:create, *args, &b)
@@ -64,6 +51,9 @@ module Rudy
     end
   end
   
+  class Machines < Caesars
+  end
+  
   class Config < Caesars::Config
     dsl Rudy::AWSInfo::DSL
     dsl Rudy::Defaults::DSL
@@ -79,8 +69,10 @@ module Rudy
     
     def look_and_load
       cwd = Dir.pwd
-      files = Dir.glob(File.join(cwd, 'config', 'rudy', '*.rb')) || []
-      @paths += files unless files.empty?
+      # Rudy looks for configs in all these locations
+      @paths += Dir.glob(File.join('/etc', 'rudy', '*.rb')) || []
+      @paths += Dir.glob(File.join(cwd, 'config', 'rudy', '*.rb')) || []
+      @paths += Dir.glob(File.join(cwd, '.rudy', '*.rb')) || []
       refresh
     end
     

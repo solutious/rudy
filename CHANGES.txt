@@ -23,6 +23,7 @@ that can be used for any machine group. These commands relate to starting new in
 * NEW: Extra caution when running destructive commands
 * NEW: Default ~/.rudy/config created if it doesn't exist. 
 
+
 #### 0.3 (2009-02-26) ###############################
 
 NOTE: This is a significant re-write from 0.2

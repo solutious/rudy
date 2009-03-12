@@ -123,7 +123,9 @@ module Rudy
       def keypairpath(name=nil)
         name ||= @global.user
         raise "No default user configured" unless name
-        kp = @config.machines.find_deferred(@global.environment, @global.role, :users, name, :keypair)
+        kp = @config.machines.find(@global.environment, @global.role, :users, name, :keypair2)
+        kp ||= @config.machines.find(@global.environment, :users, name, :keypair)
+        kp ||= @config.machines.find(:users, name, :keypair)
         kp &&= File.expand_path(kp)
         kp
       end
@@ -797,7 +799,16 @@ module Rudy
                 privatekey "~/path/2/pk-xxxx.pem"
                 cert "~/path/2/cert-xxxx.pem"
               end
-
+              
+              # Machine Configuration
+              # Specify your private keys here. These can be defined globally
+              # or by environment and role like in machines.rb.
+              machines do
+                users do
+                  root :keypair => "path/2/root-private-key"
+                end
+              end
+              
               # Routine Configuration
               # Define stuff here that you don't want to be stored in version control. 
               routines do

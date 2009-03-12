@@ -60,12 +60,14 @@
   s.require_paths = %w[lib]
   s.rubygems_version = '1.1.1'
 
+  
+  
   s.add_dependency 'drydock'
   s.add_dependency 'caesars'
   s.add_dependency 'net-ssh'
   s.add_dependency 'net-scp'
   s.add_dependency 'net-ssh-gateway'
-  s.add_dependency 'net-multi'
+  s.add_dependency 'net-ssh-multi'
   s.add_dependency 'highline'
   
     

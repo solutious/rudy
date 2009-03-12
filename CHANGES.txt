@@ -1,7 +1,21 @@
 RUDY, CHANGES
 
+TODO: Look into RubyGems error
+    /Library/Ruby/Gems/1.8/gems/rake-0.8.3/lib/rake/gempackagetask.rb:13:Warning: Gem::manage_gems is deprecated and will be removed on or after March 2009.
+    rake aborted!
+    RubyGem version error: rdoc(2.4.0 not ~> 2.3.0)
 
-#### 0.4 (2009-03-07) ###############################
+TODO:
+
+
+#### 0.4.1 (2009-03-??) ###############################
+
+* CHANGE: Recommend keypair config to be in ~/.rudy/config
+* FIX: Rudy now checks for user keys specified by env-role, env, and global
+* FIX: gemspec dependency net-ssh-multi
+
+
+#### 0.4 (2009-03-12) ###############################
 
 NOTE: This is a significant re-write from 0.3
 

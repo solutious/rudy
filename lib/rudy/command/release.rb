@@ -27,7 +27,7 @@ module Rudy
         
         raise "No SCM defined for release routine" unless @scm        
         raise "#{Dir.pwd} is not a working copy" unless @scm.working_copy?(Dir.pwd)
-        #raise "There are local changes. Please revert or check them in." unless @scm.everything_checked_in?
+        raise "There are local changes. Please revert or check them in." unless @scm.everything_checked_in?
         raise "Invalid base URI (#{@scm_params[:base]})." unless @scm.valid_uri?(@scm_params[:base])
         
         true

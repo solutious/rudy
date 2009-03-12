@@ -9,29 +9,12 @@ RUDY_HOME = File.join(File.dirname(__FILE__), '..')
 RUDY_LIB = File.join(RUDY_HOME, 'lib')
 $:.unshift RUDY_LIB # Put our local lib in first place
 
-#
-# No Ruby 1.9.1 support. Only 1.8.x for now :[
-unless RUBY_VERSION < "1.9"
-  puts "Sorry! We're using the right_aws gem and it doesn't support Ruby 1.9 (md5 error)."
-  exit 1
-else
- require 'rubygems'
-end
-
+require 'rubygems' if RUBY_VERSION < "1.9"
 require 'date'
 require 'drydock'
 extend Drydock
 
 project "Rudy"  # This also runs require 'ruby'
-debug :off
-capture :stderr       
-before do
-  @start = Time.now
-end
-after do
-  @elapsed = Time.now - @start
-  puts $/, "Elapsed: %.2f seconds" % @elapsed.to_f
-end
 
 global :A, :accesskey, String, "AWS Access Key"
 global :S, :secretkey, String, "AWS Secret Access Key"
@@ -123,8 +106,13 @@ command :metadata => Rudy::Command::Metadata
 command_alias :metadata, :md
 
 
+desc "Machine Group Status"
+command :status => Rudy::Command::Machines
+
+
 #desc "Update a Machine Group with the current version of Rudy"
 #command :update => Rudy::Command::Machines
+
 
 usage "rudy [-e env] [-u user] connect [-p] [cmd]"
 desc "Open an SSH connection"
@@ -143,8 +131,6 @@ command_alias :copy, :scp
 command_alias :copy, :upload
 command_alias :copy, :download
 
-desc "Machine Group Status"
-command :status => Rudy::Command::Machines
 
 # --------------------------------  RUDY ROUTINES COMMANDS  --------
 # ------------------------------------------------------------------
@@ -164,8 +150,8 @@ option :s, :switch, "Switch to the release branch/tag"
 option :m, :msg, String, "A short release note"
 command :release => Rudy::Command::Release
 
-#desc "Update the release currently running machine group"
-#command :rerelease => Rudy::Command::Release
+desc "Update the release currently running machine group"
+command :rerelease => Rudy::Command::Release
 
 #desc "Deploy disk snapshots from one machine to another"
 #command :deploy => Rudy::Command::Deploy
@@ -173,13 +159,15 @@ command :release => Rudy::Command::Release
 
 
 
-
-
-
-__END__
-RUDY v0.5                                   UTC: 2009-02-27 15:39:57
-
-       [z:us-east-1b   e:stage   r:app   p:01]
-
-
+# -------------------------------------------  UGLY STUFFS  --------
+# ------------------------------------------------------------------
+debug :on
+capture :stderr       
+before do
+  @start = Time.now
+end
+after do
+  @elapsed = Time.now - @start
+  puts $/, "Elapsed: %.2f seconds" % @elapsed.to_f if @elapsed > 0.1
+end
 

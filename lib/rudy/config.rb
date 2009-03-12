@@ -29,6 +29,7 @@ module Rudy
       hash_handler(:mount, *args, &b)
     end
     
+    #
     # Force the specified keyword to always be treated as a hash. 
     # Example:
     #
@@ -40,8 +41,9 @@ module Rudy
     #         end
     #       end
     #     end
+    #
     def hash_handler(caesars_meth, *args, &b)
-      
+      # TODO: Move to caesars
       return @caesars_properties[caesars_meth] if @caesars_properties.has_key?(caesars_meth) && args.empty? && b.nil?
       return nil if args.empty? && b.nil?
       return method_missing(caesars_meth, *args, &b) if args.empty?

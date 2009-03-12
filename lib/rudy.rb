@@ -1,4 +1,12 @@
 
+#
+# No Ruby 1.9.1 support. Only 1.8.x for now :[
+unless RUBY_VERSION < "1.9"
+  puts "Sorry! We're using the right_aws gem and it doesn't support Ruby 1.9 (md5 error)."
+  exit 1
+end
+
+
 begin
   require 'digest/md5'
   require 'right_aws'

@@ -128,15 +128,16 @@ module Rudy
       #  
       #  raise "Cannot find startup script" unless File.exists?(@script)
       #  
-      #  exit unless are_you_sure?
       #  
       #  true
       #end
       #
       #
       #def update
+      #  puts "Updating Rudy "
       #  switch_user("root")
       #  
+      #  exit unless are_you_sure?
       #  scp do |scp|
       #    puts "Updating Rudy startup script (#{@script})"
       #    scp.upload!(@script, "/etc/init.d/") do |ch, name, sent, total|

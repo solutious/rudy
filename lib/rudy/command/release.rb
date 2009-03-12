@@ -27,10 +27,15 @@ module Rudy
         
         raise "No SCM defined for release routine" unless @scm        
         raise "#{Dir.pwd} is not a working copy" unless @scm.working_copy?(Dir.pwd)
-        raise "There are local changes. Please revert or check them in." unless @scm.everything_checked_in?
+        #raise "There are local changes. Please revert or check them in." unless @scm.everything_checked_in?
         raise "Invalid base URI (#{@scm_params[:base]})." unless @scm.valid_uri?(@scm_params[:base])
         
         true
+      end
+      
+      def release2
+        p @scm
+        p @scm_params
       end
       
       # <li>Creates a release tag based on the working copy on your machine</li>
@@ -74,12 +79,12 @@ module Rudy
         
         if @scm
           
-          puts "Creating checkout".att(:bright)
+          puts "Running SCM command".att(:bright)
           ssh do |session|
-            cmd = "svn co #{tag} #{@scm_params[:path]}"
-            puts "Running #{cmd}"
+            cmd = "svn #{@scm_params[:command]} #{tag} #{@scm_params[:path]}"
+            puts "#{cmd}"
             session.exec!(cmd)
-            puts "Checkout complete"
+            puts "#{@scm_params[:command]} complete"
           end
           
         end
@@ -97,12 +102,18 @@ module Rudy
         
         # Look for the source control engine, checking all known scm values.
         # The available one will look like [environment][role][release][svn]
-        params = @config.routines.find_deferred(env, rol, :release, :checkout)
+        params = nil
+        scm_name = nil
+        SUPPORTED_SCM_NAMES.each do |v|
+          scm_name = v
+          params = @config.routines.find(env, rol, :release, scm_name)
+          break if params
+        end
         
-        raise "Unsupported SCM #{params[:scm]}" unless SUPPORTED_SCM_NAMES.member?(params[:scm].to_sym)
-        
-        klass = eval "Rudy::SCM::#{params[:scm].to_s.upcase}"
-        scm = klass.new(:base => params[:base])
+        if params
+          klass = eval "Rudy::SCM::#{scm_name.to_s.upcase}"
+          scm = klass.new(:base => params[:base])
+        end
         
         [scm, params]
         

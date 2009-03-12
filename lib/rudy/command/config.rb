@@ -51,6 +51,8 @@ module Rudy
           if @option.all
             y @config.machines.to_hash
             y @config.routines.to_hash
+          elsif @option.defaults
+            y @config.defaults.to_hash
           else
             env, rol, usr, att = @global.environment, @global.role, @global.user, @argv.name
             val = @config.machines.find_deferred(env, rol, usr, att) || ''

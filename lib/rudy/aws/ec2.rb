@@ -123,8 +123,8 @@ module Rudy::AWS
       def destroy(*list)
         begin
           @aws.terminate_instances(list.flatten)
-        rescue RightAws::AwsError => ex
-          raise UnknownInstance.new
+        #rescue RightAws::AwsError => ex
+        #  raise UnknownInstance.new
         end
       end
       

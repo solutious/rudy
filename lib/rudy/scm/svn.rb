@@ -51,7 +51,7 @@ module Rudy
         ret.scan(/URL: (http:.+?)\s*\n.+Revision: (\d+)/m).flatten
       end
       
-      def svn_dir?(path)
+      def working_copy?(path)
         (File.exists?(File.join(path, '.svn')))
       end
       

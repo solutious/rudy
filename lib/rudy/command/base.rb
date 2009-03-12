@@ -272,35 +272,6 @@ module Rudy
       end
       
       
-    
-      def execute_shutdown_routines(machines)
-        machines = [machines] unless machines.is_a?( Array)
-        before = @config.machines.find_deferred(@global.environment, @global.role, :shutdown, :before) || []
-        before = [before] unless before.is_a?(Array)
-        machines.each do |machine|
-          
-          before.each do |rscript|
-            user, script = rscript.shift
-            switch_user(user) # scp and ssh will run as this user
-          
-            # TODO: Send configs! See startup_routines
-          
-            ssh machine[:dns_name] do |session|
-              puts "Running #{script}..."
-              session.exec!("chmod 700 #{script}")
-              puts session.exec!("#{script}")
-              
-            end
-          end
-          
-          switch_user("root")
-          puts "Shutdown disk routines for #{machine_group}"
-          execute_disk_routines(:shutdown, machine)
-          
-        end
-        switch_user # return to the requested user
-      end
-      
       def device_to_path(machine, device)
         # /dev/sdr            10321208    154232   9642688   2% /rilli/app
         dfoutput = ssh_command(machine[:dns_name], keypairpath, @global.user, "df #{device} | tail -1").chomp
@@ -310,164 +281,254 @@ module Rudy
       
       # +action+ is one of: :shutdown, :start, :deploy
       # +machine+ is a right_aws machine instance hash
-      def execute_disk_routines(action, machine)
-        disks = @config.machines.find(@global.environment, @global.role, :disks)
+      def execute_disk_routines(machines, action)
+        machines = [machines] unless machines.is_a?( Array)
+        
+        puts "Running #{action.to_s.capitalize} DISK routines".att(:bright)
+        
+        disks = @config.machines.find_deferred(@global.environment, @global.role, :disks)
         routines = @config.routines.find(@global.environment, @global.role, action, :disks)
         
-        if routines && routines.destroy
-          disk_paths = routines.destroy.keys
-          vols = @ec2.instances.volumes(machine[:aws_instance_id]) || []
-          puts "No volumes to destroy for (#{machine[:aws_instance_id]})" if vols.empty?
-          vols.each do |vol|
-            disk = Rudy::MetaData::Disk.find_from_volume(@sdb, vol[:aws_id])
-            if disk
-              this_path = disk.path
-            else
-              puts "No disk metadata for volume #{vol[:aws_id]}. Going old school..."
-              this_path = device_to_path(machine, vol[:aws_device])
-            end
-            puts "PATH: #{this_path} (#{disk_paths.join(',')})"
-            if disk_paths.member?(this_path) 
-              
-              puts "Unmounting #{this_path}..."
-              ssh_command machine[:dns_name], keypairpath, @global.user, "umount #{this_path}"
-              sleep 1
-              
-              puts "Detaching #{vol[:aws_id]}"
-              @ec2.volumes.detach(vol[:aws_id])
-              
-              puts "Destroying #{this_path} (#{vol[:aws_id]})"
-              @ec2.volumes.destroy(vol[:aws_id])
-              Rudy::MetaData::Disk.destroy(@sdb, disk) if disk
-            end
-            
-          end
-          
+        unless routines
+          puts "No #{action} disk routines for #{machine[:aws_instance_id]}"
+          return
         end
         
-        if routines && routines.create
-          routines.create.each_pair do |path,dconf|
+        switch_user("root")
+        
+        machines.each do |machine|
+
+          unless machine[:aws_instance_id]
+            puts "Machine given has no instance ID. Skipping disks."
+            return
+          end
+        
+          unless machine[:dns_name]
+            puts "Machine given has no DNS name. Skipping disks."
+            return
+          end
+        
+          if routines && routines.destroy
+            disk_paths = routines.destroy.keys
+            vols = @ec2.instances.volumes(machine[:aws_instance_id]) || []
+            puts "No volumes to destroy for (#{machine[:aws_instance_id]})" if vols.empty?
+            vols.each do |vol|
+              disk = Rudy::MetaData::Disk.find_from_volume(@sdb, vol[:aws_id])
+              if disk
+                this_path = disk.path
+              else
+                puts "No disk metadata for volume #{vol[:aws_id]}. Going old school..."
+                this_path = device_to_path(machine, vol[:aws_device])
+              end
+              puts "PATH: #{this_path} (of #{disk_paths.join(',')})"
+              if disk_paths.member?(this_path) 
+              
+                unless disks.has_key?(this_path)
+                  puts "#{this_path} is not defined as a machine disk. Skipping..."
+                  next
+                end
+              
+                begin
+                  puts "Unmounting #{this_path}..."
+                  ssh_command machine[:dns_name], keypairpath, @global.user, "umount #{this_path}"
+                  sleep 3
+                rescue => ex
+                  puts "Error while unmounting #{this_path}: #{ex.message}"
+                  puts "We'll keep going..."
+                end
+              
+                begin
+                  puts "Detaching #{vol[:aws_id]}"
+                  @ec2.volumes.detach(vol[:aws_id])
+                  sleep 3
+              
+                  puts "Destroying #{this_path} (#{vol[:aws_id]})"
+                  @ec2.volumes.destroy(vol[:aws_id])
+                
+                  if disk
+                    puts "Deleteing metadata for #{disk.name}"
+                    Rudy::MetaData::Disk.destroy(@sdb, disk)
+                  end
+                
+                rescue => ex
+                  puts "Error while detaching volume #{vol[:aws_id]}: #{ex.message}"
+                  puts "Continuing..."
+                end
+                
+              end
+              puts
+              
+            end
+          
+          end
+        
+          if routines && routines.mount
+            disk_paths = routines.mount.keys
+            vols = @ec2.instances.volumes(machine[:aws_instance_id]) || []
+            puts "No volumes to mount for (#{machine[:aws_instance_id]})" if vols.empty?
+            vols.each do |vol|
+              disk = Rudy::MetaData::Disk.find_from_volume(@sdb, vol[:aws_id])
+              if disk
+                this_path = disk.path
+              else
+                puts "No disk metadata for volume #{vol[:aws_id]}. Going old school..."
+                this_path = device_to_path(machine, vol[:aws_device])
+              end
+              
+              next unless disk_paths.member?(this_path)
+                
+              begin
+                unless @ec2.instances.attached_volume?(machine[:aws_instance_id], vol[:aws_device])
+                  puts "Attaching #{vol[:aws_id]} to #{machine[:aws_instance_id]}"
+                  @ec2.volumes.attach(machine[:aws_instance_id], vol[:aws_id],vol[:aws_device])
+                  sleep 3
+                end
+
+                puts "Mounting #{this_path} to #{vol[:aws_device]}"
+                ssh_command machine[:dns_name], keypairpath, @global.user, "mkdir -p #{this_path} && mount -t ext3 #{vol[:aws_device]} #{this_path}"
+
+                sleep 1
+              rescue => ex
+                puts "There was an error mounting #{this_path}: #{ex.message}"
+              end
+              puts 
+            end
+          end
+        
+          if routines && routines.create
+            routines.create.each_pair do |path,props|
+        
+              begin 
+                dconf = disks[path]
+                puts "Creating disk for #{path}"
+                disk = Rudy::MetaData::Disk.new
+                disk.path = path
+                [:region, :zone, :environment, :role, :position].each do |n|
+                  disk.send("#{n}=", @global.send(n)) if @global.send(n)
+                end
+                [:device, :size].each do |n|
+                  disk.send("#{n}=", dconf[n]) if dconf.has_key?(n)
+                end
             
-            disk = Rudy::MetaData::Disk.new
-            [:region, :zone, :environment, :role, :position].each do |n|
-              disk.send("#{n}=", @global.send(n)) if @global.send(n)
-            end
-            [:path, :device, :size].each do |n|
-              disk.send("#{n}=", dconf[n]) if dconf.has_key?(n)
-            end
+                if Rudy::MetaData::Disk.is_defined?(@sdb, disk)
+                  puts "The disk #{disk.name} already exists."
+                  puts "You probably need to define when to destroy the disk."
+                  puts "Skipping..."
+                  next
+                end
             
-            if Rudy::MetaData::Disk.is_defined?(@sdb, disk)
-              puts "The disk #{disk.name} already exists."
-              puts "You probably need to define when to destroy the disk."
-              puts "Skipping..."
-              next
-            end
+                if @ec2.instances.attached_volume?(machine[:aws_instance_id], disk.device)
+                  puts "Skipping disk for #{disk.path} (device #{disk.device} is in use)"
+                  next
+                end
             
-            if @ec2.instances.attached_volume?(machine[:aws_instance_id], disk.device)
-              puts "Skipping disk for #{disk.path} (device #{disk.device} is in use)"
-              next
-            end
+                # NOTE: It's important to use Caesars' hash syntax b/c the disk property
+                # "size" conflicts with Hash#size which is what we'll get if there's no 
+                # size defined. 
+                unless disk.size.kind_of?(Integer)
+                  puts "Skipping disk for #{disk.path} (size not defined)"
+                  next
+                end
             
-            # NOTE: It's important to use Caesars' hash syntax b/c the disk property
-            # "size" conflicts with Hash#size which is what we'll get if there's no 
-            # size defined. 
-            unless disk.size.kind_of?(Integer)
-              puts "Skipping disk for #{disk.path} (size not defined)"
-              next
-            end
+                if disk.path.nil?
+                  puts "Skipping disk for #{disk.path} (no path defined)"
+                  next
+                end
             
-            if disk.path.nil?
-              puts "Skipping disk for #{disk.path} (no path defined)"
-              next
-            end
-            
-            unless disk.valid?
-              puts "Skipping #{disk.name} (not enough info)"
-              next
-            end
+                unless disk.valid?
+                  puts "Skipping #{disk.name} (not enough info)"
+                  next
+                end
                         
-            puts "Creating volume... (#{disk.size}GB in #{@global.zone})"
-            # NOTE: It's important to use Caesars' hash syntax b/c the disk property
-            # "size" conflicts with Hash#size which is what we'll get if there's no 
-            # size defined.
-            volume = @ec2.volumes.create(@global.zone, disk.size)
+                puts "Creating volume... (#{disk.size}GB in #{@global.zone})"
+                # NOTE: It's important to use Caesars' hash syntax b/c the disk property
+                # "size" conflicts with Hash#size which is what we'll get if there's no 
+                # size defined.
+                volume = @ec2.volumes.create(@global.zone, disk.size)
             
-            puts "Attaching #{volume[:aws_id]} to #{machine[:aws_instance_id]}"
-            @ec2.volumes.attach(machine[:aws_instance_id], volume[:aws_id], disk.device)
-            
-            puts "Creating disk metadata for #{disk.name}"
-            disk.awsid = volume[:aws_id]
-            Rudy::MetaData::Disk.save(@sdb, disk)
-            
-            puts "Creating the filesystem (mkfs.ext3 -F #{disk.device})"
-            capture(:stdout) do
-              ssh_command machine[:dns_name], keypairpath, @global.user, "mkfs.ext3 -F #{disk.device}"
+                puts "Attaching #{volume[:aws_id]} to #{machine[:aws_instance_id]}"
+                @ec2.volumes.attach(machine[:aws_instance_id], volume[:aws_id], disk.device)
+                sleep 3
+                
+                puts "Creating the filesystem (mkfs.ext3 -F #{disk.device})"
+                ssh_command machine[:dns_name], keypairpath, @global.user, "mkfs.ext3 -F #{disk.device}"
+                sleep 1
+                
+                puts "Mounting #{disk.device} to #{disk.path}"
+                ssh_command machine[:dns_name], keypairpath, @global.user, "mkdir -p #{disk.path} && mount -t ext3 #{disk.device} #{disk.path}"
+              
+                puts "Creating disk metadata for #{disk.name}"
+                disk.awsid = volume[:aws_id]
+                Rudy::MetaData::Disk.save(@sdb, disk)
+              
+                sleep 1
+              rescue => ex
+                puts "There was an error creating #{path}: #{ex.message}"
+                if disk
+                  puts "Removing metadata for #{disk.name}"
+                  Rudy::MetaData::Disk.destroy(@sdb, disk)
+                end
+              end
+              puts
             end
-            
-            puts "Mounting #{disk.device} to #{disk.path}"
-            capture(:stdout) do
-              ssh_command machine[:dns_name], keypairpath, @global.user, "mkdir -p #{disk.path} && mount -t ext3 #{disk.device} #{disk.path}"
-            end
-            sleep 1
-            
           end
         end
       end
       
       
-      def execute_startup_routines(machines)
+      def execute_routines(machines, action, before_or_after)
         machines = [machines] unless machines.is_a?( Array)
-        config = @config.machines.find_deferred(@global.environment, @global.role, :config) || {}
+        config = @config.routines.find_deferred(@global.environment, @global.role, :config) || {}        
         config[:global] = @global.marshal_dump
         config[:global].reject! { |n,v| n == :cert || n == :privatekey }
-
         
-        tf = Tempfile.new('startup-config')
+        # The config file contains settings from ~/.rudy/config 
+        #
+        #     routines do 
+        #       config do
+        #       end
+        #     end
+        #
+        config_file = "#{action}-config.yaml"
+        tf = Tempfile.new(config_file)
         write_to_file(tf.path, config.to_hash.to_yaml, 'w')
-
+        puts "Running #{action.to_s.capitalize} #{before_or_after.to_s.upcase} routines".att(:bright)
         machines.each do |machine|
-          puts "Startup routine for #{machine_group}"
+          puts "Machine Group: #{machine_group}"
+          puts "Hostname: #{machine[:dns_name]}"
           
-          execute_disk_routines(:startup, machine)
-          
-          puts "SKIPPING"
-          next 
-          
-          rscripts = @config.machines.find_deferred(@global.environment, @global.role, :startup, :after) || []
+          rscripts = @config.routines.find_deferred(@global.environment, @global.role, action, before_or_after) || []
           rscripts = [rscripts] unless rscripts.is_a?(Array)
+          
+          puts "No scripts defined." if !rscripts || rscripts.empty?
+          
           rscripts.each do |rscript|
             user, script = rscript.shift
-            script &&= script
-          
+            
             switch_user(user) # scp and ssh will run as this user
-          
-            puts "Transfering startup-config.yaml..."
+        
+            puts "Transfering #{config_file}..."
             scp do |scp|
-              # The startup-config.yaml file contains settings from ~/.rudy/config 
-              scp.upload!(tf.path, "~/startup-config.yaml") do |ch, name, sent, total|
-                puts "#{name}: #{sent}/#{total}"
+              scp.upload!(tf.path, "~/#{config_file}") do |ch, name, sent, total|
+                "#{name}: #{sent}/#{total}"
               end
             end
             ssh do |session|
               puts "Running #{script}..."
+              session.exec!("chmod 700 ~/#{config_file}")
               session.exec!("chmod 700 #{script}")
               puts session.exec!("#{script}")
-            
-              session.exec!("rm ~/startup-config.yaml")
+          
+              puts "Removing remote copy of #{config_file}..."
+              session.exec!("rm ~/#{config_file}")
             end
+            puts $/
           end
-        
         end
         
-        tf.delete    # remove release-config.yaml
-        
-        switch_user # return to the requested user
-        
-        
+        tf.delete     # remove local copy of config_file
+        #switch_user   # return to the requested user
       end
-      
-      
-      
       
       # Print a default header to the screen for every command.
       # +cmd+ is the name of the command current running. 
@@ -548,7 +609,7 @@ module Rudy
         
         def print_volume(vol, disk)
           puts '-'*60
-          puts "Volume: #{vol[:aws_id].att(:bright)} (disk: #{disk.name})"
+          puts "Volume: #{vol[:aws_id].att(:bright)} (disk: #{disk.name if disk})"
           vol.each_pair do |key, value|
              printf(" %22s: %s#{$/}", key, value) if value
            end

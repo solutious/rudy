@@ -95,6 +95,7 @@ module Rudy
       def destroy_disk_valid?
         raise "No disk specified" if argv.empty?
         exit unless are_you_sure?(5)
+        true
       end
       
       def destroy_disk

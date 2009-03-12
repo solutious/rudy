@@ -147,10 +147,11 @@ desc "Shutdown a Machine Group"
 command :shutdown => Rudy::Command::Machines
 
 desc "Start a Machine Group"
-command :start => Rudy::Command::Machines
+command :startup => Rudy::Command::Machines
+command_alias :startup, :start
 
-#desc "Restart a Machine Group"
-#command :restart => Rudy::Command::Machines
+desc "Restart a Machine Group"
+command :restart => Rudy::Command::Machines
 
 desc "Release to a machine group"
 option :s, :switch, "Switch to the release branch/tag"

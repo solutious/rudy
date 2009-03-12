@@ -9,7 +9,7 @@ module Rudy
       
       def release_valid?
         
-        relroutine = @config.machines.find_deferred(@global.environment, @global.role, :release)
+        relroutine = @config.routines.find_deferred(@global.environment, @global.role, :release)
         raise "No release routines defined for #{machine_group}" if relroutine.nil?
         
         raise "No EC2 .pem keys provided" unless has_pem_keys?
@@ -24,19 +24,30 @@ module Rudy
         end
         
         @scm, @scm_params = find_scm
-                
-        raise "#{Dir.pwd} is not a working copy" unless @scm.svn_dir?(Dir.pwd)
-        raise "There are local changes. Please revert or check them in." unless @scm.everything_checked_in?
+        
+        raise "No SCM defined for release routine" unless @scm        
+        raise "#{Dir.pwd} is not a working copy" unless @scm.working_copy?(Dir.pwd)
+        #raise "There are local changes. Please revert or check them in." unless @scm.everything_checked_in?
         raise "Invalid base URI (#{@scm_params[:base]})." unless @scm.valid_uri?(@scm_params[:base])
         
         true
       end
+      
+      def release
+        p @scm
+        p @scm_params
         
+        inst = @ec2.instances.list(machine_group).values
+        
+        execute_disk_routines(inst, :release)
+        
+      end
+      
       # <li>Creates a release tag based on the working copy on your machine</li>
       # <li>Starts a new stage instance</li>
       # <li>Executes startup routines</li>
       # <li>Executes release routines</li>
-      def release
+      def release2
         # TODO: store metadata about release with local username and hostname
         puts "Creating release from working copy"
 
@@ -55,20 +66,24 @@ module Rudy
         
         switch_user("root")
         
-        puts "Starting an instance in #{machine_group}"
+        puts "Starting #{machine_group}"
         
         instances = @ec2.instances.create(@option.image, machine_group.to_s, File.basename(keypairpath), machine_data.to_yaml, @global.zone)
         inst = instances.first
-        id, state = inst[:aws_instance_id], inst[:aws_state]
         
         if @option.address ||= machine_address
-          puts "Associating #{@option.address} to #{id}"
-          @ec2.addresses.associate(id, @option.address)
+          puts "Associating #{@option.address} to #{inst[:aws_instance_id]}"
+          @ec2.addresses.associate(inst[:aws_instance_id], @option.address)
         end
         
-        wait_for_machine(id)
-       
+        wait_for_machine(inst[:aws_instance_id])
+        inst = @ec2.instances.get(inst[:aws_instance_id])
         
+        #inst = @ec2.instances.list(machine_group).values
+        
+        puts "Running Release routines..."
+        execute_release_routines(inst)
+       
         if @scm && @scm_params[:command]
           
           ssh do |session|
@@ -81,46 +96,6 @@ module Rudy
         
         
         
-        config = @config.machines.find_deferred(@global.environment, @global.role, :config) || {}
-        
-        config[:global] = @global.marshal_dump
-        config[:global].reject! { |n,v| n == :cert || n == :privatekey }
-
-        tf = Tempfile.new('release-config')
-        write_to_file(tf.path, config.to_hash.to_yaml, 'w')
-
-        
-        machine = @list.values.first # NOTE: we're assuming there's only one machine
-        
-        rscripts = @config.machines.find_deferred(@global.environment, @global.role, :release, :after) || []
-        rscripts = [rscripts] unless rscripts.is_a?(Array)
-        rscripts.each do |rscript|
-          user, script = rscript.shift
-          script &&= script
-          
-          switch_user(user) # scp and ssh will run as this user
-          
-          puts "Transfering release-config.yaml..."
-          scp do |scp|
-            # The release-config.yaml file contains settings from ~/.rudy/config 
-            scp.upload!(tf.path, "~/release-config.yaml") do |ch, name, sent, total|
-              puts "#{name}: #{sent}/#{total}"
-            end
-          end
-          ssh do |session|
-            puts "Running #{script}..."
-            session.exec!("chmod 700 #{script}")
-            puts session.exec!("#{script}")
-            
-            puts "Cleaning up..."
-            session.exec!("rm ~/release-config.yaml")
-          end
-        end
-        
-        
-        tf.delete    # remove release-config.yaml
-        
-        switch_user # return to the requested user
       end
       
       
@@ -129,18 +104,12 @@ module Rudy
         
         # Look for the source control engine, checking all known scm values.
         # The available one will look like [environment][role][release][svn]
-        params = nil
-        scm = nil
-        SUPPORTED_SCM_NAMES.each do |v|
-          scm = v
-          params = @config.machines.find_deferred(env, rol, :release, scm)
-          break if params
-        end
-        if params
-          klass = eval "Rudy::SCM::#{scm.to_s.upcase}"
-          scm = klass.new(:base => params[:base])
-        end
+        params = @config.routines.find_deferred(env, rol, :release, :checkout)
         
+        raise "Unsupported SCM #{params[:scm]}" unless SUPPORTED_SCM_NAMES.member?(params[:scm].to_sym)
+        
+        klass = eval "Rudy::SCM::#{params[:scm].to_s.upcase}"
+        scm = klass.new(:base => params[:base])
         
         [scm, params]
         

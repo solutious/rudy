@@ -10,17 +10,30 @@ module Rudy
         raise "I will not help you destroy production!" if @global.environment == "prod"
         raise "The volume #{id} doesn't exist!" unless @ec2.volumes.exists?(id)
         exit unless are_you_sure? 4
+        true
       end
         
       def destroy_volumes
         id = @argv.first
         disk = Rudy::MetaData::Disk.find_from_volume(@sdb, id)
-        puts "Destroying #{id}!"
-        @ec2.volumes.destroy id
+
+        begin
+          puts "Detaching #{id}"
+          @ec2.volumes.detach(id)
+          sleep 3
         
-        disk.awsid = nil if disk
+          puts "Destroying #{id}"
+          @ec2.volumes.destroy(id)
+          
+          if disk
+            puts "Deleteing metadata for #{disk.name}"
+            Rudy::MetaData::Disk.destroy(@sdb, disk)
+          end
+          
+        rescue => ex
+          puts "Error while detaching volume #{id}: #{ex.message}"
+        end
         
-        Rudy::MetaData::Disk.save(@sdb, disk)
         
       end
       

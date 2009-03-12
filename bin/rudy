@@ -5,6 +5,10 @@
 #   See rudy -h for usage
 # 
 
+RUDY_HOME = File.join(File.dirname(__FILE__), '..')
+RUDY_LIB = File.join(RUDY_HOME, 'lib')
+$:.unshift RUDY_LIB # Put our local lib in first place
+
 #
 # No Ruby 1.9.1 support. Only 1.8.x for now :[
 unless RUBY_VERSION < "1.9"
@@ -14,18 +18,20 @@ else
  require 'rubygems'
 end
 
-RUDY_HOME = File.join(File.dirname(__FILE__), '..')
-RUDY_LIB = File.join(RUDY_HOME, 'lib')
-$:.unshift RUDY_LIB # Put our local lib in first place
-
+require 'date'
 require 'drydock'
 extend Drydock
 
 project "Rudy"  # This also runs require 'ruby'
-
 debug :on
-
 capture :stderr       
+before do
+  @start = Time.now
+end
+after do
+  @elapsed = Time.now - @start
+  puts $/, "Elapsed: %.2f seconds" % @elapsed.to_f
+end
 
 global :A, :accesskey, String, "AWS Access Key"
 global :S, :secretkey, String, "AWS Secret Access Key"

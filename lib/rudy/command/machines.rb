@@ -20,7 +20,7 @@ module Rudy
       
       
       def shutdown
-        puts "Shutting down #{machine_group}: #{@list.keys.join(', ')}"
+        puts "Shutting down #{machine_group}: #{@list.keys.join(', ')}".att(:bright)
         switch_user("root")
         puts "This command also affects the volumes attached to the instances! (according to your routines config)"
         exit unless are_you_sure?(5)
@@ -45,7 +45,7 @@ module Rudy
         true
       end
       def startup
-        puts "Starting a machine in #{machine_group}"
+        puts "Starting a machine in #{machine_group}".att(:bright)
         switch_user("root")
         exit unless are_you_sure?(3)
         
@@ -76,7 +76,7 @@ module Rudy
         shutdown_valid?
       end
       def restart
-        puts "Restarting #{machine_group}: #{@list.keys.join(', ')}"
+        puts "Restarting #{machine_group}: #{@list.keys.join(', ')}".att(:bright)
         switch_user("root")
         exit unless are_you_sure?(5)
         

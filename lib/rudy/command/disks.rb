@@ -28,7 +28,7 @@ module Rudy
         machine = @instances.values.first # NOTE: DANGER! Should handle position.
         
         disk = Rudy::MetaData::Disk.new
-        [:zone, :environment, :role, :position].each do |n|
+        [:region, :zone, :environment, :role, :position].each do |n|
           disk.send("#{n}=", @global.send(n)) if @global.send(n)
         end
         [:path, :device, :size].each do |n|
@@ -37,6 +37,7 @@ module Rudy
         
         raise "Not enough info was provided to define a disk (#{disk.name})" unless disk.valid?
         raise "The device #{disk.device} is already in use on that machine" if Rudy::MetaData::Disk.is_defined?(@sdb, disk)
+        # TODO: Check disk path
         puts "Creating disk metadata for #{disk.name}"
         
         
@@ -136,9 +137,11 @@ module Rudy
       def execute_unattach_disk(disk, machine)
         begin
           
-          puts "Unmounting #{disk.path}...".att(:bright)
-          ssh_command machine[:dns_name], keypairpath, global.user, "umount #{disk.path}"
-          sleep 1
+          if machine
+            puts "Unmounting #{disk.path}...".att(:bright)
+            ssh_command machine[:dns_name], keypairpath, global.user, "umount #{disk.path}"
+            sleep 1
+          end
           
           if @ec2.volumes.attached?(disk.awsid)
             puts "Unattaching #{disk.awsid}".att(:bright)
@@ -147,8 +150,8 @@ module Rudy
           end
           
         rescue => ex
-          puts "Error while destroying volume #{disk.awsid}: #{ex.message}"
-        
+          puts "Error while unattaching volume #{disk.awsid}: #{ex.message}"
+          puts ex.backtrace if Drydock.debug?
         end
       end
       
@@ -168,6 +171,7 @@ module Rudy
           
         rescue => ex
           puts "Error while destroying volume #{disk.awsid}: #{ex.message}"
+          puts ex.backtrace if Drydock.debug?
         end
       end
       
@@ -191,6 +195,7 @@ module Rudy
           sleep 1
         rescue => ex
           puts "There was an error attaching #{disk.name}: #{ex.message}"
+          puts ex.backtrace if Drydock.debug?
         end
       end
       

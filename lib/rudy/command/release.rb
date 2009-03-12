@@ -27,38 +27,26 @@ module Rudy
         
         raise "No SCM defined for release routine" unless @scm        
         raise "#{Dir.pwd} is not a working copy" unless @scm.working_copy?(Dir.pwd)
-        #raise "There are local changes. Please revert or check them in." unless @scm.everything_checked_in?
+        raise "There are local changes. Please revert or check them in." unless @scm.everything_checked_in?
         raise "Invalid base URI (#{@scm_params[:base]})." unless @scm.valid_uri?(@scm_params[:base])
         
         true
       end
       
-      def release
-        p @scm
-        p @scm_params
-        
-        inst = @ec2.instances.list(machine_group).values
-        
-        execute_disk_routines(inst, :release)
-        
-      end
-      
       # <li>Creates a release tag based on the working copy on your machine</li>
       # <li>Starts a new stage instance</li>
-      # <li>Executes startup routines</li>
       # <li>Executes release routines</li>
-      def release2
+      def release
         # TODO: store metadata about release with local username and hostname
-        puts "Creating release from working copy"
+        puts "Creating release from working copy".att(:bright)
 
         exit unless are_you_sure?
 
-        #tag = @scm.create_release(@global.local_user, @option.msg)        
-        tag = "http://rilli.unfuddle.com/svn/rilli_rilli/tags/rel-2009-03-07-delano-03"
+        tag = @scm.create_release(@global.local_user, @option.msg)        
         puts "Done! (#{tag})"
         
         if @option.switch
-          puts "Switching working copy to new tag"
+          puts "Switching working copy to new tag".att(:bright)
           @scm.switch_working_copy(tag)
         end
         
@@ -66,13 +54,13 @@ module Rudy
         
         switch_user("root")
         
-        puts "Starting #{machine_group}"
+        puts "Starting #{machine_group}".att(:bright)
         
         instances = @ec2.instances.create(@option.image, machine_group.to_s, File.basename(keypairpath), machine_data.to_yaml, @global.zone)
         inst = instances.first
         
         if @option.address ||= machine_address
-          puts "Associating #{@option.address} to #{inst[:aws_instance_id]}"
+          puts "Associating #{@option.address} to #{inst[:aws_instance_id]}".att(:bright)
           @ec2.addresses.associate(inst[:aws_instance_id], @option.address)
         end
         
@@ -81,21 +69,26 @@ module Rudy
         
         #inst = @ec2.instances.list(machine_group).values
         
-        puts "Running Release routines..."
-        execute_release_routines(inst)
-       
-        if @scm && @scm_params[:command]
+        
+        execute_disk_routines(inst, :release)
+        
+        if @scm
           
+          puts "Creating checkout".att(:bright)
           ssh do |session|
-            cmd = "svn #{@scm_params[:command]} #{tag} #{@scm_params[:path]}"
+            cmd = "svn co #{tag} #{@scm_params[:path]}"
             puts "Running #{cmd}"
-            puts session.exec!(cmd)
+            session.exec!(cmd)
+            puts "Checkout complete"
           end
           
         end
         
+        execute_routines(inst, :release, :after)
         
+        print_instance inst
         
+        puts "Done!"
       end
       
       

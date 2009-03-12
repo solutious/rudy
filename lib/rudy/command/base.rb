@@ -307,8 +307,8 @@ module Rudy
             puts "Machine given has no DNS name. Skipping disks."
             return
           end
-        
-          if routines && routines.destroy
+          
+          if routines.destroy
             disk_paths = routines.destroy.keys
             vols = @ec2.instances.volumes(machine[:aws_instance_id]) || []
             puts "No volumes to destroy for (#{machine[:aws_instance_id]})" if vols.empty?
@@ -320,7 +320,14 @@ module Rudy
                 puts "No disk metadata for volume #{vol[:aws_id]}. Going old school..."
                 this_path = device_to_path(machine, vol[:aws_device])
               end
-              puts "PATH: #{this_path} (of #{disk_paths.join(',')})"
+              
+              dconf = disks[this_path]
+              
+              unless dconf
+                puts "#{this_path} is not defined for this machine. Check your machines config."
+                next
+              end
+              
               if disk_paths.member?(this_path) 
               
                 unless disks.has_key?(this_path)
@@ -334,20 +341,25 @@ module Rudy
                   sleep 3
                 rescue => ex
                   puts "Error while unmounting #{this_path}: #{ex.message}"
+                  puts ex.backtrace if Drydock.debug?
                   puts "We'll keep going..."
                 end
                 
                 begin
                   
-                  if @ec2.volumes.attached?(@disk.awsid)
+                  if @ec2.volumes.attached?(disk.awsid)
                     puts "Detaching #{vol[:aws_id]}"
                     @ec2.volumes.detach(vol[:aws_id])
                     sleep 3
                   end
                   
                   puts "Destroying #{this_path} (#{vol[:aws_id]})"
-                  @ec2.volumes.destroy(vol[:aws_id])
-                
+                  if @ec2.volumes.available?(disk.awsid)
+                    @ec2.volumes.destroy(vol[:aws_id])
+                  else
+                    puts "Volume is still attached (maybe a web server of database is running?)"
+                  end
+                  
                   if disk
                     puts "Deleteing metadata for #{disk.name}"
                     Rudy::MetaData::Disk.destroy(@sdb, disk)
@@ -355,6 +367,7 @@ module Rudy
                 
                 rescue => ex
                   puts "Error while detaching volume #{vol[:aws_id]}: #{ex.message}"
+                  puts ex.backtrace if Drydock.debug?
                   puts "Continuing..."
                 end
                 
@@ -364,8 +377,9 @@ module Rudy
             end
           
           end
-        
-          if routines && routines.mount
+          
+          
+          if routines.mount
             disk_paths = routines.mount.keys
             vols = @ec2.instances.volumes(machine[:aws_instance_id]) || []
             puts "No volumes to mount for (#{machine[:aws_instance_id]})" if vols.empty?
@@ -380,30 +394,151 @@ module Rudy
               
               next unless disk_paths.member?(this_path)
                 
+              dconf = disks[this_path]
+              
+              unless dconf
+                puts "#{this_path} is not defined for this machine. Check your machines config."
+                next
+              end
+              
+              
               begin
                 unless @ec2.instances.attached_volume?(machine[:aws_instance_id], vol[:aws_device])
-                  puts "Attaching #{vol[:aws_id]} to #{machine[:aws_instance_id]}"
+                  puts "Attaching #{vol[:aws_id]} to #{machine[:aws_instance_id]}".att(:bright)
                   @ec2.volumes.attach(machine[:aws_instance_id], vol[:aws_id],vol[:aws_device])
                   sleep 3
                 end
 
-                puts "Mounting #{this_path} to #{vol[:aws_device]}"
+                puts "Mounting #{this_path} to #{vol[:aws_device]}".att(:bright)
                 ssh_command machine[:dns_name], keypairpath, @global.user, "mkdir -p #{this_path} && mount -t ext3 #{vol[:aws_device]} #{this_path}"
 
                 sleep 1
               rescue => ex
                 puts "There was an error mounting #{this_path}: #{ex.message}"
+                puts ex.backtrace if Drydock.debug?
               end
               puts 
             end
           end
         
-          if routines && routines.create
+        
+          
+          if routines.restore
+            
+            routines.restore.each_pair do |path,props|
+              from = props[:from] || "unknown"
+              unless from.to_s == "backup"
+                puts "Sorry! You can currently only restore from backup. Check your routines config."
+                next
+              end
+              
+              begin 
+                puts "Restoring disk for #{path}"
+                
+                dconf = disks[path]
+                
+                unless dconf
+                  puts "#{path} is not defined for this machine. Check your machines config."
+                  next
+                end
+                    
+                zon = props[:zone] || @global.zone
+                env = props[:environment] || @global.environment
+                rol = props[:role] || @global.role
+                pos = props[:position] || @global.position
+                puts "Looking for backup from #{zon}-#{env}-#{rol}-#{pos}"
+                backup = find_most_recent_backup(zon, env, rol, pos, path)
+                
+                unless backup
+                  puts "No backups found"
+                  next
+                end
+                
+                puts "Found: #{backup.name}".att(:bright)
+                
+                disk = Rudy::MetaData::Disk.new
+                disk.path = path
+                [:region, :zone, :environment, :role, :position].each do |n|
+                  disk.send("#{n}=", @global.send(n)) if @global.send(n)
+                end
+                
+                disk.device = dconf[:device]
+                size = (backup.size.to_i > dconf[:size].to_i) ? backup.size : dconf[:size]
+                disk.size = size.to_i
+                
+                
+                if Rudy::MetaData::Disk.is_defined?(@sdb, disk)
+                  puts "The disk #{disk.name} already exists."
+                  puts "You probably need to define when to destroy the disk."
+                  puts "Skipping..."
+                  next
+                end
+
+                if @ec2.instances.attached_volume?(machine[:aws_instance_id], disk.device)
+                  puts "Skipping disk for #{disk.path} (device #{disk.device} is in use)"
+                  next
+                end
+
+                # NOTE: It's important to use Caesars' hash syntax b/c the disk property
+                # "size" conflicts with Hash#size which is what we'll get if there's no 
+                # size defined. 
+                unless disk.size.kind_of?(Integer)
+                  puts "Skipping disk for #{disk.path} (size not defined)"
+                  next
+                end
+
+                if disk.path.nil?
+                  puts "Skipping disk for #{disk.path} (no path defined)"
+                  next
+                end
+
+                unless disk.valid?
+                  puts "Skipping #{disk.name} (not enough info)"
+                  next
+                end
+
+                puts "Creating volume... (from #{backup.awsid})".att(:bright)
+                volume = @ec2.volumes.create(@global.zone, disk.size, backup.awsid)
+
+                puts "Attaching #{volume[:aws_id]} to #{machine[:aws_instance_id]}".att(:bright)
+                @ec2.volumes.attach(machine[:aws_instance_id], volume[:aws_id], disk.device)
+                sleep 3
+
+                puts "Mounting #{disk.device} to #{disk.path}".att(:bright)
+                ssh_command machine[:dns_name], keypairpath, @global.user, "mkdir -p #{disk.path} && mount -t ext3 #{disk.device} #{disk.path}"
+
+                puts "Creating disk metadata for #{disk.name}"
+                disk.awsid = volume[:aws_id]
+                Rudy::MetaData::Disk.save(@sdb, disk)
+
+                sleep 1
+              rescue => ex
+                puts "There was an error creating #{path}: #{ex.message}"
+                puts ex.backtrace if Drydock.debug?
+                if disk
+                  puts "Removing metadata for #{disk.name}"
+                  Rudy::MetaData::Disk.destroy(@sdb, disk)
+                end
+              end
+              puts
+            end
+          end
+          
+          
+          
+          if routines.create
             routines.create.each_pair do |path,props|
         
               begin 
-                dconf = disks[path]
                 puts "Creating disk for #{path}"
+                
+                dconf = disks[path]
+
+                unless dconf
+                  puts "#{path} is not defined for this machine. Check your machines config."
+                  next
+                end
+                
                 disk = Rudy::MetaData::Disk.new
                 disk.path = path
                 [:region, :zone, :environment, :role, :position].each do |n|
@@ -443,18 +578,18 @@ module Rudy
                   next
                 end
                         
-                puts "Creating volume... (#{disk.size}GB in #{@global.zone})"
+                puts "Creating volume... (#{disk.size}GB in #{@global.zone})".att(:bright)
                 volume = @ec2.volumes.create(@global.zone, disk.size)
             
-                puts "Attaching #{volume[:aws_id]} to #{machine[:aws_instance_id]}"
+                puts "Attaching #{volume[:aws_id]} to #{machine[:aws_instance_id]}".att(:bright)
                 @ec2.volumes.attach(machine[:aws_instance_id], volume[:aws_id], disk.device)
                 sleep 3
                 
-                puts "Creating the filesystem (mkfs.ext3 -F #{disk.device})"
+                puts "Creating the filesystem (mkfs.ext3 -F #{disk.device})".att(:bright)
                 ssh_command machine[:dns_name], keypairpath, @global.user, "mkfs.ext3 -F #{disk.device}"
                 sleep 1
                 
-                puts "Mounting #{disk.device} to #{disk.path}"
+                puts "Mounting #{disk.device} to #{disk.path}".att(:bright)
                 ssh_command machine[:dns_name], keypairpath, @global.user, "mkdir -p #{disk.path} && mount -t ext3 #{disk.device} #{disk.path}"
               
                 puts "Creating disk metadata for #{disk.name}"
@@ -475,6 +610,10 @@ module Rudy
         end
       end
       
+      def find_most_recent_backup(zon, env, rol, pos, path)
+        criteria = [zon, env, rol, pos, path]
+        (Rudy::MetaData::Backup.list(@sdb, *criteria) || []).first
+      end
       
       def execute_routines(machines, action, before_or_after)
         machines = [machines] unless machines.is_a?( Array)
@@ -514,7 +653,7 @@ module Rudy
               end
             end
             ssh do |session|
-              puts "Running #{script}..."
+              puts "Running #{script}...".att(:bright)
               session.exec!("chmod 700 ~/#{config_file}")
               session.exec!("chmod 700 #{script}")
               puts session.exec!("#{script}")

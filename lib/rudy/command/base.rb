@@ -327,7 +327,7 @@ module Rudy
                   puts "#{this_path} is not defined as a machine disk. Skipping..."
                   next
                 end
-              
+                
                 begin
                   puts "Unmounting #{this_path}..."
                   ssh_command machine[:dns_name], keypairpath, @global.user, "umount #{this_path}"
@@ -336,12 +336,15 @@ module Rudy
                   puts "Error while unmounting #{this_path}: #{ex.message}"
                   puts "We'll keep going..."
                 end
-              
+                
                 begin
-                  puts "Detaching #{vol[:aws_id]}"
-                  @ec2.volumes.detach(vol[:aws_id])
-                  sleep 3
-              
+                  
+                  if @ec2.volumes.attached?(@disk.awsid)
+                    puts "Detaching #{vol[:aws_id]}"
+                    @ec2.volumes.detach(vol[:aws_id])
+                    sleep 3
+                  end
+                  
                   puts "Destroying #{this_path} (#{vol[:aws_id]})"
                   @ec2.volumes.destroy(vol[:aws_id])
                 
@@ -441,9 +444,6 @@ module Rudy
                 end
                         
                 puts "Creating volume... (#{disk.size}GB in #{@global.zone})"
-                # NOTE: It's important to use Caesars' hash syntax b/c the disk property
-                # "size" conflicts with Hash#size which is what we'll get if there's no 
-                # size defined.
                 volume = @ec2.volumes.create(@global.zone, disk.size)
             
                 puts "Attaching #{volume[:aws_id]} to #{machine[:aws_instance_id]}"

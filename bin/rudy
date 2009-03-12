@@ -25,7 +25,7 @@ project "Rudy"  # This also runs require 'ruby'
 
 debug :on
 
-#capture :stderr       
+capture :stderr       
 
 global :A, :accesskey, String, "AWS Access Key"
 global :S, :secretkey, String, "AWS Secret Access Key"

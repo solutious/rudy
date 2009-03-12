@@ -101,16 +101,19 @@ module Rudy::AWS
       end
       
       def deleting?(vol_id)
+        return false unless vol_id
         vol = get(vol_id)
         (vol && vol[:aws_status] == "deleting")
       end
       
       def available?(vol_id)
+        return false unless vol_id
         vol = get(vol_id)
         (vol && vol[:aws_status] == "available")
       end
       
       def attached?(vol_id)
+        return false unless vol_id
         vol = get(vol_id)
         (vol && vol[:aws_status] == "in-use")
       end

@@ -17,11 +17,11 @@ module Rudy
         raise "No SSH key provided for root in #{machine_group}!" unless has_keypair?(:root)
         
         @list = @ec2.instances.list(machine_group)
-        unless @list.empty?
-          msg = "#{machine_group} is in use, probably with another release. #{$/}"
-          msg << 'Sort it out and run "rudy destroy" before continuing.' 
-          raise msg
-        end
+        #unless @list.empty?
+        #  msg = "#{machine_group} is in use, probably with another release. #{$/}"
+        #  msg << 'Sort it out and run "rudy shutdown" before continuing.' 
+        #  raise msg
+        #end
         
         @scm, @scm_params = find_scm
         

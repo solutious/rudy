@@ -73,8 +73,8 @@ module Rudy
       
       def Disk.get(sdb, name)
         disk = sdb.get_attributes(RUDY_DOMAIN, name)
-        
-        raise "Disk #{name} does not exist!" unless disk && disk.has_key?(:attributes)
+        return nil unless disk && disk.has_key?(:attributes) && !disk[:attributes].empty?
+#        raise "Disk #{name} does not exist!" unless 
         Rudy::MetaData::Disk.from_hash(disk[:attributes])
       end
       

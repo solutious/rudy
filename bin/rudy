@@ -23,7 +23,7 @@ require 'drydock'
 extend Drydock
 
 project "Rudy"  # This also runs require 'ruby'
-debug :on
+debug :off
 capture :stderr       
 before do
   @start = Time.now

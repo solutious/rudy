@@ -150,8 +150,9 @@ option :s, :switch, "Switch to the release branch/tag"
 option :m, :msg, String, "A short release note"
 command :release => Rudy::Command::Release
 
-desc "Update the release currently running machine group"
+desc "Update the release currently running in a machine group"
 command :rerelease => Rudy::Command::Release
+command_alias :rerelease, :rere
 
 #desc "Deploy disk snapshots from one machine to another"
 #command :deploy => Rudy::Command::Deploy
@@ -161,7 +162,7 @@ command :rerelease => Rudy::Command::Release
 
 # -------------------------------------------  UGLY STUFFS  --------
 # ------------------------------------------------------------------
-debug :off
+debug :on
 capture :stderr       
 before do
   @start = Time.now

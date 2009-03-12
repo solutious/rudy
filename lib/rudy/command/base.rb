@@ -292,7 +292,7 @@ module Rudy
         routines = @config.routines.find(@global.environment, @global.role, action, :disks)
         
         unless routines
-          puts "No #{action} disk routines for #{machine[:aws_instance_id]}"
+          puts "No #{action} disk routines for #{machine_group}"
           return
         end
         
@@ -352,7 +352,7 @@ module Rudy
                   if @ec2.volumes.attached?(disk.awsid)
                     puts "Detaching #{vol[:aws_id]}"
                     @ec2.volumes.detach(vol[:aws_id])
-                    sleep 3
+                    sleep 3 # TODO: replace with something like wait_for_machine
                   end
                   
                   puts "Destroying #{this_path} (#{vol[:aws_id]})"
@@ -585,11 +585,11 @@ module Rudy
             
                 puts "Attaching #{volume[:aws_id]} to #{machine[:aws_instance_id]}".att(:bright)
                 @ec2.volumes.attach(machine[:aws_instance_id], volume[:aws_id], disk.device)
-                sleep 3
+                sleep 6
                 
                 puts "Creating the filesystem (mkfs.ext3 -F #{disk.device})".att(:bright)
                 ssh_command machine[:dns_name], keypairpath, @global.user, "mkfs.ext3 -F #{disk.device}"
-                sleep 1
+                sleep 3
                 
                 puts "Mounting #{disk.device} to #{disk.path}".att(:bright)
                 ssh_command machine[:dns_name], keypairpath, @global.user, "mkdir -p #{disk.path} && mount -t ext3 #{disk.device} #{disk.path}"
@@ -682,7 +682,7 @@ module Rudy
           next unless val
           criteria << "#{n.to_s.slice(0,1).att :normal}:#{val.att :bright}"
         end
-        puts '%s -- %s' % [title, now_utc] unless @global.quiet
+        puts '%s -- %s UTC' % [title, now_utc] unless @global.quiet
         puts '[%s]' % criteria.join("  ") unless @global.quiet
         
         puts unless @global.quiet

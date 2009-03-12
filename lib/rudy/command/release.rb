@@ -17,13 +17,13 @@ module Rudy
         raise "No SSH key provided for root in #{machine_group}!" unless has_keypair?(:root)
         
         @list = @ec2.instances.list(machine_group)
-        #unless @list.empty?
-        #  msg = "#{machine_group} is in use, probably with another release. #{$/}"
-        #  msg << 'Sort it out and run "rudy shutdown" before continuing.' 
-        #  raise msg
-        #end
+        unless @list.empty?
+          msg = "#{machine_group} is in use, probably with another release. #{$/}"
+          msg << 'Sort it out and run "rudy shutdown" before continuing.' 
+          raise msg
+        end
         
-        @scm, @scm_params = find_scm
+        @scm, @scm_params = find_scm(:release)
         
         raise "No SCM defined for release routine" unless @scm        
         raise "#{Dir.pwd} is not a working copy" unless @scm.working_copy?(Dir.pwd)
@@ -33,9 +33,57 @@ module Rudy
         true
       end
       
-      def release2
-        p @scm
-        p @scm_params
+      
+      
+      def rerelease_valid?
+        relroutine = @config.routines.find_deferred(@global.environment, @global.role, :rerelease)
+        raise "No rerelease routines defined for #{machine_group}" if relroutine.nil?
+        
+        raise "No EC2 .pem keys provided" unless has_pem_keys?
+        raise "No SSH key provided for #{@global.user} in #{machine_group}!" unless has_keypair?
+        raise "No SSH key provided for root in #{machine_group}!" unless has_keypair?(:root)
+        
+        @list = @ec2.instances.list(machine_group)
+        if @list.empty?
+          msg = "There are no machines running in #{machine_group}. #{$/}"
+          msg << 'You must run "rudy release" before you can rerelease.' 
+          raise msg
+        end
+        
+        @scm, @scm_params = find_scm(:rerelease)
+        
+        raise "No SCM defined for release routine" unless @scm        
+        raise "#{Dir.pwd} is not a working copy" unless @scm.working_copy?(Dir.pwd)
+        raise "There are local changes. Please revert or check them in." unless @scm.everything_checked_in?
+        raise "Invalid base URI (#{@scm_params[:base]})." unless @scm.valid_uri?(@scm_params[:base])
+        
+        true
+      end
+      
+      def rerelease
+        puts "Updating release from working copy".att(:bright)
+
+        tag, revision = @scm.local_info
+        puts "tag: #{tag}"
+        puts "rev: #{revision}"
+        
+        execute_disk_routines(@list.values, :rerelease)
+        
+        if @scm
+          
+          puts "Running SCM command".att(:bright)
+          ssh do |session|
+            cmd = "svn #{@scm_params[:command]}"
+            puts "#{cmd}"
+            session.exec!("cd #{@scm_params[:path]}")
+            session.exec!(cmd)
+            puts "#{@scm_params[:command]} complete"
+          end
+          
+        end
+        
+        execute_routines(@list.values, :rerelease, :after)
+        
       end
       
       # <li>Creates a release tag based on the working copy on your machine</li>
@@ -97,7 +145,7 @@ module Rudy
       end
       
       
-      def find_scm
+      def find_scm(routine)
         env, rol, att = @global.environment, @global.role
         
         # Look for the source control engine, checking all known scm values.
@@ -106,7 +154,7 @@ module Rudy
         scm_name = nil
         SUPPORTED_SCM_NAMES.each do |v|
           scm_name = v
-          params = @config.routines.find(env, rol, :release, scm_name)
+          params = @config.routines.find(env, rol, routine, scm_name)
           break if params
         end
         

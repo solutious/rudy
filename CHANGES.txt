@@ -5,7 +5,7 @@ TODO: Look into RubyGems error
     rake aborted!
     RubyGem version error: rdoc(2.4.0 not ~> 2.3.0)
 
-TODO:
+TODO: Remove aws_swb
 
 
 #### 0.4.1 (2009-03-??) ###############################
@@ -13,7 +13,7 @@ TODO:
 * CHANGE: Recommend keypair config to be in ~/.rudy/config
 * FIX: Rudy now checks for user keys specified by env-role, env, and global
 * FIX: gemspec dependency net-ssh-multi
-
+* NEW: rerelease command
 
 #### 0.4 (2009-03-12) ###############################
 

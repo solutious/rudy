@@ -52,18 +52,19 @@
   support/rudy-ec2-startup
   tryouts/console_tryout.rb
   )
-  s.executables = %w[rudy]
+  s.executables = %w[rudy rudy-ec2]
   
   s.extra_rdoc_files = %w[README.rdoc LICENSE.txt]
   s.has_rdoc = true
-  s.rdoc_options = ["--line-numbers", "--inline-source", "--title", "Rudy: #{s.summary}", "--main", "README.rdoc"]
+  s.rdoc_options = ["--line-numbers", "--title", "Rudy: #{s.summary}", "--main", "README.rdoc"]
   s.require_paths = %w[lib]
   s.rubygems_version = '1.1.1'
 
   
-  
   s.add_dependency 'drydock'
   s.add_dependency 'caesars'
+  s.add_dependency 'echoe'
+  s.add_dependency 'right_aws'
   s.add_dependency 'net-ssh'
   s.add_dependency 'net-scp'
   s.add_dependency 'net-ssh-gateway'

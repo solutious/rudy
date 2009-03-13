@@ -19,7 +19,8 @@ module Rudy
           cmd = false
         end
         
-        puts ssh_command(machine[:dns_name], keypairpath, @global.user, cmd, @option.print)
+        ret = ssh_command(machine[:dns_name], keypairpath, @global.user, cmd, @option.print)
+        puts ret if ret  # ssh command returns false with "ssh_exchange_identification: Connection closed by remote host"
         
       end
       

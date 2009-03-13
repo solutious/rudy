@@ -110,8 +110,8 @@ desc "Machine Group Status"
 command :status => Rudy::Command::Machines
 
 
-#desc "Update a Machine Group with the current version of Rudy"
-#command :update => Rudy::Command::Machines
+desc "Update a Machine Group with the current version of Rudy"
+command :update => Rudy::Command::Machines
 
 
 usage "rudy [-e env] [-u user] connect [-p] [cmd]"
@@ -139,6 +139,7 @@ desc "Shutdown a Machine Group"
 command :shutdown => Rudy::Command::Machines
 
 desc "Start a Machine Group"
+option :i, :image, String, "EC2 image ID (AMI)"
 command :startup => Rudy::Command::Machines
 command_alias :startup, :start
 
@@ -162,7 +163,7 @@ command_alias :rerelease, :rere
 
 # -------------------------------------------  UGLY STUFFS  --------
 # ------------------------------------------------------------------
-debug :off
+debug :on
 capture :stderr       
 before do
   @start = Time.now

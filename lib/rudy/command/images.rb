@@ -13,7 +13,11 @@ module Rudy
       
       def create_images_valid?
         puts "Make sure the machine is clean. I don't want archive no crud!"
-        exit unless are_you_sure?
+        switch_user("root")
+        
+          raise "No EC2 .pem keys provided" unless has_pem_keys?
+          raise "No SSH key provided for #{@global.user}!" unless has_keypair?
+          raise "No SSH key provided for root!" unless has_keypair?(:root)
         true
       end
       
@@ -25,16 +29,12 @@ module Rudy
       
       
       def create_images
+        puts "Creating image from #{machine_group}"
         
-        switch_user("root")
-        
-        puts "TODO: clean transient rudy crap off of instance before making image!!!"
         # ~/.rudy, /etc/motd, history -c, /etc/hosts, /var/log/rudy*
-        exit
         
-        raise "No EC2 .pem keys provided" unless has_pem_keys?
-        raise "No SSH key provided for #{keypairname}!" unless has_keypair?(keypairname)
-        raise "SSH key provided but cannot be found! (#{keypairpath})" unless File.exists?(keypairpath)
+        are_you_sure?(2)
+        
         
         machine_list = @ec2.instances.list(machine_group)
         machine = machine_list.values.first  # NOTE: Only one machine per group, for now...
@@ -44,9 +44,9 @@ module Rudy
         
         puts "The new image will be based on #{machine_group}_01"
         
-        @option.account ||= @global.account_num
+        @option.account ||= @config.awsinfo.account
         
-        unless @global.account
+        unless @option.account
           puts "Enter your 12 digit Amazon account number:"
           @global.account = gets.chomp
         end
@@ -61,13 +61,21 @@ module Rudy
           @option.bucket_name = gets.chomp
         end
         
-        scp_command machine[:dns_name], keypairpath, @global.user, @global.cert, "/mnt/"
-        scp_command machine[:dns_name], keypairpath, @global.user, @global.privatekey, "/mnt/"
+        unless @option.print
+          puts "Copying .pem keys to /mnt (they will not be included in the AMI)"
+          scp_command machine[:dns_name], keypairpath, @global.user, @global.cert, "/mnt/"
+          scp_command machine[:dns_name], keypairpath, @global.user, @global.privatekey, "/mnt/"
+        end
         
-        ssh_command machine[:dns_name], keypairpath, @global.user, "ec2-bundle-vol -r i386 -p #{@option.image_name} -k /mnt/pk-*pem -c /mnt/cert*pem -u #{@option.account}"
-        ssh_command machine[:dns_name], keypairpath, @global.user, "ec2-upload-bundle -b #{@option.bucket_name} -m /tmp/#{@option.image_name}.manifest.xml -a #{@global.accesskey} -s #{@global.secretkey}"
+        ssh do |session|
+          session.exec!("touch /root/firstrun")
+        end
         
-        @ec2.images.register("#{@option.bucket_name}/#{@option.image_name}.manifest.xml")
+        puts "Starting bundling process...".att(:bright)
+        puts ssh_command(machine[:dns_name], keypairpath, @global.user, "ec2-bundle-vol -r i386 -p #{@option.image_name} -k /mnt/pk-*pem -c /mnt/cert*pem -u #{@option.account}", @option.print)
+        puts ssh_command(machine[:dns_name], keypairpath, @global.user, "ec2-upload-bundle -b #{@option.bucket_name} -m /tmp/#{@option.image_name}.manifest.xml -a #{@global.accesskey} -s #{@global.secretkey}", @option.print)
+
+        @ec2.images.register("#{@option.bucket_name}/#{@option.image_name}.manifest.xml") unless @option.print
       end
       
       def deregister

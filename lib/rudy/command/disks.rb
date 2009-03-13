@@ -165,13 +165,14 @@ module Rudy
               @ec2.volumes.destroy(disk.awsid)
             end
             
-            puts "Deleteing metadata for #{disk.name}".att(:bright)
-            Rudy::MetaData::Disk.destroy(@sdb, disk)
           end
           
         rescue => ex
           puts "Error while destroying volume #{disk.awsid}: #{ex.message}"
           puts ex.backtrace if Drydock.debug?
+        ensure
+          puts "Deleteing metadata for #{disk.name}".att(:bright)
+          Rudy::MetaData::Disk.destroy(@sdb, disk)
         end
       end
       

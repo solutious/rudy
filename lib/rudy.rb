@@ -162,13 +162,15 @@ end
 
 def ssh_command(host, keypair, user, command=false, printonly=false, verbose=false)
   #puts "CONNECTING TO #{host}..."
-  cmd = "ssh -q -i #{keypair} #{user}@#{host} "
+  cmd = "ssh -i #{keypair} #{user}@#{host} "
   cmd += " '#{command}'" if command
   puts cmd if verbose
   return cmd if printonly
   # backticks returns STDOUT
   # exec replaces current process (it's just like running ssh)
-  (command) ? `#{cmd}` : Kernel.exec(cmd)
+  # -- UPDATE -- Some problem with exec. "Operation not supported"
+  # using system (http://www.mail-archive.com/mongrel-users@rubyforge.org/msg02018.html)
+  (command) ? `#{cmd}` : Kernel.system(cmd)
 end
 
 
@@ -189,9 +191,8 @@ def scp_command(host, keypair, user, paths, to_path, to_local=false, verbose=fal
   end
   
   
-  cmd = "scp -i #{keypair} #{from_paths} #{to_path}"
+  cmd = "scp -r -i #{keypair} #{from_paths} #{to_path}"
 
-  puts "CONNECTING TO #{host}..."
   puts cmd if verbose
   printonly ? (puts cmd) : system(cmd)
 end

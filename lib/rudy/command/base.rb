@@ -55,8 +55,7 @@ module Rudy
         
         @global.local_user = ENV['USER'] || :user
         @global.local_hostname = Socket.gethostname || :host
-
-        check_keys
+        
         
         if @global.verbose > 1
           puts "GLOBALS:"
@@ -292,7 +291,7 @@ module Rudy
         routines = @config.routines.find(@global.environment, @global.role, action, :disks)
         
         unless routines
-          puts "No #{action} disk routines for #{machine_group}"
+          puts "No #{action} disk routines."
           return
         end
         
@@ -635,8 +634,6 @@ module Rudy
         write_to_file(tf.path, config.to_hash.to_yaml, 'w')
         puts "Running #{action.to_s.capitalize} #{before_or_after.to_s.upcase} routines".att(:bright)
         machines.each do |machine|
-          puts "Machine Group: #{machine_group}"
-          puts "Hostname: #{machine[:dns_name]}"
           
           rscripts = @config.routines.find_deferred(@global.environment, @global.role, action, before_or_after) || []
           rscripts = [rscripts] unless rscripts.is_a?(Array)
@@ -804,6 +801,7 @@ module Rudy
               # Specify your private keys here. These can be defined globally
               # or by environment and role like in machines.rb.
               machines do
+                ami "ami-0734d36e"    # gentoo-m1.small-v5
                 users do
                   root :keypair => "path/2/root-private-key"
                 end

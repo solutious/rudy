@@ -9,7 +9,6 @@ module Rudy::CLI
       raise "I will not help you ruin production!" if @global.environment == "prod" # TODO: use_caution?, locked?
       true
     end
-    
     def shutdown
       @option.group ||= machine_group
       
@@ -25,6 +24,21 @@ module Rudy::CLI
       
       rudy = Rudy::Machines.new(:config => @config, :global => @global)
       rudy.shutdown(opts)
+    end
+    
+    def status_valid?
+      @option.group ||= machine_group
+      @option.state ||= :running
+      true
+    end
+    def status
+      puts "Status for #{@option.group} (state: #{@option.state})"
+      opts = {}
+      opts[:group] = @option.group if @option.group
+      opts[:id] = @argv.awsid if @argv.awsid
+      opts[:id] = [opts[:id]] if opts[:id] && !opts[:id].is_a?(Array)
+      rudy = Rudy::Machines.new(:config => @config, :global => @global)
+      rudy.status(opts)
     end
     
     
@@ -95,29 +109,7 @@ module Rudy::CLI
     end
     
     
-    def status_valid?
-      raise "No EC2 .pem keys provided" unless has_pem_keys?
-      raise "No SSH key provided for #{@global.user}!" unless has_keypair?
-      raise "No SSH key provided for root!" unless has_keypair?(:root)
-      
-      @option.group ||= machine_group
-      @option.state ||= :running
-      
-      @list = @ec2.instances.list_by_group(@option.group, @option.state)
 
-      raise "No machines running in #{@option.group}" unless @list && !@list.empty?
-      true
-    end
-    def status
-      puts "Status for #{@option.group} (state: #{@option.state})"
-
-      @list.each_pair do |id, inst|
-        puts '-'*60
-        puts "Instance: #{id.att(:bright)} (AMI: #{inst.ami})"
-        puts inst.to_s
-      end
-    end
-    
     
     def update_valid?
       raise "No EC2 .pem keys provided" unless has_pem_keys?

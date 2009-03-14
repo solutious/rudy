@@ -124,12 +124,6 @@ command :metadata => Rudy::CLI::Metadata
 command_alias :metadata, :md
 
 
-desc "Machine Group Status"
-option :g, :group, String, "A security group name"
-option :s, :state, String, "Machine state. One of: running (default), pending, terminated"
-command :status => Rudy::CLI::Machines
-
-
 desc "Update a Machine Group with the current version of Rudy"
 option :g, :group, String, "A security group name"
 command :update => Rudy::CLI::Machines
@@ -173,6 +167,7 @@ command_alias :startup, :start
 
 desc "Restart a Machine Group"
 option :g, :group, String, "A security group name"
+argv :awsid
 command :restart => Rudy::CLI::Machines
 
 desc "Release to a Machine Group"
@@ -180,6 +175,12 @@ option :g, :group, String, "A security group name"
 option :s, :switch, "Switch to the release branch/tag"
 option :m, :msg, String, "A short release note"
 command :release => Rudy::CLI::Release
+
+desc "Machine Group Status"
+option :g, :group, String, "A security group name"
+option :s, :state, String, "Machine state. One of: running (default), pending, terminated"
+argv :awsid
+command :status => Rudy::CLI::Machines
 
 desc "Update the release currently running in a machine group"
 command :rerelease => Rudy::CLI::Release

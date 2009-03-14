@@ -124,15 +124,11 @@ module Rudy::AWS
       include Rudy::AWS::ObjectBase
       
       def destroy(*list)
-        begin
-          @aws.terminate_instances(list.flatten)
-        #rescue RightAws::AwsError => ex
-        #  raise UnknownInstance.new
-        end
+        @aws.terminate_instances(:instance_id => list.flatten)
       end
       
       def restart(*list)
-        @aws.reboot_instances(list.flatten)
+        @aws.reboot_instances(:instance_id => list.flatten)
       end
       
       def attached_volume?(id, device)
@@ -186,11 +182,12 @@ module Rudy::AWS
       # +inst_ids+ is an Array of instance IDs.
       # +state+ is an optional instance state. Must be one of: running, pending, terminated.
       # Returns a hash of Rudy::AWS::EC2::Instance objects. The key is the instance ID. 
-      def list(inst_ids=[], state=nil)
+      def list(inst_ids, state=nil)
         state &&= state.to_sym
-        inst_ids = [inst_ids] unless inst_ids.is_a?(Array)
+        inst_ids &&= [inst_ids].flatten
+        inst_ids ||= []
         raise "Unknown state given: #{state}" if state && ![:running, :pending, :terminated].member?(state)
-
+        
         # requestId: c16878ac-28e4-4859-9878-ef93af45789c
         # reservationSet: 
         #   item: 
@@ -201,6 +198,7 @@ module Rudy::AWS
         #     instancesSet: 
         #       item: 
         # 
+
         ilist = @aws.describe_instances(:instance_id => inst_ids) || {}
         reqid = ilist['requestId']
         resids = []
@@ -232,6 +230,25 @@ module Rudy::AWS
         instances.reject { |id,inst| !inst.groups.member?(group)}    
       end
 
+      def get(inst_id)
+        list(inst_id)
+      end
+      
+      def running?(inst_id)
+        inst = get(inst_id)
+        (inst && inst[:aws_state] == "running")
+      end
+      
+      def pending?(inst_id)
+        inst = get(inst_id)
+        (inst && inst[:aws_state] == "pending")
+      end
+      
+      def terminated?(inst_id)
+        inst = get(inst_id)
+        (inst && inst[:aws_state] == "terminated")
+      end
+      
       #
       # +h+ is a hash of instance properties in the format returned
       # by EC2::Base#describe_instances:
@@ -273,26 +290,8 @@ module Rudy::AWS
         inst.state = h['instanceState']['name']
         inst
       end
-      
-      def get(inst_id)
-        # This is ridiculous. Send inst_id to describe volumes
-        instance = {}
-        list.each_pair do |id, hash|
-          next unless inst_id == id
-          instance = hash
-        end
-        instance
-      end
-      
-      def running?(inst_id)
-        inst = get(inst_id)
-        (inst && inst[:aws_state] == "running")
-      end
-      
-      def pending?(inst_id)
-        inst = get(inst_id)
-        (inst && inst[:aws_state] == "pending")
-      end
+
+
     end
     
     class Groups

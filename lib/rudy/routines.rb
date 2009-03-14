@@ -6,7 +6,7 @@ module Rudy::Routines
     attr_accessor :logger
     attr_accessor :global
   
-    def initialize(args={})
+    def initialize(opts={})
       opts = { :config => {}, :logger => STDERR, :global => {}}.merge(opts)
       # Set instance variables
       opts.each_pair { |n,v| self.send("#{n}=", v) if self.respond_to?("#{n}=") }

@@ -42,7 +42,7 @@ module Rudy::AWS
     end
     
     def select(query)
-      list = @aws2.select(query) || []
+      list = @aws.select(query) || []
       list[0]
     end
     

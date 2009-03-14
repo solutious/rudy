@@ -219,25 +219,21 @@ module Rudy::AWS
       include Rudy::AWS::ObjectBase
     
       
-      # +list+ is a list of security groups to look for. If it's empty, all groups
+      # +list+ is a list of security group names to look for. If it's empty, all groups
       # associated to the account will be returned.
-      # right_aws returns an array of hashes
-      # :aws_group_name  => "default-1",
-      # :aws_owner       => "000000000888",
-      # :aws_description => "Default allowing SSH, HTTP, and HTTPS ingress",
-      # :aws_perms       => [{:owner => "000000000888", :group => "default"},
-      #        {:owner => "000000000888", :group => "default-1"},
-      #        {:to_port => "-1",  :protocol => "icmp", :from_port => "-1",  :cidr_ips => "0.0.0.0/0"}]
-      #                     ]
+      # Returns an Array of Rudy::AWS::EC2::Group objects
       def list(list=[])
-        glist = @aws.describe_security_groups(list) || []
-
+        glist = @aws.describe_security_groups(:group_name => list) || {}
+        groups = glist['securityGroupInfo']['item'].collect do |oldg| 
+          Groups.hash_to_obj(oldg)
+        end
+        groups
       end
       
       # Create a new EC2 security group
       # Returns true/false whether successful
       def create(name, desc=nil)
-        @aws.create_security_group(name, desc || "Group #{name}")
+        @aws.create_security_group(:group_name => name, :group_description => desc || "Group #{name}")
       end
       
       # Delete an EC2 security group
@@ -246,26 +242,109 @@ module Rudy::AWS
         @aws.delete_security_group(name)
       end
       
-      # Modify an EC2 security group
-      # Returns true/false whether successful
-      def modify(name, from_port, to_port, protocol='tcp', ipa='0.0.0.0/0')
-        @aws.authorize_security_group_IP_ingress(name, from_port, to_port, protocol, ipa)
+      # +name+ a string
+      def get(name)
+        (list([name]) || []).first
       end
       
+      # +group+ a Rudy::AWS::EC2::Group object
+      #def save(group)
+      #  
+      #end
+      
+      # Authorize a port/protocol for a specific IP address
+      def authorize(name, from_port, to_port, protocol='tcp', ipa='0.0.0.0/0')
+        opts = {
+          :group_name => name,
+          :ip_protocol => protocol,
+          :from_port => from_port,
+          :to_port => to_port,
+          :cidr_ip => ipa
+        }
+        @aws.authorize_security_group_ingress(opts)
+      end
+      alias :authorise :authorize
+      
+      # Revoke a port/protocol for a specific IP address
+      def revoke(name, from_port, to_port, protocol='tcp', ipa='0.0.0.0/0')
+        opts = {
+          :group_name => name,
+          :ip_protocol => protocol,
+          :from_port => from_port,
+          :to_port => to_port,
+          :cidr_ip => ipa
+        }
+        @aws.revoke_security_group_ingress(opts)
+      end
+        
       
       # Does the security group +name+ exist?
       def exists?(name)
         begin
           g = list([name.to_s])
-          
-        rescue RightAws::AwsError => ex
-          # Ignore (it raises an exception when the list contains an unknown group name)
-        ensure
-          g ||= []
+        rescue
+          return false
         end
         
         !g.empty?
       end
+      
+      
+      
+      
+      # +oldg+ is an EC2::Base Security Group Hash. This is the format
+      # returned by EC2::Base#describe_security_groups
+      #
+      #      groupName: stage-app
+      #      groupDescription: 
+      #      ownerId: "207436219441"
+      #      ipPermissions: 
+      #        item: 
+      #        - ipRanges: 
+      #            item: 
+      #            - cidrIp: 216.19.182.83/32
+      #            - cidrIp: 24.5.71.201/32
+      #            - cidrIp: 75.157.176.202/32
+      #            - cidrIp: 84.28.52.172/32
+      #            - cidrIp: 87.212.145.201/32
+      #            - cidrIp: 96.49.129.178/32
+      #          groups: 
+      #            item: 
+      #            - groupName: default
+      #              userId: "207436219441"
+      #            - groupName: stage-app
+      #              userId: "207436219441"  
+      #          fromPort: "22"
+      #          toPort: "22"
+      #          ipProtocol: tcp
+      #
+      # Returns a Rudy::AWS::EC2::Group object
+      def Groups.hash_to_obj(oldg)
+        newg = Rudy::AWS::EC2::Group.new
+        newg.name = oldg['groupName']
+        newg.description = oldg['groupDescription']
+        newg.owner_id = oldg['ownerId']
+        return newg unless oldg['ipPermissions'].is_a?(Hash)
+        newg.permissions = oldg['ipPermissions']['item'].collect do |oldp|
+          newp = Rudy::AWS::EC2::Group::Permissions.new
+          newp.source = oldp['fromPort']
+          newp.destination = oldp['toPort']
+          newp.protocol = oldp['ipProtocol']
+          if oldp['groups'].is_a?(Hash)
+            newp.groups = oldp['groups']['item'].collect do |oldpg|
+              [oldpg['userId'], oldpg['groupName']].join(':')   # account_num:name
+            end
+          end
+          if oldp['ipRanges'].is_a?(Hash)
+            newp.addresses = oldp['ipRanges']['item'].collect do |olda|
+              olda['cidrIp']
+            end
+          end
+          newp
+        end
+        newg
+      end
+      
       
     end
     

@@ -1,5 +1,6 @@
 
 
+require 'ec2'
 
 
 module Rudy
@@ -24,13 +25,13 @@ module Rudy
       attr_reader :aws
 
       def initialize(access_key, secret_key)
-        @aws = RightAws::Ec2.new(access_key, secret_key, {:logger => Logger.new(@@logger)})
-        @instances = Rudy::AWS::EC2::Instances.new(@aws)
-        @images = Rudy::AWS::EC2::Images.new(@aws)
-        @groups = Rudy::AWS::EC2::Groups.new(@aws)
-        @addresses = Rudy::AWS::EC2::Addresses.new(@aws)
-        @snapshots = Rudy::AWS::EC2::Snapshots.new(@aws)
-        @volumes = Rudy::AWS::EC2::Volumes.new(@aws)
+        ec2 = ::EC2::Base.new(:access_key_id => access_key, :secret_access_key => secret_key)
+        @instances = Rudy::AWS::EC2::Instances.new(ec2)
+        @images = Rudy::AWS::EC2::Images.new(ec2)
+        @groups = Rudy::AWS::EC2::Groups.new(ec2)
+        @addresses = Rudy::AWS::EC2::Addresses.new(ec2)
+        @snapshots = Rudy::AWS::EC2::Snapshots.new(ec2)
+        @volumes = Rudy::AWS::EC2::Volumes.new(ec2)
       end
     
     end
@@ -41,7 +42,7 @@ module Rudy
       attr_reader :aws
 
       def initialize(access_key, secret_key)
-        @aws = RightAws::S3.new(access_key, secret_key, {:logger => Logger.new(@@logger)})
+       # @aws = RightAws::S3.new(access_key, secret_key, {:logger => Logger.new(@@logger)})
       end
     end
     
@@ -52,8 +53,8 @@ module Rudy
       attr_reader :aws
     
       def initialize(access_key, secret_key)
-        @aws = RightAws::SdbInterface.new(access_key, secret_key, {:logger => Logger.new(@@logger)})
-        @aws2 = AwsSdb::Service.new(:access_key_id => access_key, :secret_access_key => secret_key, :logger => Logger.new(@@logger))
+        #@aws = RightAws::SdbInterface.new(access_key, secret_key, {:logger => Logger.new(@@logger)})
+        @aws = AwsSdb::Service.new(:access_key_id => access_key, :secret_access_key => secret_key, :logger => Logger.new(@@logger))
         @domains = Rudy::AWS::SimpleDB::Domains.new(@aws)
       end
 
@@ -66,3 +67,15 @@ module Rudy
   end
   
 end
+
+# Require EC2, S3, Simple DB class
+begin
+  # TODO: Use autoload
+  Dir.glob(File.join(RUDY_LIB, 'rudy', 'aws', '{ec2,s3,sdb}', "*.rb")).each do |path|
+    require path
+  end
+rescue LoadError => ex
+  puts "Error: #{ex.message}"
+  exit 1
+end
+

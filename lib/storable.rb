@@ -109,7 +109,7 @@ class Storable
   # Create a new instance of the object from a hash.
   def self.from_hash(from={})
     me = self.new
-  
+    
     return me if !from || from.empty?
     
     fnames = field_names
@@ -122,8 +122,10 @@ class Storable
       if field_types[index] == Array
         ((value ||= []) << stored_value).flatten 
       elsif field_types[index] == Hash
+        
         value = stored_value
       else
+        
         # SimpleDB stores attribute shit as lists of values
         value = stored_value.first if stored_value.is_a?(Array) && stored_value.size == 1
 
@@ -137,8 +139,10 @@ class Storable
           value = value.to_f
         elsif field_types[index] == Integer
           value = value.to_i
+        elsif field_types[index].kind_of?(Storable) && stored_value.is_a?(Hash)
+          value = field_types[index].from_hash(stored_value)
         else
-          value = value.first if value.is_a?(Array) && value.size == 1 # I
+          value = (stored_value.is_a?(Array) && stored_value.size == 1) ? stored_value.first : stored_value
         end
       end
       

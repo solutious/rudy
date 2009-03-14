@@ -754,29 +754,6 @@ module Rudy
           puts
         end
         
-        # Print info about a a security group
-        # +group+ is an OpenStruct
-        def print_group(group)
-          puts '-'*60
-          puts "%12s: %s" % ['GROUP', group[:aws_group_name].att(:bright)]
-          puts 
-          
-          group_ip = {}
-          group[:aws_perms].each do |perm| 
-             (group_ip[ perm[:cidr_ips] ] ||= []) << "#{perm[:protocol]}/#{perm[:from_port]}-#{perm[:to_port]}"
-          end
-           
-          puts "%22s  %s" % ["source address/mask", "protocol/ports (from, to)"]
-          
-           
-          group_ip.each_pair do |ip, perms|
-            puts "%22s  %s" % [ip, perms.shift]
-            perms.each do |perm|
-              puts "%22s  %s" % ['', perm]
-            end
-            puts
-          end
-        end
         
         def init_config_dir
           unless File.exists?(RUDY_CONFIG_DIR)

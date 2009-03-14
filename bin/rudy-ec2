@@ -91,18 +91,3 @@ command :instances => Rudy::Command::Instances
 command_alias :instances, :instance
 
 
-usage "rudy [global options] groups [-C] [-a IP addresses] [-p ports] [group name]"
-desc "Manage EC2 Security Groups"
-option :all, "Display all security groups"
-option :r, :protocols, Array, "Comma-separated list of protocols. One of: tcp (default), udp, icmp"
-option :p, :ports, Array, "List of comma-separated ports to authorize (default: 22,80,443)"
-option :a, :addresses, Array, "List of comma-separated IP addresses to authorize (default: your external IP)"
-action :C, :create, "Create a security group"
-action :D, :destroy, "Destroy a security group"
-action :M, :modify, "Modify a security group"
-argv :group
-command :groups => Rudy::Command::Groups
-command_alias :groups, :group
-
-
-

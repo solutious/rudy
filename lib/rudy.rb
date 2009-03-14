@@ -6,27 +6,20 @@ unless RUBY_VERSION < "1.9"
   exit 1
 end
 
-begin
-  require 'digest/md5'
-  require 'right_aws'
-  require 'stringio'
-  require 'ostruct'
-  require 'yaml'
-  require 'socket'
-  require 'tempfile'
+require 'digest/md5'
+require 'stringio'
+require 'ostruct'
+require 'yaml'
+require 'socket'
+require 'tempfile'
 
-  require 'console'
-  require 'storable'
+require 'console'
+require 'storable'
 
-  require 'net/ssh'
-  require 'net/ssh/gateway'
-  require 'net/ssh/multi'
-  require 'net/scp'
-  
-rescue LoadError => ex
-  abort "Problem requiring: #{ex.message}"
-  exit 1
-end
+require 'net/ssh'
+require 'net/ssh/gateway'
+require 'net/ssh/multi'
+require 'net/scp'
 
 
 

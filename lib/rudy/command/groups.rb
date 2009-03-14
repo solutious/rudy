@@ -5,26 +5,29 @@ module Rudy
   module Command
     class Groups < Rudy::Command::Base
       
-      def groups(name=@argv.first)
-        name = machine_group if name.nil? && !@option.all
-        @ec2.groups.list(name).each do |grp|
-          print_group grp
+      def group
+        @argv.name ||= machine_group if name.nil? && !@option.all
+        @argv.name ||= []
+        @ec2.groups.list(@argv.name).each do |grp|
+          puts '-'*60
+          puts grp.to_s
         end
       end
       
-      def create_groups(name=@argv.first)
-        name ||= machine_group
-        puts "Creating group #{name}"
-        raise "The group #{name} already exists" if @ec2.groups.exists?(name)
+      def create_group
+        @argv.name ||= machine_group
+        puts "Creating group: #{@argv.name}"
+        abort "Group already exists" if @ec2.groups.exists?(@argv.name)
 
-        @ec2.groups.create(name)
+        @ec2.groups.create(@argv.name)
         
-        modify_groups name
+        modify_group
       end
       
-      def modify_groups(name=@argv.first)
-        name ||= machine_group
-        raise "The group #{name} does not exist" unless @ec2.groups.exists?(name)
+      def authorize_group(action=:authorize)
+        @argv.name ||= machine_group
+        puts "#{action.to_s.capitalize} group: #{@argv.name}"
+        raise "Group does not exist" unless @ec2.groups.exists?(@argv.name)
         
         @option.addresses ||= [Rudy::Utils::external_ip_address]
         @option.ports ||= [22,80,443]
@@ -34,18 +37,23 @@ module Rudy
         @option.addresses.collect! { |ip| (ip.match /\/\d+/) ? ip : "#{ip}/32"  }
         
         @option.protocols.each do |protocol|
-          puts "Adding ports #{@option.ports.join(',')} (#{protocol}) for #{@option.addresses.join(', ')}"
+          puts "Ports #{@option.ports.join(',')} (#{protocol}) for #{@option.addresses.join(', ')}"
           @option.addresses.each do |address|
             @option.ports.each do |port|
-              @ec2.groups.modify(name, port, port, protocol, address)
+              @ec2.groups.send(action, @argv.name, port, port, protocol, address)
             end
           end
         end
         
-        groups name
+        puts '-'*60
+        puts @ec2.groups.get(@argv.name).to_s
       end
       
-      def destroy_groups(name=@argv.first)
+      def revoke_group
+        authorize_group(:revoke)
+      end
+      
+      def destroy_group(name=@argv.first)
         name ||= machine_group
         puts "Destroying group #{name}"
         name = machine_group if name.nil?

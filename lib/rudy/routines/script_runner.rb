@@ -28,7 +28,7 @@ module Rudy::Routines
         user, script = rscript.shift
         
         begin
-          scp do |scp|
+          Net::SCP.start(host, user, :keys => [keypairpath(user)]) do |scp|
             scp.upload!(tf.path, "~/#{script_config_filename}") do |ch, name, sent, total|
               "#{name}: #{sent}/#{total}"
             end
@@ -37,20 +37,20 @@ module Rudy::Routines
           raise "Error transfering #{script_config_filename}: #{ex.message} "
         end
         
-        Net::SSH.start(instance.dns_name_public, user, :keys => [keypair]) do |session|
-          b.call(session)
-        end
-        
-        ssh do |session|
-          puts "Running #{script}...".att(:bright)
-          session.exec!("chmod 700 ~/#{script_config_filename}")
-          session.exec!("chmod 700 #{script}")
-          puts session.exec!("#{script}")
+        begin
+          Net::SSH.start(instance.dns_name_public, user, :keys => [keypairpath(user)]) do |session|
+
+            puts "Running #{script}...".att(:bright)
+            session.exec!("chmod 700 ~/#{script_config_filename}")
+            session.exec!("chmod 700 #{script}")
+            puts session.exec!("#{script}")
       
-          puts "Removing remote copy of #{script_filename}..."
-          session.exec!("rm ~/#{script_config_filename}")
+            puts "Removing remote copy of #{script_filename}..."
+            session.exec!("rm ~/#{script_config_filename}")
+          end
+        rescue => ex
+          raise "Error executing #{script}: #{ex.message}"
         end
-        puts $/
       end
     
       

@@ -53,5 +53,94 @@ module Rudy
     end
     
     
+    
+    
+
+    # +name+ the name of the remote user to use for the remainder of the command
+    # (or until switched again). If no name is provided, the user will be revert
+    # to whatever it was before the previous switch. 
+    def switch_user(name=nil)
+      if name == nil && @switch_user_previous
+        @global.user = @switch_user_previous
+      elsif @global.user != name
+        puts "Remote commands will be run as #{name} user"
+        @switch_user_previous = @global.user
+        @global.user = name
+      end
+    end
+    
+    # Returns a hash of info for the requested machine. If the requested machine
+    # is not running, it will raise an exception. 
+    def find_current_machine
+      find_machine(machine_group)
+    end
+      
+    def find_machine(group)
+      machine_list = @ec2.instances.list(group)
+      machine = machine_list.values.first  # NOTE: Only one machine per group, for now...
+      raise "There's no machine running in #{group}" unless machine
+      raise "The primary machine in #{group} is not in a running state" unless machine[:aws_state] == 'running'
+      machine
+    end
+    
+    def machine_hostname(group=nil)
+      group ||= machine_group
+      find_machine(group)[:dns_name]
+    end
+    
+    def machine_group
+      [@global.environment, @global.role].join(RUDY_DELIM)
+    end
+    
+    def machine_image
+      ami = @config.machines.find_deferred(@global.environment, @global.role, :ami)
+      raise "There is no AMI configured for #{machine_group}" unless ami
+      ami
+    end
+    
+    def machine_address
+      @config.machines.find_deferred(@global.environment, @global.role, :address)
+    end
+    
+    # TODO: fix machine_group to include zone
+    def machine_name
+      [@global.zone, machine_group, @global.position].join(RUDY_DELIM)
+    end
+
+
+    
+    def wait_for_machine(id)
+      
+      print "Waiting for #{id} to become available"
+      STDOUT.flush
+      
+      while @ec2.instances.pending?(id)
+        sleep 2
+        print '.'
+        STDOUT.flush
+      end
+      
+      machine = @ec2.instances.get(id)
+      
+      puts " It's up!\a\a" # with bells
+      print "Waiting for SSH daemon at #{machine[:dns_name]}"
+      STDOUT.flush
+      
+      while !Rudy::Utils.service_available?(machine[:dns_name], 22)
+        print '.'
+        STDOUT.flush
+      end
+      puts " It's up!\a\a\a"
+
+    end
+    
+
+    
+    def group_metadata(env=@global.environment, role=@global.role)
+      query = "['environment' = '#{env}'] intersection ['role' = '#{role}']"
+      @sdb.query_with_attributes(RUDY_DOMAIN, query)
+    end
+    
+    
   end
 end

@@ -170,31 +170,6 @@ def sh(command, chdir=false, verbose=false)
 end
 
 
-# Secure copy. 
-# 
-#      scp do |scp|
-#        # upload a file to a remote server
-#        scp.upload! "/local/path", "/remote/path"
-#
-#        # upload from an in-memory buffer
-#        scp.upload! StringIO.new("some data to upload"), "/remote/path"
-#
-#        # run multiple downloads in parallel
-#        d1 = scp.download("/remote/path", "/local/path")
-#        d2 = scp.download("/remote/path2", "/local/path2")
-#        [d1, d2].each { |d| d.wait }
-#      end
-#
-def scp(host, &b)
-  raise "No host provided for scp" unless host
-  raise "No block provided for scp" unless b
-  
-  Net::SCP.start(host, @global.user, :keys => [keypairpath]) do |scp|
-    b.call(scp)
-  end
-end
-
-
 def ssh_command(host, keypair, user, command=false, printonly=false, verbose=false)
   #puts "CONNECTING TO #{host}..."
   cmd = "ssh -i #{keypair} #{user}@#{host} "

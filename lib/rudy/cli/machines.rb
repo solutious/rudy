@@ -41,40 +41,17 @@ module Rudy::CLI
       rudy.status(opts)
     end
     
-    
     def startup_valid?
-      #rig = @ec2.instances.list(machine_group)
-      #raise "There is already an instance running in #{machine_group}" if rig && !rig.empty?
-      #raise "No SSH key provided for #{keypairname}!" unless has_keypair?
+      @option.image ||= machine_image
+      @option.address ||= machine_address
+      raise "No AMI supplied" unless @option.image
       true
     end
     def startup
       puts "Starting a machine in #{machine_group}".att(:bright)
-      switch_user("root")
       exit unless are_you_sure?(3)
+
       
-      #execute_routines([], :startup, :before_local)
-      
-      @option.image ||= machine_image
-      
-      puts "using AMI: #{@option.image}"
-      
-      instances = @ec2.instances.create(@option.image, machine_group.to_s, File.basename(keypairpath), machine_data.to_yaml, @global.zone)
-      y instances
-      inst = instances.first
-      
-      if @option.address ||= machine_address
-        puts "Associating #{@option.address} to #{inst[:aws_instance_id]}"
-        @ec2.addresses.associate(inst[:aws_instance_id], @option.address)
-      end
-      
-      wait_for_machine(inst[:aws_instance_id])
-      inst = @ec2.instances.get(inst[:aws_instance_id])
-      
-      #inst = @ec2.instances.list(machine_group).values
-      
-      execute_disk_routines(inst, :startup)
-      execute_routines(inst, :startup, :after)
       
       puts "Done!"
     end

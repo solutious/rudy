@@ -76,11 +76,7 @@ module Rudy
         #  puts "Checking #{check_environment} permissions..."
         #end
         
-        if has_keys?
-          @ec2 = Rudy::AWS::EC2.new(@global.accesskey, @global.secretkey)
-          @sdb = Rudy::AWS::SimpleDB.new(@global.accesskey, @global.secretkey)
-          #@s3 = Rudy::AWS::SimpleDB.new(@global.accesskey, @global.secretkey)
-        end
+
       end
       protected :init
       
@@ -102,36 +98,7 @@ module Rudy
       end
       
       
-      # Raises exceptions if the requested user does 
-      # not have a valid keypair configured. (See: EC2_KEYPAIR_*)
-      def check_keys
-        raise "No SSH key provided for #{@global.user}! (check #{RUDY_CONFIG_FILE})" unless has_keypair?
-        raise "SSH key provided but cannot be found! (check #{RUDY_CONFIG_FILE})" unless File.exists?(keypairpath)
-      end  
-      
-      def has_pem_keys?
-        (@global.cert       && File.exists?(@global.cert) && 
-         @global.privatekey && File.exists?(@global.privatekey))
-      end
-       
-      def has_keys?
-        (@global.accesskey && !@global.accesskey.empty? && @global.secretkey && !@global.secretkey.empty?)
-      end
-      
-      def keypairpath(name=nil)
-        name ||= @global.user
-        raise "No default user configured" unless name
-        kp = @config.machines.find(@global.environment, @global.role, :users, name, :keypair2)
-        kp ||= @config.machines.find(@global.environment, :users, name, :keypair)
-        kp ||= @config.machines.find(:users, name, :keypair)
-        kp &&= File.expand_path(kp)
-        kp
-      end
-      def has_keypair?(name=nil)
-        kp = keypairpath(name)
-        (!kp.nil? && File.exists?(kp))
-      end
-      
+
       # +name+ the name of the remote user to use for the remainder of the command
       # (or until switched again). If no name is provided, the user will be revert
       # to whatever it was before the previous switch. 
@@ -183,22 +150,7 @@ module Rudy
         [@global.zone, machine_group, @global.position].join(RUDY_DELIM)
       end
 
-      def instance_id?(id=nil)
-        (id && id[0,2] == "i-")
-      end
-      
-      def image_id?(id=nil)
-        (id && id[0,4] == "ami-")
-      end
-      
-      def volume_id?(id=nil)
-        (id && id[0,4] == "vol-")
-      end
-      
-      def snapshot_id?(id=nil)
-        (id && id[0,5] == "snap-")
-      end
-      
+
       
       def wait_for_machine(id)
         

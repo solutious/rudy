@@ -12,6 +12,7 @@ require 'ostruct'
 require 'yaml'
 require 'socket'
 require 'tempfile'
+require 'timeout'
 
 require 'console'
 require 'storable'
@@ -64,19 +65,19 @@ module Rudy #:nodoc:
 end
 
 require 'rudy/aws'
+require 'rudy/cli'
+require 'rudy/utils'
 require 'rudy/config'
 require 'rudy/metadata'
-require 'rudy/utils'
-require 'rudy/cli/base'
-
 require 'rudy/routines'
+require 'rudy/huxtable'
 require 'rudy/machines'
 
 
-# Require CLI, MetaData, and SCM classes
+# Require CLI, MetaData, Routines, and SCM classes
 begin
   # TODO: Use autoload
-  Dir.glob(File.join(RUDY_LIB, 'rudy', '{cli,metadata,scm}', "*.rb")).each do |path|
+  Dir.glob(File.join(RUDY_LIB, 'rudy', '{cli,metadata,routines,scm}', "*.rb")).each do |path|
     require path
   end
 rescue LoadError => ex
@@ -108,6 +109,18 @@ def capture(stream)
   result
 end
 
+def waiter(duration=2, max=120, dot='.', &b)
+  duration = 1 if duration < 1
+  max = duration*2 if max < duration
+  
+  success = Timeout::timeout(max) do
+    while !b.call
+      sleep duration
+      print dot if dot
+      STDOUT.flush
+    end
+  end
+end
 
 def write_to_file(filename, content, type)
   type = (type == :append) ? 'a' : 'w'
@@ -156,26 +169,6 @@ def sh(command, chdir=false, verbose=false)
   Dir.chdir prevdir if chdir
 end
 
-
-# Opens an SSH session. 
-# <li>+host+ the hostname to connect to. Defaults to the machine specified
-# by @global.environment, @global.role, @global.position.</li>
-# <li>+b+ a block to execute on the host. Receives |session|</li>
-# 
-#      ssh do |session|
-#        session.exec(cmd)
-#      end
-#
-# See Net::SSH
-#
-def ssh(host, &b)
-  raise "No host provided for SSH" unless host
-  raise "No block provided for SSH" unless b
-  
-  Net::SSH.start(host, @global.user, :keys => [keypairpath]) do |session|
-    b.call(session)
-  end
-end
 
 # Secure copy. 
 # 

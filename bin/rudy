@@ -12,9 +12,9 @@ $:.unshift RUDY_LIB # Put our local lib in first place
 require 'rubygems' if RUBY_VERSION < "1.9"
 require 'date'
 require 'drydock'
+require 'rudy'
 extend Drydock
 
-project "Rudy"  # This also runs require 'ruby'
 
 global :A, :accesskey, String, "AWS Access Key"
 global :S, :secretkey, String, "AWS Secret Access Key"

@@ -1,62 +1,10 @@
 
-require 'tempfile'
 
-module Rudy
-  class Routines
+module Rudy::Routines
+  class DiskHandler
     
-    attr_accessor :config
-    attr_accessor :logger
     
-    def initialize(args={})
-      args = { :config => {}, :logger => STDERR }.merge(args)
-      @config = args[:config]
-      @logger = args[:logger]
-    end
     
-    def execute_routines(scripts, machines)
-      return false unless scripts && machines
-      machines = [machines] unless machines.is_a?( Array)
-      
-      # The config file contains settings from ~/.rudy/config 
-      config_file = "#{action}-config.yaml"
-      
-      tf = Tempfile.new(config_file)
-      write_to_file(tf.path, config.to_hash.to_yaml, 'w')
-      
-      
-      machines.each do |machine|
-        
-        rscripts = [rscripts] unless rscripts.is_a?(Array)
-        
-        puts "No scripts defined." if !rscripts || rscripts.empty?
-        
-        rscripts.each do |rscript|
-          user, script = rscript.shift
-          
-          switch_user(user) # scp and ssh will run as this user
-      
-          puts "Transfering #{config_file}..."
-          scp do |scp|
-            scp.upload!(tf.path, "~/#{config_file}") do |ch, name, sent, total|
-              "#{name}: #{sent}/#{total}"
-            end
-          end
-          ssh do |session|
-            puts "Running #{script}...".att(:bright)
-            session.exec!("chmod 700 ~/#{config_file}")
-            session.exec!("chmod 700 #{script}")
-            puts session.exec!("#{script}")
-        
-            puts "Removing remote copy of #{config_file}..."
-            session.exec!("rm ~/#{config_file}")
-          end
-          puts $/
-        end
-      end
-      
-      tf.delete     # remove local copy of config_file
-      #switch_user   # return to the requested user
-    end
     
     
     
@@ -398,6 +346,12 @@ module Rudy
         end
       end
     end
+    
+    
+    
+    
+    
+    
     
     
   end

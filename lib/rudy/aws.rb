@@ -13,6 +13,24 @@ module Rudy
       end
     end
   
+  
+    def self.instance_id?(id=nil)
+      (id && id[0,2] == "i-")
+    end
+    
+    def self.image_id?(id=nil)
+      (id && id[0,4] == "ami-")
+    end
+    
+    def self.volume_id?(id=nil)
+      (id && id[0,4] == "vol-")
+    end
+    
+    def self.snapshot_id?(id=nil)
+      (id && id[0,5] == "snap-")
+    end
+
+
     class EC2
       @@logger = StringIO.new
 

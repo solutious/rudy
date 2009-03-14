@@ -1,8 +1,8 @@
 
 
 module Rudy
-  module Command
-    class Images < Rudy::Command::Base
+  module CLI
+    class Images < Rudy::CLI::Base
       
 
       def images

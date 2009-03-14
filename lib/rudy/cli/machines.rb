@@ -1,8 +1,8 @@
 
 
 module Rudy
-  module Command
-    class Machines < Rudy::Command::Base
+  module CLI
+    class Machines < Rudy::CLI::Base
       
 
       def shutdown_valid?
@@ -10,16 +10,25 @@ module Rudy
         raise "No SSH key provided for #{@global.user}!" unless has_keypair?
         raise "No SSH key provided for root!" unless has_keypair?(:root)
         
-        @list = @ec2.instances.list(machine_group)
-        raise "No machines running in #{machine_group}" unless @list && !@list.empty?
-        
+        raise "Cannot specify both instance ID and group name" if @argv.awsid && @option.group
         raise "I will not help you ruin production!" if @global.environment == "prod" # TODO: use_caution?, locked?
         
         true
       end
       
-      
       def shutdown
+        puts "Shutting down #{@option.group}: #{@list.keys.join(', ')}".att(:bright)
+        puts "This command also affects the volumes attached to the instances! (according to your routines config)"
+        exit unless are_you_sure?(5)
+        @option.group ||= machine_group
+        rudy = Rudy::Machines.new(:config => @config)
+        opts = {}
+        opts[:group] = @option.group if @option.group
+        opts[:id] = @argv.awsid if @argv.awsid
+        rudy.shutdown(opts)
+      end
+      
+      def shutdown2
         puts "Shutting down #{machine_group}: #{@list.keys.join(', ')}".att(:bright)
         switch_user("root")
         puts "This command also affects the volumes attached to the instances! (according to your routines config)"
@@ -41,9 +50,9 @@ module Rudy
       end
       
       def startup_valid?
-        rig = @ec2.instances.list(machine_group)
-        raise "There is already an instance running in #{machine_group}" if rig && !rig.empty?
-        raise "No SSH key provided for #{keypairname}!" unless has_keypair?
+        #rig = @ec2.instances.list(machine_group)
+        #raise "There is already an instance running in #{machine_group}" if rig && !rig.empty?
+        #raise "No SSH key provided for #{keypairname}!" unless has_keypair?
         true
       end
       def startup
@@ -58,6 +67,7 @@ module Rudy
         puts "using AMI: #{@option.image}"
         
         instances = @ec2.instances.create(@option.image, machine_group.to_s, File.basename(keypairpath), machine_data.to_yaml, @global.zone)
+        y instances
         inst = instances.first
         
         if @option.address ||= machine_address
@@ -111,14 +121,21 @@ module Rudy
         raise "No SSH key provided for #{@global.user}!" unless has_keypair?
         raise "No SSH key provided for root!" unless has_keypair?(:root)
         
-        @list = @ec2.instances.list(machine_group)
-        raise "No machines running in #{machine_group}" unless @list
+        @option.group ||= machine_group
+        @option.state ||= :running
+        
+        @list = @ec2.instances.list_by_group(@option.group, @option.state)
+
+        raise "No machines running in #{@option.group}" unless @list && !@list.empty?
         true
       end
       def status
-        puts "There are no machines running in #{machine_group}" if @list.empty?
+        puts "Status for #{@option.group} (state: #{@option.state})"
+
         @list.each_pair do |id, inst|
-          print_instance inst
+          puts '-'*60
+          puts "Instance: #{id.att(:bright)} (AMI: #{inst.ami})"
+          puts inst.to_s
         end
       end
       
@@ -127,6 +144,8 @@ module Rudy
         raise "No EC2 .pem keys provided" unless has_pem_keys?
         raise "No SSH key provided for #{@global.user}!" unless has_keypair?
         raise "No SSH key provided for root!" unless has_keypair?(:root)
+        
+        @option.group ||= machine_group
         
         @scripts = %w[rudy-ec2-startup update-ec2-ami-tools randomize-root-password]
         @scripts.collect! {|script| File.join(RUDY_HOME, 'support', script) }
@@ -137,9 +156,8 @@ module Rudy
         true
       end
       
-      
       def update
-        puts "Updating Rudy "
+        puts "Updating Rudy on machines in #{@option.group}"
         switch_user("root")
         
         exit unless are_you_sure?

@@ -1,8 +1,8 @@
 
 
 module Rudy
-  module Command
-    class Disks < Rudy::Command::Base
+  module CLI
+    class Disks < Rudy::CLI::Base
       
       def disk
         criteria = [@global.zone]

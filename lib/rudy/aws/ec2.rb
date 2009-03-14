@@ -152,46 +152,126 @@ module Rudy::AWS
         volumes.select { |v| v[:aws_device] === device }
       end
       
+
       def create(ami, group, keypair_name, user_data, zone)
-        @aws.run_instances(ami, 1, 1, [group], keypair_name, user_data, 'public', nil, nil, nil, zone)
+        opts = {
+          :image_id => ami,
+          :min_count => 1,
+          :max_count => 1,
+          :key_name => keypair_name,
+          :user_data => user_data,
+          :availability_zone => zone, 
+          :addressing_type => 'public',
+          :instance_type => 'm1.small',
+          :kernel_id => nil
+        }
+        # reservationId: r-f393149a
+        # groupSet: 
+        #   item: 
+        #   - groupId: default
+        # requestId: a4de33de-6da1-4f43-a3f5-f987f5f1f1cf
+        # instancesSet: 
+        #   item:
+        #     ... # see from_hash
+        ilist = @aws.run_instances(opts) || {}
+        reqid = ilist['requestId']
+        resid = ilist['reservationId']
+        raise "The request failed to return instance data" unless ilist['instancesSet'].is_a?(Hash)
+        instances = ilist['instancesSet']['item'].collect do |inst|
+          Instances.from_hash(inst)
+        end
+        instances
       end
       
-      # Creates a list of running instance IDs which are in a security group
-      # that matches +filter+. 
-      # Returns a hash. The keys are instance IDs and the values are a hash
-      # of attributes associated to that instance. 
-      # {:aws_state_code=>"16",
-      # :private_dns_name=>"domU-12-31-38-00-51-F1.compute-1.internal",
-      # :aws_instance_type=>"m1.small",
-      # :aws_reason=>"",
-      # :ami_launch_index=>"0",
-      # :aws_owner=>"207436219441",
-      # :aws_launch_time=>"2009-03-11T06:55:00.000Z",
-      # :aws_kernel_id=>"aki-a71cf9ce",
-      # :ssh_key_name=>"rilli-sexytime",
-      # :aws_reservation_id=>"r-66f5710f",
-      # :aws_state=>"running",
-      # :aws_ramdisk_id=>"ari-a51cf9cc",
-      # :aws_instance_id=>"i-0b2ab662",
-      # :aws_groups=>["rudydev-app"],
-      # :aws_availability_zone=>"us-east-1b",
-      # :aws_image_id=>"ami-daca2db3",
-      # :aws_product_codes=>[],
-      # :dns_name=>"ec2-67-202-9-30.compute-1.amazonaws.com"}
-      def list(filter='.')
-        filter = filter.to_s.downcase.tr('_|-', '.') # treat dashes, underscores as one
-        # Returns an array of hashes with the following keys:
+      # +inst_ids+ is an Array of instance IDs.
+      # +state+ is an optional instance state. Must be one of: running, pending, terminated.
+      # Returns a hash of Rudy::AWS::EC2::Instance objects. The key is the instance ID. 
+      def list(inst_ids=[], state=nil)
+        state &&= state.to_sym
+        inst_ids = [inst_ids] unless inst_ids.is_a?(Array)
+        raise "Unknown state given: #{state}" if state && ![:running, :pending, :terminated].member?(state)
+
+        # requestId: c16878ac-28e4-4859-9878-ef93af45789c
+        # reservationSet: 
+        #   item: 
+        #   - reservationId: r-e493148d
+        #     groupSet: 
+        #       item: 
+        #       - groupId: default
+        #     instancesSet: 
+        #       item: 
+        # 
+        ilist = @aws.describe_instances(:instance_id => inst_ids) || {}
+        reqid = ilist['requestId']
+        resids = []
+        return unless ilist['reservationSet'].is_a?(Hash)  # No instances 
+        
+        instances = {}
+        # AWS Returns instances grouped by reservation
+        ilist['reservationSet']['item'].each do |res|      
+          resids << res['reservationId']
+          groups = res['groupSet']['item'].collect { |g| g['groupId'] }
+          # And each reservation can have 1 or more instances
+          next unless res['instancesSet'].is_a?(Hash)
+          res['instancesSet']['item'].each do |props|
+            inst = Instances.from_hash(props)
+            inst.groups = groups
+            next if state && inst.state != state.to_s
+            instances[inst.awsid] = inst
+          end
+        end
+        instances
+      end
+      
+      # +group+ is a security group name. 
+      # +state+ is an optional instance state. Must be one of: running, pending, terminated.
+      # Returns a hash of Rudy::AWS::EC2::Instance objects. The key is the instance ID.
+      def list_by_group(group, state=nil)
+        group = group.to_s.tr('_|-', '.') # treat dashes, underscores as one
+        instances = list([], state)
+        instances.reject { |id,inst| !inst.groups.member?(group)}    
+      end
+
+      #
+      # +h+ is a hash of instance properties in the format returned
+      # by EC2::Base#describe_instances:
+      #   
+      #       kernelId: aki-9b00e5f2
+      #       amiLaunchIndex: "0"
+      #       keyName: solutious-default
+      #       launchTime: "2009-03-14T12:48:15.000Z"
+      #       instanceType: m1.small
+      #       imageId: ami-0734d36e
+      #       privateDnsName: 
+      #       reason: 
+      #       placement: 
+      #         availabilityZone: us-east-1b
+      #       dnsName: 
+      #       instanceId: i-cdaa34a4
+      #       instanceState: 
+      #         name: pending
+      #         code: "0"
+      #
+      # Returns an Instance object.
+      def Instances.from_hash(h)
+        # Was:
         # :aws_image_id, :aws_reason, :aws_state_code, :aws_owner, :aws_instance_id, :aws_reservation_id 
         # :aws_state, :dns_name, :ssh_key_name, :aws_groups, :private_dns_name, :aws_instance_type, 
         # :aws_launch_time, :aws_availability_zone :aws_kernel_id, :aws_ramdisk_id
-        instances = @aws.describe_instances || []
-        running_instances = {}
-        instances.each do |inst|
-          if inst[:aws_state] != "terminated" && (inst[:aws_groups].to_s =~ /#{filter}/)
-            running_instances[inst[:aws_instance_id]] = inst
-          end
-        end
-        running_instances
+        inst = Rudy::AWS::EC2::Instance.new
+        inst.aki = h['kernelId']
+        inst.ami = h['imageId']
+        inst.launch_time = h['launchTime']
+        inst.keyname = h['keyName']
+        inst.launch_index = h['amiLaunchIndex']
+        inst.instance_type = h['instanceType']
+        inst.dns_name_private = h['privateDnsName']
+        inst.dns_name_public = h['dnsName']
+        inst.reason = h['reason']
+        inst.zone = h['placement']['availabilityZone']
+        inst.awsid = h['instanceId']
+        inst.state = h['instanceState']['name']
+        inst
       end
       
       def get(inst_id)
@@ -224,8 +304,9 @@ module Rudy::AWS
       # Returns an Array of Rudy::AWS::EC2::Group objects
       def list(list=[])
         glist = @aws.describe_security_groups(:group_name => list) || {}
+        return unless glist['securityGroupInfo'].is_a?(Hash)
         groups = glist['securityGroupInfo']['item'].collect do |oldg| 
-          Groups.hash_to_obj(oldg)
+          Groups.from_hash(oldg)
         end
         groups
       end
@@ -320,7 +401,7 @@ module Rudy::AWS
       #          ipProtocol: tcp
       #
       # Returns a Rudy::AWS::EC2::Group object
-      def Groups.hash_to_obj(oldg)
+      def Groups.from_hash(oldg)
         newg = Rudy::AWS::EC2::Group.new
         newg.name = oldg['groupName']
         newg.description = oldg['groupDescription']

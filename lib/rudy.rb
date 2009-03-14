@@ -67,12 +67,16 @@ require 'rudy/aws'
 require 'rudy/config'
 require 'rudy/metadata'
 require 'rudy/utils'
-require 'rudy/command/base'
+require 'rudy/cli/base'
 
-# Require Command, MetaData, and SCM classes
+require 'rudy/routines'
+require 'rudy/machines'
+
+
+# Require CLI, MetaData, and SCM classes
 begin
   # TODO: Use autoload
-  Dir.glob(File.join(RUDY_LIB, 'rudy', '{command,metadata,scm}', "*.rb")).each do |path|
+  Dir.glob(File.join(RUDY_LIB, 'rudy', '{cli,metadata,scm}', "*.rb")).each do |path|
     require path
   end
 rescue LoadError => ex
@@ -151,6 +155,52 @@ def sh(command, chdir=false, verbose=false)
   system(command)
   Dir.chdir prevdir if chdir
 end
+
+
+# Opens an SSH session. 
+# <li>+host+ the hostname to connect to. Defaults to the machine specified
+# by @global.environment, @global.role, @global.position.</li>
+# <li>+b+ a block to execute on the host. Receives |session|</li>
+# 
+#      ssh do |session|
+#        session.exec(cmd)
+#      end
+#
+# See Net::SSH
+#
+def ssh(host, &b)
+  raise "No host provided for SSH" unless host
+  raise "No block provided for SSH" unless b
+  
+  Net::SSH.start(host, @global.user, :keys => [keypairpath]) do |session|
+    b.call(session)
+  end
+end
+
+# Secure copy. 
+# 
+#      scp do |scp|
+#        # upload a file to a remote server
+#        scp.upload! "/local/path", "/remote/path"
+#
+#        # upload from an in-memory buffer
+#        scp.upload! StringIO.new("some data to upload"), "/remote/path"
+#
+#        # run multiple downloads in parallel
+#        d1 = scp.download("/remote/path", "/local/path")
+#        d2 = scp.download("/remote/path2", "/local/path2")
+#        [d1, d2].each { |d| d.wait }
+#      end
+#
+def scp(host, &b)
+  raise "No host provided for scp" unless host
+  raise "No block provided for scp" unless b
+  
+  Net::SCP.start(host, @global.user, :keys => [keypairpath]) do |scp|
+    b.call(scp)
+  end
+end
+
 
 def ssh_command(host, keypair, user, command=false, printonly=false, verbose=false)
   #puts "CONNECTING TO #{host}..."

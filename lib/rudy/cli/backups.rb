@@ -3,8 +3,8 @@
 
 
 module Rudy
-  module Command
-    class Backups < Rudy::Command::Base
+  module CLI
+    class Backups < Rudy::CLI::Base
       
       
       def backup

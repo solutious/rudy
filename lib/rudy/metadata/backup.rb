@@ -140,6 +140,11 @@ module Rudy
         list
       end
       
+      def Backup.find_most_recent(zon, env, rol, pos, path)
+        criteria = [zon, env, rol, pos, path]
+        (Rudy::MetaData::Backup.list(@sdb, *criteria) || []).first
+      end
+      
       def Backup.destroy(sdb, name)
         back = Backup.get(sdb, name) # get raises an exception if the disk doesn't exist
         sdb.destroy(RUDY_DOMAIN, name)

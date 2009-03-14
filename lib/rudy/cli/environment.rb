@@ -2,8 +2,8 @@
 
 
 module Rudy
-  module Command
-    class Environment < Rudy::Command::Base
+  module CLI
+    class Environment < Rudy::CLI::Base
       
       #---
       # TODO: http://net-ssh.rubyforge.org/ssh/v1/chapter-4.html

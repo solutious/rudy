@@ -1,8 +1,8 @@
 
 
 module Rudy
-  module Command
-    class Metadata < Rudy::Command::Base
+  module CLI
+    class Metadata < Rudy::CLI::Base
       
       
       # Print Rudy's metadata to STDOUT

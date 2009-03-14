@@ -2,8 +2,8 @@
 
 
 module Rudy
-  module Command
-    class Groups < Rudy::Command::Base
+  module CLI
+    class Groups < Rudy::CLI::Base
       
       def group
         @argv.name ||= machine_group if name.nil? && !@option.all

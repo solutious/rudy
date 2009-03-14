@@ -1,8 +1,8 @@
 
 
 module Rudy
-  module Command
-    class Release < Rudy::Command::Base
+  module CLI
+    class Release < Rudy::CLI::Base
       
       
 

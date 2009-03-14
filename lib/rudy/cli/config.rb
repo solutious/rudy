@@ -1,10 +1,10 @@
 
 
 module Rudy
-  module Command
-    class Config < Rudy::Command::Base
+  module CLI
+    class Config < Rudy::CLI::Base
       
-      # We force the Command::Base#print_header to be quiet
+      # We force the CLI::Base#print_header to be quiet
       def print_header
         @global.quiet = true
         super

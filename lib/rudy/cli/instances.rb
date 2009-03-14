@@ -11,8 +11,8 @@
 # 
 
 module Rudy
-  module Command
-    class Instances < Rudy::Command::Base
+  module CLI
+    class Instances < Rudy::CLI::Base
       
       def restart_instances_valid?
         raise "No instance ID provided" if @argv.filter.nil?

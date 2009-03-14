@@ -19,7 +19,7 @@ TODO: Remove aws_swb
 
 NOTE: This is a significant re-write from 0.3
 
-* CHANGE: Mostly re-written bin/ruby, moving validation to Command classes 
+* CHANGE: Mostly re-written bin/ruby, moving validation to CLI classes 
 * CHANGE: upgrade to Drydock 0.5
 * CHANGE: Moved generic EC2 commands to bin/rudy-ec2
 * CHANGE: Removed ambiguity of pluralized command names.
@@ -58,7 +58,7 @@ NOTE: This is a complete re-write from 0.1
 * NEW: All time references are converted to UTC
 * NEW: Safer "Are you sure?". Number of characters to enter is 
        commiserate with amount of danger.  
-* NEW: Commands: myaddress, addresses, images, instances, 
+* NEW: CLIs: myaddress, addresses, images, instances, 
        disks, connect, copy, stage, backups, volumes
 * NEW: Metadata storage to SimpleDB for disks, backups
 * NEW: Creates EBS volumes based on startup from metadata

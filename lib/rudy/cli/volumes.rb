@@ -1,8 +1,8 @@
 
 
 module Rudy
-  module Command
-    class Volumes < Rudy::Command::Base
+  module CLI
+    class Volumes < Rudy::CLI::Base
       
       def destroy_volumes_valid?        
         id = @argv.first

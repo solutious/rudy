@@ -2,8 +2,8 @@
 
 
 module Rudy
-  module Command
-    class Addresses < Rudy::Command::Base
+  module CLI
+    class Addresses < Rudy::CLI::Base
 
 
       def associate_addresses_valid?

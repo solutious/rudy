@@ -9,7 +9,7 @@
 
 # Runs when an ec2 instance startups up.
 # Grabs configuration from the run time user data and stores it locally.
-# See Rudy::Command::Instances#start_instance for the expected yaml format.
+# See Rudy::CLI::Instances#start_instance for the expected yaml format.
 
 # Put this in /etc/init.d. Then:
 #   * chmod 755 rudy-ec2-startup

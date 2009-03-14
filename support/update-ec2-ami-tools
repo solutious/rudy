@@ -1,0 +1,20 @@
+#!/bin/sh
+
+#
+# Installs the latest EC2 AMI Tools
+#
+# * Downloads zip to /tmp
+# * Unzips and removes /usr/ec2 (if it exists)
+# * Moves tools to /usr/ec2
+#
+#   who: delano@solutious.com
+#  when: 2009-03-13
+#
+
+cd /tmp
+echo " + Updating ec2-ami-tools"
+wget http://s3.amazonaws.com/ec2-downloads/ec2-ami-tools.zip && \
+unzip ec2-ami-tools.zip && rm ec2*.zip* && rm -rf /usr/ec2 && \
+mv ec2-* ec2 && mv ec2 /usr/ && \
+echo " + Updated ec2-ami-tools"
+

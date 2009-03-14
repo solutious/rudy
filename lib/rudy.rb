@@ -6,7 +6,6 @@ unless RUBY_VERSION < "1.9"
   exit 1
 end
 
-
 begin
   require 'digest/md5'
   require 'right_aws'
@@ -25,7 +24,7 @@ begin
   require 'net/scp'
   
 rescue LoadError => ex
-  puts "Problem requiring: #{ex.message}"
+  abort "Problem requiring: #{ex.message}"
   exit 1
 end
 

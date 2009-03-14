@@ -801,7 +801,6 @@ module Rudy
               # Specify your private keys here. These can be defined globally
               # or by environment and role like in machines.rb.
               machines do
-                ami "ami-0734d36e"    # gentoo-m1.small-v5
                 users do
                   root :keypair => "path/2/root-private-key"
                 end

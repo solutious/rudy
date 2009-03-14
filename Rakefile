@@ -22,7 +22,11 @@ Rake::GemPackageTask.new(@spec) do |p|
   p.need_tar = true if RUBY_PLATFORM !~ /mswin/
 end
 
-task :release => [ :rdoc, :package ]
+task :release => [ :rdoc, :package ] do
+  $: << File.join(File.dirname(__FILE__), 'lib')
+  require "rudy"
+  abort if Drydock.debug?
+end
 
 task :install => [ :rdoc, :package ] do
 	sh %{sudo gem install pkg/#{name}-#{version}.gem}
@@ -52,7 +56,7 @@ end
 Rake::RDocTask.new do |t|
 	t.rdoc_dir = 'doc'
 	t.title    = @spec.summary
-	t.options << '--line-numbers' << '--inline-source' << '-A cattr_accessor=object'
+	t.options << '--line-numbers' <<  '-A cattr_accessor=object'
 	t.options << '--charset' << 'utf-8'
 	t.rdoc_files.include('LICENSE.txt')
 	t.rdoc_files.include('README.rdoc')

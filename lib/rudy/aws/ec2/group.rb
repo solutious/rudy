@@ -6,8 +6,7 @@ module Rudy::AWS
     class Permissions < Storable
       field :addresses => Array      # IPAddr
       field :groups => Array         # String
-      field :source => Integer
-      field :destination => Integer
+      field :ports => Range          # Port range
       field :protocol => String
     end      
   end
@@ -24,7 +23,7 @@ module Rudy::AWS
       lines = ["%12s: %s" % ['GROUP', self.name.att(:bright)]]
       
       (self.permissions || []).each do |perm|
-        lines << "%10s %-5s -> %-5s (%s):" % ['', perm.source,  perm.destination, perm.protocol]
+        lines << "%6s %5s:%-5s (%s):" % ['', perm.ports.first, perm.ports.last, perm.protocol]
         lines << (perm.addresses || perm.groups || []).sort.collect { |item| sprintf("%12s %-30s", '', item) }
         lines << nil
       end

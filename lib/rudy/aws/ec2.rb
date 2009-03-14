@@ -239,7 +239,7 @@ module Rudy::AWS
       # Delete an EC2 security group
       # Returns true/false whether successful
       def destroy(name)
-        @aws.delete_security_group(name)
+        @aws.delete_security_group(:group_name => name)
       end
       
       # +name+ a string
@@ -252,29 +252,30 @@ module Rudy::AWS
       #  
       #end
       
-      # Authorize a port/protocol for a specific IP address
-      def authorize(name, from_port, to_port, protocol='tcp', ipa='0.0.0.0/0')
+      def modify(meth, name, from_port, to_port, protocol='tcp', ipa='0.0.0.0/0', gname=nil, gowner=nil)
         opts = {
           :group_name => name,
           :ip_protocol => protocol,
           :from_port => from_port,
           :to_port => to_port,
-          :cidr_ip => ipa
+          :cidr_ip => ipa,
+          :source_security_group_name => gname,
+          :source_security_group_owner_id => gowner
         }
-        @aws.authorize_security_group_ingress(opts)
+        @aws.send("#{meth}_security_group_ingress", opts)
+      end
+      private :modify
+      
+      # Authorize a port/protocol for a specific IP address
+      def authorize(*args)
+        modify(:authorize, *args)
       end
       alias :authorise :authorize
       
       # Revoke a port/protocol for a specific IP address
-      def revoke(name, from_port, to_port, protocol='tcp', ipa='0.0.0.0/0')
-        opts = {
-          :group_name => name,
-          :ip_protocol => protocol,
-          :from_port => from_port,
-          :to_port => to_port,
-          :cidr_ip => ipa
-        }
-        @aws.revoke_security_group_ingress(opts)
+      # Takes the same arguments as authorize
+      def revoke(*args)
+        modify(:revoke, *args)
       end
         
       
@@ -327,8 +328,7 @@ module Rudy::AWS
         return newg unless oldg['ipPermissions'].is_a?(Hash)
         newg.permissions = oldg['ipPermissions']['item'].collect do |oldp|
           newp = Rudy::AWS::EC2::Group::Permissions.new
-          newp.source = oldp['fromPort']
-          newp.destination = oldp['toPort']
+          newp.ports = Range.new(oldp['fromPort'], oldp['toPort'])
           newp.protocol = oldp['ipProtocol']
           if oldp['groups'].is_a?(Hash)
             newp.groups = oldp['groups']['item'].collect do |oldpg|

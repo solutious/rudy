@@ -3,7 +3,7 @@ require 'tempfile'
 
 module Rudy::Routines
   class ScriptRunner
-    include Rudy::Routines::Base
+    include Rudy::Huxtable
     
     def execute(instance, routine, before_or_after)
       return false unless instance
@@ -27,8 +27,9 @@ module Rudy::Routines
       rscripts.each do |rscript|
         user, script = rscript.shift
         
+        @logger.puts "User: #{user} (#{user_keypairpath(user)})"
         begin
-          Net::SCP.start(host, user, :keys => [keypairpath(user)]) do |scp|
+          Net::SCP.start(instance.dns_name_public, user, :keys => [user_keypairpath(user)]) do |scp|
             scp.upload!(tf.path, "~/#{script_config_filename}") do |ch, name, sent, total|
               "#{name}: #{sent}/#{total}"
             end
@@ -38,7 +39,7 @@ module Rudy::Routines
         end
         
         begin
-          Net::SSH.start(instance.dns_name_public, user, :keys => [keypairpath(user)]) do |session|
+          Net::SSH.start(instance.dns_name_public, user, :keys => [user_keypairpath(user)]) do |session|
 
             puts "Running #{script}...".att(:bright)
             session.exec!("chmod 700 ~/#{script_config_filename}")

@@ -48,8 +48,9 @@ end
 
 usage "rudy [-f config-file] config [param-name]"
 desc "Check Rudy configuration."
-option :l, :all, "Display config settings for all machines"
+option :l, :all, "Display configs for all machines"
 option :d, :defaults, "Display the default value for the supplied parameter"
+option :g, :group, String, "Display configuration for a specific group"
 argv :name
 command :config => Rudy::CLI::Config
 
@@ -118,33 +119,35 @@ command_alias :group, :groups
 
 
 
-usage "rudy [global options] metadata instance-ID"
-desc "Display Rudy metadata."
-command :metadata => Rudy::CLI::Metadata
-command_alias :metadata, :md
+#usage "rudy [global options] metadata instance-ID"
+#desc "Display Rudy metadata."
+#command :metadata => Rudy::CLI::Metadata
+#command_alias :metadata, :md
+#
+#
+#desc "Update a Machine Group with the current version of Rudy"
+#option :g, :group, String, "A security group name"
+#command :update => Rudy::CLI::Machines
 
 
-desc "Update a Machine Group with the current version of Rudy"
-option :g, :group, String, "A security group name"
-command :update => Rudy::CLI::Machines
-
-
-usage "rudy [-e env] [-u user] connect [-p] [cmd]"
+usage "rudy [global options] connect [-g group-name] [-i instance-ID] [cmd]"
 desc "Open an SSH connection"
-option :p, :print, "Only print the SSH command, don't connect"
+option :print, "Only print the SSH command, don't connect"
 option :g, :group, String, "A security group name"
+option :i, :awsid, String, "An instance ID"
 argv :cmd
-command :connect => Rudy::CLI::Environment 
+command :connect => Rudy::CLI::Machines 
 command_alias :connect, :ssh
 
-
-usage "rudy [-e env] [-u user] copy [-p] -r [from path] [to path]"
+usage "rudy [global options] copy [-p] [-r] source target"
 desc "Copy files to or from machines. NOTE: You must use quotes when using a tilda for your remote dir ('~/')."
-option :r, :remote, "Copy FROM the remote machine to the local machine"
-option :p, :print, "Only print the SSH command, don't connect"
+option :r, :recursive, "Recursively copy entire directories"
+option :p, :preserve, "Preserve atimes and ctimes."
+option :d, :download, "Download FROM the remote machine to the local machine"
+option :print, "Only print the SSH command, don't connect"
 option :g, :group, String, "A security group name"
-argv :from, :to
-command :copy => Rudy::CLI::Environment
+option :i, :awsid, String, "An instance ID"
+command :copy => Rudy::CLI::Machines
 command_alias :copy, :scp
 command_alias :copy, :upload
 command_alias :copy, :download
@@ -153,38 +156,41 @@ command_alias :copy, :download
 # --------------------------------  RUDY ROUTINES COMMANDS  --------
 # ------------------------------------------------------------------
 
-usage "rudy [global options] shutdown [-g group-name] [instance id]"
+desc "Machine Group Status"
+usage "rudy [global options] status [-g group-name] [-s state] [-l] [instance-ID]"
+option :g, :group, String, "A security group name"
+option :s, :state, String, "Machine state. One of: running (default), pending, terminated"
+option :l, :all, "Show all machines in this group, regardless of state."
+argv :awsid
+command :status => Rudy::CLI::Machines
+
 desc "Shutdown a Machine Group"
+usage "rudy [global options] shutdown [-g group-name] [instance-ID]"
 option :g, :group, String, "A security group name"
 argv :awsid
 command :shutdown => Rudy::CLI::Machines
 
 desc "Start a Machine Group"
+usage "rudy [global options] startup [-g group-name] [-i image-ID]"
 option :i, :image, String, "EC2 image ID (AMI)"
 option :g, :group, String, "A security group name"
 command :startup => Rudy::CLI::Machines
 command_alias :startup, :start
 
-desc "Restart a Machine Group"
-option :g, :group, String, "A security group name"
-argv :awsid
-command :restart => Rudy::CLI::Machines
+#desc "Restart a Machine Group"
+#option :g, :group, String, "A security group name"
+#argv :awsid
+#command :restart => Rudy::CLI::Machines
+#
+#desc "Release to a Machine Group"
+#option :g, :group, String, "A security group name"
+#option :s, :switch, "Switch to the release branch/tag"
+#option :m, :msg, String, "A short release note"
+#command :release => Rudy::CLI::Release
 
-desc "Release to a Machine Group"
-option :g, :group, String, "A security group name"
-option :s, :switch, "Switch to the release branch/tag"
-option :m, :msg, String, "A short release note"
-command :release => Rudy::CLI::Release
-
-desc "Machine Group Status"
-option :g, :group, String, "A security group name"
-option :s, :state, String, "Machine state. One of: running (default), pending, terminated"
-argv :awsid
-command :status => Rudy::CLI::Machines
-
-desc "Update the release currently running in a machine group"
-command :rerelease => Rudy::CLI::Release
-command_alias :rerelease, :rere
+#desc "Update the release currently running in a machine group"
+#command :rerelease => Rudy::CLI::Release
+#command_alias :rerelease, :rere
 
 #desc "Deploy disk snapshots from one machine to another"
 #command :deploy => Rudy::CLI::Deploy
@@ -195,47 +201,47 @@ command_alias :rerelease, :rere
 # -----------------------------------  AMAZON EC2 COMMANDS  --------
 # ------------------------------------------------------------------
 
-usage "rudy [global options] addresses [-A address instance ID]"
-desc "Manage Amazon Elastic IP addresses"
-argv :address, :instanceid
-action :A, :associate, "Associate an address to a running instance"
-command :addresses => Rudy::CLI::Addresses
-command_alias :addresses, :address
+#usage "rudy [global options] addresses [-A address instance ID]"
+#desc "Manage Amazon Elastic IP addresses"
+#argv :address, :instanceid
+#action :A, :associate, "Associate an address to a running instance"
+#command :addresses => Rudy::CLI::Addresses
+#command_alias :addresses, :address
+#
+#
+#usage "rudy images [-C -i name [-b bucket -a account]] [-D AMI-ID]"
+#desc "Manage EC2 Machine Images (AMIs)"
+#option :a, :account, String, "Your Amazon Account Number"
+#option :i, :image_name, String, "The name of the image"
+#option :p, :print, "Print-only (don't execute commands)"
+#option :b, :bucket_name, String, "The name of the bucket that will store the image"
+#action :C, :create, "Create an image"
+##action :P, :prepare, "Prepare a running instance to be used as an image"
+#action :D, :destroy, "Deregister an image (currently _does not_ remove images files from S3)"
+#argv :ami
+#command :images => Rudy::CLI::Images
+#command_alias :images, :image
+#
+#
+#desc "Manage EC2 Volumes"
+#action :D, :destroy, "Destroy a volume"
+#argv :vol
+#command :volumes => Rudy::CLI::Volumes
+#command_alias :volumes, :volume
 
 
-usage "rudy images [-C -i name [-b bucket -a account]] [-D AMI-ID]"
-desc "Manage EC2 Machine Images (AMIs)"
-option :a, :account, String, "Your Amazon Account Number"
-option :i, :image_name, String, "The name of the image"
-option :p, :print, "Print-only (don't execute commands)"
-option :b, :bucket_name, String, "The name of the bucket that will store the image"
-action :C, :create, "Create an image"
-#action :P, :prepare, "Prepare a running instance to be used as an image"
-action :D, :destroy, "Deregister an image (currently _does not_ remove images files from S3)"
-argv :ami
-command :images => Rudy::CLI::Images
-command_alias :images, :image
-
-
-desc "Manage EC2 Volumes"
-action :D, :destroy, "Destroy a volume"
-argv :vol
-command :volumes => Rudy::CLI::Volumes
-command_alias :volumes, :volume
-
-
-usage "rudy [global options] instances [-D] [-S -i image ID] [instance ID OR group name]"
-desc "Manage EC2 Instances"
-option :all, "Display all instances"
-option :a, :address, String, "Amazon elastic IP"
-option :i, :image, String, "Amazon machine image ID (ami)"
-#option :v, :volume, String, "Amazon volume ID"
-action :D, :destroy, "Destroy the given instance IDs. All data will be lost!"
-#action :S, :start, "Start an instance"
-#action :R, :restart, "Restart an instance"
-argv :filter
-command :instances => Rudy::CLI::Instances
-command_alias :instances, :instance
+#usage "rudy [global options] instances [-D] [-S -i image ID] [instance ID OR group name]"
+#desc "Manage EC2 Instances"
+#option :all, "Display all instances"
+#option :a, :address, String, "Amazon elastic IP"
+#option :i, :image, String, "Amazon machine image ID (ami)"
+##option :v, :volume, String, "Amazon volume ID"
+#action :D, :destroy, "Destroy the given instance IDs. All data will be lost!"
+##action :S, :start, "Start an instance"
+##action :R, :restart, "Restart an instance"
+#argv :filter
+#command :instances => Rudy::CLI::Instances
+#command_alias :instances, :instance
 
 
 

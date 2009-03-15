@@ -34,8 +34,9 @@ module Rudy
         return if @config.nil? 
         puts "Config: #{@config.paths}" if @global.verbose > 0
         
-        which = @option.defaults ? @global.user : machine_name
-        puts "Machine: #{which}" if @global.verbose > 0
+        @option.group ||= [@global.environment, @global.role].join(RUDY_DELIM)
+        
+        puts "Machine Group: #{@option.group}" if @global.verbose > 0
         puts "User: #{@global.user}" if @global.verbose > 0
         
         return if @config.empty?
@@ -47,7 +48,6 @@ module Rudy
           
           
         else
-          
           if @option.all
             y @config.machines.to_hash
             y @config.routines.to_hash

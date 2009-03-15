@@ -109,17 +109,31 @@ def capture(stream)
   result
 end
 
-def waiter(duration=2, max=120, dot='.', &b)
+# Wait for something to happen. 
+# * +duration+ seconds to wait between tries (default: 2).
+# * +max+ maximum time to wait (default: 120). Throws an exception when exceeded.
+# * +dot+ the character to print after each attempt (default: .). 
+# Set to nil or false to keep the waiter silent.
+# * +logger+ IO object to print +dot+ to.
+# The block must return false while waiting. Once it returns true
+# the waiter will return true.
+def waiter(duration=2, max=120, dot='.', logger=STDOUT, &b)
+  raise "The waiter needs a block!" unless b
   duration = 1 if duration < 1
   max = duration*2 if max < duration
-  
-  success = Timeout::timeout(max) do
-    while !b.call
-      sleep duration
-      print dot if dot
-      STDOUT.flush
+  begin
+    success = Timeout::timeout(max) do
+      while !b.call
+        sleep duration
+        logger.print dot if dot && logger.respond_to?(:print)
+        logger.flush if logger.respond_to?(:flush)
+      end
     end
+  rescue Timeout::Error => ex
+    retry if pose_question(" Keep waiting? ", /yes|y|ya|sure|you bet!/i, @logger)
+    raise ex # We won't get here unless the question fails
   end
+  success
 end
 
 def write_to_file(filename, content, type)
@@ -129,24 +143,26 @@ def write_to_file(filename, content, type)
   f.close
 end
 
+def pose_question(msg, exp, logger=STDOUT)
+  return true unless STDIN.tty? # Only ask a question if there's a human
+  exp &&= Regexp.new exp
+  logger.print msg 
+  logger.flush if logger.respond_to?(:flush)
+  ans = (STDIN.gets || "").gsub(/["']/, '')
+  exp.match(ans)
+end
+
 def are_you_sure?(len=3)
-  if Drydock.debug?
-    puts 'DEBUG: skipping "are you sure" check'
-    return true 
-  end
+  return true unless STDIN.tty? # Only ask a question if there's a human 
   
-  if STDIN.tty? # Only ask a question if there's a human 
-    challenge = strand len
-    STDOUT.print "Are you sure? To continue type \"#{challenge}\": "
-    STDOUT.flush
-    if ((STDIN.gets || "").gsub(/["']/, '') =~ /^#{challenge}$/)
-      true
-    else
-      puts "Nothing changed"
-      exit 0
-    end
-  else
+  challenge = strand len
+  STDOUT.print "Are you sure? To continue type \"#{challenge}\": "
+  STDOUT.flush
+  if ((STDIN.gets || "").gsub(/["']/, '') =~ /^#{challenge}$/)
     true
+  else
+    puts "Nothing changed"
+    exit 0
   end
 end
     

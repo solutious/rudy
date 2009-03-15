@@ -148,19 +148,22 @@ module Rudy::AWS
         volumes.select { |v| v[:aws_device] === device }
       end
       
-
+      
+      # Return an Array of Instances objects
       def create(ami, group, keypair_name, user_data, zone)
         opts = {
           :image_id => ami,
           :min_count => 1,
           :max_count => 1,
           :key_name => keypair_name,
+          :group_id => [group].flatten,
           :user_data => user_data,
           :availability_zone => zone, 
           :addressing_type => 'public',
           :instance_type => 'm1.small',
           :kernel_id => nil
         }
+        
         # reservationId: r-f393149a
         # groupSet: 
         #   item: 
@@ -179,8 +182,8 @@ module Rudy::AWS
         instances
       end
       
-      # +inst_ids+ is an Array of instance IDs.
-      # +state+ is an optional instance state. Must be one of: running, pending, terminated.
+      # * +inst_ids+ is an Array of instance IDs.
+      # * +state+ is an optional instance state. If specified, must be one of: running, pending, terminated.
       # Returns a hash of Rudy::AWS::EC2::Instance objects. The key is the instance ID. 
       def list(inst_ids, state=nil)
         state &&= state.to_sym
@@ -198,12 +201,17 @@ module Rudy::AWS
         #     instancesSet: 
         #       item: 
         # 
-
-        ilist = @aws.describe_instances(:instance_id => inst_ids) || {}
-        reqid = ilist['requestId']
-        resids = []
-        return unless ilist['reservationSet'].is_a?(Hash)  # No instances 
         
+        begin
+          ilist = @aws.describe_instances(:instance_id => inst_ids) || {}
+          reqid = ilist['requestId']
+          resids = []
+        rescue ::EC2::InvalidInstanceIDMalformed => ex
+          ilist = {}
+        end
+        
+        return unless ilist['reservationSet'].is_a?(Hash)  # No instances 
+
         instances = {}
         # AWS Returns instances grouped by reservation
         ilist['reservationSet']['item'].each do |res|      
@@ -225,28 +233,30 @@ module Rudy::AWS
       # +state+ is an optional instance state. Must be one of: running, pending, terminated.
       # Returns a hash of Rudy::AWS::EC2::Instance objects. The key is the instance ID.
       def list_by_group(group, state=nil)
-        group = group.to_s.tr('_|-', '.') # treat dashes, underscores as one
         instances = list([], state)
-        instances.reject { |id,inst| !inst.groups.member?(group)}    
+        instances.reject { |id,inst| !inst.groups.member?(group) }    
       end
-
+      
+      # +inst_id+ is an instance ID
+      # Returns an Instance object
       def get(inst_id)
-        list(inst_id)
+        inst = list(inst_id)
+        inst.values.first if inst
       end
       
       def running?(inst_id)
         inst = get(inst_id)
-        (inst && inst[:aws_state] == "running")
+        (!inst.nil? && inst.state == "running")
       end
       
       def pending?(inst_id)
         inst = get(inst_id)
-        (inst && inst[:aws_state] == "pending")
+        (!inst.nil? && inst.state == "pending")
       end
       
       def terminated?(inst_id)
         inst = get(inst_id)
-        (inst && inst[:aws_state] == "terminated")
+        (!inst.nil? && inst.state == "terminated")
       end
       
       #

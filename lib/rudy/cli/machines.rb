@@ -3,56 +3,99 @@
 module Rudy::CLI
   class Machines < Rudy::CLI::Base
     
-
+    def connect
+      opts = {}
+      opts[:group] = @option.group if @option.group
+      opts[:id] = @option.awsid if @option.awsid
+      opts[:id] &&= [opts[:id]].flatten
+      opts[:print] = @option.print if @option.print
+      
+      if @argv.cmd
+        opts[:cmd] = [@argv.cmd].flatten.join(' ')
+        exit unless are_you_sure?(2)
+      end
+      
+      rudy = Rudy::Machines.new(:config => @config, :global => @global)
+      rudy.connect(opts)
+    end
+    
+    def copy_valid?
+      raise "You must supply a source and a target. See rudy #{@alias} -h" unless @argv.size >= 2
+      raise "You cannot download and upload at the same time" if @option.download && @alias == 'upload'
+      true
+    end
+    def copy
+      opts = {}
+      opts[:group] = @option.group if @option.group
+      opts[:id] = @option.awsid if @option.awsid
+      opts[:id] &&= [opts[:id]].flatten
+      opts[:print] = @option.print if @option.print
+      opts[:recursive] = @option.recursive if @option.recursive
+      opts[:preserve] = @option.preserve if @option.preserve
+      opts[:paths] = @argv
+      opts[:dest] = opts[:paths].pop
+      
+      opts[:task] = :download if @alias == 'download' || @option.download
+      opts[:task] = :upload if @alias == 'upload'
+      opts[:task] ||= :upload
+      
+      exit unless are_you_sure?(2)
+      
+      rudy = Rudy::Machines.new(:config => @config, :global => @global)
+      rudy.copy(opts)
+    end
+    
     def shutdown_valid?
       raise "Cannot specify both instance ID and group name" if @argv.awsid && @option.group
       raise "I will not help you ruin production!" if @global.environment == "prod" # TODO: use_caution?, locked?
       true
     end
     def shutdown
-      @option.group ||= machine_group
-      
       opts = {}
       opts[:group] = @option.group if @option.group
       opts[:id] = @argv.awsid if @argv.awsid
-      opts[:id] = [opts[:id]] if opts[:id] && !opts[:id].is_a?(Array)
+      opts[:id] &&= [opts[:id]].flatten
       
-      msg = opts[:id] ? "instances: #{opts[:id].join(', ')}" : "group: #{opts[:group]}"
+      msg = opts[:id] ? "instances: #{opts[:id].join(', ')}" : (opts[:group] ? "group: #{opts[:group]}" : '')
       puts "Shutting down #{msg}".att(:bright)
       puts "This command also affects the volumes attached to the instances! (according to your routines config)"
-      exit unless are_you_sure?(5)        
+      exit unless are_you_sure?(5)        # TODO: Check if instances are running before this
       
       rudy = Rudy::Machines.new(:config => @config, :global => @global)
       rudy.shutdown(opts)
     end
     
+    
     def status_valid?
-      @option.group ||= machine_group
-      @option.state ||= :running
       true
     end
     def status
-      puts "Status for #{@option.group} (state: #{@option.state})"
+      puts "Machine Status".att(:bright)
       opts = {}
       opts[:group] = @option.group if @option.group
+      opts[:state] = @option.state if @option.state
+      
+      # A nil value forces the @ec2.instances.list to return all instances
+      opts[:state] = nil if @option.all
+      
       opts[:id] = @argv.awsid if @argv.awsid
-      opts[:id] = [opts[:id]] if opts[:id] && !opts[:id].is_a?(Array)
+      opts[:id] &&= [opts[:id]].flatten
       rudy = Rudy::Machines.new(:config => @config, :global => @global)
       rudy.status(opts)
     end
     
+    
     def startup_valid?
-      @option.image ||= machine_image
-      @option.address ||= machine_address
-      raise "No AMI supplied" unless @option.image
       true
     end
     def startup
-      puts "Starting a machine in #{machine_group}".att(:bright)
+      puts "Starting a machine".att(:bright)
+      opts = {}
+      opts[:ami] = @option.image if @option.image
+      opts[:group] = @option.group if @option.group
       exit unless are_you_sure?(3)
-
-      
-      
+      rudy = Rudy::Machines.new(:config => @config, :global => @global)
+      rudy.startup(opts)
       puts "Done!"
     end
 

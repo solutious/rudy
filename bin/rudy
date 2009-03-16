@@ -129,18 +129,18 @@ end
 #option :g, :group, String, "A security group name"
 #command :update => Rudy::CLI::Machines
 
-
+usage "rudy [global options] annoy [-h -m -l] [-e]"
 option :e, :equation, "A math challenge"
+option :i, :insane, "Insane annoyance factor"
 option :h, :high, "High annoyance factor"
 option :m, :medium, "Medium annoyance factor"
 option :l, :low, "Low annoyance factor"
+option :r, :rand, "Random challenge type"
 command :annoy do |obj|
-  flavor = obj.option.equation ? :math : :string
-  factor = :high if obj.option.high
-  factor = :medium if obj.option.medium
-  factor = :low if obj.option.low
-  factor ||= :medium
-  puts Annoy.are_you_sure?(factor, flavor)
+  flavor = [:math, :rand].detect { |v| obj.option.send(v) } || :string
+  factor = [:insane, :high, :medium, :low].detect { |v| obj.option.send(v) } || :medium
+  success = Annoy.challenge?("Is this annoying?", factor, flavor)
+  puts (success ? "Correct!" : "u r WRONG!").att(:bright)
 end
 
 usage "rudy [global options] connect [-g group-name] [-i instance-ID] [cmd]"

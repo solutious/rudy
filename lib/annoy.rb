@@ -14,25 +14,28 @@ class Annoy
   
   @@operators = {
     :low      => %w(+ - *),
-    :medium   => %w(* | & % + -),
-    :high     => %w(* | & % ^)
+    :medium   => %w(* % + -),
+    :high     => %w(* % ^),
+    :insane   => %w(** << | & *)
   }.freeze
   
   @@strlen = {
     :low      => 2,
     :medium   => 4,
-    :high     => 6
+    :high     => 8,
+    :insane   => 32
   }.freeze
   
   @@randsize = {
     :low      => 10,
     :medium   => 100,
-    :high     => 1000
+    :high     => 1000,
+    :insane   => 1000
   }.freeze
   
   @@flavors = [:math, :string].freeze
   
-  # * +factor+ annoyance factor, one of :low (default), :medium, :high
+  # * +factor+ annoyance factor, one of :low (default), :medium, :high, :insane
   # * +flavor+ annoyance flavor, one of :rand (default), :math, string
   # * +writer+ an IO object to write to. Default: STDERR.
   def initialize(factor=:medium, flavor=:rand, writer=STDOUT)
@@ -80,12 +83,12 @@ class Annoy
   # STDIN is NOT connected to a tty.
   # * +msg+ The message to print. Default: "Please confirm."
   # Returns true when the answer is correct, otherwise false.
-  def Annoy.challenge(msg, factor=:medium, flavor=:rand, writer=STDOUT)
+  def Annoy.challenge?(msg="Please confirm.", factor=:medium, flavor=:rand, writer=STDOUT)
     return true unless STDIN.tty? # Humans only!
     flavor = Annoy.get_flavor(flavor)
     question, answer = Annoy.question(factor, flavor)
     writer.print "#{msg} To continue, #{Annoy.verb(flavor)} #{question}: "
-    writer.print " (#{answer}) " if factor != :high && flavor == :math
+    writer.print " (#{answer}) " if ![:high].member?(factor) && flavor == :math
     writer.flush
     response = (STDIN.gets || "").chomp.strip.gsub(/["']/, '')
     response = response.to_i if flavor == :math
@@ -93,15 +96,15 @@ class Annoy
   end
   
   # Runs a challenge with the message, "Are you sure?"
-  # See: Annoy.challenge
+  # See: Annoy.challenge?
   def Annoy.are_you_sure?(factor=:medium, flavor=:rand, writer=STDOUT)
-    Annoy.challenge("Are you sure?", factor, flavor, writer)
+    Annoy.challenge?("Are you sure?", factor, flavor, writer)
   end
   
-  # See: Annoy.challenge
+  # See: Annoy.challenge?
   # Uses the value of @flavor, @factor, and @writer
-  def challenge(msg="Please confirm.")
-    Annoy.challenge(msg, @factor, @flavor, @writer)
+  def challenge?(msg="Please confirm.")
+    Annoy.challenge?(msg, @factor, @flavor, @writer)
   end
   
   # See: Annoy.pose_question

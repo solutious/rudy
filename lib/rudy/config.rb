@@ -85,6 +85,9 @@ module Rudy
       @paths += Dir.glob(File.join('/etc', 'rudy', '*.rb')) || []
       @paths += Dir.glob(File.join(cwd, 'config', 'rudy', '*.rb')) || []
       @paths += Dir.glob(File.join(cwd, '.rudy', '*.rb')) || []
+      @paths += Dir.glob(File.join(cwd, 'Rudyfile')) || []
+      @paths += Dir.glob(File.join(cwd, '*.rudy')) || []
+      @paths &&= @paths.uniq
       refresh
     end
     

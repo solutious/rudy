@@ -127,7 +127,7 @@ def waiter(duration=2, max=120, dot='.', logger=STDOUT, &b)
       end
     end
   rescue Timeout::Error => ex
-    retry if Annoy.pose_question(" Keep waiting? ", /yes|y|ya|sure|you bet!/i, @logger)
+    retry if Annoy.pose_question(" Keep waiting? ", /yes|y|ya|sure|you bet!/i, logger)
     raise ex # We won't get here unless the question fails
   end
   success

@@ -19,7 +19,7 @@ module Rudy::Routines
       script_config = @config.routines.find_deferred(@global.environment, @global.role, :config) || {}        
       script_config[:global] = @global.marshal_dump
       script_config[:global].reject! { |n,v| n == :cert || n == :privatekey }
-      script_config_filename = "config.yaml"
+      script_config_filename = "#{routine}_config.yaml"
       
       tf = Tempfile.new(script_config_filename)
       write_to_file(tf.path, script_config.to_hash.to_yaml, 'w')

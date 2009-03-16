@@ -8,7 +8,7 @@ module Rudy
     def initialize(opts={})
       super(opts)
       @script_runner = Rudy::Routines::ScriptRunner.new(opts)
-      @disks = Rudy::Routines::DiskHandler.new(opts)
+      @disk_handler = Rudy::Routines::DiskHandler.new(opts)
     end
     
     def connect(opts={})
@@ -100,6 +100,9 @@ module Rudy
 
       @logger.puts "using AMI: #{opts[:ami]}"
       
+      #@logger.puts $/, "Running BEFORE scripts...".att(:bright), $/
+      #instances.each { |inst| @script_runner.execute(inst, :startup, :before) }
+      
       # TODO: start multiple, update machine data for each
       instances = @ec2.instances.create(opts[:ami], opts[:group], File.basename(opts[:keypair]), opts[:machine_data], @global.zone)
       
@@ -130,8 +133,11 @@ module Rudy
           next
         end
         
-        #execute_disk_routines(inst, :startup)
-        #execute_routines(inst, :startup, :after)
+        @logger.puts $/, "Running DISK scripts...".att(:bright), $/
+        #instances.each { |inst| @disk_handler.execute(inst, :startup, :before) }
+        
+        @logger.puts $/, "Running AFTER scripts...".att(:bright), $/
+        instances.each { |inst| @script_runner.execute(inst, :startup, :before) }
       end
       
       status(opts)

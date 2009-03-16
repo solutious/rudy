@@ -1,4 +1,5 @@
 
+require 'timeout'
 
 # Annoy - your annoying friend that asks you questions all the time.
 #
@@ -11,6 +12,7 @@ class Annoy
   attr_accessor :flavor
   attr_accessor :answer
   attr_accessor :writer
+  attr_accessor :period
   
   @@operators = {
     :low      => %w(+ - *),
@@ -33,16 +35,19 @@ class Annoy
     :insane   => 1000
   }.freeze
   
+  @@period = 60.freeze    # max seconds to wait
+  
   @@flavors = [:math, :string].freeze
   
   # * +factor+ annoyance factor, one of :low (default), :medium, :high, :insane
   # * +flavor+ annoyance flavor, one of :rand (default), :math, string
-  # * +writer+ an IO object to write to. Default: STDERR.
-  def initialize(factor=:medium, flavor=:rand, writer=STDOUT)
-    @factor = factor
-    @flavor = Annoy.get_flavor(flavor)
-    @writer = writer
-    
+  # * +writer+ an IO object to write to. Default: STDERR
+  # * +period+ the amount of time to wait in seconds. Default: 60
+  def initialize(opts={:factor=>:medium, :flavor=>:rand, :writer=>STDOUT, :period=>nil})
+    @factor = opts[:factor]
+    @flavor = Annoy.get_flavor(opts[:flavor])
+    @writer = opts[:writer]
+    @period = opts[:period] || @@period
     unless Annoy.respond_to?("#{@flavor}_question")
       raise "Hey, hey, hey. I don't know that flavor! (#{@flavor})" 
     end
@@ -83,16 +88,23 @@ class Annoy
   # STDIN is NOT connected to a tty.
   # * +msg+ The message to print. Default: "Please confirm."
   # Returns true when the answer is correct, otherwise false.
-  def Annoy.challenge?(msg="Please confirm.", factor=:medium, flavor=:rand, writer=STDOUT)
+  def Annoy.challenge?(msg="Please confirm.", factor=:medium, flavor=:rand, writer=STDOUT, period=nil)
     return true unless STDIN.tty? # Humans only!
-    flavor = Annoy.get_flavor(flavor)
-    question, answer = Annoy.question(factor, flavor)
-    writer.print "#{msg} To continue, #{Annoy.verb(flavor)} #{question}: "
-    writer.print " (#{answer}) " if ![:high].member?(factor) && flavor == :math
-    writer.flush
-    response = (STDIN.gets || "").chomp.strip.gsub(/["']/, '')
-    response = response.to_i if flavor == :math
-    (response == answer)
+    begin
+      success = Timeout::timeout(period || @@period) do
+        flavor = Annoy.get_flavor(flavor)
+        question, answer = Annoy.question(factor, flavor)
+        writer.print "#{msg} To continue, #{Annoy.verb(flavor)} #{question}: "
+        writer.print " (#{answer}) " if ![:high].member?(factor) && flavor == :math
+        writer.flush
+        response = (STDIN.gets || "").chomp.strip.gsub(/["']/, '')
+        response = response.to_i if flavor == :math
+        (response == answer)
+      end
+    rescue Timeout::Error => ex
+      writer.puts $/, "Times up!"
+      false
+    end
   end
   
   # Runs a challenge with the message, "Are you sure?"
@@ -119,13 +131,20 @@ class Annoy
   # STDIN is NOT connected to a tty.
   # * +msg+ The question to pose to the user
   # * +regexp+ The regular expression to match the answer. 
-  def Annoy.pose_question(msg, regexp, writer=STDOUT)
+  def Annoy.pose_question(msg, regexp, writer=STDOUT, period=nil)
     return true unless STDIN.tty? # Only ask a question if there's a human
-    regexp &&= Regexp.new regexp
-    writer.print msg 
-    writer.flush if logger.respond_to?(:flush)
-    ans = (STDIN.gets || "").gsub(/["']/, '')
-    regexp.match(ans)
+    begin
+      success = Timeout::timeout(period || @@period) do
+        regexp &&= Regexp.new regexp
+        writer.print msg 
+        writer.flush if logger.respond_to?(:flush)
+        ans = (STDIN.gets || "").gsub(/["']/, '')
+        regexp.match(ans)
+      end
+    rescue Timeout::Error => ex
+      writer.puts $/, "Times up!"
+      false
+    end
   end
  
  

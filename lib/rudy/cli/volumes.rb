@@ -9,7 +9,7 @@ module Rudy
         raise "No volume ID provided" unless id
         raise "I will not help you destroy production!" if @global.environment == "prod"
         raise "The volume #{id} doesn't exist!" unless @ec2.volumes.exists?(id)
-        exit unless are_you_sure? 4
+        exit unless Annoy.are_you_sure?(:high)
         true
       end
         

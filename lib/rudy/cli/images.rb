@@ -33,7 +33,7 @@ module Rudy
         
         # ~/.rudy, /etc/motd, history -c, /etc/hosts, /var/log/rudy*
         
-        are_you_sure?(2)
+        exit unless Annoy.are_you_sure?(:medium)
         
         
         machine_list = @ec2.instances.list(machine_group)
@@ -83,7 +83,7 @@ module Rudy
         raise "You must supply an AMI ID (ami-XXXXXXX)" unless ami
         puts "Deregistering AMI: #{ami}"
         
-        are_you_sure?
+        exit unless Annoy.are_you_sure?
         
         if @ec2.images.deregister(ami)
           puts "Done!"

@@ -12,7 +12,7 @@ module Rudy::CLI
       
       if @argv.cmd
         opts[:cmd] = [@argv.cmd].flatten.join(' ')
-        exit unless are_you_sure?(2)
+        exit unless Annoy.are_you_sure?(:low)
       end
       
       rudy = Rudy::Machines.new(:config => @config, :global => @global)
@@ -39,7 +39,7 @@ module Rudy::CLI
       opts[:task] = :upload if @alias == 'upload'
       opts[:task] ||= :upload
       
-      exit unless are_you_sure?(2)
+      exit unless @option.print || Annoy.are_you_sure?(:low)
       
       rudy = Rudy::Machines.new(:config => @config, :global => @global)
       rudy.copy(opts)
@@ -59,7 +59,7 @@ module Rudy::CLI
       msg = opts[:id] ? "instances: #{opts[:id].join(', ')}" : (opts[:group] ? "group: #{opts[:group]}" : '')
       puts "Shutting down #{msg}".att(:bright)
       puts "This command also affects the volumes attached to the instances! (according to your routines config)"
-      exit unless are_you_sure?(5)        # TODO: Check if instances are running before this
+      exit unless Annoy.are_you_sure?(:high)        # TODO: Check if instances are running before this
       
       rudy = Rudy::Machines.new(:config => @config, :global => @global)
       rudy.shutdown(opts)
@@ -93,7 +93,7 @@ module Rudy::CLI
       opts = {}
       opts[:ami] = @option.image if @option.image
       opts[:group] = @option.group if @option.group
-      exit unless are_you_sure?(3)
+      exit unless Annoy.are_you_sure?
       rudy = Rudy::Machines.new(:config => @config, :global => @global)
       rudy.startup(opts)
       puts "Done!"
@@ -105,7 +105,7 @@ module Rudy::CLI
     def restart
       puts "Restarting #{machine_group}: #{@list.keys.join(', ')}".att(:bright)
       switch_user("root")
-      exit unless are_you_sure?(5)
+      exit unless Annoy.are_you_sure?(:medium)
       
       @list.each do |id, inst|
         execute_routines(@list.values, :restart, :before)
@@ -151,7 +151,7 @@ module Rudy::CLI
       puts "Updating Rudy on machines in #{@option.group}"
       switch_user("root")
       
-      exit unless are_you_sure?
+      exit unless Annoy.are_you_sure?
       scp do |scp|
         @scripts.each do |script|
           puts "Uploading #{File.basename(script)}"

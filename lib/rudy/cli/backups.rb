@@ -44,7 +44,7 @@ module Rudy
         end
         
         puts
-        are_you_sure?
+        exit unless Annoy.are_you_sure?
         
         puts 
         puts "Deleting..."
@@ -59,7 +59,7 @@ module Rudy
       
       def destroy_backup_valid?
         raise "No backup specified" if argv.empty?
-        exit unless are_you_sure?(5)
+        exit unless Annoy.are_you_sure?(:high)
         true
       end
       

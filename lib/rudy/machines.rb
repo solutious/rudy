@@ -40,7 +40,7 @@ module Rudy
         @logger.puts $/, "#{msg} #{inst.awsid}".att(:bright)
         
         if opts[:print]
-          scp_command inst.dns_name_public, @global.user, current_user_keypairpath, opts[:paths], opts[:dest], (opts[:task] == :download), false, opts[:print]
+          scp_command inst.dns_name_public, current_user_keypairpath, @global.user, opts[:paths], opts[:dest], (opts[:task] == :download), false, opts[:print]
           return
         end
         
@@ -53,6 +53,7 @@ module Rudy
         
       end
       
+      @logger.puts
     end
     
     
@@ -111,7 +112,7 @@ module Rudy
         @logger.puts "Waiting for the instance to startup "        
         begin 
           waiter(2, 120) { @ec2.instances.running?(inst_tmp.awsid) }
-          
+          @logger.puts "It's up!\a\a\a"
         rescue Timeout::Error, Interrupt
           @logger.puts "Check later: rudy status #{instances.keys.join(' ')}"
           next
@@ -119,9 +120,10 @@ module Rudy
         
         inst = @ec2.instances.get(inst_tmp.awsid)   # The DNS names are now available
         
-        @logger.puts "Waiting for the SSH daemon "
+        @logger.puts $/, "Waiting for the SSH daemon "
         begin
           waiter(2, 60) { Rudy::Utils.service_available?(inst.dns_name_public, 22) }
+          @logger.puts "It's up!\a\a"
         rescue Timeout::Error, Interrupt
           @logger.puts "Check later: rudy status #{instances.keys.join(' ')}"
           next

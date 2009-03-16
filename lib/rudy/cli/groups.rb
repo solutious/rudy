@@ -79,7 +79,7 @@ module Rudy
         puts "Destroying group #{name}"
         name = machine_group if name.nil?
         raise "The group #{name} does not exist" unless @ec2.groups.exists?(name)
-        exit unless are_you_sure?
+        exit unless Annoy.are_you_sure?(:high)
         
         @ec2.groups.destroy(name)
         

@@ -1,10 +1,6 @@
 
 #
-# No Ruby 1.9.1 support. Only 1.8.x for now :[
-unless RUBY_VERSION < "1.9"
-  puts "Sorry! We're using the right_aws gem and it doesn't support Ruby 1.9 (md5 error)."
-  exit 1
-end
+
 
 require 'digest/md5'
 require 'stringio'
@@ -16,6 +12,7 @@ require 'timeout'
 
 require 'console'
 require 'storable'
+require 'annoy'
 
 require 'net/ssh'
 require 'net/ssh/gateway'
@@ -130,7 +127,7 @@ def waiter(duration=2, max=120, dot='.', logger=STDOUT, &b)
       end
     end
   rescue Timeout::Error => ex
-    retry if pose_question(" Keep waiting? ", /yes|y|ya|sure|you bet!/i, @logger)
+    retry if Annoy.pose_question(" Keep waiting? ", /yes|y|ya|sure|you bet!/i, @logger)
     raise ex # We won't get here unless the question fails
   end
   success
@@ -143,32 +140,13 @@ def write_to_file(filename, content, type)
   f.close
 end
 
-def pose_question(msg, exp, logger=STDOUT)
-  return true unless STDIN.tty? # Only ask a question if there's a human
-  exp &&= Regexp.new exp
-  logger.print msg 
-  logger.flush if logger.respond_to?(:flush)
-  ans = (STDIN.gets || "").gsub(/["']/, '')
-  exp.match(ans)
-end
 
-def are_you_sure?(len=3)
-  return true unless STDIN.tty? # Only ask a question if there's a human 
-  
-  challenge = strand len
-  STDOUT.print "Are you sure? To continue type \"#{challenge}\": "
-  STDOUT.flush
-  if ((STDIN.gets || "").gsub(/["']/, '') =~ /^#{challenge}$/)
-    true
-  else
-    puts "Nothing changed"
-    exit 0
-  end
-end
-    
+
 # 
-# Generates a string of random alphanumeric characters
-# These are used as IDs throughout the system
+# Generates a string of random alphanumeric characters.
+# * +len+ is the length, an Integer. Default: 8
+# * +safe+ in safe-mode, ambiguous characters are removed (default: true):
+#       i l o 1 0
 def strand( len=8, safe=true )
    chars = ("a".."z").to_a + ("0".."9").to_a
    chars = [("a".."h").to_a, "j", "k", "m", "n", ("p".."z").to_a, ("2".."9").to_a].flatten if safe

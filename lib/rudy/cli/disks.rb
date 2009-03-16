@@ -24,7 +24,7 @@ module Rudy
       def create_disk
         puts "Creating #{@option.path} for #{machine_group}"
         switch_user("root")
-        exit unless are_you_sure?(2) 
+        exit unless Annoy.are_you_sure?(:low)
         machine = @instances.values.first # NOTE: DANGER! Should handle position.
         
         disk = Rudy::MetaData::Disk.new
@@ -80,7 +80,7 @@ module Rudy
       def destroy_disk
         puts "Destroying #{@disk.name} and #{@disk.awsid}"
         switch_user("root")
-        exit unless are_you_sure?(5)
+        exit unless Annoy.are_you_sure?(:high)
         
         machine = @instances.values.first # NOTE: DANGER! Should handle position. 
         
@@ -99,7 +99,7 @@ module Rudy
       def attach_disk
         puts "Attaching #{name}"
         switch_user("root")
-        are_you_sure?(4)
+        exit unless Annoy.are_you_sure?(:medium)
   
         machine = @instances.values.first  # AK! Assumes single machine
         
@@ -123,7 +123,7 @@ module Rudy
        def unattach_disk
          puts "Unattaching #{@disk.name} from #{machine_group}"
          switch_user("root")
-         are_you_sure?(4)
+         exit unless Annoy.are_you_sure?(:high)
          
          machine = @instances.values.first
 

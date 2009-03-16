@@ -26,7 +26,7 @@ module Rudy
         
         raise "I will not help you destroy production!" if @global.environment == "prod" # TODO: use_caution?, locked?
         
-        exit unless are_you_sure?(5)
+        exit unless Annoy.are_you_sure?(:high)
         true
       end
       def restart_instances
@@ -61,13 +61,15 @@ module Rudy
         filter = argv.first
         raise "No instance ID provided" if filter.nil?
         raise "I will not help you destroy production!" if @global.environment == "prod" || filter =~ /^prod/
-        exit unless are_you_sure?
+        
         true
       end
         
       def destroy_instances
         filter = argv.first
-
+        
+        exit unless Annoy.are_you_sure?(:high)
+        
         if @ec2.groups.exists?(filter)
           list = @ec2.instances.list(filter)
           raise "The group #{filter} has no running instances" if list.empty?

@@ -75,47 +75,47 @@ end
 # -----------------------------  RUDY MAINTENANCE COMMANDS  --------
 # ------------------------------------------------------------------
 
-usage "#{$/} [global options] disks [-C -p path -d device -s size] [-A] [-D] [disk name]"
-desc "Manage Disks"
-option :l, :all, "Display all disk definitions"
-option :p, :path, String, "The filesystem path to use as the mount point"
-option :d, :device, String, "The device id (default: /dev/sdh)"
-option :s, :size, Integer, "The size of disk (in GB)"
-action :C, :create, "Create a disk definition"
-action :D, :destroy, "Destroy a disk definition"
-action :A, :attach, "Attach a disk"
-action :N, :unattach, "Unattach a disk"
-argv :diskname
-command :disk => Rudy::CLI::Disks
+#usage "#{$/} [global options] disks [-C -p path -d device -s size] [-A] [-D] [disk name]"
+#desc "Manage Disks"
+#option :l, :all, "Display all disk definitions"
+#option :p, :path, String, "The filesystem path to use as the mount point"
+#option :d, :device, String, "The device id (default: /dev/sdh)"
+#option :s, :size, Integer, "The size of disk (in GB)"
+#action :C, :create, "Create a disk definition"
+#action :D, :destroy, "Destroy a disk definition"
+#action :A, :attach, "Attach a disk"
+#action :N, :unattach, "Unattach a disk"
+#argv :diskname
+#command :disk => Rudy::CLI::Disks
 
 
-usage "rudy [global options] backups [-C] [disk name]"
-desc "Manage Backups"
-option :s, :snapshot, String, "Create a backup entry from an existing snapshot"
-action :Z, :sync, "Check for and delete backup metadata with no snapshot. DOES NOT delete snapshots."
-#action :T, :tidy, "Tidy existing backups"
-action :D, :destroy, "Destroy a backup and DELETE its snapshots."
-action :C, :create, "Create a backup"
-argv :disk
-command :'backup' => Rudy::CLI::Backups
-command_alias :backup, :bu
+#usage "rudy [global options] backups [-C] [disk name]"
+#desc "Manage Backups"
+#option :s, :snapshot, String, "Create a backup entry from an existing snapshot"
+#action :Z, :sync, "Check for and delete backup metadata with no snapshot. DOES NOT delete snapshots."
+##action :T, :tidy, "Tidy existing backups"
+#action :D, :destroy, "Destroy a backup and DELETE its snapshots."
+#action :C, :create, "Create a backup"
+#argv :disk
+#command :'backup' => Rudy::CLI::Backups
+#command_alias :backup, :bu
 
 
-usage "rudy [global options] groups [-C -R -A] [-a IP addresses] [-p ports] [group name]"
-desc "Manage EC2 Security Groups"
-option :all, "Display all security groups"
-option :r, :protocols, Array, "Comma-separated list of protocols. One of: tcp (default), udp, icmp"
-option :p, :ports, Array, "List of comma-separated port ranges in the form FROM:TO (default: 22,80,443)"
-option :a, :addresses, Array, "List of comma-separated IP addresses (default: #{Rudy::Utils::external_ip_address})"
-option :g, :group, String, "A group name to authorize or revoke permissions. Must also supply -o!"
-option :o, :owner, String, "A group owner ID (account number). Must also supply -g!"
-action :C, :create, "Create a security group"
-action :D, :destroy, "Destroy a security group"
-action :A, :authorize, "Authorize a permission for a security group"
-action :R, :revoke, "Revoke a permission for a security group"
-argv :name
-command :group => Rudy::CLI::Groups
-command_alias :group, :groups
+#usage "rudy [global options] groups [-C -R -A] [-a IP addresses] [-p ports] [group name]"
+#desc "Manage EC2 Security Groups"
+#option :all, "Display all security groups"
+#option :r, :protocols, Array, "Comma-separated list of protocols. One of: tcp (default), udp, icmp"
+#option :p, :ports, Array, "List of comma-separated port ranges in the form FROM:TO (default: 22,80,443)"
+#option :a, :addresses, Array, "List of comma-separated IP addresses (default: #{Rudy::Utils::external_ip_address})"
+#option :g, :group, String, "A group name to authorize or revoke permissions. Must also supply -o!"
+#option :o, :owner, String, "A group owner ID (account number). Must also supply -g!"
+#action :C, :create, "Create a security group"
+#action :D, :destroy, "Destroy a security group"
+#action :A, :authorize, "Authorize a permission for a security group"
+#action :R, :revoke, "Revoke a permission for a security group"
+#argv :name
+#command :group => Rudy::CLI::Groups
+#command_alias :group, :groups
 
 
 
@@ -129,6 +129,19 @@ command_alias :group, :groups
 #option :g, :group, String, "A security group name"
 #command :update => Rudy::CLI::Machines
 
+
+option :e, :equation, "A math challenge"
+option :h, :high, "High annoyance factor"
+option :m, :medium, "Medium annoyance factor"
+option :l, :low, "Low annoyance factor"
+command :annoy do |obj|
+  flavor = obj.option.equation ? :math : :string
+  factor = :high if obj.option.high
+  factor = :medium if obj.option.medium
+  factor = :low if obj.option.low
+  factor ||= :medium
+  puts Annoy.are_you_sure?(factor, flavor)
+end
 
 usage "rudy [global options] connect [-g group-name] [-i instance-ID] [cmd]"
 desc "Open an SSH connection"

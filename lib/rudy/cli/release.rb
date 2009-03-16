@@ -93,7 +93,7 @@ module Rudy
         # TODO: store metadata about release with local username and hostname
         puts "Creating release from working copy".att(:bright)
 
-        exit unless are_you_sure?
+        exit unless Annoy.are_you_sure?(:low)
 
         tag = @scm.create_release(@global.local_user, @option.msg)        
         puts "Done! (#{tag})"

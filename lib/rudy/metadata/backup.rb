@@ -4,8 +4,6 @@ require 'date'
 module Rudy
   module MetaData
     class Backup < Storable
-      include Rudy::MetaData::ObjectBase
-      extend Rudy::MetaData::ObjectBase
         
       @@rtype = "back"
       

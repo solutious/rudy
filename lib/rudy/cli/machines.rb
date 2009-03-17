@@ -4,6 +4,7 @@ module Rudy::CLI
   class Machines < Rudy::CLI::Base
     
     def connect
+      puts "Rudy Connect".bright
       opts = {}
       opts[:group] = @option.group if @option.group
       opts[:id] = @option.awsid if @option.awsid
@@ -25,6 +26,7 @@ module Rudy::CLI
       true
     end
     def copy
+      puts "Rudy Copy".bright
       opts = {}
       opts[:group] = @option.group if @option.group
       opts[:id] = @option.awsid if @option.awsid

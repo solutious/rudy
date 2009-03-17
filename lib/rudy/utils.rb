@@ -71,9 +71,6 @@ module Rudy
     #
     def capture(stream)
       #raise "We can only capture STDOUT or STDERR" unless stream == :stdout || stream == :stderr
-
-      # I'm using this to trap the annoying right_aws "peer certificate" warning.
-      # TODO: discover source of annoying right_aws warning and give it a hiding.
       begin
         stream = stream.to_s
         eval "$#{stream} = StringIO.new"

@@ -5,10 +5,7 @@
 #   See rudy -h for usage
 # 
 
-RUDY_HOME = File.join(File.dirname(__FILE__), '..')
-RUDY_LIB = File.join(RUDY_HOME, 'lib')
-$:.unshift RUDY_LIB # Put our local lib in first place
-
+$:.unshift File.join(File.dirname(__FILE__), '..', 'lib') # Put our local lib in first place
 
 require 'rubygems' if RUBY_VERSION < "1.9"
 require 'date'
@@ -286,16 +283,7 @@ command :id do |obj|
 end
 
 
-command :console do 
-  irb = RUBY_PLATFORM =~ /(:?mswin|mingw)/ ? 'irb.bat' : '/usr/bin/irb'
-
-  libs = " -r irb/completion"
-  # Perhaps use a console_lib to store any extra methods I may want available in the cosole
-  # libs << " -r #{File.dirname(__FILE__) + '/../lib/console_lib/console_logger.rb'}"
-  libs << " -r rudy -I #{RUDY_LIB}"
-  puts "Loading Rudy"
-  exec "#{irb} #{libs} --simple-prompt"
-end
+command :console => Rudy::CLI::Console
 
 
 # -------------------------------------------  UGLY STUFFS  --------

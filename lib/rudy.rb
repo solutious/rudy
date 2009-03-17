@@ -1,5 +1,4 @@
 
-#
 
 
 require 'digest/md5'
@@ -20,8 +19,8 @@ require 'net/ssh/multi'
 require 'net/ssh/gateway'
 
 
-RUDY_HOME = File.join(__FILE__, '..', '..') unless defined?(RUDY_HOME)
-RUDY_LIB = File.join(__FILE__, '..') unless defined?(RUDY_LIB)
+RUDY_HOME = File.join(File.dirname(__FILE__), '..') unless defined?(RUDY_HOME)
+RUDY_LIB = File.join(File.dirname(__FILE__), '..', 'lib') unless defined?(RUDY_LIB)
 
 
 module Rudy #:nodoc:
@@ -144,12 +143,11 @@ end
 require 'rudy/aws'
 require 'rudy/utils'       # The
 require 'rudy/config'      # order
-require 'rudy/metadata'    # of
-require 'rudy/huxtable'    # require
-require 'rudy/routines'    # statements
-require 'rudy/machines'    # is
-require 'rudy/manager'     # important.
-require 'rudy/backups'
+require 'rudy/huxtable'    # of
+require 'rudy/routines'    # require
+require 'rudy/machines'    # statements
+require 'rudy/manager'     # is
+require 'rudy/backups'     # important.
 require 'rudy/groups'
 require 'rudy/disks'
 
@@ -164,8 +162,6 @@ rescue LoadError => ex
   puts "Error: #{ex.message}"
   exit 1
 end
-
-
 
 
 

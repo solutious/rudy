@@ -9,14 +9,7 @@ module Rudy
     
     class Base < Drydock::Command
 
-      attr_reader :scm
-  
-      attr_reader :rscripts
-      attr_reader :domains
-      attr_reader :machine_images
-      
       attr_reader :config
-      
       
       def init
         

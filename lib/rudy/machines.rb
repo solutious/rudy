@@ -13,8 +13,8 @@ module Rudy
     def connect(opts={})
       opts, instances = process_filter_options(opts)
       instances.values.each do |inst|
-        msg = opts[:cmd] ? "Running command on" : "Connecting to"
-        @logger.puts $/, "#{msg} #{inst.awsid}".bright
+        msg = opts[:cmd] ? %Q{"#{opts[:cmd]}" on} : "Connecting to"
+        @logger.puts $/, "#{msg} #{inst.awsid}", $/
         ret = ssh_command(inst.dns_name_public, current_user_keypairpath, @global.user, opts[:cmd], opts[:print])
         puts ret if ret  # ssh command returns false with "ssh_exchange_identification: Connection closed by remote host"
       end

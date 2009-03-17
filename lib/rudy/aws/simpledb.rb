@@ -24,6 +24,7 @@ module Rudy::AWS
     end
     
     def store(domain, item, attributes={}, replace=false)
+      replace &&= true  # Accept any value as true
       @aws.put_attributes(domain, item, attributes, replace)
     end
     
@@ -34,10 +35,12 @@ module Rudy::AWS
     def query_with_attributes(domain, query, max=nil)
       # FIX OUTPUT
       items = @aws.query_with_attributes(domain, query, max) || {}
+      return nil if !items || items.empty? || items == [[], ""]  # NOTE: wtf, aws-sdb?
       p items
-      items[:items].each do |item|
-        items[item] = get_attributes(domain, item)[:attributes]
-      end
+      # TODO: We're getting nest Arrays in items. Sort it out:
+      # [[{"device"=>["/dev/sdh"], "Name"=>"disk-us-east-1b-stella-app-01-stella", "zone"=>["us-east-1b"], 
+      # "size"=>["1"], "region"=>["us-east-1"], "role"=>["app"], "rtype"=>["disk"], "awsid"=>[""], 
+      # "environment"=>["stella"], "position"=>["01"], "path"=>["/stella"]}], ""]
       items
     end
     

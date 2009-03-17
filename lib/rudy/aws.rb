@@ -1,7 +1,7 @@
 
 
 require 'ec2'
-
+require 'aws_sdb'
 
 module Rudy
   module AWS

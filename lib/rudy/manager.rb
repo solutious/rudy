@@ -4,12 +4,12 @@ module Rudy
   class Manager
     include Rudy::Huxtable
     
-    def create_domain
-      @sdb.domains.create(RUDY_DOMAIN)
+    def create_domain(name)
+      @sdb.domains.create(name)
     end
     
     def domains
-      @sdb.domains.list[:domains] || []
+      (@sdb.domains.list || []).flatten
     end
     
     

@@ -39,7 +39,7 @@ module Rudy
       end
       
       def name
-        Disk.generate_name(@zone, @environment, @role, @position, @path)
+        Rudy::Disks.generate_name(@zone, @environment, @role, @position, @path)
       end
       
       def valid?

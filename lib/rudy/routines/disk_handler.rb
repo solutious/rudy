@@ -43,6 +43,15 @@ module Rudy::Routines
         @logger.puts "Skipping disk for #{disk.path} (device #{disk.device} is in use)"
         return false
       end
+      
+      @logger.puts "Creating Volume..."
+      vol = @ec2.volumes.create(disk.zone, disk.size)
+      disk.awsid = vol.awsid
+      
+      
+      @logger.puts "Attaching Volume..."
+      ret = @ec2.volumes.attach(machine.awsid, disk.awsid, disk.device)
+      p ret
     end
     
     def create(machine, disk_definitions, disk_routine)

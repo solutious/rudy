@@ -202,12 +202,12 @@ command_alias :copy, :download
 
 
 desc "Manage EC2 Volumes"
-option :s, :size, "Size (in GB)"
+option :s, :size, String, "Size (in GB)"
 action :D, :destroy, "Destroy a volume"
 action :C, :create, "Create a volume"
-argv :vol
-command :volumes => Rudy::CLI::Volumes
-command_alias :volumes, :volume
+argv :volid
+command :volume => Rudy::CLI::Volumes
+command_alias :volume, :volumes
 
 
 #usage "rudy [global options] instances [-D] [-S -i image ID] [instance ID OR group name]"
@@ -283,6 +283,8 @@ command :id do |obj|
 end
 
 
+usage "rudy console"
+desc "A rudimentary, IRB-style console."
 command :console => Rudy::CLI::Console
 
 

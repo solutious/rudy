@@ -11,6 +11,7 @@ module Rudy
 
       attr_reader :config
       
+    protected
       def init
         
         raise "PRODUCTION ACCESS IS DISABLED IN DEBUG MODE" if @global.environment == "prod" && Drydock.debug?
@@ -68,11 +69,7 @@ module Rudy
         #  puts "Checking #{check_environment} permissions..."
         #end
         
-
       end
-      protected :init
-      
-
       
       
       # Print a default header to the screen for every command.
@@ -108,43 +105,10 @@ module Rudy
         end
         
       end
-      
-      def print_footer
-        
-      end
-      
+
 
       private 
 
-        
-        def print_image(img)
-          puts '-'*60
-          puts "Image: #{img[:aws_id].bright}"
-          img.each_pair do |key, value|
-             printf(" %22s: %s#{$/}", key, value) if value
-           end
-          puts
-        end
-        
-        def print_disk(disk, backups=[])
-          puts '-'*60
-          puts "Disk: #{disk.name.bright}"
-          puts disk.to_s
-          puts "#{backups.size} most recent backups:", backups.collect { |back| "#{back.nice_time} (#{back.awsid})" }
-          puts
-        end
-        
-        
-        def print_volume(vol, disk)
-          puts '-'*60
-          puts "Volume: #{vol[:aws_id].bright} (disk: #{disk.name if disk})"
-          vol.each_pair do |key, value|
-             printf(" %22s: %s#{$/}", key, value) if value
-           end
-          puts
-        end
-        
-        
         def init_config_dir
           unless File.exists?(RUDY_CONFIG_DIR)
             puts "Creating #{RUDY_CONFIG_DIR}"

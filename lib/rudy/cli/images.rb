@@ -93,6 +93,18 @@ module Rudy
         
       end
       
+      
+      def print_image(img)
+        puts '-'*60
+        puts "Image: #{img[:aws_id].bright}"
+        img.each_pair do |key, value|
+           printf(" %22s: %s#{$/}", key, value) if value
+         end
+        puts
+      end
+      
+      
+      
     end
   end
 end

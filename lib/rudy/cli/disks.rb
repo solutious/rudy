@@ -11,13 +11,21 @@ module Rudy
           opts[v] = @option.send(v) if @option.respond_to?(v)
         end
         rdisks = Rudy::Disks.new(:config => @config, :global => @global)
+        list = rdisks.list(opts) || []
         #rbacks = Rudy::Backups.new(:config => @config, :global => @global)
-        rdisks.list(opts).each do |disk|
+        list.each do |disk|
           #backups = rbacks.list_by_disk(disk, 2)
           print_disk(disk, backups)
         end
       end
-
+      def print_disk(disk, backups=[])
+        puts '-'*60
+        puts "Disk: #{disk.name.bright}"
+        puts disk.to_s
+        puts "#{backups.size} most recent backups:", backups.collect { |back| "#{back.nice_time} (#{back.awsid})" }
+        puts
+      end
+      
       def create_disk_valid?
         raise "No filesystem path specified" unless @option.path
         raise "No size specified" unless @option.size
@@ -39,7 +47,7 @@ module Rudy
         
         @global.debug = true
         rdisks = Rudy::Disks.new(:config => @config, :global => @global)
-        rdisks.create(opts)
+        p rdisks.create(opts)
         #print_disk(disk)
       end
       

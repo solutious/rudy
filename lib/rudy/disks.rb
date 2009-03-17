@@ -9,7 +9,7 @@ module Rudy
       @disk_handler = Rudy::Routines::DiskHandler.new(opts)
     end
     
-    def generate_name(zon, env, rol, pos, pat, sep=File::SEPARATOR)
+    def Disks.generate_name(zon, env, rol, pos, pat, sep=File::SEPARATOR)
       pos = pos.to_s.rjust 2, '0'
       dirs = pat.split sep if pat
       dirs.shift while dirs && (dirs[0].nil? || dirs[0].empty?)
@@ -31,7 +31,7 @@ module Rudy
       # We don't care about the path, but we do care about the device
       # which is not part of the disk's name. 
       query = disk.to_query(:device, :path)
-      !@sdb.query_with_attributes(RUDY_DOMAIN, query).empty?
+      !(@sdb.query_with_attributes(RUDY_DOMAIN, query) || {}).empty?
     end
     
     def create(opts={})
@@ -47,12 +47,10 @@ module Rudy
       end
       
       raise "Not enough info was provided to define a disk (#{disk.name})" unless disk.valid?
-      #raise "The device #{disk.device} is already in use on that machine" if is_defined?(disk)
-      
-      #p instances
+      raise "The device #{disk.device} is already in use on that machine" if is_defined?(disk)
       
       instances.each_pair do |id, machine|
-        @disk_handler.create_disk(machine, disk)
+        p @disk_handler.create_disk(machine, disk)
       end
       
       
@@ -62,7 +60,7 @@ module Rudy
      # 
      # disk.awsid = volume[:aws_id]
      # disk.raw_volume = true    # This value is not saved. 
-     # Rudy::MetaData::Disk.save(@sdb, disk)
+     #save(disk)
      # 
      # execute_attach_disk(disk, machine)
       
@@ -80,17 +78,25 @@ module Rudy
            query << " intersection ['#{n}' = '#{@global.send(n)}']" if @global.send(n)
         end
       end
-      puts query
-      list = []
-      @sdb.query_with_attributes(RUDY_DOMAIN, query).each_pair do |name, hash|
+      disks = []
+      list = @sdb.query_with_attributes(RUDY_DOMAIN, query)
+      return nil if !list || list.empty?
+      list.each_pair do |name, hash|
         #puts "DISK: #{hash.to_yaml}"
-        list << Rudy::MetaData::Disk.from_hash(hash)
+        disks << Rudy::MetaData::Disk.from_hash(hash)
       end
-      list
-      
+      disks
     end
 
 
+    
+    def find_from_volume(vol_id)
+      query = "['awsid' = '#{vol_id}']"
+      res = @sdb.query_with_attributes(RUDY_DOMAIN, query) || []
+      return nil if !res || res.empty?
+      disk = Rudy::MetaData::Disk.from_hash(res.values.first)
+    end
+    
 
 
 
@@ -101,18 +107,7 @@ module Rudy
       true # wtf: RightAws::SimpleDB doesn't tell us whether it succeeds. We'll assume!
     end
     
-    
-    def find_from_volume(sdb, vol_id)
-      query = "['awsid' = '#{vol_id}']"
-      res = sdb.query_with_attributes(RUDY_DOMAIN, query)
-      if res.empty?
-        nil
-      else
-        disk = Rudy::MetaData::Disk.from_hash(res.values.first)
-      end
-    end
-    
-    
+
     def find_from_path(sdb, path)
       query = "['path' = '#{path}']"
       res = sdb.query_with_attributes(RUDY_DOMAIN, query)

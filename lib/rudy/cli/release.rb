@@ -61,7 +61,7 @@ module Rudy
       end
       
       def rerelease
-        puts "Updating release from working copy".att(:bright)
+        puts "Updating release from working copy".bright
 
         tag, revision = @scm.local_info
         puts "tag: #{tag}"
@@ -71,7 +71,7 @@ module Rudy
         
         if @scm
           
-          puts "Running SCM command".att(:bright)
+          puts "Running SCM command".bright
           ssh do |session|
             cmd = "svn #{@scm_params[:command]}"
             puts "#{cmd}"
@@ -91,7 +91,7 @@ module Rudy
       # <li>Executes release routines</li>
       def release
         # TODO: store metadata about release with local username and hostname
-        puts "Creating release from working copy".att(:bright)
+        puts "Creating release from working copy".bright
 
         exit unless Annoy.are_you_sure?(:low)
 
@@ -99,7 +99,7 @@ module Rudy
         puts "Done! (#{tag})"
         
         if @option.switch
-          puts "Switching working copy to new tag".att(:bright)
+          puts "Switching working copy to new tag".bright
           @scm.switch_working_copy(tag)
         end
         
@@ -107,13 +107,13 @@ module Rudy
         
         switch_user("root")
         
-        puts "Starting #{machine_group}".att(:bright)
+        puts "Starting #{machine_group}".bright
         
         instances = @ec2.instances.create(@option.image, machine_group.to_s, File.basename(keypairpath), machine_data.to_yaml, @global.zone)
         inst = instances.first
         
         if @option.address ||= machine_address
-          puts "Associating #{@option.address} to #{inst[:aws_instance_id]}".att(:bright)
+          puts "Associating #{@option.address} to #{inst[:aws_instance_id]}".bright
           @ec2.addresses.associate(inst[:aws_instance_id], @option.address)
         end
         
@@ -127,7 +127,7 @@ module Rudy
         
         if @scm
           
-          puts "Running SCM command".att(:bright)
+          puts "Running SCM command".bright
           ssh do |session|
             cmd = "svn #{@scm_params[:command]} #{tag} #{@scm_params[:path]}"
             puts "#{cmd}"

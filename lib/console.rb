@@ -35,6 +35,10 @@ class String
     Console.style(nil, nil, :default)
   end
   
+  # Shortcut for att(:bright)
+  def bright
+    att(:bright)
+  end
   
   # Print the string at +x+ +y+. When +minus+ is any true value
   # the length of the string is subtracted from the value of x

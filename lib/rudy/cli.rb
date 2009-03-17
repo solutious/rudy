@@ -20,7 +20,6 @@ module Rudy
       
       def init
         
-        
         raise "PRODUCTION ACCESS IS DISABLED IN DEBUG MODE" if @global.environment == "prod" && Drydock.debug?
         
         @global.config ||= RUDY_CONFIG_FILE
@@ -100,19 +99,19 @@ module Rudy
         puts unless @global.quiet
         
         if (@global.environment == "prod") 
-          msg = without_indent %q(
+          msg = Rudy.without_indent %q(
           =======================================================
           =======================================================
           !!!!!!!!!   YOU ARE PLAYING WITH PRODUCTION   !!!!!!!!!
           =======================================================
           =======================================================)
-          puts msg.colour(:red).bgcolour(:white).att(:bright), $/  unless @global.quiet
+          puts msg.colour(:red).bgcolour(:white).bright, $/  unless @global.quiet
           
         end
         
         if Rudy.in_situ?
           msg = %q(============ THIS IS EC2 ============)
-          puts msg.colour(:blue).bgcolour(:white).att(:bright), $/ unless @global.quiet
+          puts msg.colour(:blue).bgcolour(:white).bright, $/ unless @global.quiet
         end
         
       end
@@ -127,7 +126,7 @@ module Rudy
         
         def print_image(img)
           puts '-'*60
-          puts "Image: #{img[:aws_id].att(:bright)}"
+          puts "Image: #{img[:aws_id].bright}"
           img.each_pair do |key, value|
              printf(" %22s: %s#{$/}", key, value) if value
            end
@@ -136,7 +135,7 @@ module Rudy
         
         def print_disk(disk, backups=[])
           puts '-'*60
-          puts "Disk: #{disk.name.att(:bright)}"
+          puts "Disk: #{disk.name.bright}"
           puts disk.to_s
           puts "#{backups.size} most recent backups:", backups.collect { |back| "#{back.nice_time} (#{back.awsid})" }
           puts
@@ -145,7 +144,7 @@ module Rudy
         
         def print_volume(vol, disk)
           puts '-'*60
-          puts "Volume: #{vol[:aws_id].att(:bright)} (disk: #{disk.name if disk})"
+          puts "Volume: #{vol[:aws_id].bright} (disk: #{disk.name if disk})"
           vol.each_pair do |key, value|
              printf(" %22s: %s#{$/}", key, value) if value
            end
@@ -161,7 +160,7 @@ module Rudy
 
           unless File.exists?(RUDY_CONFIG_FILE)
             puts "Creating #{RUDY_CONFIG_FILE}"
-            rudy_config = without_indent %Q{
+            rudy_config = Rudy.without_indent %Q{
               # Amazon Web Services 
               # Account access indentifiers.
               awsinfo do
@@ -200,14 +199,23 @@ module Rudy
                 user ENV['USER']
               end
             }
-            write_to_file(RUDY_CONFIG_FILE, rudy_config, 'w')
+            Rudy::Utils.write_to_file(RUDY_CONFIG_FILE, rudy_config, 'w')
           end
 
-          #puts "Creating SimpleDB domain called #{RUDY_DOMAIN}"
-          #@sdb.domains.create(RUDY_DOMAIN)
         end
     end
   end
+end
+
+# Require EC2, S3, Simple DB class
+begin
+  # TODO: Use autoload
+  Dir.glob(File.join(RUDY_LIB, 'rudy', 'cli', "*.rb")).each do |path|
+    require path
+  end
+rescue LoadError => ex
+  puts "Error: #{ex.message}"
+  exit 1
 end
 
 

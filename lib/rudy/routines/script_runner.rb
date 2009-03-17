@@ -22,7 +22,7 @@ module Rudy::Routines
       script_config_filename = "#{routine}_config.yaml"
       
       tf = Tempfile.new(script_config_filename)
-      write_to_file(tf.path, script_config.to_hash.to_yaml, 'w')
+      Rudy::Utils.write_to_file(tf.path, script_config.to_hash.to_yaml, 'w')
 
       rscripts.each do |rscript|
         user, script = rscript.shift
@@ -41,7 +41,7 @@ module Rudy::Routines
         begin
           Net::SSH.start(instance.dns_name_public, user, :keys => [user_keypairpath(user)]) do |session|
 
-            puts "Running #{script}...".att(:bright)
+            puts "Running #{script}...".bright
             session.exec!("chmod 700 ~/#{script_config_filename}")
             session.exec!("chmod 700 #{script}")
             puts session.exec!("#{script}")
@@ -59,13 +59,7 @@ module Rudy::Routines
       #switch_user   # return to the requested user
     end
     
-    def write_to_file(filename, content, type)
-      type = (type == :append) ? 'a' : 'w'
-      f = File.open(filename,type)
-      f.puts content
-      f.close
-    end
-    
+
     
   end
 end

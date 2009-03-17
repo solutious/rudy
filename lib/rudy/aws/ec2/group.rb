@@ -20,7 +20,7 @@ module Rudy::AWS
     # Print info about a a security group
     # +group+ is a Rudy::AWS::EC2::Group object
     def to_s
-      lines = ["%12s: %s" % ['GROUP', self.name.att(:bright)]]
+      lines = ["%12s: %s" % ['GROUP', self.name.bright]]
       
       (self.permissions || []).each do |perm|
         lines << "%6s %5s:%-5s (%s):" % ['', perm.ports.first, perm.ports.last, perm.protocol]

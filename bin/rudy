@@ -9,10 +9,12 @@ RUDY_HOME = File.join(File.dirname(__FILE__), '..')
 RUDY_LIB = File.join(RUDY_HOME, 'lib')
 $:.unshift RUDY_LIB # Put our local lib in first place
 
+
 require 'rubygems' if RUBY_VERSION < "1.9"
 require 'date'
 require 'drydock'
 require 'rudy'
+require 'rudy/cli'
 extend Drydock
 
 
@@ -35,16 +37,198 @@ global :V, :version, "Display version number" do
   exit 0
 end
 
-#desc "Run this the first time you use Rudy (it's immutable so running it again does no harm)."
-#command :setup => Rudy::CLI::Metadata
 
-
-# ------------------------------------  RUDY INFO COMMANDS  --------
+# ---------------------------------  RUDY MANAGER COMMANDS  --------
 # ------------------------------------------------------------------
 
-#usage "rudy info"
-#desc "Displays info about the current Rudy configuration"
-#command :info => Rudy::CLI::Metadata
+usage "rudy create-domain"
+desc "Run this the first time you use Rudy (it's immutable so running it again does no harm)."
+command :create_domain => Rudy::CLI::Manager
+
+usage "rudy info"
+desc "Displays info about the current Rudy configuration"
+command :info => Rudy::CLI::Manager
+
+#desc "Update a Machine Group with the current version of Rudy"
+#option :g, :group, String, "A security group name"
+#command :update => Rudy::CLI::Manager
+
+
+usage "#{$/} [global options] disks [-C -p path -d device -s size] [-A] [-D] [path]"
+desc "Manage Disks"
+option :l, :all, "Display all disk definitions"
+option :i, :awsid, String, "EC2 Instance ID"
+option :g, :group, String, "Machine group name"
+option :p, :path, String, "The filesystem path to use as the mount point"
+option :d, :device, String, "The device id (default: /dev/sdh)"
+option :s, :size, Integer, "The size of disk (in GB)"
+action :C, :create, "Create a disk definition"
+action :D, :destroy, "Destroy a disk definition"
+action :A, :attach, "Attach a disk"
+action :N, :unattach, "Unattach a disk"
+argv :diskname
+command :disk => Rudy::CLI::Disks
+command_alias :disk, :disks
+
+#usage "rudy [global options] backups [-C] [disk name]"
+#desc "Manage Backups"
+#option :s, :snapshot, String, "Create a backup entry from an existing snapshot"
+#action :Z, :sync, "Check for and delete backup metadata with no snapshot. DOES NOT delete snapshots."
+##action :T, :tidy, "Tidy existing backups"
+#action :D, :destroy, "Destroy a backup and DELETE its snapshots."
+#action :C, :create, "Create a backup"
+#argv :disk
+#command :'backup' => Rudy::CLI::Backups
+#command_alias :backup, :bu
+
+
+usage "rudy [global options] groups [-C -R -A] [-a IP addresses] [-p ports] [group name]"
+desc "Manage EC2 Security Groups"
+option :all, "Display all security groups"
+option :r, :protocols, Array, "Comma-separated list of protocols. One of: tcp (default), udp, icmp"
+option :p, :ports, Array, "List of comma-separated port ranges in the form FROM:TO (default: 22,80,443)"
+option :a, :addresses, Array, "List of comma-separated IP addresses (default: #{Rudy::Utils::external_ip_address})"
+option :g, :group, String, "A group name to authorize or revoke permissions. Must also supply -o!"
+option :o, :owner, String, "A group owner ID (account number). Must also supply -g!"
+action :C, :create, "Create a security group"
+action :D, :destroy, "Destroy a security group"
+action :A, :authorize, "Authorize a permission for a security group"
+action :R, :revoke, "Revoke a permission for a security group"
+argv :name
+command :group => Rudy::CLI::Groups
+command_alias :group, :groups
+
+
+
+#usage "rudy [global options] metadata instance-ID"
+#desc "Display Rudy metadata."
+#command :metadata => Rudy::CLI::Manager
+#command_alias :metadata, :md
+#
+#
+
+# ---------------------------------  RUDY MACHINE COMMANDS  --------
+# ------------------------------------------------------------------
+
+desc "Machine Group Status"
+usage "rudy [global options] status [-g group-name] [-s state] [-l] [instance-ID]"
+option :g, :group, String, "A security group name"
+option :s, :state, String, "Machine state. One of: running (default), pending, terminated"
+option :l, :all, "Show all machines in this group, regardless of state."
+argv :awsid
+command :status => Rudy::CLI::Machines
+
+desc "Shutdown a Machine Group"
+usage "rudy [global options] shutdown [-g group-name] [instance-ID]"
+option :g, :group, String, "A security group name"
+argv :awsid
+command :shutdown => Rudy::CLI::Machines
+
+desc "Start a Machine Group"
+usage "rudy [global options] startup [-g group-name] [-i image-ID]"
+option :ami, String, "EC2 image ID (AMI)"
+option :g, :group, String, "A security group name"
+command :startup => Rudy::CLI::Machines
+command_alias :startup, :start
+
+#desc "Restart a Machine Group"
+#option :g, :group, String, "A security group name"
+#argv :awsid
+#command :restart => Rudy::CLI::Machines
+#
+
+usage "rudy [global options] connect [-g group-name] [-i instance-ID] [cmd]"
+desc "Open an SSH connection"
+option :print, "Only print the SSH command, don't connect"
+option :g, :group, String, "A security group name"
+option :i, :awsid, String, "An instance ID"
+argv :cmd
+command :connect => Rudy::CLI::Machines 
+command_alias :connect, :ssh
+
+usage "rudy [global options] copy [-p] [-r] source target"
+desc "Copy files to or from machines. NOTE: You must use quotes when using a tilda for your remote dir ('~/')."
+option :r, :recursive, "Recursively copy entire directories"
+option :p, :preserve, "Preserve atimes and ctimes."
+option :d, :download, "Download FROM the remote machine to the local machine"
+option :print, "Only print the SSH command, don't connect"
+option :g, :group, String, "A security group name"
+option :i, :awsid, String, "An instance ID"
+command :copy => Rudy::CLI::Machines
+command_alias :copy, :scp
+command_alias :copy, :upload
+command_alias :copy, :download
+
+
+
+# --------------------------  RUDY RELEASE/DEPLOY COMMANDS  --------
+# ------------------------------------------------------------------
+
+#desc "Release to a Machine Group"
+#option :g, :group, String, "A security group name"
+#option :s, :switch, "Switch to the release branch/tag"
+#option :m, :msg, String, "A short release note"
+#command :release => Rudy::CLI::Release
+
+#desc "Update the release currently running in a machine group"
+#command :rerelease => Rudy::CLI::Release
+#command_alias :rerelease, :rere
+
+#desc "Deploy disk snapshots from one machine to another"
+#command :deploy => Rudy::CLI::Deploy
+
+
+
+# -----------------------------------  AMAZON EC2 COMMANDS  --------
+# ------------------------------------------------------------------
+
+#usage "rudy [global options] addresses [-A address instance ID]"
+#desc "Manage Amazon Elastic IP addresses"
+#argv :address, :instanceid
+#action :A, :associate, "Associate an address to a running instance"
+#command :addresses => Rudy::CLI::Addresses
+#command_alias :addresses, :address
+#
+#
+#usage "rudy images [-C -i name [-b bucket -a account]] [-D AMI-ID]"
+#desc "Manage EC2 Machine Images (AMIs)"
+#option :a, :account, String, "Your Amazon Account Number"
+#option :i, :image_name, String, "The name of the image"     # TODO: change to --ami
+#option :p, :print, "Print-only (don't execute commands)"
+#option :b, :bucket_name, String, "The name of the bucket that will store the image"
+#action :C, :create, "Create an image"
+##action :P, :prepare, "Prepare a running instance to be used as an image"
+#action :D, :destroy, "Deregister an image (currently _does not_ remove images files from S3)"
+#argv :ami
+#command :images => Rudy::CLI::Images
+#command_alias :images, :image
+
+
+desc "Manage EC2 Volumes"
+option :s, :size, "Size (in GB)"
+action :D, :destroy, "Destroy a volume"
+action :C, :create, "Create a volume"
+argv :vol
+command :volumes => Rudy::CLI::Volumes
+command_alias :volumes, :volume
+
+
+#usage "rudy [global options] instances [-D] [-S -i image ID] [instance ID OR group name]"
+#desc "Manage EC2 Instances"
+#option :all, "Display all instances"
+#option :a, :address, String, "Amazon elastic IP"
+#option :i, :image, String, "Amazon machine image ID (ami)"  # TODO: Change to --ami
+##option :v, :volume, String, "Amazon volume ID"
+#action :D, :destroy, "Destroy the given instance IDs. All data will be lost!"
+##action :S, :start, "Start an instance"
+##action :R, :restart, "Restart an instance"
+#argv :filter
+#command :instances => Rudy::CLI::Instances
+#command_alias :instances, :instance
+
+
+# --------------------------------  MISCELLANEOUS COMMANDS  --------
+# ------------------------------------------------------------------
 
 usage "rudy [-f config-file] config [param-name]"
 desc "Check Rudy configuration."
@@ -71,192 +255,47 @@ command :myaddress do |obj|
 end
 
 
-
-# -----------------------------  RUDY MAINTENANCE COMMANDS  --------
-# ------------------------------------------------------------------
-
-#usage "#{$/} [global options] disks [-C -p path -d device -s size] [-A] [-D] [disk name]"
-#desc "Manage Disks"
-#option :l, :all, "Display all disk definitions"
-#option :p, :path, String, "The filesystem path to use as the mount point"
-#option :d, :device, String, "The device id (default: /dev/sdh)"
-#option :s, :size, Integer, "The size of disk (in GB)"
-#action :C, :create, "Create a disk definition"
-#action :D, :destroy, "Destroy a disk definition"
-#action :A, :attach, "Attach a disk"
-#action :N, :unattach, "Unattach a disk"
-#argv :diskname
-#command :disk => Rudy::CLI::Disks
-
-
-#usage "rudy [global options] backups [-C] [disk name]"
-#desc "Manage Backups"
-#option :s, :snapshot, String, "Create a backup entry from an existing snapshot"
-#action :Z, :sync, "Check for and delete backup metadata with no snapshot. DOES NOT delete snapshots."
-##action :T, :tidy, "Tidy existing backups"
-#action :D, :destroy, "Destroy a backup and DELETE its snapshots."
-#action :C, :create, "Create a backup"
-#argv :disk
-#command :'backup' => Rudy::CLI::Backups
-#command_alias :backup, :bu
-
-
-#usage "rudy [global options] groups [-C -R -A] [-a IP addresses] [-p ports] [group name]"
-#desc "Manage EC2 Security Groups"
-#option :all, "Display all security groups"
-#option :r, :protocols, Array, "Comma-separated list of protocols. One of: tcp (default), udp, icmp"
-#option :p, :ports, Array, "List of comma-separated port ranges in the form FROM:TO (default: 22,80,443)"
-#option :a, :addresses, Array, "List of comma-separated IP addresses (default: #{Rudy::Utils::external_ip_address})"
-#option :g, :group, String, "A group name to authorize or revoke permissions. Must also supply -o!"
-#option :o, :owner, String, "A group owner ID (account number). Must also supply -g!"
-#action :C, :create, "Create a security group"
-#action :D, :destroy, "Destroy a security group"
-#action :A, :authorize, "Authorize a permission for a security group"
-#action :R, :revoke, "Revoke a permission for a security group"
-#argv :name
-#command :group => Rudy::CLI::Groups
-#command_alias :group, :groups
-
-
-
-#usage "rudy [global options] metadata instance-ID"
-#desc "Display Rudy metadata."
-#command :metadata => Rudy::CLI::Metadata
-#command_alias :metadata, :md
-#
-#
-#desc "Update a Machine Group with the current version of Rudy"
-#option :g, :group, String, "A security group name"
-#command :update => Rudy::CLI::Machines
-
 usage "rudy [global options] annoy [-h -m -l] [-e]"
-option :e, :equation, "A math challenge"
+desc "Play around with Rudy's annoying challenges"
+option :s, :string, "A numeric challenge"
+option :n, :numeric, "A numeric challenge"
 option :i, :insane, "Insane annoyance factor"
 option :h, :high, "High annoyance factor"
 option :m, :medium, "Medium annoyance factor"
 option :l, :low, "Low annoyance factor"
 option :r, :rand, "Random challenge type"
 command :annoy do |obj|
-  flavor = [:math, :rand].detect { |v| obj.option.send(v) } || :string
+  srand(Time.now.to_f)
+  flavor = [:numeric, :string, :rand].detect { |v| obj.option.send(v) } || :string
   factor = [:insane, :high, :medium, :low].detect { |v| obj.option.send(v) } || :medium
   success = Annoy.challenge?("Is this annoying?", factor, flavor)
-  puts (success ? "Correct!" : "u r WRONG!").att(:bright)
+  puts (success ? "Correct!" : "WRONG!").bright
 end
 
-usage "rudy [global options] connect [-g group-name] [-i instance-ID] [cmd]"
-desc "Open an SSH connection"
-option :print, "Only print the SSH command, don't connect"
-option :g, :group, String, "A security group name"
-option :i, :awsid, String, "An instance ID"
-argv :cmd
-command :connect => Rudy::CLI::Machines 
-command_alias :connect, :ssh
-
-usage "rudy [global options] copy [-p] [-r] source target"
-desc "Copy files to or from machines. NOTE: You must use quotes when using a tilda for your remote dir ('~/')."
-option :r, :recursive, "Recursively copy entire directories"
-option :p, :preserve, "Preserve atimes and ctimes."
-option :d, :download, "Download FROM the remote machine to the local machine"
-option :print, "Only print the SSH command, don't connect"
-option :g, :group, String, "A security group name"
-option :i, :awsid, String, "An instance ID"
-command :copy => Rudy::CLI::Machines
-command_alias :copy, :scp
-command_alias :copy, :upload
-command_alias :copy, :download
+usage "rudy id [-t type] idstr"
+desc "Check what kind of object an ID belongs to (instance, backup, disk, etc...)"
+option :t, String, "Check if idstr is of a specific type"
+argv :idstr
+command :id do |obj|
+  if obj.option.t 
+    raise "Unknown type #{obj.option.t}" unless Rudy.known_type?(obj.option.t)
+    puts Rudy.is_id?(obj.option.t, obj.argv.idstr)
+  else
+    puts Rudy.id_type(obj.argv.idstr)
+  end
+end
 
 
-# --------------------------------  RUDY ROUTINES COMMANDS  --------
-# ------------------------------------------------------------------
+command :console do 
+  irb = RUBY_PLATFORM =~ /(:?mswin|mingw)/ ? 'irb.bat' : '/usr/bin/irb'
 
-desc "Machine Group Status"
-usage "rudy [global options] status [-g group-name] [-s state] [-l] [instance-ID]"
-option :g, :group, String, "A security group name"
-option :s, :state, String, "Machine state. One of: running (default), pending, terminated"
-option :l, :all, "Show all machines in this group, regardless of state."
-argv :awsid
-command :status => Rudy::CLI::Machines
-
-desc "Shutdown a Machine Group"
-usage "rudy [global options] shutdown [-g group-name] [instance-ID]"
-option :g, :group, String, "A security group name"
-argv :awsid
-command :shutdown => Rudy::CLI::Machines
-
-desc "Start a Machine Group"
-usage "rudy [global options] startup [-g group-name] [-i image-ID]"
-option :i, :image, String, "EC2 image ID (AMI)"
-option :g, :group, String, "A security group name"
-command :startup => Rudy::CLI::Machines
-command_alias :startup, :start
-
-#desc "Restart a Machine Group"
-#option :g, :group, String, "A security group name"
-#argv :awsid
-#command :restart => Rudy::CLI::Machines
-#
-#desc "Release to a Machine Group"
-#option :g, :group, String, "A security group name"
-#option :s, :switch, "Switch to the release branch/tag"
-#option :m, :msg, String, "A short release note"
-#command :release => Rudy::CLI::Release
-
-#desc "Update the release currently running in a machine group"
-#command :rerelease => Rudy::CLI::Release
-#command_alias :rerelease, :rere
-
-#desc "Deploy disk snapshots from one machine to another"
-#command :deploy => Rudy::CLI::Deploy
-
-
-
-
-# -----------------------------------  AMAZON EC2 COMMANDS  --------
-# ------------------------------------------------------------------
-
-#usage "rudy [global options] addresses [-A address instance ID]"
-#desc "Manage Amazon Elastic IP addresses"
-#argv :address, :instanceid
-#action :A, :associate, "Associate an address to a running instance"
-#command :addresses => Rudy::CLI::Addresses
-#command_alias :addresses, :address
-#
-#
-#usage "rudy images [-C -i name [-b bucket -a account]] [-D AMI-ID]"
-#desc "Manage EC2 Machine Images (AMIs)"
-#option :a, :account, String, "Your Amazon Account Number"
-#option :i, :image_name, String, "The name of the image"
-#option :p, :print, "Print-only (don't execute commands)"
-#option :b, :bucket_name, String, "The name of the bucket that will store the image"
-#action :C, :create, "Create an image"
-##action :P, :prepare, "Prepare a running instance to be used as an image"
-#action :D, :destroy, "Deregister an image (currently _does not_ remove images files from S3)"
-#argv :ami
-#command :images => Rudy::CLI::Images
-#command_alias :images, :image
-#
-#
-#desc "Manage EC2 Volumes"
-#action :D, :destroy, "Destroy a volume"
-#argv :vol
-#command :volumes => Rudy::CLI::Volumes
-#command_alias :volumes, :volume
-
-
-#usage "rudy [global options] instances [-D] [-S -i image ID] [instance ID OR group name]"
-#desc "Manage EC2 Instances"
-#option :all, "Display all instances"
-#option :a, :address, String, "Amazon elastic IP"
-#option :i, :image, String, "Amazon machine image ID (ami)"
-##option :v, :volume, String, "Amazon volume ID"
-#action :D, :destroy, "Destroy the given instance IDs. All data will be lost!"
-##action :S, :start, "Start an instance"
-##action :R, :restart, "Restart an instance"
-#argv :filter
-#command :instances => Rudy::CLI::Instances
-#command_alias :instances, :instance
-
-
+  libs = " -r irb/completion"
+  # Perhaps use a console_lib to store any extra methods I may want available in the cosole
+  # libs << " -r #{File.dirname(__FILE__) + '/../lib/console_lib/console_logger.rb'}"
+  libs << " -r rudy -I #{RUDY_LIB}"
+  puts "Loading Rudy"
+  exec "#{irb} #{libs} --simple-prompt"
+end
 
 
 # -------------------------------------------  UGLY STUFFS  --------

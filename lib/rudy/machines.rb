@@ -1,7 +1,6 @@
 
 
 module Rudy
-  
   class Machines
     include Rudy::Huxtable
       
@@ -15,7 +14,7 @@ module Rudy
       opts, instances = process_filter_options(opts)
       instances.values.each do |inst|
         msg = opts[:cmd] ? "Running command on" : "Connecting to"
-        @logger.puts $/, "#{msg} #{inst.awsid}".att(:bright)
+        @logger.puts $/, "#{msg} #{inst.awsid}".bright
         ret = ssh_command(inst.dns_name_public, current_user_keypairpath, @global.user, opts[:cmd], opts[:print])
         puts ret if ret  # ssh command returns false with "ssh_exchange_identification: Connection closed by remote host"
       end
@@ -33,12 +32,12 @@ module Rudy
       opts = {
         :task => :upload,
         :recursive => false,
-        :preservw => false
+        :preserve => false
       }.merge(opts)
         
       instances.values.each do |inst|
         msg = opts[:task] == :upload ? "Upload to" : "Download from"
-        @logger.puts $/, "#{msg} #{inst.awsid}".att(:bright)
+        @logger.puts $/, "#{msg} #{inst.awsid}".bright
         
         if opts[:print]
           scp_command inst.dns_name_public, current_user_keypairpath, @global.user, opts[:paths], opts[:dest], (opts[:task] == :download), false, opts[:print]
@@ -63,21 +62,21 @@ module Rudy
       
       @logger.puts "Found instances: #{instances.keys.join(", ")}"
       
-      @logger.puts $/, "Running BEFORE scripts...".att(:bright), $/
+      @logger.puts $/, "Running BEFORE scripts...".bright, $/
       #instances.each { |inst| @script_runner.execute(inst, :shutdown, :before) }
       
-      @logger.puts $/, "Running DISK routines...".att(:bright), $/
+      @logger.puts $/, "Running DISK routines...".bright, $/
       #@disk_handler
       
-      @logger.puts $/, "Terminating instances...".att(:bright), $/
+      @logger.puts $/, "Terminating instances...".bright, $/
       @ec2.instances.destroy instances.keys
       
       @logger.puts "Waiting for #{instances.keys.first} to terminate"
-      waiter(4, 10) do # This raises an exception if it times out
-        !@ec2.instances.running?(instances.keys.first)
+      Rudy.waiter(4, 30) do # This raises an exception if it times out
+        @ec2.instances.terminated?(instances.keys.first)
       end
       
-      @logger.puts $/, "Running AFTER scripts...".att(:bright), $/
+      @logger.puts $/, "Running AFTER scripts...".bright, $/
       #instances.each { |inst| @script_runner.execute(inst, :shutdown, :after) }
     end
        
@@ -85,7 +84,7 @@ module Rudy
       opts, instances = process_filter_options(opts)
       instances.each_pair do |id, inst|
         puts '-'*60
-        puts "Instance: #{id.att(:bright)} (AMI: #{inst.ami})"
+        puts "Instance: #{id.bright} (AMI: #{inst.ami})"
         puts inst.to_s
       end
     end
@@ -100,13 +99,16 @@ module Rudy
 
       @logger.puts "using AMI: #{opts[:ami]}"
       
-      #@logger.puts $/, "Running BEFORE scripts...".att(:bright), $/
+      #@logger.puts $/, "Running BEFORE scripts...".bright, $/
       #instances.each { |inst| @script_runner.execute(inst, :startup, :before) }
       
       # TODO: start multiple, update machine data for each
-      instances = @ec2.instances.create(opts[:ami], opts[:group], File.basename(opts[:keypair]), opts[:machine_data], @global.zone)
-      
+      #instances = @ec2.instances.create(opts[:ami], opts[:group], File.basename(opts[:keypair]), opts[:machine_data], @global.zone)
+      instances = [@ec2.instances.get("i-956af3fc")]
+      instances_with_dns = []
       instances.each_with_index do |inst_tmp,index|
+        Rudy.bug('hs672h48') && next if inst_tmp.nil?
+        
         @logger.puts "Instance: #{inst_tmp.awsid}"
         if opts[:address] && index == 0  # We currently only support assigned an address to the first machine
           @logger.puts "Associating #{opts[:address]} to #{inst_tmp.awsid}"
@@ -115,32 +117,40 @@ module Rudy
         
         @logger.puts "Waiting for the instance to startup "        
         begin 
-          waiter(2, 120) { @ec2.instances.running?(inst_tmp.awsid) }
+          Rudy.waiter(2, 120) { @ec2.instances.running?(inst_tmp.awsid) }
           @logger.puts "It's up!\a\a\a"
         rescue Timeout::Error, Interrupt
           @logger.puts "Check later: rudy status #{instances.keys.join(' ')}"
           next
         end
         
-        inst = @ec2.instances.get(inst_tmp.awsid)   # The DNS names are now available
+        # The DNS names are now available so we need to grab that data from AWS
+        inst = @ec2.instances.get(inst_tmp.awsid)   
         
         @logger.puts $/, "Waiting for the SSH daemon "
         begin
-          waiter(2, 60) { Rudy::Utils.service_available?(inst.dns_name_public, 22) }
+          Rudy.waiter(2, 60) { Rudy::Utils.service_available?(inst.dns_name_public, 22) }
           @logger.puts "It's up!\a\a"
         rescue Timeout::Error, Interrupt
           @logger.puts "Check later: rudy status #{instances.keys.join(' ')}"
           next
         end
         
-        @logger.puts $/, "Running DISK scripts...".att(:bright), $/
-        #instances.each { |inst| @disk_handler.execute(inst, :startup, :before) }
+        instances_with_dns << inst
         
-        @logger.puts $/, "Running AFTER scripts...".att(:bright), $/
-        instances.each { |inst| @script_runner.execute(inst, :startup, :before) }
+        
+        instances.each do |inst|
+          rdisks.create_disk(inst)
+        end
+        
+        # NOTE: These should be handled a level above
+        #@logger.puts $/, "Running DISK scripts...".bright, $/
+        #instances.each { |inst| @disk_handler.execute(inst, :startup) }
+        #@logger.puts $/, "Running AFTER scripts...".bright, $/
+        #instances.each { |inst| @script_runner.execute(inst, :startup, :before) }
       end
       
-      status(opts)
+      instances_with_dns
     end
     
   private

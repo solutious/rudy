@@ -3,12 +3,17 @@
 module Rudy
   module CLI
     class Disks < Rudy::CLI::Base
-      
+
       def disk
-        criteria = [@global.zone]
-        criteria += [@global.environment, @global.role] unless @option.all
-        Rudy::MetaData::Disk.list(@sdb, *criteria).each do |disk|
-          backups = Rudy::MetaData::Backup.for_disk(@sdb, disk, 2)
+        puts "Disks".bright
+        opts = {}
+        [:all, :path, :device, :size].each do |v| 
+          opts[v] = @option.send(v) if @option.respond_to?(v)
+        end
+        rdisks = Rudy::Disks.new(:config => @config, :global => @global)
+        #rbacks = Rudy::Backups.new(:config => @config, :global => @global)
+        rdisks.list(opts).each do |disk|
+          #backups = rbacks.list_by_disk(disk, 2)
           print_disk(disk, backups)
         end
       end
@@ -16,43 +21,26 @@ module Rudy
       def create_disk_valid?
         raise "No filesystem path specified" unless @option.path
         raise "No size specified" unless @option.size
-        @instances = @ec2.instances.list(machine_group)
-        raise "There are no instances running in #{machine_group}" if !@instances || @instances.empty?
+        raise "No device specified" unless @option.device
+        #@instances = @ec2.instances.list(machine_group)
+        #raise "There are no instances running in #{machine_group}" if !@instances || @instances.empty?
         true
       end
       
       def create_disk
-        puts "Creating #{@option.path} for #{machine_group}"
-        switch_user("root")
-        exit unless Annoy.are_you_sure?(:low)
-        machine = @instances.values.first # NOTE: DANGER! Should handle position.
-        
-        disk = Rudy::MetaData::Disk.new
-        [:region, :zone, :environment, :role, :position].each do |n|
-          disk.send("#{n}=", @global.send(n)) if @global.send(n)
+        puts "Creating Disk".bright
+        #exit unless Annoy.are_you_sure?(:low)
+        opts = {}
+        [:path, :device, :size, :group].each do |v| 
+          opts[v] = @option.send(v) if @option.respond_to?(v)
         end
-        [:path, :device, :size].each do |n|
-          disk.send("#{n}=", @option.send(n)) if @option.send(n)
-        end
+        opts[:id] = @option.awsid if @option.awsid
+        opts[:id] &&= [opts[:id]].flatten
         
-        raise "Not enough info was provided to define a disk (#{disk.name})" unless disk.valid?
-        raise "The device #{disk.device} is already in use on that machine" if Rudy::MetaData::Disk.is_defined?(@sdb, disk)
-        # TODO: Check disk path
-        puts "Creating disk metadata for #{disk.name}"
-        
-        
-        
-        puts "Creating volume... (#{disk.size}GB in #{@global.zone})"
-        volume = @ec2.volumes.create(@global.zone, disk.size)
-        sleep 3
-        
-        disk.awsid = volume[:aws_id]
-        disk.raw_volume = true    # This value is not saved. 
-        Rudy::MetaData::Disk.save(@sdb, disk)
-        
-        execute_attach_disk(disk, machine)
-        
-        print_disk(disk)
+        @global.debug = true
+        rdisks = Rudy::Disks.new(:config => @config, :global => @global)
+        rdisks.create(opts)
+        #print_disk(disk)
       end
       
       
@@ -138,13 +126,13 @@ module Rudy
         begin
           
           if machine
-            puts "Unmounting #{disk.path}...".att(:bright)
+            puts "Unmounting #{disk.path}...".bright
             ssh_command machine[:dns_name], keypairpath, global.user, "umount #{disk.path}"
             sleep 1
           end
           
           if @ec2.volumes.attached?(disk.awsid)
-            puts "Unattaching #{disk.awsid}".att(:bright)
+            puts "Unattaching #{disk.awsid}".bright
             @ec2.volumes.detach(disk.awsid)
             sleep 5
           end
@@ -161,7 +149,7 @@ module Rudy
           if disk
             
             if disk.awsid && @ec2.volumes.available?(disk.awsid)
-              puts "Destroying #{disk.path} (#{disk.awsid})".att(:bright)
+              puts "Destroying #{disk.path} (#{disk.awsid})".bright
               @ec2.volumes.destroy(disk.awsid)
             end
             
@@ -171,7 +159,7 @@ module Rudy
           puts "Error while destroying volume #{disk.awsid}: #{ex.message}"
           puts ex.backtrace if Drydock.debug?
         ensure
-          puts "Deleteing metadata for #{disk.name}".att(:bright)
+          puts "Deleteing metadata for #{disk.name}".bright
           Rudy::MetaData::Disk.destroy(@sdb, disk)
         end
       end
@@ -179,18 +167,18 @@ module Rudy
       def execute_attach_disk(disk, machine)
         begin
           unless @ec2.instances.attached_volume?(machine[:aws_instance_id], disk.device)
-            puts "Attaching #{disk.awsid} to #{machine[:aws_instance_id]}".att(:bright)
+            puts "Attaching #{disk.awsid} to #{machine[:aws_instance_id]}".bright
             @ec2.volumes.attach(machine[:aws_instance_id], disk.awsid, disk.device)
             sleep 3
           end
           
           if disk.raw_volume
-            puts "Creating the filesystem (mkfs.ext3 -F #{disk.device})".att(:bright)
+            puts "Creating the filesystem (mkfs.ext3 -F #{disk.device})".bright
             ssh_command machine[:dns_name], keypairpath, @global.user, "mkfs.ext3 -F #{disk.device}"
             sleep 1
           end
           
-          puts "Mounting #{disk.path} to #{disk.device}".att(:bright)
+          puts "Mounting #{disk.path} to #{disk.device}".bright
           ssh_command machine[:dns_name], keypairpath, @global.user, "mkdir -p #{disk.path} && mount -t ext3 #{disk.device} #{disk.path}"
 
           sleep 1

@@ -37,7 +37,7 @@ module Rudy
     end
     
     # Generates a canonical tag name in the form:
-    #     rudy-2009-12-31-r1
+    #     rudy-2009-12-31-01
     # where r1 refers to the revision number that day
     def generate_tag(revision=1)
       n = DateTime.now
@@ -60,5 +60,61 @@ module Rudy
         false
       end
     end
+    
+    
+    
+    # Capture STDOUT or STDERR to prevent it from being printed. 
+    #
+    #    capture(:stdout) do
+    #      ...
+    #    end
+    #
+    def capture(stream)
+      #raise "We can only capture STDOUT or STDERR" unless stream == :stdout || stream == :stderr
+
+      # I'm using this to trap the annoying right_aws "peer certificate" warning.
+      # TODO: discover source of annoying right_aws warning and give it a hiding.
+      begin
+        stream = stream.to_s
+        eval "$#{stream} = StringIO.new"
+        yield
+        result = eval("$#{stream}").read
+      ensure
+        eval("$#{stream} = #{stream.upcase}")
+      end
+
+      result
+    end
+
+    # A basic file writer
+    def write_to_file(filename, content, mode)
+      mode = (mode == :append) ? 'a' : 'w'
+      f = File.open(filename,type)
+      f.puts content
+      f.close
+    end
+
+    # 
+    # Generates a string of random alphanumeric characters.
+    # * +len+ is the length, an Integer. Default: 8
+    # * +safe+ in safe-mode, ambiguous characters are removed (default: true):
+    #       i l o 1 0
+    def strand( len=8, safe=true )
+       chars = ("a".."z").to_a + ("0".."9").to_a
+       chars.delete_if { |v| %w(i l o 1 0).member?(v) } if safe
+       str = ""
+       1.upto(len) { |i| str << chars[rand(chars.size-1)] }
+       str
+    end
+    
+    # Returns +str+ with the average leading indentation removed. 
+    # Useful for keeping inline codeblocks spaced with code. 
+    def without_indent(str)
+      lines = str.split($/)
+      lspaces = (lines.inject(0) {|total,line| total += (line.scan(/^\s+/).first || '').size } / lines.size) + 1
+      lines.collect { |line| line.gsub(/^\s{#{lspaces}}/, '') }.join($/)
+    end
+
+
   end
 end

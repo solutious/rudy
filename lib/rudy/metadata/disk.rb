@@ -62,75 +62,8 @@ module Rudy
           str << sprintf(" %22s: %s#{$/}", key, self.send(key.to_sym))
         end
         str
-       end
+      end
        
-      def Disk.generate_name(zon, env, rol, pos, pat, sep=File::SEPARATOR)
-        pos = pos.to_s.rjust 2, '0'
-        dirs = pat.split sep if pat
-        dirs.shift while dirs && (dirs[0].nil? || dirs[0].empty?)
-        ["disk", zon, env, rol, pos, *dirs].join(RUDY_DELIM)
-      end
-      
-      def Disk.get(sdb, name)
-        disk = sdb.get_attributes(RUDY_DOMAIN, name)
-        return nil unless disk && disk.has_key?(:attributes) && !disk[:attributes].empty?
-#        raise "Disk #{name} does not exist!" unless 
-        Rudy::MetaData::Disk.from_hash(disk[:attributes])
-      end
-      
-      def Disk.destroy(sdb, disk)
-        disk = Disk.get(sdb, disk) if disk.is_a?(String) # get raises an exception if the disk doesn't exist
-        sdb.destroy(RUDY_DOMAIN, disk.name)
-        true # wtf: RightAws::SimpleDB doesn't tell us whether it succeeds. We'll assume!
-      end
-      
-      def Disk.save(sdb, disk)
-        sdb.store(RUDY_DOMAIN, disk.name, disk.to_hash, :replace)
-      end
-      
-      def Disk.is_defined?(sdb, disk)
-        # We don't care about the path, but we do care about the device
-        # which is not part of the disk's name. 
-        query = disk.to_query(:device, :path)
-        !sdb.query_with_attributes(RUDY_DOMAIN, query).empty?
-      end
-      
-      def Disk.find_from_volume(sdb, vol_id)
-        query = "['awsid' = '#{vol_id}']"
-        res = sdb.query_with_attributes(RUDY_DOMAIN, query)
-        if res.empty?
-          nil
-        else
-          disk = Rudy::MetaData::Disk.from_hash(res.values.first)
-        end
-      end
-      
-      
-      def Disk.find_from_path(sdb, path)
-        query = "['path' = '#{path}']"
-        res = sdb.query_with_attributes(RUDY_DOMAIN, query)
-        if res.empty?
-          nil
-        else
-          disk = Rudy::MetaData::Disk.from_hash(res.values.first)
-        end
-      end
-      
-      def Disk.list(sdb, zon, env=nil, rol=nil, pos=nil)
-        query = ''
-        query << "['rtype' = '#{@@rtype}']" if zon
-        query << " intersection ['zone' = '#{zon}']" if zon
-        query << " intersection ['environment' = '#{env}']" if env
-        query << " intersection ['role' = '#{rol}']" if rol
-        query << " intersection ['position' = '#{pos}']" if pos
-        
-        list = []
-        sdb.query_with_attributes(RUDY_DOMAIN, query).each_pair do |name, hash|
-          #puts "DISK: #{hash.to_yaml}"
-          list << Rudy::MetaData::Disk.from_hash(hash)
-        end
-        list
-      end
     end
     
   end

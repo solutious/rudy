@@ -51,13 +51,14 @@ module Rudy::CLI
       true
     end
     def shutdown
+      puts "Shutting down a machine group".bright
       opts = {}
       opts[:group] = @option.group if @option.group
       opts[:id] = @argv.awsid if @argv.awsid
       opts[:id] &&= [opts[:id]].flatten
       
       msg = opts[:id] ? "instances: #{opts[:id].join(', ')}" : (opts[:group] ? "group: #{opts[:group]}" : '')
-      puts "Shutting down #{msg}".att(:bright)
+      puts "Shutting down #{msg}".bright
       puts "This command also affects the volumes attached to the instances! (according to your routines config)"
       exit unless Annoy.are_you_sure?(:high)        # TODO: Check if instances are running before this
       
@@ -70,7 +71,7 @@ module Rudy::CLI
       true
     end
     def status
-      puts "Machine Status".att(:bright)
+      puts "Machine Status".bright
       opts = {}
       opts[:group] = @option.group if @option.group
       opts[:state] = @option.state if @option.state
@@ -89,13 +90,20 @@ module Rudy::CLI
       true
     end
     def startup
-      puts "Starting a machine".att(:bright)
+      puts "Starting a machine group".bright
       opts = {}
       opts[:ami] = @option.image if @option.image
       opts[:group] = @option.group if @option.group
       exit unless Annoy.are_you_sure?
-      rudy = Rudy::Machines.new(:config => @config, :global => @global)
-      rudy.startup(opts)
+      
+      rmachines = Rudy::Machines.new(:config => @config, :global => @global)
+      rdisks = Rudy::Disks.new(:config => @config, :global => @global)
+      
+      instances = rmachines.startup(opts)
+      instances.each do |inst|
+        rdisks.create_disk(inst)
+      end
+      
       puts "Done!"
     end
 
@@ -103,7 +111,7 @@ module Rudy::CLI
       shutdown_valid?
     end
     def restart
-      puts "Restarting #{machine_group}: #{@list.keys.join(', ')}".att(:bright)
+      puts "Restarting #{machine_group}: #{@list.keys.join(', ')}".bright
       switch_user("root")
       exit unless Annoy.are_you_sure?(:medium)
       
@@ -111,7 +119,7 @@ module Rudy::CLI
         execute_routines(@list.values, :restart, :before)
       end
       
-      puts "Restarting instances: #{@list.keys.join(', ')}".att(:bright)
+      puts "Restarting instances: #{@list.keys.join(', ')}".bright
       @ec2.instances.restart @list.keys
       sleep 10 # Wait for state to change and SSH to shutdown
       
@@ -130,47 +138,6 @@ module Rudy::CLI
     
     
 
-    
-    def update_valid?
-      raise "No EC2 .pem keys provided" unless has_pem_keys?
-      raise "No SSH key provided for #{@global.user}!" unless has_keypair?
-      raise "No SSH key provided for root!" unless has_keypair?(:root)
-      
-      @option.group ||= machine_group
-      
-      @scripts = %w[rudy-ec2-startup update-ec2-ami-tools randomize-root-password]
-      @scripts.collect! {|script| File.join(RUDY_HOME, 'support', script) }
-      @scripts.each do |script| 
-        raise "Cannot find #{script}" unless File.exists?(script)
-      end
-      
-      true
-    end
-    
-    def update
-      puts "Updating Rudy on machines in #{@option.group}"
-      switch_user("root")
-      
-      exit unless Annoy.are_you_sure?
-      scp do |scp|
-        @scripts.each do |script|
-          puts "Uploading #{File.basename(script)}"
-          scp.upload!(script, "/etc/init.d/")
-        end
-      end
-      
-      ssh do |session|
-        @scripts.each do |script|
-          session.exec!("chmod 700 /etc/init.d/#{File.basename(script)}")
-        end
-        
-        puts "Installing Rudy (#{Rudy::VERSION})"
-        session.exec!("mkdir -p /etc/ec2")
-        session.exec!("gem sources -a http://gems.github.com")
-        puts session.exec!("gem install --no-ri --no-rdoc rudy -v #{Rudy::VERSION}")
-      end
-    end
-    
     
   end
 end

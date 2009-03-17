@@ -57,16 +57,7 @@ module Rudy::AWS
     class Volumes
       include Rudy::AWS::ObjectBase
       
-      # [{:aws_device=>"/dev/sdr",
-      # :aws_attachment_status=>"attached",
-      # :snapshot_id=>nil,
-      # :aws_id=>"vol-6811f601",
-      # :aws_attached_at=>Wed Mar 11 07:06:44 UTC 2009,
-      # :aws_status=>"in-use",
-      # :aws_instance_id=>"i-0b2ab662",
-      # :aws_created_at=>Tue Mar 10 18:55:18 UTC 2009,
-      # :zone=>"us-east-1b",
-      # :aws_size=>10}]
+
       def list
         list = @aws.describe_volumes() || []
         list.select { |v| v[:aws_status] != "deleting" }
@@ -141,6 +132,8 @@ module Rudy::AWS
       
       def volumes(id)
         list = @aws.describe_volumes() || []
+        p list
+        exit
         list.select { |v| v[:aws_status] != "deleting" && v[:aws_instance_id] === id }
       end
       
@@ -200,8 +193,7 @@ module Rudy::AWS
         #       - groupId: default
         #     instancesSet: 
         #       item: 
-        # 
-        
+        #
         begin
           ilist = @aws.describe_instances(:instance_id => inst_ids) || {}
           reqid = ilist['requestId']
@@ -210,8 +202,8 @@ module Rudy::AWS
           ilist = {}
         end
         
-        return unless ilist['reservationSet'].is_a?(Hash)  # No instances 
-
+        return nil unless ilist['reservationSet'].is_a?(Hash)  # No instances 
+        
         instances = {}
         # AWS Returns instances grouped by reservation
         ilist['reservationSet']['item'].each do |res|      
@@ -233,7 +225,7 @@ module Rudy::AWS
       # +state+ is an optional instance state. Must be one of: running, pending, terminated.
       # Returns a hash of Rudy::AWS::EC2::Instance objects. The key is the instance ID.
       def list_by_group(group, state=nil)
-        instances = list([], state)
+        instances = list([], state) || {}
         instances.reject { |id,inst| !inst.groups.member?(group) }    
       end
       
@@ -256,7 +248,7 @@ module Rudy::AWS
       
       def terminated?(inst_id)
         inst = get(inst_id)
-        (!inst.nil? && inst.state == "terminated")
+        (!inst.nil? && inst.state == "terminated") # also, shutting-down
       end
       
       #

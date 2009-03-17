@@ -71,7 +71,7 @@ module Rudy
           session.exec!("touch /root/firstrun")
         end
         
-        puts "Starting bundling process...".att(:bright)
+        puts "Starting bundling process...".bright
         puts ssh_command(machine[:dns_name], keypairpath, @global.user, "ec2-bundle-vol -r i386 -p #{@option.image_name} -k /mnt/pk-*pem -c /mnt/cert*pem -u #{@option.account}", @option.print)
         puts ssh_command(machine[:dns_name], keypairpath, @global.user, "ec2-upload-bundle -b #{@option.bucket_name} -m /tmp/#{@option.image_name}.manifest.xml -a #{@global.accesskey} -s #{@global.secretkey}", @option.print)
 

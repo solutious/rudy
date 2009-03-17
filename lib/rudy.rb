@@ -7,36 +7,52 @@ require 'stringio'
 require 'ostruct'
 require 'yaml'
 require 'socket'
-require 'tempfile'
 require 'timeout'
+require 'tempfile'
 
-require 'console'
 require 'storable'
+require 'console'
 require 'annoy'
 
 require 'net/ssh'
-require 'net/ssh/gateway'
-require 'net/ssh/multi'
 require 'net/scp'
+require 'net/ssh/multi'
+require 'net/ssh/gateway'
 
+
+RUDY_HOME = File.join(__FILE__, '..', '..') unless defined?(RUDY_HOME)
+RUDY_LIB = File.join(__FILE__, '..') unless defined?(RUDY_LIB)
 
 
 module Rudy #:nodoc:
-  RUDY_DOMAIN = "rudy_state"
-  RUDY_DELIM  = '-'
+  RUDY_DOMAIN = "rudy_state" unless defined?(RUDY_DOMAIN)
+  RUDY_DELIM  = '-' unless defined?(RUDY_DELIM)
   
-  RUDY_CONFIG_DIR = File.join(ENV['HOME'] || ENV['USERPROFILE'], '.rudy')
-  RUDY_CONFIG_FILE = File.join(RUDY_CONFIG_DIR, 'config')
+  RUDY_CONFIG_DIR = File.join(ENV['HOME'] || ENV['USERPROFILE'], '.rudy') unless defined?(RUDY_CONFIG_DIR)
+  RUDY_CONFIG_FILE = File.join(RUDY_CONFIG_DIR, 'config') unless defined?(RUDY_CONFIG_FILE)
   
-  DEFAULT_REGION = 'us-east-1'
-  DEFAULT_ZONE = 'us-east-1b'
-  DEFAULT_ENVIRONMENT = 'stage'
-  DEFAULT_ROLE = 'app'
-  DEFAULT_POSITION = '01'
+  DEFAULT_REGION = 'us-east-1' unless defined?(DEFAULT_REGION)
+  DEFAULT_ZONE = 'us-east-1b' unless defined?(DEFAULT_ZONE)
+  DEFAULT_ENVIRONMENT = 'stage' unless defined?(DEFAULT_ENVIRONMENT)
+  DEFAULT_ROLE = 'app' unless defined?(DEFAULT_ROLE)
+  DEFAULT_POSITION = '01' unless defined?(DEFAULT_POSITION)
   
-  DEFAULT_USER = 'rudy'
+  DEFAULT_USER = 'rudy' unless defined?(DEFAULT_USER)
   
-  SUPPORTED_SCM_NAMES = [:svn, :git]
+  SUPPORTED_SCM_NAMES = [:svn, :git] unless defined?(SUPPORTED_SCM_NAMES)
+  
+  ID_MAP = {
+    :instance => 'i',
+    :disk => 'disk',
+    :backup => 'back',
+    :volume => 'vol',
+    :snapshot => 'snap',
+    :kernel => 'aki',
+    :image => 'ami',
+    :ram => 'ari',
+    :log => 'log',
+    :reservation => 'r'
+  }.freeze unless defined?(ID_MAP)
   
   module VERSION #:nodoc:
     MAJOR = 0.freeze unless defined? MAJOR
@@ -56,25 +72,92 @@ module Rudy #:nodoc:
   # file is written by /etc/init.d/rudy-ec2-startup. 
   # NOTE: Is there a way to know definitively that this is EC2?
   # We could make a request to the metadata IP addresses. 
-  def self.in_situ?
+  def Rudy.in_situ?
     File.exists?('/etc/ec2/instance-id')
   end
+  
+  
+  # Wait for something to happen. 
+  # * +duration+ seconds to wait between tries (default: 2).
+  # * +max+ maximum time to wait (default: 120). Throws an exception when exceeded.
+  # * +dot+ the character to print after each attempt (default: .). 
+  # Set to nil or false to keep the waiter silent.
+  # * +logger+ IO object to print +dot+ to.
+  # The block must return false while waiting. Once it returns true
+  # the waiter will return true.
+  def Rudy.waiter(duration=2, max=120, dot='.', logger=STDOUT, &b)
+    # TODO: Move to Drydock
+    raise "The waiter needs a block!" unless b
+    duration = 1 if duration < 1
+    max = duration*2 if max < duration
+    begin
+      success = Timeout::timeout(max) do
+        while !b.call
+          sleep duration
+          logger.print dot if dot && logger.respond_to?(:print)
+          logger.flush if logger.respond_to?(:flush)
+        end
+      end
+    rescue Timeout::Error => ex
+      retry if Annoy.pose_question(" Keep waiting?\a ", /yes|y|ya|sure|you bet!/i, logger)
+      raise ex # We won't get here unless the question fails
+    end
+    success
+  end
+
+
+  # Have you seen that episode of The Cosby Show where Dizzy Gillespie... ah nevermind.
+  def Rudy.bug(bugid, logger=STDERR)
+    logger.puts "You have found a bug! If you want, you can email".color(:red)
+    logger.puts 'rudy@solutious.com'.color(:red).bright << " about it. It's bug ##{bugid}.".color(:red)          
+    logger.puts "Continuing...".color(:red)
+    true # so we can string it together like: bug('1') && next if ...
+  end
+
+  # Is the given string +str+ an ID of type +identifier+? 
+  # * +identifier+ is expected to be a key from ID_MAP
+  # * +str+ is a string you're investigating
+  def Rudy.is_id?(identifier, str)
+    return false unless identifier && str && Rudy.known_type?(identifier)
+    identifier &&= identifier.to_sym
+    str &&= str.to_s.strip
+    str.split('-').first == Rudy::ID_MAP[identifier]
+  end
+  
+  # Returns the object type associated to +str+ or nil if unknown. 
+  # * +str+ is a string you're investigating
+  def Rudy.id_type(str)
+    return false unless str
+    str &&= str.to_s.strip
+    (Rudy::ID_MAP.detect { |n,v| v == str.split('-').first } || []).first
+  end
+  
+  # Is the given +identifier+ a known type of object?
+  def Rudy.known_type?(identifier)
+    return false unless identifier
+    identifier &&= identifier.to_s.to_sym
+    Rudy::ID_MAP.has_key?(identifier)
+  end
+  
 end
 
 require 'rudy/aws'
-require 'rudy/cli'
-require 'rudy/utils'
-require 'rudy/config'
-require 'rudy/metadata'
-require 'rudy/routines'
-require 'rudy/huxtable'
-require 'rudy/machines'
+require 'rudy/utils'       # The
+require 'rudy/config'      # order
+require 'rudy/metadata'    # of
+require 'rudy/huxtable'    # require
+require 'rudy/routines'    # statements
+require 'rudy/machines'    # is
+require 'rudy/manager'     # important.
+require 'rudy/backups'
+require 'rudy/groups'
+require 'rudy/disks'
 
 
-# Require CLI, MetaData, Routines, and SCM classes
+# Require MetaData, Routines, and SCM classes
 begin
   # TODO: Use autoload
-  Dir.glob(File.join(RUDY_LIB, 'rudy', '{cli,metadata,routines,scm}', "*.rb")).each do |path|
+  Dir.glob(File.join(RUDY_LIB, 'rudy', '{metadata,routines,scm}', "*.rb")).each do |path|
     require path
   end
 rescue LoadError => ex
@@ -83,77 +166,12 @@ rescue LoadError => ex
 end
 
 
-# Capture STDOUT or STDERR to prevent it from being printed. 
-#
-#    capture(:stdout) do
-#      ...
-#    end
-#
-def capture(stream)
-  #raise "We can only capture STDOUT or STDERR" unless stream == :stdout || stream == :stderr
-  
-  # I'm using this to trap the annoying right_aws "peer certificate" warning.
-  # TODO: discover source of annoying right_aws warning and give it a hiding.
-  begin
-    stream = stream.to_s
-    eval "$#{stream} = StringIO.new"
-    yield
-    result = eval("$#{stream}").read
-  ensure
-    eval("$#{stream} = #{stream.upcase}")
-  end
-
-  result
-end
-
-# Wait for something to happen. 
-# * +duration+ seconds to wait between tries (default: 2).
-# * +max+ maximum time to wait (default: 120). Throws an exception when exceeded.
-# * +dot+ the character to print after each attempt (default: .). 
-# Set to nil or false to keep the waiter silent.
-# * +logger+ IO object to print +dot+ to.
-# The block must return false while waiting. Once it returns true
-# the waiter will return true.
-def waiter(duration=2, max=120, dot='.', logger=STDOUT, &b)
-  raise "The waiter needs a block!" unless b
-  duration = 1 if duration < 1
-  max = duration*2 if max < duration
-  begin
-    success = Timeout::timeout(max) do
-      while !b.call
-        sleep duration
-        logger.print dot if dot && logger.respond_to?(:print)
-        logger.flush if logger.respond_to?(:flush)
-      end
-    end
-  rescue Timeout::Error => ex
-    retry if Annoy.pose_question(" Keep waiting? ", /yes|y|ya|sure|you bet!/i, logger)
-    raise ex # We won't get here unless the question fails
-  end
-  success
-end
-
-def write_to_file(filename, content, type)
-  type = (type == :append) ? 'a' : 'w'
-  f = File.open(filename,type)
-  f.puts content
-  f.close
-end
 
 
 
-# 
-# Generates a string of random alphanumeric characters.
-# * +len+ is the length, an Integer. Default: 8
-# * +safe+ in safe-mode, ambiguous characters are removed (default: true):
-#       i l o 1 0
-def strand( len=8, safe=true )
-   chars = ("a".."z").to_a + ("0".."9").to_a
-   chars = [("a".."h").to_a, "j", "k", "m", "n", ("p".."z").to_a, ("2".."9").to_a].flatten if safe
-   newpass = ""
-   1.upto(len) { |i| newpass << chars[rand(chars.size-1)] }
-   newpass
-end
+# ---
+# TODO: Find a home for these poor guys:
+# +++
 
 def sh(command, chdir=false, verbose=false)
   prevdir = Dir.pwd
@@ -200,15 +218,4 @@ def scp_command(host, keypair, user, paths, to_path, to_local=false, verbose=fal
   puts cmd if verbose
   printonly ? (puts cmd) : system(cmd)
 end
-
-
-# Returns +str+ with the average leading indentation removed. 
-# Useful for keeping inline codeblocks spaced with code. 
-def without_indent(str)
-  lines = str.split($/)
-  lspaces = (lines.inject(0) {|total,line| total += (line.scan(/^\s+/).first || '').size } / lines.size) + 1
-  lines.collect { |line| line.gsub(/^\s{#{lspaces}}/, '') }.join($/)
-end
-
-
 

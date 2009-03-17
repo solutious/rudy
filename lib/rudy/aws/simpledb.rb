@@ -2,8 +2,6 @@
 
 
 module Rudy::AWS
-
-  
   class SimpleDB
     class Domains 
       include Rudy::AWS::ObjectBase
@@ -34,8 +32,10 @@ module Rudy::AWS
     end
     
     def query_with_attributes(domain, query, max=nil)
-      items = {}
-      query(domain, query)[:items].each do |item|
+      # FIX OUTPUT
+      items = @aws.query_with_attributes(domain, query, max) || {}
+      p items
+      items[:items].each do |item|
         items[item] = get_attributes(domain, item)[:attributes]
       end
       items

@@ -3,6 +3,8 @@
 
 module Rudy
   module Huxtable
+    @@debug = false
+    
     attr_accessor :config
     attr_accessor :global
     attr_accessor :logger
@@ -19,6 +21,8 @@ module Rudy
         #@s3 = Rudy::AWS::SimpleDB.new(@global.accesskey, @global.secretkey)
       end
     end
+    
+    def debug?; @@debug && @@debug == true; end
     
     def check_keys
       raise "No EC2 .pem keys provided" unless has_pem_keys?

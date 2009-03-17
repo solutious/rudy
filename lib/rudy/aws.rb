@@ -13,9 +13,10 @@ module Rudy
       end
     end
   
-  
+    # TODO: Move to Rudy
+    
     def self.instance_id?(id=nil)
-      (id && id[0,2] == "i-")
+      (id && id[0,2] == "i-")  # OR: split at dash, use first value
     end
     
     def self.image_id?(id=nil)
@@ -71,7 +72,6 @@ module Rudy
       attr_reader :aws
     
       def initialize(access_key, secret_key)
-        #@aws = RightAws::SdbInterface.new(access_key, secret_key, {:logger => Logger.new(@@logger)})
         @aws = AwsSdb::Service.new(:access_key_id => access_key, :secret_access_key => secret_key, :logger => Logger.new(@@logger))
         @domains = Rudy::AWS::SimpleDB::Domains.new(@aws)
       end

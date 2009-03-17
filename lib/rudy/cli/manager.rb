@@ -2,13 +2,13 @@
 
 module Rudy
   module CLI
-    class Metadata < Rudy::CLI::Base
+    class Manager < Rudy::CLI::Base
       
       
       # Print Rudy's metadata to STDOUT
       def metadata
         group_metadata.each_pair do |n,h|
-          puts n.att(:bright)
+          puts n.bright
           puts h.inspect, ""
         end
       end
@@ -21,11 +21,20 @@ module Rudy
         @sdb.domains.destroy(RUDY_DOMAIN)
       end
       
+      # TODO: WHERE TO CREATE DOMAIN???????????????????????????
       
+      def create_domain
+        puts "Creating SimpleDB Domain called #{RUDY_DOMAIN}".bright
+        rudy = Rudy::Manager.new(:config => @config, :global => @global)
+        rudy.create_domain
+        rudy.info
+      end
       
       def info
-        domains = @sdb.domains.list[:domains]
-        puts "Domains: #{domains.join(", ")}"
+        puts "Rudy Manager".bright
+        rudy = Rudy::Manager.new(:config => @config, :global => @global)
+        doms = rudy.domains
+        puts "Domains: #{doms.join(", ")}"
       end
       
     private

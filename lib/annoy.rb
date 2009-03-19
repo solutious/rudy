@@ -1,5 +1,7 @@
 
 require 'timeout'
+require 'sysinfo'
+
 
 # Annoy - your annoying friend that asks you questions all the time.
 #
@@ -13,6 +15,7 @@ class Annoy
   attr_accessor :answer
   attr_accessor :writer
   attr_accessor :period
+  attr_accessor :system
   
   @@operators = {
     :low      => %w(+ - *),
@@ -38,6 +41,7 @@ class Annoy
   @@period = 60.freeze    # max seconds to wait
   
   @@flavors = [:numeric, :string].freeze
+  
   
   # * +factor+ annoyance factor, one of :low (default), :medium, :high, :insane
   # * +flavor+ annoyance flavor, one of :rand (default), :numeric, string
@@ -103,7 +107,7 @@ class Annoy
         writer.print "#{msg} To continue, #{Annoy.verb(flavor)} #{question}: "
         writer.print "(#{answer}) " if ![:high, :insane].member?(factor) && flavor == :numeric
         writer.flush
-        response = (STDIN.gets || "").chomp.strip.gsub(/["']/, '')
+        response = Annoy.get_response(writer)
         response = response.to_i if flavor == :numeric
         (response == answer)
       end
@@ -144,8 +148,8 @@ class Annoy
         regexp &&= Regexp.new regexp
         writer.print msg 
         writer.flush if writer.respond_to?(:flush)
-        ans = (STDIN.gets || "").gsub(/["']/, '')
-        regexp.match(ans)
+        response = Annoy.get_response
+        regexp.match(response)
       end
     rescue Timeout::Error => ex
       writer.puts $/, "Times up!"
@@ -153,9 +157,34 @@ class Annoy
     end
   end
  
- 
- private 
   
+ private 
+  def Annoy.get_response(writer=STDOUT)
+    return true unless STDIN.tty? # Humans only
+    # TODO: Count the number of keystrokes to prevent copy/paste
+    # We likely need to be more specific but this will do for now.
+    #if ::SystemInfo.new.os == :unix 
+    #  begin
+    #    response = []
+    #    char = nil
+    #    system("stty raw -echo") # Raw mode, no echo
+    #    while char != "\r" || response.size > 5
+    #      char = STDIN.getc.chr
+    #      writer.print char
+    #      writer.flush
+    #      response << char
+    #    end
+    #    writer.print "\n\r"
+    #    response = response.join('')
+    #  rescue => ex
+    #  ensure
+    #    system("stty -raw echo") # Reset terminal mode
+    #  end
+    #else
+      response = (STDIN.gets || "")
+    #end
+    response.chomp.gsub(/["']/, '')
+  end
   # Returns a verb appropriate to the flavor.
   # * :numeric => resolve
   # * :string => type

@@ -78,13 +78,8 @@ module Rudy
            query << " intersection ['#{n}' = '#{@global.send(n)}']" if @global.send(n)
         end
       end
-      disks = []
-      list = @sdb.query_with_attributes(RUDY_DOMAIN, query)
-      return nil if !list || list.empty?
-      list.each_pair do |name, hash|
-        #puts "DISK: #{hash.to_yaml}"
-        disks << Rudy::MetaData::Disk.from_hash(hash)
-      end
+      disks = @sdb.query_with_attributes(RUDY_DOMAIN, query)
+      return nil if !disks || disks.empty?
       disks
     end
 

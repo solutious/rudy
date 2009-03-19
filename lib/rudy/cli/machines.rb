@@ -19,7 +19,7 @@ module Rudy::CLI
       rudy = Rudy::Machines.new(:config => @config, :global => @global)
       rudy.connect(opts)
     end
-    
+
     def copy_valid?
       raise "You must supply a source and a target. See rudy #{@alias} -h" unless @argv.size >= 2
       raise "You cannot download and upload at the same time" if @option.download && @alias == 'upload'

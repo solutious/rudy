@@ -11,11 +11,11 @@ module Rudy
           opts[v] = @option.send(v) if @option.respond_to?(v)
         end
         rdisks = Rudy::Disks.new(:config => @config, :global => @global)
-        list = rdisks.list(opts) || []
+        disks = rdisks.list(opts) || []
         #rbacks = Rudy::Backups.new(:config => @config, :global => @global)
-        list.each do |disk|
+        disks.each_pair do |diskid, disk|
           #backups = rbacks.list_by_disk(disk, 2)
-          print_disk(disk, backups)
+          print_disk(disk)
         end
       end
       def print_disk(disk, backups=[])
@@ -30,14 +30,12 @@ module Rudy
         raise "No filesystem path specified" unless @option.path
         raise "No size specified" unless @option.size
         raise "No device specified" unless @option.device
-        #@instances = @ec2.instances.list(machine_group)
-        #raise "There are no instances running in #{machine_group}" if !@instances || @instances.empty?
         true
       end
       
       def create_disk
         puts "Creating Disk".bright
-        #exit unless Annoy.are_you_sure?(:low)
+        exit unless Annoy.are_you_sure?(:low)
         opts = {}
         [:path, :device, :size, :group].each do |v| 
           opts[v] = @option.send(v) if @option.respond_to?(v)

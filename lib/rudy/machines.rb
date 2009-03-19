@@ -8,6 +8,7 @@ module Rudy
       super(opts)
       @script_runner = Rudy::Routines::ScriptRunner.new(opts)
       @disk_handler = Rudy::Routines::DiskHandler.new(opts)
+      @rdisks
     end
     
     def connect(opts={})
@@ -102,9 +103,8 @@ module Rudy
       #@logger.puts $/, "Running BEFORE scripts...".bright, $/
       #instances.each { |inst| @script_runner.execute(inst, :startup, :before) }
       
-      # TODO: start multiple, update machine data for each
-      #instances = @ec2.instances.create(opts[:ami], opts[:group], File.basename(opts[:keypair]), opts[:machine_data], @global.zone)
-      instances = [@ec2.instances.get("i-956af3fc")]
+      instances = @ec2.instances.create(opts[:ami], opts[:group], File.basename(opts[:keypair]), opts[:machine_data], @global.zone)
+      #instances = [@ec2.instances.get("i-956af3fc")]
       instances_with_dns = []
       instances.each_with_index do |inst_tmp,index|
         Rudy.bug('hs672h48') && next if inst_tmp.nil?
@@ -120,7 +120,7 @@ module Rudy
           Rudy.waiter(2, 120) { @ec2.instances.running?(inst_tmp.awsid) }
           @logger.puts "It's up!\a\a\a"
         rescue Timeout::Error, Interrupt
-          @logger.puts "Check later: rudy status #{instances.keys.join(' ')}"
+          @logger.puts "Check later: rudy status #{instances.join(' ')}"
           next
         end
         
@@ -132,16 +132,12 @@ module Rudy
           Rudy.waiter(2, 60) { Rudy::Utils.service_available?(inst.dns_name_public, 22) }
           @logger.puts "It's up!\a\a"
         rescue Timeout::Error, Interrupt
-          @logger.puts "Check later: rudy status #{instances.keys.join(' ')}"
+          @logger.puts "Check later: rudy status #{instances.join(' ')}"
           next
         end
         
         instances_with_dns << inst
         
-        
-        instances.each do |inst|
-          rdisks.create_disk(inst)
-        end
         
         # NOTE: These should be handled a level above
         #@logger.puts $/, "Running DISK scripts...".bright, $/

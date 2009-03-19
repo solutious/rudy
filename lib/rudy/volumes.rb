@@ -4,23 +4,39 @@ module Rudy
     include Rudy::Huxtable
 
 
-    
+    def create(zone, size, snapshot=nil)
+      raise "No instance supplied" unless zone
+      raise "No size supplied" unless size
+      switch_user(:root)
+      ret = false
+      begin
+        @logger.print "Creating Volume "
+        ret = @ec2.volumes.create(zone, size, snapshot)
+        Rudy.waiter(1, 30) do
+          @ec2.volumes.available?(ret.awsid)
+        end
+        puts
+      rescue => ex
+        @logger.puts ex.backtrace if debug?
+        raise "Error creating volume: #{ex.message}"
+      end
+      ret
+    end
+        
     def attach(inst_id, vol_id, device)
       raise "No instance supplied" unless inst_id
       switch_user(:root)
       
       begin
-        @logger.puts "Attaching Volume "
+        @logger.print "Attaching Volume "
         ret = @ec2.volumes.attach(inst_id, vol_id, device)
         # {"attachTime"=>"2009-03-19T13:45:59.000Z", "status"=>"attaching", "device"=>"/dev/sdm", 
         # "requestId"=>"1c494a5d-a727-4fbc-a422-fa70898ca28a", "instanceId"=>"i-f17ae298", 
         # "volumeId"=>"vol-69f71100", "xmlns"=>"http://ec2.amazonaws.com/doc/2008-12-01/"}
-        Rudy.waiter(2, 30) do
+        Rudy.waiter(1, 30) do
           @ec2.volumes.attached?(vol_id)
         end
         puts
-      rescue Timeout::Error => ex
-        puts "Moving on..."
       rescue => ex
         @logger.puts ex.backtrace if debug?
         raise "Error attaching #{device} to #{vol_id}: #{ex.message}"
@@ -36,7 +52,7 @@ module Rudy
         
         raise "Volume is still attached. Cannot destroy." unless @ec2.volumes.available?(vol_id)
         
-        @logger.puts "Destroying #{vol_id}"
+        @logger.print "Destroying #{vol_id}"
         @ec2.volumes.destroy(vol_id)
         puts
       rescue => ex
@@ -51,7 +67,7 @@ module Rudy
       begin
         @logger.print "Dettaching #{vol_id} "
         @ec2.volumes.detach(vol_id)
-        Rudy.waiter(2, 30) do
+        Rudy.waiter(1, 30) do
           @ec2.volumes.available?(vol_id)
         end
         puts

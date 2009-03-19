@@ -11,12 +11,12 @@ module Rudy
     end
     
     def create(instance=nil, opts={})
-      disk = find_disk_from_opts(opts, :create)
+      disk = create_disk_from_opts(opts)
       switch_user(:root)
       
       raise "Not enough info was provided to define a disk (#{disk.name})" unless disk.valid?
-      raise "The path #{disk.path} is already in use on that machine" if is_defined?(disk)
-      raise "The device #{disk.device} is already in use on that machine" if device_used?(disk)
+      raise "The path #{disk.path} is defined for that machine" if is_defined?(disk)
+      raise "The device #{disk.device} is already defined for that machine" if device_used?(disk)
 
       if is_defined?(disk)
         @logger.puts "The disk #{disk.name} already exists."
@@ -49,10 +49,8 @@ module Rudy
           return
         end
         
-        @logger.puts "Creating Volume..."
-        vol = @ec2.volumes.create(disk.zone, disk.size)
+        vol = @volumes.create(disk.zone, disk.size)
         disk.awsid = vol.awsid
-        sleep 5 # Replace with waiter
         
         @volumes.attach(instance.awsid, disk.awsid, disk.device)
         
@@ -77,8 +75,9 @@ module Rudy
     
     def destroy(instance, opts)
       raise "No instance supplied" unless instance
+      opts.reject! { |n,v| [:device, :size].member?(n) }
+      p opts
       disk = find_disk_from_opts(opts)
-
       raise "Must supply a disk" unless disk
       begin
         
@@ -107,7 +106,7 @@ module Rudy
       begin
         puts "Creating the filesystem (mkfs.ext3 -F #{disk.device})".bright
         ssh_command instance.dns_name_public, current_user_keypairpath, @global.user, "mkfs.ext3 -F #{disk.device}"
-        sleep 3
+        sleep 1
       rescue => ex
         @logger.puts ex.backtrace if debug?
         raise "Error formatting #{disk.path}: #{ex.message}"
@@ -135,7 +134,7 @@ module Rudy
       begin
         puts "Unmounting #{disk.path}...".bright
         ssh_command instance.dns_name_public, current_user_keypairpath, global.user, "umount #{disk.path}"
-        sleep 2
+        sleep 1
       rescue => ex
         @logger.puts ex.backtrace if debug?
         raise "Error unmounting #{disk.path}: #{ex.message}"
@@ -147,10 +146,12 @@ module Rudy
       opts = {
         :all => false
       }.merge(opts)
-      disk = find_disk_from_opts(opts)
+      disk = find_disk_from_opts(opts) || create_disk_from_opts(opts)
       query = opts[:all] ? disk.to_query([], [:zone, :environment, :role, :position, :path]) : disk.to_query
       items = execute_query(query)
     end
+    
+    # TODO: These are broken! They don't even look at rtype!
     def find_from_volume(vol_id)
       query = "['awsid' = '#{vol_id}']"
       items = execute_query(query) || {}
@@ -186,6 +187,7 @@ module Rudy
       !(@sdb.query_with_attributes(RUDY_DOMAIN, query) || {}).empty?
     end
     
+    
   private
     
     def execute_query(query)
@@ -196,40 +198,55 @@ module Rudy
         next unless disk.is_a?(Hash)
         name = disk.delete("Name")
         clean_items[name] = Rudy::MetaData::Disk.from_hash(disk)
-        break
       end
       clean_items
     end
     
-    def find_disk_from_opts(opts, create=false)
-      raise Exception, "No options given!", caller unless opts
-      
-      return opts if opts.is_a?(Rudy::MetaData::Disk)
-      # Try to load based on the name if supplied
-      if opts[:name]
-        disk = get(opts[:name])
-        raise "Disk #{opts[:name]} does not exist" unless disk
-      elsif opts[:path] && !opts[:device] && !opts[:size]
-        disk = find_from_path(opts[:path])
-        raise "Disk: #{opts[:path]} does not exist"if !disk && !create
+    
+    def create_disk_from_opts(opts)
+      disk = Rudy::MetaData::Disk.new
+      [:region, :zone, :environment, :role, :position].each do |n|
+        disk.send("#{n}=", @global.send(n)) if @global.send(n)
       end
-      
-      if !disk && create
-        disk = Rudy::MetaData::Disk.new
-        [:region, :zone, :environment, :role, :position].each do |n|
-          disk.send("#{n}=", @global.send(n)) if @global.send(n)
-        end
-      
-        [:path, :device, :size].each do |n|
-          disk.send("#{n}=", opts[n]) if opts[n]
-        end
+
+      [:path, :device, :size].each do |n|
+        disk.send("#{n}=", opts[n]) if opts[n]
       end
-      
-      #raise "The disk is in another machine environment" unless @global.environment.to_s == disk.environment.to_s
-      #raise "The disk is in another machine role" unless @global.role.to_s == disk.role.to_s
       
       disk
     end
+    
+    def find_disk_from_opts(opts)
+
+      raise Exception, "No options given!", caller unless opts
+      
+      return opts if opts.is_a?(Rudy::MetaData::Disk)
+      
+      # If a disk name was supplied, the user knows what she's looking for.
+      # If we don't find it, we can throw an error.
+      if opts[:name] 
+        disk = get(opts[:name])
+      
+      # If there's a path, with no device or size specified, then she's
+      # again looking for a specific disk and we can throw an error. 
+      elsif opts[:path]
+        disk = find_from_path(opts[:path])
+      end
+
+      if disk
+        # If a user specifies a disk that doesn't match the global 
+        # values for environment and role, we need to throw an error. 
+        unless @global.environment.to_s == disk.environment.to_s
+          raise "The disk is in another machine environment" 
+        end
+        unless @global.role.to_s == disk.role.to_s
+          raise "The disk is in another machine role"
+        end
+      end
+      
+      disk
+    end
+    
   
       
   end

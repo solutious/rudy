@@ -13,7 +13,9 @@ module Rudy::CLI
       
       if @argv.cmd
         opts[:cmd] = [@argv.cmd].flatten.join(' ')
-        exit unless Annoy.are_you_sure?(:low)
+        if @global.user.to_s == "root"
+          exit unless Annoy.are_you_sure?(:medium)
+        end
       end
       
       rudy = Rudy::Machines.new(:config => @config, :global => @global)
@@ -60,9 +62,8 @@ module Rudy::CLI
       opts[:id] &&= [opts[:id]].flatten
       
       msg = opts[:id] ? "instances: #{opts[:id].join(', ')}" : (opts[:group] ? "group: #{opts[:group]}" : '')
-      puts "Shutting down #{msg}".bright
-      puts "This command also affects the volumes attached to the instances! (according to your routines config)"
-      exit unless Annoy.are_you_sure?(:high)        # TODO: Check if instances are running before this
+      puts "This command also affects the disks on these machines! (according to your routines config)"
+      exit unless Annoy.are_you_sure?(:medium)        # TODO: Check if instances are running before this
       
       rudy = Rudy::Machines.new(:config => @config, :global => @global)
       rudy.shutdown(opts)

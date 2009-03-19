@@ -24,7 +24,7 @@ module Rudy
       routine = fetch_routine(:startup) 
 
       instances = @ec2.instances.create(opts[:ami], opts[:group], File.basename(opts[:keypair]), opts[:machine_data], @global.zone)
-      #instances = [@ec2.instances.get("i-f17ae298")]
+      #instances = [@ec2.instances.get("i-39009850")]
       instances_with_dns = []
       instances.each_with_index do |inst_tmp,index|
         Rudy.bug('hs672h48') && next if inst_tmp.nil?
@@ -37,7 +37,7 @@ module Rudy
         
         @logger.puts "Waiting for the instance to startup "        
         begin 
-          Rudy.waiter(2, 4) { !@ec2.instances.pending?(inst_tmp.awsid) }
+          Rudy.waiter(2, 120) { !@ec2.instances.pending?(inst_tmp.awsid) }
           raise Exception unless @ec2.instances.running?(inst_tmp.awsid)
           @logger.puts "It's up!"
           Rudy.bell(3)
@@ -47,11 +47,11 @@ module Rudy
         end
         
         # The DNS names are now available so we need to grab that data from AWS
-        inst = @ec2.instances.get(inst_tmp.awsid)   
+        instance = @ec2.instances.get(inst_tmp.awsid)   
         
         @logger.puts $/, "Waiting for the SSH daemon "
         begin
-          Rudy.waiter(2, 60) { Rudy::Utils.service_available?(inst.dns_name_public, 22) }
+          Rudy.waiter(2, 60) { Rudy::Utils.service_available?(instance.dns_name_public, 22) }
           @logger.puts "It's up!"
           Rudy.bell(2)
         rescue Timeout::Error, Interrupt
@@ -72,22 +72,17 @@ module Rudy
             props[:path] = path
             puts path
             begin
-              @rdisks.send(action, inst, props)
+              @rdisks.send(action, instance, props)
             rescue => ex
               @logger.puts "Continuing..."
             end
           end
         end
         
-        instances_with_dns << inst
+        instances_with_dns << instance
         
         
-        ## NOTE: These should be handled a level above
-        #@logger.puts $/, "Running DISK scripts...".bright, $/
-        #instances.each { |inst| @disk_handler.execute(inst, :startup) }
-        #
-        #@logger.puts $/, "Running AFTER scripts...".bright, $/
-        #instances.each { |inst| @script_runner.execute(inst, :startup, :before) }
+        
       end
       
       instances_with_dns
@@ -99,22 +94,51 @@ module Rudy
       
       @logger.puts "Found instances: #{instances.keys.join(", ")}"
       
-      @logger.puts $/, "Running BEFORE scripts...".bright, $/
-      #instances.each { |inst| @script_runner.execute(inst, :shutdown, :before) }
+      routine = fetch_routine(:shutdown)
       
-      @logger.puts $/, "Running DISK routines...".bright, $/
-      #@disk_handler
+      instances.each_pair do |inst,instance|
+        @logger.puts $/, "Shutting down #{inst}".bright, $/
+        
+        @logger.puts $/, "Running BEFORE scripts...", $/
+        #instances.each { |inst| @script_runner.execute(inst, :shutdown, :before) }
       
-      @logger.puts $/, "Terminating instances...".bright, $/
-      @ec2.instances.destroy instances.keys
+        @logger.puts $/, "Running DISK routines...", $/
+        routine.disks.each_pair do |action,disks|
+          
+          unless @rdisks.respond_to?(action)
+            @logger.puts("Skipping unknown action: #{action}").color(:blue)
+            next
+          end
+          
+          disks.each_pair do |path,props|
+            props[:path] = path
+            begin
+              @rdisks.send(action, instance, props)
+            rescue => ex
+              @logger.puts "Continuing..."
+              puts ex.message
+              puts ex.backtrace
+            end
+          end
+        end
+
       
-      @logger.puts "Waiting for #{instances.keys.first} to terminate"
-      Rudy.waiter(4, 30) do # This raises an exception if it times out
-        @ec2.instances.terminated?(instances.keys.first)
+        @logger.puts $/, "Terminating instances...", $/
+        @ec2.instances.destroy instance.awsid
+      
+        @logger.puts "Waiting for #{instance.awsid} to terminate"
+
+        begin 
+          Rudy.waiter(2, 30) { @ec2.instances.terminated?(instance.awsid) }
+          @logger.puts "It's down!"
+        rescue Timeout::Error, Interrupt, Exception
+          @logger.puts "It's not down yet. Check later: " << "rudy status #{instance.awsid}".color(:blue)
+          next
+        end
+      
+        @logger.puts $/, "Running AFTER scripts...".bright, $/
+        #instances.each { |inst| @script_runner.execute(instance, :shutdown, :after) }
       end
-      
-      @logger.puts $/, "Running AFTER scripts...".bright, $/
-      #instances.each { |inst| @script_runner.execute(inst, :shutdown, :after) }
     end
     
     def list(opts={}, &block)

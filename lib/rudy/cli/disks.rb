@@ -20,8 +20,6 @@ module Rudy
         raise "No disks." unless disks
         #rbacks = Rudy::Backups.new(:config => @config, :global => @global)
         disks.each_pair do |diskid, disk|
-          p diskid
-          p disk
           #backups = rbacks.list_by_disk(disk, 2)
           print_disk(disk)
         end
@@ -76,7 +74,9 @@ module Rudy
           key = @argv.diskname =~ /^disk-/ ? :name : :path
           opts[key] = @argv.diskname
         end
-
+        
+        # TODO: This is fucked! Store the machine info with the disk metadata.
+        # Get all disks that match the request and destroy them.
         rmachines = Rudy::Machines.new(:config => @config, :global => @global)
         rmachines.list(opts).each_pair do |id,machine|
           rdisks = Rudy::Disks.new(:config => @config, :global => @global)

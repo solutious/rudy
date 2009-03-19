@@ -93,17 +93,18 @@ module Rudy #:nodoc:
     raise "The waiter needs a block!" unless b
     duration = 1 if duration < 1
     max = duration*2 if max < duration
+    success = false
     begin
       success = Timeout::timeout(max) do
         while !b.call
-          sleep duration
           logger.print dot if dot && logger.respond_to?(:print)
           logger.flush if logger.respond_to?(:flush)
+          sleep duration
         end
       end
     rescue Timeout::Error => ex
       retry if Annoy.pose_question(" Keep waiting?\a ", /yes|y|ya|sure|you bet!/i, logger)
-      raise ex # We won't get here unless the question fails
+      @logger.puts $/, "Too slow!" # We won't get here unless the question fails
     end
     success
   end

@@ -53,6 +53,10 @@ module Rudy #:nodoc:
     :reservation => 'r'
   }.freeze unless defined?(ID_MAP)
   
+  @@quiet = false
+  def Rudy.enable_quiet; @@quiet = true; end
+  def Rudy.disable_quiet; @@quiet = false; end
+  
   module VERSION #:nodoc:
     MAJOR = 0.freeze unless defined? MAJOR
     MINOR = 4.freeze unless defined? MINOR
@@ -103,8 +107,15 @@ module Rudy #:nodoc:
     end
     success
   end
-
-
+  
+  # Make a terminal bell chime
+  def Rudy.bell(chimes=1, logger=STDERR)
+    return if @@quiet
+    chimed = chimes.to_i
+    logger.print "\a"*chimes
+    true # be like Rudy.bug()
+  end
+  
   # Have you seen that episode of The Cosby Show where Dizzy Gillespie... ah nevermind.
   def Rudy.bug(bugid, logger=STDERR)
     logger.puts "You have found a bug! If you want, you can email".color(:red)
@@ -148,6 +159,7 @@ require 'rudy/routines'    # require
 require 'rudy/machines'    # statements
 require 'rudy/manager'     # is
 require 'rudy/backups'     # important.
+require 'rudy/volumes'
 require 'rudy/groups'
 require 'rudy/disks'
 

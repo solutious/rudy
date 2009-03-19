@@ -8,12 +8,15 @@ TODO: Look into RubyGems error
 TODO: Remove aws_swb
 
 
-#### 0.4.1 (2009-03-??) ###############################
+#### 0.5.0 (2009-03-??) ###############################
 
 * CHANGE: Recommend keypair config to be in ~/.rudy/config
 * FIX: Rudy now checks for user keys specified by env-role, env, and global
 * FIX: gemspec dependency net-ssh-multi
 * NEW: rerelease command
+* NEW: --nocolor option 
+* NEW: Ruby API
+
 
 #### 0.4 (2009-03-12) ###############################
 

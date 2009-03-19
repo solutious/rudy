@@ -96,15 +96,10 @@ module Rudy::CLI
       opts = {}
       opts[:ami] = @option.image if @option.image
       opts[:group] = @option.group if @option.group
-      exit unless Annoy.are_you_sure?
+      #exit unless Annoy.are_you_sure?
       
       rmachines = Rudy::Machines.new(:config => @config, :global => @global)
-      rdisks = Rudy::Disks.new(:config => @config, :global => @global)
-      
       instances = rmachines.startup(opts)
-      instances.each do |inst|
-        rdisks.create_disk(inst)
-      end
       
       puts "Done!"
     end

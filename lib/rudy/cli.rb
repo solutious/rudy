@@ -49,6 +49,8 @@ module Rudy
         @global.local_user = ENV['USER'] || :user
         @global.local_hostname = Socket.gethostname || :host
         
+        @global.nocolor = @config.defaults.nocolor || false
+        @global.quiet = @config.defaults.quiet || false
         
         if @global.verbose > 1
           puts "GLOBALS:"
@@ -63,6 +65,8 @@ module Rudy
           puts
         end
         
+        String.disable_color if @global.nocolor
+        Rudy.enable_quiet if @global.quiet
         
         # TODO: enforce home directory permissions
         #if File.exists?(RUDY_CONFIG_DIR)

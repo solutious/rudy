@@ -39,7 +39,14 @@ module Rudy
       end
       
       def name
-        Rudy::Disks.generate_name(@zone, @environment, @role, @position, @path)
+        Disk.generate_name(@zone, @environment, @role, @position, @path)
+      end
+      
+      def Disk.generate_name(zon, env, rol, pos, pat, sep=File::SEPARATOR)
+        pos = pos.to_s.rjust 2, '0'
+        dirs = pat.split sep if pat
+        dirs.shift while dirs && (dirs[0].nil? || dirs[0].empty?)
+        ["disk", zon, env, rol, pos, *dirs].join(RUDY_DELIM)
       end
       
       def valid?
@@ -51,7 +58,8 @@ module Rudy
         criteria -= [*remove].flatten
         query = []
         criteria.each do |n|
-          query << "['#{n}' = '#{self.send(n.to_sym)}'] "
+          val = self.send(n.to_sym)
+          query << "['#{n}' = '#{self.send(n.to_sym)}'] " if val # Only add attributes with values
         end
         query.join(" intersection ")
       end

@@ -94,7 +94,8 @@ module Rudy
       if name == nil && @switch_user_previous
         @global.user = @switch_user_previous
       elsif @global.user != name
-        puts "Remote commands will be run as #{name} user"
+        raise "No root keypair defined for #{name}!" unless has_keypair?(name)
+        @logger.puts "Remote commands will be run as #{name} user"
         @switch_user_previous = @global.user
         @global.user = name
       end

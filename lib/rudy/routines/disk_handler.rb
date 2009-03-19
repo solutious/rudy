@@ -5,68 +5,44 @@ module Rudy::Routines
     include Rudy::Huxtable    # @config, @global come from here
     
     
-    # +action+ is one of: :shutdown, :start, :deploy
     # +machine+ is a Rudy::AWS::EC2::Instance object
-    def execute(machine, action)
+    # +routines+ is a Hash config contain the disk routines.
+    def execute(machine, routines)
       
-      puts "Running #{action.to_s.capitalize} DISK routines".bright
+      @logger.puts "Running DISK routines".bright
       
-      disk_definitions = @config.machines.find_deferred(@global.environment, @global.role, :disks)
-      routines = @config.routines.find(@global.environment, @global.role, action, :disks)
       
       unless routines
-        puts "No #{action} disk routines."
+        @logger.puts "No #{action} disk routines."
         return
       end
       
       unless machine.awsid
-        puts "Machine given has no instance ID. Skipping disks."
+        @logger.puts "Machine given has no instance ID. Skipping disk routines."
         return
       end
     
       unless machine.dns_name_public
-        puts "Machine given has no DNS name: #{machine.dns_name_public}. Skipping disks."
+        @logger.puts "Machine given has no DNS name: #{machine.awsid}. Skipping disk routines."
         return
       end
       
       # The order is important. We could be destroying and recreating
       # a disk on the same machine. 
-      destroy(machine, disk_definitions, routines.destroy) if routines.destroy
-      mount(machine, disk_definitions, routines.mount) if routines.mount
-      restore(machine, disk_definitions, routine.restore) if routines.restore
-      create(machine, disk_definitions, routines.create) if routines.create
+      destroy(machine, routines.destroy) if routines.destroy
+      mount(machine, routines.mount) if routines.mount
+      restore(machine, routines.restore) if routines.restore
+      create(machine, routines.create) if routines.create
     
     end
     
-    def create_disk(machine, disk)
-      if @ec2.instances.attached_volume?(machine.awsid, disk.device)
-        @logger.puts "Skipping disk for #{disk.path} (device #{disk.device} is in use)"
-        return false
-      end
-      
-      @logger.puts "Creating Volume..."
-      vol = @ec2.volumes.create(disk.zone, disk.size)
-      disk.awsid = vol.awsid
-      
-      
-      @logger.puts "Attaching Volume..."
-      ret = @ec2.volumes.attach(machine.awsid, disk.awsid, disk.device)
-      p ret
-    end
     
-    def create(machine, disk_definitions, disk_routine)
+    def create(machine, disk_routine)
       
       disk_routine.each_pair do |path,props|
   
         begin 
           puts "Creating disk for #{path}"
-          
-          dconf = disk_definitions[path]
-
-          unless dconf
-            puts "#{path} is not defined for this machine. Check your machines config."
-            next
-          end
           
           disk = Rudy::MetaData::Disk.new
           disk.path = path
@@ -74,38 +50,9 @@ module Rudy::Routines
             disk.send("#{n}=", @global.send(n)) if @global.send(n)
           end
           [:device, :size].each do |n|
-            disk.send("#{n}=", dconf[n]) if dconf.has_key?(n)
+            disk.send("#{n}=", props[n]) if props.has_key?(n)
           end
       
-          if Rudy::MetaData::Disk.is_defined?(@sdb, disk)
-            puts "The disk #{disk.name} already exists."
-            puts "You probably need to define when to destroy the disk."
-            puts "Skipping..."
-            next
-          end
-      
-          if @ec2.instances.attached_volume?(machine.awsid, disk.device)
-            puts "Skipping disk for #{disk.path} (device #{disk.device} is in use)"
-            next
-          end
-      
-          # NOTE: It's important to use Caesars' hash syntax b/c the disk property
-          # "size" conflicts with Hash#size which is what we'll get if there's no 
-          # size defined. 
-          unless disk.size.kind_of?(Integer)
-            puts "Skipping disk for #{disk.path} (size not defined)"
-            next
-          end
-      
-          if disk.path.nil?
-            puts "Skipping disk for #{disk.path} (no path defined)"
-            next
-          end
-      
-          unless disk.valid?
-            puts "Skipping #{disk.name} (not enough info)"
-            next
-          end
                   
           puts "Creating volume... (#{disk.size}GB in #{@global.zone})".bright
           volume = @ec2.volumes.create(@global.zone, disk.size)
@@ -142,7 +89,7 @@ module Rudy::Routines
     
     
     
-    def destroy(machine, disk_definitions, disk_routine)
+    def destroy(machine, disk_routine)
       disk_paths = disk_routine.keys
       
       vols = @ec2.instances.volumes(machine.awsid) || []
@@ -156,19 +103,8 @@ module Rudy::Routines
           this_path = device_to_path(machine, vol[:aws_device])
         end
         
-        dconf = disk_definitions[this_path]
-        
-        unless dconf
-          puts "#{this_path} is not defined for this machine. Check your machines config."
-          next
-        end
-        
         if disk_paths.member?(this_path) 
         
-          unless disk_definitions.has_key?(this_path)
-            puts "#{this_path} is not defined as a machine disk. Skipping..."
-            next
-          end
           
           begin
             puts "Unmounting #{this_path}..."
@@ -214,7 +150,7 @@ module Rudy::Routines
     end
     
     
-    def mount(machine, disk_definitions, disk_routine)
+    def mount(machine, disk_routine)
       disk_paths = disk_routine.keys 
       vols = @ec2.instances.volumes(machine.awsid) || []
       puts "No volumes to mount for (#{machine.awsid})" if vols.empty?
@@ -228,14 +164,6 @@ module Rudy::Routines
         end
         
         next unless disk_paths.member?(this_path)
-          
-        dconf = disk_definitions[this_path]
-        
-        unless dconf
-          puts "#{this_path} is not defined for this machine. Check your machines config."
-          next
-        end
-        
         
         begin
           unless @ec2.instances.attached_volume?(machine.awsid, vol[:aws_device])
@@ -260,7 +188,7 @@ module Rudy::Routines
     
     
     
-    def restore(machine, disk_definitions, disk_routine)
+    def restore(machine, disk_routine)
       
       disk_routine.each_pair do |path,props|
         from = props[:from] || "unknown"
@@ -272,13 +200,6 @@ module Rudy::Routines
         begin 
           puts "Restoring disk for #{path}"
           
-          dconf = disk_definitions[path]
-          
-          unless dconf
-            puts "#{path} is not defined for this machine. Check your machines config."
-            next
-          end
-              
           zon = props[:zone] || @global.zone
           env = props[:environment] || @global.environment
           rol = props[:role] || @global.role
@@ -299,8 +220,8 @@ module Rudy::Routines
             disk.send("#{n}=", @global.send(n)) if @global.send(n)
           end
           
-          disk.device = dconf[:device]
-          size = (backup.size.to_i > dconf[:size].to_i) ? backup.size : dconf[:size]
+          disk.device = props[:device]
+          size = (backup.size.to_i > props[:size].to_i) ? backup.size : props[:size]
           disk.size = size.to_i
           
           

@@ -11,46 +11,35 @@ module Rudy
       end
       def destroy_volume
         puts "Destroy Volume".bright
-
-        ec2 = Rudy::AWS::EC2.new(@global.accesskey, @global.secretkey)
-        raise "The volume #{@argv.volid} doesn't exist!" unless ec2.volumes.exists?(@argv.volid)
-        raise "The volume #{@argv.volid} is already being deleted!" if ec2.volumes.deleting?(@argv.volid)
+        @argv.volid &&= [@argv.volid].flatten
         
-        exit unless Annoy.are_you_sure?(:high)
+        exit unless Annoy.are_you_sure?(:low)
+            
+        @argv.volid.each do |volid|
+          begin
+            ec2 = Rudy::AWS::EC2.new(@global.accesskey, @global.secretkey)
+            raise "The volume #{volid} doesn't exist!" unless ec2.volumes.exists?(volid)
+            raise "The volume #{volid} is already being deleted!" if ec2.volumes.deleting?(volid)
         
-        rdisks = Rudy::Disks.new(:config => @config, :global => @global)
-        disk = rdisks.find_from_volume(@argv.volid)
         
-        if disk
-          puts "The following disk metadata will also be destroyed:"
-          puts disk.to_s
-          exit unless Annoy.are_you_sure?(:high)
-        end
+            rdisks = Rudy::Disks.new(:config => @config, :global => @global)
+            disk = rdisks.find_from_volume(volid)
         
-        begin
-          
-          if ec2.volumes.attached?(@argv.volid)
-            puts "Detaching #{@argv.volid}"
-            ec2.volumes.detach(@argv.volid)
-          
-            Rudy.waiter(2, 30) do
-              ec2.volumes.available?(@argv.volid)
+            if disk
+              puts "There is a disk associated to this volume:".color(:blue)
+              puts disk.name.color(:blue)
+              puts "You must use: rudy disks -D #{disk.name}".color(:blue).bright
+              return
             end
-            puts
-          end
-          
-          puts "Destroying #{@argv.volid}"
-          ec2.volumes.destroy(@argv.volid)
-          
-          if disk
-            puts "Deleteing metadata for #{disk.name}"
-            rdisks.destroy(disk)
-          end
-          
-        rescue => ex
-          puts "Error while detaching volume #{id}: #{ex.message}"
-        end
         
+            volumes = Rudy::Volumes.new(:config => @config, :global => @global)
+            volumes.destroy(volid)
+            
+          rescue => ex
+            puts ex.message
+            puts ex.backtrace if Drydock.debug?
+          end
+        end
       end
       
       

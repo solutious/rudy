@@ -19,8 +19,8 @@ module Rudy::AWS
       end
     end
     
-    def destroy(domain, item, attributes={})
-      @aws.delete_attributes(domain, item, attributes)
+    def destroy(domain, item)
+      @aws.delete_attributes(domain, item)
     end
     
     def store(domain, item, attributes={}, replace=false)
@@ -33,19 +33,13 @@ module Rudy::AWS
     end
     
     def query_with_attributes(domain, query, max=nil)
-      # FIX OUTPUT
       items = @aws.query_with_attributes(domain, query, max)
       return nil if !items || items.empty? || items == [[], ""]  # NOTE: wtf, aws-sdb?
       clean_items = {}
       # [[{"device"=>["/dev/sdh"], "Name"=>"disk-us-east-1b-stella-app-01-stella", "zone"=>["us-east-1b"], 
       # "size"=>["1"], "region"=>["us-east-1"], "role"=>["app"], "rtype"=>["disk"], "awsid"=>[""], 
       # "environment"=>["stella"], "position"=>["01"], "path"=>["/stella"]}], ""]
-      items.flatten.each do |disk|
-        next unless disk.is_a?(Hash)
-        name = disk.delete("Name")
-        clean_items[name] = Rudy::MetaData::Disk.from_hash(disk)
-      end
-      clean_items
+      items
     end
     
     def select(query)
@@ -53,8 +47,8 @@ module Rudy::AWS
       list[0]
     end
     
-    def get_attributes(domain, item, attribute=nil)
-      @aws.get_attributes(domain, item, attribute)
+    def get_attributes(domain, item)
+      @aws.get_attributes(domain, item)
     end
   end
 end

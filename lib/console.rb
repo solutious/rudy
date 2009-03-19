@@ -6,6 +6,11 @@
 
 
 class String
+  @@print_with_attributes = true
+  def String.disable_colour; @@print_with_attributes = false; end
+  def String.disable_color;  @@print_with_attributes = false; end
+  def String.enable_colour;  @@print_with_attributes = true;  end
+  def String.enable_color;   @@print_with_attributes = true;  end
   
   # +col+, +bgcol+, and +attribute+ are symbols corresponding
   # to Console::COLOURS, Console::BGCOLOURS, and Console::ATTRIBUTES.
@@ -14,6 +19,7 @@ class String
   #     "MONKEY_JUNK".colour(:blue, :white, :blink)  # => "\e[34;47;5mMONKEY_JUNK\e[39;49;0m"
   #
   def colour(col, bgcol = nil, attribute = nil)
+    return self unless @@print_with_attributes
     Console.style(col, bgcol, attribute) +
     self +
     Console.style(:default, :default, :default)
@@ -22,6 +28,7 @@ class String
   
   # See colour
   def bgcolour(bgcol = :default)
+    return self unless @@print_with_attributes
     Console.style(nil, bgcol, nil) +
     self +
     Console.style(nil, :default, nil)
@@ -30,6 +37,7 @@ class String
   
   # See colour
   def att(a = :default)
+    return self unless @@print_with_attributes
     Console.style(nil, nil, a) +
     self +
     Console.style(nil, nil, :default)

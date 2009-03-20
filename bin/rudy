@@ -68,6 +68,7 @@ argv :diskname
 command :disk => Rudy::CLI::Disks
 command_alias :disk, :disks
 
+
 #usage "rudy [global options] backups [-C] [disk name]"
 #desc "Manage Backups"
 #option :s, :snapshot, String, "Create a backup entry from an existing snapshot"
@@ -108,32 +109,30 @@ command_alias :group, :groups
 # ---------------------------------  RUDY MACHINE COMMANDS  --------
 # ------------------------------------------------------------------
 
-desc "Machine Group Status"
-usage "rudy [global options] status [-g group-name] [-s state] [-l] [instance-ID]"
+
+desc "Machine Status"
+usage "rudy [global options] status [-g group-name] [-s state] [--all] [instance-ID]"
 option :g, :group, String, "A security group name"
 option :s, :state, String, "Machine state. One of: running (default), pending, terminated"
-option :l, :all, "Show all machines in this group, regardless of state."
+option     :all, "Show all machines in this group, regardless of state."
 argv :awsid
 command :status => Rudy::CLI::Machines
 
-desc "Shutdown a Machine Group"
-usage "rudy [global options] shutdown [-g group-name] [instance-ID]"
-option :g, :group, String, "A security group name"
+
+desc "Manage Machines"
+usage "rudy [global options] machines [-g group-name] [-s state] [instance-ID]"
+option :g, :group, String, "The security group name"
+option :i, :ami, String, "The machine image ID (ami-)"
+option :t, :itype, String, "The instance type (default: m1.small)"
+option :k, :keypair, String, "The SSH keypair to use for launch"
+option :a, :address, String, "The IP address to associate"
+action :C, :create, "Create a machine instance"
+action :D, :destroy, "Destroy a machine instance"
 argv :awsid
-command :shutdown => Rudy::CLI::Machines
+command :machine => Rudy::CLI::Machines
+command_alias :machine, :machines
+command_alias :machine, :status
 
-desc "Start a Machine Group"
-usage "rudy [global options] startup [-g group-name] [-i image-ID]"
-option :ami, String, "EC2 image ID (AMI)"
-option :g, :group, String, "A security group name"
-command :startup => Rudy::CLI::Machines
-command_alias :startup, :start
-
-#desc "Restart a Machine Group"
-#option :g, :group, String, "A security group name"
-#argv :awsid
-#command :restart => Rudy::CLI::Machines
-#
 
 usage "rudy [global options] connect [-g group-name] [-i instance-ID] [cmd]"
 desc "Open an SSH connection"
@@ -175,6 +174,26 @@ command_alias :copy, :download
 #desc "Deploy disk snapshots from one machine to another"
 #command :deploy => Rudy::CLI::Deploy
 
+
+desc "Shutdown a Machine Group"
+usage "rudy [global options] shutdown [-g group-name] [instance-ID]"
+option :g, :group, String, "A security group name"
+argv :awsid
+command :shutdown => Rudy::CLI::Routines
+
+#
+#desc "Start a Machine Group"
+#usage "rudy [global options] startup [-g group-name] [-i image-ID]"
+#option :ami, String, "EC2 image ID (AMI)"
+#option :g, :group, String, "A security group name"
+#command :startup => Rudy::CLI::Routines
+#command_alias :startup, :start
+
+#desc "Restart a Machine Group"
+#option :g, :group, String, "A security group name"
+#argv :awsid
+#command :restart => Rudy::CLI::Machines
+#
 
 
 # -----------------------------------  AMAZON EC2 COMMANDS  --------

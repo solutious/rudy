@@ -490,19 +490,23 @@ module Rudy::AWS
     class Addresses
       include Rudy::AWS::ObjectBase
       
-      # Returns and array of hashes:
-      # [{:instance_id=>"i-d630cbbf", :public_ip=>"75.101.1.140"},
-      #  {:instance_id=>nil, :public_ip=>"75.101.1.141"}]
+      # Returns:
+      # ?
       def list
         @aws.describe_addresses || []
       end
       
       
       # Associate an elastic IP to an instance
-      def associate(instance, address)
-        @aws.associate_address(instance, address)
+      def associate(inst_id, address)
+        opts ={
+          :instance_id => inst_id || raise("No instance ID"),
+          :public_ip => address || raise("No public IP adress")
+        }
+        @aws.associate_address(opts)
       end
       
+      # TODO: Fix since with change to amazon-ec2
       def valid?(address)
         list.each do |a|
           return true if a[:public_ip] == address
@@ -510,6 +514,7 @@ module Rudy::AWS
         false
       end
       
+      # TODO: Fix since with change to amazon-ec2
       def associated?(address)
         list.each do |a|
           return true if a[:public_ip] == address && a[:instance_id]

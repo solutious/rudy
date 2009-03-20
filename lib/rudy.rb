@@ -104,7 +104,7 @@ module Rudy #:nodoc:
       end
     rescue Timeout::Error => ex
       retry if Annoy.pose_question(" Keep waiting?\a ", /yes|y|ya|sure|you bet!/i, logger)
-      @logger.puts $/, "Too slow!" # We won't get here unless the question fails
+      raise ex # We won't get here unless the question fails
     end
     success
   end
@@ -132,7 +132,7 @@ module Rudy #:nodoc:
     return false unless identifier && str && Rudy.known_type?(identifier)
     identifier &&= identifier.to_sym
     str &&= str.to_s.strip
-    str.split('-').first == Rudy::ID_MAP[identifier]
+    str.split('-').first == Rudy::ID_MAP[identifier].to_s
   end
   
   # Returns the object type associated to +str+ or nil if unknown. 

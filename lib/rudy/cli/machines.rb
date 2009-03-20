@@ -33,9 +33,13 @@ module Rudy::CLI
       opts[:group] = @option.group if @option.group
       opts[:id] = @option.awsid if @option.awsid
       opts[:id] &&= [opts[:id]].flatten
-      opts[:print] = @option.print if @option.print
-      opts[:recursive] = @option.recursive if @option.recursive
-      opts[:preserve] = @option.preserve if @option.preserve
+      
+      # Is this more clear?
+      @option.recursive && opts[:recursive] = true
+      @option.preserve  && opts[:preserve]  = true
+      @option.print     && opts[:print]     = true
+      
+      
       opts[:paths] = @argv
       opts[:dest] = opts[:paths].pop
       
@@ -48,31 +52,8 @@ module Rudy::CLI
       rudy = Rudy::Machines.new(:config => @config, :global => @global)
       rudy.copy(opts)
     end
-    
-    def shutdown_valid?
-      raise "Cannot specify both instance ID and group name" if @argv.awsid && @option.group
-      raise "I will not help you ruin production!" if @global.environment == "prod" # TODO: use_caution?, locked?
-      true
-    end
-    def shutdown
-      puts "Shutting down a machine group".bright
-      opts = {}
-      opts[:group] = @option.group if @option.group
-      opts[:id] = @argv.awsid if @argv.awsid
-      opts[:id] &&= [opts[:id]].flatten
-      
-      msg = opts[:id] ? "instances: #{opts[:id].join(', ')}" : (opts[:group] ? "group: #{opts[:group]}" : '')
-      puts "This command also affects the disks on these machines! (according to your routines config)"
-      exit unless Annoy.are_you_sure?(:medium)        # TODO: Check if instances are running before this
-      
-      rudy = Rudy::Machines.new(:config => @config, :global => @global)
-      rudy.shutdown(opts)
-    end
-    
-    
-    def status_valid?
-      true
-    end
+
+
     def status
       puts "Machine Status".bright
       opts = {}
@@ -85,57 +66,42 @@ module Rudy::CLI
       opts[:id] = @argv.awsid if @argv.awsid
       opts[:id] &&= [opts[:id]].flatten
       rudy = Rudy::Machines.new(:config => @config, :global => @global)
-      rudy.status(opts)
+      rudy.list(opts) do |inst|
+        puts '-'*60
+        puts "Instance: #{inst.awsid.bright} (AMI: #{inst.ami})"
+        puts inst.to_s
+      end
     end
+    alias :machine :status
     
     
-    def startup_valid?
-      true
-    end
-    def startup
-      puts "Starting a machine group".bright
+    def machine_create
+      puts "Create Machine".bright
       opts = {}
-      opts[:ami] = @option.image if @option.image
-      opts[:group] = @option.group if @option.group
-      #exit unless Annoy.are_you_sure?
-      
-      rmachines = Rudy::Machines.new(:config => @config, :global => @global)
-      instances = rmachines.startup(opts)
-      
-      puts "Done!"
-    end
+      [:group, :ami, :address, :itype, :keypair].each do |n|
+        opts[n] = @option.send(n) if @option.send(n)
+      end
 
-    def restart_valid?
-      shutdown_valid?
-    end
-    def restart
-      puts "Restarting #{machine_group}: #{@list.keys.join(', ')}".bright
-      switch_user("root")
-      exit unless Annoy.are_you_sure?(:medium)
-      
-      @list.each do |id, inst|
-        execute_routines(@list.values, :restart, :before)
+      rmach = Rudy::Machines.new(:config => @config, :global => @global)
+      rmach.create(opts) do |inst| # Rudy::AWS::EC2::Instance objects
+        puts '-'*60
+        puts "Instance: #{inst.awsid.bright} (AMI: #{inst.ami})"
+        puts inst.to_s
       end
-      
-      puts "Restarting instances: #{@list.keys.join(', ')}".bright
-      @ec2.instances.restart @list.keys
-      sleep 10 # Wait for state to change and SSH to shutdown
-      
-      @list.keys.each do |id|
-        wait_for_machine(id)
-      end
-      
-      execute_disk_routines(@list.values, :restart)
-      
-      @list.each do |id, inst|
-        execute_routines(@list.values, :restart, :after)
-      end
-      
-      puts "Done!"
+    
     end
     
     
-
+    def machine_destroy
+      puts "Destroy Machine".bright
+      opts = {}
+      [:group, :awsid].each do |n|
+        opts[n] = @option.send(n) if @option.send(n)
+      end
+      rmach = Rudy::Machines.new(:config => @config, :global => @global)
+      rmach.destroy(opts)
+      puts "Done!"
+    end
     
   end
 end

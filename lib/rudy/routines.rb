@@ -1,30 +1,54 @@
 
 
-module Rudy::Routines
-  #module Base
-  #  attr_accessor :config
-  #  attr_accessor :logger
-  #  attr_accessor :global
-  #
-  #  def initialize(opts={})
-  #    opts = { :config => {}, :logger => STDERR, :global => {}}.merge(opts)
-  #    # Set instance variables
-  #    opts.each_pair { |n,v| self.send("#{n}=", v) if self.respond_to?("#{n}=") }
-  #  end
-  #  
-  #  def keypairpath(name=nil)
-  #    name ||= @global.user
-  #    raise "No default user configured" unless name
-  #    kp = @config.machines.find(@global.environment, @global.role, :users, name, :keypair2)
-  #    kp ||= @config.machines.find(@global.environment, :users, name, :keypair)
-  #    kp ||= @config.machines.find(:users, name, :keypair)
-  #    kp &&= File.expand_path(kp)
-  #    kp
-  #  end
-  #  def has_keypair?(name=nil)
-  #    kp = keypairpath(name)
-  #    (!kp.nil? && File.exists?(kp))
-  #  end
-  #  
-  #end
+module Rudy
+  module Routines
+    class Base
+      include Rudy::Huxtable
+    
+      # Examples:
+      #
+      # def before
+      # end
+      # def before_local
+      # end
+      # def svn
+      # end
+      #
+      
+      
+      #
+      #
+      def execute
+        raise "Override this method"
+      end
+      
+      
+      
+      # We grab the appropriate routines config and check the paths
+      # against those defined for the matching machine group. 
+      # Disks that appear in a routine but not the machine will be
+      # removed and a warning printed. Otherwise, the routines config
+      # is merged on top of the machine config and that's what we return.
+      def fetch_routine(action)
+        raise "No configuration" unless @config
+        raise "No globals" unless @global
+        
+        disk_definitions = @config.machines.find_deferred(@global.environment, @global.role, :disks)
+        routine = @config.routines.find(@global.environment, @global.role, action)
+        routine.disks.each_pair do |raction,disks|
+          disks.each_pair do |path, props|
+            routine.disks[raction][path] = disk_definitions[path].merge(props) if disk_definitions.has_key?(path)
+            unless disk_definitions.has_key?(path)
+              @logger.puts "#{path} is not defined. Check your #{action} routines config.".color(:red)
+              routine.disks[raction].delete(path) 
+            end
+          end
+        end
+        routine
+      end
+
+
+      
+    end
+  end
 end

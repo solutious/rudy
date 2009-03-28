@@ -2,14 +2,28 @@ require 'rubygems'
 require 'rake/clean'
 require 'rake/gempackagetask'
 require 'hanna/rdoctask'
+require 'rake/testtask'
 require 'fileutils'
 include FileUtils
  
-task :default => :package
+task :default => :test
  
-# SPECS ===============================================================
+# TESTS ===============================================================
  
-# None-yet!
+Rake::TestTask.new(:test_old) do |t|
+  require 'monkeyspecdoc'
+  t.test_files = FileList['test/*_test.rb']
+  t.ruby_opts = ['-rubygems'] if defined? Gem
+  t.verbose = true
+#  t.warning = true
+  
+end
+
+task :test do
+  require 'rake/runtest'
+  require 'monkeyspecdoc'  # http://jgre.org/2008/09/03/monkeyspecdoc/
+  Rake.run_tests "test/*_test.rb"
+end
 
 # PACKAGE =============================================================
 

@@ -99,6 +99,7 @@ module Rudy::CLI
         opts[n] = @option.send(n) if @option.send(n)
       end
       rmach = Rudy::Machines.new(:config => @config, :global => @global)
+      exit unless Annoy.are_you_sure?(:low)
       rmach.destroy(opts)
       puts "Done!"
     end

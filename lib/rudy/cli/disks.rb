@@ -24,6 +24,7 @@ module Rudy
           print_disk(disk)
         end
       end
+      
       def print_disk(disk, backups=[])
         return unless disk
         puts '-'*60

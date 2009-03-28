@@ -6,7 +6,8 @@ module Rudy
     
     def destroy(opts={}, &each_inst)
       opts, instances = process_filter_options(opts)
-
+      raise "No machines running" unless instances && !instances.empty?
+      
       @logger.puts "Found instances: #{instances.keys.join(", ")}"
       
       if each_inst
@@ -15,7 +16,7 @@ module Rudy
       
       begin
         @logger.puts $/, "Terminating instances...", $/
-        @ec2.instances.destroy instance.keys
+        @ec2.instances.destroy instances.keys
       rescue => ex
         @logger.puts ex.message if debug?
         @logger.puts ex.backtrace if debug?
@@ -51,7 +52,7 @@ module Rudy
 
         @logger.puts "Waiting for the instance to startup "        
         begin 
-          Rudy.waiter(2, 120) { !@ec2.instances.pending?(inst_tmp.awsid) }
+          Rudy.waiter(2, 120, @logger) { !@ec2.instances.pending?(inst_tmp.awsid) }
           raise Exception unless @ec2.instances.running?(inst_tmp.awsid)
           @logger.puts "It's up!"
           Rudy.bell(3)
@@ -65,7 +66,7 @@ module Rudy
 
         @logger.puts $/, "Waiting for the SSH daemon "
         begin
-          Rudy.waiter(1, 60) { Rudy::Utils.service_available?(instance.dns_name_public, 22) }
+          Rudy.waiter(1, 60, @logger) { Rudy::Utils.service_available?(instance.dns_name_public, 22) }
           @logger.puts "It's up!"
           Rudy.bell(2)
         rescue Timeout::Error, Interrupt, Exception
@@ -86,14 +87,32 @@ module Rudy
     
     
     def list(opts={}, &each_inst)
+      (list_as_hash(opts, &each_inst) || {}).values
+    end
+    
+    def list_as_hash(opts={}, &each_inst)
       opts, instances = process_filter_options(opts)
-      return instances unless each_inst
-      instances.each_pair { |inst_id,inst| each_inst.call(inst) }
+      raise "No machines running" unless instances && !instances.empty?
+      instances.each_pair { |inst_id,inst| each_inst.call(inst) } if each_inst
       instances
+    end
+    
+    # +opts+ See list
+    # Returns true if there are machines running
+    def running?(opts={})
+      ret = false
+      begin
+        instances = list(opts)
+        ret = (instances && !instances.empty?)
+      rescue => ex
+      end
+      ret
     end
     
     def connect(opts={})
       opts, instances = process_filter_options(opts)
+      raise "No machines running" unless instances && !instances.empty?
+      
       instances.values.each do |inst|
         msg = opts[:cmd] ? %Q{"#{opts[:cmd]}" on} : "Connecting to"
         @logger.puts $/, "#{msg} #{inst.awsid}", $/
@@ -108,6 +127,7 @@ module Rudy
     # * +:paths+ an array of paths to copy. The last element is the "to" path. 
     def copy(opts={})
       opts, instances = process_filter_options(opts)
+      raise "No machines running" unless instances && !instances.empty?
       raise "You must supply at least one source path" if !opts[:paths] || opts[:paths].empty?
       raise "You must supply a destination path" unless opts[:dest]
       
@@ -145,7 +165,6 @@ module Rudy
       raise "You must supply either a group name or instance ID" unless opts[:group] || opts[:id]
       opts[:id] &&= [opts[:id]].flatten
       instances = opts[:id] ? @ec2.instances.list(opts[:id], opts[:state]) : @ec2.instances.list_by_group(opts[:group], opts[:state])
-      raise "No machines running" unless instances && !instances.empty?
       [opts, instances]
     end
     def machine_data

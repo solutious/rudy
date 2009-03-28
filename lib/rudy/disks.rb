@@ -15,7 +15,7 @@ module Rudy
       opts = {
         :all => false
       }.merge(opts)
-      disk = find_disk_from_opts(opts) || create_disk_from_opts(opts)
+      disk = find_disk(opts[:disk] || opts[:path]) || create_disk_from_opts(opts)
       query = opts[:all] ? disk.to_query([], [:zone, :environment, :role, :position, :path]) : disk.to_query
       items = execute_query(query)
     end
@@ -52,49 +52,50 @@ module Rudy
     end
     
     def attach(disk, machine=nil)
-      disk = find_disk(disk)
+      disk_obj = find_disk(disk)
       
-      #if instance && @ec2.instances.attached_volume?(instance.awsid, disk.device)
-      #  raise "Skipping disk for #{disk.path} (device #{disk.device} is in use)"
+      #if instance && @ec2.instances.attached_volume?(instance.awsid, disk_obj.device)
+      #  raise "Skipping disk for #{disk_obj.path} (device #{disk_obj.device} is in use)"
       #
       #end
     end
     
     def destroy(disk, instance=nil)
-      disk = find_disk(disk) # Throws exception when not found
-      is_mounted = is_mounted?(disk)
-      is_attached = is_attached?(disk)
-      is_available = @volumes.is_attached?(disk)
+      disk_obj = find_disk(disk)
+      raise "Disk #{disk} cannot be found" unless disk_obj
+      is_mounted = is_mounted?(disk_obj)
+      is_attached = is_attached?(disk_obj)
+      is_available = @volumes.is_attached?(disk_obj)
       raise "Disk is in use (unmount it or use force)" if is_mounted && !@global.force
-      raise "Disk is attached (unattach it or use force)" if is_attached && !@global.force
       raise "Disk is attached (unattach it or use force)" if is_attached && !@global.force
       
       begin
         
         if @global.force 
-          unmount(instance, disk) if is_mounted
-          @volumes.dettach(disk.awsid) if is_attached
-          @volumes.destroy(disk.awsid)
+          unmount(instance, disk_obj) if is_mounted
+          @volumes.dettach(disk_obj.awsid) if is_attached
+          @volumes.destroy(disk_obj.awsid)
         end
         
         
-        if disk.awsid && !disk.awsid.empty?
+        if disk_obj.awsid && !disk_obj.awsid.empty?
           
         end
         
       rescue => ex
-        puts "Error while detaching volume #{disk.awsid}: #{ex.message}"
+        puts "Error while detaching volume #{disk_obj.awsid}: #{ex.message}"
         puts ex.backtrace if debug?
         puts "Continuing..."
       ensure
-        puts "Deleteing metadata for #{disk.name}"
-        @sdb.destroy(RUDY_DOMAIN, disk.name)
+        puts "Deleteing metadata for #{disk_obj.name}"
+        @sdb.destroy(RUDY_DOMAIN, disk_obj.name)
       end
     end
     
     def format(instance, opts={})
       raise "No instance supplied" unless instance
-      disk = find_disk_from_opts(opts)
+      disk = find_disk(opts[:disk] || opts[:path])
+      raise "Disk #{opts[:disk] || opts[:path]} cannot be found" unless disk
       switch_user(:root)
       
       begin
@@ -109,7 +110,8 @@ module Rudy
     end
     def mount(instance, opts={})
       raise "No instance supplied" unless instance
-      disk = find_disk_from_opts(opts)
+      disk = find_disk(opts[:disk] || opts[:path])
+      raise "Disk #{opts[:disk] || opts[:path]} cannot be found" unless disk
       switch_user(:root)
       begin
         puts "Mounting #{disk.device} to #{disk.path}".bright
@@ -123,8 +125,9 @@ module Rudy
     
     def unmount(instance, opts={})
       raise "No instance supplied" unless instance
-        disk = find_disk_from_opts(opts)
-        switch_user(:root)
+      disk = find_disk(opts[:disk] || opts[:path])
+      raise "Disk #{opts[:disk] || opts[:path]} cannot be found" unless disk
+      switch_user(:root)
       begin
         puts "Unmounting #{disk.path}...".bright
         ssh_command instance.dns_name_public, current_user_keypairpath, global.user, "umount #{disk.path}"
@@ -139,8 +142,8 @@ module Rudy
     
     # TODO: This is a fresh copy paster. 
     #def restore(machine, opts)
-    #  disk = find_disk_from_opts(opts)
-    #  
+    #  disk = find_disk(opts[:disk] || opts[:path])
+    #  raise "Disk #{opts[:disk] || opts[:path]} cannot be found" unless disk
     #  disk_routine.each_pair do |path,props|
     #    from = props[:from] || "unknown"
     #    unless from.to_s == "backup"
@@ -269,11 +272,20 @@ module Rudy
     def is_defined?(disk)
       # We don't care about the path, but we do care about the device
       # which is not part of the disk's name. 
-      query = disk.to_query
+      disk_obj = find_disk(disk)
+      raise "Disk #{opts[:disk] || opts[:path]} cannot be found" unless disk_obj
+      query = disk_obj.to_query
       !(@sdb.query_with_attributes(RUDY_DOMAIN, query) || {}).empty?
     end
-
+    
+    def is_mounted?(disk)
+      disk_obj = find_disk(disk)
+      raise "Disk #{opts[:disk] || opts[:path]} cannot be found" unless disk_obj
+    end
+    
     def device_used?(disk)
+      disk_obj = find_disk(disk)
+      raise "Disk #{opts[:disk] || opts[:path]} cannot be found" unless disk_obj
       # We don't care about the path, but we do care about the device
       # which is not part of the disk's name. 
       query = disk.to_query(:device, :path)
@@ -283,34 +295,37 @@ module Rudy
     
     # * +disk+ is a disk name (disk-zone-...), a path, or a Rudy::MetaData::Disk object
     # An exception is raised in the following cases:
-    # * No disk is found
     # * The disk belongs to a different environment or role than what's in @globals. 
+    # Returns the disk object or false if not found.
     def find_disk(disk)
-      raise Exception, "No disk, disk name or path given!", caller unless disk
+      return false unless disk
       return disk if disk.is_a?(Rudy::MetaData::Disk)
+      
+      disc_obj = nil
       
       # If a disk name was supplied, the user knows what she's looking for.
       # If we don't find it, we can throw an error.
       if Rudy.is_id?(:disk, disk)
-        disk = get(disk)
+        disc_obj = get(disk)
       
       # Otherwise we assume it's a path
       else
-        disk = find_from_path(disk)
+        disc_obj = find_from_path(disk)
       end
       
-      raise Exception, "No disk found for #{disk}" unless disk
+      # TODO: This used to throw an exception. Some users of this method may need to throw their own.
+      return false unless disc_obj
 
       # If a user specifies a disk that doesn't match the global 
       # values for environment and role, we need to throw an error. 
-      unless @global.environment.to_s == disk.environment.to_s
+      unless @global.environment.to_s == disc_obj.environment.to_s
         raise "The disk is in another machine environment" 
       end
-      unless @global.role.to_s == disk.role.to_s
+      unless @global.role.to_s == disc_obj.role.to_s
         raise "The disk is in another machine role"
       end
       
-      disk
+      disc_obj
     end
     
     

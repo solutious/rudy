@@ -71,10 +71,9 @@ module Rudy
       
         msg = opts[:id] ? "instances: #{opts[:id].join(', ')}" : (opts[:group] ? "group: #{opts[:group]}" : '')
         puts "This command also affects the disks on these machines! (according to your routines config)"
-        exit unless Annoy.are_you_sure?(:medium)        # TODO: Check if instances are running before this
-      
-        rudy = Rudy::Machines.new(:config => @config, :global => @global)
-        rudy.shutdown(opts)
+        #exit unless Annoy.are_you_sure?(:medium)        # TODO: Check if instances are running before this
+        
+        puts "TBD"
       end
     end
   end

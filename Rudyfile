@@ -1,0 +1,86 @@
+# Rudyfile -- An example Rudy configuration. 
+#
+#
+# Rudy automatically looks for configuration files in the 
+# following locations:
+#
+#     ~/.rudy/config
+#     /etc/rudy/*.rb
+#     ./.rudy/config
+#     ./.rudy/*.rb
+#     ./Rudyfile
+#     ./config/rudy/*.rb
+#     ./*.rudy
+#
+# When multuple files are found, the configuration is 
+# NOT OVERRIDDEN. It's ADDED / APPEND. This means you can split 
+# configuration across many files as you please. 
+#
+# There are four sections: awsinfo, defaults, machines, routines. 
+# By convention, awsinfo and defaults go in ~/.rudy/config (we encourage  
+# this to help avoid checking in )
+
+# ---------------------------------------------------------  MACHINES  --------
+# The machines block describes the "physical" characteristics
+# of your environments. 
+machines do
+  env :stage do
+    
+    role :app do 
+      disks do  
+        path "/rudy/example1" do
+          size 4
+          device "/dev/sdr"
+        end
+        path "/rudy/example2" do
+          size 5  # This will be ignored when restoring from a snapshot
+          device "/dev/sdm"
+        end
+      end
+    end
+
+  end
+end
+
+# -------------------------------------------------------  ROUTINES  --------
+# The routines block describe processes for each machine group. 
+routines do
+  
+  env :stage do
+    role :app do
+      
+      shutdown do 
+        before :root => "echo 'BEFORE' && pwd"
+        disks do
+          destroy "/rudy/example1"
+          destroy "/rudy/example2"
+        end
+      end
+      
+      startup do
+        disks do
+          create "/rudy/example1" do
+            device "/dev/sdl"
+          end
+          create "/rudy/example2"
+        end
+        
+        after :root => "pwd"
+        after :rudy => "pwd"
+      end
+      
+      restart do 
+        before :root => "pwd"
+        after :root => "pwd"
+        after :rudy => "pwd"
+        
+        disks do
+          mount "/rudy/example1"
+          mount "/rudy/example2"
+        end
+      end
+      
+    end
+  end
+  
+end

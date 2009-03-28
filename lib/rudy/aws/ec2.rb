@@ -239,7 +239,7 @@ module Rudy::AWS
       # * +inst_ids+ is an Array of instance IDs.
       # * +state+ is an optional instance state. If specified, must be one of: running, pending, terminated.
       # Returns a hash of Rudy::AWS::EC2::Instance objects. The key is the instance ID. 
-      def list(inst_ids, state=nil)
+      def list(inst_id=[], state=nil)
         state &&= state.to_sym
         inst_ids &&= [inst_ids].flatten
         inst_ids ||= []
@@ -357,11 +357,11 @@ module Rudy::AWS
       include Rudy::AWS::ObjectBase
     
       
-      # +list+ is a list of security group names to look for. If it's empty, all groups
+      # +group_names+ is a list of security group names to look for. If it's empty, all groups
       # associated to the account will be returned.
       # Returns an Array of Rudy::AWS::EC2::Group objects
-      def list(list=[])
-        glist = @aws.describe_security_groups(:group_name => list) || {}
+      def list(group_names=[])
+        glist = @aws.describe_security_groups(:group_name => group_names) || {}
         return unless glist['securityGroupInfo'].is_a?(Hash)
         groups = glist['securityGroupInfo']['item'].collect do |oldg| 
           Groups.from_hash(oldg)

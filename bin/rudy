@@ -143,6 +143,7 @@ argv :cmd
 command :connect => Rudy::CLI::Machines 
 command_alias :connect, :ssh
 
+
 usage "rudy [global options] copy [-p] [-r] source target"
 desc "Copy files to or from machines. NOTE: You must use quotes when using a tilda for your remote dir ('~/')."
 option :r, :recursive, "Recursively copy entire directories"
@@ -181,13 +182,13 @@ option :g, :group, String, "A security group name"
 argv :awsid
 command :shutdown => Rudy::CLI::Routines
 
-#
-#desc "Start a Machine Group"
-#usage "rudy [global options] startup [-g group-name] [-i image-ID]"
-#option :ami, String, "EC2 image ID (AMI)"
-#option :g, :group, String, "A security group name"
-#command :startup => Rudy::CLI::Routines
-#command_alias :startup, :start
+
+desc "Start a Machine Group"
+usage "rudy [global options] startup [-g group-name] [-i image-ID]"
+option :ami, String, "EC2 image ID (AMI)"
+option :g, :group, String, "A security group name"
+command :startup => Rudy::CLI::Routines
+command_alias :startup, :start
 
 #desc "Restart a Machine Group"
 #option :g, :group, String, "A security group name"
@@ -289,9 +290,9 @@ command :annoy do |obj|
   puts (success ? "Correct!" : "WRONG!").bright
 end
 
-usage "rudy id [-t type] idstr"
+usage "rudy id [-t type] ID"
 desc "Check what kind of object an ID belongs to (instance, backup, disk, etc...)"
-option :t, String, "Check if idstr is of a specific type"
+option :t, String, "Check if ID is of a specific type"
 argv :idstr
 command :id do |obj|
   if obj.option.t 

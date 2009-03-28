@@ -9,6 +9,8 @@ require 'socket'
 require 'timeout'
 require 'tempfile'
 
+require 'rush' #, Tom Sawyer
+
 require 'storable'
 require 'console'
 require 'annoy'
@@ -83,20 +85,20 @@ module Rudy #:nodoc:
   # Wait for something to happen. 
   # * +duration+ seconds to wait between tries (default: 2).
   # * +max+ maximum time to wait (default: 120). Throws an exception when exceeded.
+  # * +logger+ IO object to print +dot+ to.
   # * +dot+ the character to print after each attempt (default: .). 
   # Set to nil or false to keep the waiter silent.
-  # * +logger+ IO object to print +dot+ to.
   # The block must return false while waiting. Once it returns true
-  # the waiter will return true.
-  def Rudy.waiter(duration=2, max=120, dot='.', logger=STDOUT, &b)
+  # the waiter will return true too.
+  def Rudy.waiter(duration=2, max=120, logger=STDOUT, dot='.', &check)
     # TODO: Move to Drydock
-    raise "The waiter needs a block!" unless b
+    raise "The waiter needs a block!" unless check
     duration = 1 if duration < 1
     max = duration*2 if max < duration
     success = false
     begin
       success = Timeout::timeout(max) do
-        while !b.call
+        while !check.call
           logger.print dot if dot && logger.respond_to?(:print)
           logger.flush if logger.respond_to?(:flush)
           sleep duration
@@ -148,6 +150,14 @@ module Rudy #:nodoc:
     return false unless identifier
     identifier &&= identifier.to_s.to_sym
     Rudy::ID_MAP.has_key?(identifier)
+  end
+  
+  # +msg+ The message to return as a banner
+  # Returns a string with styling applying
+  def Rudy.make_banner(msg)
+    return unless msg
+    msg = "============  #{msg}  ============"
+    msg.colour(:black).bgcolour(:white).bright
   end
   
 end

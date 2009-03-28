@@ -9,6 +9,10 @@ module Rudy
     attr_accessor :global
     attr_accessor :logger
     
+    attr_reader :ec2
+    attr_reader :sdb
+    attr_reader :s3
+    
     def initialize(opts={})
       opts = { :config => nil, :logger => STDERR, :global => OpenStruct.new}.merge(opts)
       
@@ -21,10 +25,6 @@ module Rudy
       end
       
       init_globals
-      
-      unless File.exists?(RUDY_CONFIG_FILE)
-        init_config_dir
-      end
       
       if has_keys?
         @ec2 = Rudy::AWS::EC2.new(@global.accesskey, @global.secretkey)
@@ -86,7 +86,7 @@ module Rudy
         ["machines", "routines"].each do |type|
           puts "#{$/*2}#{type.upcase}:"
           val = @config.send(type).find_deferred(@global.environment, @global.role)
-          puts val.to_hash.to_yaml
+          puts val.to_hash.to_yaml if val
         end
         puts
       end
@@ -221,57 +221,5 @@ module Rudy
     
   private 
     
-    
-    def init_config_dir
-      unless File.exists?(RUDY_CONFIG_DIR)
-        puts "Creating #{RUDY_CONFIG_DIR}"
-        Dir.mkdir(RUDY_CONFIG_DIR, 0700)
-      end
-
-      unless File.exists?(RUDY_CONFIG_FILE)
-        puts "Creating #{RUDY_CONFIG_FILE}"
-        rudy_config = Rudy::Utils.without_indent %Q{
-          # Amazon Web Services 
-          # Account access indentifiers.
-          awsinfo do
-            account ""
-            accesskey ""
-            secretkey ""
-            privatekey "~/path/2/pk-xxxx.pem"
-            cert "~/path/2/cert-xxxx.pem"
-          end
-          
-          # Machine Configuration
-          # Specify your private keys here. These can be defined globally
-          # or by environment and role like in machines.rb.
-          machines do
-            users do
-              root :keypair => "path/2/root-private-key"
-            end
-          end
-          
-          # Routine Configuration
-          # Define stuff here that you don't want to be stored in version control. 
-          routines do
-            config do 
-              # ...
-            end
-          end
-
-          # Global Defaults 
-          # Define the values to use unless otherwise specified on the command-line. 
-          defaults do
-            region "us-east-1" 
-            zone "us-east-1b"
-            environment "stage"
-            role "app"
-            position "01"
-            user ENV['USER']
-          end
-        }
-        Rudy::Utils.write_to_file(RUDY_CONFIG_FILE, rudy_config, 'w')
-      end
-
-    end
   end
 end

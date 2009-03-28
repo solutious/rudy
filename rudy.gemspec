@@ -70,7 +70,13 @@
   s.add_dependency 'net-scp'
   s.add_dependency 'net-ssh-gateway'
   s.add_dependency 'net-ssh-multi'
-  s.add_dependency 'highline'
+  s.add_dependency 'rush'
+  
+  # http://bit.ly/2WaAgV
+  #s.add_runtime_dependency('xml-simple', '>= 1.0.11')
+  #s.add_dependency('xml-simple', '>= 1.0.11')
+  #s.add_development_dependency('jgre-monkeyspecdoc', '>= 0.1.0')
+  #s.add_development_dependency('thoughtbot-shoulda', '>= 0.1.0')
   
     
   s.rubyforge_project = 'rudy'

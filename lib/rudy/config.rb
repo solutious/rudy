@@ -66,27 +66,31 @@ module Rudy
       end
     end
 
-
     dsl Rudy::Config::AWSInfo::DSL
     dsl Rudy::Config::Defaults::DSL
     dsl Rudy::Config::Routines::DSL
     dsl Rudy::Config::Machines::DSL
-
     
     def postprocess
-      # TODO: give caesar attributes setter methods
-      self.awsinfo.cert &&= File.expand_path(self.awsinfo.cert)
-      self.awsinfo.privatekey &&= File.expand_path(self.awsinfo.privatekey)
+      raise "There is no AWS info configured" if self.awsinfo.nil?
+      
+      if self.awsinfo
+        self.awsinfo.cert &&= File.expand_path(self.awsinfo.cert) 
+        self.awsinfo.privatekey &&= File.expand_path(self.awsinfo.privatekey)
+      end
     end
     
-    def look_and_load
+    def look_and_load(config_file_path=nil)
       cwd = Dir.pwd
       # Rudy looks for configs in all these locations
+      @paths << config_file_path if config_file_path && File.exists?(config_file_path)
+      @paths << RUDY_CONFIG_FILE
       @paths += Dir.glob(File.join('/etc', 'rudy', '*.rb')) || []
-      @paths += Dir.glob(File.join(cwd, 'config', 'rudy', '*.rb')) || []
-      @paths += Dir.glob(File.join(cwd, '.rudy', '*.rb')) || []
       @paths += Dir.glob(File.join(cwd, 'Rudyfile')) || []
-      @paths += Dir.glob(File.join(cwd, '*.rudy')) || []
+      @paths += Dir.glob(File.join(cwd, '**/*.rudy')) || []
+      @paths += Dir.glob(File.join(cwd, 'config', 'rudy', '*.rb')) || []
+      @paths += Dir.glob(File.join(cwd, '.rudy', 'config')) || []
+      @paths += Dir.glob(File.join(cwd, '.rudy', '*.rb')) || []
       @paths &&= @paths.uniq
       refresh
     end

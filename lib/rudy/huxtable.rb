@@ -10,16 +10,89 @@ module Rudy
     attr_accessor :logger
     
     def initialize(opts={})
-      opts = { :config => {}, :logger => STDERR, :global => {}}.merge(opts)
+      opts = { :config => nil, :logger => STDERR, :global => OpenStruct.new}.merge(opts)
       
       # Set instance variables
       opts.each_pair { |n,v| self.send("#{n}=", v) if self.respond_to?("#{n}=") }
+      
+      unless @config
+        @config = Rudy::Config.new
+        @config.look_and_load(@global.config)
+      end
+      
+      init_globals
+      
+      unless File.exists?(RUDY_CONFIG_FILE)
+        init_config_dir
+      end
       
       if has_keys?
         @ec2 = Rudy::AWS::EC2.new(@global.accesskey, @global.secretkey)
         @sdb = Rudy::AWS::SimpleDB.new(@global.accesskey, @global.secretkey)
         #@s3 = Rudy::AWS::SimpleDB.new(@global.accesskey, @global.secretkey)
       end
+    end
+    
+    def init_globals
+      @global.verbose ||= 0
+      
+      @global.cert = File.expand_path(@global.cert || '')
+      @global.privatekey = File.expand_path(@global.privatekey || '')
+      
+      if @config.defaults
+        @global.region ||= @config.defaults.region
+        @global.zone ||= @config.defaults.zone
+        @global.environment ||= @config.defaults.environment
+        @global.role ||= @config.defaults.role 
+        @global.position ||= @config.defaults.position
+        @global.user ||= @config.defaults.user 
+        @global.nocolor = @config.defaults.nocolor
+        @global.quiet = @config.defaults.quiet
+      end
+      
+      @global.region ||= DEFAULT_REGION
+      @global.zone ||= DEFAULT_ZONE
+      @global.environment ||= DEFAULT_ENVIRONMENT
+      @global.role ||= DEFAULT_ROLE
+      @global.position ||= DEFAULT_POSITION
+      @global.user ||= DEFAULT_USER
+      @global.nocolor = false
+      @global.quiet = false
+      
+      if @config.awsinfo
+        @global.accesskey ||= @config.awsinfo.accesskey 
+        @global.secretkey ||= @config.awsinfo.secretkey 
+        @global.account ||= @config.awsinfo.account
+        
+        @global.cert ||= @config.awsinfo.cert
+        @global.privatekey ||= @config.awsinfo.privatekey
+      end
+      
+      @global.accesskey ||= ENV['AWS_ACCESS_KEY']
+      @global.secretkey ||= ENV['AWS_SECRET_KEY'] || ENV['AWS_SECRET_ACCESS_KEY']
+      @global.account ||= ENV['AWS_ACCOUNT_NUMBER']
+      
+      @global.cert ||= ENV['EC2_CERT']
+      @global.privatekey ||= ENV['EC2_PRIVATE_KEY']
+      
+      @global.local_user = ENV['USER'] || :rudy
+      @global.local_hostname = Socket.gethostname || :localhost
+      
+      if @global.verbose > 1
+        puts "GLOBALS:"
+        @global.marshal_dump.each_pair do |n,v|
+          puts "#{n}: #{v}"
+        end
+        ["machines", "routines"].each do |type|
+          puts "#{$/*2}#{type.upcase}:"
+          val = @config.send(type).find_deferred(@global.environment, @global.role)
+          puts val.to_hash.to_yaml
+        end
+        puts
+      end
+      
+      String.disable_color if @global.nocolor
+      Rudy.enable_quiet if @global.quiet
     end
     
     def debug?; @@debug && @@debug == true; end
@@ -144,5 +217,61 @@ module Rudy
       end
     end
     
+    
+    
+  private 
+    
+    
+    def init_config_dir
+      unless File.exists?(RUDY_CONFIG_DIR)
+        puts "Creating #{RUDY_CONFIG_DIR}"
+        Dir.mkdir(RUDY_CONFIG_DIR, 0700)
+      end
+
+      unless File.exists?(RUDY_CONFIG_FILE)
+        puts "Creating #{RUDY_CONFIG_FILE}"
+        rudy_config = Rudy::Utils.without_indent %Q{
+          # Amazon Web Services 
+          # Account access indentifiers.
+          awsinfo do
+            account ""
+            accesskey ""
+            secretkey ""
+            privatekey "~/path/2/pk-xxxx.pem"
+            cert "~/path/2/cert-xxxx.pem"
+          end
+          
+          # Machine Configuration
+          # Specify your private keys here. These can be defined globally
+          # or by environment and role like in machines.rb.
+          machines do
+            users do
+              root :keypair => "path/2/root-private-key"
+            end
+          end
+          
+          # Routine Configuration
+          # Define stuff here that you don't want to be stored in version control. 
+          routines do
+            config do 
+              # ...
+            end
+          end
+
+          # Global Defaults 
+          # Define the values to use unless otherwise specified on the command-line. 
+          defaults do
+            region "us-east-1" 
+            zone "us-east-1b"
+            environment "stage"
+            role "app"
+            position "01"
+            user ENV['USER']
+          end
+        }
+        Rudy::Utils.write_to_file(RUDY_CONFIG_FILE, rudy_config, 'w')
+      end
+
+    end
   end
 end

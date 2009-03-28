@@ -153,12 +153,26 @@ module Rudy #:nodoc:
   end
   
   # +msg+ The message to return as a banner
+  # +size+ One of: :normal (default), :huge
+  # +colour+ a valid 
   # Returns a string with styling applying
-  def Rudy.make_banner(msg)
+  def Rudy.make_banner(msg, size = :normal, colour = :black)
     return unless msg
-    msg = "============  #{msg}  ============"
-    msg.colour(:black).bgcolour(:white).bright
+    banners = {
+      :huge => Rudy::Utils.without_indent(%Q(
+      =======================================================
+      =======================================================
+      !!!!!!!!!   %s   !!!!!!!!!
+      =======================================================
+      =======================================================)),
+      :normal => %Q(============  %s  ============)
+    }
+    size = :normal unless banners.has_key?(size)
+    colour = :black unless Console.valid_colour?(colour)
+    size, colour = size.to_sym, colour.to_sym
+    sprintf(banners[size], msg).colour(colour).bgcolour(:white).bright
   end
+  
   
 end
 

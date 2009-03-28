@@ -9,6 +9,15 @@ NOTE: Rudy will be ready for general consumption in Q2 2009.
 * Soon!
 * ruby -ropenssl -e 'puts OpenSSL::OPENSSL_VERSION' (See net/ssh docs)
 
+== Common Errors
+
+* "The request signature we calculated does not match the signature you provided."
+  * Check that your Amazon Web Service access key and secret key are correct
+
+* "AWS was not able to validate the provided access credentials"
+  * If it's a new Amazon Accounts, you need to sign up for EC2, SDB, and S3. 
+
+
 == More Info
 
 * GitHub[http://github.com/solutious/rudy]

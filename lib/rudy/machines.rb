@@ -78,9 +78,7 @@ module Rudy
 
       end
       
-      return instances_with_dns unless each_inst
-      
-      instances_with_dns.each { |inst| each_inst.call(inst) }
+      instances_with_dns.each { |inst| each_inst.call(inst) } if each_inst
       instances_with_dns
     end
     
@@ -92,7 +90,6 @@ module Rudy
     
     def list_as_hash(opts={}, &each_inst)
       opts, instances = process_filter_options(opts)
-      raise "No machines running" unless instances && !instances.empty?
       instances.each_pair { |inst_id,inst| each_inst.call(inst) } if each_inst
       instances
     end

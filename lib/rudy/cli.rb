@@ -21,6 +21,20 @@ module Rudy
         
         raise "There is no machine group configured" if @config.machines.nil?
         
+        # These are here so we can print the machine group shit in the header. 
+        # The dupilcation annoys me (see Rudy::Huxtable#init_globals) and I'd
+        # like to find a cleaner solution. 
+        @global.region ||= @config.defaults.region || DEFAULT_REGION
+        @global.zone ||= @config.defaults.zone || DEFAULT_ZONE
+        @global.environment ||= @config.defaults.environment || DEFAULT_ENVIRONMENT
+        @global.role ||= @config.defaults.role || DEFAULT_ROLE
+        @global.position ||= @config.defaults.position || DEFAULT_POSITION
+        @global.user ||= @config.defaults.user || DEFAULT_USER
+        
+        # This is also duplicated :[]
+        String.disable_color if @global.nocolor
+        Rudy.enable_quiet if @global.quiet
+        
         # TODO: enforce home directory permissions
         #if File.exists?(RUDY_CONFIG_DIR)
         #  puts "Checking #{check_environment} permissions..."
@@ -43,21 +57,16 @@ module Rudy
         puts '%s -- %s UTC' % [title, now_utc] unless @global.quiet
         puts '[%s]' % criteria.join("  ") unless @global.quiet
         
-        puts unless @global.quiet
-        
-        if (@global.environment == "prod") 
-          msg = Rudy::Utils.without_indent %q(
-          =======================================================
-          =======================================================
-          !!!!!!!!!   YOU ARE PLAYING WITH PRODUCTION   !!!!!!!!!
-          =======================================================
-          =======================================================)
-          puts msg.colour(:red).bgcolour(:white).bright, $/  unless @global.quiet
+        unless @global.quiet
+          puts # a new line
           
+          if @global.environment == "prod"
+            msg = "YOU ARE PLAYING WITH PRODUCTION"
+            puts Rudy.make_banner(msg, :huge, :red), $/
+          end
+        
+          puts Rudy.make_banner("THIS IS EC2"), $/ #if Rudy.in_situ?
         end
-        
-        
-        puts(Rudy.make_banner("THIS IS EC2"), $/) if Rudy.in_situ? && !@global.quiet
         
         
       end

@@ -12,7 +12,8 @@ task :default => :test
  
 Rake::TestTask.new(:test_old) do |t|
   require 'monkeyspecdoc'
-  t.test_files = FileList['test/*_test.rb']
+  test_files = FileList['test/**/*_test.rb'] || []
+  t.test_files = test_files
   t.ruby_opts = ['-rubygems'] if defined? Gem
   t.verbose = true
 #  t.warning = true

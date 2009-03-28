@@ -1,6 +1,5 @@
 
 
-
 module Rudy
   module CLI
     class Addresses < Rudy::CLI::Base
@@ -21,7 +20,7 @@ module Rudy
       
       def associate_addresses
         puts "Associating #{@argv.address} to #{@inst[:aws_groups]}: #{@inst[:dns_name]}"
-        @ec2.addresses.associate(@inst[:aws_instance_id], @argv.address)
+        
         puts "Done!"
         puts
         

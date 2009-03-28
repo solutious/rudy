@@ -5,8 +5,8 @@
 # following locations:
 #
 #     ~/.rudy/config
-#     /etc/rudy/*.rb
 #     ./.rudy/config
+#     /etc/rudy/*.rb
 #     ./.rudy/*.rb
 #     ./Rudyfile
 #     ./config/rudy/*.rb
@@ -17,8 +17,9 @@
 # configuration across many files as you please. 
 #
 # There are four sections: awsinfo, defaults, machines, routines. 
-# By convention, awsinfo and defaults go in ~/.rudy/config (we encourage  
-# this to help avoid checking in )
+# By convention, awsinfo and defaults go in ~/.rudy/config or ./.rudy/config 
+# We encourage this to help avoid checking in AWS keys into source control.
+
 
 # ---------------------------------------------------------  MACHINES  --------
 # The machines block describes the "physical" characteristics

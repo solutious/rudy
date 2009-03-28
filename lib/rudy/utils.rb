@@ -86,7 +86,7 @@ module Rudy
     # A basic file writer
     def write_to_file(filename, content, mode)
       mode = (mode == :append) ? 'a' : 'w'
-      f = File.open(filename,type)
+      f = File.open(filename,mode)
       f.puts content
       f.close
     end
@@ -107,8 +107,9 @@ module Rudy
     # Returns +str+ with the average leading indentation removed. 
     # Useful for keeping inline codeblocks spaced with code. 
     def without_indent(str)
+      # TODO: A better implementation: check how many leading spaces each line has in common. 
       lines = str.split($/)
-      lspaces = (lines.inject(0) {|total,line| total += (line.scan(/^\s+/).first || '').size } / lines.size) + 1
+      lspaces = (lines.inject(0) {|total,line| total += (line.scan(/^\s+/).first || '').size } / lines.size)
       lines.collect { |line| line.gsub(/^\s{#{lspaces}}/, '') }.join($/)
     end
 

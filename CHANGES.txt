@@ -16,6 +16,7 @@ TODO: Remove aws_swb
 * NEW: rerelease command
 * NEW: --nocolor option 
 * NEW: Ruby API
+* NEW: Tests with 65% coverage
 
 
 #### 0.4 (2009-03-12) ###############################

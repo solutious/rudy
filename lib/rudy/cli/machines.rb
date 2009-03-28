@@ -66,11 +66,13 @@ module Rudy::CLI
       opts[:id] = @argv.awsid if @argv.awsid
       opts[:id] &&= [opts[:id]].flatten
       rudy = Rudy::Machines.new(:config => @config, :global => @global)
-      rudy.list(opts) do |inst|
+      
+      lt = rudy.list(opts) do |inst|
         puts '-'*60
         puts "Instance: #{inst.awsid.bright} (AMI: #{inst.ami})"
         puts inst.to_s
       end
+      puts "No machines running" if !lt || lt.empty?
     end
     alias :machine :status
     

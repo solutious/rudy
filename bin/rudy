@@ -297,10 +297,11 @@ argv :idstr
 command :id do |obj|
   if obj.option.t 
     raise "Unknown type #{obj.option.t}" unless Rudy.known_type?(obj.option.t)
-    puts Rudy.is_id?(obj.option.t, obj.argv.idstr)
+    t = Rudy.is_id?(obj.option.t, obj.argv.idstr)
   else
-    puts Rudy.id_type(obj.argv.idstr)
+    t = Rudy.id_type(obj.argv.idstr)
   end
+  puts t if t
 end
 
 
@@ -308,6 +309,11 @@ usage "rudy console"
 desc "A rudimentary, IRB-style console."
 command :console => Rudy::CLI::Console
 
+#command :init do
+#  unless File.exists?(RUDY_CONFIG_FILE)
+#    Rudy::Config.init_config_dir
+#  end
+#end
 
 # -------------------------------------------  UGLY STUFFS  --------
 # ------------------------------------------------------------------

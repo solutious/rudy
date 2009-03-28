@@ -139,6 +139,10 @@ module Console
     :random  => 40 + rand(10).to_i
   }.freeze unless defined? BGCOLOURS
   
+  def valid_colour?(colour)
+    COLOURS.has_key? colour
+  end
+  alias :valid_color? :valid_colour? 
   
   def print_left(str, props={})
     props[:x] ||= 0

@@ -5,7 +5,7 @@ module Rudy::Test
   
     def setup
       @logger = StringIO.new
-      @rmach = Rudy::Machines.new(:logger => @logger)
+      @rmach = Rudy::Machines.new(:logger => STDERR)
     end
     
     def teardown
@@ -16,26 +16,25 @@ module Rudy::Test
       #end
     end
     
-    context "Machines in default group" do
-      xshould "(01) create 1 machine" do
+    xcontext "Machines in default group" do
+      should "(01) create 1 machine" do
         stop_test @rmach.running?, "Shutdown the machines running in #{@rmach.current_machine_group}"
-        
         instances = @rmach.create
-        assert instances.is_a?(Array), "instances is an Array"
-        assert instances.first.is_a?(Rudy::AWS::EC2::Instance), "instance is a Rudy::AWS::EC2::Instance"
-        assert_equal 1, instances.size
+        assert instances.is_a?(Array), "instances is not an Array"
+        assert instances.first.is_a?(Rudy::AWS::EC2::Instance), "instance is not a Rudy::AWS::EC2::Instance (#{instances.first.class})"
+        assert_equal 1, instances.size, "#{instances.size} instances were started"
       end
       
       
       should "(02) list 1 machine" do
         assert @rmach.running?, "No machines running"
         instances = @rmach.list
-        assert instances.is_a?(Array), "instances is an Array"
-        assert instances.first.is_a?(Rudy::AWS::EC2::Instance), "instance is a Rudy::AWS::EC2::Instance"
-        assert_equal 1, instances.size
+        assert instances.is_a?(Array), "instances is not an Array"
+        assert instances.first.is_a?(Rudy::AWS::EC2::Instance), "instance is not a Rudy::AWS::EC2::Instance"
+        assert_equal 1, instances.size, "#{instances.size} instances are running"
       end
       
-      xshould "(03) terminate 1 machine" do
+      should "(03) terminate 1 machine" do
         assert @rmach.running?, "No machines running"
         success = @rmach.destroy
         assert success, "instance was not terminated"

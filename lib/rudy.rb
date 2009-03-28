@@ -180,6 +180,7 @@ require 'rudy/aws'
 require 'rudy/utils'       # The
 require 'rudy/config'      # order
 require 'rudy/huxtable'    # of
+require 'rudy/addresses'
 require 'rudy/routines'    # require
 require 'rudy/machines'    # statements
 require 'rudy/manager'     # is

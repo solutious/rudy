@@ -85,7 +85,7 @@ module Rudy::AWS
       
       
       def any?
-        
+      (list_as_hash && !list_as_hash.empty?)
       end
       
       def self.from_hash(h)
@@ -103,24 +103,57 @@ module Rudy::AWS
       # Associate an elastic IP to an instance
       def associate(inst_id, address)
         opts ={
-          :instance_id => inst_id || raise("No instance ID"),
-          :public_ip => address || raise("No public IP adress")
+          :instance_id => inst_id || raise("No instance ID supplied"),
+          :public_ip => address || raise("No public IP address supplied")
         }
         @aws.associate_address(opts)
       end
       
-      # TODO: Fix since with change to amazon-ec2
+      
+      def create
+        ret = @aws.allocate_address
+        return false unless ret && ret['publicIp']
+        address = Rudy::AWS::EC2::Address.new
+        address.ipaddress = ret['publicIp']
+        address
+      end
+      
+      def destroy(address)
+        if address.is_a?(String)
+          address = Rudy::AWS::EC2::Address.new
+          address.ipaddress = address
+        end
+        raise "Not a valid address" unless valid?(address)
+        opts ={
+          :public_ip => address.ipaddress || raise("No public IP address supplied")
+        }
+        ret = @aws.release_address(opts)
+        (ret && ret['return'] == 'true')
+      end
+      
+      
+      # +address+ is an IP address or Rudy::AWS::EC2::Address object
+      # Returns true if the given address is assigned to the current account
       def valid?(address)
+        if address.is_a?(String)
+          address = Rudy::AWS::EC2::Address.new
+          address.ipaddress = address
+        end
         list.each do |a|
-          return true if a[:public_ip] == address
+          return true if a.ipaddress == address.ipaddress
         end
         false
       end
       
-      # TODO: Fix since with change to amazon-ec2
+      # +address+ is an IP address or Rudy::AWS::EC2::Address object
+      # Returns true if the given address is associated to an instance
       def associated?(address)
+        if address.is_a?(String)
+          address = Rudy::AWS::EC2::Address.new
+          address.ipaddress = address
+        end
         list.each do |a|
-          return true if a[:public_ip] == address && a[:instance_id]
+          return true if a.ipaddress == address && a.instid
         end
         false
       end

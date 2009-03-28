@@ -13,15 +13,26 @@ module Rudy::Test
     
     
     context "EC2 Addresses" do
-      should "allocate address" do
+      should "(00) create address" do
         stop_test @@ec2.addresses.list.any?, "Destroy the existing addresses"
+        address = @@ec2.addresses.create
+        assert address.is_a?(Rudy::AWS::EC2::Address), "Did not create"
+        assert address.ipaddress.size > 0, "Address length is 0"
       end
       
-      should "list available Elastic IP addresses" do
+      should "(01) list available addresses" do
+        
         assert @@ec2.addresses.list.any?, "No addresses"
         assert @@ec2.addresses.list_as_hash.is_a?(Hash), "Not a Hash"
         assert @@ec2.addresses.list.is_a?(Array), "Not an Array"
         assert_equal 1, @@ec2.addresses.list.size, "More than one address"
+      end
+      
+      should "(02) destroy address" do
+        assert @@ec2.addresses.list.any?, "No addresses"
+        @@ec2.addresses.list.each do |address|
+          assert @@ec2.addresses.destroy(address), "Did not destroy"
+        end
       end
       
     end

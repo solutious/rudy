@@ -65,7 +65,7 @@ module Rudy
             puts Rudy.make_banner(msg, :huge, :red), $/
           end
         
-          puts Rudy.make_banner("THIS IS EC2"), $/ #if Rudy.in_situ?
+          puts Rudy.make_banner("THIS IS EC2"), $/ if Rudy.in_situ?
         end
         
         

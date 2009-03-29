@@ -22,6 +22,11 @@ module Rudy
       @ec2.groups.destroy(opts[:name])
     end
     
+    def exists?(name)
+      g = list(:name => name)
+      (g && !g.empty?)
+    end
+    
     def list(opts={})
       opts = {
         :name => current_machine_group,
@@ -29,7 +34,7 @@ module Rudy
       }.merge(opts)
      
       filter = opts[:all] ? [] : opts.delete(:name)
-      @ec2.groups.list(filter) || []
+      @ec2.groups.list(filter)
     end
     
     def authorize(opts={})

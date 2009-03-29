@@ -2,32 +2,31 @@ require File.join(File.dirname(__FILE__), 'helper')
 
 module Rudy::Test
   class EC2 < Test::Unit::TestCase
-    @@logger = StringIO.new
-    @@rmach = Rudy::Machines.new(:logger => STDERR)
+    @@logger = STDERR #StringIO.new
+    @@rmach = Rudy::Machines.new(:logger => @@logger)
     @@ec2 = @@rmach.ec2
     
     def setup
-#      puts @@ec2
       stop_test @@ec2.is_a?(Rudy::AWS::EC2::Instances), "We don't have an instance of Rudy::AWS::EC2"
     end
     
     
     context "EC2 Addresses" do
-      should "(00) create address" do
+      should "(01) create address" do
         stop_test @@ec2.addresses.list.any?, "Destroy the existing addresses"
         address = @@ec2.addresses.create
         assert address.is_a?(Rudy::AWS::EC2::Address), "Did not create"
         assert address.ipaddress.size > 0, "Address length is 0"
       end
       
-      should "(01) list available addresses" do
+      should "(02) list available addresses" do
         assert @@ec2.addresses.list.any?, "No addresses"
         assert @@ec2.addresses.list_as_hash.is_a?(Hash), "Not a Hash"
         assert @@ec2.addresses.list.is_a?(Array), "Not an Array"
         assert_equal 1, @@ec2.addresses.list.size, "More than one address"
       end
       
-      should "(02) destroy address" do
+      should "(03) destroy address" do
         assert @@ec2.addresses.list.any?, "No addresses"
         @@ec2.addresses.list.each do |address|
           assert @@ec2.addresses.destroy(address), "Did not destroy"
@@ -62,7 +61,7 @@ module Rudy::Test
       should "(04) restart instance" do
         instances = @@ec2.instances.list
         instances.each do |instance|
-          next if instance.terminated? || instance.shutting_down? || instance.pending?
+          next unless instance.running?
           assert @@ec2.instances.restart(instance), "Did not restart"
         end
       end

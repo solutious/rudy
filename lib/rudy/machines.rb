@@ -158,7 +158,7 @@ module Rudy
     
   private
     def process_filter_options(opts)
-      opts = { :group => current_machine_group, :id => nil, :state => :running }.merge(opts)
+      opts = { :group => current_machine_group, :id => nil, :state => nil }.merge(opts)
       raise "You must supply either a group name or instance ID" unless opts[:group] || opts[:id]
       opts[:id] &&= [opts[:id]].flatten
       instances = opts[:id] ? @ec2.instances.list(opts[:id], opts[:state]) : @ec2.instances.list_by_group(opts[:group], opts[:state])

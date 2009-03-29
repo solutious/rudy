@@ -54,7 +54,7 @@ module Rudy
           next unless val
           criteria << "#{n.to_s.slice(0,1).att :normal}:#{val.att :bright}"
         end
-        puts '%s -- %s UTC' % [title, now_utc] unless @global.quiet
+        puts '%s -- %s -- %s UTC' % [title, @config.awsinfo.name, now_utc] unless @global.quiet
         puts '[%s]' % criteria.join("  ") unless @global.quiet
         
         unless @global.quiet

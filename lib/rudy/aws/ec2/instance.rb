@@ -33,18 +33,67 @@ module Rudy::AWS
       lines.join($/)
     end
     
+    def running?
+      self.state && self.state == 'running'
+    end
+    
+    def pending?
+      self.state && self.state == 'pending'
+    end
+    
+    def terminated?
+      self.state && self.state == 'terminated'
+    end
+    
+    def shutting_down?
+      self.state && self.state == 'shutting-down'
+    end
+      
   end
   
   
   class EC2::Instances
     include Rudy::AWS::ObjectBase
     
-    def destroy(*list)
-      @aws.terminate_instances(:instance_id => list.flatten)
+    def destroy(*instances)
+      if instances.first.is_a?(Rudy::AWS::EC2::Instance)
+        inst_ids = instances.collect { |inst| inst.awsid }
+      else
+        inst_ids = instances.flatten
+      end
+      
+      raise "No instances provided" if inst_ids.empty?
+        
+      #instancesSet: 
+      #  item: 
+      #  - instanceId: i-ebdcb882
+      #    shutdownState: 
+      #      code: "48"
+      #      name: terminated
+      #    previousState: 
+      #      code: "48"
+      #      name: terminated
+      ret = @aws.terminate_instances(:instance_id => inst_ids)
+      raise "The request failed to return instance data" unless ret['instancesSet'].is_a?(Hash)
+      instances_shutdown = []
+      ret['instancesSet']['item'].collect do |inst|
+        next unless inst['shutdownState'].is_a?(Hash) && inst['shutdownState']['name'] == 'shutting-down'
+        instances_shutdown << inst['instanceId']
+      end
+      success = instances_shutdown.size == inst_ids.size
+      #puts "SUC: #{success} #{instances_shutdown.size} #{inst_ids.size}"
+      success
     end
     
-    def restart(*list)
-      @aws.reboot_instances(:instance_id => list.flatten)
+    def restart(*instances)
+      if instances.first.is_a?(Rudy::AWS::EC2::Instance)
+        inst_ids = instances.collect { |inst| inst.awsid }
+      else
+        inst_ids = instances.flatten
+      end
+      
+      ret = @aws.reboot_instances(:instance_id => inst_ids)
+      (ret && ret['return'] == 'true')
     end
     
     def attached_volume?(id, device)
@@ -74,7 +123,7 @@ module Rudy::AWS
         :key_name => keypair_name,
         :group_id => [group].flatten,
         :user_data => user_data,
-        :availability_zone => zone || DEFAULT_ZONE, 
+        :availability_zone => zone, 
         :addressing_type => 'public',
         :instance_type => 'm1.small',
         :kernel_id => nil
@@ -93,19 +142,21 @@ module Rudy::AWS
       resid = ilist['reservationId']
       raise "The request failed to return instance data" unless ilist['instancesSet'].is_a?(Hash)
       instances = ilist['instancesSet']['item'].collect do |inst|
-        Instances.from_hash(inst)
+        self.class.from_hash(inst)
       end
       instances
     end
     
-    # * +state+ is an optional instance state. If specified, must be one of: running, pending, terminated.
+    # * +state+ is an optional instance state. If specified, must be one of: running (default), pending, terminated.
     # * +inst_ids+ is an Array of instance IDs.
     # Returns an Array of Rudy::AWS::EC2::Instance objects. 
     def list(state=nil, inst_id=[])
-      list_as_hash(state=nil, inst_id=[]).values
+      instances = list_as_hash(state, inst_id)
+      instances &&= instances.values
+      instances
     end
     
-    # * +state+ is an optional instance state. If specified, must be one of: running, pending, terminated.
+    # * +state+ is an optional instance state. If specified, must be one of: running (default), pending, terminated.
     # * +inst_ids+ is an Array of instance IDs.
     # Returns a Hash of Rudy::AWS::EC2::Instance objects. The key is the instance ID. 
     def list_as_hash(state=nil, inst_id=[])
@@ -142,12 +193,14 @@ module Rudy::AWS
         # And each reservation can have 1 or more instances
         next unless res['instancesSet'].is_a?(Hash)
         res['instancesSet']['item'].each do |props|
-          inst = Instances.from_hash(props)
+          inst = self.class.from_hash(props)
           inst.groups = groups
+          #puts "STATE: #{inst.state} #{state}"
           next if state && inst.state != state.to_s
           instances[inst.awsid] = inst
         end
       end
+      instances = nil if instances.empty? # Don't return an empty hash
       instances
     end
     
@@ -164,6 +217,11 @@ module Rudy::AWS
     def get(inst_id)
       inst = list(nil, inst_id)
       inst.first if inst
+    end
+    
+    def any?(state=nil)
+      instances = list(state)
+      (instances && !instances.empty?)
     end
     
     def running?(inst_id)

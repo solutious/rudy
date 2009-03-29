@@ -68,14 +68,16 @@ module Rudy::AWS
       
       # Returns a Array of Rudy::AWS::EC2::Address objects. 
       def list 
-        list_as_hash.values
+        (list_as_hash || {}).values
       end
       
       # Returns a Hash of Rudy::AWS::EC2::Address objects. The key of the IP address.
       def list_as_hash
         alist = @aws.describe_addresses || []
+        
+        return nil unless alist['addressesSet'].is_a?(Hash)
+        
         addresses = {}
-        return addresses unless alist['addressesSet'].is_a?(Hash)
         alist['addressesSet']['item'].each do |address|
           address = Addresses.from_hash(address)
           addresses[address.ipaddress] = address
@@ -101,12 +103,16 @@ module Rudy::AWS
       end
       
       # Associate an elastic IP to an instance
-      def associate(inst_id, address)
+      def associate(instance, address)
+        address = address.ipaddress if address.is_a?(Rudy::AWS::EC2::Address)
+        instance = instance.awsid if instance.is_a?(Rudy::AWS::EC2::Instance)
+        raise "Not a valid address" unless valid?(address)
         opts ={
-          :instance_id => inst_id || raise("No instance ID supplied"),
+          :instance_id => instance || raise("No instance ID supplied"),
           :public_ip => address || raise("No public IP address supplied")
         }
-        @aws.associate_address(opts)
+        ret = @aws.associate_address(opts)
+        (ret && ret['return'] == 'true')
       end
       
       
@@ -119,13 +125,10 @@ module Rudy::AWS
       end
       
       def destroy(address)
-        if address.is_a?(String)
-          address = Rudy::AWS::EC2::Address.new
-          address.ipaddress = address
-        end
+        address = address.ipaddress if address.is_a?(Rudy::AWS::EC2::Address)
         raise "Not a valid address" unless valid?(address)
         opts ={
-          :public_ip => address.ipaddress || raise("No public IP address supplied")
+          :public_ip => address || raise("No public IP address supplied")
         }
         ret = @aws.release_address(opts)
         (ret && ret['return'] == 'true')
@@ -135,12 +138,9 @@ module Rudy::AWS
       # +address+ is an IP address or Rudy::AWS::EC2::Address object
       # Returns true if the given address is assigned to the current account
       def valid?(address)
-        if address.is_a?(String)
-          address = Rudy::AWS::EC2::Address.new
-          address.ipaddress = address
-        end
+        address = address.ipaddress if address.is_a?(Rudy::AWS::EC2::Address)
         list.each do |a|
-          return true if a.ipaddress == address.ipaddress
+          return true if a.ipaddress == address
         end
         false
       end
@@ -148,10 +148,7 @@ module Rudy::AWS
       # +address+ is an IP address or Rudy::AWS::EC2::Address object
       # Returns true if the given address is associated to an instance
       def associated?(address)
-        if address.is_a?(String)
-          address = Rudy::AWS::EC2::Address.new
-          address.ipaddress = address
-        end
+        address = address.ipaddress if address.is_a?(Rudy::AWS::EC2::Address)
         list.each do |a|
           return true if a.ipaddress == address && a.instid
         end

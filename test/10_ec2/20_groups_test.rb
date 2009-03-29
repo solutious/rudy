@@ -2,8 +2,17 @@
 module Rudy::Test
 
   class EC2
-
-    xcontext "(20) #{name} Groups" do
+    
+    def get_groups
+      # Ruby 1.8 throws an undefined method error when this is at the 
+      # bottom of the class
+      group_list = @@ec2.groups.list_as_hash
+      # "default" cannot be deleted so we exempt it
+      group_list.reject { |gname,group| gname == "default" }
+    end
+    
+    
+    context "(20) #{name} Groups" do
       
       should "(00) not be existing groups" do
         group_list = get_groups
@@ -14,22 +23,22 @@ module Rudy::Test
         group_list = get_groups
         
         str = Rudy::Utils.strand
-        name = "test-name-#{str}"
-        group = @@ec2.groups.create(name)
+        gname = "test-name-#{str}"
+        group = @@ec2.groups.create(gname)
         assert group.is_a?(Rudy::AWS::EC2::Group), "Not a Group object"
-        assert_equal group.name, name, "Group name not set"
-        assert_equal group.description, "Group #{name}", "Group description not 'Group #{name}'"
+        assert_equal group.name, gname, "Group name not set"
+        assert_equal group.description, "Group #{gname}", "Group description not 'Group #{gname}'"
       end
       
       should "(02) create group with name and description" do
         group_list = get_groups
         
         str = Rudy::Utils.strand
-        name = "test-name-#{str}"
+        gname = "test-name-#{str}"
         desc = "test-desc-#{str}"
-        group = @@ec2.groups.create(name, desc)
+        group = @@ec2.groups.create(gname, desc)
         assert group.is_a?(Rudy::AWS::EC2::Group), "Not a Group object"
-        assert_equal group.name, name, "Group name not set"
+        assert_equal group.name, gname, "Group name not set"
         assert_equal group.description, desc, "Group description not set"
       end
       
@@ -49,8 +58,8 @@ module Rudy::Test
         external_ip_address = Rudy::Utils::external_ip_address
         external_ip_address ||= '192.168.0.1/32'
         
-        name = "test-" << Rudy::Utils.strand
-        group = @@ec2.groups.create(name)
+        gname = "test-" << Rudy::Utils.strand
+        group = @@ec2.groups.create(gname)
         protocols = ['tcp', 'udp']
         addresses = [external_ip_address]
         ports = [[3100,3150],[3200,3250]]
@@ -59,12 +68,12 @@ module Rudy::Test
           addresses.each do |address|
             ports.each do |port|
               should_have << "#{address}/#{protocol}"
-              ret = @@ec2.groups.authorize(name, port[0].to_i, (port[1] || port[0]).to_i, protocol, address)
+              ret = @@ec2.groups.authorize(gname, port[0].to_i, (port[1] || port[0]).to_i, protocol, address)
               assert ret, "Did not authorize: #{port[0]}:#{port[1]} (#{protocol}) for #{address}"
             end
           end
         end
-        group = @@ec2.groups.get(name)
+        group = @@ec2.groups.get(gname)
         assert group.addresses.is_a?(Hash), "Addresses is not a hash"
         address_diff = group.addresses.keys - should_have
         assert address_diff.empty?, "Some addresses not created (#{address_diff.join(', ')})"
@@ -78,34 +87,34 @@ module Rudy::Test
           addresses.each do |address|
             ports.each do |port|
               should_have << "#{address}/#{protocol}"
-              ret = @@ec2.groups.revoke(name, port[0].to_i, (port[1] || port[0]).to_i, protocol, address)
+              ret = @@ec2.groups.revoke(gname, port[0].to_i, (port[1] || port[0]).to_i, protocol, address)
               assert ret, "Did not revoke: #{port[0]}:#{port[1]} (#{protocol}) for #{address}"
             end
           end
         end
         
-        group = @@ec2.groups.get(name)
+        group = @@ec2.groups.get(gname)
         assert group.addresses.is_a?(Hash), "Addresses is not a hash"
         assert group.addresses.empty?, "Some addresses not revoked #{group.addresses.to_s}"
       end
       
       
       should "(21) authorize/revoke group permissions for account/group" do
-        name = "test-" << Rudy::Utils.strand
-        group = @@ec2.groups.create(name)
-        should_have = "#{@@rmach.config.awsinfo.account}:#{name}"
+        gname = "test-" << Rudy::Utils.strand
+        group = @@ec2.groups.create(gname)
+        should_have = "#{@@rmach.config.awsinfo.account}:#{gname}"
         
-        ret = @@ec2.groups.authorize_group(name, @@rmach.config.awsinfo.account, name)
+        ret = @@ec2.groups.authorize_group(gname, @@rmach.config.awsinfo.account, gname)
         assert ret, "Authorize failed (#{should_have})"
-        group = @@ec2.groups.get(name)
+        group = @@ec2.groups.get(gname)
         assert group.is_a?(Rudy::AWS::EC2::Group), "Not a Group object"
         assert group.groups.is_a?(Hash), "Groups is not a Hash (#{group.groups.class})"
         assert_equal should_have, group.groups.keys.first, "Authorized group is not #{should_have}"
         # TODO: Check port ranges
         
-        ret = @@ec2.groups.revoke_group(name, @@rmach.config.awsinfo.account, name)
+        ret = @@ec2.groups.revoke_group(gname, @@rmach.config.awsinfo.account, gname)
         assert ret, "Revoke failed (#{should_have})"
-        group = @@ec2.groups.get(name)
+        group = @@ec2.groups.get(gname)
         assert group.is_a?(Rudy::AWS::EC2::Group), "Not a Group object"
         assert group.groups.is_a?(Hash), "Groups is not a Hash (#{group.groups.class})"
         assert !group.groups.has_key?(should_have), "Still authorized for #{should_have}"
@@ -115,16 +124,12 @@ module Rudy::Test
       should "(50) destroy groups" do
         group_list = get_groups
         assert !group_list.empty?, "No groups"
-        group_list.each_pair do |name,group|
+        group_list.each_pair do |gname,group|
           assert @@ec2.groups.destroy(group.name), "Not destroyed (#{group.name})"
         end
       end
       
-      def get_groups
-        group_list = @@ec2.groups.list_as_hash
-        # "default" cannot be deleted so we exempt it
-        group_list.reject { |name,group| name == "default" }
-      end
+
     end
     
       

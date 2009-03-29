@@ -2,7 +2,7 @@
 module Rudy::Test
   class EC2
 
-    xcontext "(80) #{name} Instances" do
+    context "(80) #{name} Instances" do
       
       should "(01) create instance" do
         stop_test @@ec2.instances.any?(:running), "Destroy the existing instances"
@@ -39,6 +39,12 @@ module Rudy::Test
         instances.each do |instance|
           next if instance.terminated? || instance.shutting_down?
           assert @@ec2.instances.destroy(instance), "Did not destroy"
+        end
+      end
+      
+      should "(99) clean created addresses" do
+        (@@ec2.addresses.list || []).each do |address|
+          assert @@ec2.addresses.destroy(address), "Address not destroyed (#{address})"
         end
       end
       

@@ -3,7 +3,7 @@ module Rudy::Test
 
   class EC2
     
-    xcontext "(30) #{name} Addresses" do
+    context "(30) #{name} Addresses" do
       should "(00) not be existing addresses" do
         #p @@ec2.addresses.list
         stop_test @@ec2.addresses.any?, "Destroy the existing addresses"
@@ -28,6 +28,7 @@ module Rudy::Test
           assert @@ec2.addresses.destroy(address), "Did not destroy"
         end
       end
+      
     end
 
   end

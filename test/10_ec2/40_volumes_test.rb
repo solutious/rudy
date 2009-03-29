@@ -2,15 +2,15 @@
 module Rudy::Test
   class EC2
     
-    xcontext "(40) #{name} Volumes" do
+    context "(40) #{name} Volumes" do
 
-      xshould "(00) not be existing volumes" do
+      should "(00) not be existing volumes" do
         volume_hash = @@ec2.volumes.list_as_hash
         volume_hash.reject! { |volid, vol| !vol.available? }
         stop_test !volume_hash.empty?, "Destroy the existing volumes"
       end
 
-      xshould "(10) create volume" do 
+      should "(10) create volume" do 
         volume_size = 2
         volume = @@ec2.volumes.create(@@zone, volume_size)
         assert volume.is_a?(Rudy::AWS::EC2::Volume), "Not a Volume"
@@ -19,7 +19,7 @@ module Rudy::Test
         assert volume.creating? || volume.available?, "Volume not creating or available (#{volume.status})"
       end
 
-      xshould "(20) list volumes" do
+      should "(20) list volumes" do
         volume_list = @@ec2.volumes.list
         assert volume_list.is_a?(Array), "Not an Array"
         assert volume_list.size > 0, "No Volumes in Array"
@@ -31,7 +31,7 @@ module Rudy::Test
         assert_equal volume_list.size.to_i, volume_hash.keys.size.to_i, "Hash and Array not equal size"
       end
 
-      xshould "(50) destroy volumes" do
+      should "(50) destroy volumes" do
         assert @@ec2.volumes.any?, "No volumes"
         volume_list = @@ec2.volumes.list
         volume_list.each do |vol|

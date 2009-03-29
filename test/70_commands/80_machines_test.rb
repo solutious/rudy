@@ -1,7 +1,13 @@
 
 module Rudy::Test
   class Commands
-
+    
+    context "stub" do
+      should "do nothing to prevevt Ruby 1.8 error message" do
+        assert true
+      end
+    end
+    
     xcontext "(80) #{name} Machines" do
       
       should "(00) have current machine group" do

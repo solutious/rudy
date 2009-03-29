@@ -23,7 +23,8 @@ end
 task :test do
   require 'rake/runtest'
   require 'monkeyspecdoc'  # http://jgre.org/2008/09/03/monkeyspecdoc/
-  Rake.run_tests "test/*_test.rb"
+  Rake.run_tests "test/**/*_test.rb"
+  
 end
 
 # PACKAGE =============================================================

@@ -1,7 +1,7 @@
-require File.join(File.dirname(__FILE__), 'helper')
+require File.join(File.dirname(__FILE__), '..', 'helper')
 
 module Rudy::Test
-  class Machines < Test::Unit::TestCase
+  class Commands < Test::Unit::TestCase
     @@logger = STDERR #StringIO.new
     @@rmach = Rudy::Machines.new(:logger => @@logger)
     @@rgroup = Rudy::Groups.new(:logger => @@logger)

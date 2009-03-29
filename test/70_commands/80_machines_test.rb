@@ -1,8 +1,8 @@
 
 module Rudy::Test
-  class Machines
+  class Commands
 
-    xcontext "Machines in current group" do
+    xcontext "(80) #{name} Machines" do
       
       should "(00) have current machine group" do
         assert @@rmach.current_machine_group.is_a?(String), "No current machine group"

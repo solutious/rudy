@@ -1,7 +1,8 @@
 
 
 module Rudy::AWS
-  class EC2::Volume < Storable
+  class EC2
+    class Volume < Storable
     field :awsid
     field :status
     field :size
@@ -18,6 +19,22 @@ module Rudy::AWS
          lines << sprintf(" %12s: %s", n, self.send(n)) if self.send(n)
        end
       lines.join($/)
+    end
+    
+    def available?
+      (status && status == "available")
+    end
+    
+    def creating?
+      (status && status == "creating")
+    end
+    
+    def deleting?
+      (status && status == "deleting")
+    end
+    
+    def attached?
+      (status && (status == "in-use" || status == "attached"))
     end
     
   end
@@ -58,6 +75,7 @@ module Rudy::AWS
       end
       volumes
     end
+    
     
     # * +size+ the number of GB
     def create(zone, size, snapshot=nil)
@@ -118,11 +136,16 @@ module Rudy::AWS
     end
     
     def destroy(vol_id)
-      @aws.delete_volume(:volume_id => vol_id)
+      ret = @aws.delete_volume(:volume_id => vol_id)
+      (ret && ret['return'] == 'true') 
+    end
+    
+    def any?
+      !(list || []).empty?
     end
     
     def exists?(vol_id)
-      !list(vol_id).first.nil?
+      !get(vol_id).nil?
     end
     
     def get(vol_id)
@@ -148,5 +171,5 @@ module Rudy::AWS
     end
       
   end
-  
+end
 end

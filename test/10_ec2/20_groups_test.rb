@@ -3,7 +3,7 @@ module Rudy::Test
 
   class EC2
 
-    context "(20) EC2 Groups" do
+    xcontext "(20) #{name} Groups" do
       def setup 
         @external_ip_address ||= Rudy::Utils::external_ip_address
         @external_ip_address ||= '192.168.0.1/32'

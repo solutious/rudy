@@ -1,9 +1,8 @@
 
 module Rudy::Test
-
   class EC2
 
-    context "(80) EC2 Instances" do
+    xcontext "(80) #{name} Instances" do
       
       should "(01) create instance" do
         stop_test @@ec2.instances.any?(:running), "Destroy the existing instances"

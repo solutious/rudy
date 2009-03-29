@@ -86,9 +86,13 @@ module Rudy
     
     def is_attached?(volume)
       volume = find_volume(volume)
-      @ec2.volumes.available?(volume.awsid)
+      @ec2.volumes.attached?(volume.awsid)
     end
     
+    
+    def list(vol_id=nil)
+      @ec2.volumes.list(vol_id)
+    end
     
     
     # * +volopt* is a volume ID or an Rudy::AWS::EC2::Volume object

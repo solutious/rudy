@@ -3,7 +3,9 @@ module Rudy::Test
   
   class EC2
     
-    context "(10) EC2 KeyPairs" do
+    xcontext "(10) #{name} KeyPairs" do
+      
+      
       should "(01) create keypair" do
         name = 'test-' << Rudy::Utils.strand
         keypair = @@ec2.keypairs.create(name)
@@ -13,12 +15,12 @@ module Rudy::Test
         assert !keypair.private_key.empty?, "No private key"
       end
       
-      should "(02) list keypairs" do
+      should "(10) list keypairs" do
         keypairs = @@ec2.keypairs.list || []
         assert keypairs.size > 0, "No keypairs"
       end
       
-      should "(03) destroy keypairs" do
+      should "(50) destroy keypairs" do
         keypairs = @@ec2.keypairs.list || []
         assert keypairs.size > 0, "No keypairs"
         keypairs.each do |kp|

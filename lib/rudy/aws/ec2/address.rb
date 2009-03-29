@@ -39,7 +39,8 @@ module Rudy::AWS
     
     
       def any?
-      (list_as_hash && !list_as_hash.empty?)
+      ret = (list_as_hash && !list_as_hash.empty?)
+      ret
       end
     
       def self.from_hash(h)

@@ -1,5 +1,7 @@
 
 
+# TODO: Only half updated. Tests will do the trick!
+
 
 module Rudy
   module CLI
@@ -8,22 +10,20 @@ module Rudy
       def group
         puts "Machine Groups".bright
         opts = {}
-        opts[:name] = @argv.name if @argv.name && !@option.all
-        opts[:all] = true if @option.all
+        name = @option.all ? nil : @argv.name
         rudy = Rudy::Groups.new(:config => @config, :global => @global)
-        rudy.list(opts).each do |grp|
+        rudy.list(name).each do |grp|
           puts '-'*60
           puts grp.to_s
         end
       end
       
-      def destroy_group(name=@argv.first)
+      def destroy_group
         puts "Destroying Machine Group".bright
         opts = {}
-        opts[:name] = @argv.name if @argv.name
         exit unless Annoy.are_you_sure?(:high)
         rudy = Rudy::Groups.new(:config => @config, :global => @global)
-        rudy.destroy(opts)
+        rudy.destroy(@argv.name)
         puts "Done!"
       end
       
@@ -32,7 +32,7 @@ module Rudy
         opts = check_options
         exit unless Annoy.are_you_sure?(:medium)
         rudy = Rudy::Groups.new(:config => @config, :global => @global)
-        rudy.create(opts)
+        rudy.create(@argv.name, opts)
         rudy.list(opts)
       end
       
@@ -41,8 +41,8 @@ module Rudy
         opts = check_options
         exit unless Annoy.are_you_sure?(:medium)
         rudy = Rudy::Groups.new(:config => @config, :global => @global)
-        rudy.revoke(opts)
-        rudy.list(opts)
+        rudy.revoke(@argv.name, opts)
+        rudy.list(@argv.name)
       end
       
       def authorize_group
@@ -59,8 +59,6 @@ module Rudy
       
       def check_options
         opts = {}
-        opts[:name] = @argv.name if @argv.name && !@option.all
-        opts[:all] = true if @option.all
         [:addresses, :protocols, :owner, :group, :ports].each do |opt|
           opts[opt] = @option.send(opt) if @option.respond_to?(opt)
         end

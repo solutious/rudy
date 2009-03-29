@@ -5,21 +5,18 @@ module Rudy
     include Rudy::Huxtable
    
    
-    def create(opts={})
-      opts = {
-        :name => current_machine_group
-      }.merge(opts)
-      raise "Group already exists" if @ec2.groups.exists?(opts[:name])
-      @ec2.groups.create(opts[:name])
-      authorize(opts)
+    def create(name, description=nil, opts={})
+      name ||= current_machine_group
+      description ||= 
+      raise "Group #{name} already exists" if @ec2.groups.exists?(name)
+      @ec2.groups.create(name, description)
+      authorize(name, opts)
     end
     
-    def destroy(opts={})
-      opts = {
-        :name => current_machine_group
-      }.merge(opts)
-      raise "Group #{opts[:name]} does not exist" unless @ec2.groups.exists?(opts[:name])
-      @ec2.groups.destroy(opts[:name])
+    def destroy(name)
+      name ||= current_machine_group
+      raise "Group #{name} does not exist" unless @ec2.groups.exists?(name)
+      @ec2.groups.destroy(name)
     end
     
     def exists?(name)
@@ -27,31 +24,23 @@ module Rudy
       (g && !g.empty?)
     end
     
-    def list(opts={})
-      opts = {
-        :name => current_machine_group,
-        :all => false
-      }.merge(opts)
-     
-      filter = opts[:all] ? [] : opts.delete(:name)
+    def list(name=nil)
+      filter = name ? [name] : []
       @ec2.groups.list(filter)
     end
     
-    def authorize(opts={})
-      modify_permissions(:authorize, opts)
+    def authorize(name, opts={})
+      modify_permissions(:authorize, name, opts)
     end
-    def revoke(opts={})
-      modify_permissions(:revoke, opts)
+    def revoke(name, opts={})
+      modify_permissions(:revoke, name, opts)
     end
     
-    def modify_permissions(action, opts)
-      opts = {
-        :name => current_machine_group,
-        :all => false
-      }.merge(opts)
+    def modify_permissions(action, name, opts)
+      name ||= current_machine_group
       
-      raise "You must supply a group name" unless opts[:name]
-      raise "Group does not exist" unless @ec2.groups.exists?(opts[:name])
+      raise "You must supply a group name" unless name
+      raise "Group does not exist" unless @ec2.groups.exists?(name)
       @logger.puts "#{action.to_s.capitalize} access for #{opts[:name].bright}"
       
       if opts[:group] || opts[:owner]
@@ -68,7 +57,7 @@ module Rudy
         raise "You must supply a group name" unless opts[:group]
         raise "You must supply an owner ID" unless opts[:owner]
          
-        @ec2.groups.send(action, opts[:name], nil, nil, nil, nil, opts[:group], opts[:owner])
+        @ec2.groups.send("#{action}_group", opts[:name], opts[:owner], opts[:group])
       else
         opts[:ports] ||= [[22,22],[80,80],[443,443]]
         opts[:protocols] ||= ["tcp"]          

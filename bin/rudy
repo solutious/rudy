@@ -81,23 +81,6 @@ command_alias :disk, :disks
 #command_alias :backup, :bu
 
 
-usage "rudy [global options] groups [-C -R -A] [-a IP addresses] [-p ports] [group name]"
-desc "Manage EC2 Security Groups"
-option :all, "Display all security groups"
-option :r, :protocols, Array, "Comma-separated list of protocols. One of: tcp (default), udp, icmp"
-option :p, :ports, Array, "List of comma-separated port ranges in the form FROM:TO (default: 22,80,443)"
-option :a, :addresses, Array, "List of comma-separated IP addresses (default: #{Rudy::Utils::external_ip_address})"
-option :g, :group, String, "A group name to authorize or revoke permissions. Must also supply -o!"
-option :o, :owner, String, "A group owner ID (account number). Must also supply -g!"
-action :C, :create, "Create a security group"
-action :D, :destroy, "Destroy a security group"
-action :A, :authorize, "Authorize a permission for a security group"
-action :R, :revoke, "Revoke a permission for a security group"
-argv :name
-command :group => Rudy::CLI::Groups
-command_alias :group, :groups
-
-
 
 #usage "rudy [global options] metadata instance-ID"
 #desc "Display Rudy metadata."
@@ -221,6 +204,22 @@ command_alias :startup, :start
 #command :images => Rudy::CLI::Images
 #command_alias :images, :image
 
+
+usage "rudy [global options] groups [-C -R -A] [-a IP addresses] [-p ports] [group name]"
+desc "Manage EC2 Security Groups"
+option :all, "Display all security groups"
+option :r, :protocols, Array, "Comma-separated list of protocols. One of: tcp (default), udp, icmp"
+option :p, :ports, Array, "List of comma-separated port ranges in the form FROM:TO (default: 22,80,443)"
+option :a, :addresses, Array, "List of comma-separated IP addresses (default: #{Rudy::Utils::external_ip_address})"
+option :g, :group, String, "A group name to authorize or revoke permissions. Must also supply -o!"
+option :o, :owner, String, "A group owner ID (account number). Must also supply -g!"
+action :C, :create, "Create a security group"
+action :D, :destroy, "Destroy a security group"
+action :A, :authorize, "Authorize a permission for a security group"
+action :R, :revoke, "Revoke a permission for a security group"
+argv :name
+command :group => Rudy::CLI::Groups
+command_alias :group, :groups
 
 desc "Manage EC2 Volumes"
 option :s, :size, String, "Size (in GB)"

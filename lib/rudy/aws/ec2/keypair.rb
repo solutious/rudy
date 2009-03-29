@@ -61,7 +61,7 @@ module Rudy::AWS
       end
       
       def any?
-        keypairs = list
+        keypairs = list || []
         !keypairs.empty?
       end
       

@@ -6,7 +6,7 @@ module Rudy::AWS
     field :awsid
     field :status
     field :size
-    field :snapshot
+    field :snapid
     field :zone
     field :create_time
     field :attach_time
@@ -44,10 +44,13 @@ module Rudy::AWS
     include Rudy::AWS::ObjectBase
     
     def attach(inst_id, vol_id, device)
+      vol_id = (vol_id.is_a?(Rudy::AWS::EC2::Volume)) ? vol_id.awsid : vol_id
+      inst_id = inst_id.is_a?(Rudy::AWS::EC2::Instace) ? inst_id.awsid : inst_id
       @aws.attach_volume(:volume_id => vol_id, :instance_id => inst_id, :device => device)
     end
     
     def detach(vol_id)
+      vol_id = (vol_id.is_a?(Rudy::AWS::EC2::Volume)) ? vol_id.awsid : vol_id
       @aws.detach_volume(:volume_id => vol_id)
     end
     
@@ -78,13 +81,13 @@ module Rudy::AWS
     
     
     # * +size+ the number of GB
-    def create(zone, size, snapshot=nil)
+    def create(zone, size, snapid=nil)
       opts = {
         :availability_zone => zone,
         :size => (size || 1).to_s
       }
       
-      opts[:snapshot] = snapshot if snapshot
+      opts[:snapshot_id] = snapid if snapid
       
       # "status"=>"creating", 
       # "size"=>"1", 
@@ -121,7 +124,7 @@ module Rudy::AWS
       vol = Rudy::AWS::EC2::Volume.new
       vol.status = h['status']
       vol.size = h['size']
-      vol.snapshot = h['snapshotId']
+      vol.snapid = h['snapshotId']
       vol.zone = h['availabilityZone']
       vol.awsid = h['volumeId']
       vol.create_time = h['createTime']
@@ -136,6 +139,7 @@ module Rudy::AWS
     end
     
     def destroy(vol_id)
+      vol_id = (vol_id.is_a?(Rudy::AWS::EC2::Volume)) ? vol_id.awsid : vol_id
       ret = @aws.delete_volume(:volume_id => vol_id)
       (ret && ret['return'] == 'true') 
     end
@@ -145,26 +149,31 @@ module Rudy::AWS
     end
     
     def exists?(vol_id)
+      vol_id = (vol_id.is_a?(Rudy::AWS::EC2::Volume)) ? vol_id.awsid : vol_id
       !get(vol_id).nil?
     end
     
     def get(vol_id)
+      vol_id = (vol_id.is_a?(Rudy::AWS::EC2::Volume)) ? vol_id.awsid : vol_id
       list(vol_id).first || nil
     end
     
     def deleting?(vol_id)
+      vol_id = (vol_id.is_a?(Rudy::AWS::EC2::Volume)) ? vol_id.awsid : vol_id
       return false unless vol_id
       vol = get(vol_id)
       (vol && vol.status == "deleting")
     end
     
     def available?(vol_id)
+      vol_id = (vol_id.is_a?(Rudy::AWS::EC2::Volume)) ? vol_id.awsid : vol_id
       return false unless vol_id
       vol = get(vol_id)
       (vol && vol.status == "available")
     end
     
     def attached?(vol_id)
+      vol_id = (vol_id.is_a?(Rudy::AWS::EC2::Volume)) ? vol_id.awsid : vol_id
       return false unless vol_id
       vol = get(vol_id)
       (vol && (vol.status == "in-use" || vol.status == "attached"))

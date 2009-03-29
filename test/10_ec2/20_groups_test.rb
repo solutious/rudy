@@ -4,10 +4,6 @@ module Rudy::Test
   class EC2
 
     xcontext "(20) #{name} Groups" do
-      def setup 
-        @external_ip_address ||= Rudy::Utils::external_ip_address
-        @external_ip_address ||= '192.168.0.1/32'
-      end
       
       should "(00) not be existing groups" do
         group_list = get_groups
@@ -50,10 +46,13 @@ module Rudy::Test
       end
       
       should "(20) authorize/revoke group permissions for address" do
+        external_ip_address = Rudy::Utils::external_ip_address
+        external_ip_address ||= '192.168.0.1/32'
+        
         name = "test-" << Rudy::Utils.strand
         group = @@ec2.groups.create(name)
         protocols = ['tcp', 'udp']
-        addresses = [@external_ip_address]
+        addresses = [external_ip_address]
         ports = [[3100,3150],[3200,3250]]
         should_have = [] # The list of address keys we're expecting in Groups#addresses
         protocols.each do |protocol|

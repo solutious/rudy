@@ -18,7 +18,9 @@ module Rudy::AWS
     
       # Returns a Array of Rudy::AWS::EC2::Address objects. 
       def list 
-        (list_as_hash || {}).values
+        addresses = list_as_hash
+        addresses &&= addresses.values
+        addresses
       end
     
       # Returns a Hash of Rudy::AWS::EC2::Address objects. The key of the IP address.

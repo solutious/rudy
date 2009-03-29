@@ -11,7 +11,32 @@ module Rudy::Test
     end
     
     
-    context "EC2 Addresses" do
+    context "EC2 KeyPairs" do
+      
+      should "(01) create keypair" do
+        name = 'test-' << Rudy::Utils.strand
+        keypair = @@ec2.keypairs.create(name)
+        assert keypair.is_a?(Rudy::AWS::EC2::KeyPair), "Not a KeyPair"
+        assert !keypair.name.empty?, "No name"
+        assert !keypair.fingerprint.empty?, "No fingerprint"
+        assert !keypair.private_key.empty?, "No private key"
+      end
+      
+      should "(02) list keypairs" do
+        keypairs = @@ec2.keypairs.list || []
+        assert keypairs.size > 0, "No keypairs"
+      end
+      
+      should "(03) destroy keypairs" do
+        keypairs = @@ec2.keypairs.list || []
+        assert keypairs.size > 0, "No keypairs"
+        keypairs.each do |kp|
+          @@ec2.keypairs.destroy(kp.name)
+        end
+      end
+    end
+    
+    xcontext "EC2 Addresses" do
       should "(01) create address" do
         stop_test @@ec2.addresses.list.any?, "Destroy the existing addresses"
         address = @@ec2.addresses.create
@@ -34,7 +59,7 @@ module Rudy::Test
       end
     end
     
-    context "EC2 Instances" do
+    xcontext "EC2 Instances" do
       
       should "(01) create instance" do
         stop_test @@ec2.instances.any?(:running), "Destroy the existing instances"

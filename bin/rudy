@@ -230,6 +230,13 @@ argv :volid
 command :volume => Rudy::CLI::Volumes
 command_alias :volume, :volumes
 
+desc "Manage KeyPairs"
+usage "rudy keypairs [-C] [-D] [name]"
+action :D, :destroy, "Destroy KeyPair"
+action :C, :create, "Create KeyPair"
+argv :kpname
+command :keypairs => Rudy::CLI::KeyPairs
+
 
 #usage "rudy [global options] instances [-D] [-S -i image ID] [instance ID OR group name]"
 #desc "Manage EC2 Instances"

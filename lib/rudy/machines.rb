@@ -38,7 +38,12 @@ module Rudy
                :address => current_machine_address,
                :machine_data => machine_data.to_yaml }.merge(opts)
       
-      instances = @ec2.instances.create(opts[:ami], opts[:group], File.basename(opts[:keypair]), opts[:machine_data], @global.zone)
+      # We use the base file name to determine the registered keypair name.
+      # If it contains a leading "key-", we'll remove that first. 
+      keypair_name = File.basename(opts[:keypair])
+      keypair_name = Rudy.strip_identifier(keypair_name) if Rudy.is_id?(:key, keypair_name)
+      
+      instances = @ec2.instances.create(opts[:ami], opts[:group], keypair_name, opts[:machine_data], @global.zone)
       #instances = [@ec2.instances.get("i-39009850")]
       instances_with_dns = []
       instances.each_with_index do |inst_tmp,index|

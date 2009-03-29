@@ -7,6 +7,10 @@ module Rudy::AWS
       attr_accessor :private_key # never saved
       field :name
       field :fingerprint
+      
+      def to_s
+        "%-20s   %s" % [self.name, self.fingerprint]
+      end
     end
     
     class KeyPairs
@@ -22,11 +26,11 @@ module Rudy::AWS
         name = name.name if name.is_a?(Rudy::AWS::EC2::KeyPair)
         raise "No name provided" unless name.is_a?(String)
         ret = @aws.delete_keypair(:key_name => name)
-        (ret && ret['return'] == 'true')
+        (ret && ret['return'] == 'true') # BUG? Always returns true
       end
       
       def list(*names)
-        keypairs = list_as_hash
+        keypairs = list_as_hash(names)
         keypairs &&= keypairs.values
         keypairs
       end
@@ -58,10 +62,16 @@ module Rudy::AWS
       
       def any?
         keypairs = list
+        !keypairs.empty?
       end
       
       def exists?(name)
-        
+        begin
+          keypairs = list(name)
+          !keypairs.empty?
+        rescue => ex
+          false
+        end
       end
     end
   end

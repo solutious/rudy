@@ -12,7 +12,6 @@ module Rudy::Test
     
     
     context "EC2 KeyPairs" do
-      
       should "(01) create keypair" do
         name = 'test-' << Rudy::Utils.strand
         keypair = @@ec2.keypairs.create(name)

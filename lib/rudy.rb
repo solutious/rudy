@@ -52,6 +52,9 @@ module Rudy #:nodoc:
     :image => 'ami',
     :ram => 'ari',
     :log => 'log',
+    :key => 'key',
+    :pk => 'pk',
+    :cert => 'cert',
     :reservation => 'r'
   }.freeze unless defined?(ID_MAP)
   
@@ -152,6 +155,13 @@ module Rudy #:nodoc:
     Rudy::ID_MAP.has_key?(identifier)
   end
   
+  # Return a string ID without the identifier. i.e. key-stage-app-root => stage-app-root
+  def Rudy.strip_identifier(str)
+    el = str.split('-')
+    el.shift
+    el.join('-')
+  end
+    
   # +msg+ The message to return as a banner
   # +size+ One of: :normal (default), :huge
   # +colour+ a valid 

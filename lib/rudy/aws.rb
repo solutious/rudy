@@ -5,33 +5,27 @@ require 'aws_sdb'
 
 module Rudy
   module AWS
-        
+    extend self
+    @@ec2 = @@sdb = @@s3 = nil
+    
+    
+    def ec2; @@ec2; end
+    def sdb; @@sdb; end
+    def  s3; @@s3;  end
+    
+    def set_access_identifiers(accesskey, secretkey, logger=nil)
+      @@ec2 ||= Rudy::AWS::EC2.new(accesskey, secretkey)
+      @@sdb ||= Rudy::AWS::SimpleDB.new(accesskey, secretkey)
+      #@@s3 ||= Rudy::AWS::SimpleDB.new(accesskey, secretkey)
+    end
+      
     module ObjectBase
       attr_accessor :aws
       def initialize(aws_connection)
         @aws = aws_connection
       end
     end
-  
-    # TODO: Move to Rudy
     
-    def self.instance_id?(id=nil)
-      (id && id[0,2] == "i-")  # OR: split at dash, use first value
-    end
-    
-    def self.image_id?(id=nil)
-      (id && id[0,4] == "ami-")
-    end
-    
-    def self.volume_id?(id=nil)
-      (id && id[0,4] == "vol-")
-    end
-    
-    def self.snapshot_id?(id=nil)
-      (id && id[0,5] == "snap-")
-    end
-
-
 
   
     class S3

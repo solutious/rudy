@@ -26,6 +26,8 @@ RUDY_LIB = File.join(File.dirname(__FILE__), '..', 'lib') unless defined?(RUDY_L
 
 
 module Rudy #:nodoc:
+  # SimpleDB accepts dashes in the domain name on creation and with the query syntax. 
+  # However, with select syntax it says: "The specified query expression syntax is not valid"
   RUDY_DOMAIN = "rudy_state" unless defined?(RUDY_DOMAIN)
   RUDY_DELIM  = '-' unless defined?(RUDY_DELIM)
   
@@ -148,11 +150,18 @@ module Rudy #:nodoc:
     (Rudy::ID_MAP.detect { |n,v| v == str.split('-').first } || []).first
   end
   
-  # Is the given +identifier+ a known type of object?
-  def Rudy.known_type?(identifier)
-    return false unless identifier
-    identifier &&= identifier.to_s.to_sym
-    Rudy::ID_MAP.has_key?(identifier)
+  # Is the given +key+ a known type of object?
+  def Rudy.known_type?(key)
+    return false unless key
+    key &&= key.to_s.to_sym
+    Rudy::ID_MAP.has_key?(key)
+  end
+  
+  # Returns the string identifier associated to this +key+
+  def Rudy.identifier(key)
+    key &&= key.to_sym
+    return unless Rudy::ID_MAP.has_key?(key)
+    Rudy::ID_MAP[key]
   end
   
   # Return a string ID without the identifier. i.e. key-stage-app-root => stage-app-root

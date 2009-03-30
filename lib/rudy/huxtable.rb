@@ -3,15 +3,13 @@
 
 module Rudy
   module Huxtable
-    @@debug = false
     
+    @@debug = false
+
     attr_accessor :config
     attr_accessor :global
     attr_accessor :logger
     
-    attr_reader :ec2
-    attr_reader :sdb
-    attr_reader :s3
     
     def initialize(opts={})
       opts = { :config => nil, :logger => STDERR, :global => OpenStruct.new}.merge(opts)
@@ -27,11 +25,11 @@ module Rudy
       init_globals
       
       if has_keys?
-        @ec2 = Rudy::AWS::EC2.new(@global.accesskey, @global.secretkey)
-        @sdb = Rudy::AWS::SimpleDB.new(@global.accesskey, @global.secretkey)
-        #@s3 = Rudy::AWS::SimpleDB.new(@global.accesskey, @global.secretkey)
+        Rudy::AWS.set_access_identifiers(@global.accesskey, @global.secretkey, @logger)
       end
     end
+    
+
     
     def init_globals
       @global.verbose ||= 0

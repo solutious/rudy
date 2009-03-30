@@ -12,7 +12,7 @@ module Rudy::Test
     end
     
     
-    context "(20) #{name} Groups" do
+    xcontext "(20) #{name} Groups" do
       
       should "(00) not be existing groups" do
         group_list = get_groups

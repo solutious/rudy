@@ -4,7 +4,7 @@ module Rudy::Test
 
 
        
-   context "(50) #{name} Snapshots" do
+   xcontext "(50) #{name} Snapshots" do
      
      should "(00) be no snapshots" do
        stop_test @@ec2.snapshots.any?, "Destroy existing snapshots"

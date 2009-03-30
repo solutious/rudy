@@ -2,8 +2,8 @@
 module Rudy::Test
   class Commands
     
-    context "stub" do
-      should "do nothing to prevevt Ruby 1.8 error message" do
+    xcontext "(80) #{name} stub" do
+      should "do nothing to prevent Ruby 1.8 error message" do
         assert true
       end
     end

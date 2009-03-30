@@ -8,14 +8,17 @@ module Rudy::AWS
       
       def create(name)
         @aws.create_domain(name)
+        true
       end
       
       def destroy(name)
-        @aws.delete_domain(name)
+        @aws.delete_domain(name)  # Always returns nil, wtf?
+        true
       end
     
       def list
-        @aws.list_domains
+        domains = (@aws.list_domains || [[]])  # Nested array, again wtf?
+        domains.first.flatten
       end
     end
     
@@ -29,22 +32,35 @@ module Rudy::AWS
     end
     
     def query(domain, query=nil, max=nil)
-      @aws.query(domain, query, max)
+      items = @aws.query(domain, query, max)
+      return nil if !items || items.empty? || items == [[], ""]  # NOTE: wtf, aws-sdb?
+      # [["produce", "produce1", "produce2"], ""]
+      clean_items = items.first
+      clean_items
     end
     
     def query_with_attributes(domain, query, max=nil)
       items = @aws.query_with_attributes(domain, query, max)
       return nil if !items || items.empty? || items == [[], ""]  # NOTE: wtf, aws-sdb?
       clean_items = {}
+      # aws-sdb returns the following (another nested array -- wtf X 9):
       # [[{"device"=>["/dev/sdh"], "Name"=>"disk-us-east-1b-stella-app-01-stella", "zone"=>["us-east-1b"], 
       # "size"=>["1"], "region"=>["us-east-1"], "role"=>["app"], "rtype"=>["disk"], "awsid"=>[""], 
       # "environment"=>["stella"], "position"=>["01"], "path"=>["/stella"]}], ""]
-      items
+      items.first.each do |item|
+        clean_items[item.delete('Name')] = item
+      end
+      clean_items
     end
     
     def select(query)
-      list = @aws.select(query) || []
-      list[0]
+      items = @aws.select(query) || []
+      return nil if !items || items.empty? || items == [[], ""]  # NOTE: wtf, aws-sdb?
+      clean_items = {}
+      items.first.each do |item|
+        clean_items[item.delete('Name')] = item
+      end
+      clean_items
     end
     
     def get_attributes(domain, item)

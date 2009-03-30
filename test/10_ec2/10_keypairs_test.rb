@@ -3,7 +3,7 @@ module Rudy::Test
   
   class EC2
     
-    context "(10) #{name} KeyPairs" do
+    xcontext "(10) #{name} KeyPairs" do
       
       
       should "(01) create keypair" do

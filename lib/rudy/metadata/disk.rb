@@ -1,14 +1,12 @@
 
 
 module Rudy
-  
   module MetaData
     class Disk < Storable
-      
-      @@rtype = 'disk'
+      include Rudy::AWS
       
         # This is a flag used internally to specify that a volume has been
-        # created for this disk, but not formated. 
+        # created for this disk, but not yet formated. 
       attr_accessor :raw_volume
       
       field :rtype
@@ -27,12 +25,8 @@ module Rudy
       
       def initialize
         @backups = []
-        @rtype = @@rtype.to_s
+        @rtype = self.class.to_s.downcase
         @raw_volume = false
-      end
-      
-      def rtype
-        @@rtype.to_s
       end
       
       def rtype=(val)
@@ -62,6 +56,14 @@ module Rudy
           query << "['#{n}' = '#{self.send(n.to_sym)}'] " if val # Only add attributes with values
         end
         query.join(" intersection ")
+      end
+      
+      def to_select
+        
+      end
+      
+      def save
+        @@sdb.store(RUDY_DOMAIN, disk.name, disk.to_hash, :replace)
       end
       
       def to_s

@@ -13,8 +13,8 @@
 #     ./*.rudy
 #
 # When multuple files are found, the configuration is 
-# NOT OVERRIDDEN. It's ADDED / APPEND. This means you can split 
-# configuration across many files as you please. 
+# NOT OVERRIDDEN. It's ADDED / APPENDED. This means you can 
+# split configuration across many files as you please. 
 #
 # There are four sections: awsinfo, defaults, machines, routines. 
 # By convention, awsinfo and defaults go in ~/.rudy/config or ./.rudy/config 
@@ -25,21 +25,23 @@
 # The machines block describes the "physical" characteristics
 # of your environments. 
 machines do
+  region :"us-east-1" do
   env :stage do
-    
-    role :app do 
+    role :app do
+      ami 'ami-235fba4a'          # Amazon Getting Started AMI 
       disks do  
         path "/rudy/example1" do
           size 4
           device "/dev/sdr"
         end
         path "/rudy/example2" do
-          size 5  # This will be ignored when restoring from a snapshot
+          size 5                 # Ignored when restoring from a snapshot
           device "/dev/sdm"
         end
       end
     end
 
+  end
   end
 end
 

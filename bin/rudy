@@ -324,6 +324,7 @@ command :console => Rudy::CLI::Console
 # -------------------------------------------  UGLY STUFFS  --------
 # ------------------------------------------------------------------
 debug :on
+default :ssh
 capture :stderr       
 before do
   @start = Time.now

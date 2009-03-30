@@ -32,12 +32,9 @@ module Rudy
       #
       def config
         return if @config.nil? 
-        puts "Config: #{@config.paths}" if @global.verbose > 0
+        
         
         @option.group ||= [@global.environment, @global.role].join(RUDY_DELIM)
-        
-        puts "Machine Group: #{@option.group}" if @global.verbose > 0
-        puts "User: #{@global.user}" if @global.verbose > 0
         
         return if @config.empty?
         
@@ -55,7 +52,7 @@ module Rudy
             y @config.defaults.to_hash
           else
             env, rol, usr, att = @global.environment, @global.role, @global.user, @argv.name
-            val = @config.machines.find_deferred(env, rol, usr, att) || ''
+            val = @config.machines.find_deferred(@global.region, env, rol, usr, att) || ''
             puts (val.is_a?(String)) ? val : val.to_hash.to_yaml
           end
           

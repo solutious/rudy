@@ -3,6 +3,7 @@
 
 module Rudy
   module Huxtable
+    include Rudy::AWS
     
     @@debug = false
 
@@ -76,18 +77,6 @@ module Rudy
       @global.local_user = ENV['USER'] || :rudy
       @global.local_hostname = Socket.gethostname || :localhost
       
-      if @global.verbose > 1
-        puts "GLOBALS:"
-        @global.marshal_dump.each_pair do |n,v|
-          puts "#{n}: #{v}"
-        end
-        ["machines", "routines"].each do |type|
-          puts "#{$/*2}#{type.upcase}:"
-          val = @config.send(type).find_deferred(@global.environment, @global.role)
-          puts val.to_hash.to_yaml if val
-        end
-        puts
-      end
       
       String.disable_color if @global.nocolor
       Rudy.enable_quiet if @global.quiet

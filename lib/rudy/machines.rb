@@ -16,7 +16,7 @@ module Rudy
       
       begin
         @logger.puts $/, "Terminating instances...", $/
-        @ec2.instances.destroy instances.keys
+        @@ec2.instances.destroy instances.keys
       rescue => ex
         @logger.puts ex.message if debug?
         @logger.puts ex.backtrace if debug?
@@ -43,8 +43,8 @@ module Rudy
       keypair_name = File.basename(opts[:keypair])
       keypair_name = Rudy.strip_identifier(keypair_name) if Rudy.is_id?(:key, keypair_name)
       
-      instances = @ec2.instances.create(opts[:ami], opts[:group], keypair_name, opts[:machine_data], @global.zone)
-      #instances = [@ec2.instances.get("i-39009850")]
+      instances = @@ec2.instances.create(opts[:ami], opts[:group], keypair_name, opts[:machine_data], @global.zone)
+      #instances = [@@ec2.instances.get("i-39009850")]
       instances_with_dns = []
       instances.each_with_index do |inst_tmp,index|
         Rudy.bug('hs672h48') && next if inst_tmp.nil?
@@ -52,13 +52,13 @@ module Rudy
         @logger.puts "Instance: #{inst_tmp.awsid}"
         if opts[:address] && index == 0  # We currently only support assigned an address to the first machine
           @logger.puts "Associating #{opts[:address]} to #{inst_tmp.awsid}"
-          @ec2.addresses.associate(inst_tmp.awsid, opts[:address])
+          @@ec2.addresses.associate(inst_tmp.awsid, opts[:address])
         end
 
         @logger.puts "Waiting for the instance to startup "        
         begin 
-          Rudy.waiter(2, 120, @logger) { !@ec2.instances.pending?(inst_tmp.awsid) }
-          raise Exception unless @ec2.instances.running?(inst_tmp.awsid)
+          Rudy.waiter(2, 120, @logger) { !@@ec2.instances.pending?(inst_tmp.awsid) }
+          raise Exception unless @@ec2.instances.running?(inst_tmp.awsid)
           @logger.puts "It's up!"
           Rudy.bell(3)
         rescue Timeout::Error, Interrupt, Exception
@@ -67,7 +67,7 @@ module Rudy
         end
 
         # The DNS names are now available so we need to grab that data from AWS
-        instance = @ec2.instances.get(inst_tmp.awsid)   
+        instance = @@ec2.instances.get(inst_tmp.awsid)   
 
         @logger.puts $/, "Waiting for the SSH daemon "
         begin
@@ -166,7 +166,7 @@ module Rudy
       opts = { :group => current_machine_group, :id => nil, :state => nil }.merge(opts)
       raise "You must supply either a group name or instance ID" unless opts[:group] || opts[:id]
       opts[:id] &&= [opts[:id]].flatten
-      instances = opts[:id] ? @ec2.instances.list(opts[:id], opts[:state]) : @ec2.instances.list_by_group(opts[:group], opts[:state])
+      instances = opts[:id] ? @@ec2.instances.list(opts[:id], opts[:state]) : @@ec2.instances.list_by_group(opts[:group], opts[:state])
       [opts, instances]
     end
     def machine_data

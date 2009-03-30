@@ -31,6 +31,21 @@ module Rudy
         @global.position ||= @config.defaults.position || DEFAULT_POSITION
         @global.user ||= @config.defaults.user || DEFAULT_USER
         
+        if @global.verbose > 1
+          puts "CONFIGS: ", @config.paths, $/
+          
+          puts "GLOBALS:"
+          @global.marshal_dump.each_pair do |n,v|
+            puts "#{n}: #{v}"
+          end
+          ["machines", "routines"].each do |type|
+            puts "#{$/*2}#{type.upcase}:"
+            val = @config.send(type).find_deferred(@global.environment, @global.role)
+            puts val.to_hash.to_yaml if val
+          end
+          puts
+        end
+        
         # This is also duplicated :[]
         String.disable_color if @global.nocolor
         Rudy.enable_quiet if @global.quiet

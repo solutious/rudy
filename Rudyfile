@@ -25,10 +25,17 @@
 # The machines block describes the "physical" characteristics
 # of your environments. 
 machines do
-  region :"us-east-1" do
+
+  zone :"us-east-1b" do
+    ami 'ami-235fba4a'    # Amazon Getting Started AMI (US)
+  end
+  zone :"eu-west-1b" do
+    ami 'ami-e40f2790'    # Amazon Getting Started AMI (EU)
+  end
+  
   env :stage do
     role :app do
-      ami 'ami-235fba4a'          # Amazon Getting Started AMI 
+              
       disks do  
         path "/rudy/example1" do
           size 4
@@ -39,10 +46,10 @@ machines do
           device "/dev/sdm"
         end
       end
+      
     end
-
   end
-  end
+  
 end
 
 # -------------------------------------------------------  ROUTINES  --------

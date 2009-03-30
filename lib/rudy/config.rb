@@ -127,6 +127,7 @@ def init_config_dir
       # Amazon Web Services 
       # Account access indentifiers.
       awsinfo do
+        name "Rudy Default"
         account ""
         accesskey ""
         secretkey ""
@@ -154,12 +155,12 @@ def init_config_dir
       # Global Defaults 
       # Define the values to use unless otherwise specified on the command-line. 
       defaults do
-        region "us-east-1" 
-        zone "us-east-1b"
-        environment "stage"
-        role "app"
-        position "01"
-        user ENV['USER']
+        region :"us-east-1" 
+        zone :"us-east-1b"
+        environment :stage
+        role :app
+        position :01
+        user ENV['USER'].to_sym
       end
     }
     Rudy::Utils.write_to_file(RUDY_CONFIG_FILE, rudy_config, 'w')

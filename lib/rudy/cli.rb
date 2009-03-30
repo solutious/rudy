@@ -67,7 +67,7 @@ module Rudy
         [:zone, :environment, :role, :position].each do |n|
           val = @global.send(n)
           next unless val
-          criteria << "#{n.to_s.slice(0,1).att :normal}:#{val.att :bright}"
+          criteria << "#{n.to_s.slice(0,1).att :normal}:#{val.to_s.bright}"
         end
         puts '%s -- %s -- %s UTC' % [title, @config.awsinfo.name, now_utc] unless @global.quiet
         puts '[%s]' % criteria.join("  ") unless @global.quiet

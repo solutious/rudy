@@ -51,8 +51,9 @@ module Rudy
           elsif @option.defaults
             y @config.defaults.to_hash
           else
-            env, rol, usr, att = @global.environment, @global.role, @global.user, @argv.name
-            val = @config.machines.find_deferred(@global.region, env, rol, usr, att) || ''
+            zon, env, rol = @global.zone, @global.environment, @global.role
+            usr, att = @global.user, @argv.name
+            val = @config.machines.find_deferred(zon, env, rol, usr, att) || ''
             puts (val.is_a?(String)) ? val : val.to_hash.to_yaml
           end
           

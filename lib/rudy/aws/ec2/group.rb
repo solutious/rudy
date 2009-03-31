@@ -64,6 +64,7 @@ module Rudy::AWS
       include Rudy::AWS::ObjectBase
   
       def list(group_names=[])
+        group_names ||= []
         groups = list_as_hash(group_names)
         groups &&= groups.values
         groups
@@ -73,6 +74,7 @@ module Rudy::AWS
       # associated to the account will be returned.
       # Returns an Array of Rudy::AWS::EC2::Group objects
       def list_as_hash(group_names=[])
+        group_names ||= []
         glist = @aws.describe_security_groups(:group_name => group_names) || {}
         return unless glist['securityGroupInfo'].is_a?(Hash)
         groups = {}

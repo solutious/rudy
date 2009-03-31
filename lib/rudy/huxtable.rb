@@ -106,10 +106,12 @@ module Rudy
     end
     
     def user_keypairpath(name)
-      raise "No default user configured" unless name
-      kp = @config.machines.find(@global.environment, @global.role, :users, name, :keypair2)
-      kp ||= @config.machines.find(@global.environment, :users, name, :keypair)
-      kp ||= @config.machines.find(:users, name, :keypair)
+      raise "No user provided" unless name
+      zon, env, rol = @global.zone, @global.environment, @global.role
+      #Caesars.enable_debug
+      kp = @config.machines.find_deferred(zon, env, rol, [:users, name, :keypair])
+      kp ||= @config.machines.find_deferred(env, rol, [:users, name, :keypair])
+      kp ||= @config.machines.find_deferred(rol, [:users, name, :keypair])
       kp &&= File.expand_path(kp)
       kp
     end

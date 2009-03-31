@@ -26,7 +26,17 @@ module Rudy::Test
         # level tests for Rudy::AWS::EC2::Groups. 
       end
       
-      should "(20) list keypairs" do
+      should "(11) create a group with an arbitrary name" do
+        n = "test-%s" % Rudy::Utils.strand
+        group = @rgroup.create(n)
+
+        assert group.is_a?(Rudy::AWS::EC2::Group)
+        assert @rgroup.exists?(group.name), "Group #{group.name} not registered with Amazon"
+        assert_equal group.name, n
+      end
+      
+      
+      should "(20) list groups" do
         assert @rgroup.any?, "No groups"
         assert @rgroup.exists?, "No #{@rgroup.name} group"
         
@@ -40,19 +50,22 @@ module Rudy::Test
       should "(30) not create group if one exists" do
         assert @rgroup.exists?, "No #{@rgroup.name} Group"
         begin
-          kp = @rgroup.create
+          group = @rgroup.create
         rescue # Quiet, you!
         end
-        assert kp.nil?, "Group was still created"
+        assert group.nil?, "Group was still created"
       end
       
-      should "(40) modify group permissions" do
+      xshould "(40) modify group permissions" do
         
       end
       
-      should "(99) destroy group" do
+      should "(99) destroy groups" do
         assert @rgroup.exists?, "Group #{@rgroup.name} doesn't exist"
-        assert @rgroup.destroy, "Did not destroy #{@rgroup.name}"
+        @rgroup.list.each do |group|
+          next if group.name == 'default'
+          assert @rgroup.destroy(group.name), "Did not destroy #{group.name}"
+        end
         assert !@rgroup.exists?, "Group #{@rgroup.name} still exists"
       end
       

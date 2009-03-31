@@ -3,7 +3,7 @@ module Rudy::Test
   class Case_50_Commands
     
 
-    xcontext "#{name}_50 Machines" do
+    context "#{name}_50 Machines" do
       
       setup do
         
@@ -12,7 +12,9 @@ module Rudy::Test
         
         @rgroup = Rudy::Groups.new(:logger => @@logger)
         stop_test !@rgroup.is_a?(Rudy::Groups), "We need Rudy::Machines (#{@rgroup})"
-        
+
+        @rkey = Rudy::KeyPairs.new(:logger => @@logger)
+        stop_test !@rkey.is_a?(Rudy::KeyPairs), "We need Rudy::KeyPairs (#{@rkey})"
       end
       
       should "(00) have current machine group" do
@@ -26,7 +28,11 @@ module Rudy::Test
         assert group.is_a?(Rudy::AWS::EC2::Group), "Not a Group"
         assert @rgroup.exists?(@rmach.current_machine_group), "No matching security group"
       end
-            
+      
+      should "(01) have root keypair" do
+        
+      end
+      
       should "(11) create machine group" do
         stop_test @rmach.running?, "Shutdown the machines running in #{@rmach.current_machine_group}"
         instances = @rmach.create

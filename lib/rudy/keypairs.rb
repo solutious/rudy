@@ -7,6 +7,12 @@ module Rudy
     def create(n=nil, opts={})
       n ||= name(n)
       
+      if has_root_keypair?
+        @logger.puts "A root keypair is already defined for #{current_machine_group}" 
+        @logger.puts user_keypairpath(:root)
+        return
+      end
+      
       opts = {
         :force => false
       }.merge(opts)
@@ -38,7 +44,6 @@ module Rudy
     end
     
     def list(n=nil, &each_object)
-      n ||= name(n)
       n &&= [n]
       keypairs = @@ec2.keypairs.list(n)
       keypairs.each { |n,kp| each_object.call(kp) } if each_object
@@ -46,7 +51,6 @@ module Rudy
     end
     
     def list_as_hash(n=nil, &each_object)
-      n ||= name(n)
       n &&= [n]
       keypairs = @@ec2.keypairs.list_as_hash(n)
       keypairs.each_pair { |n,kp| each_object.call(kp) } if each_object
@@ -76,7 +80,12 @@ module Rudy
       n ||= name(n)
       File.join(self.dirname, "#{n}.pub")
     end
-  
+    
+    def has_root_keypair?
+      path = user_keypairpath(:root)
+      (!path.nil? && !path.empty?)
+    end
+    
     def dirname
       raise "No config paths defined" unless @config.is_a?(Rudy::Config) && @config.paths.is_a?(Array)
       base_dir = File.dirname @config.paths.first

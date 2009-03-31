@@ -39,7 +39,6 @@ module Rudy
     end
     
     def list(n=nil, &each_object)
-      n ||= name(n)
       n &&= [n]
       groups = @@ec2.groups.list(n)
       groups.each { |g| each_object.call(g) } if each_object
@@ -47,7 +46,6 @@ module Rudy
     end
     
     def list_as_hash(n=nil, &each_object)
-      n ||= name(n)
       n &&= [n]
       groups = @@ec2.groups.list_as_hash(n)
       groups.each_pair { |n,g| each_object.call(g) } if each_object

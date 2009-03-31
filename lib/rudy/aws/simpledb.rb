@@ -24,6 +24,7 @@ module Rudy::AWS
     
     def destroy(domain, item)
       @aws.delete_attributes(domain, item)
+      true
     end
     
     def store(domain, item, attributes={}, replace=false)

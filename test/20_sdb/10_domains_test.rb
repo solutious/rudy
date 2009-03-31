@@ -59,7 +59,7 @@ module Rudy::Test
         assert_equal 2, items.size, "More than 2 objects"
       end
       
-      should "(51) query objects with attribtues" do
+      should "(51) query objects with attributes" do
         
         assert !@domain.nil?, "No domain"
         
@@ -81,6 +81,19 @@ module Rudy::Test
         assert items['produce1']['celery'].first.to_i > 1000, "Celery less than 1000"
       end
       
+      
+      should "(70) destroy objects" do
+        assert !@domain.nil?, "No domain"
+        q = "select * from #{@domain}"
+        items = @@sdb.select(q)
+        assert items.is_a?(Hash), "Not a Hash"
+        items.keys.each do |item|
+          assert @@sdb.destroy(@domain, item), "Not destroyed (#{item})"
+        end
+        q = "select * from #{@domain}"
+        items = @@sdb.select(q)
+        assert items.nil?, "Some items not destroyed (#{items})"
+      end
       
       xshould "(99) destroy domains" do
         

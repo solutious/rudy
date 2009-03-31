@@ -4,8 +4,7 @@ require 'date'
 module Rudy
   module MetaData
     class Backup < Storable
-        
-      @@rtype = "back"
+           
       
       field :rtype
       field :awsid
@@ -30,15 +29,11 @@ module Rudy
         @zone = DEFAULT_ZONE
         @region = DEFAULT_REGION
         @position = "01"
-        @rtype = @@rtype
-      end
-      
-      def rtype
-        @@rtype
+        @rtype = Backup.rtype
       end
       
       def self.rtype
-        @@rtype
+        Backup.to_s.split('::').last.downcase
       end
       
       
@@ -105,56 +100,31 @@ module Rudy
         [@@rtype, zon, env, rol, pos, dirs, timestamp].flatten.join(RUDY_DELIM)
       end
       
-
-      def Backup.for_disk(sdb, disk, max=50)
-        list = Backup.list(sdb, disk.zone, disk.environment, disk.role, disk.position, disk.path) || []
-        list[0..(max-1)]
+      
+      
+      
+      def to_select
+        
       end
       
-      def Backup.get(sdb, name)
-        object = sdb.get_attributes(RUDY_DOMAIN, name)
-        raise "Object #{name} does not exist!" unless object.has_key?(:attributes) && !object[:attributes].empty?
-        self.from_hash(object[:attributes])
+      def save
+        @@sdb.store(RUDY_DOMAIN, name, self.to_hash, :replace) # Always returns nil
+        true
       end
       
-      def Backup.save(sdb, obj, replace = :replace)
-        sdb.store(RUDY_DOMAIN, obj.name, obj.to_hash, replace)
+      def destroy
+        @@sdb.destroy(RUDY_DOMAIN, name)
+        true
       end
       
-      def Backup.list(sdb, zon, env=nil, rol=nil, pos=nil, path=nil, date=nil)
-        query = "select * from #{RUDY_DOMAIN} where "
-        query << "rtype = '#{rtype}' "
-        query << " and zone = '#{zon}'" if zon
-        query << " and environment = '#{env}'" if env
-        query << " and role = '#{rol}'" if rol
-        query << " and position = '#{pos}'" if pos
-        query << " and path = '#{path}'" if path
-        query << " and date = '#{date}'" if date
-        query << " and unixtime != '0' order by unixtime desc"
-        list = []
-        sdb.select(query).each do |obj|
-          list << self.from_hash(obj)
-        end
-        list
+      def refresh
+        h = @@sdb.get(RUDY_DOMAIN, name) || {}
+        from_hash(h)
       end
       
-      def Backup.find_most_recent(zon, env, rol, pos, path)
-        criteria = [zon, env, rol, pos, path]
-        (Rudy::MetaData::Backup.list(@sdb, *criteria) || []).first
-      end
-      
-      def Backup.destroy(sdb, name)
-        back = Backup.get(sdb, name) # get raises an exception if the disk doesn't exist
-        sdb.destroy(RUDY_DOMAIN, name)
-        true # wtf: RightAws::SimpleDB doesn't tell us whether it succeeds. We'll assume!
-      end
-      
-
-      
-      def Backup.is_defined?(sdb, backup)
-        query = backup.to_query()
-        puts query
-        !sdb.select(query).empty?
+      def Disk.get(dname)
+        h = @@sdb.get(RUDY_DOMAIN, dname) || {}
+        from_hash(h)
       end
       
     end

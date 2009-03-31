@@ -66,14 +66,10 @@ module Rudy #:nodoc:
   
   module VERSION #:nodoc:
     MAJOR = 0.freeze unless defined? MAJOR
-    MINOR = 4.freeze unless defined? MINOR
+    MINOR = 5.freeze unless defined? MINOR
     TINY  = 0.freeze unless defined? TINY
-    def self.to_s
-      [MAJOR, MINOR, TINY].join('.')
-    end
-    def self.to_f
-      self.to_s.to_f
-    end
+    def self.to_s; [MAJOR, MINOR, TINY].join('.'); end
+    def self.to_f; self.to_s.to_f; end
   end
   
   # Determine if we're running directly on EC2 or

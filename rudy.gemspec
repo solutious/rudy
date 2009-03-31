@@ -1,6 +1,6 @@
 @spec = Gem::Specification.new do |s|
 	s.name = "rudy"
-	s.version = "0.4.0"
+	s.version = "0.5.0"
 	s.summary = "Your friend in staging and deploying with EC2."
 	s.description = s.summary
 	s.author = "Delano Mandelbaum"

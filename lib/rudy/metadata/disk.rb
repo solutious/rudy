@@ -25,11 +25,12 @@ module Rudy
       
       def initialize
         @backups = []
-        @rtype = self.class.to_s.split('::').last.downcase
         @raw_volume = false
+        @rtype = Disk.rtype
       end
       
-      def rtype=(val)
+      def self.rtype
+        Disk.to_s.split('::').last.downcase
       end
       
       def name
@@ -65,6 +66,16 @@ module Rudy
       def save
         @@sdb.store(RUDY_DOMAIN, name, self.to_hash, :replace) # Always returns nil
         true
+      end
+      
+      def destroy
+        @@sdb.destroy(RUDY_DOMAIN, name)
+        true
+      end
+      
+      def refresh
+        h = @@sdb.get(RUDY_DOMAIN, name) || {}
+        from_hash(h)
       end
       
       def Disk.get(dname)

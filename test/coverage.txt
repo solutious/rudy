@@ -1,0 +1,50 @@
+Finished in 80.663275 seconds.
+
+54 tests, 136 assertions, 0 failures, 0 errors
++----------------------------------------------------+-------+-------+--------+
+|                  File                              | Lines |  LOC  |  COV   |
++----------------------------------------------------+-------+-------+--------+
+|lib/annoy.rb                                        |   227 |   131 |  42.0% |
+|lib/aws_sdb.rb                                      |     3 |     2 | 100.0% |
+|lib/aws_sdb/error.rb                                |    42 |    33 |  66.7% |
+|lib/aws_sdb/service.rb                              |   215 |   192 |  82.8% |
+|lib/console.rb                                      |   401 |   263 |  35.7% |
+|lib/rudy.rb                                         |   274 |   186 |  47.3% |
+|lib/rudy/addresses.rb                               |    22 |    14 |  57.1% |
+|lib/rudy/aws.rb                                     |    72 |    47 |  91.5% |
+|lib/rudy/aws/ec2.rb                                 |    28 |    23 | 100.0% |
+|lib/rudy/aws/ec2/address.rb                         |   111 |    80 |  87.5% |
+|lib/rudy/aws/ec2/group.rb                           |   233 |   147 |  84.4% |
+|lib/rudy/aws/ec2/image.rb                           |    46 |    33 |  21.2% |
+|lib/rudy/aws/ec2/instance.rb                        |   283 |   180 |  71.1% |
+|lib/rudy/aws/ec2/keypair.rb                         |    78 |    61 |  75.4% |
+|lib/rudy/aws/ec2/snapshot.rb                        |    87 |    63 |  87.3% |
+|lib/rudy/aws/ec2/volume.rb                          |   184 |   127 |  60.6% |
+|lib/rudy/aws/s3.rb                                  |     3 |     2 | 100.0% |
+|lib/rudy/aws/simpledb.rb                            |    70 |    53 |  88.7% |
+|lib/rudy/backups.rb                                 |     7 |     4 | 100.0% |
+|lib/rudy/config.rb                                  |   113 |    72 |  91.7% |
+|lib/rudy/disks.rb                                   |     9 |     5 | 100.0% |
+|lib/rudy/groups.rb                                  |    82 |    62 |  16.1% |
+|lib/rudy/huxtable.rb                                |   212 |   152 |  53.3% |
+|lib/rudy/machines.rb                                |   191 |   140 |   9.3% |
+|lib/rudy/manager.rb                                 |    62 |    43 |  16.3% |
+|lib/rudy/metadata/backup.rb                         |   163 |   126 |  30.2% |
+|lib/rudy/metadata/disk.rb                           |    82 |    59 |  67.8% |
+|lib/rudy/metadata/machine.rb                        |    34 |    23 |  82.6% |
+|lib/rudy/routines.rb                                |    54 |    26 |  23.1% |
+|lib/rudy/routines/disk_handler.rb                   |   190 |   133 |   5.3% |
+|lib/rudy/routines/release.rb                        |    15 |     8 | 100.0% |
+|lib/rudy/routines/script_runner.rb                  |    65 |    47 |  10.6% |
+|lib/rudy/routines/shutdown.rb                       |    42 |    30 |  13.3% |
+|lib/rudy/routines/startup.rb                        |    48 |    33 |  12.1% |
+|lib/rudy/scm/svn.rb                                 |    68 |    50 |  26.0% |
+|lib/rudy/utils.rb                                   |   118 |    75 |  48.0% |
+|lib/rudy/volumes.rb                                 |   108 |    84 |  11.9% |
+|lib/storable.rb                                     |   284 |   185 |  24.9% |
+|lib/sysinfo.rb                                      |   255 |   154 |  35.7% |
++----------------------------------------------------+-------+-------+--------+
+|Total                                               |  4581 |  3148 |  48.5% |
++----------------------------------------------------+-------+-------+--------+
+48.5%   39 file(s)   4581 Lines   3148 LOC
+

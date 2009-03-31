@@ -2,7 +2,7 @@ require File.join(File.dirname(__FILE__), '..', 'helper')
 
 module Rudy::Test
 
-  class Config < Test::Unit::TestCase
+  class TC_05_Config < Test::Unit::TestCase
     include Rudy::AWS
     
     @@logger = STDERR #StringIO.new

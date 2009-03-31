@@ -1,7 +1,7 @@
 require File.join(File.dirname(__FILE__), '..', 'helper')
 
 module Rudy::Test
-  class MetaData < Test::Unit::TestCase
+  class TC_50_MetaData < Test::Unit::TestCase
     include Rudy::AWS
     
     @@logger = StringIO.new
@@ -9,7 +9,7 @@ module Rudy::Test
     @@global = @@rmach.global
     
     
-    context "(50) #{name} Setup" do
+    context "#{name} Setup" do
       
     end
     

@@ -1,7 +1,7 @@
 module Rudy::Test
-  class MetaData
+  class TC_50_MetaData
     
-    xcontext "(51) #{name} Disks" do
+    context "#{name} Disks" do
       
       should "(00) have global setup" do
         [:region, :zone, :environment, :role, :position].each do |n|

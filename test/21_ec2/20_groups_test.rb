@@ -1,7 +1,7 @@
 
 module Rudy::Test
 
-  class EC2
+  class TC_21_EC2
     
     def get_groups
       # Ruby 1.8 throws an undefined method error when this is at the 
@@ -12,7 +12,7 @@ module Rudy::Test
     end
     
     
-    xcontext "(20) #{name} Groups" do
+    xcontext "#{name} Groups" do
       
       should "(00) not be existing groups" do
         group_list = get_groups

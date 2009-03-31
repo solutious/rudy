@@ -1,12 +1,12 @@
 module Rudy::Test
-  class SimpleDB
+  class TC_20_SimpleDB
     
     
     def get_domain
 
     end
     
-    xcontext "(21) #{name} Domains" do
+    context "#{name} Domains" do
       
       setup do
         @domain_list = @@sdb.domains.list || []
@@ -60,17 +60,20 @@ module Rudy::Test
         items = @@sdb.query_with_attributes(@domain, "[ 'grapes' = 'green' ]")
         assert items.is_a?(Hash), "Not a Hash"
         assert_equal 2, items.keys.size, "More than 2 objects"
+        assert items['produce1']['celery'].first.to_i > 1000, "Celery less than 1000"
       end
       
       should "(50) select objects" do
         assert @domain_list.is_a?(Array), "Not an Array"
         assert !@domain_list.empty?, "No Domains"
         q = "select * from #{@domain}"
-        #p q
+
         items = @@sdb.select(q)
         assert items.is_a?(Hash), "Not a Hash"
         assert_equal 2, items.keys.size, "More than 2 objects"
-        assert items['produce1']['celery'].to_i > 1000, "Celery less than 1000"
+        
+        # {"produce1"=>{"celery"=>["5200"], "grapes"=>["green"], "orange"=>["550"]}}
+        assert items['produce1']['celery'].first.to_i > 1000, "Celery less than 1000"
       end
       
       

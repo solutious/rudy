@@ -8,12 +8,12 @@ module Rudy::Test
   #
   # DO NOT RUN THIS TEST ON A PRODUCTION AWS ACCOUNT!!
   #
-  class EC2 < Test::Unit::TestCase
+  class TC_21_EC2 < Test::Unit::TestCase
     include Rudy::AWS
     
     @@logger = STDERR #StringIO.new
     @@rmach = Rudy::Machines.new(:logger => @@logger)
-    @@zone = @@rmach.global.zone
+    @@zone = @@rmach.global.zone.to_s
     
     xcontext "(10) #{name} Setup" do
       should "(10) have class variables setup" do
@@ -22,7 +22,7 @@ module Rudy::Test
         stop_test !@@rmach.config || !@@rmach.config.awsinfo || !@@rmach.config.awsinfo.account, "No account number"
       end
       should "(11) be zone" do
-        stop_test !@@zone || @@zone.empty?, "No zone"
+        stop_test !@@zone, "No zone"
       end
     end
   end

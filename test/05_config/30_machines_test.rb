@@ -1,6 +1,6 @@
 
 module Rudy::Test
-  class Config
+  class TC_05_Config
     
     context "(30) #{name} Machines" do
       
@@ -47,12 +47,6 @@ module Rudy::Test
         
         assert_equal conf, conf_find, "config hash and find not equal"
         assert_equal conf_find_def, conf_find, "find and find_deferred not equal"
-        
-        
-        #p @@config.machines.find_deferred([reg, zon], env, rol)
-        #p @@config.machines.find_deferred(reg, env, rol)
-        #p @@config.machines[reg][env]#[rol]
-        #p @@config.machines.find(reg, env, rol)
       end
       
       should "(51) find different config for each zone" do
@@ -65,7 +59,6 @@ module Rudy::Test
         assert us_ami.is_a?(String), "No ami for us-east-1b zone"
         assert eu_ami.is_a?(String), "No ami for eu-west-1b"
         assert us_ami != eu_ami, "EU (#{eu_ami}) and US (#{us_ami}) AMIs are the same"
-        
       end
       
     end

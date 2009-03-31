@@ -1,10 +1,10 @@
 
 module Rudy::Test
-  class EC2
+  class TC_21_EC2
 
 
        
-   xcontext "(50) #{name} Snapshots" do
+   xcontext "#{name} Snapshots" do
      
      should "(00) be no snapshots" do
        stop_test @@ec2.snapshots.any?, "Destroy existing snapshots"
@@ -17,6 +17,7 @@ module Rudy::Test
      end
      
      should "(01) create snapshot" do
+       stop_test !@@volumes.first.is_a?(Rudy::AWS::EC2::Volume), "No volume to work off of."
        assert !@@volumes.first.awsid.empty?, "No volume ID"
        @@ec2.snapshots.create(@@volumes.first.awsid)
      end

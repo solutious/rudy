@@ -1,8 +1,10 @@
 module Rudy::Test
-  class EC2
+  class TC_21_EC2
 
-    context "(85) #{name} Images" do
-      
+    xcontext "#{name} Images" do
+      should "nothing" do
+        assert true
+      end
       
     end
     

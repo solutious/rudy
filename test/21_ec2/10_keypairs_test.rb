@@ -1,7 +1,7 @@
 
 module Rudy::Test
   
-  class EC2
+  class TC_21_EC2
     
     xcontext "(10) #{name} KeyPairs" do
       

@@ -1,8 +1,8 @@
 
 module Rudy::Test
-  class EC2
+  class TC_21_EC2
     
-    xcontext "(40) #{name} Volumes" do
+    xcontext "#{name} Volumes" do
 
       should "(00) not be existing volumes" do
         volume_hash = @@ec2.volumes.list_as_hash

@@ -1,5 +1,5 @@
 module Rudy::Test
-  class Case_60_MetaData
+  class Case_40_MetaData
     
     def create_backup
       back = Rudy::MetaData::Backup.new
@@ -18,7 +18,7 @@ module Rudy::Test
       [dat.year, mon, day, Rudy::RUDY_DELIM, hour, min, Rudy::RUDY_DELIM, sec].join
     end
     
-    xcontext "#{name}_20 Backups" do
+    context "#{name}_20 Backups" do
       
       should "(00) have global setup" do
         [:region, :zone, :environment, :role, :position].each do |n|
@@ -38,7 +38,7 @@ module Rudy::Test
         [:region, :zone, :environment, :role, :position].each do |n|
           back_name << @@global.send(n)
         end
-        p back_name
+        
         back_time = format_timestamp(Time.now.utc)
         
         back_name.shift   # don't use region in backup name, but add the backup identifier and path

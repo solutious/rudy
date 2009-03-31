@@ -1,5 +1,5 @@
 module Rudy::Test
-  class Case_60_MetaData
+  class Case_40_MetaData
     
     def create_disk
       disk = Rudy::MetaData::Disk.new
@@ -90,14 +90,6 @@ module Rudy::Test
         assert_equal @@global.zone.to_s, disk.zone.to_s
       end
       
-      should "(40) mount disk to instance" do
-        inst_list = @@ec2.instances.list
-        assert inst_list.is_a?(Array), "Not an Array of instances"
-        p inst_list
-        #inst_list.each do |inst|
-        #  
-        #end
-      end
       
       should "(99) destroy disk metadata" do
         q = "select * from #{Rudy::RUDY_DOMAIN} where rtype = 'disk'"

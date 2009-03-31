@@ -19,11 +19,14 @@ module Rudy::Test
       end
       
       should "(03) assign IP address to instance" do
+        assigned = 0
         @@ec2.instances.list.each do |instance|
           next if instance.terminated? || instance.shutting_down?
+          assigned += 1
           address = @@ec2.addresses.create
           assert @@ec2.addresses.associate(instance, address), "Did not assign"
         end
+        assert assigned > 0, "No machine running"
       end
       
       should "(04) restart instance" do

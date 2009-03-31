@@ -63,7 +63,7 @@ module Rudy::AWS
       clean_items
     end
     
-    def get_attributes(domain, item)
+    def get(domain, item)
       @aws.get_attributes(domain, item)
     end
   end

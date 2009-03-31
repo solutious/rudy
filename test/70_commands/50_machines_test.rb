@@ -1,6 +1,6 @@
 
 module Rudy::Test
-  class TC_70_Commands
+  class Case_70_Commands
     
     context "#{name} stub" do
       should "do nothing to prevent Ruby 1.8 error message" do
@@ -8,7 +8,7 @@ module Rudy::Test
       end
     end
     
-    xcontext "#{name} Machines" do
+    xcontext "#{name}_50 Machines" do
       
       should "(00) have current machine group" do
         assert @@rmach.current_machine_group.is_a?(String), "No current machine group"

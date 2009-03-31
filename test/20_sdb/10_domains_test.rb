@@ -1,12 +1,12 @@
 module Rudy::Test
-  class TC_20_SimpleDB
+  class Case_20_SimpleDB
     
     
     def get_domain
 
     end
     
-    context "#{name} Domains" do
+    context "#{name}_10 Domains" do
       
       setup do
         @domain_list = @@sdb.domains.list || []

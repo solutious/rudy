@@ -1,7 +1,7 @@
 
 module Rudy::Test
 
-  class TC_21_EC2
+  class Case_21_EC2
     
     xcontext "#{name} Addresses" do
       should "(00) not be existing addresses" do

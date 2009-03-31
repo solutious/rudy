@@ -8,7 +8,7 @@ module Rudy::Test
   #
   # DO NOT RUN THIS TEST ON A PRODUCTION AWS ACCOUNT!!
   #
-  class TC_21_EC2 < Test::Unit::TestCase
+  class Case_21_EC2 < Test::Unit::TestCase
     include Rudy::AWS
     
     @@logger = STDERR #StringIO.new

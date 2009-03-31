@@ -1,8 +1,8 @@
 
 module Rudy::Test
-  class TC_05_Config
+  class Case_05_Config
     
-    context "(30) #{name} Machines" do
+    context "#{name}_30 Machines" do
       
       should "(10) have awsinfo" do
         assert @@config.awsinfo.is_a?(Rudy::Config::AWSInfo), "Not an AWSInfo class"

@@ -4,6 +4,8 @@ require 'rake/gempackagetask'
 require 'hanna/rdoctask'
 require 'rake/testtask'
 require 'shoulda/tasks'
+require 'rake/runtest'
+require 'monkeyspecdoc'  # http://jgre.org/2008/09/03/monkeyspecdoc/
 require 'fileutils'
 include FileUtils
  
@@ -34,6 +36,21 @@ namespace :test do
   task :files do
     puts Dir.glob(File.join('test', '**', '*_test.rb'))
   end
+  # rake test:05 etc...
+  ('00'..'99').each do |num|
+    task num.to_sym do
+      Rake.run_tests "test/#{num}*/*_test.rb"
+    end
+  end
+end
+
+task :test do
+
+  #all_tests = Dir.glob(File.join('test', '{05,20,50}*', '*_test.rb')) || []
+  #all_tests.sort.each do |file|
+  #  load file
+  #end
+  Rake.run_tests 'test/**/*_test.rb'
 end
 
 
@@ -70,16 +87,6 @@ namespace :shoulda do
   end
 end
 
-
-task :test do
-  require 'rake/runtest'
-  require 'monkeyspecdoc'  # http://jgre.org/2008/09/03/monkeyspecdoc/
-  #all_tests = Dir.glob(File.join('test', '{05,20,50}*', '*_test.rb')) || []
-  #all_tests.sort.each do |file|
-  #  load file
-  #end
-  Rake.run_tests 'test/**/*_test.rb'
-end
 
 # PACKAGE =============================================================
 

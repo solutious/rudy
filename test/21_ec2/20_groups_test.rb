@@ -1,7 +1,7 @@
 
 module Rudy::Test
 
-  class TC_21_EC2
+  class Case_21_EC2
     
     def get_groups
       # Ruby 1.8 throws an undefined method error when this is at the 

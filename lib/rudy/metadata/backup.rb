@@ -4,7 +4,7 @@ require 'date'
 module Rudy
   module MetaData
     class Backup < Storable
-           
+      include Rudy::AWS
       
       field :rtype
       field :awsid
@@ -30,10 +30,11 @@ module Rudy
         @region = DEFAULT_REGION
         @position = "01"
         @rtype = Backup.rtype
+        time_stamp # initialize time to right now
       end
       
       def self.rtype
-        Backup.to_s.split('::').last.downcase
+        'back'
       end
       
       
@@ -43,7 +44,8 @@ module Rudy
       end
       
       def valid?
-        @zone && @environment && @role && @position && @path && @date && @time && @second
+        #puts(@zone, @environment, @role, @position, @path, @date, @time, @second)
+        (@zone && @environment && @role && @position && @path && @date && @time && @second)
       end
       
       def time_stamp
@@ -97,7 +99,7 @@ module Rudy
         dirs = pat.split sep if pat
         dirs.shift while dirs && (dirs[0].nil? || dirs[0].empty?)
         timestamp = Backup.format_timestamp(dat.utc)
-        [@@rtype, zon, env, rol, pos, dirs, timestamp].flatten.join(RUDY_DELIM)
+        [rtype, zon, env, rol, pos, dirs, timestamp].flatten.join(RUDY_DELIM)
       end
       
       
@@ -122,7 +124,7 @@ module Rudy
         from_hash(h)
       end
       
-      def Disk.get(dname)
+      def Backup.get(dname)
         h = @@sdb.get(RUDY_DOMAIN, dname) || {}
         from_hash(h)
       end

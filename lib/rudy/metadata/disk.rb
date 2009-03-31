@@ -30,7 +30,7 @@ module Rudy
       end
       
       def self.rtype
-        Disk.to_s.split('::').last.downcase
+        'disk'
       end
       
       def name

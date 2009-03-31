@@ -48,7 +48,7 @@ module Rudy
         @global.nocolor = @config.defaults.nocolor
         @global.quiet = @config.defaults.quiet
       end
-      
+            
       @global.region ||= DEFAULT_REGION
       @global.zone ||= DEFAULT_ZONE
       @global.environment ||= DEFAULT_ENVIRONMENT

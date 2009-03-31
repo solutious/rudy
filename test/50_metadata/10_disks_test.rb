@@ -13,7 +13,7 @@ module Rudy::Test
       disk
     end
     
-    context "#{name}_10 Disks" do
+    xcontext "#{name}_10 Disks" do
       
       should "(00) have global setup" do
         [:region, :zone, :environment, :role, :position].each do |n|
@@ -80,7 +80,9 @@ module Rudy::Test
         q = "select * from #{Rudy::RUDY_DOMAIN} where rtype = 'disk'"
         items = @@sdb.select(q)
         assert_equal Hash, items.class
-        
+        items.keys.each do |item|
+          @@sdb.destroy(Rudy::RUDY_DOMAIN, item)
+        end
       end
       
     end

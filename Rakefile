@@ -41,9 +41,20 @@ namespace :test do
   # rake test:05 
   # rake test:60
   # etc...
-  ('00'..'99').each do |num|
-    task num.to_sym do
-      Rake.run_tests "test/#{num}*/*_test.rb"
+  ('00'..'99').each do |group|
+    task group.to_sym do
+      Rake.run_tests "test/#{group}*/*_test.rb"
+    end
+    
+    # And also individual test files
+    # rake test:50:10
+    # etc...
+    ('00'..'99').each do |test|
+      namespace group.to_sym do
+        task test.to_sym do
+          Rake.run_tests "test/#{group}*/{00,#{test}}*_test.rb"
+        end
+      end
     end
   end
 end

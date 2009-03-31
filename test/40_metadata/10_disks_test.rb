@@ -25,19 +25,9 @@ module Rudy::Test
         end
       end
       
-      xshould "(01) have domain" do
+      should "(01) have domain" do
         assert @@sdb.domains.create(Rudy::RUDY_DOMAIN), "Domain not created (#{Rudy::RUDY_DOMAIN})"
       end
-      
-      xshould "(02) have instance to work with" do
-        stop_test @@ec2.instances.any?(:running), "Destroy the existing instances"
-        instances = @@ec2.instances.create(@ami)
-        assert instances.is_a?(Array), "Not an Array of instances"
-        instances.each do |instance|
-          assert instance.is_a?(Rudy::AWS::EC2::Instance), "Not an Rudy::AWS::EC2::Instance object"
-        end
-      end
-      
       
       
       should "(10) create a disk object" do

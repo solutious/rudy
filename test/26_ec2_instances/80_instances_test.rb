@@ -2,7 +2,7 @@
 module Rudy::Test
   class Case_26_EC2
 
-    xcontext "#{name} Instances" do
+    context "#{name} Instances" do
       
       setup do
         @us_ami = @@config.machines.find(:"us-east-1b", :ami)

@@ -45,7 +45,7 @@ module Rudy
       keypairs
     end
     
-    def list_as_hash(n=nill, &each_object)
+    def list_as_hash(n=nil, &each_object)
       n ||= name(n)
       n &&= [n]
       keypairs = @@ec2.keypairs.list_as_hash(n)

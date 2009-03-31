@@ -13,7 +13,7 @@ module Rudy::Test
         @domain = @domain_list.first
       end
       
-      xshould "(10) create domain" do
+      should "(10) create domain" do
         dname = 'test_' << Rudy::Utils.strand
         assert @@sdb.domains.create(dname), "Domain not created (#{dname})"
       end
@@ -95,7 +95,7 @@ module Rudy::Test
         assert items.nil?, "Some items not destroyed (#{items})"
       end
       
-      xshould "(99) destroy domains" do
+      should "(99) destroy domains" do
         
         assert !@domain.nil?, "No domain"
         

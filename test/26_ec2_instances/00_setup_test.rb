@@ -17,7 +17,7 @@ module Rudy::Test
     @@config = @@rmach.config
     @@zone = @@rmach.global.zone.to_s
     
-    xcontext "(10) #{name} Setup" do
+    context "(10) #{name} Setup" do
       should "(10) have class variables setup" do
         stop_test !@@rmach.is_a?(Rudy::Machines), "We don't have an instance of Rudy::Machines (#{@@rmach})"
         stop_test !@@ec2.is_a?(Rudy::AWS::EC2), "We don't have an instance of Rudy::AWS::EC2 (#{@@ec2})"

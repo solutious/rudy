@@ -3,7 +3,7 @@ module Rudy::Test
   class Case_50_Commands
     
 
-    xcontext "#{name}_10 KeyPairs" do
+    context "#{name}_10 KeyPairs" do
       setup do
         @rkey = Rudy::KeyPairs.new(:logger => @@logger)
         stop_test !@rkey.is_a?(Rudy::KeyPairs), "We need Rudy::KeyPairs (#{@rkey})"
@@ -17,7 +17,7 @@ module Rudy::Test
       end
       
       should "(10) create a keypair" do
-        stop_test !@rkey.any?, "Delete existing KeyPairs"
+        stop_test @rkey.any?, "Delete existing KeyPairs"
         kp = @rkey.create
         assert kp.is_a?(Rudy::AWS::EC2::KeyPair)
         assert File.exists?(@rkey.path), "No private key: #{@rkey.path}"

@@ -11,11 +11,11 @@ module Rudy::Test
         stop_test !@rmach.is_a?(Rudy::Machines), "We need Rudy::Machines (#{@rmach})"
         
         @rgroup = Rudy::Groups.new(:logger => @@logger)
-        stop_test !@@rgroup.is_a?(Rudy::Groups), "We need Rudy::Machines (#{@@rgroup})"
+        stop_test !@rgroup.is_a?(Rudy::Groups), "We need Rudy::Machines (#{@rgroup})"
         
       end
       
-      xshould "(00) have current machine group" do
+      should "(00) have current machine group" do
         stop_test @rgroup.exists?(@rmach.current_machine_group), "Destroy existing groups first"
         @rgroup.any?
         
@@ -36,7 +36,7 @@ module Rudy::Test
       end
       
       
-      xshould "(20) list 1 machine" do
+      should "(20) list 1 machine" do
         assert @rmach.running?, "No machines running"
         instances = @rmach.list
         assert instances.is_a?(Array), "instances is not an Array"
@@ -52,7 +52,7 @@ module Rudy::Test
         
       end
       
-      xshould "(99) destroy machines" do
+      should "(99) destroy machines" do
         assert @rmach.running?, "No machines running"
         success = @rmach.destroy
         assert success, "instance was not terminated"

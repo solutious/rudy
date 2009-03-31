@@ -36,7 +36,11 @@ namespace :test do
   task :files do
     puts Dir.glob(File.join('test', '**', '*_test.rb'))
   end
-  # rake test:05 etc...
+  
+  # Run individual test groups with: 
+  # rake test:05 
+  # rake test:60
+  # etc...
   ('00'..'99').each do |num|
     task num.to_sym do
       Rake.run_tests "test/#{num}*/*_test.rb"

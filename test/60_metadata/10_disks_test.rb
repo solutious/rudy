@@ -57,7 +57,7 @@ module Rudy::Test
         disk.save
       end
       
-      xshould "(20) list metadata" do
+      should "(20) list metadata" do
         q = "select * from #{Rudy::RUDY_DOMAIN}"
 
         items = @@sdb.select(q)
@@ -66,7 +66,7 @@ module Rudy::Test
         assert_equal @@global.zone.to_s, items.values.first['zone'].first.to_s
       end
       
-      xshould "(22) list disk metadata with select" do
+      should "(22) list disk metadata with select" do
         q = "select * from #{Rudy::RUDY_DOMAIN} where rtype = 'disk'"
         items = @@sdb.select(q)
         assert_equal Hash, items.class
@@ -74,7 +74,7 @@ module Rudy::Test
         assert_equal @@global.zone.to_s, items.values.first['zone'].first.to_s
       end
       
-      xshould "(23) list disk metadata with query" do
+      should "(23) list disk metadata with query" do
         q = "select * from #{Rudy::RUDY_DOMAIN} where rtype = 'disk'"
         
         items = @@sdb.query_with_attributes(Rudy::RUDY_DOMAIN, "['rtype' = 'disk']")
@@ -83,7 +83,7 @@ module Rudy::Test
         assert_equal @@global.zone.to_s, items.values.first['zone'].first.to_s
       end
       
-      xshould "(30) get disk metadata" do
+      should "(30) get disk metadata" do
         disk_tmp = create_disk
         disk = Rudy::MetaData::Disk.get(disk_tmp.name)
         assert_equal Rudy::MetaData::Disk, disk.class

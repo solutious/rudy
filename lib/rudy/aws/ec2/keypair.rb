@@ -11,6 +11,12 @@ module Rudy::AWS
       def to_s
         "%-20s   %s" % [self.name, self.fingerprint]
       end
+      
+      def public_key
+        return unless @private_key
+        k = Crypto::Key.new(@private_key)
+        k.key.public_key
+      end
     end
     
     class KeyPairs
@@ -65,10 +71,16 @@ module Rudy::AWS
         !keypairs.empty?
       end
       
+      def get(name)
+        keypairs = list(name) || []
+        return if keypairs.empty?
+        keypairs.first
+      end
+      
       def exists?(name)
         begin
-          keypairs = list(name)
-          !keypairs.empty?
+          kp = get(name)
+          kp.is_a?(Rudy::AWS::EC2::KeyPair)
         rescue => ex
           false
         end

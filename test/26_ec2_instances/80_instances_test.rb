@@ -1,10 +1,15 @@
 
 module Rudy::Test
-  class Case_21_EC2
+  class Case_26_EC2
 
     xcontext "#{name} Instances" do
       
-      should "(01) create instance" do
+      setup do
+        @us_ami = @@config.machines.find(:"us-east-1b", :ami)
+        @eu_ami = @@config.machines.find(:"eu-west-1b", :ami)
+      end
+      
+      should "(10) create instance" do
         stop_test @@ec2.instances.any?(:running), "Destroy the existing instances"
         instances = @@ec2.instances.create('ami-235fba4a') # Amazon Getting Started AMI
         assert instances.is_a?(Array), "Not an Array of instances"
@@ -13,12 +18,12 @@ module Rudy::Test
         end
       end
       
-      should "(02) list instance" do
+      should "(20) list instance" do
         assert @@ec2.instances.list.is_a?(Array), "Not an Array of instances"
         assert @@ec2.instances.list_as_hash.is_a?(Hash), "Not a Hash of instances"
       end
       
-      should "(03) assign IP address to instance" do
+      should "(30) assign IP address to instance" do
         assigned = 0
         @@ec2.instances.list.each do |instance|
           next if instance.terminated? || instance.shutting_down?
@@ -29,7 +34,7 @@ module Rudy::Test
         assert assigned > 0, "No machine running"
       end
       
-      should "(04) restart instance" do
+      should "(40) restart instance" do
         instances = @@ec2.instances.list
         instances.each do |instance|
           next unless instance.running?
@@ -37,7 +42,7 @@ module Rudy::Test
         end
       end
       
-      should "(05) destroy instance" do
+      should "(99) destroy instance" do
         instances = @@ec2.instances.list  # nil means all states
         instances.each do |instance|
           next if instance.terminated? || instance.shutting_down?

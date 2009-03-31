@@ -1,12 +1,12 @@
 
 module Rudy::Test
   
-  class Case_21_EC2
+  class Case_25_EC2
     
-    xcontext "(10) #{name} KeyPairs" do
+    context "#{name}_10 KeyPairs" do
       
       
-      should "(01) create keypair" do
+      should "(10) create keypair" do
         name = 'test-' << Rudy::Utils.strand
         keypair = @@ec2.keypairs.create(name)
         assert keypair.is_a?(Rudy::AWS::EC2::KeyPair), "Not a KeyPair"
@@ -15,7 +15,7 @@ module Rudy::Test
         assert !keypair.private_key.empty?, "No private key"
       end
       
-      should "(10) list keypairs" do
+      should "(20) list keypairs" do
         keypairs = @@ec2.keypairs.list || []
         assert keypairs.size > 0, "No keypairs"
       end

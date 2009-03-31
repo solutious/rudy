@@ -1,7 +1,7 @@
 
 module Rudy::Test
 
-  class Case_21_EC2
+  class Case_25_EC2
     
     def get_groups
       # Ruby 1.8 throws an undefined method error when this is at the 
@@ -12,7 +12,7 @@ module Rudy::Test
     end
     
     
-    xcontext "#{name} Groups" do
+    context "#{name}_20 Groups" do
       
       should "(00) not be existing groups" do
         group_list = get_groups
@@ -28,6 +28,7 @@ module Rudy::Test
         assert group.is_a?(Rudy::AWS::EC2::Group), "Not a Group object"
         assert_equal group.name, gname, "Group name not set"
         assert_equal group.description, "Group #{gname}", "Group description not 'Group #{gname}'"
+        assert @@ec2.groups.exists?(gname), "Group #{gname} doesn't exist"
       end
       
       should "(02) create group with name and description" do
@@ -40,6 +41,7 @@ module Rudy::Test
         assert group.is_a?(Rudy::AWS::EC2::Group), "Not a Group object"
         assert_equal group.name, gname, "Group name not set"
         assert_equal group.description, desc, "Group description not set"
+        assert @@ec2.groups.exists?(gname), "Group #{gname} doesn't exist"
       end
       
       should "(10) list available groups" do
@@ -104,7 +106,7 @@ module Rudy::Test
         group = @@ec2.groups.create(gname)
         should_have = "#{@@rmach.config.awsinfo.account}:#{gname}"
         
-        ret = @@ec2.groups.authorize_group(gname, @@rmach.config.awsinfo.account, gname)
+        ret = @@ec2.groups.authorize_group(gname, gname, @@rmach.config.awsinfo.account)
         assert ret, "Authorize failed (#{should_have})"
         group = @@ec2.groups.get(gname)
         assert group.is_a?(Rudy::AWS::EC2::Group), "Not a Group object"
@@ -112,7 +114,7 @@ module Rudy::Test
         assert_equal should_have, group.groups.keys.first, "Authorized group is not #{should_have}"
         # TODO: Check port ranges
         
-        ret = @@ec2.groups.revoke_group(gname, @@rmach.config.awsinfo.account, gname)
+        ret = @@ec2.groups.revoke_group(gname, gname, @@rmach.config.awsinfo.account)
         assert ret, "Revoke failed (#{should_have})"
         group = @@ec2.groups.get(gname)
         assert group.is_a?(Rudy::AWS::EC2::Group), "Not a Group object"

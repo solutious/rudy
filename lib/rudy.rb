@@ -9,17 +9,19 @@ require 'socket'
 require 'timeout'
 require 'tempfile'
 
-require 'rush' #, Tom Sawyer
-
 require 'storable'
 require 'console'
+require 'sysinfo'
 require 'annoy'
+
+require 'rush' #, Tom Sawyer
 
 require 'net/ssh'
 require 'net/scp'
 require 'net/ssh/multi'
 require 'net/ssh/gateway'
 
+require 'utils/crypto-key'
 
 RUDY_HOME = File.join(File.dirname(__FILE__), '..') unless defined?(RUDY_HOME)
 RUDY_LIB = File.join(File.dirname(__FILE__), '..', 'lib') unless defined?(RUDY_LIB)
@@ -43,6 +45,8 @@ module Rudy #:nodoc:
   DEFAULT_USER = 'rudy' unless defined?(DEFAULT_USER)
   
   SUPPORTED_SCM_NAMES = [:svn, :git] unless defined?(SUPPORTED_SCM_NAMES)
+  
+  PK_FORMAT = "key-%s.private"
   
   ID_MAP = {
     :instance => 'i',
@@ -196,6 +200,7 @@ require 'rudy/utils'       # The
 require 'rudy/config'      # order
 require 'rudy/huxtable'    # of
 require 'rudy/addresses'
+require 'rudy/keypairs'
 require 'rudy/routines'    # require
 require 'rudy/machines'    # statements
 require 'rudy/manager'     # is

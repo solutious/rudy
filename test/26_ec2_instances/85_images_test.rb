@@ -1,5 +1,5 @@
 module Rudy::Test
-  class Case_21_EC2
+  class Case_26_EC2
 
     xcontext "#{name} Images" do
       should "nothing" do

@@ -1,5 +1,5 @@
 module Rudy::Test
-  class Case_50_MetaData
+  class Case_60_MetaData
     
     def create_disk
       disk = Rudy::MetaData::Disk.new
@@ -13,7 +13,11 @@ module Rudy::Test
       disk
     end
     
-    xcontext "#{name}_10 Disks" do
+    context "#{name}_10 Disks" do
+      
+      setup do
+        @ami = @@config.machines.find(@@zone.to_sym, :ami)
+      end
       
       should "(00) have global setup" do
         [:region, :zone, :environment, :role, :position].each do |n|
@@ -21,9 +25,19 @@ module Rudy::Test
         end
       end
       
-      should "(01) have domain" do
-        #assert @@sdb.domains.create(Rudy::RUDY_DOMAIN), "Domain not created (#{Rudy::RUDY_DOMAIN})"
+      xshould "(01) have domain" do
+        assert @@sdb.domains.create(Rudy::RUDY_DOMAIN), "Domain not created (#{Rudy::RUDY_DOMAIN})"
       end
+      
+      xshould "(02) have instance to work with" do
+        stop_test @@ec2.instances.any?(:running), "Destroy the existing instances"
+        instances = @@ec2.instances.create(@ami)
+        assert instances.is_a?(Array), "Not an Array of instances"
+        instances.each do |instance|
+          assert instance.is_a?(Rudy::AWS::EC2::Instance), "Not an Rudy::AWS::EC2::Instance object"
+        end
+      end
+      
       
       
       should "(10) create a disk object" do
@@ -43,7 +57,7 @@ module Rudy::Test
         disk.save
       end
       
-      should "(20) list metadata" do
+      xshould "(20) list metadata" do
         q = "select * from #{Rudy::RUDY_DOMAIN}"
 
         items = @@sdb.select(q)
@@ -52,7 +66,7 @@ module Rudy::Test
         assert_equal @@global.zone.to_s, items.values.first['zone'].first.to_s
       end
       
-      should "(22) list disk metadata with select" do
+      xshould "(22) list disk metadata with select" do
         q = "select * from #{Rudy::RUDY_DOMAIN} where rtype = 'disk'"
         items = @@sdb.select(q)
         assert_equal Hash, items.class
@@ -60,7 +74,7 @@ module Rudy::Test
         assert_equal @@global.zone.to_s, items.values.first['zone'].first.to_s
       end
       
-      should "(23) list disk metadata with query" do
+      xshould "(23) list disk metadata with query" do
         q = "select * from #{Rudy::RUDY_DOMAIN} where rtype = 'disk'"
         
         items = @@sdb.query_with_attributes(Rudy::RUDY_DOMAIN, "['rtype' = 'disk']")
@@ -69,14 +83,23 @@ module Rudy::Test
         assert_equal @@global.zone.to_s, items.values.first['zone'].first.to_s
       end
       
-      should "(30) get disk metadata" do
+      xshould "(30) get disk metadata" do
         disk_tmp = create_disk
         disk = Rudy::MetaData::Disk.get(disk_tmp.name)
         assert_equal Rudy::MetaData::Disk, disk.class
         assert_equal @@global.zone.to_s, disk.zone.to_s
       end
       
-      should "(40) destroy disk metadata" do
+      should "(40) mount disk to instance" do
+        inst_list = @@ec2.instances.list
+        assert inst_list.is_a?(Array), "Not an Array of instances"
+        p inst_list
+        #inst_list.each do |inst|
+        #  
+        #end
+      end
+      
+      should "(99) destroy disk metadata" do
         q = "select * from #{Rudy::RUDY_DOMAIN} where rtype = 'disk'"
         items = @@sdb.select(q)
         assert_equal Hash, items.class

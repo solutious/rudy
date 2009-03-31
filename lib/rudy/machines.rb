@@ -29,6 +29,8 @@ module Rudy
     def create(opts={}, &each_inst)
       raise "No root keypair configured" if !opts[:keypair] && !has_keypair?(:root)
       
+      p user_keypairpath(:root)
+      exit
       # TODO: Handle itype on create
       opts = { :ami => current_machine_image, 
                :group => current_machine_group, 

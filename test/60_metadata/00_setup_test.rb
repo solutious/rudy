@@ -1,15 +1,16 @@
 require File.join(File.dirname(__FILE__), '..', 'helper')
 
 module Rudy::Test
-
-  class Case_05_Config < Test::Unit::TestCase
-    include Rudy::AWS # If we include Huxtable, we won't need to grab global and config form rmach
+  class Case_60_MetaData < Test::Unit::TestCase
+    include Rudy::AWS
     
-    @@logger = STDERR #StringIO.new
+    @@logger = StringIO.new
     @@rmach = Rudy::Machines.new(:logger => @@logger)
     @@global = @@rmach.global
     @@config = @@rmach.config
     @@zone = @@rmach.global.zone.to_s
+    
+
     
     context "#{name}_00 Setup" do
       should "(00) have class variables setup" do
@@ -19,6 +20,9 @@ module Rudy::Test
       end
     end
     
-    
+    at_exit {
+      @@logger.rewind
+      puts @@logger.read
+    }
   end
 end

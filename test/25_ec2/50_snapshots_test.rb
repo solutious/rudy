@@ -1,10 +1,10 @@
 
 module Rudy::Test
-  class Case_21_EC2
+  class Case_25_EC2
 
 
        
-   xcontext "#{name} Snapshots" do
+   xcontext "#{name}_50 Snapshots" do
      
      should "(00) be no snapshots" do
        stop_test @@ec2.snapshots.any?, "Destroy existing snapshots"

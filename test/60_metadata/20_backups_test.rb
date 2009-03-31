@@ -1,5 +1,5 @@
 module Rudy::Test
-  class Case_50_MetaData
+  class Case_60_MetaData
     
     def create_backup
       back = Rudy::MetaData::Backup.new
@@ -18,7 +18,7 @@ module Rudy::Test
       [dat.year, mon, day, Rudy::RUDY_DELIM, hour, min, Rudy::RUDY_DELIM, sec].join
     end
     
-    context "#{name}_20 Backups" do
+    xcontext "#{name}_20 Backups" do
       
       should "(00) have global setup" do
         [:region, :zone, :environment, :role, :position].each do |n|

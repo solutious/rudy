@@ -6,7 +6,11 @@ module Rudy::AWS
       field :ports => Range          # Port range
       field :protocol => String
       def to_s
-        "%s..%s/%s" % [self.ports.first, self.ports.last, self.protocol]
+        if self.ports.first == self.ports.last
+          "%s/%s" % [self.ports.last, self.protocol]
+        else
+          "%s..%s/%s" % [self.ports.first, self.ports.last, self.protocol]
+        end
       end
     end     
   end
@@ -24,11 +28,11 @@ module Rudy::AWS
       lines = ["%12s: %s" % ['GROUP', self.name.bright]]
       
       (self.addresses || {}).each_pair do |address,perms|
-        lines << "%6s %s %s" % ['', address.to_s, perms.collect { |p| p.to_s}.join(', ')]
+        lines << "%6s %s:  %s" % ['', address.to_s, perms.collect { |p| p.to_s}.join(', ')]
       end
       
       (self.groups || {}).each_pair do |group,perms|
-        lines << "%6s %s %s" % ['', group, perms.collect { |p| p.to_s}.join(', ') ]
+        lines << "%6s %s:  %s" % ['', group, perms.collect { |p| p.to_s}.join(', ') ]
       end
       
       lines.join($/)
@@ -101,8 +105,7 @@ module Rudy::AWS
     
       # +name+ a string
       def get(name)
-        g = (list([name]) || []).first
-        g
+        (list([name]) || []).first
       end
     
       # +group+ a Rudy::AWS::EC2::Group object
@@ -118,12 +121,13 @@ module Rudy::AWS
           :to_port => to_port,
           :cidr_ip => ipa
         }
+        
         ret = @aws.send("#{meth}_security_group_ingress", opts)
         (ret && ret['return'] == 'true')
       end
       private :modify_perms
     
-      def modify_group_perms(meth, name, gowner=nil, gname=nil)
+      def modify_group_perms(meth, name, gname=nil, gowner=nil)
         opts = {
           :group_name => name,
           :source_security_group_name => gname,
@@ -160,8 +164,8 @@ module Rudy::AWS
       def exists?(name)
         begin
           g = list([name.to_s])
-        rescue
-          return false
+        rescue ::EC2::InvalidGroupNotFound
+          return false 
         end
       
         !g.empty?

@@ -105,7 +105,6 @@ module Rudy
       refresh
     end
     
-
   end
 end
 

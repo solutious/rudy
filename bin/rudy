@@ -236,6 +236,11 @@ action :C, :create, "Create KeyPair"
 argv :kpname
 command :keypairs => Rudy::CLI::KeyPairs
 
+usage "rudy console [-g group] [instance ID]"
+desc "Displays system console output for given instance(s)"
+option :g, :group, String, "A group name to authorize or revoke network rule. Must also supply -o!"
+argv :awsid
+command :console => Rudy::CLI::Machines
 
 #usage "rudy [global options] instances [-D] [-S -i image ID] [instance ID OR group name]"
 #desc "Manage EC2 Instances"
@@ -310,10 +315,6 @@ command :id do |obj|
   puts t if t
 end
 
-
-usage "rudy console"
-desc "A rudimentary, IRB-style console."
-command :console => Rudy::CLI::Console
 
 desc "Display the current Rudy slogan"
 command :slogan do

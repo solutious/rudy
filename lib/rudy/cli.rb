@@ -18,20 +18,42 @@ module Rudy
     protected
       def init
         
+        # This is duplicated in Huxtable :[
+        String.disable_color if @global.nocolor
+        Rudy.enable_quiet if @global.quiet
+        
+        
         @config = Rudy::Config.new
         @config.look_and_load(@global.config)
+
+        unless @config.respond_to?(:awsinfo)
+          STDERR.puts Rudy.banner(%Q(Rudy says, "I can't find any configuration"), nil, :red) 
+          exit 1
+        end
         
-        raise "There is no machine group configured" if @config.machines.nil?
+#        raise Rudy.banner("There is no machine group configured") unless 
+        
+        # EVERYTHING BELOW THIS LINE IS ATROCIOUS 
         
         # These are here so we can print the machine group shit in the header. 
         # The dupilcation annoys me (see Rudy::Huxtable#init_globals) and I'd
         # like to find a cleaner solution. 
-        @global.region ||= @config.defaults.region || DEFAULT_REGION
-        @global.zone ||= @config.defaults.zone || DEFAULT_ZONE
-        @global.environment ||= @config.defaults.environment || DEFAULT_ENVIRONMENT
-        @global.role ||= @config.defaults.role || DEFAULT_ROLE
-        @global.position ||= @config.defaults.position || DEFAULT_POSITION
-        @global.user ||= @config.defaults.user || DEFAULT_USER
+        if @config.respond_to? :defaults
+          @global.region ||= @config.defaults.region 
+          @global.zone ||= @config.defaults.zone 
+          @global.environment ||= @config.defaults.environment
+          @global.role ||= @config.defaults.role 
+          @global.position ||= @config.defaults.position 
+          @global.user ||= @config.defaults.user
+        end
+        
+        @global.region ||= DEFAULT_REGION
+        @global.zone ||= DEFAULT_ZONE
+        @global.environment ||= DEFAULT_ENVIRONMENT
+        @global.role ||= DEFAULT_ROLE
+        @global.position ||= DEFAULT_POSITION
+        @global.user ||= DEFAULT_USER
+        
         
         if @global.verbose > 1
           puts "CONFIGS: ", @config.paths, $/
@@ -53,10 +75,7 @@ module Rudy
           exit 1
         end
         
-        # This is also duplicated :[]
-        String.disable_color if @global.nocolor
-        Rudy.enable_quiet if @global.quiet
-        
+
         # TODO: enforce home directory permissions
         #if File.exists?(RUDY_CONFIG_DIR)
         #  puts "Checking #{check_environment} permissions..."

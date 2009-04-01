@@ -28,6 +28,9 @@ module Rudy
       @logger.puts "Writing #{self.public_path(n)}"
       Rudy::Utils.write_to_file(self.public_path(n), kp.public_key, 'w')
       
+      @logger.puts "Changing permissions to #{self.public_path(n)}"
+      Rudy::Utils.write_to_file(self.public_path(n), kp.public_key, 'w')
+      
       @logger.puts "NOTE: If you move #{self.path(n)} you need to also update your Rudy machines config."
       
       kp

@@ -56,8 +56,10 @@ require 'utils/crypto-key'
 #     $ rudy slogan
 #     Rudy: Not your grandparent's deployment tool! 
 #
-# -----------------------------------------------------------------------------------
+#
 module Rudy
+  extend self
+  
   unless defined?(RUDY_DOMAIN) # We can assume all constants are defined
     # SimpleDB accepts dashes in the domain name on creation and with the query syntax. 
     # However, with select syntax it says: "The specified query expression syntax is not valid"
@@ -107,6 +109,14 @@ module Rudy
     def self.to_s; [MAJOR, MINOR, TINY].join('.'); end
     def self.to_f; self.to_s.to_f; end
   end
+  
+  begin
+    SYSINFO = SystemInfo.new
+  rescue 
+  end
+  
+  def Rudy.sysinfo; SYSINFO; end
+  def sysinfo; SYSINFO;  end
   
   # Determine if we're running directly on EC2 or
   # "some other machine". We do this by checking if

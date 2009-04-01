@@ -151,7 +151,6 @@ module Rudy::AWS
         destroy(inst_ids, :skip_check)
       end
     
-    
       # * +state+ is an optional instance state. If specified, must be one of: running (default), pending, terminated.
       # * +inst_ids+ is an Array of instance IDs.
       # Returns an Array of Rudy::AWS::EC2::Instance objects. 
@@ -232,7 +231,19 @@ module Rudy::AWS
         instances
       end
     
-    
+      # System console output. 
+      # * +inst_id+ instance ID (String) or Instance object.
+      # NOTE: Amazon encrypts the console output before sendind it. The machine instances
+      # you are requesting will need to have an associated keypair in order to decrypt
+      # this output.
+      def console_output(inst_id)
+        inst_ids = objects_to_instance_ids([inst_id])
+        response = execute_request({}) { 
+          @aws.get_console_output(:instance_id => inst_ids.first)
+        }
+        response['output']
+      end
+      
       def attached_volume?(id, device)
         list = volumes(id)
         list.each do |v|

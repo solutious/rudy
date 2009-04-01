@@ -38,6 +38,8 @@ module Rudy
       @global.cert = File.expand_path(@global.cert || '')
       @global.privatekey = File.expand_path(@global.privatekey || '')
       
+      # ATROCIOUS!
+      
       if @config.defaults
         @global.region ||= @config.defaults.region
         @global.zone ||= @config.defaults.zone

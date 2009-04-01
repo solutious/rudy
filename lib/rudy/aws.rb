@@ -39,8 +39,10 @@ module Rudy
         response = nil
         begin
           response = request.call
+        rescue ::EC2::Error => ex
+          STDERR.puts ex.message
         rescue ::EC2::InvalidInstanceIDMalformed => ex
-          # TODO: put error messages somewhere
+          STDERR.puts ex.message
         ensure
           response ||= default
         end

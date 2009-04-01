@@ -25,8 +25,8 @@ def skip(msg)
 end
 
 def xshould(*args, &ignore)
-  puts %q(Skipping test: "%s") % args.first.color(:blue).bright
+  puts %Q(Skipping test: %s "%s") % [@name.color(:blue), args.first.color(:blue).bright]
 end
 def xcontext(*args, &ignore)
-  puts %q(Skipping context: "%s") % args.first.color(:blue).bright
+  puts %q(Skipping context: "%s") % @name.color(:blue).bright
 end

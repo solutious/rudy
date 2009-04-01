@@ -9,7 +9,7 @@ module Rudy::Test
         @eu_ami = @@config.machines.find(:"eu-west-1b", :ami)
       end
       
-      should "(10) create instance" do
+      xshould "(10) create instance" do
         stop_test @@ec2.instances.any?(:running), "Destroy the existing instances"
         instances = @@ec2.instances.create('ami-235fba4a') # Amazon Getting Started AMI
         assert instances.is_a?(Array), "Not an Array of instances"
@@ -19,24 +19,31 @@ module Rudy::Test
         end
       end
       
-        testnum = 20
-        Rudy::AWS::EC2::Instances::KNOWN_STATES.each do |state|
-      should "(#{testnum}) know instance is #{state}" do
+          testnum = 20
+          Rudy::AWS::EC2::Instances::KNOWN_STATES.each do |state|
+      xshould "(#{testnum}) know instance is #{state}" do
         instances = @@ec2.instances.list(state) || []
         return skip("No instances are in #{state} state") if instances.empty?
         instances.each do |inst|
           assert @@ec2.instances.send("#{state}?", inst) # running?(inst)
         end
       end
-        testnum += 1
-        end
+          testnum += 1
+          end
       
-      should "(30) list instance" do
+      xshould "(30) list instance" do
         assert @@ec2.instances.list.is_a?(Array), "Not an Array of instances"
         assert @@ec2.instances.list_as_hash.is_a?(Hash), "Not a Hash of instances"
       end
       
-      should "(40) assign IP address to instance" do
+      should "(31) console" do
+        #assert @@ec2.instances.any?(:running), "No machines running"
+        @@ec2.instances.list.each do |inst|
+          assert @@ec2.instances.console_output(inst).is_a?(String), "No console output for (#{inst})"
+        end
+      end
+      
+      xshould "(40) assign IP address to instance" do
         assigned = 0
         @@ec2.instances.list.each do |instance|
           next if instance.terminated? || instance.shutting_down?
@@ -47,14 +54,15 @@ module Rudy::Test
         assert assigned > 0, "No machine running"
       end
       
-      should "(50) restart instance" do
+      
+      xshould "(60) restart instance" do
         instances = @@ec2.instances.list(:running)
         instances.each do |instance|
           assert @@ec2.instances.restart(instance), "Did not restart"
         end
       end
       
-      should "(99) destroy instance" do
+      xshould "(99) destroy instance" do
         Rudy.waiter(2, 60, @@logger) { @@ec2.instances.any?(:running) }
         instances = @@ec2.instances.list(:running) 
         return skip("No running instances") unless instances
@@ -63,7 +71,7 @@ module Rudy::Test
         end
       end
       
-      should "(99) clean created addresses" do
+      xshould "(99) clean created addresses" do
         (@@ec2.addresses.list || []).each do |address|
           assert @@ec2.addresses.destroy(address), "Address not destroyed (#{address})"
         end

@@ -66,10 +66,10 @@ module Rudy
       instances_with_dns
     end
     
-    def destroy(group=nil, &each_inst)
+    def destroy(group=nil, inst_id=[], &each_inst)
       group ||= current_machine_group
       raise "No machines running in #{group}" unless running?(group)
-      instances = @@ec2.instances.list_group(group, :running)
+      instances = @@ec2.instances.list_group(group, :running, inst_id)
       instances &&= [instances].flatten
       @logger.puts "Found #{instances.size} instances in #{group}"
       instances.each { |inst| each_inst.call(inst) } if each_inst
@@ -97,6 +97,21 @@ module Rudy
       instances = @@ec2.instances.list_group_as_hash(group, state, inst_ids) || {}
       instances.each_pair { |inst_id,inst| each_inst.call(inst) } if each_inst
       instances
+    end
+    
+    # System console output. 
+    #
+    # NOTE: Amazon encrypts the console output before sendind it. The machine instances
+    # you are requesting will need to have an associated keypair in order to decrypt
+    # this output.
+    #
+    # Returns output for the first machine in the group (if provided) or the first
+    # instance ID (if provided)
+    def console(group=nil, inst_ids=[])
+      group ||= current_machine_group
+      instances = @@ec2.instances.list_group(group, :any, inst_ids)
+      return if instances.nil?
+      @@ec2.instances.console_output(instances.first.awsid)
     end
     
     # * +group+ machine group name

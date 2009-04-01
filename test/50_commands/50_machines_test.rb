@@ -39,11 +39,6 @@ module Rudy::Test
         assert @rgroup.exists?(@rmach.current_machine_group), "No matching security group"
       end
       
-      # TODO: standardize the Rudy::Machines class API. For example, @rmach.running?
-      # Without an argument, should it assume the current machine group?
-      # What about for pending? What if there are 3 machines running and only 1 is running. 
-      # What should it return?
-      
       should "(11) create machine group" do
         stop_test @rmach.running?, "Shutdown the machines running in #{@rmach.current_machine_group}"
         instances = @rmach.create

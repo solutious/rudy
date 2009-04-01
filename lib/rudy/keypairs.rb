@@ -67,7 +67,8 @@ module Rudy
     
     def any?(n=nil)
       n ||= name(n)
-      @@ec2.keypairs.any?    end
+      @@ec2.keypairs.any?    
+    end
     
     def name(n=nil)
       n ||= current_machine_group

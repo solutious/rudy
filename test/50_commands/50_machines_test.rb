@@ -61,6 +61,9 @@ module Rudy::Test
         assert instances.first.is_a?(Rudy::AWS::EC2::Instance), "instance is not a Rudy::AWS::EC2::Instance"
       end
 
+      should "(30) check console output" do
+        assert @rmach.console.is_a?(String), "No console output"
+      end
       
       should "(90) destroy machines" do
         assert @rmach.running?, "No machines running"

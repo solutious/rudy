@@ -232,10 +232,18 @@ module Rudy::AWS
       end
     
       # System console output. 
+      #
       # * +inst_id+ instance ID (String) or Instance object.
-      # NOTE: Amazon encrypts the console output before sendind it. The machine instances
-      # you are requesting will need to have an associated keypair in order to decrypt
-      # this output.
+      #
+      # NOTE: Amazon sends the console outputs as a Base64 encoded string.
+      # This method DOES NOT decode in order to remain compliant with the 
+      # data formats returned by Amazon. 
+      #
+      # You can decode it like this:
+      #
+      #      require 'base64'
+      #      Base64.decode64(output)
+      #
       def console_output(inst_id)
         inst_ids = objects_to_instance_ids([inst_id])
         response = execute_request({}) { 

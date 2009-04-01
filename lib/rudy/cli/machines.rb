@@ -5,21 +5,16 @@ module Rudy::CLI
     
     def connect
       puts "Rudy Connect".bright
-      opts = {}
-      opts[:group] = @option.group if @option.group
-      opts[:id] = @option.awsid if @option.awsid
-      opts[:id] &&= [opts[:id]].flatten
-      opts[:print] = @option.print if @option.print
-      
+
       if @argv.cmd
-        opts[:cmd] = [@argv.cmd].flatten.join(' ')
+        @argv.cmd = [@argv.cmd].flatten.join(' ')
         if @global.user.to_s == "root"
           exit unless Annoy.are_you_sure?(:medium)
         end
       end
       
       rudy = Rudy::Machines.new(:config => @config, :global => @global)
-      rudy.connect(opts)
+      rudy.connect(@argv.cmd, @option.group, @option.awsid, @option.print)
     end
 
     def copy_valid?

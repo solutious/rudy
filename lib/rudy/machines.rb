@@ -101,9 +101,8 @@ module Rudy
     
     # System console output. 
     #
-    # NOTE: Amazon encrypts the console output before sendind it. The machine instances
-    # you are requesting will need to have an associated keypair in order to decrypt
-    # this output.
+    # NOTE: Amazon sends the console output as a Base64 encoded string. This method
+    # decrypts it before returning it.
     #
     # Returns output for the first machine in the group (if provided) or the first
     # instance ID (if provided)
@@ -111,7 +110,25 @@ module Rudy
       group ||= current_machine_group
       instances = @@ec2.instances.list_group(group, :any, inst_ids)
       return if instances.nil?
-      @@ec2.instances.console_output(instances.first.awsid)
+      output = @@ec2.instances.console_output(instances.first.awsid)
+      return unless output
+      Base64.decode64(output)
+    end
+    
+    def connect(cmd, group=nil, inst_ids=[], print_only=false)
+      group ||= current_machine_group
+      instances = @@ec2.instances.list_group(group, :any, inst_ids)
+      raise "No machines running" if instances.nil?
+      raise "No keypair configured for #{current_user}" unless current_user_keypairpath
+      
+      # TODO: If a group is supplied we need to discover the keypair.
+      
+      instances.each do |inst|
+        msg = cmd ? %Q{"#{cmd}" on} : "Connecting to"
+        @logger.puts $/, "#{msg} #{inst.dns_name_public}", $/
+        ret = ssh_command(inst.dns_name_public, current_user_keypairpath, @global.user, cmd, print_only)
+        puts ret if ret  # ssh command returns false with "ssh_exchange_identification: Connection closed by remote host"
+      end
     end
     
     # * +group+ machine group name
@@ -155,25 +172,14 @@ module Rudy
       @@ec2.instances.unavailable?(instances)
     end
     
-    def connect(opts={})
-      raise "TODO: fix grabbing instances"
-      opts, instances = process_filter_options(opts)
-      raise "No machines running" unless instances && !instances.empty?
-      
-      instances.values.each do |inst|
-        msg = opts[:cmd] ? %Q{"#{opts[:cmd]}" on} : "Connecting to"
-        @logger.puts $/, "#{msg} #{inst.awsid}", $/
-        ret = ssh_command(inst.dns_name_public, current_user_keypairpath, @global.user, opts[:cmd], opts[:print])
-        puts ret if ret  # ssh command returns false with "ssh_exchange_identification: Connection closed by remote host"
-      end
-    end
+
     
     # * +:recursive: recursively transfer directories (default: false)
     # * +:preserve: preserve atimes and ctimes (default: false)
     # * +:task+ one of: :upload (default), :download.
     # * +:paths+ an array of paths to copy. The last element is the "to" path. 
     def copy(opts={})
-      raise "TODO: fix grabbing instances"
+      raise "TODO: re-implement copy (not working, sorry!)"
       opts, instances = process_filter_options(opts)
       raise "No machines running" unless instances && !instances.empty?
       raise "You must supply at least one source path" if !opts[:paths] || opts[:paths].empty?

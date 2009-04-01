@@ -33,7 +33,7 @@ namespace :test do
     system("#{rcov} --html test/**/*_test.rb")
     system("open coverage/index.html") if RUBY_PLATFORM['darwin']
   end
-  task :files do
+  task :list do
     puts Dir.glob(File.join('test', '**', '*_test.rb'))
   end
   
@@ -154,7 +154,6 @@ Rake::RDocTask.new do |t|
 	t.rdoc_files.include('README.rdoc')
 	t.rdoc_files.include('CHANGES.txt')
 	t.rdoc_files.include('bin/*')
-	t.rdoc_files.include('lib/*.rb')
 	t.rdoc_files.include('lib/**/*.rb')
 end
 

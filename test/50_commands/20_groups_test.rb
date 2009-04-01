@@ -22,7 +22,7 @@ module Rudy::Test
         assert group.is_a?(Rudy::AWS::EC2::Group)
         assert @rgroup.exists?(group.name), "Group not registered with Amazon"
         assert_equal group.name, @rgroup.name
-        # We don't check the permissions because we do that in the lower
+        # We don't check the rules because we do that in the lower
         # level tests for Rudy::AWS::EC2::Groups. 
       end
       
@@ -56,7 +56,7 @@ module Rudy::Test
         assert group.nil?, "Group was still created"
       end
       
-      xshould "(40) modify group permissions" do
+      xshould "(40) modify group rules" do
         
       end
       

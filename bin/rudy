@@ -211,12 +211,12 @@ option :all, "Display all security groups"
 option :r, :protocols, Array, "Comma-separated list of protocols. One of: tcp (default), udp, icmp"
 option :p, :ports, Array, "List of comma-separated port ranges in the form FROM:TO (default: 22,80,443)"
 option :a, :addresses, Array, "List of comma-separated IP addresses (default: #{Rudy::Utils::external_ip_address})"
-option :g, :group, String, "A group name to authorize or revoke permissions. Must also supply -o!"
+option :g, :group, String, "A group name to authorize or revoke network rule. Must also supply -o!"
 option :o, :owner, String, "A group owner ID (account number). Must also supply -g!"
 action :C, :create, "Create a security group"
 action :D, :destroy, "Destroy a security group"
-action :A, :authorize, "Authorize a permission for a security group"
-action :R, :revoke, "Revoke a permission for a security group"
+action :A, :authorize, "Authorize a rule for a security group"
+action :R, :revoke, "Revoke a rule for a security group"
 argv :name
 command :group => Rudy::CLI::Groups
 command_alias :group, :groups
@@ -315,6 +315,11 @@ usage "rudy console"
 desc "A rudimentary, IRB-style console."
 command :console => Rudy::CLI::Console
 
+desc "Display the current Rudy slogan"
+command :slogan do
+  puts "Rudy: Not your grandparent's deployment tool!"
+end
+
 #command :init do
 #  unless File.exists?(RUDY_CONFIG_FILE)
 #    Rudy::Config.init_config_dir
@@ -324,7 +329,7 @@ command :console => Rudy::CLI::Console
 # -------------------------------------------  UGLY STUFFS  --------
 # ------------------------------------------------------------------
 debug :on
-default :ssh
+default :status
 capture :stderr       
 before do
   @start = Time.now

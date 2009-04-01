@@ -53,15 +53,15 @@ module Rudy
     end
     
     def authorize(n, opts={})
-      modify_permissions(:authorize, n, opts)
+      modify_rules(:authorize, n, opts)
     end
     def revoke(n, opts={})
-      modify_permissions(:revoke, n, opts)
+      modify_rules(:revoke, n, opts)
     end
     
     # TODO: Consider changing the hash interface into arguments. 
     # with different methods for authorizing groups and addresses
-    def modify_permissions(action, n, opts={})
+    def modify_rules(action, n, opts={})
       n ||= name(n)
       
       raise "You must supply a group name" unless n
@@ -90,7 +90,7 @@ module Rudy
      
     end
     
-    def modify_group_permissions(n=nil, group=nil, owner=nil)
+    def modify_group_rules(n=nil, group=nil, owner=nil)
       n ||= name(n)
       
       owner ||= @config.awsinfo.account

@@ -56,7 +56,7 @@ module Rudy::Test
         end
       end
       
-      should "(20) authorize/revoke group permissions for address" do
+      should "(20) authorize/revoke group rules for address" do
         external_ip_address = Rudy::Utils::external_ip_address
         external_ip_address ||= '192.168.0.1/32'
         
@@ -79,9 +79,9 @@ module Rudy::Test
         assert group.addresses.is_a?(Hash), "Addresses is not a hash"
         address_diff = group.addresses.keys - should_have
         assert address_diff.empty?, "Some addresses not created (#{address_diff.join(', ')})"
-        group.addresses.each_pair do |address,perms|
-          assert perms.is_a?(Array), "Not an Array"
-          assert_equal 2, perms.size, "Not 2 perms"
+        group.addresses.each_pair do |address,rules|
+          assert rules.is_a?(Array), "Not an Array"
+          assert_equal 2, rules.size, "Not 2 rules"
           # TODO: Check port ranges
         end
         

@@ -8,7 +8,7 @@ require 'openssl'
 require 'rexml/document'
 require 'rexml/xpath'
 
-module AwsSdb
+module AwsSdb #:nodoc:all
 
   class Service
     def initialize(options={})

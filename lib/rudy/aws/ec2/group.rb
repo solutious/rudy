@@ -2,14 +2,14 @@
 module Rudy::AWS
   
   class EC2::Group < Storable
-    class Permissions < Storable
+    class Rule < Storable
       field :ports => Range          # Port range
       field :protocol => String
       def to_s
         if self.ports.first == self.ports.last
-          "%s/%s" % [self.ports.last, self.protocol]
+          "%s(%s)" % [self.protocol, self.ports.last]
         else
-          "%s..%s/%s" % [self.ports.first, self.ports.last, self.protocol]
+          "%s(%s..%s)" % [self.protocol, self.ports.first, self.ports.last]
         end
       end
     end     
@@ -19,40 +19,41 @@ module Rudy::AWS
     field :name => String
     field :description => String
     field :owner_id => String
-    field :addresses => Hash         # key: address/mask, value Array of Permissions object
-    field :groups => Hash            # key: group, value Array of Permissions object
+    field :addresses => Hash         # key: address/mask, value Array of Rule object
+    field :groups => Hash            # key: group, value Array of Rule object
     
     # Print info about a a security group
-    # +group+ is a Rudy::AWS::EC2::Group object
+    #
+    # * +group+ is a Rudy::AWS::EC2::Group object
     def to_s
       lines = ["%12s: %s" % ['GROUP', self.name.bright]]
       
-      (self.addresses || {}).each_pair do |address,perms|
-        lines << "%6s %s:  %s" % ['', address.to_s, perms.collect { |p| p.to_s}.join(', ')]
+      (self.addresses || {}).each_pair do |address,rules|
+        lines << "%6s %s:  %s" % ['', address.to_s, rules.collect { |p| p.to_s}.join(', ')]
       end
       
-      (self.groups || {}).each_pair do |group,perms|
-        lines << "%6s %s:  %s" % ['', group, perms.collect { |p| p.to_s}.join(', ') ]
+      (self.groups || {}).each_pair do |group,rules|
+        lines << "%6s %s:  %s" % ['', group, rules.collect { |p| p.to_s}.join(', ') ]
       end
       
       lines.join($/)
     end
     
-    # +ipaddress+ is a String, ipaddress/mask/protocol
-    # +perm+ is a Permissions object
-    def add_address(ipaddress, perm)
-      return false unless perm.is_a?(Permissions)
+    # * +ipaddress+ is a String, ipaddress/mask/protocol
+    # * +rule+ is a Rule object
+    def add_address(ipaddress, rule)
+      return false unless rule.is_a?(Rule)
       @addresses ||= {}
-      (@addresses[ipaddress] ||= []) << perm
-      perm
+      (@addresses[ipaddress] ||= []) << rule
+      rule
     end
     
-    # +group+ is a String, accountnum:group
-    # +perm+ is a Permissions object
-    def add_group(group, perm)
-      return false unless perm.is_a?(Permissions)
+    # * +group+ is a String, accountnum:group
+    # * +rule+ is a Rule object
+    def add_group(group, rule)
+      return false unless rule.is_a?(Rule)
       @groups ||= {}
-      (@groups[group] ||= []) << perm
+      (@groups[group] ||= []) << rule
     end
     
   end
@@ -70,8 +71,9 @@ module Rudy::AWS
         groups
       end
       
-      # +group_names+ is a list of security group names to look for. If it's empty, all groups
+      # * +group_names+ is a list of security group names to look for. If it's empty, all groups
       # associated to the account will be returned.
+      #
       # Returns an Array of Rudy::AWS::EC2::Group objects
       def list_as_hash(group_names=[])
         group_names ||= []
@@ -105,7 +107,7 @@ module Rudy::AWS
         (ret && ret['return'] == 'true')
       end
     
-      # +name+ a string
+      # * +name+ a string
       def get(name)
         (list([name]) || []).first
       end
@@ -115,7 +117,7 @@ module Rudy::AWS
       #  
       #end
     
-      def modify_perms(meth, name, from_port, to_port, protocol='tcp', ipa='0.0.0.0/0')
+      def modify_rules(meth, name, from_port, to_port, protocol='tcp', ipa='0.0.0.0/0')
         opts = {
           :group_name => name,
           :ip_protocol => protocol,
@@ -127,9 +129,9 @@ module Rudy::AWS
         ret = @aws.send("#{meth}_security_group_ingress", opts)
         (ret && ret['return'] == 'true')
       end
-      private :modify_perms
+      private :modify_rules
     
-      def modify_group_perms(meth, name, gname=nil, gowner=nil)
+      def modify_group_rules(meth, name, gname=nil, gowner=nil)
         opts = {
           :group_name => name,
           :source_security_group_name => gname,
@@ -138,27 +140,27 @@ module Rudy::AWS
         ret = @aws.send("#{meth}_security_group_ingress", opts)
         (ret && ret['return'] == 'true')
       end
-      private :modify_group_perms
+      private :modify_group_rules
       
       # Authorize a port/protocol for a specific IP address
       def authorize(*args)
-        modify_perms(:authorize, *args)
+        modify_rules(:authorize, *args)
       end
       alias :authorise :authorize
       
       def authorize_group(*args)
-        modify_group_perms(:authorize, *args)
+        modify_group_rules(:authorize, *args)
       end
       alias :authorise_group :authorize_group
       
       def revoke_group(*args)
-        modify_group_perms(:revoke, *args)
+        modify_group_rules(:revoke, *args)
       end
       
       # Revoke a port/protocol for a specific IP address
       # Takes the same arguments as authorize
       def revoke(*args)
-        modify_perms(:revoke, *args)
+        modify_rules(:revoke, *args)
       end
       
     
@@ -176,7 +178,7 @@ module Rudy::AWS
     
     
     
-      # +oldg+ is an EC2::Base Security Group Hash. This is the format
+      # * +ghash+ is an EC2::Base Security Group Hash. This is the format
       # returned by EC2::Base#describe_security_groups
       #
       #      groupName: stage-app
@@ -203,18 +205,18 @@ module Rudy::AWS
       #          ipProtocol: tcp
       #
       # Returns a Rudy::AWS::EC2::Group object
-      def self.from_hash(oldg)
+      def self.from_hash(ghash)
         newg = Rudy::AWS::EC2::Group.new
-        newg.name = oldg['groupName']
-        newg.description = oldg['groupDescription']
-        newg.owner_id = oldg['ownerId']
+        newg.name = ghash['groupName']
+        newg.description = ghash['groupDescription']
+        newg.owner_id = ghash['ownerId']
         newg.addresses = {}
         newg.groups = {}
         
-        return newg unless oldg['ipPermissions'].is_a?(Hash)
+        return newg unless ghash['ipPermissions'].is_a?(Hash)
         
-        oldg['ipPermissions']['item'].each do |oldp|
-          newp = Rudy::AWS::EC2::Group::Permissions.new
+        ghash['ipPermissions']['item'].each do |oldp|
+          newp = Rudy::AWS::EC2::Group::Rule.new
           newp.ports = Range.new(oldp['fromPort'], oldp['toPort'])
           newp.protocol = oldp['ipProtocol']
           if oldp['groups'].is_a?(Hash)

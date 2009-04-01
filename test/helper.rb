@@ -9,7 +9,7 @@ require 'shoulda'
 require 'rudy'
 
 
-puts Rudy.make_banner("THIS IS RUBY #{RUBY_VERSION}")
+puts Rudy.banner("THIS IS RUBY #{RUBY_VERSION}")
 
 # +should_stop+ should the test be stopped?
 # +str+ The message to print when +should_stop+ is true

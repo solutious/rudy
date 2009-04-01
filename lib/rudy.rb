@@ -1,4 +1,8 @@
 
+unless defined?(RUDY_HOME)
+  RUDY_HOME = File.join(File.dirname(__FILE__), '..') 
+  RUDY_LIB = File.join(File.dirname(__FILE__), '..', 'lib')
+end
 
 
 require 'digest/md5'
@@ -23,55 +27,83 @@ require 'net/ssh/gateway'
 
 require 'utils/crypto-key'
 
-RUDY_HOME = File.join(File.dirname(__FILE__), '..') unless defined?(RUDY_HOME)
-RUDY_LIB = File.join(File.dirname(__FILE__), '..', 'lib') unless defined?(RUDY_LIB)
 
-
-module Rudy #:nodoc:
-  # SimpleDB accepts dashes in the domain name on creation and with the query syntax. 
-  # However, with select syntax it says: "The specified query expression syntax is not valid"
-  RUDY_DOMAIN = "rudy_state" unless defined?(RUDY_DOMAIN)
-  RUDY_DELIM  = '-' unless defined?(RUDY_DELIM)
+# = Rudy
+#
+# == About
+#
+# Rudy is a development and deployment tool for the Amazon Elastic Compute Cloud
+# (EC2). There are two interfaces: a command-line tool executable and a Ruby library.
+# You can use Rudy as a development tool to simply the management of instances, 
+# security groups, etc.. on an ad-hoc basic. You can also define complex machine 
+# environments using a simple domain specific language (DSL) and use Rudy to build
+# and deploy these environments. 
+#
+# Services like EC2 are really new and we're still figuring out all the cool stuff
+# we can do with them. Rudy is a tool that helps you do that for your large, small
+# and otherwise awesome projects. 
+#
+#
+# == Status: Experimental
+#
+# The current release (0.4) is not ready for general consumption. We've been busy 
+# working away on the 0.5 release which will not only be 9 times better than 0.4, 
+# it will also have a big sexy doc. The documentation your reading now is a mix of 
+# 0.4 and 0.5 functionality. It's also quite incomplete! 
+# 
+# ==== You can expect the 0.5 release in May 2009.
+#
+#     $ rudy slogan
+#     Rudy: Not your grandparent's deployment tool! 
+#
+# -----------------------------------------------------------------------------------
+module Rudy
+  unless defined?(RUDY_DOMAIN) # We can assume all constants are defined
+    # SimpleDB accepts dashes in the domain name on creation and with the query syntax. 
+    # However, with select syntax it says: "The specified query expression syntax is not valid"
+    RUDY_DOMAIN = "rudy_state".freeze
+    RUDY_DELIM  = '-'.freeze
   
-  RUDY_CONFIG_DIR = File.join(ENV['HOME'] || ENV['USERPROFILE'], '.rudy') unless defined?(RUDY_CONFIG_DIR)
-  RUDY_CONFIG_FILE = File.join(RUDY_CONFIG_DIR, 'config') unless defined?(RUDY_CONFIG_FILE)
+    RUDY_CONFIG_DIR = File.join(ENV['HOME'] || ENV['USERPROFILE'], '.rudy').freeze
+    RUDY_CONFIG_FILE = File.join(RUDY_CONFIG_DIR, 'config').freeze
   
-  DEFAULT_REGION = 'us-east-1' unless defined?(DEFAULT_REGION)
-  DEFAULT_ZONE = 'us-east-1b' unless defined?(DEFAULT_ZONE)
-  DEFAULT_ENVIRONMENT = 'stage' unless defined?(DEFAULT_ENVIRONMENT)
-  DEFAULT_ROLE = 'app' unless defined?(DEFAULT_ROLE)
-  DEFAULT_POSITION = '01' unless defined?(DEFAULT_POSITION)
+    DEFAULT_REGION = 'us-east-1'.freeze 
+    DEFAULT_ZONE = 'us-east-1b'.freeze 
+    DEFAULT_ENVIRONMENT = 'stage'.freeze
+    DEFAULT_ROLE = 'app'.freeze
+    DEFAULT_POSITION = '01'.freeze
+                                 
+    DEFAULT_USER = 'rudy'.freeze
   
-  DEFAULT_USER = 'rudy' unless defined?(DEFAULT_USER)
+    SUPPORTED_SCM_NAMES = [:svn, :git].freeze
   
-  SUPPORTED_SCM_NAMES = [:svn, :git] unless defined?(SUPPORTED_SCM_NAMES)
-  
-  PK_FORMAT = "key-%s.private"
-  
-  ID_MAP = {
-    :instance => 'i',
-    :disk => 'disk',
-    :backup => 'back',
-    :volume => 'vol',
-    :snapshot => 'snap',
-    :kernel => 'aki',
-    :image => 'ami',
-    :ram => 'ari',
-    :log => 'log',
-    :key => 'key',
-    :pk => 'pk',
-    :cert => 'cert',
-    :reservation => 'r'
-  }.freeze unless defined?(ID_MAP)
+    ID_MAP = {
+      :instance => 'i',
+      :disk => 'disk',
+      :backup => 'back',
+      :volume => 'vol',
+      :snapshot => 'snap',
+      :kernel => 'aki',
+      :image => 'ami',
+      :ram => 'ari',
+      :log => 'log',
+      :key => 'key',
+      :pk => 'pk',
+      :cert => 'cert',
+      :reservation => 'r'
+    }.freeze
+  end
   
   @@quiet = false
   def Rudy.enable_quiet; @@quiet = true; end
   def Rudy.disable_quiet; @@quiet = false; end
   
   module VERSION #:nodoc:
-    MAJOR = 0.freeze unless defined? MAJOR
-    MINOR = 5.freeze unless defined? MINOR
-    TINY  = 0.freeze unless defined? TINY
+    unless defined?(MAJOR)
+      MAJOR = 0.freeze
+      MINOR = 5.freeze
+      TINY  = 0.freeze
+    end
     def self.to_s; [MAJOR, MINOR, TINY].join('.'); end
     def self.to_f; self.to_s.to_f; end
   end
@@ -175,7 +207,7 @@ module Rudy #:nodoc:
   # +size+ One of: :normal (default), :huge
   # +colour+ a valid 
   # Returns a string with styling applying
-  def Rudy.make_banner(msg, size = :normal, colour = :black)
+  def Rudy.banner(msg, size = :normal, colour = :black)
     return unless msg
     banners = {
       :huge => Rudy::Utils.without_indent(%Q(

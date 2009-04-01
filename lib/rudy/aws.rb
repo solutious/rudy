@@ -24,6 +24,10 @@ module Rudy
       def initialize(aws_connection)
         @aws = aws_connection
       end
+      
+      
+    protected
+    
       # Execute AWS requests safely. This will trap errors and return
       # a default value (if specified).
       # * +default+ A default response value

@@ -13,9 +13,11 @@ require 'fileutils'
 # Storable.field method which tells Storable the order and 
 # name.
 class Storable
-  VERSION = 2
-  NICE_TIME_FORMAT  = "%Y-%m-%d@%H:%M:%S".freeze unless defined? NICE_TIME_FORMAT
-  SUPPORTED_FORMATS = %w{tsv csv yaml json}.freeze unless defined? SUPPORTED_FORMATS
+  unless defined?(VERSION) # We can assume all are defined
+    VERSION = 2
+    NICE_TIME_FORMAT  = "%Y-%m-%d@%H:%M:%S".freeze 
+    SUPPORTED_FORMATS = %w{tsv csv yaml json}.freeze 
+  end
   
   # This value will be used as a default unless provided on-the-fly.
   # See SUPPORTED_FORMATS for available values.

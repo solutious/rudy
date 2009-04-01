@@ -1,8 +1,11 @@
-
-
+#
+# ---
 # TODO: Only half updated. Tests will do the trick!
+# +++
+#
 
-
+#
+#
 module Rudy
   module CLI
     class Groups < Rudy::CLI::Base
@@ -37,7 +40,7 @@ module Rudy
       end
       
       def revoke_group
-        puts "Revoke Machine Group Permissions".bright
+        puts "Revoke Machine Group Rule".bright
         opts = check_options
         exit unless Annoy.are_you_sure?(:medium)
         rudy = Rudy::Groups.new(:config => @config, :global => @global)
@@ -46,7 +49,7 @@ module Rudy
       end
       
       def authorize_group
-        puts "Authorize Machine Group Permissions".bright
+        puts "Authorize Machine Group Rule".bright
         opts = check_options
         exit unless Annoy.are_you_sure?(:medium)
         rudy = Rudy::Groups.new(:config => @config, :global => @global)

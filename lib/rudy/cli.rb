@@ -1,11 +1,15 @@
 
 module Rudy
-  class UnknownInstance < RuntimeError; end
+  class UnknownInstance < RuntimeError #:nodoc
+  end
 end
 
 module Rudy
+  
+  # 
   module CLI
-    class NoCred < RuntimeError; end;
+    class NoCred < RuntimeError #:nodoc
+    end
     
     class Base < Drydock::Command
 
@@ -13,8 +17,6 @@ module Rudy
       
     protected
       def init
-        
-        raise "PRODUCTION ACCESS IS DISABLED IN DEBUG MODE" if @global.environment == "prod" && Drydock.debug?
         
         @config = Rudy::Config.new
         @config.look_and_load(@global.config)
@@ -46,6 +48,11 @@ module Rudy
           puts
         end
         
+        if @global.environment =~ /^prod/ && Drydock.debug?
+          puts Rudy.banner("PRODUCTION ACCESS IS DISABLED IN DEBUG MODE")
+          exit 1
+        end
+        
         # This is also duplicated :[]
         String.disable_color if @global.nocolor
         Rudy.enable_quiet if @global.quiet
@@ -59,7 +66,8 @@ module Rudy
       
       
       # Print a default header to the screen for every command.
-      # +cmd+ is the name of the command current running. 
+      #
+      # * +cmd+ is the name of the command current running. 
       def print_header(cmd=nil)
         title = "RUDY v#{Rudy::VERSION}" unless @global.quiet
         now_utc = Time.now.utc.strftime("%Y-%m-%d %H:%M:%S")
@@ -77,10 +85,10 @@ module Rudy
           
           if @global.environment == "prod"
             msg = "YOU ARE PLAYING WITH PRODUCTION"
-            puts Rudy.make_banner(msg, :huge, :red), $/
+            puts Rudy.banner(msg, :huge, :red), $/
           end
         
-          puts Rudy.make_banner("THIS IS EC2"), $/ if Rudy.in_situ?
+          puts Rudy.banner("THIS IS EC2"), $/ if Rudy.in_situ?
         end
         
         

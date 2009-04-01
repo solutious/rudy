@@ -19,8 +19,8 @@ module Rudy::Test
         #end
       end
       
-      xshould "(10) create a keypair" do
-        stop_test @rkey.any?, "Delete existing KeyPairs"
+      should "(10) create a keypair" do
+        stop_test @rkey.any?, "Delete existing keypairs"
         kp = @rkey.create
         assert kp.is_a?(Rudy::AWS::EC2::KeyPair)
         assert File.exists?(@rkey.path), "No private key: #{@rkey.path}"
@@ -28,7 +28,7 @@ module Rudy::Test
         assert @rkey.exists?(kp.name), "KeyPair not registered with Amazon"
       end
       
-      xshould "(11) create a keypair with an arbitrary name" do
+      should "(11) create a keypair with an arbitrary name" do
         n = "test-%s" % Rudy::Utils.strand
         kp = @rkey.create(n)
         assert kp.is_a?(Rudy::AWS::EC2::KeyPair)
@@ -37,7 +37,7 @@ module Rudy::Test
         assert @rkey.exists?(kp.name), "KeyPair not registered with Amazon"
       end
       
-      xshould "(12) not create keypair if one exists" do
+      should "(12) not create keypair if one exists" do
         assert @rkey.exists?, "No #{@rkey.name} KeyPair"
         begin
           kp = @rkey.create
@@ -52,14 +52,13 @@ module Rudy::Test
         assert @rkey.has_root_keypair?, "No root keypair path defined in config"
         begin
           kp = @rkey.create
-        rescue
+        rescue => ex
         end
         assert kp.nil?, "Keypair was still created"
       end
       
-      xshould "(20) list keypairs" do
+      should "(20) list keypairs" do
         assert @rkey.any?, "No keypairs"
-        assert @rkey.exists?, "No #{@rkey.name} keypair"
         
         kp_list = @rkey.list
         assert kp_list.is_a?(Array), "List not an Array"
@@ -70,11 +69,20 @@ module Rudy::Test
         assert kp_list.size > 1, "List not greater than 1 (#{kp_list.size})"
       end
       
+      should "(30) find existing keypair for current machine group" do
+        
+        test_kp = @rkey.user_keypairpath(:root)
+        @rkey.global.environment = :stage
+        stage_kp = @rkey.user_keypairpath(:root)
+        
+        assert !test_kp.nil?, "Test keypair is nil"
+        assert !stage_kp.nil?, "Stage keypair is nil"
+        assert test_kp != stage_kp, "Test and Stage keypairs are the same (how can this be??)"
+      end
       
-      xshould "(99) destroy keypairs" do
-        assert @rkey.exists?, "KeyPair #{@rkey.name} doesn't exist"
+      should "(99) destroy keypairs" do
+        assert @rkey.any?, "No keypairs registered"
         @rkey.list.each do |kp|
-          puts kp.name
           assert @rkey.destroy(kp.name), "Did not destroy #{kp.name}"
         end
         assert !File.exists?(@rkey.path), "Still exists: #{@rkey.path}"

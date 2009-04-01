@@ -5,14 +5,13 @@ module Rudy
     
     
     def create(n=nil, opts={})
-      n ||= name(n)
       
-      if has_root_keypair?
-        @logger.puts "A root keypair is already defined for #{current_machine_group}" 
-        @logger.puts user_keypairpath(:root)
-        return
+      if !n && has_root_keypair?
+        raise "A root keypair is already defined for #{current_machine_group}" 
       end
       
+      n ||= name(n)
+        
       opts = {
         :force => false
       }.merge(opts)
@@ -40,7 +39,8 @@ module Rudy
       @logger.puts "No private key file: #{self.path(n)}. Continuing..." unless File.exists?(self.path(n))
       @logger.puts "Unregistering KeyPair with Amazon"
       ret = @@ec2.keypairs.destroy(n)
-      delete_files(n)
+      ret = delete_files(n) if ret # only delete local file if remote keypair is successfully destroyed
+      ret
     end
     
     def list(n=nil, &each_object)
@@ -73,12 +73,12 @@ module Rudy
       
     def path(n=nil)
       n ||= name(n)
-      File.join(self.dirname, "#{n}.private")
+      File.join(self.config_dirname, "#{n}.private")
     end
     
     def public_path(n=nil)
       n ||= name(n)
-      File.join(self.dirname, "#{n}.pub")
+      File.join(self.config_dirname, "#{n}.pub")
     end
     
     def has_root_keypair?
@@ -86,11 +86,12 @@ module Rudy
       (!path.nil? && !path.empty?)
     end
     
-    def dirname
-      raise "No config paths defined" unless @config.is_a?(Rudy::Config) && @config.paths.is_a?(Array)
-      base_dir = File.dirname @config.paths.first
-      raise "Config directory doesn't exist #{base_dir}" unless File.exists?(base_dir)
-      base_dir
+
+    # We use the base file name to determine the registered keypair name.
+    def KeyPairs.path_to_name(path)
+      return unless path
+      return path unless File.exists?(path)
+      File.basename(path).gsub('.private', '')
     end
     
   private

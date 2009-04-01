@@ -99,11 +99,25 @@ module Rudy
       (@global.accesskey && !@global.accesskey.empty? && @global.secretkey && !@global.secretkey.empty?)
     end
     
+    def config_dirname
+      raise "No config paths defined" unless @config.is_a?(Rudy::Config) && @config.paths.is_a?(Array)
+      base_dir = File.dirname @config.paths.first
+      raise "Config directory doesn't exist #{base_dir}" unless File.exists?(base_dir)
+      base_dir
+    end
     
     def has_keypair?(name=nil)
       kp = user_keypairpath(name)
       (!kp.nil? && File.exists?(kp))
     end
+    
+    def user_keypairname(user)
+      kp = user_keypairpath(user)
+      return unless kp
+      KeyPairs.path_to_name(kp)
+    end
+    
+
     
     def user_keypairpath(name)
       raise "No user provided" unless name
@@ -112,6 +126,15 @@ module Rudy
       kp = @config.machines.find_deferred(zon, env, rol, [:users, name, :keypair])
       kp ||= @config.machines.find_deferred(env, rol, [:users, name, :keypair])
       kp ||= @config.machines.find_deferred(rol, [:users, name, :keypair])
+      
+      # EC2 Keypairs that were created are intended for starting the machine instances. 
+      # These are used as the root SSH keys. If we can find a user defined key, we'll 
+      # check the config path for a generated one. 
+      if !kp && name.to_s == 'root'
+        path = File.join(self.config_dirname, "key-#{current_machine_group}.private")
+        kp = path if File.exists?(path)
+      end
+      
       kp &&= File.expand_path(kp)
       kp
     end

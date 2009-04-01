@@ -117,13 +117,13 @@ module Rudy::AWS
     # Return an Array of Instances objects
     def create(ami, group='default', keypair_name=nil, user_data=nil, zone=nil)
       opts = {
-        :image_id => ami,
+        :image_id => ami.to_s,
         :min_count => 1,
         :max_count => 1,
-        :key_name => keypair_name,
+        :key_name => keypair_name.to_s,
         :group_id => [group].flatten,
         :user_data => user_data,
-        :availability_zone => zone, 
+        :availability_zone => zone.to_s, 
         :addressing_type => 'public',
         :instance_type => 'm1.small',
         :kernel_id => nil
@@ -215,8 +215,10 @@ module Rudy::AWS
     # +inst_id+ is an instance ID
     # Returns an Instance object
     def get(inst_id)
+      inst_id = inst_id.awsid if inst_id.is_a?(Rudy::AWS::EC2::Instance)
       inst = list(nil, inst_id)
-      inst.first if inst
+      raise "Unknown instance: #{inst_id}" unless inst
+      inst.first
     end
     
     def any?(state=nil)
@@ -226,17 +228,29 @@ module Rudy::AWS
     
     def running?(inst_id)
       inst = get(inst_id)
-      (!inst.nil? && inst.state == "running")
+      (inst.state == "running")
     end
     
     def pending?(inst_id)
       inst = get(inst_id)
-      (!inst.nil? && inst.state == "pending")
+      (inst.state == "pending")
     end
     
     def terminated?(inst_id)
       inst = get(inst_id)
-      (!inst.nil? && inst.state == "terminated") # also, shutting-down
+      (inst.state == "terminated")
+    end
+    
+    def shutting_down?(inst_id)
+      inst = get(inst_id)
+      (inst.state == "shutting-down")
+    end
+    
+    def unavailable?(inst_id)
+      inst = get(inst_id)
+      (inst.state == "shutting-down" || 
+       inst.state == "pending" || 
+       inst.state == "terminated")
     end
     
     #

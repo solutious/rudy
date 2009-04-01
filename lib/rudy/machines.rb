@@ -4,33 +4,23 @@ module Rudy
   class Machines
     include Rudy::Huxtable
     
-    def destroy(opts={}, &each_inst)
-      opts, instances = process_filter_options(opts)
-      raise "No machines running" unless instances && !instances.empty?
-      
+    def destroy(inst_ids=[], &each_inst)
+      raise "No machines running" unless @@ec2.instances.any?(:running)
+      instances = @ec2.instances.list(inst_ids)
+      instances &&= [instances].flatten
       @logger.puts "Found instances: #{instances.keys.join(", ")}"
       
-      if each_inst
-        instances.each_pair { |inst_id,inst| each_inst.call(inst) }
-      end
+      instances.each { |inst| each_inst.call(inst) } if each_inst
       
-      begin
-        @logger.puts $/, "Terminating instances...", $/
-        @@ec2.instances.destroy instances.keys
-      rescue => ex
-        @logger.puts ex.message if debug?
-        @logger.puts ex.backtrace if debug?
-        raise ex
-      end
+      @logger.puts $/, "Terminating instances...", $/
+      @@ec2.instances.destroy instances
       
       true
     end
     
     def create(opts={}, &each_inst)
       raise "No root keypair configured" if !opts[:keypair] && !has_keypair?(:root)
-      
-      p user_keypairpath(:root)
-      exit
+ 
       # TODO: Handle itype on create
       opts = { :ami => current_machine_image, 
                :group => current_machine_group, 
@@ -40,10 +30,7 @@ module Rudy
                :address => current_machine_address,
                :machine_data => machine_data.to_yaml }.merge(opts)
       
-      # We use the base file name to determine the registered keypair name.
-      # If it contains a leading "key-", we'll remove that first. 
-      keypair_name = File.basename(opts[:keypair])
-      keypair_name = Rudy.strip_identifier(keypair_name) if Rudy.is_id?(:key, keypair_name)
+      keypair_name = KeyPairs.path_to_name(opts[:keypair])
       
       instances = @@ec2.instances.create(opts[:ami], opts[:group], keypair_name, opts[:machine_data], @global.zone)
       #instances = [@@ec2.instances.get("i-39009850")]
@@ -101,17 +88,12 @@ module Rudy
       instances
     end
     
-    # +opts+ See list
-    # Returns true if there are machines running
-    def running?(opts={})
-      ret = false
-      begin
-        instances = list(opts)
-        ret = (instances && !instances.empty?)
-      rescue => ex
-      end
-      ret
-    end
+    def any?(state=nil);      @@ec2.instances.any?(state);  end
+    def running?(inst);       @@ec2.instances.pending(inst); end
+    def terminated?(inst);    @@ec2.instances.terminated(inst); end
+    def shutting_down?(inst); @@ec2.instances.shutting_down(inst); end
+    def pending?(inst);       @@ec2.instances.pending(inst); end
+    def unavailable?(inst);   @@ec2.instances.unavailable(inst); end
     
     def connect(opts={})
       opts, instances = process_filter_options(opts)

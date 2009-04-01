@@ -24,6 +24,24 @@ module Rudy
       def initialize(aws_connection)
         @aws = aws_connection
       end
+      # Execute AWS requests safely. This will trap errors and return
+      # a default value (if specified).
+      # * +default+ A default response value
+      # * +request+ A block which contains the AWS request
+      # Returns the return value from the request is returned untouched
+      # or the default value on error or if the request returned nil. 
+      def execute_request(default=nil, &request)
+        raise "No block provided" unless request
+        response = nil
+        begin
+          response = request.call
+        rescue ::EC2::InvalidInstanceIDMalformed => ex
+          # TODO: put error messages somewhere
+        ensure
+          response ||= default
+        end
+        response
+      end
     end
     
 

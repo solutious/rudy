@@ -19,9 +19,14 @@ def stop_test(should_stop, str)
   abort str.color(:red).bright
 end
 
+def skip(msg)
+  puts "%s (%s)" % ["SKIP".color(:blue).bright, msg]
+  :skip # this doesn't do anything, but I would like it to!
+end
+
 def xshould(*args, &ignore)
-  puts "Skipping test: \"#{args.first}\"".color(:blue)
+  puts %q(Skipping test: "%s") % args.first.color(:blue).bright
 end
 def xcontext(*args, &ignore)
-  puts "Skipping context: \"#{args.first}\"".color(:blue)
+  puts %q(Skipping context: "%s") % args.first.color(:blue).bright
 end

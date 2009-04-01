@@ -52,246 +52,327 @@ module Rudy::AWS
   end
   
   
-  class EC2::Instances
-    include Rudy::AWS::ObjectBase
+  class EC2
+    class Instances
+      include Rudy::AWS::ObjectBase
+      KNOWN_STATES = [:running, :pending, :shutting_down, :terminated].freeze unless defined?(KNOWN_STATES)
     
-    def destroy(*instances)
-      if instances.first.is_a?(Rudy::AWS::EC2::Instance)
-        inst_ids = instances.collect { |inst| inst.awsid }
-      else
-        inst_ids = instances.flatten
-      end
+      # Return an Array of Instance objects. Note: These objects will not have
+      # DNS data because they will still be in pending state. The DNS info becomes
+      # available once the instance enters the running state.
+      def create(ami, group='default', keypair_name=nil, user_data=nil, zone=nil)
+        opts = {
+          :image_id => ami.to_s,
+          :min_count => 1,
+          :max_count => 1,
+          :key_name => keypair_name.to_s,
+          :group_id => [group].flatten,
+          :user_data => user_data,
+          :availability_zone => zone.to_s, 
+          :addressing_type => 'public',
+          :instance_type => 'm1.small',
+          :kernel_id => nil
+        }
       
-      raise "No instances provided" if inst_ids.empty?
+        response = execute_request({}) { @aws.run_instances(opts) }
         
-      #instancesSet: 
-      #  item: 
-      #  - instanceId: i-ebdcb882
-      #    shutdownState: 
-      #      code: "48"
-      #      name: terminated
-      #    previousState: 
-      #      code: "48"
-      #      name: terminated
-      ret = @aws.terminate_instances(:instance_id => inst_ids)
-      raise "The request failed to return instance data" unless ret['instancesSet'].is_a?(Hash)
-      instances_shutdown = []
-      ret['instancesSet']['item'].collect do |inst|
-        next unless inst['shutdownState'].is_a?(Hash) && inst['shutdownState']['name'] == 'shutting-down'
-        instances_shutdown << inst['instanceId']
-      end
-      success = instances_shutdown.size == inst_ids.size
-      #puts "SUC: #{success} #{instances_shutdown.size} #{inst_ids.size}"
-      success
-    end
-    
-    def restart(*instances)
-      if instances.first.is_a?(Rudy::AWS::EC2::Instance)
-        inst_ids = instances.collect { |inst| inst.awsid }
-      else
-        inst_ids = instances.flatten
-      end
-      
-      ret = @aws.reboot_instances(:instance_id => inst_ids)
-      (ret && ret['return'] == 'true')
-    end
-    
-    def attached_volume?(id, device)
-      list = volumes(id)
-      list.each do |v|
-        return true if v.device == device
-      end
-      false
-    end
-    
-    def volumes(id)
-      list = Rudy::AWS::EC2::Volumes.new(@aws).list || []
-      list.select { |v| v.status != "deleting" && v.instid === id }
-    end
-    
-    def device_volume(id, device)
-      volumes(id).select { |v| v.device === device }
-    end
-    
-    
-    # Return an Array of Instances objects
-    def create(ami, group='default', keypair_name=nil, user_data=nil, zone=nil)
-      opts = {
-        :image_id => ami.to_s,
-        :min_count => 1,
-        :max_count => 1,
-        :key_name => keypair_name.to_s,
-        :group_id => [group].flatten,
-        :user_data => user_data,
-        :availability_zone => zone.to_s, 
-        :addressing_type => 'public',
-        :instance_type => 'm1.small',
-        :kernel_id => nil
-      }
-      
-      # reservationId: r-f393149a
-      # groupSet: 
-      #   item: 
-      #   - groupId: default
-      # requestId: a4de33de-6da1-4f43-a3f5-f987f5f1f1cf
-      # instancesSet: 
-      #   item:
-      #     ... # see from_hash
-      ilist = @aws.run_instances(opts) || {}
-      reqid = ilist['requestId']
-      resid = ilist['reservationId']
-      raise "The request failed to return instance data" unless ilist['instancesSet'].is_a?(Hash)
-      instances = ilist['instancesSet']['item'].collect do |inst|
-        self.class.from_hash(inst)
-      end
-      instances
-    end
-    
-    # * +state+ is an optional instance state. If specified, must be one of: running (default), pending, terminated.
-    # * +inst_ids+ is an Array of instance IDs.
-    # Returns an Array of Rudy::AWS::EC2::Instance objects. 
-    def list(state=nil, inst_id=[])
-      instances = list_as_hash(state, inst_id)
-      instances &&= instances.values
-      instances
-    end
-    
-    # * +state+ is an optional instance state. If specified, must be one of: running (default), pending, terminated.
-    # * +inst_ids+ is an Array of instance IDs.
-    # Returns a Hash of Rudy::AWS::EC2::Instance objects. The key is the instance ID. 
-    def list_as_hash(state=nil, inst_id=[])
-      state &&= state.to_sym
-      inst_ids &&= [inst_ids].flatten
-      inst_ids ||= []
-      raise "Unknown state given: #{state}" if state && ![:running, :pending, :terminated].member?(state)
-      
-      # requestId: c16878ac-28e4-4859-9878-ef93af45789c
-      # reservationSet: 
-      #   item: 
-      #   - reservationId: r-e493148d
-      #     groupSet: 
-      #       item: 
-      #       - groupId: default
-      #     instancesSet: 
-      #       item: 
-      #
-      begin
-        ilist = @aws.describe_instances(:instance_id => inst_ids) || {}
-        reqid = ilist['requestId']
-        resids = []
-      rescue ::EC2::InvalidInstanceIDMalformed => ex
-        ilist = {}
-      end
-      
-      return nil unless ilist['reservationSet'].is_a?(Hash)  # No instances 
-      
-      instances = {}
-      # AWS Returns instances grouped by reservation
-      ilist['reservationSet']['item'].each do |res|      
-        resids << res['reservationId']
-        groups = res['groupSet']['item'].collect { |g| g['groupId'] }
-        # And each reservation can have 1 or more instances
-        next unless res['instancesSet'].is_a?(Hash)
-        res['instancesSet']['item'].each do |props|
-          inst = self.class.from_hash(props)
-          inst.groups = groups
-          #puts "STATE: #{inst.state} #{state}"
-          next if state && inst.state != state.to_s
-          instances[inst.awsid] = inst
+        # reservationId: r-f393149a
+        # groupSet: 
+        #   item: 
+        #   - groupId: default
+        # requestId: a4de33de-6da1-4f43-a3f5-f987f5f1f1cf
+        # instancesSet: 
+        #   item:
+        #     ... # see Instances.from_hash
+        raise "The request failed to return instance data" unless response['instancesSet'].is_a?(Hash)
+        instances = response['instancesSet']['item'].collect do |inst|
+          self.class.from_hash(inst)
         end
+        instances
       end
-      instances = nil if instances.empty? # Don't return an empty hash
-      instances
-    end
     
-    # +group+ is a security group name. 
-    # +state+ is an optional instance state. Must be one of: running, pending, terminated.
-    # Returns a hash of Rudy::AWS::EC2::Instance objects. The key is the instance ID.
-    def list_by_group(group, state=nil)
-      instances = list_as_hash(state) || {}
-      instances.reject { |id,inst| !inst.groups.member?(group) }    
-    end
+      def restart(inst_ids=[], skip_check=false)
+        unless skip_check
+          instances = list(:running, inst_ids) || []
+          raise "No matching running instances found" if instances.empty?
+        end
+      
+        inst_ids = objects_to_instance_ids(inst_ids)
+            
+        response = execute_request({}) {
+          @aws.reboot_instances(:instance_id => inst_ids)
+        }
+      
+        response['return'] == 'true'
+      end
     
-    # +inst_id+ is an instance ID
-    # Returns an Instance object
-    def get(inst_id)
-      inst_id = inst_id.awsid if inst_id.is_a?(Rudy::AWS::EC2::Instance)
-      inst = list(nil, inst_id)
-      raise "Unknown instance: #{inst_id}" unless inst
-      inst.first
-    end
+      def destroy(inst_ids=[], skip_check=false)
+        unless skip_check
+          instances = list(:running, inst_ids) || [] 
+          raise "No matching running instances found" if instances.empty?
+        end
+      
+        inst_ids = objects_to_instance_ids(inst_ids)
+            
+        response = execute_request({}) {
+          @aws.terminate_instances(:instance_id => inst_ids)
+        }
+      
+        #instancesSet: 
+        #  item: 
+        #  - instanceId: i-ebdcb882
+        #    shutdownState: 
+        #      code: "48"
+        #      name: terminated
+        #    previousState: 
+        #      code: "48"
+        #      name: terminated
+      
+        raise "The request failed to return instance data" unless response['instancesSet'].is_a?(Hash)
+        instances_shutdown = []
+        response['instancesSet']['item'].collect do |inst|
+          next unless inst['shutdownState'].is_a?(Hash) && inst['shutdownState']['name'] == 'shutting-down'
+          instances_shutdown << inst['instanceId']
+        end
+        success = instances_shutdown.size == inst_ids.size
+        #puts "SUC: #{success} #{instances_shutdown.size} #{inst_ids.size}"
+        success
+      end
     
-    def any?(state=nil)
-      instances = list(state)
-      (instances && !instances.empty?)
-    end
+      def restart_group(group)
+        instances = list_group(group, :running) || []
+        inst_ids = objects_to_instance_ids(instances)
+        restart(inst_ids, :skip_check)
+      end
     
-    def running?(inst_id)
-      inst = get(inst_id)
-      (inst.state == "running")
-    end
+      def destroy_group(group)
+        instances = list_group(group, :running) || []
+        inst_ids = objects_to_instance_ids(instances)
+        destroy(inst_ids, :skip_check)
+      end
     
-    def pending?(inst_id)
-      inst = get(inst_id)
-      (inst.state == "pending")
-    end
     
-    def terminated?(inst_id)
-      inst = get(inst_id)
-      (inst.state == "terminated")
-    end
+      # * +state+ is an optional instance state. If specified, must be one of: running (default), pending, terminated.
+      # * +inst_ids+ is an Array of instance IDs.
+      # Returns an Array of Rudy::AWS::EC2::Instance objects. 
+      def list(state=nil, inst_ids=[])
+        instances = list_as_hash(state, inst_ids)
+        instances &&= instances.values
+        instances
+      end
     
-    def shutting_down?(inst_id)
-      inst = get(inst_id)
-      (inst.state == "shutting-down")
-    end
+      # * +group+ is a security group name.
+      # * +state+ is an optional instance state. If specified, must be one of: running (default), pending, terminated.
+      # * +inst_ids+ is an Array of instance IDs.
+      def list_group(group=nil, state=nil, inst_ids=[])
+        raise "No group specified" unless group
+        instances = list_group_as_hash(group, state, inst_ids)
+        instances &&= instances.values
+        instances
+      end
     
-    def unavailable?(inst_id)
-      inst = get(inst_id)
-      (inst.state == "shutting-down" || 
-       inst.state == "pending" || 
-       inst.state == "terminated")
-    end
     
-    #
-    # +h+ is a hash of instance properties in the format returned
-    # by EC2::Base#describe_instances:
-    #   
-    #       kernelId: aki-9b00e5f2
-    #       amiLaunchIndex: "0"
-    #       keyName: solutious-default
-    #       launchTime: "2009-03-14T12:48:15.000Z"
-    #       instanceType: m1.small
-    #       imageId: ami-0734d36e
-    #       privateDnsName: 
-    #       reason: 
-    #       placement: 
-    #         availabilityZone: us-east-1b
-    #       dnsName: 
-    #       instanceId: i-cdaa34a4
-    #       instanceState: 
-    #         name: pending
-    #         code: "0"
-    #
-    # Returns an Instance object.
-    def self.from_hash(h)
-      inst = Rudy::AWS::EC2::Instance.new
-      inst.aki = h['kernelId']
-      inst.ami = h['imageId']
-      inst.launch_time = h['launchTime']
-      inst.keyname = h['keyName']
-      inst.launch_index = h['amiLaunchIndex']
-      inst.instance_type = h['instanceType']
-      inst.dns_name_private = h['privateDnsName']
-      inst.dns_name_public = h['dnsName']
-      inst.reason = h['reason']
-      inst.zone = h['placement']['availabilityZone']
-      inst.awsid = h['instanceId']
-      inst.state = h['instanceState']['name']
-      inst
-    end
+      # * +group+ is a security group name.
+      # * +state+ is an optional instance state. If specified, must be one of: running (default), pending, terminated.
+      # * +inst_ids+ is an Array of instance IDs.
+      def list_group_as_hash(group=nil, state=nil, inst_ids=[])
+        raise "No group specified" unless group
+        instances = list_as_hash(state, inst_ids)
+        # Remove instances that are not in the specified group
+        instances &&= instances.reject { |id,inst| !inst.groups.member?(group) } if group
+        instances
+      end
+    
+      # * +state+ is an optional instance state. If specified, must be 
+      # one of: running (default), pending, terminated, any
+      # * +inst_ids+ is an Array of instance IDs or Rudy::AWS::EC2::Instance objects.
+      # Returns a Hash of Rudy::AWS::EC2::Instance objects. The key is the instance ID. 
+      def list_as_hash(state=nil, inst_ids=[])
+        state &&= state.to_sym
+        state = nil if state == :any
+        raise "Unknown state: #{state}" if state && !Instances.known_state?(state)
+        state = :'shutting-down' if state == :shutting_down # EC2 uses a dash
 
+        # If we got Instance objects, we want just the IDs.
+        # This method always returns an Array.
+        inst_ids = objects_to_instance_ids(inst_ids)
+      
+        response = execute_request({}) {
+          @aws.describe_instances(:instance_id => inst_ids)
+        }
+      
+        # requestId: c16878ac-28e4-4859-9878-ef93af45789c
+        # reservationSet: 
+        #   item: 
+        #   - reservationId: r-e493148d
+        #     groupSet: 
+        #       item: 
+        #       - groupId: default
+        #     instancesSet: 
+        #       item:
+        return nil unless response['reservationSet'].is_a?(Hash)  # No instances 
+      
+        resids = []
+        instances = {}
+        response['reservationSet']['item'].each do |res|      
+          resids << res['reservationId']
+          groups = res['groupSet']['item'].collect { |g| g['groupId'] }
+          # And each reservation can have 1 or more instances
+          next unless res['instancesSet'].is_a?(Hash)
+          res['instancesSet']['item'].each do |props|
+            inst = self.class.from_hash(props)
+            next if state && inst.state != state.to_s
+            inst.groups = groups
+            #puts "STATE: #{inst.state} #{state}"
+            instances[inst.awsid] = inst
+          end
+        end
 
+        instances = nil if instances.empty? # Don't return an empty hash
+        instances
+      end
+    
+    
+      def attached_volume?(id, device)
+        list = volumes(id)
+        list.each do |v|
+          return true if v.device == device
+        end
+        false
+      end
+    
+      def volumes(id)
+        list = Rudy::AWS::EC2::Volumes.new(@aws).list || []
+        list.select { |v| v.status != "deleting" && v.instid === id }
+      end
+    
+      def device_volume(id, device)
+        volumes(id).select { |v| v.device === device }
+      end
+    
+      # +inst_id+ is an instance ID
+      # Returns an Instance object
+      def get(inst_id)
+        inst_id = inst_id.awsid if inst_id.is_a?(Rudy::AWS::EC2::Instance)
+        inst = list(:any, inst_id)
+        raise "Unknown instance: #{inst_id}" unless inst
+        inst.first
+      end
+
+      def any?(state=:any, inst_ids=[])
+        !list(state, inst_ids).nil?
+      end
+    
+      def any_group?(group=nil)
+        !list_group(group, :any).nil?
+      end
+        
+      def running?(inst_ids)
+        compare_instance_lists(list(:running, inst_ids), inst_ids)
+      end
+      def pending?(inst_ids)
+        compare_instance_lists(list(:pending, inst_ids), inst_ids)
+      end
+      def terminated?(inst_ids)
+        compare_instance_lists(list(:terminated, inst_ids), inst_ids)
+      end
+      def shutting_down?(inst_ids)
+        compare_instance_lists(list(:shutting_down, inst_ids), inst_ids)
+      end
+      
+      def unavailable?(inst_ids)
+        instances = list(:any, inst_ids) || []
+        instances.reject! { |inst| 
+          (inst.state == "shutting-down" || 
+           inst.state == "pending" || 
+           inst.state == "terminated") 
+        }
+        compare_instance_lists(instances, inst_ids)
+      end
+    
+      #
+      # +h+ is a hash of instance properties in the format returned
+      # by EC2::Base#describe_instances:
+      #   
+      #       kernelId: aki-9b00e5f2
+      #       amiLaunchIndex: "0"
+      #       keyName: solutious-default
+      #       launchTime: "2009-03-14T12:48:15.000Z"
+      #       instanceType: m1.small
+      #       imageId: ami-0734d36e
+      #       privateDnsName: 
+      #       reason: 
+      #       placement: 
+      #         availabilityZone: us-east-1b
+      #       dnsName: 
+      #       instanceId: i-cdaa34a4
+      #       instanceState: 
+      #         name: pending
+      #         code: "0"
+      #
+      # Returns an Instance object.
+      def self.from_hash(h)
+        inst = Rudy::AWS::EC2::Instance.new
+        inst.aki = h['kernelId']
+        inst.ami = h['imageId']
+        inst.launch_time = h['launchTime']
+        inst.keyname = h['keyName']
+        inst.launch_index = h['amiLaunchIndex']
+        inst.instance_type = h['instanceType']
+        inst.dns_name_private = h['privateDnsName']
+        inst.dns_name_public = h['dnsName']
+        inst.reason = h['reason']
+        inst.zone = h['placement']['availabilityZone']
+        inst.awsid = h['instanceId']
+        inst.state = h['instanceState']['name']
+        inst
+      end
+    
+      # Is +state+ a known EC2 machine instance state? Returns true for
+      # one of: :running, :pending, :terminated, :shutting_down
+      def self.known_state?(state)
+        return false unless state
+        state &&= state.to_sym
+        state = :shutting_down if state == :'shutting-down'
+        KNOWN_STATES.member?(state)
+      end
+
+    private
+  
+    
+      # Find out whether two lists of instance IDs (or Rudy::AWS::EC2::Instance objects)
+      # contain the same instances regardless of order. 
+      #
+      # *+listA+ An Array of instance IDs (Strings) or Rudy::AWS::EC2::Instance objects
+      # *+listB+ Another Array of instance IDs (Strings) or Rudy::AWS::EC2::Instance objects
+      # Returns true if:
+      # * both listA and listB are Arrays
+      # * listA and listB contain the same number of items
+      # * all items in listA are in listB
+      # * all items in listB are in listA
+      def compare_instance_lists(listA, listB)
+        listA = objects_to_instance_ids(listA)
+        listB = objects_to_instance_ids(listB)
+        return false if listA.empty? || listB.empty?
+        return false unless listA.size == listB.size
+        (listA - listB).empty? && (listB - listA).empty? 
+      end
+    
+      # * +inst_ids+ an Array of instance IDs (Strings) or Instance objects.
+      # Note: This method removes nil values and always returns an Array.
+      # Returns an Array of instances IDs. 
+      def objects_to_instance_ids(inst_ids)
+        inst_ids = [inst_ids].flatten    # Make sure it's an Array
+        inst_ids = inst_ids.collect do |inst|
+          next if inst.nil? || inst.to_s.empty?
+          if !inst.is_a?(Rudy::AWS::EC2::Instance) && !Rudy.is_id?(:instance, inst)
+            raise %Q("#{inst}" is not an instance ID or object)
+          end
+          inst.is_a?(Rudy::AWS::EC2::Instance) ? inst.awsid : inst
+        end
+        inst_ids
+      end
+  
+    end
   end
-
 end

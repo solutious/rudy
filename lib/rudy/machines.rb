@@ -4,19 +4,6 @@ module Rudy
   class Machines
     include Rudy::Huxtable
     
-    def destroy(inst_ids=[], &each_inst)
-      raise "No machines running" unless @@ec2.instances.any?(:running)
-      instances = @ec2.instances.list(inst_ids)
-      instances &&= [instances].flatten
-      @logger.puts "Found instances: #{instances.keys.join(", ")}"
-      
-      instances.each { |inst| each_inst.call(inst) } if each_inst
-      
-      @logger.puts $/, "Terminating instances...", $/
-      @@ec2.instances.destroy instances
-      
-      true
-    end
     
     def create(opts={}, &each_inst)
       raise "No root keypair configured" if !opts[:keypair] && !has_keypair?(:root)
@@ -25,14 +12,16 @@ module Rudy
       opts = { :ami => current_machine_image, 
                :group => current_machine_group, 
                :user => current_user,
-               :itype => "m1.small",
-               :keypair => user_keypairpath(:root), 
+               :size => "m1.small",
+               :keypair => user_keypairpath(:root), # Must be a root key
                :address => current_machine_address,
                :machine_data => machine_data.to_yaml }.merge(opts)
       
       keypair_name = KeyPairs.path_to_name(opts[:keypair])
       
       instances = @@ec2.instances.create(opts[:ami], opts[:group], keypair_name, opts[:machine_data], @global.zone)
+
+      
       #instances = [@@ec2.instances.get("i-39009850")]
       instances_with_dns = []
       instances.each_with_index do |inst_tmp,index|
@@ -46,6 +35,7 @@ module Rudy
 
         @logger.puts "Waiting for the instance to startup "        
         begin 
+          # TODO: Puts "it's up" and :bell => 3 into waiter 
           Rudy.waiter(2, 120, @logger) { !@@ec2.instances.pending?(inst_tmp.awsid) }
           raise Exception unless @@ec2.instances.running?(inst_tmp.awsid)
           @logger.puts "It's up!"
@@ -76,26 +66,82 @@ module Rudy
       instances_with_dns
     end
     
-    
-    
-    def list(opts={}, &each_inst)
-      (list_as_hash(opts, &each_inst) || {}).values
+    def destroy(group=nil, &each_inst)
+      group ||= current_machine_group
+      raise "No machines running in #{group}" unless running?(group)
+      instances = @@ec2.instances.list_group(group, :running)
+      instances &&= [instances].flatten
+      @logger.puts "Found #{instances.size} instances in #{group}"
+      instances.each { |inst| each_inst.call(inst) } if each_inst
+      @logger.puts $/, "Terminating instances...", $/
+      @@ec2.instances.destroy(instances, :skip_check)
     end
     
-    def list_as_hash(opts={}, &each_inst)
-      opts, instances = process_filter_options(opts)
+    # * +state+ instance state (:running, :terminated, :pending, :shutting_down)
+    # * +group+ machine group name
+    # * +inst_ids+ An Array of instance IDs (Strings) or Instance objects to 
+    # filter the list by. Any instances not in the group will be ignored. 
+    # * +each_inst+ a block to execute for every instance in the list. 
+    # Returns an Array of Rudy::AWS::EC2::Instance objects
+    def list(state=nil, group=nil, inst_ids=[], &each_inst)
+      group ||= current_machine_group
+      instances = @@ec2.instances.list_group(group, state, inst_ids) || []
+      instances.each { |inst| each_inst.call(inst) } if each_inst
+      instances
+    end
+    
+    # See Rudy::Machines#list for arguments.
+    # Returns a Hash of Rudy::AWS::EC2::Instance objects (the keys are instance IDs)
+    def list_as_hash(state=nil, group=nil, inst_ids=[], &each_inst)
+      group ||= current_machine_group
+      instances = @@ec2.instances.list_group_as_hash(group, state, inst_ids) || {}
       instances.each_pair { |inst_id,inst| each_inst.call(inst) } if each_inst
       instances
     end
     
-    def any?(state=nil);      @@ec2.instances.any?(state);  end
-    def running?(inst);       @@ec2.instances.pending(inst); end
-    def terminated?(inst);    @@ec2.instances.terminated(inst); end
-    def shutting_down?(inst); @@ec2.instances.shutting_down(inst); end
-    def pending?(inst);       @@ec2.instances.pending(inst); end
-    def unavailable?(inst);   @@ec2.instances.unavailable(inst); end
+    # * +group+ machine group name
+    def any?(group=nil)
+      group ||= current_machine_group
+      @@ec2.instances.any_group?(group)
+    end
+    
+    
+    # *NOTE REGARDING THE STATUS METHODS*:
+    #
+    # We currently return true IF ANY instances are operating
+    # in the given state. This is faulty but we can't fix it
+    # until we have a way to know how many instances should be
+    # running in any given group. 
+    #
+    # Are *any* instances in the group in the running state? 
+    def running?(group=nil)
+      !list(:running, group).empty?
+    end
+    
+    # Are *any* instances in the group in the terminated state?
+    def terminated?(group=nil)
+      !list(:terminated, group).empty?
+    end
+    
+    # Are *any* instances in the group in the shutting-down state?
+    def shutting_down?(group=nil)
+      !list(:shutting_down, group).empty?
+    end
+    
+    # Are *any* instances in the group in the pending state?
+    def pending?(group=nil)
+      !list(:pending, group).empty?
+    end
+    
+    # Are *any* instances in the group in the a non-running state?
+    def unavailable?(group=nil)
+      # We go through @@ec2 so we don't reimplement the "unavailable logic"
+      instances = list(:any, group)
+      @@ec2.instances.unavailable?(instances)
+    end
     
     def connect(opts={})
+      raise "TODO: fix grabbing instances"
       opts, instances = process_filter_options(opts)
       raise "No machines running" unless instances && !instances.empty?
       
@@ -112,6 +158,7 @@ module Rudy
     # * +:task+ one of: :upload (default), :download.
     # * +:paths+ an array of paths to copy. The last element is the "to" path. 
     def copy(opts={})
+      raise "TODO: fix grabbing instances"
       opts, instances = process_filter_options(opts)
       raise "No machines running" unless instances && !instances.empty?
       raise "You must supply at least one source path" if !opts[:paths] || opts[:paths].empty?
@@ -146,13 +193,7 @@ module Rudy
     
     
   private
-    def process_filter_options(opts)
-      opts = { :group => current_machine_group, :id => nil, :state => nil }.merge(opts)
-      raise "You must supply either a group name or instance ID" unless opts[:group] || opts[:id]
-      opts[:id] &&= [opts[:id]].flatten
-      instances = opts[:id] ? @@ec2.instances.list(opts[:id], opts[:state]) : @@ec2.instances.list_by_group(opts[:group], opts[:state])
-      [opts, instances]
-    end
+
     def machine_data
       data = {
         # Give the machine an identity

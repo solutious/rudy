@@ -74,10 +74,10 @@ module Rudy
         # We don't want sensitive config values available in the log
         puts "CONFIG: " << config_yaml
         
-        zone = config[:zone] ? config[:zone].downcase : "zone"
-        environment = config[:environment] ? config[:environment].downcase : "env"
-        role = config[:role] ? config[:role].downcase : "role"
-        position = config[:position] ? config[:position].downcase : "00"
+        zone = config[:zone] ? config[:zone].to_s.downcase : "zone"
+        environment = config[:environment] ? config[:environment].to_s.downcase : "env"
+        role = config[:role] ? config[:role].to_s.downcase : "role"
+        position = config[:position] ? config[:position].to_s.downcase : "00"
         
         hostname = [zone, environment, role, position].join('-')
         log "Setting hostname: #{hostname}"

@@ -51,6 +51,7 @@ module Rudy::Test
       end
       
       should "(20) list keypairs" do
+        # We assume we've created more than one keypair before this point
         assert @rkey.any?, "No keypairs"
         assert (kp_list = @rkey.list).is_a?(Array), "List not an Array"
         assert kp_list.size > 1, "List not greater than 1 (#{kp_list.size})"

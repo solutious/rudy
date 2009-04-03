@@ -125,6 +125,7 @@
   s.add_dependency 'net-scp'
   s.add_dependency 'net-ssh-gateway'
   s.add_dependency 'net-ssh-multi'
+  s.add_dependency 'session'
   s.add_dependency 'rush'
   
   # http://bit.ly/2WaAgV

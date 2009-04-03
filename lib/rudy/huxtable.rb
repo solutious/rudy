@@ -30,7 +30,7 @@ module Rudy
       end
     end
     
-
+    
     
     def init_globals
       @global.verbose ||= 0

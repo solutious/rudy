@@ -84,11 +84,14 @@ module Rudy
     end
 
     # A basic file writer
-    def write_to_file(filename, content, mode)
+    def write_to_file(filename, content, mode, chmod=nil)
       mode = (mode == :append) ? 'a' : 'w'
       f = File.open(filename,mode)
       f.puts content
       f.close
+      return unless Rudy.sysinfo.os == :unix
+      raise "Provided chmod is not a Fixnum" unless chmod.is_a?(Fixnum)
+      File.chmod(chmod, filename)
     end
 
     # 

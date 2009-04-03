@@ -56,7 +56,10 @@ module Rudy::CLI
       opts[:state] = @option.state if @option.state
       
       # A nil value forces the @ec2.instances.list to return all instances
-      opts[:state] = :any if @option.all
+      if @option.all
+        opts[:state] = :any
+        opts[:group] = :any
+      end
       
       opts[:id] = @argv.awsid if @argv.awsid
       opts[:id] &&= [opts[:id]].flatten

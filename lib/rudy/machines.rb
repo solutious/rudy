@@ -78,14 +78,20 @@ module Rudy
     end
     
     # * +state+ instance state (:running, :terminated, :pending, :shutting_down)
-    # * +group+ machine group name
+    # * +group+ machine group name. The default is the current machine group
+    # (as determined by the globals) if none is supplied. A value of :any will 
+    # return machines from all groups.
     # * +inst_ids+ An Array of instance IDs (Strings) or Instance objects to 
     # filter the list by. Any instances not in the group will be ignored. 
     # * +each_inst+ a block to execute for every instance in the list. 
     # Returns an Array of Rudy::AWS::EC2::Instance objects
     def list(state=nil, group=nil, inst_ids=[], &each_inst)
       group ||= current_machine_group
-      instances = @@ec2.instances.list_group(group, state, inst_ids) || []
+      unless group == :any
+        instances = @@ec2.instances.list_group(group, state, inst_ids) || []
+      else
+        instances = @@ec2.instances.list(state, inst_ids) || []
+      end
       instances.each { |inst| each_inst.call(inst) } if each_inst
       instances
     end
@@ -94,7 +100,11 @@ module Rudy
     # Returns a Hash of Rudy::AWS::EC2::Instance objects (the keys are instance IDs)
     def list_as_hash(state=nil, group=nil, inst_ids=[], &each_inst)
       group ||= current_machine_group
-      instances = @@ec2.instances.list_group_as_hash(group, state, inst_ids) || {}
+      if group == :any
+        instances = @@ec2.instances.list_group_as_hash(group, state, inst_ids) || {}
+      else
+        instances = @@ec2.instances.list_as_hash(state, inst_ids) || {}
+      end
       instances.each_pair { |inst_id,inst| each_inst.call(inst) } if each_inst
       instances
     end

@@ -1,10 +1,12 @@
 require 'storable'
 require 'socket'
+
 # SystemInfo
 # 
 # A container for the system platform information. 
 # Portions of this code is from Amazon's EC2 AMI tools, lib/platform.rb. 
 class SystemInfo < Storable
+  VERSION = 2
   IMPLEMENTATIONS = [
     
     # These are for JRuby, System.getproperty('os.name'). 
@@ -198,7 +200,6 @@ class SystemInfo < Storable
   end
 
 
-  # local_ip_address
   #
   # Return the local IP address which receives external traffic
   # from: http://coderrr.wordpress.com/2008/05/28/get-your-local-ip-address/
@@ -211,7 +212,6 @@ class SystemInfo < Storable
     Socket.do_not_reverse_lookup = orig
   end
 
-  # local_ip_address_alt
   #
   # Returns the local IP address based on the hostname. 
   # According to coderrr (see comments on blog link above), this implementation
@@ -228,23 +228,39 @@ class SystemInfo < Storable
     ipaddr
   end
 
-  # platform
-  #
   # returns a symbol in the form: os_implementation. This is used throughout Stella
   # for platform specific support. 
   def platform
     "#{@os}_#{@implementation}".to_sym
   end
   
-  # ruby
-  #
   # Returns Ruby version as an array
   def ruby
     RUBY_VERSION.split('.').map { |v| v.to_i }
   end
   
-  # to_s
-  # 
+  # Returns the environment PATH as an Array
+  def paths
+    if @os == :unix
+      (ENV['PATH'] || '').split(':')
+    elsif
+      (ENV['PATH'] || '').split(';') # Note tested!
+    else
+      raise "paths not implemented for: #{@os}"
+    end
+  end
+  
+  
+  def home
+    if @os == :unix
+      File.expand_path(ENV['HOME'])
+    elsif @os == :win32
+      File.expand_path(ENV['USERPROFILE'])
+    else
+      raise "paths not implemented for: #{@os}"
+    end
+  end
+  
   # Print friendly system information. 
   def to_s
     sprintf("Hostname: %s#{$/}IP Address: %s#{$/}System: %s#{$/}Uptime: %.2f (hours)#{$/}Ruby: #{ruby.join('.')}", 

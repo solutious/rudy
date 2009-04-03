@@ -7,13 +7,14 @@
 
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib') # Put our local lib in first place
 
-require 'rubygems' if RUBY_VERSION < "1.9"
+require 'rubygems' unless defined? Gem
 require 'date'
 require 'drydock'
 require 'rudy'
 require 'rudy/cli'
 extend Drydock
 
+$SAFE = 2
 
 global :A, :accesskey, String, "AWS Access Key"
 global :S, :secretkey, String, "AWS Secret Access Key"
@@ -97,7 +98,7 @@ desc "Machine Status"
 usage "rudy [global options] status [-g group-name] [-s state] [--all] [instance-ID]"
 option :g, :group, String, "A security group name"
 option :s, :state, String, "Machine state. One of: running (default), pending, terminated"
-option     :all, "Show all machines in this group, regardless of state."
+option :l, :all, "Show all machines in this group, regardless of state."
 argv :awsid
 command :status => Rudy::CLI::Machines
 
@@ -114,7 +115,6 @@ action :D, :destroy, "Destroy a machine instance"
 argv :awsid
 command :machine => Rudy::CLI::Machines
 command_alias :machine, :machines
-command_alias :machine, :status
 
 
 usage "rudy [global options] connect [-g group-name] [-i instance-ID] [cmd]"

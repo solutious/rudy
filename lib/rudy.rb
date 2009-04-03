@@ -94,11 +94,9 @@ module Rudy
       :cert => 'cert',
       :reservation => 'r'
     }.freeze
+    
+    SYSINFO = SystemInfo.new.freeze
   end
-  
-  @@quiet = false
-  def Rudy.enable_quiet; @@quiet = true; end
-  def Rudy.disable_quiet; @@quiet = false; end
   
   module VERSION #:nodoc:
     unless defined?(MAJOR)
@@ -109,12 +107,11 @@ module Rudy
     def self.to_s; [MAJOR, MINOR, TINY].join('.'); end
     def self.to_f; self.to_s.to_f; end
   end
-  
-  begin
-    SYSINFO = SystemInfo.new
-  rescue 
-  end
-  
+
+  @@quiet = false
+  def Rudy.enable_quiet; @@quiet = true; end
+  def Rudy.disable_quiet; @@quiet = false; end
+    
   def Rudy.sysinfo; SYSINFO; end
   def sysinfo; SYSINFO;  end
   
@@ -234,6 +231,23 @@ module Rudy
     sprintf(banners[size], msg).colour(colour).bgcolour(:white).bright
   end
   
+  # Run a block and trap common, known errors. 
+  # * +default+ A default response value
+  # * +request+ A block which contains the AWS request
+  # Returns the return value from the request is returned untouched
+  # or the default value on error or if the request returned nil. 
+  def trap_known_errors(default=nil, &request)
+    raise "No block provided" unless request
+    response = nil
+    begin
+      response = request.call
+    rescue => ex
+      STDERR.puts ex.message
+    ensure
+      response ||= default
+    end
+    response
+  end
   
 end
 

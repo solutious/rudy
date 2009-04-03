@@ -6,10 +6,7 @@ module Rudy
     
     def create(n=nil, opts={})
       
-      if !n && has_root_keypair?
-        raise "A root keypair is already defined for #{current_machine_group}" 
-      end
-      
+      raise KeyPairAlreadyDefined, current_machine_group if !n && has_root_keypair?
       n ||= name(n)
         
       opts = {
@@ -17,25 +14,34 @@ module Rudy
       }.merge(opts)
       
       delete_pk(n) if opts[:force] == true && File.exists?(self.path(n))
-      raise "Private key already exists: #{self.path(n)}" if File.exists?(self.path(n))
+      raise KeyPairExists, self.path(n) if File.exists?(self.path(n))
       
       kp = @@ec2.keypairs.create(n)
-      raise "Error creating #{n} keypair" unless kp.is_a?(Rudy::AWS::EC2::KeyPair)
+      raise ErrorCreatingKeyPair, n unless kp.is_a?(Rudy::AWS::EC2::KeyPair)
       
-      @logger.puts "Writing #{self.path(n)}"
-      Rudy::Utils.write_to_file(self.path(n), kp.private_key, 'w')
+      Rudy.trap_known_errors do
+        @logger.puts "Writing #{self.path(n)}"
+        Rudy::Utils.write_to_file(self.path(n), kp.private_key, 'w', '0600')
+      end
       
-      @logger.puts "Writing #{self.public_path(n)}"
-      Rudy::Utils.write_to_file(self.public_path(n), kp.public_key, 'w')
-      
-      @logger.puts "Changing permissions to #{self.public_path(n)}"
-      Rudy::Utils.write_to_file(self.public_path(n), kp.public_key, 'w')
+      Rudy.trap_known_errors do
+        @logger.puts "Writing #{self.public_path(n)}"
+        Rudy::Utils.write_to_file(self.public_path(n), kp.public_key, 'w', 0600)
+      end
       
       @logger.puts "NOTE: If you move #{self.path(n)} you need to also update your Rudy machines config."
       
       kp
     end
     
+    #def check_permissions(n=nil)
+    #  n ||= name(n)
+    #  raise NoPrivateKeyFile, self.path(n) unless File.exists?(self.path(n))
+    #  raise InsecureKeyPairPermissions, self.path(n) unless File::Stat....
+    #  p n
+    #end
+    
+      
     def destroy(n=nil)
       n ||= name(n)
       raise "KeyPair #{n} doesn't exist" unless exists?(n)
@@ -110,5 +116,15 @@ module Rudy
       (File.unlink(self.public_path(n)) > 0)
     end
 
+  end
+end
+
+module Rudy
+  class KeyPairs
+    class InsecureKeyPairPermissions < RuntimeError; end
+    class NoPrivateKeyFile < RuntimeError; end
+    class ErrorCreatingKeyPair < RuntimeError; end
+    class KeyPairExists < RuntimeError; end
+    class KeyPairAlreadyDefined < RuntimeError; end
   end
 end

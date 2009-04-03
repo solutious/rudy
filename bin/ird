@@ -26,7 +26,7 @@ end
 #@rbox2 = Rye::Box.new('ec2-174-129-173-3.compute-1.amazonaws.com', 'root')
 #@rbox.add_keys('/Users/delano/Projects/git/rudy/.rudy/key-test-app.private')
 
-@rbox = Rye::Box.new('localhost', 'josh').connect
+@rbox = Rye::Box.new
 
 
 if __FILE__ == $0

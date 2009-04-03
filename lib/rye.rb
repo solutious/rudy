@@ -5,12 +5,13 @@ require 'escape'
 require 'thread'
 require 'highline'
 require 'rye'
-require 'rye/box'
 
 # = Rye
-# An abstration for local and remote commands (via SSH). 
-# 
-# Inspired by/stolen from:
+#
+# Rye is an library for running commands locally (via shell or SSH)
+# and remotely (via SSH). 
+#
+# Rye is inspired by the following:
 # http://github.com/adamwiggins/rush
 # http://github.com/jamis/capistrano/blob/master/lib/capistrano/shell.rb
 # http://www.nofluffjuststuff.com/blog/david_bock/2008/10/ruby_s_closure_cleanup_idiom_and_net_ssh.html
@@ -33,7 +34,6 @@ module Rye
   
   # Useful with irb. Reload Rye. 
   def reload
-    load 'rye.rb'
     pat = File.join(File.dirname(__FILE__), 'rye', '**', '*.rb')
     Dir.glob(pat).collect { |file| load file; file; }
   end
@@ -47,4 +47,4 @@ module Rye
 end
 
 
-#Rye.reload
+Rye.reload

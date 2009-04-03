@@ -8,20 +8,16 @@ require 'session'
 require 'net/ssh'
 require 'rye'
 require 'yaml'
+require 'stringio'
 
 #p Rye.command('ssh', '-i', '', '')
 
 module Rye::Box::Commands
-  def uptime
-    command("uptime")
-  end
-  def sleep
-    command("sleep", 5)
-  end
+  def rudy(*args); command("/proj/git/rudy/bin/rudy", args);  end
 end
 
-
-rbox = Rye::Box.new('localhost', 'delano').connect
+logger = StringIO.new
+rbox = Rye::Box.new('localhost', 'delano', :stderr => logger).connect
 #rbox2 = Rye::Box.new('ec2-174-129-173-3.compute-1.amazonaws.com', 'root')
 #rbox.add_keys('/Users/delano/Projects/git/rudy/.rudy/key-test-app.private')
 #rbox.connect
@@ -30,8 +26,9 @@ rbox = Rye::Box.new('localhost', 'delano').connect
 puts rbox['/usr/bin'].pwd
 puts rbox.uptime
 puts rbox.can
+puts rbox.rudy('myaddress')
 rbox.disconnect
-
+#puts logger.read
 #>> 
 
 __END__

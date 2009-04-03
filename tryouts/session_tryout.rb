@@ -11,7 +11,7 @@ require 'yaml'
 
 #p Rye.command('ssh', '-i', '', '')
 
-class Rye::Box
+module Rye::Box::Commands
   def uptime
     command("uptime")
   end
@@ -21,13 +21,17 @@ class Rye::Box
 end
 
 
-rbox = Rye::Box.new('ec2-174-129-173-3.compute-1.amazonaws.com', 'root')
-rbox2 = Rye::Box.new('ec2-174-129-173-3.compute-1.amazonaws.com', 'root')
-rbox.add_keys('/Users/delano/Projects/git/rudy/.rudy/key-test-app.private')
-rbox.connect
-puts rbox.date
-puts rbox.sleep
+rbox = Rye::Box.new('localhost', 'delano').connect
+#rbox2 = Rye::Box.new('ec2-174-129-173-3.compute-1.amazonaws.com', 'root')
+#rbox.add_keys('/Users/delano/Projects/git/rudy/.rudy/key-test-app.private')
+#rbox.connect
+#puts rbox.date
+#puts rbox.pwd
+puts rbox['/usr/bin'].pwd
+puts rbox.uptime
+puts rbox.can
 rbox.disconnect
+
 #>> 
 
 __END__

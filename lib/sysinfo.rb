@@ -250,6 +250,9 @@ class SystemInfo < Storable
     end
   end
   
+  def user
+    ENV['USER']
+  end
   
   def home
     if @os == :unix

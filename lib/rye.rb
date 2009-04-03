@@ -4,6 +4,7 @@ require 'sysinfo'
 require 'escape'
 require 'thread'
 require 'highline'
+require 'rye'
 require 'rye/box'
 
 # = Rye
@@ -27,9 +28,23 @@ module Rye
   def sysinfo; SYSINFO;  end
   
   class CommandNotFound < RuntimeError; end
+  class NoHost < RuntimeError; end
+  class NotConnected < RuntimeError; end
   
+  # Useful with irb. Reload Rye. 
+  def reload
+    load 'rye.rb'
+    pat = File.join(File.dirname(__FILE__), 'rye', '**', '*.rb')
+    Dir.glob(pat).collect { |file| load file; file; }
+  end
   
-  
-
+  def run
+    #@bgthread = Thread.new do
+    #  loop { @mutex.synchronize { approach } }
+    #end
+    #@bgthread.join
+  end
 end
 
+
+#Rye.reload

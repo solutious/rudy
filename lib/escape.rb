@@ -83,7 +83,8 @@ module Escape
   #   it is recognized as single word with the later.
   #   For example, system(*["echo foo"]) invokes echo command with an argument "foo".
   #   But system(Escape.shell_command(["echo foo"])) invokes "echo foo" command without arguments (and it probably fails).
-  def shell_command(command)
+  def shell_command(*command)
+    command = [command].flatten.compact # Delano
     s = command.map {|word| shell_single_word(word) }.join(' ')
     ShellEscaped.new_no_dup(s)
   end
@@ -99,6 +100,8 @@ module Escape
   #  Escape.shell_single_word("foo") #=> #<Escape::ShellEscaped: foo>
   #  Escape.shell_single_word("*") #=> #<Escape::ShellEscaped: '*'>
   def shell_single_word(str)
+    return unless str
+    str &&= str.to_s # Delano fix
     if str.empty?
       ShellEscaped.new_no_dup("''")
     elsif %r{\A[0-9A-Za-z+,./:=@_-]+\z} =~ str

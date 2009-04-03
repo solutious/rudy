@@ -26,6 +26,7 @@ rbox = Rye::Box.new('localhost', 'delano', :stderr => logger).connect
 puts rbox['/usr/bin'].pwd
 puts rbox.uptime
 puts rbox.can
+puts rbox.echo '$HOME'
 puts rbox.rudy('myaddress')
 rbox.disconnect
 #puts logger.read

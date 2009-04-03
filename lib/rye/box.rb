@@ -1,5 +1,4 @@
 
-require 'rye/box/commands'
 
 module Rye
   
@@ -23,7 +22,7 @@ module Rye
   class Box 
     include Rye::Box::Commands
     
-    @@agent_env ||= Hash.new  # ssh-agent env vars
+    @@agent_env ||= Hash.new  # holds ssh-agent env vars
     
       # An instance of Net::SSH::Connection::Session
     attr_reader :ssh
@@ -57,7 +56,7 @@ module Rye
       Box.end_sshagent_environment
     }
      
-    # Returns an Array of commands available
+    # Returns an Array of system commands available over SSH
     def can
       Rye::Box::Commands.instance_methods
     end
@@ -86,6 +85,12 @@ module Rye
       self
     end
     alias :cd :'[]'
+    
+    
+    # Add an environment variable to the command
+    def add_env(n, v)
+      
+    end
     
     # Open an SSH session with +@host+.  
     # Raises a Rye::NoHost exception if +@host+ is not specified.
@@ -132,7 +137,7 @@ module Rye
     end
     
     # Takes a command with arguments and returns it in a 
-    # single String, escaped and stuff. 
+    # single String with escaped args and some other stuff. 
     # 
     # * +args+ An Array. The first element must be the 
     # command name, the rest are its aruments. 
@@ -194,8 +199,8 @@ module Rye
       
       # Start the SSH Agent locally. This is important
       # primarily because Rye relies on it for SSH key
-      # managements. If it doesn't start then passwordless
-      # logins won't work. 
+      # management. If the agent doesn't start then 
+      # passwordless logins won't work. 
       #
       # This method starts an instances of ssh-agent
       # and sets the appropriate environment so all
@@ -228,7 +233,7 @@ module Rye
         nil
       end
       
-      # Kills the local instance of the SSH Agent we started.
+      # Kill the local instance of the SSH Agent we started.
       #
       #     $ echo $SSH_AGENT_PID
       #     99416

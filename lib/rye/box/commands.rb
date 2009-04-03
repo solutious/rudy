@@ -21,12 +21,16 @@ module Rye; class Box;
   #
   module Commands
     def wc(*args); command('wc', args); end
-    def date(*args); command('date', args); end
+    def cp(*args); command("cp", args); end
+    def mv(*args); command("mv", args); end
     def ls(*args); command('ls', args); end
+    def env; command "env"; end
     def pwd(key=nil); command "pwd"; end
-    def uptime; command("uptime"); end
+    def date(*args); command('date', args); end
+    def echo(*args); command('echo', args); end
     def sleep(seconds=1); command("sleep", seconds); end
-    def mount; command("mount", 5); end
+    def mount; command("mount"); end
+    def uptime; command("uptime"); end
   end
 
 end; end

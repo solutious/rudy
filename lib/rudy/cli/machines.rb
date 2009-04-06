@@ -94,6 +94,7 @@ module Rudy::CLI
       end
 
       rmach = Rudy::Machines.new(:config => @config, :global => @global)
+
       rmach.create(opts) do |inst| # Rudy::AWS::EC2::Instance objects
         puts '-'*60
         puts "Instance: #{inst.awsid.bright} (AMI: #{inst.ami})"

@@ -144,6 +144,7 @@ module Rudy
     # * +group+ machine group name
     def any?(group=nil)
       group ||= current_machine_group
+      
       @@ec2.instances.any_group?(group)
     end
     

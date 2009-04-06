@@ -82,9 +82,9 @@ module Crypto
       @key.send("#{type}_decrypt", Base64.decode64(text))
     end
   
-    def private?()  !@public; end # Added () and ;
-  
-    def public?()   @public;  end # Added () and ;
+    def private?()  !@public; end
+                                 
+    def public?()   @public;  end
     
     def type
       @public ? :public : :private

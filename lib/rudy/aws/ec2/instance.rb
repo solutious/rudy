@@ -157,6 +157,7 @@ module Rudy::AWS
       def list(state=nil, inst_ids=[])
         instances = list_as_hash(state, inst_ids)
         instances &&= instances.values
+        instances = nil if instances && instances.empty? # Don't return an empty hash
         instances
       end
     
@@ -167,6 +168,7 @@ module Rudy::AWS
         raise "No group specified" unless group
         instances = list_group_as_hash(group, state, inst_ids)
         instances &&= instances.values
+        instances = nil if instances && instances.empty? # Don't return an empty hash
         instances
       end
     
@@ -179,6 +181,7 @@ module Rudy::AWS
         instances = list_as_hash(state, inst_ids)
         # Remove instances that are not in the specified group
         instances &&= instances.reject { |id,inst| !inst.groups.member?(group) } if group
+        instances = nil if instances && instances.empty? # Don't return an empty hash
         instances
       end
     
@@ -282,8 +285,10 @@ module Rudy::AWS
         !list(state, inst_ids).nil?
       end
     
-      def any_group?(group=nil)
-        !list_group(group, :any).nil?
+      def any_group?(group=nil, state=:any)
+        ret = list_group(group, state)
+        p ret
+        !ret.nil?
       end
         
       def running?(inst_ids)

@@ -18,7 +18,7 @@ require 'console'
 require 'sysinfo'
 require 'annoy'
 
-require 'rush' #, Tom Sawyer
+require 'rye'
 
 require 'net/ssh'
 require 'net/scp'
@@ -95,7 +95,7 @@ module Rudy
       :reservation => 'r'
     }.freeze
     
-    SYSINFO = SystemInfo.new.freeze
+    @@sysinfo = SystemInfo.new.freeze
   end
   
   module VERSION #:nodoc:
@@ -112,8 +112,8 @@ module Rudy
   def Rudy.enable_quiet; @@quiet = true; end
   def Rudy.disable_quiet; @@quiet = false; end
     
-  def Rudy.sysinfo; SYSINFO; end
-  def sysinfo; SYSINFO;  end
+  def Rudy.sysinfo; @@sysinfo; end
+  def sysinfo; @@sysinfo;  end
   
   # Determine if we're running directly on EC2 or
   # "some other machine". We do this by checking if

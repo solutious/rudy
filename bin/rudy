@@ -1,6 +1,8 @@
 #!/usr/bin/ruby
 
-# Rudy -- Your friend in staging and deploying to EC2
+# = Rudy
+# 
+# _Not your granparent's deployment tool_
 #
 #   See rudy -h for usage
 # 

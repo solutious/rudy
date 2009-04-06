@@ -94,7 +94,7 @@ module Rudy::CLI
       end
 
       rmach = Rudy::Machines.new(:config => @config, :global => @global)
-
+      # TODO: Print number of machines running. If more than 0, use Annoy.are_you_sure?
       rmach.create(opts) do |inst| # Rudy::AWS::EC2::Instance objects
         puts '-'*60
         puts "Instance: #{inst.awsid.bright} (AMI: #{inst.ami})"

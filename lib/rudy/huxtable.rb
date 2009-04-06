@@ -11,6 +11,8 @@ module Rudy
     attr_accessor :global
     attr_accessor :logger
     
+     # An instance of Rye::Box for the local machine (running Rudy)
+    attr_reader :rbox
     
     def initialize(opts={})
       opts = { :config => nil, :logger => STDERR, :global => OpenStruct.new}.merge(opts)
@@ -24,6 +26,8 @@ module Rudy
       end
       
       init_globals
+      
+      @rbox = Rye::Box.new('localhost')
       
       if has_keys?
         Rudy::AWS.set_access_identifiers(@global.accesskey, @global.secretkey, @logger)
@@ -133,7 +137,7 @@ module Rudy
       # These are used as the root SSH keys. If we can find a user defined key, we'll 
       # check the config path for a generated one. 
       if !kp && name.to_s == 'root'
-        path = File.join(self.config_dirname, "key-#{current_machine_group}.private")
+        path = File.join(self.config_dirname, "key-#{current_machine_group}")
         kp = path if File.exists?(path)
       end
       
@@ -141,6 +145,11 @@ module Rudy
       kp
     end
 
+    def has_root_keypair?
+      path = user_keypairpath(:root)
+      (!path.nil? && !path.empty?)
+    end
+    
     def current_user
       @global.user
     end

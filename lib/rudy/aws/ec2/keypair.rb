@@ -1,10 +1,11 @@
-
+require 'rye'
 
 module Rudy::AWS
   class EC2
     
     class KeyPair < Storable
-      attr_accessor :private_key # never saved
+      attr_accessor :private_key  # not a storable field
+      
       field :name
       field :fingerprint
       
@@ -14,9 +15,10 @@ module Rudy::AWS
       
       def public_key
         return unless @private_key
-        k = Crypto::Key.new(@private_key)
-        k.key.public_key
+        k = Rye::Key.new(@private_key)
+        k.public_key.to_ssh2
       end
+
     end
     
     class KeyPairs

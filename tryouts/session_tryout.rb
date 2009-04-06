@@ -19,7 +19,7 @@ end
 logger = StringIO.new
 rbox = Rye::Box.new('localhost', 'delano', :stderr => logger).connect
 #rbox2 = Rye::Box.new('ec2-174-129-173-3.compute-1.amazonaws.com', 'root')
-#rbox.add_keys('/Users/delano/Projects/git/rudy/.rudy/key-test-app.private')
+#rbox.add_keys('/Users/delano/Projects/git/rudy/.rudy/key-test-app')
 #rbox.connect
 #puts rbox.date
 #puts rbox.pwd

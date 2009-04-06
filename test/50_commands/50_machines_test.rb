@@ -7,7 +7,6 @@ module Rudy::Test
     # What about for pending? What if there are 3 machines running and only 1 is running. 
     # What should it return?
     
-    # Add Rush instance to Huxtable
     
     context "#{name}_50 Machines" do
       

@@ -5,8 +5,8 @@ module Rudy
     
     
     def create(n=nil, opts={})
-      
-      raise KeyPairAlreadyDefined, current_machine_group if !n && has_root_keypair?
+      raise KeyPairAlreadyDefined.new(current_machine_group) if !n && has_root_keypair?
+
       n ||= name(n)
         
       opts = {
@@ -21,7 +21,7 @@ module Rudy
       
       Rudy.trap_known_errors do
         @logger.puts "Writing #{self.path(n)}"
-        Rudy::Utils.write_to_file(self.path(n), kp.private_key, 'w', '0600')
+        Rudy::Utils.write_to_file(self.path(n), kp.private_key, 'w', 0600)
       end
       
       Rudy.trap_known_errors do
@@ -48,19 +48,30 @@ module Rudy
       @logger.puts "No private key file: #{self.path(n)}. Continuing..." unless File.exists?(self.path(n))
       @logger.puts "Unregistering KeyPair with Amazon"
       ret = @@ec2.keypairs.destroy(n)
-      ret = delete_files(n) if ret # only delete local file if remote keypair is successfully destroyed
+      if ret
+        ret = delete_files(n) if ret # only delete local file if remote keypair is successfully destroyed
+      else
+        @logger.puts "Keypair not destroyed successfully."
+      end
       ret
     end
     
+    # Lists the keypairs registered with Amazon
     def list(n=nil, &each_object)
-      n &&= [n]
+      n &&= [n].flatten.compact
       keypairs = @@ec2.keypairs.list(n)
       keypairs.each { |n,kp| each_object.call(kp) } if each_object
       keypairs
     end
     
+    def get(n=nil)
+      n ||= name(n)
+      keypairs = @@ec2.keypairs.list(n) || []
+      keypairs.first
+    end
+    
     def list_as_hash(n=nil, &each_object)
-      n &&= [n]
+      n &&= [n].flatten.compact
       keypairs = @@ec2.keypairs.list_as_hash(n)
       keypairs.each_pair { |n,kp| each_object.call(kp) } if each_object
       keypairs
@@ -83,7 +94,7 @@ module Rudy
       
     def path(n=nil)
       n ||= name(n)
-      File.join(self.config_dirname, "#{n}.private")
+      File.join(self.config_dirname, "#{n}")
     end
     
     def public_path(n=nil)
@@ -91,10 +102,7 @@ module Rudy
       File.join(self.config_dirname, "#{n}.pub")
     end
     
-    def has_root_keypair?
-      path = user_keypairpath(:root)
-      (!path.nil? && !path.empty?)
-    end
+
     
 
     # We use the base file name to determine the registered keypair name.
@@ -107,15 +115,20 @@ module Rudy
   private
     def delete_files(n=nil)
       n ||= name(n)
-      return false unless File.exists?(self.path(n))
       @logger.puts "Deleting #{self.path(n)}"
-      (File.unlink(self.path(n)) > 0)      # raise exception on error. handle?
+      #return false unless File.exists?(self.path(n))
+      ret = (File.unlink(self.path(n)) > 0)      # raise exception on error. handle?
       
-      return false unless File.exists?(self.public_path(n))
       @logger.puts "Deleting #{self.public_path(n)}"
-      (File.unlink(self.public_path(n)) > 0)
+      #return false unless File.exists?(self.public_path(n))
+      ret && (File.unlink(self.public_path(n)) > 0)
     end
 
+  end
+  class Keypairs
+    def initialize(*args)
+      raise "Oops! The correct class uses a capital 'P': Rudy::KeyPairs"
+    end
   end
 end
 
@@ -125,6 +138,14 @@ module Rudy
     class NoPrivateKeyFile < RuntimeError; end
     class ErrorCreatingKeyPair < RuntimeError; end
     class KeyPairExists < RuntimeError; end
-    class KeyPairAlreadyDefined < RuntimeError; end
+    class KeyPairAlreadyDefined < RuntimeError
+      attr_reader :group
+      def initialize(group)
+        @group = group
+      end
+      def message
+        "A keypair is defined for #{group}. Check your Rudy config."
+      end
+    end
   end
 end

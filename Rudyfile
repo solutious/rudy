@@ -52,6 +52,7 @@ machines do
   
 end
 
+
 # -------------------------------------------------------  ROUTINES  --------
 # The routines block describe processes for each machine group. 
 routines do
@@ -92,5 +93,9 @@ routines do
       
     end
   end
+  
+end
+
+networks do
   
 end

@@ -27,22 +27,28 @@ module Rudy
       
       
     protected
-    
+
       # Execute AWS requests safely. This will trap errors and return
       # a default value (if specified).
       # * +default+ A default response value
       # * +request+ A block which contains the AWS request
       # Returns the return value from the request is returned untouched
       # or the default value on error or if the request returned nil. 
-      def execute_request(default=nil, &request)
+      def execute_request(default=nil, timeout=nil, &request)
+        timeout ||= 10
         raise "No block provided" unless request
         response = nil
         begin
-          response = request.call
+          Timeout::timeout(timeout) do
+            response = request.call
+          end
         rescue ::EC2::Error => ex
           STDERR.puts ex.message
         rescue ::EC2::InvalidInstanceIDMalformed => ex
           STDERR.puts ex.message
+        rescue Timeout::Error => ex
+          STDERR.puts "Timeout (#{timeout}): #{ex.message}!"
+          false
         ensure
           response ||= default
         end

@@ -47,68 +47,17 @@ machines do
       end
       
     end
-  end
-  
-  env :gateway do
     
-  end
-end
-
-networks do
-  # simple_gateway, server-connections.yml:
-  #   --- 
-  #   local: 
-  #   - foo
-  #   foo: 
-  #   - bar
-  #   - baz
-  #   bar: 
-  #   - foobar
-  #   - foobaz
-  #   - barbaz
-end
-
-
-# -------------------------------------------------------  ROUTINES  --------
-# The routines block describe processes for each machine group. 
-routines do
-  
-  env :stage do
-    role :app do
-      
-      shutdown do 
-        before :root => "echo 'BEFORE' && pwd"
-        disks do
-          destroy "/rudy/example1"
-          destroy "/rudy/example2"
-        end
-      end
-      
-      startup do
-        disks do
-          create "/rudy/example1" do
-            device "/dev/sdl"
-          end
-          create "/rudy/example2"
-        end
-        
-        after :root => "pwd"
-        after :rudy => "pwd"
-      end
-      
-      restart do 
-        before :root => "pwd"
-        after :root => "pwd"
-        after :rudy => "pwd"
-        
-        disks do
-          mount "/rudy/example1"
-          mount "/rudy/example2"
-        end
-      end
+    role :gateway do
       
     end
   end
   
+end
+
+networks do
+end
+
+routines do
 end
 

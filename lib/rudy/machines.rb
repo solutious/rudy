@@ -6,8 +6,9 @@ module Rudy
     
     
     def create(opts={}, &each_inst)
-      raise "No root keypair configured" if !opts[:keypair] && !has_keypair?(:root)
- 
+      
+      rgroup = Rudy::Groups.new(:config => @config, :global => @global)
+      
       # TODO: Handle itype on create
       opts = { :ami => current_machine_image, 
                :group => current_machine_group, 
@@ -16,7 +17,10 @@ module Rudy
                :keypair => user_keypairpath(:root), # Must be a root key
                :address => current_machine_address,
                :machine_data => machine_data.to_yaml }.merge(opts)
-      
+
+      raise NoGroup.new(opts[:group]) unless rgroup.exists?(opts[:group])
+      raise NoRootKeyPair.new(opts[:group]) if !opts[:keypair] && !has_keypair?(:root)
+
       keypair_name = KeyPairs.path_to_name(opts[:keypair])
       
       instances = @@ec2.instances.create(opts[:ami], opts[:group], keypair_name, opts[:machine_data], @global.zone)
@@ -245,4 +249,22 @@ module Rudy
     
     
   end
+  class NoGroup < RuntimeError
+    def initialize(group)
+      @group = group
+    end
+    def message
+      "Group #{@group} does not exist. See: rudy groups -h"
+    end
+  end
+  
+  class NoRootKeyPair < RuntimeError
+    def initialize(group)
+      @group = group
+    end
+    def message
+      "No root keypair for #{@group}. See: rudy keypairs -h"
+    end
+  end
+  
 end

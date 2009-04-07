@@ -24,7 +24,7 @@ module Rudy
       def destroy_group
         puts "Destroying Machine Group".bright
         opts = {}
-        exit unless Annoy.are_you_sure?(:high)
+        exit unless Annoy.are_you_sure?(:medium)
         rudy = Rudy::Groups.new(:config => @config, :global => @global)
         rudy.destroy(@argv.name)
         puts "Done!"
@@ -35,8 +35,8 @@ module Rudy
         opts = check_options
         exit unless Annoy.are_you_sure?(:medium)
         rudy = Rudy::Groups.new(:config => @config, :global => @global)
-        rudy.create(@argv.name, opts)
-        rudy.list(opts)
+        rudy.create(@argv.name, nil, opts)
+        rudy.list(@argv.name)
       end
       
       def revoke_group

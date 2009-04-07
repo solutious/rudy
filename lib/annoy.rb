@@ -26,8 +26,8 @@ class Annoy
   
   @@strlen = {
     :low      => 2,
-    :medium   => 4,
-    :high     => 8,
+    :medium   => 3,
+    :high     => 4,
     :insane   => 32
   }.freeze
   

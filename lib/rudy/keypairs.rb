@@ -29,7 +29,7 @@ module Rudy
         Rudy::Utils.write_to_file(self.public_path(n), kp.public_key, 'w', 0600)
       end
       
-      @logger.puts "NOTE: If you move #{self.path(n)} you need to also update your Rudy machines config."
+      @logger.puts "NOTE: If you move #{self.path(n)} you need to also update your Rudy machines config.".color(:blue)
       
       kp
     end
@@ -61,7 +61,7 @@ module Rudy
       n &&= [n].flatten.compact
       keypairs = @@ec2.keypairs.list(n)
       keypairs.each { |n,kp| each_object.call(kp) } if each_object
-      keypairs
+      keypairs || []
     end
     
     def get(n=nil)
@@ -74,7 +74,7 @@ module Rudy
       n &&= [n].flatten.compact
       keypairs = @@ec2.keypairs.list_as_hash(n)
       keypairs.each_pair { |n,kp| each_object.call(kp) } if each_object
-      keypairs
+      keypairs || {}
     end
     
     def exists?(n=nil)
@@ -103,13 +103,11 @@ module Rudy
     end
     
 
-    
-
     # We use the base file name to determine the registered keypair name.
     def KeyPairs.path_to_name(path)
       return unless path
       return path unless File.exists?(path)
-      File.basename(path).gsub('.private', '')
+      File.basename(path)
     end
     
   private

@@ -36,6 +36,9 @@ module Rudy
         rkey.list.each do |kp|
           puts kp.to_s
         end
+        
+        puts "No keypairs" unless rkey.any?
+        
       end
       
       

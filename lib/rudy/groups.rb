@@ -19,6 +19,13 @@ module Rudy
       @@ec2.groups.destroy(n)
     end
     
+    def authorize(n, opts={})
+      modify_rules(:authorize, n, opts)
+    end
+    def revoke(n, opts={})
+      modify_rules(:revoke, n, opts)
+    end
+    
     def exists?(n=nil)
       n ||= name(n)
       @@ec2.groups.exists?(n)
@@ -50,13 +57,6 @@ module Rudy
       groups = @@ec2.groups.list_as_hash(n)
       groups.each_pair { |n,g| each_object.call(g) } if each_object
       groups
-    end
-    
-    def authorize(n, opts={})
-      modify_rules(:authorize, n, opts)
-    end
-    def revoke(n, opts={})
-      modify_rules(:revoke, n, opts)
     end
     
     # TODO: Consider changing the hash interface into arguments. 

@@ -22,7 +22,7 @@ module Rudy::AWS
     field :addresses => Hash         # key: address/mask, value Array of Rule object
     field :groups => Hash            # key: group, value Array of Rule object
     
-    # Print info about a a security group
+    # Print info about a security group
     #
     # * +group+ is a Rudy::AWS::EC2::Group object
     def to_s

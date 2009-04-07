@@ -129,18 +129,18 @@ command :connect => Rudy::CLI::Machines
 command_alias :connect, :ssh
 
 
-usage "rudy [global options] copy [-p] [-r] source target"
-desc "Copy files to or from machines. NOTE: You must use quotes when using a tilda for your remote dir ('~/')."
-option :r, :recursive, "Recursively copy entire directories"
-option :p, :preserve, "Preserve atimes and ctimes."
-option :d, :download, "Download FROM the remote machine to the local machine"
-option :print, "Only print the SSH command, don't connect"
-option :g, :group, String, "A security group name"
-option :i, :awsid, String, "An instance ID"
-command :copy => Rudy::CLI::Machines
-command_alias :copy, :scp
-command_alias :copy, :upload
-command_alias :copy, :download
+#usage "rudy [global options] copy [-p] [-r] source target"
+#desc "Copy files to or from machines. NOTE: You must use quotes when using a tilda for your remote dir ('~/')."
+#option :r, :recursive, "Recursively copy entire directories"
+#option :p, :preserve, "Preserve atimes and ctimes."
+#option :d, :download, "Download FROM the remote machine to the local machine"
+#option :print, "Only print the SSH command, don't connect"
+#option :g, :group, String, "A security group name"
+#option :i, :awsid, String, "An instance ID"
+#command :copy => Rudy::CLI::Machines
+#command_alias :copy, :scp
+#command_alias :copy, :upload
+#command_alias :copy, :download
 
 
 
@@ -161,19 +161,19 @@ command_alias :copy, :download
 #command :deploy => Rudy::CLI::Deploy
 
 
-desc "Shutdown a Machine Group"
-usage "rudy [global options] shutdown [-g group-name] [instance-ID]"
-option :g, :group, String, "A security group name"
-argv :awsid
-command :shutdown => Rudy::CLI::Routines
-
-
-desc "Start a Machine Group"
-usage "rudy [global options] startup [-g group-name] [-i image-ID]"
-option :ami, String, "EC2 image ID (AMI)"
-option :g, :group, String, "A security group name"
-command :startup => Rudy::CLI::Routines
-command_alias :startup, :start
+#desc "Shutdown a Machine Group"
+#usage "rudy [global options] shutdown [-g group-name] [instance-ID]"
+#option :g, :group, String, "A security group name"
+#argv :awsid
+#command :shutdown => Rudy::CLI::Routines
+#
+#
+#desc "Start a Machine Group"
+#usage "rudy [global options] startup [-g group-name] [-i image-ID]"
+#option :ami, String, "EC2 image ID (AMI)"
+#option :g, :group, String, "A security group name"
+#command :startup => Rudy::CLI::Routines
+#command_alias :startup, :start
 
 #desc "Restart a Machine Group"
 #option :g, :group, String, "A security group name"
@@ -208,6 +208,9 @@ command_alias :startup, :start
 
 
 usage "rudy [global options] groups [-C -R -A] [-a IP addresses] [-p ports] [group name]"
+usage "rudy groups -C               (create a group)"
+usage "rudy -e prod groups          (list groups in the prod environment)"
+usage "rudy groups -A -p 81,82,83   (open ports to a group from this machine)"
 desc "Manage EC2 Security Groups"
 option :all, "Display all security groups"
 option :r, :protocols, Array, "Comma-separated list of protocols. One of: tcp (default), udp, icmp"

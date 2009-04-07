@@ -12,7 +12,7 @@ module Rudy::Test
      
      should "(01) create a volume to work off of" do
        @@volumes ||= []
-       @@volumes << @@ec2.volumes.create(@@zone, 1)
+       @@volumes << @@ec2.volumes.create(1, @@zone)
        stop_test !@@volumes.first.is_a?(Rudy::AWS::EC2::Volume), "No volume to work off of."
      end
      
@@ -37,7 +37,7 @@ module Rudy::Test
        snap_list = @@ec2.snapshots.list || []
        assert !snap_list.empty?, "No snapshots"
         
-       volume = @@ec2.volumes.create(@@zone, volume_size, snap_list.first.awsid)
+       volume = @@ec2.volumes.create(volume_size, @@zone, snap_list.first.awsid)
        #puts "#{volume.awsid} #{snap_list.first.awsid}"
        
        assert volume.is_a?(Rudy::AWS::EC2::Volume), "Not a Volume"

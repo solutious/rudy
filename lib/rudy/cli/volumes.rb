@@ -13,9 +13,7 @@ module Rudy
         puts "Destroy Volume".bright
         @argv.volid &&= [@argv.volid].flatten
         
-        exit unless Annoy.are_you_sure?(:low)
-        
-        
+        exit unless Annoy.are_you_sure?(:medium)
       end
       
       
@@ -26,9 +24,12 @@ module Rudy
       end
       def volume_create
         puts "Create Volume".bright
-        ec2 = Rudy::AWS::EC2.new(@global.accesskey, @global.secretkey)
-        vol = ec2.volumes.create(@global.zone, @option.size, @option.snapshot)
-        Rudy.bug('hnic721') unless vol
+        
+        exit unless Annoy.are_you_sure?(:medium)
+        
+        rvol = Rudy::Volumes(:config => @config, :global => @global)
+        vol = rvol.create(@global.zone, @option.size, @option.snapshot)
+        
         puts vol.to_s
       end
       

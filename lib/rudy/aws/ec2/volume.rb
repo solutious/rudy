@@ -21,6 +21,11 @@ module Rudy::AWS
       lines.join($/)
     end
     
+    # Alias for status
+    def state
+      status
+    end
+    
     def available?
       (status && status == "available")
     end
@@ -43,6 +48,10 @@ module Rudy::AWS
   class EC2::Volumes
     include Rudy::AWS::ObjectBase
     
+    unless defined?(KNOWN_STATES)
+      KNOWN_STATES = [:available, :creating, :deleting, :attached, :detaching].freeze 
+    end
+    
     def attach(inst_id, vol_id, device)
       vol_id = (vol_id.is_a?(Rudy::AWS::EC2::Volume)) ? vol_id.awsid : vol_id
       inst_id = inst_id.is_a?(Rudy::AWS::EC2::Instace) ? inst_id.awsid : inst_id
@@ -55,11 +64,15 @@ module Rudy::AWS
     end
     
     
-    def list(vol_id=[])
-      list_as_hash(vol_id).values
+    def list(state=nil, vol_id=[])
+      list_as_hash(state, vol_id).values
     end
     
-    def list_as_hash(vol_id=[])
+    def list_as_hash(state=nil, vol_id=[])
+      state &&= state.to_sym
+      state = nil if state == :any
+      raise "Unknown state: #{state}" if state && !Volumes.known_state?(state)
+      
       opts = { 
         :volume_id => vol_id ? [vol_id].flatten : [] 
       }
@@ -74,6 +87,7 @@ module Rudy::AWS
       return volumes unless vlist['volumeSet'].is_a?(Hash)
       vlist['volumeSet']['item'].each do |vol|
         v = Volumes.from_hash(vol)
+        next if state && v.state != state.to_s
         volumes[v.awsid] = v
       end
       volumes
@@ -81,9 +95,9 @@ module Rudy::AWS
     
     
     # * +size+ the number of GB
-    def create(zone, size, snapid=nil)
+    def create(size, zone, snapid=nil)
       opts = {
-        :availability_zone => zone,
+        :availability_zone => zone.to_s,
         :size => (size || 1).to_s
       }
       
@@ -144,8 +158,8 @@ module Rudy::AWS
       (ret && ret['return'] == 'true') 
     end
     
-    def any?
-      !(list || []).empty?
+    def any?(state=nil,vol_id=[])
+      !(list(state, vol_id) || []).empty?
     end
     
     def exists?(vol_id)
@@ -155,7 +169,7 @@ module Rudy::AWS
     
     def get(vol_id)
       vol_id = (vol_id.is_a?(Rudy::AWS::EC2::Volume)) ? vol_id.awsid : vol_id
-      list(vol_id).first || nil
+      list(:any, vol_id).first || nil
     end
     
     def deleting?(vol_id)
@@ -179,6 +193,12 @@ module Rudy::AWS
       (vol && (vol.status == "in-use" || vol.status == "attached"))
     end
       
+    # Is +state+ a known EC2 volume state? See: KNOWN_STATES
+    def self.known_state?(state)
+      return false unless state
+      state &&= state.to_sym
+      KNOWN_STATES.member?(state)
+    end
   end
 end
 end

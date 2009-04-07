@@ -12,7 +12,7 @@ module Rudy::Test
 
       should "(10) create volume" do 
         volume_size = 2
-        volume = @@ec2.volumes.create(@@zone, volume_size)
+        volume = @@ec2.volumes.create(volume_size, @@zone)
         assert volume.is_a?(Rudy::AWS::EC2::Volume), "Not a Volume"
         assert_equal @@zone, volume.zone, "Zone incorrect: #{volume.zone}"
         assert_equal volume_size.to_i, volume.size.to_i, "Size incorrect: #{volume.size}"

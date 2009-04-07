@@ -35,7 +35,6 @@ machines do
   
   env :stage do
     role :app do
-              
       disks do  
         path "/rudy/example1" do
           size 4
@@ -50,6 +49,23 @@ machines do
     end
   end
   
+  env :gateway do
+    
+  end
+end
+
+networks do
+  # simple_gateway, server-connections.yml:
+  #   --- 
+  #   local: 
+  #   - foo
+  #   foo: 
+  #   - bar
+  #   - baz
+  #   bar: 
+  #   - foobar
+  #   - foobaz
+  #   - barbaz
 end
 
 
@@ -96,6 +112,3 @@ routines do
   
 end
 
-networks do
-  
-end

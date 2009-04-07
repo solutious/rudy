@@ -55,7 +55,9 @@ module Rudy::AWS
   class EC2
     class Instances
       include Rudy::AWS::ObjectBase
-      KNOWN_STATES = [:running, :pending, :shutting_down, :terminated].freeze unless defined?(KNOWN_STATES)
+      unless defined?(KNOWN_STATES)
+        KNOWN_STATES = [:running, :pending, :shutting_down, :terminated].freeze 
+      end
     
       # Return an Array of Instance objects. Note: These objects will not have
       # DNS data because they will still be in pending state. The DNS info becomes
@@ -352,8 +354,7 @@ module Rudy::AWS
         inst
       end
     
-      # Is +state+ a known EC2 machine instance state? Returns true for
-      # one of: :running, :pending, :terminated, :shutting_down
+      # Is +state+ a known EC2 machine instance state? See: KNOWN_STATES
       def self.known_state?(state)
         return false unless state
         state &&= state.to_sym

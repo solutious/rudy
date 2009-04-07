@@ -55,7 +55,7 @@ module Rudy::Routines
       
                   
           puts "Creating volume... (#{disk.size}GB in #{@global.zone})".bright
-          volume = @ec2.volumes.create(@global.zone, disk.size)
+          volume = @ec2.volumes.create(disk.size, @global.zone)
       
           puts "Attaching #{volume[:aws_id]} to #{machine.awsid}".bright
           @ec2.volumes.attach(machine.awsid, volume[:aws_id], disk.device)

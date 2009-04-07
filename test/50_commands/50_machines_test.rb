@@ -2,12 +2,6 @@
 module Rudy::Test
   class Case_50_Commands
     
-    # TODO: standardize the Rudy::Machines class API. For example, @rmach.running?
-    # Without an argument, should it assume the current machine group?
-    # What about for pending? What if there are 3 machines running and only 1 is running. 
-    # What should it return?
-    
-    
     context "#{name}_50 Machines" do
       
       setup do

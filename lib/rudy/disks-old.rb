@@ -34,7 +34,7 @@ module Rudy
       begin
 
         rvolumes = Rudy::Volumes.new(opts)
-        vol = rvolumes.create(disk.zone, disk.size)
+        vol = rvolumes.create(disk.size, disk.zone)
         disk.awsid = vol.awsid        
         save(disk)
         
@@ -65,7 +65,7 @@ module Rudy
       raise "Disk #{disk} cannot be found" unless disk_obj
       is_mounted = is_mounted?(disk_obj)
       is_attached = is_attached?(disk_obj)
-      is_available = @volumes.is_attached?(disk_obj)
+      is_available = @volumes.attached?(disk_obj.awsid)
       raise "Disk is in use (unmount it or use force)" if is_mounted && !@global.force
       raise "Disk is attached (unattach it or use force)" if is_attached && !@global.force
       
@@ -284,7 +284,7 @@ __END__
 #      end
 #
 #      puts "Creating volume... (from #{backup.awsid})".bright
-#      volume = @ec2.volumes.create(@global.zone, disk.size, backup.awsid)
+#      volume = @ec2.volumes.create(disk.size, @global.zone, backup.awsid)
 #
 #      puts "Attaching #{volume[:aws_id]} to #{machine.awsid}".bright
 #      @ec2.volumes.attach(machine.awsid, volume[:aws_id], disk.device)

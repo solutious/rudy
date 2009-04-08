@@ -31,5 +31,5 @@ def xshould(*args, &ignore)
   puts %Q(Skipping test: %s "%s") % [@name.color(:blue), args.first.color(:blue).bright]
 end
 def xcontext(*args, &ignore)
-  puts %q(Skipping context: "%s") % @name.color(:blue).bright
+  puts %q(Skipping context: "%s") % (@name || args.first).color(:blue).bright
 end

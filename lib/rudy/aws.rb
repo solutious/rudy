@@ -16,7 +16,7 @@ module Rudy
     def set_access_identifiers(accesskey, secretkey, logger=nil)
       @@ec2 ||= Rudy::AWS::EC2.new(accesskey, secretkey)
       @@sdb ||= Rudy::AWS::SimpleDB.new(accesskey, secretkey)
-      #@@s3 ||= Rudy::AWS::SimpleDB.new(accesskey, secretkey)
+      #@@s3 ||= Rudy::AWS::S3.new(accesskey, secretkey)
     end
       
     module ObjectBase
@@ -35,7 +35,7 @@ module Rudy
       # Returns the return value from the request is returned untouched
       # or the default value on error or if the request returned nil. 
       def execute_request(default=nil, timeout=nil, &request)
-        timeout ||= 10
+        timeout ||= 30
         raise "No block provided" unless request
         response = nil
         begin

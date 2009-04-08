@@ -4,21 +4,34 @@ module Rudy
   module CLI
     class Volumes < Rudy::CLI::Base
       
-      def destroy_volume_valid?  
-        raise "No volume ID provided" unless @argv.volid
-        raise "I will not help you destroy production!" if @global.environment =~ /^prod/
+
+      def destroy_volume_valid?
+        raise "You must supply a volume ID. See rudy volume -h" unless @argv.volid
+        
+        @rvol = Rudy::Volumes.new(:config => @config, :global => @global)
+        
+        @volume = @rvol.get(@argv.volid)
+        
+        raise "Volume #{@argv.volid} does not exist" unless @volume
+        
+        raise "Volume #{@argv.volid} is still in-use" if @volume.in_use?
+        raise "Volume #{@argv.volid} is still attached" if @volume.attached?
+        
         true
       end
+      
       def destroy_volume
-        puts "Destroy Volume".bright
-        @argv.volid &&= [@argv.volid].flatten
+        puts "Destroy Volume".bright, $/
         
+        puts "Destroying #{@volume.awsid}"
         exit unless Annoy.are_you_sure?(:medium)
         
-        rvol = Rudy::Volumes.new(:config => @config, :global => @global)
-        vol = rvol.destroy(@argv.volid)
+        ret = @rvol.destroy(@volume.awsid)
+        raise "Failed" unless ret
         
-        puts "Done!"
+        vol = @rvol.get(@volume.awsid)
+        
+        puts vol.to_s
       end
       
       
@@ -80,8 +93,6 @@ module Rudy
       def volume_detach
         puts "Detach Volume".bright, $/
         
-        @option.device ||= "/dev/sdh"
-        
         puts "Detaching #{@volume.awsid} from #{@volume.instid}"
         exit unless Annoy.are_you_sure?(:low)
         
@@ -90,6 +101,7 @@ module Rudy
         volume = @rvol.get(@volume.awsid)
         puts volume.to_s
       end
+      
       
       def volume
         puts "Volumes".bright, $/

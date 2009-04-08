@@ -6,7 +6,7 @@ module Rudy::Test
 
     end
     
-    context "#{name}_10 Domains" do
+    xcontext "#{name}_10 Domains" do
       
       setup do
         @domain_list = @@sdb.domains.list || []

@@ -53,7 +53,6 @@ module Rudy
         detach(volume) if volume.attached?
         raise "Volume is still attached. Cannot destroy." unless available?(volume.awsid)
         
-        @logger.puts "Destroying #{volume.awsid}"
         ret = @@ec2.volumes.destroy(volume.awsid)
         
       rescue => ex

@@ -18,30 +18,29 @@ module Rudy
       vol
     end
         
-    def attach(volume, instance)
+    def attach(volume, instance, device="/dev/sdh")
       volume = get(volume)
       raise "No instance supplied" unless instance.is_a?(Rudy::AWS::EC2::Instance)
       raise "No instance id" unless instance.awsid
+      raise "No device supplied" unless device
       raise "Volume #{volume.awsid} already attached" if attached?(volume) 
       
-      switch_user(:root)
-      
+      ret = false
       begin
         @logger.print "Attaching Volume "
-        volume = @@ec2.volumes.attach(instance.awsid, volume.awsid, volume.device)
-        # {"attachTime"=>"2009-03-19T13:45:59.000Z", "status"=>"attaching", "device"=>"/dev/sdm", 
-        # "requestId"=>"1c494a5d-a727-4fbc-a422-fa70898ca28a", "instanceId"=>"i-f17ae298", 
-        # "volumeId"=>"vol-69f71100", "xmlns"=>"http://ec2.amazonaws.com/doc/2008-12-01/"}
+        ret = @@ec2.volumes.attach(instance.awsid, volume.awsid, device)
+        raise "Unknown error" unless ret 
+        
         Rudy.waiter(1, 30, @logger) do
-          attached?(volume.awsid)
+          ret = attached?(volume.awsid)
         end
         
       rescue => ex
         @logger.puts ex.backtrace if debug?
-        raise "Error attaching #{volume.device} to #{volume.awsid}: #{ex.message}"
+        raise "Error attaching #{volume.awsid} to #{instance.awsid}: #{ex.message}"
       end
       
-      attached?(volume.awsid)
+      ret
     end
     
     def destroy(volume)
@@ -67,12 +66,13 @@ module Rudy
     def detach(volume)
       volume = get(volume)
       raise "#{volume.awsid} is not attached" unless @@ec2.volumes.attached?(volume.awsid)
-
+      
+      ret = false
       begin
         @logger.print "Dettaching #{volume.awsid} "
         @@ec2.volumes.detach(volume.awsid)
         Rudy.waiter(1, 30) do
-          @@ec2.volumes.available?(volume.awsid)
+          ret = @@ec2.volumes.available?(volume.awsid)
         end
         
       rescue => ex
@@ -80,7 +80,7 @@ module Rudy
         raise "Error detaching volume #{volume.awsid}: #{ex.message}"
       end
       
-      available?(volume.awsid)
+      ret
     end
     
     

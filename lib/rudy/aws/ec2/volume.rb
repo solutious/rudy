@@ -54,13 +54,21 @@ module Rudy::AWS
     
     def attach(inst_id, vol_id, device)
       vol_id = (vol_id.is_a?(Rudy::AWS::EC2::Volume)) ? vol_id.awsid : vol_id
-      inst_id = inst_id.is_a?(Rudy::AWS::EC2::Instace) ? inst_id.awsid : inst_id
-      @aws.attach_volume(:volume_id => vol_id, :instance_id => inst_id, :device => device)
+      inst_id = inst_id.is_a?(Rudy::AWS::EC2::Instance) ? inst_id.awsid : inst_id
+      
+      ret = execute_request(false) {
+        @aws.attach_volume(:volume_id => vol_id, :instance_id => inst_id, :device => device)
+      }
+      (ret['status'] == 'attaching')
     end
     
     def detach(vol_id)
       vol_id = (vol_id.is_a?(Rudy::AWS::EC2::Volume)) ? vol_id.awsid : vol_id
-      @aws.detach_volume(:volume_id => vol_id)
+      
+      ret = execute_request({}) {
+        @aws.detach_volume(:volume_id => vol_id)
+      }
+      (ret['status'] == 'detaching') 
     end
     
     
@@ -77,7 +85,11 @@ module Rudy::AWS
         :volume_id => vol_id ? [vol_id].flatten : [] 
       }
       begin
-        vlist = @aws.describe_volumes(opts) || {}
+        
+        vlist = execute_request({}) {
+          @aws.describe_volumes(opts)
+        }
+        
       # NOTE: The InternalError is returned for non-existent volume IDs. 
       # It's probably a bug so we're ignoring it -- Dave. 
       rescue ::EC2::InternalError => ex 
@@ -110,9 +122,21 @@ module Rudy::AWS
       # "availabilityZone"=>"us-east-1b", 
       # "createTime"=>"2009-03-17T20:10:48.000Z", 
       # "volumeId"=>"vol-48826421"
-      vol = @aws.create_volume(opts) || {}
+      vol = execute_request({}) { 
+        @aws.create_volume(opts)
+      }
+      
       reqid = vol['requestId']
       Volumes.from_hash(vol) || nil
+    end
+    
+    
+    def destroy(vol_id)
+      vol_id = (vol_id.is_a?(Rudy::AWS::EC2::Volume)) ? vol_id.awsid : vol_id
+      ret = execute_request({}) { 
+         @aws.delete_volume(:volume_id => vol_id)
+      }
+      (ret['return'] == 'true') 
     end
     
     def self.from_hash(h)
@@ -151,12 +175,7 @@ module Rudy::AWS
       end
       vol
     end
-    
-    def destroy(vol_id)
-      vol_id = (vol_id.is_a?(Rudy::AWS::EC2::Volume)) ? vol_id.awsid : vol_id
-      ret = @aws.delete_volume(:volume_id => vol_id)
-      (ret && ret['return'] == 'true') 
-    end
+
     
     def any?(state=nil,vol_id=[])
       !(list(state, vol_id) || []).empty?

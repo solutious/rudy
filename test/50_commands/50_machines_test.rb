@@ -62,11 +62,16 @@ module Rudy::Test
         assert @rmach.console.is_a?(String), "No console output"
       end
       
-      should "(45) attach disk to instance" do
-        volume = @rvol.create(volume_size)
+      should "(45) attach volume to instance and then detach it" do
+        volume = @rvol.create(1)
+        #volume = @rvol.get('vol-9934d4f0')
         instances = @rmach.list(:running)
+        assert !instances.empty?, "No instances running"
+        instance = instances.first
+        assert !volume.attached?, "Volume is attached"
+        assert instance.running?, "Instance not running"
         assert volume.available?, "Volume not available"
-        assert @rvol.attach(volume, instances.first), "Volume #{volume.awsid} not attached to #{instance.awsid}"
+        assert @rvol.attach(volume, instance), "Volume #{volume.awsid} not attached to #{instance.awsid}"
         assert @rvol.detach(volume), "Volume not detached (#{volume.awsid})"
         assert @rvol.destroy(volume), "Volume not destroyed (#{volume.awsid})"
       end
@@ -76,7 +81,7 @@ module Rudy::Test
         assert @rmach.destroy, "Group not destroyed"
       end
       
-      should "(95) destroy machine group" do
+      should "(95) destroy security group" do
         # We can't delete the machine group until all instances are terminated
         Rudy.waiter(2, 60, @@logger) { !@@ec2.instances.any?(:running) }
         @rgroup.list do |group|

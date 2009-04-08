@@ -159,7 +159,7 @@ module Rudy
   def Rudy.bell(chimes=1, logger=STDERR)
     return if @@quiet
     chimed = chimes.to_i
-    logger.print "\a"*chimes
+    logger.print "\a"*chimes if logger
     true # be like Rudy.bug()
   end
   

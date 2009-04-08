@@ -15,6 +15,9 @@ module Rudy::Test
         @rkey = Rudy::KeyPairs.new(:logger => @@logger)
         stop_test !@rkey.is_a?(Rudy::KeyPairs), "We need Rudy::KeyPairs (#{@rkey})"
         
+        @rvol = Rudy::Volumes.new(:logger => @@logger)
+        stop_test !@rvol.is_a?(Rudy::Volumes), "We need Rudy::Volumes (#{@rvol})"
+        
         @rkey.global.environment = :test
         @rgroup.global.environment = :test
         @rmach.global.environment = :test
@@ -38,7 +41,8 @@ module Rudy::Test
         assert @rgroup.exists?(@rmach.current_machine_group), "No matching security group"
       end
       
-      should "(11) create machine group" do
+      
+      should "(10) create a machine" do
         stop_test @rmach.running?, "Shutdown the machines running in #{@rmach.current_machine_group}"
         instances = @rmach.create
         assert instances.is_a?(Array), "instances is not an Array"
@@ -56,6 +60,15 @@ module Rudy::Test
 
       should "(30) check console output" do
         assert @rmach.console.is_a?(String), "No console output"
+      end
+      
+      should "(45) attach disk to instance" do
+        volume = @rvol.create(volume_size)
+        instances = @rmach.list(:running)
+        assert volume.available?, "Volume not available"
+        assert @rvol.attach(volume, instances.first), "Volume #{volume.awsid} not attached to #{instance.awsid}"
+        assert @rvol.detach(volume), "Volume not detached (#{volume.awsid})"
+        assert @rvol.destroy(volume), "Volume not destroyed (#{volume.awsid})"
       end
       
       should "(90) destroy machines" do

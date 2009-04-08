@@ -18,6 +18,9 @@ def stop_test(should_stop, str)
   str ||= "Test stopped for unknown reason"
   abort str.color(:red).bright
 end
+def xstop_test(*args, &ignore)
+  puts %Q(Skipping stop_test: %s "%s") % [@name.color(:blue), args.first.color(:blue).bright]
+end
 
 def skip(msg)
   puts "%s (%s)" % ["SKIP".color(:blue).bright, msg]

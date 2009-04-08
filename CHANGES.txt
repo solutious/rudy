@@ -1,14 +1,10 @@
 RUDY, CHANGES
 
-TODO: Look into RubyGems error
-    /Library/Ruby/Gems/1.8/gems/rake-0.8.3/lib/rake/gempackagetask.rb:13:Warning: Gem::manage_gems is deprecated and will be removed on or after March 2009.
-    rake aborted!
-    RubyGem version error: rdoc(2.4.0 not ~> 2.3.0)
-
-TODO: Remove aws_swb
+TODO: Rename awsinfo to accounts (and @config.awsinfo.account to @config.accounts.aws.number)
+TODO: Remove aws_sdb
 
 
-#### 0.5.0 (2009-03-??) ###############################
+#### 0.5.0 (2009-04-??) ###############################
 
 * CHANGE: Recommend keypair config to be in ~/.rudy/config
 * FIX: Rudy now checks for user keys specified by env-role, env, and global

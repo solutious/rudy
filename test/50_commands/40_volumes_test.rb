@@ -12,7 +12,7 @@ module Rudy::Test
       
       should "(10) create a volume" do
         volume_size = 2
-        stop_test @rvol.any?(:available), "Destroy existing volumes"
+        #stop_test @rvol.any?(:available), "Destroy existing volumes"
         volume = @rvol.create(volume_size)
         assert volume.is_a?(Rudy::AWS::EC2::Volume), "Not a Volume"
         # Should use the global zone by default
@@ -26,7 +26,7 @@ module Rudy::Test
         
       end
       
-      xshould "(20) list volumes" do
+      should "(20) list volumes" do
          volume_list = @rvol.list
          assert volume_list.is_a?(Array), "Not an Array"
          assert volume_list.size > 0, "No Volumes in Array"
@@ -38,7 +38,7 @@ module Rudy::Test
          assert_equal volume_list.size.to_i, volume_hash.keys.size.to_i, "Hash and Array not equal size"
        end
        
-      xshould "(90) destroy volumes" do
+      should "(90) destroy volumes" do
         assert @rvol.any?, "No volumes"
         volume_list = @rvol.list
         volume_list.each do |vol|

@@ -185,14 +185,16 @@ command_alias :connect, :ssh
 # -----------------------------------  AMAZON EC2 COMMANDS  --------
 # ------------------------------------------------------------------
 
-#usage "rudy [global options] addresses [-A address instance ID]"
-#desc "Manage Amazon Elastic IP addresses"
-#argv :address, :instanceid
-#action :A, :associate, "Associate an address to a running instance"
-#command :addresses => Rudy::CLI::Addresses
-#command_alias :addresses, :address
-#
-#
+usage "rudy [global options] addresses [-A address instance ID]"
+desc "Manage Amazon Elastic IP addresses"
+argv :ipaddress, :instid
+action :A, :associate, "Associate an IP address to a running instance"
+action :C, :create, "Create an IP address"
+action :D, :destroy, "Destroy an IP address"
+command :addresses => Rudy::CLI::Addresses
+command_alias :addresses, :address
+
+
 #usage "rudy images [-C -i name [-b bucket -a account]] [-D AMI-ID]"
 #desc "Manage EC2 Machine Images (AMIs)"
 #option :a, :account, String, "Your Amazon Account Number"

@@ -10,6 +10,7 @@ module Rudy::AWS
       def to_s
         msg = "Address: #{self.ipaddress}"
         msg << ", instance: #{self.instid}" if self.instid
+        msg
       end
     end
   
@@ -17,16 +18,18 @@ module Rudy::AWS
       include Rudy::AWS::ObjectBase
     
       # Returns a Array of Rudy::AWS::EC2::Address objects. 
-      def list 
-        addresses = list_as_hash
+      def list(addresses=[])
+        addresses = list_as_hash(addresses)
         addresses &&= addresses.values
         addresses
       end
     
       # Returns a Hash of Rudy::AWS::EC2::Address objects. The key of the IP address.
-      def list_as_hash
-        alist = @aws.describe_addresses || []
-      
+      def list_as_hash(addresses=[])
+        addresses ||= []
+        addresses = [addresses].flatten.compact
+        alist = @aws.describe_addresses(:addresses=> addresses)
+        
         return nil unless alist['addressesSet'].is_a?(Hash)
       
         addresses = {}
@@ -34,6 +37,7 @@ module Rudy::AWS
           address = Addresses.from_hash(address)
           addresses[address.ipaddress] = address
         end
+        
         addresses
       end
     
@@ -41,7 +45,13 @@ module Rudy::AWS
       def any?
         !(list_as_hash || {}).empty?
       end
-    
+      
+      def get(address)
+        raise "Address cannot be nil" if address.nil?
+        address = address.ipaddress if address.is_a?(Rudy::AWS::EC2::Address)
+        (list(address) || []).first
+      end
+      
       def self.from_hash(h)
         # requestId: 5ebcad80-eed9-4221-86f6-8d19d7acffe4
         # addressesSet: 
@@ -58,7 +68,7 @@ module Rudy::AWS
       def associate(instance, address)
         address = address.ipaddress if address.is_a?(Rudy::AWS::EC2::Address)
         instance = instance.awsid if instance.is_a?(Rudy::AWS::EC2::Instance)
-        raise "Not a valid address" unless valid?(address)
+        raise "Not a valid address" unless exists?(address)
         opts ={
           :instance_id => instance || raise("No instance ID supplied"),
           :public_ip => address || raise("No public IP address supplied")
@@ -78,7 +88,7 @@ module Rudy::AWS
     
       def destroy(address)
         address = address.ipaddress if address.is_a?(Rudy::AWS::EC2::Address)
-        raise "Not a valid address" unless valid?(address)
+        raise "Not a valid address" unless exists?(address)
         opts ={
           :public_ip => address || raise("No public IP address supplied")
         }
@@ -89,7 +99,7 @@ module Rudy::AWS
     
       # +address+ is an IP address or Rudy::AWS::EC2::Address object
       # Returns true if the given address is assigned to the current account
-      def valid?(address)
+      def exists?(address)
         address = address.ipaddress if address.is_a?(Rudy::AWS::EC2::Address)
         list.each do |a|
           return true if a.ipaddress == address

@@ -38,7 +38,7 @@ module Rudy::Test
       
       should "(31) console" do
         @@ec2.instances.list.each do |inst|
-          assert @@ec2.instances.console_output(inst).is_a?(String), "No console output for (#{inst})"
+          assert @@ec2.instances.console_output(inst).is_a?(String), "No console output for (#{inst.awsid})"
         end
       end
       

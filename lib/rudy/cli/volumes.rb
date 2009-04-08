@@ -14,6 +14,11 @@ module Rudy
         @argv.volid &&= [@argv.volid].flatten
         
         exit unless Annoy.are_you_sure?(:medium)
+        
+        rvol = Rudy::Volumes.new(:config => @config, :global => @global)
+        vol = rvol.destroy(@argv.volid)
+        
+        puts "Done!"
       end
       
       
@@ -27,8 +32,8 @@ module Rudy
         
         exit unless Annoy.are_you_sure?(:medium)
         
-        rvol = Rudy::Volumes(:config => @config, :global => @global)
-        vol = rvol.create(@global.zone, @option.size, @option.snapshot)
+        rvol = Rudy::Volumes.new(:config => @config, :global => @global)
+        vol = rvol.create(@option.size, @global.zone, @option.snapshot)
         
         puts vol.to_s
       end

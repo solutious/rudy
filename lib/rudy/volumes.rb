@@ -10,17 +10,16 @@ module Rudy
       
       @logger.puts "Creating Volume "
       vol = @@ec2.volumes.create(size, zone, snapshot)
-      Rudy.waiter(1, 30) do
-        ret = available?(vol.awsid)
-        p ret
-        ret
+      Rudy.waiter(1, 30, @logger) do
+        vol = get(vol.awsid) # update the volume until it says it's available
+        (vol && vol.status == "available")
       end
       
       vol
     end
         
     def attach(volume, instance)
-      volume = find_volume(volume)
+      volume = get(volume)
       raise "No instance supplied" unless instance.is_a?(Rudy::AWS::EC2::Instance)
       raise "No instance id" unless instance.awsid
       raise "Volume #{volume.awsid} already attached" if attached?(volume) 
@@ -29,19 +28,20 @@ module Rudy
       
       begin
         @logger.print "Attaching Volume "
-        ret = @@ec2.volumes.attach(instance.awsid, volume.awsid, volume.device)
+        volume = @@ec2.volumes.attach(instance.awsid, volume.awsid, volume.device)
         # {"attachTime"=>"2009-03-19T13:45:59.000Z", "status"=>"attaching", "device"=>"/dev/sdm", 
         # "requestId"=>"1c494a5d-a727-4fbc-a422-fa70898ca28a", "instanceId"=>"i-f17ae298", 
         # "volumeId"=>"vol-69f71100", "xmlns"=>"http://ec2.amazonaws.com/doc/2008-12-01/"}
-        Rudy.waiter(1, 30) do
+        Rudy.waiter(1, 30, @logger) do
           attached?(volume.awsid)
         end
-        puts
+        
       rescue => ex
         @logger.puts ex.backtrace if debug?
         raise "Error attaching #{volume.device} to #{volume.awsid}: #{ex.message}"
       end
-      true
+      
+      attached?(volume.awsid)
     end
     
     def destroy(volume)
@@ -51,10 +51,10 @@ module Rudy
       ret = false
       begin
         
-        dettach(volume) if is_attached
+        detach(volume) if is_attached
         raise "Volume is still attached. Cannot destroy." unless @@ec2.volumes.available?(volume.awsid)
         
-        @logger.print "Destroying #{volume.awsid}"
+        @logger.puts "Destroying #{volume.awsid}"
         ret = @@ec2.volumes.destroy(volume.awsid)
         
       rescue => ex
@@ -63,9 +63,9 @@ module Rudy
       end
       ret
     end
-    
-    def dettach(volume)
-      volume = find_volume(volume)
+     
+    def detach(volume)
+      volume = get(volume)
       raise "#{volume.awsid} is not attached" unless @@ec2.volumes.attached?(volume.awsid)
 
       begin
@@ -74,11 +74,13 @@ module Rudy
         Rudy.waiter(1, 30) do
           @@ec2.volumes.available?(volume.awsid)
         end
-        puts
+        
       rescue => ex
         puts ex.backtrace if debug?
-        raise "Error dettaching volume #{volume.awsid}: #{ex.message}"
+        raise "Error detaching volume #{volume.awsid}: #{ex.message}"
       end
+      
+      available?(volume.awsid)
     end
     
     

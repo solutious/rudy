@@ -73,7 +73,7 @@ module Rudy
         
         if @global.force 
           unmount(instance, disk_obj) if is_mounted
-          @volumes.dettach(disk_obj.awsid) if is_attached
+          @volumes.detach(disk_obj.awsid) if is_attached
           @volumes.destroy(disk_obj.awsid)
         end
         

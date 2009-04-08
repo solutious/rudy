@@ -282,11 +282,20 @@ module Rudy::AWS
         raise "Unknown instance: #{inst_id}" unless inst
         inst.first
       end
-
+      
+      def get(inst_ids=[])
+        list(:any, inst_ids) 
+      end
+      
+      
       def any?(state=:any, inst_ids=[])
         !list(state, inst_ids).nil?
       end
-    
+      
+      def exists?(inst_ids)
+        any?(:any, inst_ids)
+      end
+      
       def any_group?(group=nil, state=:any)
         ret = list_group(group, state)
         p ret

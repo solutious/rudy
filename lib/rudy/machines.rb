@@ -152,6 +152,9 @@ module Rudy
       @@ec2.instances.any_group?(group)
     end
     
+    def exists?(inst_id)
+      @@ec2.instances.exists?(inst_id)
+    end
     
     # *NOTE REGARDING THE STATUS METHODS*:
     #

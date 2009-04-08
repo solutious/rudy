@@ -39,7 +39,11 @@ module Rudy::AWS
     end
     
     def attached?
-      (status && (status == "in-use" || status == "attached"))
+      (status && (status == "attached"))
+    end
+    
+    def in_use?
+      (status && (status == "in-use"))
     end
     
   end
@@ -209,7 +213,14 @@ module Rudy::AWS
       vol_id = (vol_id.is_a?(Rudy::AWS::EC2::Volume)) ? vol_id.awsid : vol_id
       return false unless vol_id
       vol = get(vol_id)
-      (vol && (vol.status == "in-use" || vol.status == "attached"))
+      (vol && (vol.status == "attached"))
+    end
+    
+    def in_use?(vol_id)
+      vol_id = (vol_id.is_a?(Rudy::AWS::EC2::Volume)) ? vol_id.awsid : vol_id
+      return false unless vol_id
+      vol = get(vol_id)
+      (vol && (vol.status == "in-use"))
     end
       
     # Is +state+ a known EC2 volume state? See: KNOWN_STATES

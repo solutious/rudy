@@ -229,10 +229,18 @@ command :group => Rudy::CLI::Groups
 command_alias :group, :groups
 
 desc "Manage EC2 Volumes"
+usage "rudy volumes"
+usage "rudy volume -C -s size [-d device-path]"
+usage "rudy volume -A volume-id instance-id"
+usage "rudy volume -N volume-id"
+usage "rudy volume -D volume-id"
 option :s, :size, String, "Size (in GB)"
+option :d, :device, String, "Device path (default: /dev/sdh)"
 action :D, :destroy, "Destroy a volume"
 action :C, :create, "Create a volume"
-argv :volid
+action :A, :attach, "Attach a volume to a running instance"
+action :N, :detach, "Detach a volume from an instance"
+argv :volid, :insid
 command :volume => Rudy::CLI::Volumes
 command_alias :volume, :volumes
 

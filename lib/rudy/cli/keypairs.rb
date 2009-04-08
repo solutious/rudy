@@ -17,7 +17,7 @@ module Rudy
       
       
       def destroy_keypairs
-        puts "Destroy KeyPairs #{@argv.kpname}".bright
+        puts "Destroy KeyPairs".bright
         rkey = Rudy::KeyPairs.new(:config => @config, :global => @global)
         raise "KeyPair #{rkey.name(@argv.kpname)} does not exist" unless rkey.exists?(@argv.kpname)
         kp = rkey.get(@argv.kpname)
@@ -25,7 +25,7 @@ module Rudy
         puts "NOTE: the private key file will also be deleted and you will not be able to".color(:blue)
         puts "connect to instances started with this keypair.".color(:blue)
         exit unless Annoy.are_you_sure?(:low)
-        ret = rkey.destroy
+        ret = rkey.destroy(@argv.kpname)
         puts ret ? "Success" : "Failed"
       end
       

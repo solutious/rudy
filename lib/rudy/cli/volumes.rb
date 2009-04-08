@@ -56,7 +56,7 @@ module Rudy
         raise "You must supply an instance ID. See rudy volume -h" unless @argv.instid
         
         @rvol = Rudy::Volumes.new(:config => @config, :global => @global)
-        @rmach = Rudy::Machines.new(:config => @config, :global => @global)
+        @rmach = Rudy::Instances.new(:config => @config, :global => @global)
         raise "Volume #{@argv.volid} does not exist" unless @rvol.exists?(@argv.volid)
         raise "Instance #{@argv.instid} does not exist" unless @rmach.exists?(@argv.instid)
         

@@ -90,6 +90,7 @@ module Rudy::AWS
         instances = response['instancesSet']['item'].collect do |inst|
           self.class.from_hash(inst)
         end
+        
         instances
       end
     
@@ -282,11 +283,6 @@ module Rudy::AWS
         raise "Unknown instance: #{inst_id}" unless inst
         inst.first
       end
-      
-      def get(inst_ids=[])
-        list(:any, inst_ids) 
-      end
-      
       
       def any?(state=:any, inst_ids=[])
         !list(state, inst_ids).nil?

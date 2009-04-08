@@ -48,7 +48,8 @@ module Rudy
           STDERR.puts ex.message
         rescue Timeout::Error => ex
           STDERR.puts "Timeout (#{timeout}): #{ex.message}!"
-          false
+        rescue SocketError => ex
+          STDERR.puts "Socket Error. Check your Internets!"
         ensure
           response ||= default
         end

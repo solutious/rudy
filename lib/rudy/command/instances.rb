@@ -1,7 +1,7 @@
 
 
 module Rudy
-  class Machines
+  class Instances
     include Rudy::Huxtable
     
     
@@ -51,6 +51,7 @@ module Rudy
 
         # The DNS names are now available so we need to grab that data from AWS
         instance = @@ec2.instances.get(inst_tmp.awsid)   
+        instances_with_dns << instance
 
         @logger.puts $/, "Waiting for the SSH daemon "
         begin
@@ -62,7 +63,6 @@ module Rudy
           next
         end
 
-        instances_with_dns << instance
 
       end
       
@@ -75,7 +75,6 @@ module Rudy
       raise "No machines running in #{group}" unless running?(group)
       instances = @@ec2.instances.list_group(group, :running, inst_id)
       instances &&= [instances].flatten
-      @logger.puts "Found #{instances.size} instances in #{group}"
       instances.each { |inst| each_inst.call(inst) } if each_inst
       @logger.puts $/, "Terminating instances...", $/
       @@ec2.instances.destroy(instances, :skip_check)
@@ -100,7 +99,7 @@ module Rudy
       instances
     end
     
-    # See Rudy::Machines#list for arguments.
+    # See Rudy::Instances#list for arguments.
     # Returns a Hash of Rudy::AWS::EC2::Instance objects (the keys are instance IDs)
     def list_as_hash(state=nil, group=nil, inst_ids=[], &each_inst)
       group ||= current_machine_group

@@ -156,7 +156,7 @@ module Rudy
   end
   
   # Make a terminal bell chime
-  def Rudy.bell(chimes=1, logger=STDERR)
+  def Rudy.bell(chimes=1, logger=nil)
     return if @@quiet
     chimed = chimes.to_i
     logger.print "\a"*chimes if logger
@@ -257,7 +257,7 @@ require 'rudy/config'              # order
 require 'rudy/huxtable'            # of
 require 'rudy/command/addresses'   # require
 require 'rudy/command/keypairs'
-require 'rudy/command/machines'    # statements
+require 'rudy/command/instances'  # statements
 require 'rudy/command/manager'     # is
 require 'rudy/command/backups'     # important.
 require 'rudy/command/volumes'

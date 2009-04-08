@@ -44,7 +44,7 @@ module Rudy::Test
       end
       
       should "(13) not create keypair if a root keypair is defined in config" do
-        assert_equal (@rkey.global.environment = :stage), :stage # stage needs keypairs configured
+        assert_equal (@rkey.global.environment = :keypairtest), :keypairtest # stage needs keypairs configured
         assert @rkey.has_root_keypair?, "No root keypair path defined in config"
         begin; kp = @rkey.create; rescue => ex; end
         assert kp.nil?, "Keypair was still created"
@@ -60,8 +60,8 @@ module Rudy::Test
       
       should "(30) find existing keypair for current machine group" do
         assert !(test_kp = @rkey.user_keypairpath(:root)).nil?, "Test keypair is nil"
-        @rkey.global.environment = :stage # user_keypairpath will now look at the stage
-        assert !(stage_kp = @rkey.user_keypairpath(:root)).nil?, "Stage keypair is nil"
+        @rkey.global.environment = :keypairtest # user_keypairpath will now look at the stage
+        assert !(stage_kp = @rkey.user_keypairpath(:root)).nil?, "keypairtest keypair is nil"
         assert test_kp != stage_kp, "Test and Stage keypairs are the same (#{test_kp}, #{stage_kp})"
       end
       

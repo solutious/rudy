@@ -23,13 +23,14 @@ module Rudy
       
       def destroy_group_valid?
         @rgroup = Rudy::Groups.new(:config => @config, :global => @global)
-        raise "Group #{@rgroup.name(@option.name)} does not exist" unless @rgroup.exists?(@option.name)
+        raise "Group #{@rgroup.name(@argv.name)} does not exist" unless @rgroup.exists?(@argv.name)
         true
       end
       
       def destroy_group
         puts "Destroying Machine Group".bright
         opts = {}
+        puts "Destroying group: #{@rgroup.name(@argv.name)}"
         exit unless Annoy.are_you_sure?(:medium)
         
         @rgroup.destroy(@argv.name)

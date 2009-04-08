@@ -2,15 +2,15 @@
 module Rudy::Test
   class Case_50_Commands
     
-    context "#{name}_50 Machines" do
+    context "#{name}_50 Instances" do
       
       setup do
         
-        @rmach = Rudy::Machines.new(:logger => @@logger)
-        stop_test !@rmach.is_a?(Rudy::Machines), "We need Rudy::Machines (#{@rmach})"
+        @rmach = Rudy::Instances.new(:logger => @@logger)
+        stop_test !@rmach.is_a?(Rudy::Instances), "We needRudy::Instancess (#{@rmach})"
         
         @rgroup = Rudy::Groups.new(:logger => @@logger)
-        stop_test !@rgroup.is_a?(Rudy::Groups), "We need Rudy::Machines (#{@rgroup})"
+        stop_test !@rgroup.is_a?(Rudy::Groups), "We need Rudy::Instances (#{@rgroup})"
 
         @rkey = Rudy::KeyPairs.new(:logger => @@logger)
         stop_test !@rkey.is_a?(Rudy::KeyPairs), "We need Rudy::KeyPairs (#{@rkey})"
@@ -42,8 +42,8 @@ module Rudy::Test
       end
       
       
-      should "(10) create a machine" do
-        stop_test @rmach.running?, "Shutdown the machines running in #{@rmach.current_machine_group}"
+      should "(10) create an instance" do
+        stop_test @rmach.running?, "Shutdown the instances running in #{@rmach.current_machine_group}"
         instances = @rmach.create
         assert instances.is_a?(Array), "instances is not an Array"
         assert instances.first.is_a?(Rudy::AWS::EC2::Instance), "instance is not a Rudy::AWS::EC2::Instance (#{instances.first.class})"
@@ -76,9 +76,9 @@ module Rudy::Test
         assert @rvol.destroy(volume), "Volume not destroyed (#{volume.awsid})"
       end
       
-      should "(90) destroy machines" do
-        assert @rmach.running?, "No machines running"
-        assert @rmach.destroy, "Group not destroyed"
+      should "(90) destroy instances" do
+        assert @rmach.running?, "No instances running"
+        assert @rmach.destroy, "Instances not destroyed"
       end
       
       should "(95) destroy security group" do

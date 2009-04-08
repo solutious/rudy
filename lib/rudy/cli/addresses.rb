@@ -9,7 +9,7 @@ module Rudy
         raise "You have not supplied an IP addresses" unless @argv.ipaddress
         raise "You did not supply an instance ID" unless @argv.instanceid
         
-        @rmach = Rudy::Machines.new(:config => @config, :global => @global)
+        @rmach = Rudy::Instances.new(:config => @config, :global => @global)
         @radd = Rudy::Addresses.new(:config => @config, :global => @global)
         
         raise "Instance #{@argv.instid} does not exist!" unless @rmach.exists?(@argv.instid)
@@ -55,7 +55,7 @@ module Rudy
         raise "You have not supplied an IP addresses" unless @argv.ipaddress
         
         @radd = Rudy::Addresses.new(:config => @config, :global => @global)
-        @rmach = Rudy::Machines.new(:config => @config, :global => @global)
+        @rmach = Rudy::Instances.new(:config => @config, :global => @global)
         
         raise "#{@argv.ipaddress} is not allocated to you" unless @radd.exists?(@argv.ipaddress)
         raise "#{@argv.ipaddress} is associated!" if @radd.associated?(@argv.ipaddress)

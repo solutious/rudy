@@ -88,8 +88,8 @@ module Rudy
     end
     
     def name(n=nil)
-      n ||= current_machine_group
-      "key-#{n}"
+      n ||= "key-#{current_machine_group}"
+      n
     end
       
     def path(n=nil)

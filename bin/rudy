@@ -105,22 +105,7 @@ option :g, :group, String, "A security group name"
 option :s, :state, String, "Machine state. One of: running (default), pending, terminated"
 option :l, :all, "Show all machines in this group, regardless of state."
 argv :awsid
-command :status => Rudy::CLI::Machines
-
-
-desc "Manage Machines"
-usage "rudy [global options] machines [-g group-name] [-s state] [instance-ID]"
-option :g, :group, String, "The security group name"
-option :i, :ami, String, "The machine image ID (ami-)"
-option :t, :itype, String, "The instance type (default: m1.small)"
-option :k, :keypair, String, "The SSH keypair to use for launch"
-option :a, :address, String, "The IP address to associate"
-action :C, :create, "Create a machine instance"
-action :D, :destroy, "Destroy a machine instance"
-argv :awsid
-command :machine => Rudy::CLI::Machines
-command_alias :machine, :machines
-
+command :status => Rudy::CLI::Instances
 
 usage "rudy [global options] connect [-g group-name] [-i instance-ID] [cmd]"
 desc "Open an SSH connection"
@@ -128,7 +113,7 @@ option :print, "Only print the SSH command, don't connect"
 option :g, :group, String, "A security group name"
 option :i, :awsid, String, "An instance ID"
 argv :cmd
-command :connect => Rudy::CLI::Machines 
+command :connect => Rudy::CLI::Instances 
 command_alias :connect, :ssh
 
 
@@ -140,7 +125,7 @@ command_alias :connect, :ssh
 #option :print, "Only print the SSH command, don't connect"
 #option :g, :group, String, "A security group name"
 #option :i, :awsid, String, "An instance ID"
-#command :copy => Rudy::CLI::Machines
+#command :copy => Rudy::CLI::Instances
 #command_alias :copy, :scp
 #command_alias :copy, :upload
 #command_alias :copy, :download
@@ -181,7 +166,7 @@ command_alias :connect, :ssh
 #desc "Restart a Machine Group"
 #option :g, :group, String, "A security group name"
 #argv :awsid
-#command :restart => Rudy::CLI::Machines
+#command :restart => Rudy::CLI::Routines
 #
 
 
@@ -196,7 +181,6 @@ action :C, :create, "Create an IP address"
 action :D, :destroy, "Destroy an IP address"
 command :addresses => Rudy::CLI::Addresses
 command_alias :addresses, :address
-
 
 usage "rudy [global options] groups [-C -R -A] [-a IP addresses] [-p ports] [group name]"
 usage "rudy groups -C               (create a group)"
@@ -244,8 +228,20 @@ usage "rudy console [-g group] [instance ID]"
 desc "Displays system console output for given instance(s)"
 option :g, :group, String, "A group name to authorize or revoke network rule. Must also supply -o!"
 argv :awsid
-command :console => Rudy::CLI::Machines
+command :console => Rudy::CLI::Instances
 
+desc "Manage Machines"
+usage "rudy [global options] machines [-g group-name] [-s state] [instance-ID]"
+option :g, :group, String, "The security group name"
+option :i, :ami, String, "The machine image ID (ami-)"
+option :t, :itype, String, "The instance type (default: m1.small)"
+option :k, :keypair, String, "The SSH keypair to use for launch"
+option :a, :address, String, "The IP address to associate"
+action :C, :create, "Create a machine instance"
+action :D, :destroy, "Destroy a machine instance"
+argv :awsid
+command :instance => Rudy::CLI::Instances
+command_alias :instance, :instances
 
 #usage "rudy images [-C -i name [-b bucket -a account]] [-D AMI-ID]"
 #desc "Manage EC2 Machine Images (AMIs)"
@@ -259,19 +255,6 @@ command :console => Rudy::CLI::Machines
 #argv :ami
 #command :images => Rudy::CLI::Images
 #command_alias :images, :image
-
-#usage "rudy [global options] instances [-D] [-S -i image ID] [instance ID OR group name]"
-#desc "Manage EC2 Instances"
-#option :all, "Display all instances"
-#option :a, :address, String, "Amazon elastic IP"
-#option :i, :image, String, "Amazon machine image ID (ami)"  # TODO: Change to --ami
-##option :v, :volume, String, "Amazon volume ID"
-#action :D, :destroy, "Destroy the given instance IDs. All data will be lost!"
-##action :S, :start, "Start an instance"
-##action :R, :restart, "Restart an instance"
-#argv :filter
-#command :instances => Rudy::CLI::Instances
-#command_alias :instances, :instance
 
 
 # --------------------------------  MISCELLANEOUS COMMANDS  --------

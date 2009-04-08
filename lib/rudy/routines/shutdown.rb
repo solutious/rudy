@@ -6,7 +6,7 @@ module Rudy
       
       def shutdown
         routine = fetch_routine(:shutdown)
-        rmach = Rudy::Machines.new(:config => @config, :global => @global)
+        rmach = Rudy::Instances.new(:config => @config, :global => @global)
         rmach.destroy do
           @logger.puts $/, "Running BEFORE scripts...", $/
           #instances.each { |inst| @script_runner.execute(inst, :shutdown, :before) }

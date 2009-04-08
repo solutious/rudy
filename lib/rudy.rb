@@ -252,18 +252,18 @@ module Rudy
 end
 
 require 'rudy/aws'
-require 'rudy/utils'       # The
-require 'rudy/config'      # order
-require 'rudy/huxtable'    # of
-require 'rudy/addresses'
-require 'rudy/keypairs'
-require 'rudy/routines'    # require
-require 'rudy/machines'    # statements
-require 'rudy/manager'     # is
-require 'rudy/backups'     # important.
-require 'rudy/volumes'
-require 'rudy/groups'
-require 'rudy/disks'
+require 'rudy/utils'               # The
+require 'rudy/config'              # order
+require 'rudy/huxtable'            # of
+require 'rudy/command/addresses'   # require
+require 'rudy/command/keypairs'
+require 'rudy/command/machines'    # statements
+require 'rudy/command/manager'     # is
+require 'rudy/command/backups'     # important.
+require 'rudy/command/volumes'
+require 'rudy/command/groups'
+require 'rudy/command/disks'
+require 'rudy/routines'    
 
 
 # Require MetaData, Routines, and SCM classes

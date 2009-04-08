@@ -42,7 +42,7 @@ end
 # ---------------------------------  RUDY MANAGER COMMANDS  --------
 # ------------------------------------------------------------------
 
-usage "rudy create-domain"
+usage "rudy init"
 desc "Run this the first time you use Rudy (it's immutable so running it again does no harm)."
 command :create_domain => Rudy::CLI::Manager
 
@@ -195,20 +195,6 @@ command :addresses => Rudy::CLI::Addresses
 command_alias :addresses, :address
 
 
-#usage "rudy images [-C -i name [-b bucket -a account]] [-D AMI-ID]"
-#desc "Manage EC2 Machine Images (AMIs)"
-#option :a, :account, String, "Your Amazon Account Number"
-#option :i, :image_name, String, "The name of the image"     # TODO: change to --ami
-#option :p, :print, "Print-only (don't execute commands)"
-#option :b, :bucket_name, String, "The name of the bucket that will store the image"
-#action :C, :create, "Create an image"
-##action :P, :prepare, "Prepare a running instance to be used as an image"
-#action :D, :destroy, "Deregister an image (currently _does not_ remove images files from S3)"
-#argv :ami
-#command :images => Rudy::CLI::Images
-#command_alias :images, :image
-
-
 usage "rudy [global options] groups [-C -R -A] [-a IP addresses] [-p ports] [group name]"
 usage "rudy groups -C               (create a group)"
 usage "rudy -e prod groups          (list groups in the prod environment)"
@@ -256,6 +242,20 @@ desc "Displays system console output for given instance(s)"
 option :g, :group, String, "A group name to authorize or revoke network rule. Must also supply -o!"
 argv :awsid
 command :console => Rudy::CLI::Machines
+
+
+#usage "rudy images [-C -i name [-b bucket -a account]] [-D AMI-ID]"
+#desc "Manage EC2 Machine Images (AMIs)"
+#option :a, :account, String, "Your Amazon Account Number"
+#option :i, :image_name, String, "The name of the image"     # TODO: change to --ami
+#option :p, :print, "Print-only (don't execute commands)"
+#option :b, :bucket_name, String, "The name of the bucket that will store the image"
+#action :C, :create, "Create an image"
+##action :P, :prepare, "Prepare a running instance to be used as an image"
+#action :D, :destroy, "Deregister an image (currently _does not_ remove images files from S3)"
+#argv :ami
+#command :images => Rudy::CLI::Images
+#command_alias :images, :image
 
 #usage "rudy [global options] instances [-D] [-S -i image ID] [instance ID OR group name]"
 #desc "Manage EC2 Instances"

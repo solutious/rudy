@@ -298,7 +298,6 @@ module Rudy::AWS
       
       def any_group?(group=nil, state=:any)
         ret = list_group(group, state)
-        p ret
         !ret.nil?
       end
         

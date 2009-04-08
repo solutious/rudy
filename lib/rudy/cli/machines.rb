@@ -74,6 +74,11 @@ module Rudy::CLI
     end
     alias :machine :status
     
+    def console_valid?
+      
+      @rmach = Rudy::Machines.new(:config => @config, :global => @global)
+    end
+    
     def console
       puts "Machine Console".bright
       opts = {}
@@ -81,8 +86,19 @@ module Rudy::CLI
       opts[:id] = @argv.awsid if @argv.awsid
       opts[:id] &&= [opts[:id]].flatten
       
-      rudy = Rudy::Machines.new(:config => @config, :global => @global)
-      puts rudy.console(opts[:group], opts[:id])
+      unless @rmach.any?
+        puts "No machines running"
+        return
+      end
+      
+      console = @rmach.console(opts[:group], opts[:id])
+      
+      if console
+        puts console
+      else
+        puts "Console output is not available"
+      end
+      
     end
     
     

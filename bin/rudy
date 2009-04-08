@@ -16,7 +16,10 @@ require 'rudy'
 require 'rudy/cli'
 extend Drydock
 
-$SAFE = 2
+# Is there a bug in Ruby 1.9 open-uri?
+#$ /usr/local/bin/ruby bin/rudy myaddress
+#/usr/local/lib/ruby/1.9.1/open-uri.rb:260:in `require': Insecure operation - require (SecurityError)
+#$SAFE = 2
 
 global :A, :accesskey, String, "AWS Access Key"
 global :S, :secretkey, String, "AWS Secret Access Key"
@@ -203,7 +206,7 @@ desc "Manage EC2 Security Groups"
 option :all, "Display all security groups"
 option :r, :protocols, Array, "Comma-separated list of protocols. One of: tcp (default), udp, icmp"
 option :p, :ports, Array, "List of comma-separated port ranges in the form FROM:TO (default: 22,80,443)"
-option :a, :addresses, Array, "List of comma-separated IP addresses (default: #{Rudy::Utils::external_ip_address})"
+option :a, :addresses, Array, "List of comma-separated IP addresses (default: your current external IP)"
 option :g, :group, String, "A group name to authorize or revoke network rule. Must also supply -o!"
 option :o, :owner, String, "A group owner ID (account number). Must also supply -g!"
 action :C, :create, "Create a security group"

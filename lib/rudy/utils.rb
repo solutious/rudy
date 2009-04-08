@@ -16,8 +16,8 @@ module Rudy
     def external_ip_address
       ip = nil
       %w{solutious.com/ip myip.dk/ whatismyip.com }.each do |sponge| # w/ backup
-        break unless ip.nil?
         ip = (open("http://#{sponge}") { |f| /([0-9]{1,3}\.){3}[0-9]{1,3}/.match(f.read) }).to_s rescue nil
+        break if !ip.nil?
       end
       ip += "/32" if ip
       ip

@@ -1,13 +1,47 @@
-= Rudy - v0.5 ALPHA!
+= Rudy - v0.5 ALPHA
 
-Rudy is a handy staging and deployment tool for EC2.
+Rudy is a development and deployment tool for Amazon EC2. It's both a command-line tool and Ruby library. Here's an example from both for creating an EC2 security group:
 
-NOTE: Rudy will be ready for general consumption in Q2 2009.
+     $ rudy group --create
+
+     rgroup = Rudy::Groups.new
+     rgroup.create
+
+Rudy is a bit different from other EC2 libraries in several ways. 
+
 
 == Installation
 
-* Soon!
-* ruby -ropenssl -e 'puts OpenSSL::OPENSSL_VERSION' (See net/ssh docs)
+Step 1 (install the gem):
+
+     $ sudo gem install rudy
+     $ sudo gem install solutious-rudy --source http://gems.github.com/
+     $ git clone git://github.com/solutious/rudy.git
+
+Step 2 (initialize your configuration):
+
+     $ rudy generate-config
+     [modify ~/.rudy/config]
+     $ rudy init
+
+Step 3 (get to work with EC2):
+
+     $ rudy group --create
+     $ rudy keypair --create
+     $ rudy instance --create
+
+
+== Dependencies:
+
+* OpenSSH
+* Net::SSH
+* Net::SCP
+* amazon-ec2
+* aws_sdb
+* Drydock
+* Caesars
+* Rye
+
 
 == Common Errors
 
@@ -24,7 +58,6 @@ NOTE: Rudy will be ready for general consumption in Q2 2009.
 * RubyForge[http://rubyforge.org/projects/rudy]
 * Inspiration[http://www.youtube.com/watch?v=CgaiIW5Rzes]
 
-
 == Credits
 
 * Delano Mandelbaum (delano@solutious.com)
@@ -38,7 +71,6 @@ NOTE: Rudy will be ready for general consumption in Q2 2009.
   * Andrew Simpson
   * Caleb Buxton
   * Colin Brumelle
-
 
 == License
 

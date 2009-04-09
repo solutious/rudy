@@ -217,6 +217,18 @@ command :slogan do
   puts "Rudy: Not your grandparent's deployment tool!"
 end
 
+desc "Generates a configuration template to #{Rudy::RUDY_CONFIG_FILE}"
+command :generate_config do |obj|
+  unless File.exists?(Rudy::RUDY_CONFIG_FILE)
+    Rudy::Config.init_config_dir
+    puts "Add your AWS credentials to #{Rudy::RUDY_CONFIG_FILE}"
+  else
+    puts "#{Rudy::RUDY_CONFIG_FILE} already exists"
+  end
+end
+
+
+desc "Initialize Rudy configuration"
 command :init do |obj|
   
   unless File.exists?(Rudy::RUDY_CONFIG_FILE)
@@ -229,9 +241,12 @@ command :init do |obj|
     unless rdom.exists?
       puts "Creating SimpleDB domain #{rdom.name}"
       rdom.create
+      puts "Initialized"
+    else
+      puts "Already Initialized"
     end
     
-    puts "Ready"
+    
     exit 0 # a quick hack to not print elapsed time
     
   rescue Rudy::NoConfig => ex

@@ -32,25 +32,30 @@ require 'net/ssh/gateway'
 # == About
 #
 # Rudy is a development and deployment tool for the Amazon Elastic Compute Cloud
-# (EC2). There are two interfaces: a command-line tool executable and a Ruby library.
+# (EC2). There are two interfaces: a command-line executable and a Ruby library.
 # You can use Rudy as a development tool to simply the management of instances, 
-# security groups, etc.. on an ad-hoc basic. You can also define complex machine 
+# security groups, etc... on an ad-hoc basic. You can also define complex machine 
 # environments using a simple domain specific language (DSL) and use Rudy to build
 # and deploy these environments. 
 #
-# Services like EC2 are really new and we're still figuring out all the cool stuff
-# we can do with them. Rudy is a tool that helps you do that for your large, small
-# and otherwise awesome projects. 
 #
-#
-# == Status: Experimental
-#
-# The current release (0.4) is not ready for general consumption. We've been busy 
-# working away on the 0.5 release which will not only be 9 times better than 0.4, 
-# it will also have a big sexy doc. The documentation your reading now is a mix of 
-# 0.4 and 0.5 functionality. It's also quite incomplete! 
+# == Status: Alpha
 # 
-# ==== You can expect the 0.5 release in May 2009.
+# The current release (0.5) is not ready for general production use. Use it for 
+# exploring EC2 and operating your development / ad-hoc instances. We've put in 
+# a lot of effort to make sure Rudy plays safe, but it's possible we missed
+# something. That's why we consider it alpha code. 
+#
+# To get started right away, try:
+#
+#     $ rudy -h
+#     $ rudy show-commands
+#
+# And if you're feeling particularly saucey, try Rudy's REPL interface:
+#
+#     $ ird
+# 
+# == Next Release (0.6): May 2009.
 #
 #     $ rudy slogan
 #     Rudy: Not your grandparent's deployment tool! 

@@ -1,5 +1,6 @@
 @spec = Gem::Specification.new do |s|
 	s.name = "rudy"
+  s.rubyforge_project = 'rudy'
 	s.version = "0.5.0"
 	s.summary = "Not your grandparent's deployment tool."
 	s.description = s.summary
@@ -41,6 +42,7 @@
   lib/rudy/cli/config.rb
   lib/rudy/cli/deploy.rb
   lib/rudy/cli/disks.rb
+  lib/rudy/cli/domains.rb
   lib/rudy/cli/groups.rb
   lib/rudy/cli/images.rb
   lib/rudy/cli/instances.rb
@@ -53,6 +55,7 @@
   lib/rudy/command/backups.rb
   lib/rudy/command/disks-old.rb
   lib/rudy/command/disks.rb
+  lib/rudy/command/domains.rb
   lib/rudy/command/groups.rb
   lib/rudy/command/instances.rb
   lib/rudy/command/keypairs.rb
@@ -75,7 +78,6 @@
   lib/storable.rb
   lib/sysinfo.rb
   lib/tryouts.rb
-  lib/utils/crypto-key.rb
   rudy.gemspec
   support/mailtest
   support/randomize-root-password
@@ -104,6 +106,10 @@
   test/50_commands/50_instances_test.rb
   test/coverage.txt
   test/helper.rb
+  tryouts/console_tryout.rb
+  tryouts/disks.rb
+  tryouts/nested_methods.rb
+  tryouts/session_tryout.rb
   )
   s.executables = %w[rudy ird]
   
@@ -112,10 +118,7 @@
   s.rdoc_options = ["--line-numbers", "--title", "Rudy: #{s.summary}", "--main", "README.rdoc"]
   s.require_paths = %w[lib]
   s.rubygems_version = '1.1.1'
-
   
-  s.add_dependency 'drydock'
-  s.add_dependency 'caesars'
   s.add_dependency 'echoe'
   s.add_dependency 'amazon-ec2'
   s.add_dependency 'aws-sdb'
@@ -123,7 +126,8 @@
   s.add_dependency 'net-scp'
   s.add_dependency 'net-ssh-gateway'
   s.add_dependency 'net-ssh-multi'
-  s.add_dependency 'session'
+  s.add_dependency 'drydock'
+  s.add_dependency 'caesars'
   s.add_dependency 'rye'
   
   # http://bit.ly/2WaAgV
@@ -133,5 +137,4 @@
   #s.add_development_dependency('thoughtbot-shoulda', '>= 0.1.0')
   
     
-  s.rubyforge_project = 'rudy'
 end

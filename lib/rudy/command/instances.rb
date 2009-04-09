@@ -167,7 +167,7 @@ module Rudy
         
       instances.each do |inst|
         msg = opts[:task] == :upload ? "Upload to" : "Download from"
-        @logger.puts $/, "#{msg} #{inst.awsid}".bright
+        @logger.puts $/, "#{msg} #{inst.awsid}"
         
         if opts[:print]
           scp_command inst.dns_name_public, current_user_keypairpath, @global.user, opts[:paths], opts[:dest], (opts[:task] == :download), false, opts[:print]

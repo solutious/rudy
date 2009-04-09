@@ -339,7 +339,7 @@ command :domains => Rudy::CLI::Domains
 
 # -------------------------------------------  UGLY STUFFS  --------
 # ------------------------------------------------------------------
-debug :on
+debug :off
 default :status
 #capture :stderr       
 before do

@@ -11,10 +11,18 @@ module Rudy
     dsl Rudy::Config::Machines::DSL
     dsl Rudy::Config::Networks::DSL
     
+    # TODO: auto-generate in caesars
+    def accounts?; self.respond_to?(:accounts) && !self[:accounts].nil?; end
+    def defaults?; self.respond_to?(:defaults) && !self[:defaults].nil?; end
+    def machines?; self.respond_to?(:machines) && !self[:machines].nil?; end
+    def routines?; self.respond_to?(:routines) && !self[:routines].nil?; end
+    def networks?; self.respond_to?(:networks) && !self[:networks].nil?; end
+    
     def postprocess
       #raise "There is no AWS info configured" if self.accounts.nil?
       
-      #if self.accounts.aws
+      # These don't work anymore. Caesars bug?
+      #if accounts? && !self.accounts.aws.nil?
       #  self.accounts.aws.cert &&= File.expand_path(self.accounts.aws.cert) 
       #  self.accounts.aws.privatekey &&= File.expand_path(self.accounts.aws.privatekey)
       #end
@@ -43,6 +51,7 @@ module Rudy
       @paths &&= @paths.uniq
       refresh
     end
+
     
     
     def self.init_config_dir

@@ -26,8 +26,8 @@ module Rudy
         
         @config = Rudy::Config.new
         @config.look_and_load(@global.config)
-
-        unless @config.accounts && @config.accounts.aws && @config.accounts.aws.accesskey
+        
+        unless !@config.empty? && @config.accounts? && @config.accounts.aws && @config.accounts.aws.accesskey
           STDERR.puts "No AWS credentials. Check your configs!"
           STDERR.puts "Try: #{$0} init"
           exit 1

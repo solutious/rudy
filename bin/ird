@@ -45,7 +45,7 @@ end
 
 
 default :interactive
-debug :on
+debug :off
 desc "An interactive REPL for Rudy."
 usage "#{$0} [global options]"
 command :interactive do |obj|
@@ -120,12 +120,17 @@ EXAMPLE
     otherwise specified. "stage" is the default environment and 
     "app" is the default role. You can change these with command 
     line arguments or by modifying the defaults in your Rudy 
-    config file. You can also specify your own names by providing
+    config file: #{@rmach.config_dirname}
+    
+    You can also specify your own names by providing
     one as the first argument: g.create 'group5000'.
     
     # List instances in stage-app
     >> m.list :running
     => [#<Rudy::AWS::EC2::Instance:0x18c5888 ...>]
+    
+    # Print the instance in a human readable way
+    >> puts m.list.first.to_s
     
     # Destroy ALL INSTANCES in stage-app
     >> m.destroy

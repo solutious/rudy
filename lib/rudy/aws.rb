@@ -1,6 +1,6 @@
 
 
-require 'ec2'
+require 'EC2'
 require 'aws_sdb'
 
 module Rudy

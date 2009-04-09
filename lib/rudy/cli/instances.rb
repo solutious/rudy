@@ -130,7 +130,7 @@ module Rudy::CLI
       rmach = Rudy::Instances.new(:config => @config, :global => @global)
       instances = rmach.list(:running, opts[:group], opts[:id])
       raise "No instances running" if instances.nil? || instances.empty?
-      @logger.puts "Destroying #{instances.size} instances in #{instances.first.group}"
+      puts "Destroying #{instances.size} instances in #{instances.first.groups.first}"
       exit unless Annoy.are_you_sure?(:low)
       rmach.destroy(opts[:group], opts[:id])
       puts "Done!"

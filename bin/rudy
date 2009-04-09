@@ -2,7 +2,7 @@
 
 # = Rudy
 # 
-# _Not your granparent's deployment tool_
+# === Not your granparent's deployment tool
 #
 #   See rudy -h for usage
 # 
@@ -65,19 +65,18 @@ argv :cmd
 command :connect => Rudy::CLI::Instances 
 command_alias :connect, :ssh
 
-
-#usage "rudy [global options] copy [-p] [-r] source target"
-#desc "Copy files to or from machines. NOTE: You must use quotes when using a tilda for your remote dir ('~/')."
-#option :r, :recursive, "Recursively copy entire directories"
-#option :p, :preserve, "Preserve atimes and ctimes."
-#option :d, :download, "Download FROM the remote machine to the local machine"
-#option :print, "Only print the SSH command, don't connect"
-#option :g, :group, String, "A security group name"
-#option :i, :awsid, String, "An instance ID"
-#command :copy => Rudy::CLI::Instances
-#command_alias :copy, :scp
-#command_alias :copy, :upload
-#command_alias :copy, :download
+usage "rudy [global options] copy [-p] [-r] source target"
+desc "Copy files to or from machines. NOTE: You must use quotes when using a tilda for your remote dir ('~/')."
+option :r, :recursive, "Recursively copy entire directories"
+option :p, :preserve, "Preserve atimes and ctimes."
+option :d, :download, "Download FROM the remote machine to the local machine"
+option :print, "Only print the SSH command, don't connect"
+option :g, :group, String, "A security group name"
+option :i, :awsid, String, "An instance ID"
+command :copy => Rudy::CLI::Instances
+command_alias :copy, :scp
+command_alias :copy, :upload
+command_alias :copy, :download
 
 
 
@@ -196,7 +195,6 @@ command :myaddress do |obj|
   end
 end
 
-
 usage "rudy [global options] annoy [-h -m -l] [-e]"
 desc "Play around with Rudy's annoying challenges"
 option :s, :string, "A numeric challenge"
@@ -213,20 +211,6 @@ command :annoy do |obj|
   success = Annoy.challenge?("Is this annoying?", factor, flavor)
   puts (success ? "Correct!" : "WRONG!").bright
 end
-
-#usage "rudy id [-t type] ID"
-#desc "Check what kind of object an ID belongs to (instance, backup, disk, etc...)"
-#option :t, String, "Check if ID is of a specific type"
-#argv :idstr
-#command :id do |obj|
-#  if obj.option.t 
-#    raise "Unknown type #{obj.option.t}" unless Rudy.known_type?(obj.option.t)
-#    t = Rudy.is_id?(obj.option.t, obj.argv.idstr)
-#  else
-#    t = Rudy.id_type(obj.argv.idstr)
-#  end
-#  puts t if t
-#end
 
 desc "Display the current Rudy slogan"
 command :slogan do

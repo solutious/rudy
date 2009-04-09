@@ -1,5 +1,12 @@
 #!/usr/bin/ruby
 
+# = Interactive Rudy (experimental)
+# 
+# === Not your granparent's deployment tool
+#
+#   See ird -h for usage
+#
+
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib') # Put our local lib in first place
 
 require 'rubygems' unless defined?(Gem)
@@ -19,18 +26,18 @@ include Drydock
 global :A, :accesskey, String, "AWS Access Key"
 global :S, :secretkey, String, "AWS Secret Access Key"
 #global :R, :region, String, "Connect to a specific EC2 region (ie: #{Rudy::DEFAULT_REGION})"
-global :n, :nocolor, "Disable output colors"
+#global :n, :nocolor, "Disable output colors"
 global :f, :config, String, "Specify another configuration file to read (ie: #{Rudy::RUDY_CONFIG_FILE})"
 global :z, :zone, String, "Connect to a specific EC2 zone (ie: #{Rudy::DEFAULT_ZONE})"
 global :e, :environment, String, "Connect to the specified environment (ie: #{Rudy::DEFAULT_ENVIRONMENT})"
 global :r, :role, String, "Connect to a machine with the specified role (ie: #{Rudy::DEFAULT_ROLE})"
 global :p, :position, String, "Position in the machine in its group (ie: #{Rudy::DEFAULT_POSITION})"
 global :u, :user, String, "Provide a username (ie: #{Rudy::DEFAULT_USER})"
-global :q, :quiet, "Run with less output"
-global :v, :verbose, "Increase verbosity of output (i.e. -v or -vv or -vvv)" do
-  @verbose ||= 0
-  @verbose += 1
-end
+#global :q, :quiet, "Run with less output"
+#global :v, :verbose, "Increase verbosity of output (i.e. -v or -vv or -vvv)" do
+#  @verbose ||= 0
+#  @verbose += 1
+#end
 global :V, :version, "Display version number" do
   puts "Rudy version: #{Rudy::VERSION}"
   exit 0
@@ -55,7 +62,6 @@ command :interactive do |obj|
   Welcome Interactive Rudy! (EXPERIMENTAL)
   ------------------------------------------------------------
   
-  Quick Start:
   `)
   h
   
@@ -76,29 +82,71 @@ end
 
 def h;
   puts (%Q`
-  h           Help (this screen)
-  m           Rudy::Machines instance
-  g           Rudy::Groups instance
-  k           Rudy::KeyPairs instance
-  v           Rudy::Volumes instance
-  a           Rudy::Addresses instance
+HELP
   
-  i.e. 
-    # List Amazon KeyPairs
-    >> k.list
-    => [#<Rudy::AWS::EC2::KeyPair:0x18c5888 ...>]
-    
-    # Create a machine instance in the current machine group (i.e. stage-app)
-    >> m.create
-    => ........
+  h             Help (this screen)
+  m             Rudy::Machines instance
+  g             Rudy::Groups instance
+  k             Rudy::KeyPairs instance
+  v             Rudy::Volumes instance
+  a             Rudy::Addresses instance
+  ssh [GROUP]   Connect to a machine
+  example       Start an EC2 instance from scratch.
   `)
 end
+def example
+  puts (%Q`
+EXAMPLE
+    Start an EC2 instance from scratch.
+    
+    # Create a security group
+    >> g.create
+    => #<Rudy::AWS::EC2::Group @name="stage-app" ...>
+    
+    # Create a keypair (used to login as root)
+    >> k.create
+    => #<Rudy::AWS::EC2::KeyPair @name="key-stage-app" ...>
+    
+    # Start an EC2 machine instance:    
+    >> m.create
+    Instance: i-228def51
+    Waiting for the instance to startup
+    ........It's up!
+    
+    # Login to the new instance
+    >> ssh 
+    
+    All commands in Rudy refer to the global defaults unless
+    otherwise specified. "stage" is the default environment and 
+    "app" is the default role. You can change these with command 
+    line arguments or by modifying the defaults in your Rudy 
+    config file. You can also specify your own names by providing
+    one as the first argument: g.create 'group5000'.
+    
+    # List instances in stage-app
+    >> m.list :running
+    => [#<Rudy::AWS::EC2::Instance:0x18c5888 ...>]
+    
+    # Destroy ALL INSTANCES in stage-app
+    >> m.destroy
+  `)
+end
+
 def m; @rmach; end
 def k; @rkey; end
-def g; @rgrp;   end
-def v; @rvol;  end
+def g; @rgrp; end
+def v; @rvol; end
 def a; @radd; end
 
+# Change Group
+#def cg(name); end
+
+def ssh(*args)
+  @rmach.switch_user :root
+  @rmach.connect(*args)
+  @rmach.switch_user # back to previous user
+  nil
+end
 
 __END__
 #@rbox = Rye::Box.new('ec2-174-129-173-3.compute-1.amazonaws.com', 'root')

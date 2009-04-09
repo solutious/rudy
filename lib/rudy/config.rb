@@ -67,6 +67,21 @@ module Rudy
               cert "~/path/2/cert-xxxx.pem"
             end
           end
+
+          # Machine Configuration
+          # Specify your private keys here. These can be defined globally
+          # or by environment and role like in machines.rb.
+          machines do
+            users do
+              #root :keypair => "path/2/root-private-key"
+            end
+            zone :"us-east-1b" do
+              ami 'ami-235fba4a'    # Amazon Getting Started AMI (US)
+            end
+            zone :"eu-west-1b" do
+              ami 'ami-e40f2790'    # Amazon Getting Started AMI (EU)
+            end
+          end
           
           # Global Defaults 
           # Define the values to use unless otherwise specified on the command-line. 

@@ -10,13 +10,12 @@
 #     ./.rudy/*.rb
 #     ./Rudyfile
 #     ./config/rudy/*.rb
-#     ./*.rudy
 #
 # When multuple files are found, the configuration is 
 # NOT OVERRIDDEN. It's ADDED / APPENDED. This means you can 
 # split configuration across many files as you please. 
 #
-# There are four sections: accounts, defaults, machines, routines. 
+# There are three sections: accounts, defaults, machines. 
 # By convention, accounts and defaults go in ~/.rudy/config or ./.rudy/config 
 # We encourage this to help avoid checking in AWS keys into source control.
 
@@ -25,39 +24,5 @@
 # The machines block describes the "physical" characteristics
 # of your environments. 
 machines do
-
-  zone :"us-east-1b" do
-    ami 'ami-235fba4a'    # Amazon Getting Started AMI (US)
-  end
-  zone :"eu-west-1b" do
-    ami 'ami-e40f2790'    # Amazon Getting Started AMI (EU)
-  end
-  
-  env :stage do
-    role :app do
-      disks do  
-        path "/rudy/example1" do
-          size 4
-          device "/dev/sdr"
-        end
-        path "/rudy/example2" do
-          size 5                 # Ignored when restoring from a snapshot
-          device "/dev/sdm"
-        end
-      end
-      
-    end
-    
-    role :gateway do
-      
-    end
-  end
   
 end
-
-networks do
-end
-
-routines do
-end
-

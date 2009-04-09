@@ -8,7 +8,7 @@ require 'sysinfo'
 # TODO: Use Matrix to give a more accurate annoyance factor
 # TODO: Add trivia questions
 #
-class Annoy
+class Annoy #:nodoc:all
   
   attr_accessor :factor
   attr_accessor :flavor

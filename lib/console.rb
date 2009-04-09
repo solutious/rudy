@@ -70,7 +70,7 @@ class String
   end
 end
 
-class Object
+class Object #:nodoc:all
 
   # Executes tput +capnam+ with +args+. Returns true if tcap gives
   # 0 exit status and false otherwise. 
@@ -94,7 +94,7 @@ end
 
 
 
-module Console
+module Console #:nodoc:all
   extend self
   require 'timeout'
   require 'thread'
@@ -212,7 +212,7 @@ module Console
   end
 end
 
-module Cursor
+module Cursor #:nodoc:all
   extend self
   
   # Returns [x,y] for the current cursor position.
@@ -307,7 +307,7 @@ module Cursor
   
 end
 
-class Window
+class Window #:nodoc:all
   attr_accessor :row, :col, :width, :height, :text, :fg, :bg
   attr_reader :threads
   

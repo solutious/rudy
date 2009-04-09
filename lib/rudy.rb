@@ -25,7 +25,6 @@ require 'net/scp'
 require 'net/ssh/multi'
 require 'net/ssh/gateway'
 
-require 'utils/crypto-key'
 
 
 # = Rudy

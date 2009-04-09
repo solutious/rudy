@@ -28,7 +28,7 @@
 # * URI
 # * HTML
 # * shell command
-module Escape
+module Escape #:nodoc:all
   module_function
 
   class StringWrapper
@@ -162,7 +162,7 @@ module Escape
     PercentEncoded.new_no_dup(s)
   end
 
-  # :stopdoc:
+  
   def html_form_fast(pairs, sep='&')
     s = pairs.map {|k, v|
       # query-chars - pct-encoded - x-www-form-urlencoded-delimiters =
@@ -182,7 +182,7 @@ module Escape
     }.join(sep)
     PercentEncoded.new_no_dup(s)
   end
-  # :startdoc:
+  
 
   # Escape.html_form composes HTML form key-value pairs as a x-www-form-urlencoded encoded string.
   # It returns an instance of PercentEncoded.
@@ -246,13 +246,13 @@ module Escape
   class HTMLEscaped < StringWrapper
   end
 
-  # :stopdoc:
+  
   HTML_TEXT_ESCAPE_HASH = {
     '&' => '&amp;',
     '<' => '&lt;',
     '>' => '&gt;',
   }
-  # :startdoc:
+  
 
   # Escape.html_text escapes a string appropriate for HTML text using character references.
   # It returns an instance of HTMLEscaped.
@@ -272,14 +272,14 @@ module Escape
     HTMLEscaped.new_no_dup(s)
   end
 
-  # :stopdoc:
+  
   HTML_ATTR_ESCAPE_HASH = {
     '&' => '&amp;',
     '<' => '&lt;',
     '>' => '&gt;',
     '"' => '&quot;',
   }
-  # :startdoc:
+  
 
   class HTMLAttrValue < StringWrapper
   end

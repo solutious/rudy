@@ -14,7 +14,7 @@ module Rudy::CLI
       end
       
       rudy = Rudy::Instances.new(:config => @config, :global => @global)
-      rudy.connect(@argv.cmd, @option.group, @option.awsid, @option.print)
+      rudy.connect(@option.group, @argv.cmd, @option.awsid, @option.print)
     end
 
     def copy_valid?
@@ -42,10 +42,10 @@ module Rudy::CLI
       opts[:task] = :upload if @alias == 'upload'
       opts[:task] ||= :upload
       
-      exit unless @option.print || Annoy.are_you_sure?(:low)
+      #exit unless @option.print || Annoy.are_you_sure?(:low)
       
       rudy = Rudy::Instances.new(:config => @config, :global => @global)
-      rudy.copy(opts)
+      rudy.copy(opts[:group], opts[:id], opts)
     end
 
 

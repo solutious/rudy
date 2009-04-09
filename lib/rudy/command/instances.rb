@@ -128,11 +128,11 @@ module Rudy
       Base64.decode64(output)
     end
     
-    def connect(cmd, group=nil, inst_ids=[], print_only=false)
+    def connect(group=nil, cmd=nil, inst_ids=[], print_only=false)
       group ||= current_machine_group
-      instances = @@ec2.instances.list_group(group, :any, inst_ids)
+      instances = @@ec2.instances.list_group(group, :running, inst_ids)
       raise "No machines running" if instances.nil?
-      raise "No keypair configured for #{current_user}" unless current_user_keypairpath
+      raise "No keypair configured for user #{current_user}" unless current_user_keypairpath
       
       # TODO: If a group is supplied we need to discover the keypair.
       
@@ -143,6 +143,50 @@ module Rudy
         puts ret if ret  # ssh command returns false with "ssh_exchange_identification: Connection closed by remote host"
       end
     end
+    
+    
+    # * +:recursive: recursively transfer directories (default: false)
+    # * +:preserve: preserve atimes and ctimes (default: false)
+    # * +:task+ one of: :upload (default), :download.
+    # * +:paths+ an array of paths to copy. The last element is the "to" path. 
+    def copy(group=nil, inst_ids=[], opts={})
+      group ||= current_machine_group
+      instances = @@ec2.instances.list_group(group, :running, inst_ids)
+      raise "No machines running" if instances.nil?
+      raise "No keypair configured for user #{current_user}" unless current_user_keypairpath
+      raise "You must supply at least one source path" if !opts[:paths] || opts[:paths].empty?
+      raise "You must supply a destination path" unless opts[:dest]
+       
+      
+      opts = {
+        :task => :upload,
+        :recursive => false,
+        :preserve => false
+      }.merge(opts)
+        
+        
+      instances.each do |inst|
+        msg = opts[:task] == :upload ? "Upload to" : "Download from"
+        @logger.puts $/, "#{msg} #{inst.awsid}".bright
+        
+        if opts[:print]
+          scp_command inst.dns_name_public, current_user_keypairpath, @global.user, opts[:paths], opts[:dest], (opts[:task] == :download), false, opts[:print]
+          return
+        end
+        
+        scp_opts = {
+          :recursive => opts[:recursive],
+          :preserve => opts[:preserve],
+          :chunk_size => 16384
+        }
+        
+        scp(opts[:task], inst.dns_name_public, @global.user, current_user_keypairpath, opts[:paths], opts[:dest], scp_opts)
+        
+      end
+      
+      @logger.puts
+    end
+    
     
     # * +group+ machine group name
     def any?(group=nil)
@@ -190,44 +234,6 @@ module Rudy
     end
     
 
-    
-    # * +:recursive: recursively transfer directories (default: false)
-    # * +:preserve: preserve atimes and ctimes (default: false)
-    # * +:task+ one of: :upload (default), :download.
-    # * +:paths+ an array of paths to copy. The last element is the "to" path. 
-    def copy(opts={})
-      raise "TODO: re-implement copy (not working, sorry!)"
-      opts, instances = process_filter_options(opts)
-      raise "No machines running" unless instances && !instances.empty?
-      raise "You must supply at least one source path" if !opts[:paths] || opts[:paths].empty?
-      raise "You must supply a destination path" unless opts[:dest]
-      
-      opts = {
-        :task => :upload,
-        :recursive => false,
-        :preserve => false
-      }.merge(opts)
-        
-      instances.values.each do |inst|
-        msg = opts[:task] == :upload ? "Upload to" : "Download from"
-        @logger.puts $/, "#{msg} #{inst.awsid}".bright
-        
-        if opts[:print]
-          scp_command inst.dns_name_public, current_user_keypairpath, @global.user, opts[:paths], opts[:dest], (opts[:task] == :download), false, opts[:print]
-          return
-        end
-        
-        scp_opts = {
-          :recursive => opts[:recursive],
-          :preserve => opts[:preserve],
-          :chunk_size => 16384
-        }
-        scp(opts[:task], inst.dns_name_public, @global.user, current_user_keypairpath, opts[:paths], opts[:dest], scp_opts)
-        
-      end
-      
-      @logger.puts
-    end
     
     
   private

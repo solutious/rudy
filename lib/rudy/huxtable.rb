@@ -228,7 +228,7 @@ module Rudy
         :recursive => false, :preserve => false, :chunk_size => 16384
       }.merge(opts)
       
-      Net::SCP.start(host, @global.user, :keys => [keypairpath]) do |scp|
+      Net::SCP.start(host, user, :keys => [keypairpath]) do |scp|
         paths.each do |path| 
           prev_path = nil
           scp.send("#{task}!", path, dest, opts) do |ch, name, sent, total|

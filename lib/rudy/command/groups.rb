@@ -19,10 +19,12 @@ module Rudy
       @@ec2.groups.destroy(n)
     end
     
-    def authorize(n, opts={})
+    def authorize(n=nil, opts={})
+      n ||= name(n)
       modify_rules(:authorize, n, opts)
     end
-    def revoke(n, opts={})
+    def revoke(n=nil, opts={})
+      n ||= name(n)
       modify_rules(:revoke, n, opts)
     end
     
@@ -50,6 +52,11 @@ module Rudy
       groups = @@ec2.groups.list(n)
       groups.each { |g| each_object.call(g) } if each_object
       groups
+    end
+    
+    def get(n=nil)
+      n ||= name(n)
+      (list(n) || []).first
     end
     
     def list_as_hash(n=nil, &each_object)

@@ -4,11 +4,12 @@ module Rudy::Test
     
     context "#{name}_30 Machines" do
       
-      should "(10) have awsinfo" do
-        assert @@config.awsinfo.is_a?(Rudy::Config::AWSInfo), "Not an AWSInfo class"
-        assert !@@config.awsinfo.account.nil?, "No account"
-        assert !@@config.awsinfo.accesskey.nil?, "No accesskey"
-        assert !@@config.awsinfo.secretkey.nil?, "No secretkey"
+      should "(10) have accounts.aws" do
+        stop_test !@@config.accounts.is_a?(Rudy::Config::Accounts), "Not an Accounts class"
+        
+        stop_test @@config.accounts.aws.accountnum.nil?, "No account"
+        stop_test @@config.accounts.aws.accesskey.nil?, "No accesskey"
+        stop_test @@config.accounts.aws.secretkey.nil?, "No secretkey"
       end
       
       should "(20) have defaults" do

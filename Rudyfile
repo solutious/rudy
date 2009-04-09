@@ -16,8 +16,8 @@
 # NOT OVERRIDDEN. It's ADDED / APPENDED. This means you can 
 # split configuration across many files as you please. 
 #
-# There are four sections: awsinfo, defaults, machines, routines. 
-# By convention, awsinfo and defaults go in ~/.rudy/config or ./.rudy/config 
+# There are four sections: accounts, defaults, machines, routines. 
+# By convention, accounts and defaults go in ~/.rudy/config or ./.rudy/config 
 # We encourage this to help avoid checking in AWS keys into source control.
 
 

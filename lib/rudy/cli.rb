@@ -26,7 +26,7 @@ module Rudy
         @config = Rudy::Config.new
         @config.look_and_load(@global.config)
 
-        unless @config.respond_to?(:awsinfo)
+        unless @config.respond_to?(:accounts)
           STDERR.puts Rudy.banner(%Q(Rudy says, "I can't find any configuration"), nil, :red) 
           exit 1
         end
@@ -96,7 +96,7 @@ module Rudy
           next unless val
           criteria << "#{n.to_s.slice(0,1).att :normal}:#{val.to_s.bright}"
         end
-        puts '%s -- %s -- %s UTC' % [title, @config.awsinfo.name, now_utc] unless @global.quiet
+        puts '%s -- %s -- %s UTC' % [title, @config.accounts.aws.name, now_utc] unless @global.quiet
         puts '[%s]' % criteria.join("  ") unless @global.quiet
         
         unless @global.quiet

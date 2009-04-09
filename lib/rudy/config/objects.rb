@@ -5,10 +5,10 @@ class Rudy::Config
   end
   
   
-  class AWSInfo < Caesars
+  class Accounts < Caesars
     def valid?
-      (!account.nil? && !accesskey.nil? && !secretkey.nil?) &&
-      (!account.empty? && !accesskey.empty? && !secretkey.empty?) 
+      (!aws.nil? && !aws.accesskey.nil? && !aws.secretkey.nil?) &&
+      (!aws.account.empty? && !aws.accesskey.empty? && !aws.secretkey.empty?) 
     end
   end
 

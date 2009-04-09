@@ -104,9 +104,9 @@ module Rudy::Test
       should "(21) authorize/revoke group permissions for account/group" do
         gname = "test-" << Rudy::Utils.strand
         group = @@ec2.groups.create(gname)
-        should_have = "#{@@rmach.config.awsinfo.account}:#{gname}"
+        should_have = "#{@@rmach.config.accounts.aws.accountnum}:#{gname}"
         
-        ret = @@ec2.groups.authorize_group(gname, gname, @@rmach.config.awsinfo.account)
+        ret = @@ec2.groups.authorize_group(gname, gname, @@rmach.config.accounts.aws.accountnum)
         assert ret, "Authorize failed (#{should_have})"
         group = @@ec2.groups.get(gname)
         assert group.is_a?(Rudy::AWS::EC2::Group), "Not a Group object"
@@ -114,7 +114,7 @@ module Rudy::Test
         assert_equal should_have, group.groups.keys.first, "Authorized group is not #{should_have}"
         # TODO: Check port ranges
         
-        ret = @@ec2.groups.revoke_group(gname, gname, @@rmach.config.awsinfo.account)
+        ret = @@ec2.groups.revoke_group(gname, gname, @@rmach.config.accounts.aws.accountnum)
         assert ret, "Revoke failed (#{should_have})"
         group = @@ec2.groups.get(gname)
         assert group.is_a?(Rudy::AWS::EC2::Group), "Not a Group object"

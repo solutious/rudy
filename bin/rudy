@@ -42,58 +42,6 @@ global :V, :version, "Display version number" do
 end
 
 
-# ---------------------------------  RUDY MANAGER COMMANDS  --------
-# ------------------------------------------------------------------
-
-usage "rudy init"
-desc "Run this the first time you use Rudy (it's immutable so running it again does no harm)."
-command :create_domain => Rudy::CLI::Manager
-
-usage "rudy info"
-desc "Displays info about the current Rudy configuration"
-command :info => Rudy::CLI::Manager
-
-#desc "Update a Machine Group with the current version of Rudy"
-#option :g, :group, String, "A security group name"
-#command :update => Rudy::CLI::Manager
-
-
-usage "#{$/} [global options] disks [-C -p path -d device -s size] [-A] [-D] [path]"
-desc "Manage Disks"
-option :l, :all, "Display all disk definitions"
-option :i, :awsid, String, "EC2 Instance ID"
-option :g, :group, String, "Machine group name"
-option :p, :path, String, "The filesystem path to use as the mount point"
-option :d, :device, String, "The device id (default: /dev/sdh)"
-option :s, :size, Integer, "The size of disk (in GB)"
-action :C, :create, "Create a disk definition"
-action :D, :destroy, "Destroy a disk definition"
-action :A, :attach, "Attach a disk"
-action :N, :unattach, "Unattach a disk"
-argv :diskname
-command :disk => Rudy::CLI::Disks
-command_alias :disk, :disks
-
-
-#usage "rudy [global options] backups [-C] [disk name]"
-#desc "Manage Backups"
-#option :s, :snapshot, String, "Create a backup entry from an existing snapshot"
-#action :Z, :sync, "Check for and delete backup metadata with no snapshot. DOES NOT delete snapshots."
-##action :T, :tidy, "Tidy existing backups"
-#action :D, :destroy, "Destroy a backup and DELETE its snapshots."
-#action :C, :create, "Create a backup"
-#argv :disk
-#command :'backup' => Rudy::CLI::Backups
-#command_alias :backup, :bu
-
-
-
-#usage "rudy [global options] metadata instance-ID"
-#desc "Display Rudy metadata."
-#command :metadata => Rudy::CLI::Manager
-#command_alias :metadata, :md
-#
-#
 
 # ---------------------------------  RUDY MACHINE COMMANDS  --------
 # ------------------------------------------------------------------
@@ -130,44 +78,6 @@ command_alias :connect, :ssh
 #command_alias :copy, :upload
 #command_alias :copy, :download
 
-
-
-# --------------------------  RUDY RELEASE/DEPLOY COMMANDS  --------
-# ------------------------------------------------------------------
-
-#desc "Release to a Machine Group"
-#option :g, :group, String, "A security group name"
-#option :s, :switch, "Switch to the release branch/tag"
-#option :m, :msg, String, "A short release note"
-#command :release => Rudy::CLI::Release
-
-#desc "Update the release currently running in a machine group"
-#command :rerelease => Rudy::CLI::Release
-#command_alias :rerelease, :rere
-
-#desc "Deploy disk snapshots from one machine to another"
-#command :deploy => Rudy::CLI::Deploy
-
-
-#desc "Shutdown a Machine Group"
-#usage "rudy [global options] shutdown [-g group-name] [instance-ID]"
-#option :g, :group, String, "A security group name"
-#argv :awsid
-#command :shutdown => Rudy::CLI::Routines
-#
-#
-#desc "Start a Machine Group"
-#usage "rudy [global options] startup [-g group-name] [-i image-ID]"
-#option :ami, String, "EC2 image ID (AMI)"
-#option :g, :group, String, "A security group name"
-#command :startup => Rudy::CLI::Routines
-#command_alias :startup, :start
-
-#desc "Restart a Machine Group"
-#option :g, :group, String, "A security group name"
-#argv :awsid
-#command :restart => Rudy::CLI::Routines
-#
 
 
 # -----------------------------------  AMAZON EC2 COMMANDS  --------
@@ -222,7 +132,8 @@ usage "rudy keypairs [-C] [-D] [name]"
 action :D, :destroy, "Destroy KeyPair"
 action :C, :create, "Create KeyPair"
 argv :kpname
-command :keypairs => Rudy::CLI::KeyPairs
+command :keypair => Rudy::CLI::KeyPairs
+command_alias :keypair, :keypairs
 
 usage "rudy console [-g group] [instance ID]"
 desc "Displays system console output for given instance(s)"
@@ -302,37 +213,125 @@ command :annoy do |obj|
   puts (success ? "Correct!" : "WRONG!").bright
 end
 
-usage "rudy id [-t type] ID"
-desc "Check what kind of object an ID belongs to (instance, backup, disk, etc...)"
-option :t, String, "Check if ID is of a specific type"
-argv :idstr
-command :id do |obj|
-  if obj.option.t 
-    raise "Unknown type #{obj.option.t}" unless Rudy.known_type?(obj.option.t)
-    t = Rudy.is_id?(obj.option.t, obj.argv.idstr)
-  else
-    t = Rudy.id_type(obj.argv.idstr)
-  end
-  puts t if t
-end
-
+#usage "rudy id [-t type] ID"
+#desc "Check what kind of object an ID belongs to (instance, backup, disk, etc...)"
+#option :t, String, "Check if ID is of a specific type"
+#argv :idstr
+#command :id do |obj|
+#  if obj.option.t 
+#    raise "Unknown type #{obj.option.t}" unless Rudy.known_type?(obj.option.t)
+#    t = Rudy.is_id?(obj.option.t, obj.argv.idstr)
+#  else
+#    t = Rudy.id_type(obj.argv.idstr)
+#  end
+#  puts t if t
+#end
 
 desc "Display the current Rudy slogan"
 command :slogan do
   puts "Rudy: Not your grandparent's deployment tool!"
 end
 
-#command :init do
-#  unless File.exists?(RUDY_CONFIG_FILE)
-#    Rudy::Config.init_config_dir
-#  end
-#end
+command :init do
+  unless File.exists?(RUDY_CONFIG_FILE)
+    Rudy::Config.init_config_dir
+  end
+end
+
+# ---------------------------------  RUDY MANAGER COMMANDS  --------
+# ------------------------------------------------------------------
+
+#usage "rudy init"
+#desc "Run this the first time you use Rudy (it's immutable so running it again does no harm)."
+#command :create_domain => Rudy::CLI::Manager
+#
+#usage "rudy info"
+#desc "Displays info about the current Rudy configuration"
+#command :info => Rudy::CLI::Manager
+
+#desc "Update a Machine Group with the current version of Rudy"
+#option :g, :group, String, "A security group name"
+#command :update => Rudy::CLI::Manager
+
+
+#usage "#{$/} [global options] disks [-C -p path -d device -s size] [-A] [-D] [path]"
+#desc "Manage Disks"
+#option :l, :all, "Display all disk definitions"
+#option :i, :awsid, String, "EC2 Instance ID"
+#option :g, :group, String, "Machine group name"
+#option :p, :path, String, "The filesystem path to use as the mount point"
+#option :d, :device, String, "The device id (default: /dev/sdh)"
+#option :s, :size, Integer, "The size of disk (in GB)"
+#action :C, :create, "Create a disk definition"
+#action :D, :destroy, "Destroy a disk definition"
+#action :A, :attach, "Attach a disk"
+#action :N, :unattach, "Unattach a disk"
+#argv :diskname
+#command :disk => Rudy::CLI::Disks
+#command_alias :disk, :disks
+
+
+#usage "rudy [global options] backups [-C] [disk name]"
+#desc "Manage Backups"
+#option :s, :snapshot, String, "Create a backup entry from an existing snapshot"
+#action :Z, :sync, "Check for and delete backup metadata with no snapshot. DOES NOT delete snapshots."
+##action :T, :tidy, "Tidy existing backups"
+#action :D, :destroy, "Destroy a backup and DELETE its snapshots."
+#action :C, :create, "Create a backup"
+#argv :disk
+#command :'backup' => Rudy::CLI::Backups
+#command_alias :backup, :bu
+
+#usage "rudy [global options] metadata instance-ID"
+#desc "Display Rudy metadata."
+#command :metadata => Rudy::CLI::Manager
+#command_alias :metadata, :md
+
+
+# --------------------------  RUDY RELEASE/DEPLOY COMMANDS  --------
+# ------------------------------------------------------------------
+
+#desc "Release to a Machine Group"
+#option :g, :group, String, "A security group name"
+#option :s, :switch, "Switch to the release branch/tag"
+#option :m, :msg, String, "A short release note"
+#command :release => Rudy::CLI::Release
+
+#desc "Update the release currently running in a machine group"
+#command :rerelease => Rudy::CLI::Release
+#command_alias :rerelease, :rere
+
+#desc "Deploy disk snapshots from one machine to another"
+#command :deploy => Rudy::CLI::Deploy
+
+
+#desc "Shutdown a Machine Group"
+#usage "rudy [global options] shutdown [-g group-name] [instance-ID]"
+#option :g, :group, String, "A security group name"
+#argv :awsid
+#command :shutdown => Rudy::CLI::Routines
+#
+#
+#desc "Start a Machine Group"
+#usage "rudy [global options] startup [-g group-name] [-i image-ID]"
+#option :ami, String, "EC2 image ID (AMI)"
+#option :g, :group, String, "A security group name"
+#command :startup => Rudy::CLI::Routines
+#command_alias :startup, :start
+
+#desc "Restart a Machine Group"
+#option :g, :group, String, "A security group name"
+#argv :awsid
+#command :restart => Rudy::CLI::Routines
+#
+
+
 
 # -------------------------------------------  UGLY STUFFS  --------
 # ------------------------------------------------------------------
 debug :on
 default :status
-capture :stderr       
+#capture :stderr       
 before do
   @start = Time.now
 end

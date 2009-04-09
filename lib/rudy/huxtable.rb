@@ -64,13 +64,13 @@ module Rudy
       @global.nocolor = false
       @global.quiet = false
       
-      if @config.awsinfo
-        @global.accesskey ||= @config.awsinfo.accesskey 
-        @global.secretkey ||= @config.awsinfo.secretkey 
-        @global.account ||= @config.awsinfo.account
+      if @config.accounts.aws
+        @global.accesskey ||= @config.accounts.aws.accesskey 
+        @global.secretkey ||= @config.accounts.aws.secretkey 
+        @global.account ||= @config.accounts.aws.accountnum
         
-        @global.cert ||= @config.awsinfo.cert
-        @global.privatekey ||= @config.awsinfo.privatekey
+        @global.cert ||= @config.accounts.aws.cert
+        @global.privatekey ||= @config.accounts.aws.privatekey
       end
       
       @global.accesskey ||= ENV['AWS_ACCESS_KEY']

@@ -93,7 +93,7 @@ module Rudy
     def modify_group_rules(n=nil, group=nil, owner=nil)
       n ||= name(n)
       
-      owner ||= @config.awsinfo.account
+      owner ||= @config.accounts.aws.accountnum
       
       raise "You must supply a group name" unless n
       raise "Group does not exist" unless @@ec2.groups.exists?(n)

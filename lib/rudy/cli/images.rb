@@ -44,7 +44,7 @@ module Rudy
         
         puts "The new image will be based on #{machine_group}_01"
         
-        @option.account ||= @config.awsinfo.account
+        @option.account ||= @config.accounts.aws.accountnum
         
         unless @option.account
           puts "Enter your 12 digit Amazon account number:"

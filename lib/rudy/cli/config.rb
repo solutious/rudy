@@ -46,7 +46,10 @@ module Rudy
           
         else
           if @option.all
+            puts "# ACCOUNTS: not displayed"
+            puts "# MACHINES: "
             y @config.machines.to_hash
+            puts "# ROUTINES: "
             y @config.routines.to_hash
           elsif @option.defaults
             y @config.defaults.to_hash

@@ -107,15 +107,13 @@ module Rudy
        str
     end
     
-    # Returns +str+ with the average leading indentation removed. 
-    # Useful for keeping inline codeblocks spaced with code. 
+    # Returns +str+ with the leading indentation removed. 
+    # Stolen from http://github.com/mynyml/unindent/ because it was better.
     def without_indent(str)
-      # TODO: A better implementation: check how many leading spaces each line has in common. 
-      lines = str.split($/)
-      lspaces = (lines.inject(0) {|total,line| total += (line.scan(/^\s+/).first || '').size } / lines.size)
-      lines.collect { |line| line.gsub(/^\s{#{lspaces}}/, '') }.join($/)
+      indent = str.select {|line| !line.strip.empty? }.map {|line| line.index(/[^\s]/) }.compact.min
+      str.gsub(/^[[:blank:]]{#{indent}}/, '')
     end
-
+      
 
   end
 end

@@ -1,4 +1,6 @@
 
+require 'drydock'
+
 module Rudy
   class UnknownInstance < RuntimeError #:nodoc
   end
@@ -84,21 +86,8 @@ module Rudy
       
       # Print a default header to the screen for every command.
       #
-      # * +cmd+ is the name of the command current running. 
-      def print_header(cmd=nil)
-        title = "RUDY v#{Rudy::VERSION}" unless @global.quiet
-        now_utc = Time.now.utc.strftime("%Y-%m-%d %H:%M:%S")
-        criteria = []
-        [:zone, :environment, :role, :position].each do |n|
-          val = @global.send(n)
-          next unless val
-          criteria << "#{n.to_s.slice(0,1).att :normal}:#{val.to_s.bright}"
-        end
-        if @config.accounts && @config.accounts.aws
-          puts '%s -- %s -- %s UTC' % [title, @config.accounts.aws.name, now_utc] unless @global.quiet
-          puts '[%s]' % criteria.join("  ") unless @global.quiet
-        end
-        
+      def print_header
+        puts Rudy::CLI.generate_header(@global, @config)
         unless @global.quiet
           puts # a new line
           
@@ -109,11 +98,33 @@ module Rudy
         
           puts Rudy.banner("THIS IS EC2"), $/ if Rudy.in_situ?
         end
-        
-        
       end
+      
 
     end
+
+
+
+    def self.generate_header(global, config)
+      header = StringIO.new
+      title = "RUDY v#{Rudy::VERSION}" unless global.quiet
+      now_utc = Time.now.utc.strftime("%Y-%m-%d %H:%M:%S")
+      criteria = []
+      [:zone, :environment, :role, :position].each do |n|
+        val = global.send(n)
+        next unless val
+        criteria << "#{n.to_s.slice(0,1).att :normal}:#{val.to_s.bright}"
+      end
+      if config.accounts && config.accounts.aws
+        header.puts '%s -- %s -- %s UTC' % [title, config.accounts.aws.name, now_utc] unless global.quiet
+        header.puts '[%s]' % criteria.join("  ") unless global.quiet
+      end
+      
+      header.rewind
+      header.read
+    end
+
+
   end
 end
 

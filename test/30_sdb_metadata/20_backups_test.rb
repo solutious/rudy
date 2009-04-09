@@ -1,5 +1,5 @@
 module Rudy::Test
-  class Case_40_MetaData
+  class Case_30_MetaData
     
     def create_backup
       back = Rudy::MetaData::Backup.new

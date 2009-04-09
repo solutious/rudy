@@ -132,6 +132,9 @@ EXAMPLE
     # Print the instance in a human readable way
     >> puts m.list.first.to_s
     
+    # Print instance system console output
+    >> puts m.console
+    
     # Destroy ALL INSTANCES in stage-app
     >> m.destroy
   `)

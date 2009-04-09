@@ -64,6 +64,8 @@ module Rudy
       @global.nocolor = false
       @global.quiet = false
       
+      @global.position &&= @global.position.to_s.rjust(2, '0')
+      
       if @config.accounts && @config.accounts.aws
         @global.accesskey ||= @config.accounts.aws.accesskey 
         @global.secretkey ||= @config.accounts.aws.secretkey 

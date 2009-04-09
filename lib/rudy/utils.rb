@@ -110,7 +110,7 @@ module Rudy
     # Returns +str+ with the leading indentation removed. 
     # Stolen from http://github.com/mynyml/unindent/ because it was better.
     def without_indent(str)
-      indent = str.select {|line| !line.strip.empty? }.map {|line| line.index(/[^\s]/) }.compact.min
+      indent = str.split($/).each {|line| !line.strip.empty? }.map {|line| line.index(/[^\s]/) }.compact.min
       str.gsub(/^[[:blank:]]{#{indent}}/, '')
     end
       

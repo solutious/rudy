@@ -99,7 +99,7 @@ module Rudy
             zone :"us-east-1b"
             environment :stage
             role :app
-            position 01
+            position "01"
             user ENV['USER'].to_sym
           end
         }

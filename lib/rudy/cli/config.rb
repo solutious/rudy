@@ -48,10 +48,14 @@ module Rudy
           if @option.all
             puts "# ACCOUNTS: not displayed"
             puts "# MACHINES: "
-            y @config.machines.to_hash
-            puts "# ROUTINES: "
-            y @config.routines.to_hash
-          elsif @option.defaults
+            if @config.machines?
+              y @config.machines.to_hash 
+            end
+            if @config.routines?
+              puts "# ROUTINES: "
+              y @config.routines.to_hash 
+            end
+          elsif @option.defaults?
             y @config.defaults.to_hash
           else
             zon, env, rol = @global.zone, @global.environment, @global.role

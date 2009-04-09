@@ -1,5 +1,5 @@
 module Rudy::Test
-  class Case_40_MetaData
+  class Case_30_MetaData
     
     def create_disk
       disk = Rudy::MetaData::Disk.new

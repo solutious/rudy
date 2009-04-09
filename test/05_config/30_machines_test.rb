@@ -31,12 +31,13 @@ module Rudy::Test
         
       end
       
-
-      should "(40) have routines" do
+      # Disabled for 0.5.0 (routines config removed)
+      xshould "(40) have routines" do
         assert @@config.routines.is_a?(Rudy::Config::Routines), "Not a Routines class"
       end
       
-      should "(50) be able to find and find_deferred" do
+      # Disabled for 0.5.0 (most machines config removed)
+      xshould "(50) be able to find and find_deferred" do
         reg, zon = @@config.defaults.region, @@config.defaults.zone 
         env, rol = @@config.defaults.environment, @@config.defaults.role 
 

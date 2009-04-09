@@ -21,6 +21,8 @@ extend Drydock
 #/usr/local/lib/ruby/1.9.1/open-uri.rb:260:in `require': Insecure operation - require (SecurityError)
 #$SAFE = 2
 
+
+
 global :A, :accesskey, String, "AWS Access Key"
 global :S, :secretkey, String, "AWS Secret Access Key"
 #global :R, :region, String, "Connect to a specific EC2 region (ie: #{Rudy::DEFAULT_REGION})"
@@ -40,7 +42,6 @@ global :V, :version, "Display version number" do
   puts "Rudy version: #{Rudy::VERSION}"
   exit 0
 end
-
 
 
 # ---------------------------------  RUDY MACHINE COMMANDS  --------
@@ -232,11 +233,36 @@ command :slogan do
   puts "Rudy: Not your grandparent's deployment tool!"
 end
 
-command :init do
-  unless File.exists?(RUDY_CONFIG_FILE)
+command :init do |obj|
+  
+  unless File.exists?(Rudy::RUDY_CONFIG_FILE)
     Rudy::Config.init_config_dir
   end
+  
+  begin
+    rdom = Rudy::Domains.new(:global => obj.global)
+  
+    unless rdom.exists?
+      puts "Creating SimpleDB domain #{rdom.name}"
+      rdom.create
+    end
+    
+    puts "Ready"
+    exit 0 # a quick hack to not print elapsed time
+    
+  rescue Rudy::NoConfig => ex
+    puts "AWS credentials must be configured to continue."
+    puts "You can modify these in #{Rudy::RUDY_CONFIG_FILE}"
+    exit 1
+  end
+  
+
+  
 end
+
+desc "Displays the SimpleDB domains associated to your account"
+command :domains => Rudy::CLI::Domains
+
 
 # ---------------------------------  RUDY MANAGER COMMANDS  --------
 # ------------------------------------------------------------------
@@ -335,8 +361,10 @@ default :status
 before do
   @start = Time.now
 end
-after do
-  @elapsed = Time.now - @start
-  puts $/, "Elapsed: %.2f seconds" % @elapsed.to_f if @elapsed > 0.1
+after do |obj|
+  unless obj.global.quiet
+    @elapsed = Time.now - @start
+    puts $/, "Elapsed: %.2f seconds" % @elapsed.to_f if @elapsed > 0.1
+  end
 end
 

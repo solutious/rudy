@@ -1,8 +1,3 @@
-#
-# ---
-# TODO: Only half updated. Tests will do the trick!
-# +++
-#
 
 #
 #

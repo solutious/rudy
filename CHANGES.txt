@@ -1,6 +1,5 @@
 RUDY, CHANGES
 
-TODO: Rename awsinfo to accounts (and @config.awsinfo.account to @config.accounts.aws.number)
 TODO: Remove aws_sdb
 
 

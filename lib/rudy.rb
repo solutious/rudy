@@ -249,6 +249,20 @@ module Rudy
     response
   end
   
+  
+  class NoConfig < RuntimeError
+    def message
+      "No AWS credentials. Check your configs!"
+    end
+  end
+  class NoMachineImage < RuntimeError
+    def initialize(group)
+      @group = group
+    end
+    def message
+      "There is no AMI configured for #{@group}"
+    end
+  end
 end
 
 require 'rudy/aws'
@@ -257,8 +271,9 @@ require 'rudy/config'              # order
 require 'rudy/huxtable'            # of
 require 'rudy/command/addresses'   # require
 require 'rudy/command/keypairs'
-require 'rudy/command/instances'  # statements
+require 'rudy/command/instances'   # statements
 require 'rudy/command/manager'     # is
+require 'rudy/command/domains'
 require 'rudy/command/backups'     # important.
 require 'rudy/command/volumes'
 require 'rudy/command/groups'

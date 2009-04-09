@@ -22,23 +22,21 @@ module Rudy
         String.disable_color if @global.nocolor
         Rudy.enable_quiet if @global.quiet
         
-        
         @config = Rudy::Config.new
         @config.look_and_load(@global.config)
 
-        unless @config.respond_to?(:accounts)
-          STDERR.puts Rudy.banner(%Q(Rudy says, "I can't find any configuration"), nil, :red) 
+        unless @config.accounts && @config.accounts.aws && @config.accounts.aws.accesskey
+          STDERR.puts "No AWS credentials. Check your configs!"
+          STDERR.puts "Try: #{$0} init"
           exit 1
         end
-        
-#        raise Rudy.banner("There is no machine group configured") unless 
-        
+                
         # EVERYTHING BELOW THIS LINE IS ATROCIOUS 
         
         # These are here so we can print the machine group shit in the header. 
         # The dupilcation annoys me (see Rudy::Huxtable#init_globals) and I'd
         # like to find a cleaner solution. 
-        if @config.respond_to? :defaults
+        if @config.defaults
           @global.region ||= @config.defaults.region 
           @global.zone ||= @config.defaults.zone 
           @global.environment ||= @config.defaults.environment
@@ -74,8 +72,8 @@ module Rudy
           puts Rudy.banner("PRODUCTION ACCESS IS DISABLED IN DEBUG MODE")
           exit 1
         end
-        
 
+        
         # TODO: enforce home directory permissions
         #if File.exists?(RUDY_CONFIG_DIR)
         #  puts "Checking #{check_environment} permissions..."
@@ -96,8 +94,10 @@ module Rudy
           next unless val
           criteria << "#{n.to_s.slice(0,1).att :normal}:#{val.to_s.bright}"
         end
-        puts '%s -- %s -- %s UTC' % [title, @config.accounts.aws.name, now_utc] unless @global.quiet
-        puts '[%s]' % criteria.join("  ") unless @global.quiet
+        if @config.accounts && @config.accounts.aws
+          puts '%s -- %s -- %s UTC' % [title, @config.accounts.aws.name, now_utc] unless @global.quiet
+          puts '[%s]' % criteria.join("  ") unless @global.quiet
+        end
         
         unless @global.quiet
           puts # a new line

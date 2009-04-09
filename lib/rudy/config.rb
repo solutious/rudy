@@ -12,7 +12,7 @@ module Rudy
     dsl Rudy::Config::Networks::DSL
     
     def postprocess
-      raise "There is no AWS info configured" if self.accounts.nil?
+      #raise "There is no AWS info configured" if self.accounts.nil?
       
       #if self.accounts.aws
       #  self.accounts.aws.cert &&= File.expand_path(self.accounts.aws.cert) 
@@ -38,7 +38,6 @@ module Rudy
       # Rudy then looks for the rest of the config in these locations
       @paths += Dir.glob(File.join('/etc', 'rudy', '*.rb')) || []
       @paths += Dir.glob(File.join(cwd, 'Rudyfile')) || []
-      @paths += Dir.glob(File.join(cwd, '**/*.rudy')) || []
       @paths += Dir.glob(File.join(cwd, 'config', 'rudy', '*.rb')) || []
       @paths += Dir.glob(File.join(cwd, '.rudy', '*.rb')) || []
       @paths &&= @paths.uniq
@@ -46,8 +45,8 @@ module Rudy
     end
     
     
-    def init_config_dir
-
+    def self.init_config_dir
+      
       unless File.exists?(RUDY_CONFIG_DIR)
         puts "Creating #{RUDY_CONFIG_DIR}"
         Dir.mkdir(RUDY_CONFIG_DIR, 0700)
@@ -59,7 +58,8 @@ module Rudy
           # Amazon Web Services 
           # Account access indentifiers.
           accounts do
-            aws "Rudy Default" do
+            aws do
+              name "Rudy Default"
               accountnum ""
               accesskey ""
               secretkey ""
@@ -67,24 +67,7 @@ module Rudy
               cert "~/path/2/cert-xxxx.pem"
             end
           end
-
-          # Machine Configuration
-          # Specify your private keys here. These can be defined globally
-          # or by environment and role like in machines.rb.
-          machines do
-            users do
-              root :keypair => "path/2/root-private-key"
-            end
-          end
-
-          # Routine Configuration
-          # Define stuff here that you don't want to be stored in version control. 
-          routines do
-            config do 
-              # ...
-            end
-          end
-
+          
           # Global Defaults 
           # Define the values to use unless otherwise specified on the command-line. 
           defaults do
@@ -92,11 +75,11 @@ module Rudy
             zone :"us-east-1b"
             environment :stage
             role :app
-            position :01
+            position 01
             user ENV['USER'].to_sym
           end
         }
-        Rudy::Utils.write_to_file(RUDY_CONFIG_FILE, rudy_config, 'w')
+        Rudy::Utils.write_to_file(RUDY_CONFIG_FILE, rudy_config, 'w', 0600)
       end
     end
 

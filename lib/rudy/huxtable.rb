@@ -15,7 +15,7 @@ module Rudy
     attr_reader :rbox
     
     def initialize(opts={})
-      opts = { :config => nil, :logger => STDERR, :global => OpenStruct.new}.merge(opts)
+      opts = { :config => nil, :logger => STDERR, :global => OpenStruct.new }.merge(opts)
       
       # Set instance variables
       opts.each_pair { |n,v| self.send("#{n}=", v) if self.respond_to?("#{n}=") }
@@ -29,9 +29,9 @@ module Rudy
       
       @rbox = Rye::Box.new('localhost')
       
-      if has_keys?
-        Rudy::AWS.set_access_identifiers(@global.accesskey, @global.secretkey, @logger)
-      end
+      raise Rudy::NoConfig unless has_keys?
+      Rudy::AWS.set_access_identifiers(@global.accesskey, @global.secretkey, @logger)
+
     end
     
     
@@ -64,7 +64,7 @@ module Rudy
       @global.nocolor = false
       @global.quiet = false
       
-      if @config.accounts.aws
+      if @config.accounts && @config.accounts.aws
         @global.accesskey ||= @config.accounts.aws.accesskey 
         @global.secretkey ||= @config.accounts.aws.secretkey 
         @global.account ||= @config.accounts.aws.accountnum
@@ -166,8 +166,11 @@ module Rudy
     end
     
     def current_machine_image
-      ami = @config.machines.find_deferred(@global.environment, @global.role, :ami)
-      raise "There is no AMI configured for #{current_machine_group}" unless ami
+      zon, env, rol = @global.zone, @global.environment, @global.role
+      ami = @config.machines.find_deferred(zon, env, rol, :ami)
+      ami ||= @config.machines.find_deferred(env, rol, :ami)
+      ami ||= @config.machines.find_deferred(rol, :ami)
+      raise Rudy::NoMachineImage, current_machine_group unless ami
       ami
     end
     

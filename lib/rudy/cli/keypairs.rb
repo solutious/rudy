@@ -4,7 +4,7 @@ module Rudy
   module CLI
     class KeyPairs < Rudy::CLI::Base
       
-      def create_keypairs
+      def create_keypair
         puts "Create KeyPairs".bright
         rkey = Rudy::KeyPairs.new(:config => @config, :global => @global)
         name = @argv.kpname
@@ -16,7 +16,7 @@ module Rudy
       end
       
       
-      def destroy_keypairs
+      def destroy_keypair
         puts "Destroy KeyPairs".bright
         rkey = Rudy::KeyPairs.new(:config => @config, :global => @global)
         raise "KeyPair #{rkey.name(@argv.kpname)} does not exist" unless rkey.exists?(@argv.kpname)
@@ -29,7 +29,7 @@ module Rudy
         puts ret ? "Success" : "Failed"
       end
       
-      def keypairs
+      def keypair
         puts "KeyPairs".bright
         rkey = Rudy::KeyPairs.new(:config => @config, :global => @global)
         

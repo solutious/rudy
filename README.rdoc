@@ -3,11 +3,11 @@
 Rudy is a development and deployment tool for Amazon EC2. It's both a command-line tool and Ruby library. Here's an example from both for creating an EC2 security group:
 
      $ rudy group --create
-
+		 
+		 OR
+		 
      rgroup = Rudy::Groups.new
      rgroup.create
-
-Rudy is a bit different from other EC2 libraries in several ways. 
 
 
 == Installation

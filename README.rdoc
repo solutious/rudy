@@ -9,6 +9,8 @@ Rudy is a development and deployment tool for Amazon EC2. It's both a command-li
      rgroup = Rudy::Groups.new
      rgroup.create
 
+NOTE: Rudy is in ALPHA territory. That means it's not ready for production use!
+
 
 == Installation
 

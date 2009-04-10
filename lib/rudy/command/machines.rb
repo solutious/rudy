@@ -1,7 +1,7 @@
 
 
 module Rudy
-  class Instances
+  class Machines
     include Rudy::Huxtable
     include Rudy::AWS
     
@@ -99,7 +99,7 @@ module Rudy
       instances
     end
     
-    # See Rudy::Instances#list for arguments.
+    # See Rudy::Machines#list for arguments.
     # Returns a Hash of Rudy::AWS::EC2::Instance objects (the keys are instance IDs)
     def list_as_hash(state=nil, group=nil, inst_ids=[], &each_inst)
       group ||= current_machine_group

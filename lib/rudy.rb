@@ -278,7 +278,7 @@ require 'rudy/aws'
 require 'rudy/metadata'
 require 'rudy/command/keypairs'
 require 'rudy/command/addresses'   # require
-require 'rudy/command/instances'   # statements
+require 'rudy/command/machines'   # statements
 require 'rudy/command/manager'     # is
 require 'rudy/command/domains'
 require 'rudy/command/backups'     # important.

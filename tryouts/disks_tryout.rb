@@ -27,4 +27,4 @@ puts disk2.destroy
 
 __END__
 group = Rudy::Groups.new
-inst = Rudy::Instances.new
+inst = Rudy::Machines.new

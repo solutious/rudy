@@ -2,15 +2,15 @@
 module Rudy::Test
   class Case_50_Commands
     
-    context "#{name}_50 Instances" do
+    context "#{name}_50 Machines" do
       
       setup do
         
-        @rmach = Rudy::Instances.new(:logger => @@logger)
-        stop_test !@rmach.is_a?(Rudy::Instances), "We needRudy::Instancess (#{@rmach})"
+        @rmach = Rudy::Machines.new(:logger => @@logger)
+        stop_test !@rmach.is_a?(Rudy::Machines), "We needRudy::Machiness (#{@rmach})"
         
         @rgroup = Rudy::Groups.new(:logger => @@logger)
-        stop_test !@rgroup.is_a?(Rudy::Groups), "We need Rudy::Instances (#{@rgroup})"
+        stop_test !@rgroup.is_a?(Rudy::Groups), "We need Rudy::Machines (#{@rgroup})"
 
         @rkey = Rudy::KeyPairs.new(:logger => @@logger)
         stop_test !@rkey.is_a?(Rudy::KeyPairs), "We need Rudy::KeyPairs (#{@rkey})"
@@ -42,47 +42,47 @@ module Rudy::Test
       end
       
       
-      should "(10) create an instance" do
-        stop_test @rmach.running?, "Shutdown the instances running in #{@rmach.current_machine_group}"
-        instances = @rmach.create
-        assert instances.is_a?(Array), "instances is not an Array"
-        assert instances.first.is_a?(Rudy::AWS::EC2::Instance), "instance is not a Rudy::AWS::EC2::Instance (#{instances.first.class})"
-        assert_equal 1, instances.size, "#{instances.size} instances were started"
+      should "(10) create an machine" do
+        stop_test @rmach.running?, "Shutdown the machines running in #{@rmach.current_machine_group}"
+        machines = @rmach.create
+        assert machines.is_a?(Array), "machines is not an Array"
+        assert machines.first.is_a?(Rudy::AWS::EC2::Instance), "machine is not a Rudy::AWS::EC2::Instance (#{machines.first.class})"
+        assert_equal 1, machines.size, "#{machines.size} machines were started"
       end
       
       
-      should "(20) list instances in machine group" do
+      should "(20) list machines in machine group" do
         assert @rmach.running?, "No machines running"
-        instances = @rmach.list(:running)
-        assert instances.is_a?(Array), "instances is not an Array"
-        assert instances.first.is_a?(Rudy::AWS::EC2::Instance), "instance is not a Rudy::AWS::EC2::Instance"
+        machines = @rmach.list(:running)
+        assert machines.is_a?(Array), "machines is not an Array"
+        assert machines.first.is_a?(Rudy::AWS::EC2::Instance), "machine is not a Rudy::AWS::EC2::Instance"
       end
 
       should "(30) check console output" do
         assert @rmach.console.is_a?(String), "No console output"
       end
       
-      should "(45) attach volume to instance and then detach it" do
+      should "(45) attach volume to machine and then detach it" do
         volume = @rvol.create(1)
         #volume = @rvol.get('vol-9934d4f0')
-        instances = @rmach.list(:running)
-        assert !instances.empty?, "No instances running"
-        instance = instances.first
+        machines = @rmach.list(:running)
+        assert !machines.empty?, "No machines running"
+        machine = machines.first
         assert !volume.attached?, "Volume is attached"
-        assert instance.running?, "Instance not running"
+        assert machine.running?, "Machine not running"
         assert volume.available?, "Volume not available"
-        assert @rvol.attach(volume, instance), "Volume #{volume.awsid} not attached to #{instance.awsid}"
+        assert @rvol.attach(volume, machine), "Volume #{volume.awsid} not attached to #{machine.awsid}"
         assert @rvol.detach(volume), "Volume not detached (#{volume.awsid})"
         assert @rvol.destroy(volume), "Volume not destroyed (#{volume.awsid})"
       end
       
-      should "(90) destroy instances" do
-        assert @rmach.running?, "No instances running"
-        assert @rmach.destroy, "Instances not destroyed"
+      should "(90) destroy machines" do
+        assert @rmach.running?, "No machines running"
+        assert @rmach.destroy, "Machines not destroyed"
       end
       
       should "(95) destroy security group" do
-        # We can't delete the machine group until all instances are terminated
+        # We can't delete the machine group until all machines are terminated
         Rudy.waiter(2, 60, @@logger) { !@rmach.running? }
         @rgroup.list do |group|
           next if group.name == 'default' # The default group is invisible
@@ -92,7 +92,7 @@ module Rudy::Test
       
       
       should "(96) destroy test keypair" do
-        # We can't delete the keypair until all instances are terminated
+        # We can't delete the keypair until all machines are terminated
         Rudy.waiter(2, 60, @@logger) { !@rmach.running? }
         assert @rkey.destroy, "Keypair (#{@rkey.name}) not destroyed"
       end

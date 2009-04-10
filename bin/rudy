@@ -54,7 +54,7 @@ module RudyCLI
   option :s, :state, String, "Machine state. One of: running (default), pending, terminated"
   option :l, :all, "Show all machines in this group, regardless of state."
   argv :awsid
-  command :status => Rudy::CLI::Instances
+  command :status => Rudy::CLI::Machines
 
   usage "rudy [global options] connect [-g group-name] [-i instance-ID] [cmd]"
   desc "Open an SSH connection"
@@ -62,7 +62,7 @@ module RudyCLI
   option :g, :group, String, "A security group name"
   option :i, :awsid, String, "An instance ID"
   argv :cmd
-  command :connect => Rudy::CLI::Instances 
+  command :connect => Rudy::CLI::Machines 
   command_alias :connect, :ssh
 
   usage "rudy [global options] copy [-p] [-r] source target"
@@ -73,7 +73,7 @@ module RudyCLI
   option :print, "Only print the SSH command, don't connect"
   option :g, :group, String, "A security group name"
   option :i, :awsid, String, "An instance ID"
-  command :copy => Rudy::CLI::Instances
+  command :copy => Rudy::CLI::Machines
   command_alias :copy, :scp
   command_alias :copy, :upload
   command_alias :copy, :download
@@ -139,7 +139,7 @@ module RudyCLI
   desc "Displays system console output for given instance(s)"
   option :g, :group, String, "A group name to authorize or revoke network rule. Must also supply -o!"
   argv :awsid
-  command :console => Rudy::CLI::Instances
+  command :console => Rudy::CLI::Machines
 
   desc "Manage Machines"
   usage "rudy [global options] machines [-g group-name] [-s state] [instance-ID]"
@@ -151,7 +151,7 @@ module RudyCLI
   action :C, :create, "Create a machine instance"
   action :D, :destroy, "Destroy a machine instance"
   argv :awsid
-  command :instance => Rudy::CLI::Instances
+  command :instance => Rudy::CLI::Machines
   command_alias :instance, :instances
 
   #usage "rudy images [-C -i name [-b bucket -a account]] [-D AMI-ID]"

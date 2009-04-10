@@ -51,7 +51,7 @@ module CLI
   usage "#{$0} [global options]"
   command :interactive do |obj|
   
-    @@rmach = Rudy::Instances.new(:global => obj.global)
+    @@rmach = Rudy::Machines.new(:global => obj.global)
     @@rkey = Rudy::KeyPairs.new(:global => obj.global)
     @@rgrp = Rudy::Groups.new(:global => obj.global)
     @@rvol = Rudy::Volumes.new(:global => obj.global)

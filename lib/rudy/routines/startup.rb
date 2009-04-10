@@ -11,7 +11,7 @@ module Rudy
         rdisks = Rudy::Disks.new(:config => @@config, :global => @@global)
         
         
-        rmach = Rudy::Instances.new(:config => @@config, :global => @@global)
+        rmach = Rudy::Machines.new(:config => @@config, :global => @@global)
         
         # TODO: .list for debugging, .create for actual use
         instances = rmach.list(opts) do |instance| # Rudy::AWS::EC2::Instance objects

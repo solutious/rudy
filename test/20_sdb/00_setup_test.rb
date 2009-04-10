@@ -10,7 +10,7 @@ module Rudy::Test
   #
   class Case_20_SimpleDB < Test::Unit::TestCase
     
-    @@rmach = Rudy::Instances.new
+    @@rmach = Rudy::Machines.new
     @@global = @@rmach.global
     @@config = @@rmach.config
     @@zone = @@rmach.global.zone.to_s
@@ -18,7 +18,7 @@ module Rudy::Test
     
     context "#{name}_00 Setup" do
       should "(00) have class variables setup" do
-        stop_test !@@rmach.is_a?(Rudy::Instances), "We don't have an instance of Rudy::Instancess (#{@@rmach})"
+        stop_test !@@rmach.is_a?(Rudy::Machines), "We don't have an instance of Rudy::Machiness (#{@@rmach})"
         stop_test !@@sdb.is_a?(Rudy::AWS::SimpleDB), "We don't have an instance of Rudy::AWS::EC2 (#{@@sdb})"
       end
       should "(01) be zone" do

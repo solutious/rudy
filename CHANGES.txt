@@ -17,7 +17,7 @@ NOTE: This is a significant re-write from 0.4
 * ADDED: --nocolor option 
 * ADDED: Ruby API
 * ADDED: Tests with 55% coverage
-* ADDED: Ruby API (Rudy::Instances, etc...)
+* ADDED: Ruby API (Rudy::Machines, etc...)
 * ADDED: ird, a REPL (experimental)
 * ADDED: Now uses Rye 0.4.1
 

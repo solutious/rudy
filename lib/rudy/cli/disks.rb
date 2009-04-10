@@ -52,7 +52,7 @@ module Rudy
         opts[:id] &&= [opts[:id]].flatten
         
         @global.debug = true
-        rmachines = Rudy::Instances.new(:config => @config, :global => @global)
+        rmachines = Rudy::Machines.new(:config => @config, :global => @global)
         rmachines.list(opts).each_pair do |id,machine|
           rdisks = Rudy::Disks.new(:config => @config, :global => @global)
           disk = rdisks.create(machine, opts)
@@ -78,7 +78,7 @@ module Rudy
         
         # TODO: This is fucked! Store the machine info with the disk metadata.
         # Get all disks that match the request and destroy them.
-        rmachines = Rudy::Instances.new(:config => @config, :global => @global)
+        rmachines = Rudy::Machines.new(:config => @config, :global => @global)
         rmachines.list(opts).each_pair do |id,machine|
           rdisks = Rudy::Disks.new(:config => @config, :global => @global)
           rdisks.destroy(machine, opts)

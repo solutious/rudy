@@ -3,6 +3,7 @@
 module Rudy
   class Manager
     include Rudy::Huxtable
+    include Rudy::AWS
     
 
   end
@@ -13,7 +14,7 @@ __END__
 
 
 def create_domain(name=nil)
-  name ||= Rudy::RUDY_DOMAIN
+  name ||= Rudy::DOMAIN
   @@sdb.domains.create(name)
 end
 
@@ -25,7 +26,7 @@ end
 
 def update_valid?
   raise "No EC2 .pem keys provided" unless has_pem_keys?
-  raise "No SSH key provided for #{@global.user}!" unless has_keypair?
+  raise "No SSH key provided for #{@@global.user}!" unless has_keypair?
   raise "No SSH key provided for root!" unless has_keypair?(:root)
   
   @option.group ||= machine_group

@@ -3,11 +3,11 @@
 module Rudy
   class Instances
     include Rudy::Huxtable
-    
+    include Rudy::AWS
     
     def create(opts={}, &each_inst)
       
-      rgroup = Rudy::Groups.new(:config => @config, :global => @global)
+      rgroup = Rudy::Groups.new(:config => @@config, :global => @@global)
       
       # TODO: Handle itype on create
       opts = { :ami => current_machine_image, 
@@ -23,7 +23,7 @@ module Rudy
 
       keypair_name = KeyPairs.path_to_name(opts[:keypair])
       
-      instances = @@ec2.instances.create(opts[:ami], opts[:group], keypair_name, opts[:machine_data], @global.zone)
+      instances = @@ec2.instances.create(opts[:ami], opts[:group], keypair_name, opts[:machine_data], @@global.zone)
 
       
       #instances = [@@ec2.instances.get("i-39009850")]
@@ -31,21 +31,21 @@ module Rudy
       instances.each_with_index do |inst_tmp,index|
         Rudy.bug('hs672h48') && next if inst_tmp.nil?
 
-        @logger.puts "Instance: #{inst_tmp.awsid}"
+        @@logger.puts "Instance: #{inst_tmp.awsid}"
         if opts[:address] && index == 0  # We currently only support assigned an address to the first machine
-          @logger.puts "Associating #{opts[:address]} to #{inst_tmp.awsid}"
+          @@logger.puts "Associating #{opts[:address]} to #{inst_tmp.awsid}"
           @@ec2.addresses.associate(inst_tmp.awsid, opts[:address])
         end
 
-        @logger.puts "Waiting for the instance to startup "        
+        @@logger.puts "Waiting for the instance to startup "        
         begin 
           # TODO: Puts "it's up" and :bell => 3 into waiter 
-          Rudy.waiter(2, 120, @logger) { !@@ec2.instances.pending?(inst_tmp.awsid) }
+          Rudy.waiter(2, 120, @@logger) { !@@ec2.instances.pending?(inst_tmp.awsid) }
           raise Exception unless @@ec2.instances.running?(inst_tmp.awsid)
-          @logger.puts "It's up!"
+          @@logger.puts "It's up!"
           Rudy.bell(3)
         rescue Timeout::Error, Interrupt, Exception
-          @logger.puts "It's not up yet. Check later: " << "rudy status #{inst_tmp.awsid}".color(:blue)
+          @@logger.puts "It's not up yet. Check later: " << "rudy status #{inst_tmp.awsid}".color(:blue)
           next
         end
 
@@ -53,13 +53,13 @@ module Rudy
         instance = @@ec2.instances.get(inst_tmp.awsid)   
         instances_with_dns << instance
 
-        @logger.puts $/, "Waiting for the SSH daemon "
+        @@logger.puts $/, "Waiting for the SSH daemon "
         begin
-          Rudy.waiter(1, 60, @logger) { Rudy::Utils.service_available?(instance.dns_name_public, 22) }
-          @logger.puts "It's up!"
+          Rudy.waiter(1, 60, @@logger) { Rudy::Utils.service_available?(instance.dns_name_public, 22) }
+          @@logger.puts "It's up!"
           Rudy.bell(2)
         rescue Timeout::Error, Interrupt, Exception
-          @logger.puts "SSH isn't up yet. Check later: " << "rudy status #{inst_tmp.awsid}".color(:blue)
+          @@logger.puts "SSH isn't up yet. Check later: " << "rudy status #{inst_tmp.awsid}".color(:blue)
           next
         end
 
@@ -76,7 +76,7 @@ module Rudy
       instances = @@ec2.instances.list_group(group, :running, inst_id)
       instances &&= [instances].flatten
       instances.each { |inst| each_inst.call(inst) } if each_inst
-      @logger.puts $/, "Terminating instances...", $/
+      @@logger.puts $/, "Terminating instances...", $/
       @@ec2.instances.destroy(instances, :skip_check)
     end
     
@@ -138,8 +138,8 @@ module Rudy
       
       instances.each do |inst|
         msg = cmd ? %Q{"#{cmd}" on} : "Connecting to"
-        @logger.puts $/, "#{msg} #{inst.dns_name_public}", $/
-        ret = ssh_command(inst.dns_name_public, current_user_keypairpath, @global.user, cmd, print_only)
+        @@logger.puts $/, "#{msg} #{inst.dns_name_public}", $/
+        ret = ssh_command(inst.dns_name_public, current_user_keypairpath, @@global.user, cmd, print_only)
         puts ret if ret  # ssh command returns false with "ssh_exchange_identification: Connection closed by remote host"
       end
     end
@@ -167,10 +167,10 @@ module Rudy
         
       instances.each do |inst|
         msg = opts[:task] == :upload ? "Upload to" : "Download from"
-        @logger.puts $/, "#{msg} #{inst.awsid}"
+        @@logger.puts $/, "#{msg} #{inst.awsid}"
         
         if opts[:print]
-          scp_command inst.dns_name_public, current_user_keypairpath, @global.user, opts[:paths], opts[:dest], (opts[:task] == :download), false, opts[:print]
+          scp_command inst.dns_name_public, current_user_keypairpath, @@global.user, opts[:paths], opts[:dest], (opts[:task] == :download), false, opts[:print]
           return
         end
         
@@ -180,11 +180,11 @@ module Rudy
           :chunk_size => 16384
         }
         
-        scp(opts[:task], inst.dns_name_public, @global.user, current_user_keypairpath, opts[:paths], opts[:dest], scp_opts)
+        scp(opts[:task], inst.dns_name_public, @@global.user, current_user_keypairpath, opts[:paths], opts[:dest], scp_opts)
         
       end
       
-      @logger.puts
+      @@logger.puts
     end
     
     
@@ -241,10 +241,10 @@ module Rudy
     def machine_data
       data = {
         # Give the machine an identity
-        :zone => @global.zone,
-        :environment => @global.environment,
-        :role => @global.role,
-        :position => @global.position,
+        :zone => @@global.zone,
+        :environment => @@global.environment,
+        :role => @@global.role,
+        :position => @@global.position,
         
         # Add hosts to the /etc/hosts file
         :hosts => {

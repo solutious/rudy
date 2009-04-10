@@ -63,6 +63,7 @@ module Rudy::CLI
       
       opts[:id] = @argv.awsid if @argv.awsid
       opts[:id] &&= [opts[:id]].flatten
+
       rudy = Rudy::Instances.new(:config => @config, :global => @global)
       
       lt = rudy.list(opts[:state], opts[:group], opts[:id]) do |inst|

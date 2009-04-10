@@ -3,14 +3,14 @@
 module Rudy
   class Domains
     include Rudy::Huxtable
-    
+    include Rudy::AWS
     
     def list
       @@sdb.domains.list || []
     end
     
     def get(n=nil)
-      n = name(Rudy::RUDY_DOMAIN)
+      n = name(Rudy::DOMAIN)
       n &&= n.to_s
       doms = list.select { |domain| domain == n }
       doms = nil if doms.empty?
@@ -22,7 +22,7 @@ module Rudy
     end
     
     def name(n=nil)
-      n || Rudy::RUDY_DOMAIN
+      n || Rudy::DOMAIN
     end
     
     def create(n=nil)

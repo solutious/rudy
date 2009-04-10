@@ -3,7 +3,7 @@
 module Rudy
   class Groups
     include Rudy::Huxtable
-   
+    include Rudy::AWS
    
     def create(n=nil, description=nil, opts={})
       n ||= name(n)
@@ -73,7 +73,7 @@ module Rudy
       
       raise "You must supply a group name" unless n
       raise "Group does not exist" unless @@ec2.groups.exists?(n)
-      @logger.puts "#{action.to_s.capitalize} access for #{n.bright}"
+      @@logger.puts "#{action.to_s.capitalize} access for #{n.bright}"
       
 
       opts[:ports] ||= [[22,22],[80,80],[443,443]]
@@ -86,7 +86,7 @@ module Rudy
       opts[:protocols].each do |protocol|
         opts[:addresses].each do |address|
           opts[:ports].each do |port|
-            @logger.puts "Ports #{port[0]}:#{port[1]} (#{protocol}) for #{opts[:addresses].join(', ')}"
+            @@logger.puts "Ports #{port[0]}:#{port[1]} (#{protocol}) for #{opts[:addresses].join(', ')}"
             @@ec2.groups.send(action, n, port[0].to_i, (port[1] || port[0]).to_i, protocol, address)
           end
         end
@@ -100,14 +100,14 @@ module Rudy
     def modify_group_rules(n=nil, group=nil, owner=nil)
       n ||= name(n)
       
-      owner ||= @config.accounts.aws.accountnum
+      owner ||= @@config.accounts.aws.accountnum
       
       raise "You must supply a group name" unless n
       raise "Group does not exist" unless @@ec2.groups.exists?(n)
       raise "Owner to authorize not specified" unless owner
       raise "Group to authorize not specified" unless owner
       
-      @logger.puts "#{action.to_s.capitalize} access for #{n.bright}"
+      @@logger.puts "#{action.to_s.capitalize} access for #{n.bright}"
 
       @@ec2.groups.send("#{action}_group", n, group, owner)
 

@@ -51,7 +51,7 @@ module Rudy
       def time_stamp
         #return [@date, @time] if @date && @time
         now = Time.now.utc
-        datetime = Backup.format_timestamp(now).split(RUDY_DELIM)
+        datetime = Backup.format_timestamp(now).split(Rudy::DELIM)
         @unixtime = now.to_i
         @date, @time, @second = datetime
       end
@@ -66,7 +66,7 @@ module Rudy
       def to_query(more=[], remove=[])
         criteria = [:rtype, :zone, :environment, :role, :position, :path, :date, :time, :second, *more]
         criteria -= [*remove].flatten
-        query = "select * from #{RUDY_DOMAIN} where unixtime > '0' "
+        query = "select * from #{Rudy::DOMAIN} where unixtime > '0' "
         criteria.each do |n|
           query << "and #{n} = '#{self.send(n.to_sym)}'"
         end
@@ -88,7 +88,7 @@ module Rudy
       # 20090224-1813-36
       def Backup.format_timestamp(dat)
         mon, day, hour, min, sec = [dat.mon, dat.day, dat.hour, dat.min, dat.sec].collect { |v| v.to_s.rjust(2, "0") }
-        [dat.year, mon, day, RUDY_DELIM, hour, min, RUDY_DELIM, sec].join
+        [dat.year, mon, day, Rudy::DELIM, hour, min, Rudy::DELIM, sec].join
       end
       
       # Times are converted to UTC
@@ -99,7 +99,7 @@ module Rudy
         dirs = pat.split sep if pat
         dirs.shift while dirs && (dirs[0].nil? || dirs[0].empty?)
         timestamp = Backup.format_timestamp(dat.utc)
-        [rtype, zon, env, rol, pos, dirs, timestamp].flatten.join(RUDY_DELIM)
+        [rtype, zon, env, rol, pos, dirs, timestamp].flatten.join(Rudy::DELIM)
       end
       
       
@@ -110,22 +110,22 @@ module Rudy
       end
       
       def save
-        @@sdb.store(RUDY_DOMAIN, name, self.to_hash, :replace) # Always returns nil
+        @@sdb.store(Rudy::DOMAIN, name, self.to_hash, :replace) # Always returns nil
         true
       end
       
       def destroy
-        @@sdb.destroy(RUDY_DOMAIN, name)
+        @@sdb.destroy(Rudy::DOMAIN, name)
         true
       end
       
       def refresh
-        h = @@sdb.get(RUDY_DOMAIN, name) || {}
+        h = @@sdb.get(Rudy::DOMAIN, name) || {}
         from_hash(h)
       end
       
       def Backup.get(dname)
-        h = @@sdb.get(RUDY_DOMAIN, dname) || {}
+        h = @@sdb.get(Rudy::DOMAIN, dname) || {}
         from_hash(h)
       end
       

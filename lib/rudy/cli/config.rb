@@ -34,7 +34,7 @@ module Rudy
         return if @config.nil? 
         
         
-        @option.group ||= [@global.environment, @global.role].join(RUDY_DELIM)
+        @option.group ||= [@global.environment, @global.role].join(Rudy::DELIM)
         
         return if @config.empty?
         

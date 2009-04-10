@@ -8,10 +8,10 @@ module Rudy
       def startup(opts={})
         
         routine = fetch_routine(:startup)
-        rdisks = Rudy::Disks.new(:config => @config, :global => @global)
+        rdisks = Rudy::Disks.new(:config => @@config, :global => @@global)
         
         
-        rmach = Rudy::Instances.new(:config => @config, :global => @global)
+        rmach = Rudy::Instances.new(:config => @@config, :global => @@global)
         
         # TODO: .list for debugging, .create for actual use
         instances = rmach.list(opts) do |instance| # Rudy::AWS::EC2::Instance objects

@@ -36,7 +36,7 @@ module Rudy
         rev = "01"
         criteria = ['rel', now.year, mon, day, rev]
         criteria.insert(-2, username) if username
-        tag = criteria.join(RUDY_DELIM)
+        tag = criteria.join(Rudy::DELIM)
         # Keep incrementing the revision number until we find the next one.
         tag.succ! while (valid_uri?("#{@base_uri}/#{tag}"))
         tag

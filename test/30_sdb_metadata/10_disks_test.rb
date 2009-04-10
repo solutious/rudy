@@ -26,7 +26,7 @@ module Rudy::Test
       end
       
       should "(01) have domain" do
-        assert @@sdb.domains.create(Rudy::RUDY_DOMAIN), "Domain not created (#{Rudy::RUDY_DOMAIN})"
+        assert @@sdb.domains.create(Rudy::DOMAIN), "Domain not created (#{Rudy::DOMAIN})"
       end
       
       
@@ -39,7 +39,7 @@ module Rudy::Test
         end
         
         disk_name.shift   # don't use region in disk name, but add the disk identifier and path
-        disk_name = [Rudy.identifier(:disk), disk_name, 'rudy', 'disk'].join(Rudy::RUDY_DELIM)
+        disk_name = [Rudy.identifier(:disk), disk_name, 'rudy', 'disk'].join(Rudy::DELIM)
         
         assert_equal disk_name, disk.name, "Unexpected disk name #{disk.name}"
         assert disk.valid?, "Disk not valid"
@@ -48,7 +48,7 @@ module Rudy::Test
       end
       
       should "(20) list metadata" do
-        q = "select * from #{Rudy::RUDY_DOMAIN}"
+        q = "select * from #{Rudy::DOMAIN}"
 
         items = @@sdb.select(q)
         assert_equal Hash, items.class
@@ -57,7 +57,7 @@ module Rudy::Test
       end
       
       should "(22) list disk metadata with select" do
-        q = "select * from #{Rudy::RUDY_DOMAIN} where rtype = 'disk'"
+        q = "select * from #{Rudy::DOMAIN} where rtype = 'disk'"
         items = @@sdb.select(q)
         assert_equal Hash, items.class
         assert items.size > 0, "No disks"
@@ -65,9 +65,9 @@ module Rudy::Test
       end
       
       should "(23) list disk metadata with query" do
-        q = "select * from #{Rudy::RUDY_DOMAIN} where rtype = 'disk'"
+        q = "select * from #{Rudy::DOMAIN} where rtype = 'disk'"
         
-        items = @@sdb.query_with_attributes(Rudy::RUDY_DOMAIN, "['rtype' = 'disk']")
+        items = @@sdb.query_with_attributes(Rudy::DOMAIN, "['rtype' = 'disk']")
         assert_equal Hash, items.class
         assert items.size > 0, "No disks"
         assert_equal @@global.zone.to_s, items.values.first['zone'].first.to_s
@@ -82,11 +82,11 @@ module Rudy::Test
       
       
       should "(99) destroy disk metadata" do
-        q = "select * from #{Rudy::RUDY_DOMAIN} where rtype = 'disk'"
+        q = "select * from #{Rudy::DOMAIN} where rtype = 'disk'"
         items = @@sdb.select(q)
         assert_equal Hash, items.class
         items.keys.each do |item|
-          @@sdb.destroy(Rudy::RUDY_DOMAIN, item)
+          @@sdb.destroy(Rudy::DOMAIN, item)
         end
       end
       

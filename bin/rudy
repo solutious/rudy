@@ -8,8 +8,8 @@
 # 
 
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib') # Put our local lib in first place
+%w{drydock caesars rye}.each { |dir| $: << File.join(File.dirname(__FILE__), '..', '..', dir, 'lib') }
 
-require 'date'
 require 'drydock'
 require 'rudy'
 require 'rudy/cli'
@@ -27,7 +27,7 @@ module RudyCLI
   global :S, :secretkey, String, "AWS Secret Access Key"
   #global :R, :region, String, "Connect to a specific EC2 region (ie: #{Rudy::DEFAULT_REGION})"
   global :n, :nocolor, "Disable output colors"
-  global :f, :config, String, "Specify another configuration file to read (ie: #{Rudy::RUDY_CONFIG_FILE})"
+  global :f, :config, String, "Specify another configuration file to read (ie: #{Rudy::CONFIG_FILE})"
   global :z, :zone, String, "Connect to a specific EC2 zone (ie: #{Rudy::DEFAULT_ZONE})"
   global :e, :environment, String, "Connect to the specified environment (ie: #{Rudy::DEFAULT_ENVIRONMENT})"
   global :r, :role, String, "Connect to a machine with the specified role (ie: #{Rudy::DEFAULT_ROLE})"
@@ -217,13 +217,13 @@ module RudyCLI
     puts "Rudy: Not your grandparent's deployment tool!"
   end
 
-  desc "Generates a configuration template to #{Rudy::RUDY_CONFIG_FILE}"
+  desc "Generates a configuration template to #{Rudy::CONFIG_FILE}"
   command :generate_config do |obj|
-    unless File.exists?(Rudy::RUDY_CONFIG_FILE)
+    unless File.exists?(Rudy::CONFIG_FILE)
       Rudy::Config.init_config_dir
-      puts "Add your AWS credentials to #{Rudy::RUDY_CONFIG_FILE}"
+      puts "Add your AWS credentials to #{Rudy::CONFIG_FILE}"
     else
-      puts "#{Rudy::RUDY_CONFIG_FILE} already exists"
+      puts "#{Rudy::CONFIG_FILE} already exists"
     end
   end
 
@@ -231,7 +231,7 @@ module RudyCLI
   desc "Initialize Rudy configuration"
   command :init do |obj|
   
-    unless File.exists?(Rudy::RUDY_CONFIG_FILE)
+    unless File.exists?(Rudy::CONFIG_FILE)
       Rudy::Config.init_config_dir
     end
   
@@ -251,7 +251,7 @@ module RudyCLI
     
     rescue Rudy::NoConfig => ex
       puts "AWS credentials must be configured to continue."
-      puts "You can modify these in #{Rudy::RUDY_CONFIG_FILE}"
+      puts "You can modify these in #{Rudy::CONFIG_FILE}"
       exit 1
     end
   
@@ -354,7 +354,7 @@ module RudyCLI
 
   # -------------------------------------------  UGLY STUFFS  --------
   # ------------------------------------------------------------------
-  debug :off
+  debug :on
   default :status
   #capture :stderr       
   before do

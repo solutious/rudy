@@ -18,15 +18,15 @@ module Rudy
       end
       
       def destroy_metadata
-        @sdb.domains.destroy(RUDY_DOMAIN)
+        @sdb.domains.destroy(Rudy::DOMAIN)
       end
       
       # TODO: WHERE TO CREATE DOMAIN???????????????????????????
       
       def create_domain
-        puts "Creating SimpleDB Domain called #{RUDY_DOMAIN}".bright
+        puts "Creating SimpleDB Domain called #{Rudy::DOMAIN}".bright
         rmanager = Rudy::Manager.new(:config => @config, :global => @global)
-        rmanager.create_domain(RUDY_DOMAIN)
+        rmanager.create_domain(Rudy::DOMAIN)
         doms = rmanager.domains || []
         puts "Domains: #{doms.join(", ")}"
       end

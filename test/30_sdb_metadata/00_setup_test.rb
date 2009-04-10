@@ -2,13 +2,14 @@ require File.join(File.dirname(__FILE__), '..', 'helper')
 
 module Rudy::Test
   class Case_30_MetaData < Test::Unit::TestCase
-    include Rudy::AWS
     
     @@logger = StringIO.new
     @@rmach = Rudy::Instances.new(:logger => @@logger)
     @@global = @@rmach.global
     @@config = @@rmach.config
     @@zone = @@rmach.global.zone.to_s
+    @@ec2 = @@rmach.ec2
+    @@sdb = @@rmach.sdb
     
 
     

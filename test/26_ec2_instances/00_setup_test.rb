@@ -9,13 +9,13 @@ module Rudy::Test
   # DO NOT RUN THIS TEST ON A PRODUCTION AWS ACCOUNT!!
   #
   class Case_26_EC2 < Test::Unit::TestCase
-    include Rudy::AWS
     
     @@logger = STDERR #StringIO.new
     @@rmach = Rudy::Instances.new(:logger => @@logger)
     @@global = @@rmach.global
     @@config = @@rmach.config
     @@zone = @@rmach.global.zone.to_s
+    @@ec2 = @@rmach.ec2
     
     context "#{name}_10 Setup" do
       should "(10) have class variables setup" do

@@ -6,6 +6,7 @@
 #
 #     ~/.rudy/config
 #     ./.rudy/config
+#
 #     /etc/rudy/*.rb
 #     ./.rudy/*.rb
 #     ./Rudyfile
@@ -17,12 +18,27 @@
 #
 # There are three sections: accounts, defaults, machines. 
 # By convention, accounts and defaults go in ~/.rudy/config or ./.rudy/config 
-# We encourage this to help avoid checking in AWS keys into source control.
+# machines configuration goes in ./Rudyfile or ./config/rudy/machines.rb
 
 
 # ---------------------------------------------------------  MACHINES  --------
 # The machines block describes the "physical" characteristics
 # of your environments. 
 machines do
-  
+  env :rudydev do
+    role :app do
+              
+      disks do
+        path "/rudy/example1" do
+          size 4
+          device "/dev/sdr"
+        end
+        path "/rudy/example2" do
+          size 5 # Ignored when restoring from a snapshot
+          device "/dev/sdm"
+        end
+      end
+      
+    end
+  end
 end

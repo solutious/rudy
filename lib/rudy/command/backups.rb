@@ -18,17 +18,17 @@ def Backup.for_disk(sdb, disk, max=50)
 end
 
 def Backup.get(sdb, name)
-  object = sdb.get_attributes(RUDY_DOMAIN, name)
+  object = sdb.get_attributes(Rudy::DOMAIN, name)
   raise "Object #{name} does not exist!" unless object.has_key?(:attributes) && !object[:attributes].empty?
   self.from_hash(object[:attributes])
 end
 
 def Backup.save(sdb, obj, replace = :replace)
-  sdb.store(RUDY_DOMAIN, obj.name, obj.to_hash, replace)
+  sdb.store(Rudy::DOMAIN, obj.name, obj.to_hash, replace)
 end
 
 def Backup.list(sdb, zon, env=nil, rol=nil, pos=nil, path=nil, date=nil)
-  query = "select * from #{RUDY_DOMAIN} where "
+  query = "select * from #{Rudy::DOMAIN} where "
   query << "rtype = '#{rtype}' "
   query << " and zone = '#{zon}'" if zon
   query << " and environment = '#{env}'" if env
@@ -51,7 +51,7 @@ end
 
 def Backup.destroy(sdb, name)
   back = Backup.get(sdb, name) # get raises an exception if the disk doesn't exist
-  sdb.destroy(RUDY_DOMAIN, name)
+  sdb.destroy(Rudy::DOMAIN, name)
   true # wtf: RightAws::SimpleDB doesn't tell us whether it succeeds. We'll assume!
 end
 

@@ -24,6 +24,8 @@ module Rudy
         String.disable_color if @global.nocolor
         Rudy.enable_quiet if @global.quiet
         
+        puts @global.config.class
+        
         @config = Rudy::Config.new
         @config.look_and_load(@global.config)
         
@@ -77,7 +79,7 @@ module Rudy
 
         
         # TODO: enforce home directory permissions
-        #if File.exists?(RUDY_CONFIG_DIR)
+        #if File.exists?(Rudy::CONFIG_DIR)
         #  puts "Checking #{check_environment} permissions..."
         #end
         

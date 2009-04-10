@@ -37,7 +37,7 @@ module Rudy
       
       def volume_create_valid?
         raise "You must supply a volume size. See rudy volume -h" unless @option.size
-        raise "You have no zone configured. Check #{RUDY_CONFIG_FILE}." unless @global.zone
+        raise "You have no zone configured. Check #{Rudy::CONFIG_FILE}." unless @global.zone
         true
       end
       def volume_create

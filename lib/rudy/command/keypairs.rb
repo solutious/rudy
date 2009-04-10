@@ -2,6 +2,7 @@
 module Rudy
   class KeyPairs
     include Rudy::Huxtable
+    include Rudy::AWS
     
     
     def create(n=nil, opts={})
@@ -20,16 +21,16 @@ module Rudy
       raise ErrorCreatingKeyPair, n unless kp.is_a?(Rudy::AWS::EC2::KeyPair)
       
       Rudy.trap_known_errors do
-        @logger.puts "Writing #{self.path(n)}"
+        @@logger.puts "Writing #{self.path(n)}"
         Rudy::Utils.write_to_file(self.path(n), kp.private_key, 'w', 0600)
       end
       
       Rudy.trap_known_errors do
-        @logger.puts "Writing #{self.public_path(n)}"
+        @@logger.puts "Writing #{self.public_path(n)}"
         Rudy::Utils.write_to_file(self.public_path(n), kp.public_key, 'w', 0600)
       end
       
-      @logger.puts "NOTE: If you move #{self.path(n)} you need to also update your Rudy machines config.".color(:blue)
+      @@logger.puts "NOTE: If you move #{self.path(n)} you need to also update your Rudy machines config.".color(:blue)
       
       kp
     end
@@ -45,13 +46,13 @@ module Rudy
     def destroy(n=nil)
       n ||= name(n)
       raise "KeyPair #{n} doesn't exist" unless exists?(n)
-      @logger.puts "No private key file: #{self.path(n)}. Continuing..." unless File.exists?(self.path(n))
-      @logger.puts "Unregistering KeyPair with Amazon"
+      @@logger.puts "No private key file: #{self.path(n)}. Continuing..." unless File.exists?(self.path(n))
+      @@logger.puts "Unregistering KeyPair with Amazon"
       ret = @@ec2.keypairs.destroy(n)
       if ret
         ret = delete_files(n) if ret # only delete local file if remote keypair is successfully destroyed
       else
-        @logger.puts "Keypair not destroyed successfully."
+        @@logger.puts "Keypair not destroyed successfully."
       end
       ret
     end
@@ -113,13 +114,18 @@ module Rudy
   private
     def delete_files(n=nil)
       n ||= name(n)
-      @logger.puts "Deleting #{self.path(n)}"
-      #return false unless File.exists?(self.path(n))
-      ret = (File.unlink(self.path(n)) > 0)      # raise exception on error. handle?
       
-      @logger.puts "Deleting #{self.public_path(n)}"
-      #return false unless File.exists?(self.public_path(n))
-      ret && (File.unlink(self.public_path(n)) > 0)
+      if File.exists? self.path(n)  
+        @@logger.puts "Deleting #{self.path(n)}"
+        ret = (File.unlink(self.path(n)) > 0) rescue false;
+      else
+        ret = true
+      end
+      if File.exists?(self.public_path(n))
+        @@logger.puts "Deleting #{self.public_path(n)}" 
+        ret = ret && (File.unlink(self.public_path(n)) > 0)
+      end
+      ret
     end
 
   end

@@ -14,7 +14,7 @@ require 'fileutils'
 # name.
 class Storable
   unless defined?(VERSION) # We can assume all are defined
-    VERSION = 2
+    VERSION = 4
     NICE_TIME_FORMAT  = "%Y-%m-%d@%H:%M:%S".freeze 
     SUPPORTED_FORMATS = %w{tsv csv yaml json}.freeze 
   end
@@ -30,12 +30,6 @@ class Storable
   end
   
   # TODO: from_args([HASH or ordered params])
-  
-  def init
-    # NOTE: I think this can be removed
-    self.class.send(:class_variable_set, :@@field_names, []) unless class_variable_defined?(:@@field_names)
-    self.class.send(:class_variable_set, :@@field_types, []) unless class_variable_defined?(:@@field_types)
-  end
   
   # Accepts field definitions in the one of the follow formats:
   #
@@ -110,10 +104,9 @@ class Storable
 
   # Create a new instance of the object from a hash.
   def self.from_hash(from={})
+    return nil if !from || from.empty?
     me = self.new
-    
-    return me if !from || from.empty?
-    
+        
     fnames = field_names
     fnames.each_with_index do |key,index|
       

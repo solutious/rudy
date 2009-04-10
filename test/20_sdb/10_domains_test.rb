@@ -6,20 +6,20 @@ module Rudy::Test
 
     end
     
-    xcontext "#{name}_10 Domains" do
+    context "#{name}_10 Domains" do
       
       setup do
-        @domain_list = @@sdb.domains.list || []
+        @domain_list = @@sdb.list_domains || []
         @domain = @domain_list.first
       end
       
       should "(10) create domain" do
         dname = 'test_' << Rudy::Utils.strand
-        assert @@sdb.domains.create(dname), "Domain not created (#{dname})"
+        assert @@sdb.create_domain(dname), "Domain not created (#{dname})"
       end
       
       should "(20) list domains" do
-        domain_list = @@sdb.domains.list
+        domain_list = @@sdb.list_domains
         assert domain_list.is_a?(Array), "Not an Array"
         assert !domain_list.empty?, "No Domains"
       end
@@ -100,10 +100,10 @@ module Rudy::Test
         assert !@domain.nil?, "No domain"
         
         @domain_list.each do |domain|
-          assert @@sdb.domains.destroy(domain), "Not destroyed (#{domain})"
+          assert @@sdb.destroy_domain(domain), "Not destroyed (#{domain})"
         end
         
-        domain_list = @@sdb.domains.list
+        domain_list = @@sdb.list_domains
         assert domain_list.empty?, "Not empty"
       end
       

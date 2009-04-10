@@ -3,10 +3,9 @@ require File.join(File.dirname(__FILE__), '..', 'helper')
 module Rudy::Test
 
   class Case_05_Config < Test::Unit::TestCase
-    include Rudy::AWS # If we include Huxtable, we won't need to grab global and config form rmach
-    
+
     @@logger = STDERR #StringIO.new
-    @@rmach = Rudy::Instances.new(:logger => @@logger)
+    @@rmach = Rudy::Instances.new
     @@global = @@rmach.global
     @@config = @@rmach.config
     @@zone = @@rmach.global.zone.to_s

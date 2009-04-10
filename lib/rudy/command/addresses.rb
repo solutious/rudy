@@ -3,6 +3,7 @@
 module Rudy
   class Addresses
     include Rudy::Huxtable
+    include Rudy::AWS
     
     def create
       address = @@ec2.addresses.create

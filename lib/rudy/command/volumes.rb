@@ -2,15 +2,16 @@
 module Rudy
   class Volumes
     include Rudy::Huxtable
+    include Rudy::AWS
     
 
     def create(size, zone=nil, snapshot=nil)
       raise "No size supplied" unless size
-      zone ||= @global.zone
+      zone ||= @@global.zone
       
-      @logger.puts "Creating Volume "
+      @@logger.puts "Creating Volume "
       vol = @@ec2.volumes.create(size, zone, snapshot)
-      Rudy.waiter(1, 30, @logger) do
+      Rudy.waiter(1, 30, @@logger) do
         vol = get(vol.awsid) # update the volume until it says it's available
         (vol && vol.status == "available")
       end
@@ -27,16 +28,16 @@ module Rudy
       
       ret = false
       begin
-        @logger.puts "Attaching Volume... "
+        @@logger.puts "Attaching Volume... "
         ret = @@ec2.volumes.attach(instance, volume.awsid, device)
         raise "Unknown error" unless ret 
         
-        Rudy.waiter(1, 30, @logger) do
+        Rudy.waiter(1, 30, @@logger) do
           ret = attached?(volume.awsid)
         end
         
       rescue => ex
-        @logger.puts ex.backtrace if debug?
+        @@logger.puts ex.backtrace if debug?
         raise "Error attaching #{volume.awsid} to #{instance}: #{ex.message}"
       end
       
@@ -68,7 +69,7 @@ module Rudy
       
       ret = false
       begin
-        @logger.puts "Dettaching #{volume.awsid} "
+        @@logger.puts "Dettaching #{volume.awsid} "
         @@ec2.volumes.detach(volume.awsid)
         Rudy.waiter(1, 30) do
           ret = @@ec2.volumes.available?(volume.awsid)

@@ -1,6 +1,7 @@
 
 libdir = File.join(File.dirname(__FILE__), '..', 'lib')
-$LOAD_PATH.unshift libdir unless $LOAD_PATH.include?(libdir)
+$:.unshift libdir
+%w{drydock caesars rye}.each { |dir| $: << File.join(File.dirname(__FILE__), '..', '..', dir, 'lib') }
  
 require 'test/unit'
 require 'shoulda'

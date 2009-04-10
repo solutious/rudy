@@ -1,5 +1,5 @@
 
-module Rudy::AWS
+module Rudy; module AWS
   class EC2
     @@logger = StringIO.new
 
@@ -25,4 +25,4 @@ module Rudy::AWS
   
   end
   
-end
+end; end

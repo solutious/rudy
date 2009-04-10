@@ -50,7 +50,7 @@ module Rudy
         puts "Deleting..."
         to_be_deleted.each do |snap_id, backup|
           print " -> #{backup.name}... "
-          @sdb.destroy(RUDY_DOMAIN, backup.name)
+          @sdb.destroy(Rudy::DOMAIN, backup.name)
           puts "done"
         end
         
@@ -82,7 +82,7 @@ module Rudy
           puts "Continuing..."
         ensure
           puts " -> deleting metadata..."
-          @sdb.destroy(RUDY_DOMAIN, name)
+          @sdb.destroy(Rudy::DOMAIN, name)
         end
         puts "Done."
       end

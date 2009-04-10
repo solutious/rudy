@@ -8,7 +8,7 @@ module Rudy::Routines
     def execute(instance, routine, before_or_after)
       return false unless instance
       
-      rscripts = @config.routines.find_deferred(@global.environment, @global.role, routine, before_or_after) || []
+      rscripts = @@config.routines.find_deferred(@@global.environment, @@global.role, routine, before_or_after) || []
       rscripts &&= [rscripts].flatten # Make sure it's an Array
       if !rscripts || rscripts.empty?
         @logger.puts "No scripts defined."
@@ -16,8 +16,8 @@ module Rudy::Routines
       end
       
       # The config file will contain settings from ~/.rudy/config
-      script_config = @config.routines.find_deferred(@global.environment, @global.role, :config) || {}        
-      script_config[:global] = @global.marshal_dump
+      script_config = @@config.routines.find_deferred(@@global.environment, @@global.role, :config) || {}        
+      script_config[:global] = @@global.marshal_dump
       script_config[:global].reject! { |n,v| n == :cert || n == :privatekey }
       script_config_filename = "#{routine}_config.yaml"
       

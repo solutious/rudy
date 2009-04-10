@@ -2,7 +2,7 @@
 	s.name = "rudy"
   s.rubyforge_project = 'rudy'
 	s.version = "0.5.1"
-	s.summary = "Not your grandparent's deployment tool."
+	s.summary = "Rudy: Not your grandparent's deployment tool."
 	s.description = s.summary
 	s.author = "Delano Mandelbaum"
 	s.email = "delano@solutious.com"
@@ -115,13 +115,12 @@
   
   s.extra_rdoc_files = %w[README.rdoc LICENSE.txt CHANGES.txt]
   s.has_rdoc = true
-  s.rdoc_options = ["--line-numbers", "--title", "Rudy: #{s.summary}", "--main", "README.rdoc"]
+  s.rdoc_options = ["--line-numbers", "--title", s.summary, "--main", "README.rdoc"]
   s.require_paths = %w[lib]
   s.rubygems_version = '1.1.1'
   
   s.add_dependency 'echoe'
   s.add_dependency 'amazon-ec2'
-  s.add_dependency 'aws-sdb'
   s.add_dependency 'net-ssh'
   s.add_dependency 'net-scp'
   s.add_dependency 'net-ssh-gateway'
@@ -136,5 +135,12 @@
   #s.add_development_dependency('jgre-monkeyspecdoc', '>= 0.1.0')
   #s.add_development_dependency('thoughtbot-shoulda', '>= 0.1.0')
   
-    
 end
+
+__END__
+
+RELEASE CHECKLIST
+
+* Disable debug mode
+* Disable dev $LOAD_PATH 
+

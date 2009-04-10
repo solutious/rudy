@@ -49,7 +49,6 @@ NOTE: If your are not installing via RubyGems, you will need to make sure the Ru
 * Net::SSH[http://net-ssh.rubyforge.org/]
 * Net::SCP[http://net-ssh.rubyforge.org/]
 * amazon-ec2[http://github.com/grempe/amazon-ec2]
-* aws_sdb[http://rubyforge.org/projects/aws-sdb/]
 * Drydock[http://github.com/delano/drydock]
 * Caesars[http://github.com/delano/caesars]
 * Rye[http://github.com/delano/rye]
@@ -57,13 +56,13 @@ NOTE: If your are not installing via RubyGems, you will need to make sure the Ru
 
 == Common Errors
 
-* <tt>`require': no such file to load -- amazon-ec2 (LoadError)</tt>
+* <tt>"`require': no such file to load -- amazon-ec2 (LoadError)"</tt>
   * You're probably running a mix of Rubygem and non-Rubygem libraries. Ryan Tomayko has you covered: http://gist.github.com/54177
 
-* <tt>The request signature we calculated does not match the signature you provided.</tt>
+* <tt>"The request signature we calculated does not match the signature you provided."</tt>
   * Check that your Amazon Web Service access key and secret key are correct
 
-* <tt>AWS was not able to validate the provided access credentials</tt>
+* <tt>"AWS was not able to validate the provided access credentials"</tt>
   * If it's a new Amazon Accounts, you need to sign up for EC2, SDB, and S3. 
 
 
@@ -85,9 +84,12 @@ NOTE: If your are not installing via RubyGems, you will need to make sure the Ru
 
 == Credits
 
+* aws_sdb code by Tim Dysinger (http://dysinger.net)
+* Escape, Copyright (C) 2006,2007 Tanaka Akira  <akr@fsij.org>
 * Delano Mandelbaum (delano@solutious.com)
 * Keshia Knight Pulliam (rudy@solutious.com)
-  
+
+
 == License
 
 See: LICENSE.txt

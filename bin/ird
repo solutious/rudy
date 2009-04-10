@@ -28,7 +28,7 @@ module CLI
   global :S, :secretkey, String, "AWS Secret Access Key"
   #global :R, :region, String, "Connect to a specific EC2 region (ie: #{Rudy::DEFAULT_REGION})"
   #global :n, :nocolor, "Disable output colors"
-  global :f, :config, String, "Specify another configuration file to read (ie: #{Rudy::RUDY_CONFIG_FILE})"
+  global :f, :config, String, "Specify another configuration file to read (ie: #{Rudy::CONFIG_FILE})"
   global :z, :zone, String, "Connect to a specific EC2 zone (ie: #{Rudy::DEFAULT_ZONE})"
   global :e, :environment, String, "Connect to the specified environment (ie: #{Rudy::DEFAULT_ENVIRONMENT})"
   global :r, :role, String, "Connect to a machine with the specified role (ie: #{Rudy::DEFAULT_ROLE})"

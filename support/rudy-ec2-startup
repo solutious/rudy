@@ -33,8 +33,8 @@ METADATA = 'http://169.254.169.254/2008-02-01/meta-data'
 
 METADATAPARAMS = ['instance-id', 'instance-type']
 
-RUDY_CONFIG_DIR=File.join('.rudy')
-RUDY_CONFIG_FILE=File.join('config')
+Rudy::CONFIG_DIR=File.join('.rudy')
+Rudy::CONFIG_FILE=File.join('config')
 
 module Rudy
   module EC2Startup
@@ -91,9 +91,9 @@ module Rudy
           # (when we're not running as that user.) 
           config[:userdata].each_pair do |n,hash|
             fileparts = (n == :root) ? ['/root'] : [user_home_dir(n)]
-            fileparts << RUDY_CONFIG_DIR
+            fileparts << Rudy::CONFIG_DIR
             dirpath = File.join(fileparts)
-            filepath = File.join(dirpath, RUDY_CONFIG_FILE)
+            filepath = File.join(dirpath, Rudy::CONFIG_FILE)
             
             # Backwards compatability
             if !File.directory?(dirpath)

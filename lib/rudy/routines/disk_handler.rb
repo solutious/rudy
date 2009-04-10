@@ -2,7 +2,7 @@
 
 module Rudy::Routines
   class DiskHandler
-    include Rudy::Huxtable    # @config, @global come from here
+    include Rudy::Huxtable    # @@config, @@global come from here
     
     
     # +machine+ is a Rudy::AWS::EC2::Instance object
@@ -47,26 +47,26 @@ module Rudy::Routines
           disk = Rudy::MetaData::Disk.new
           disk.path = path
           [:region, :zone, :environment, :role, :position].each do |n|
-            disk.send("#{n}=", @global.send(n)) if @global.send(n)
+            disk.send("#{n}=", @@global.send(n)) if @@global.send(n)
           end
           [:device, :size].each do |n|
             disk.send("#{n}=", props[n]) if props.has_key?(n)
           end
       
                   
-          puts "Creating volume... (#{disk.size}GB in #{@global.zone})".bright
-          volume = @ec2.volumes.create(disk.size, @global.zone)
+          puts "Creating volume... (#{disk.size}GB in #{@@global.zone})".bright
+          volume = @ec2.volumes.create(disk.size, @@global.zone)
       
           puts "Attaching #{volume[:aws_id]} to #{machine.awsid}".bright
           @ec2.volumes.attach(machine.awsid, volume[:aws_id], disk.device)
           sleep 6
           
           puts "Creating the filesystem (mkfs.ext3 -F #{disk.device})".bright
-          ssh_command machine.dns_name_public, keypairpath, @global.user, "mkfs.ext3 -F #{disk.device}"
+          ssh_command machine.dns_name_public, keypairpath, @@global.user, "mkfs.ext3 -F #{disk.device}"
           sleep 3
           
           puts "Mounting #{disk.device} to #{disk.path}".bright
-          ssh_command machine.dns_name_public, keypairpath, @global.user, "mkdir -p #{disk.path} && mount -t ext3 #{disk.device} #{disk.path}"
+          ssh_command machine.dns_name_public, keypairpath, @@global.user, "mkdir -p #{disk.path} && mount -t ext3 #{disk.device} #{disk.path}"
         
           puts "Creating disk metadata for #{disk.name}"
           disk.awsid = volume[:aws_id]
@@ -108,7 +108,7 @@ module Rudy::Routines
           
           begin
             puts "Unmounting #{this_path}..."
-            ssh_command machine.dns_name_public, keypairpath, @global.user, "umount #{this_path}"
+            ssh_command machine.dns_name_public, keypairpath, @@global.user, "umount #{this_path}"
             sleep 3
           rescue => ex
             puts "Error while unmounting #{this_path}: #{ex.message}"
@@ -173,7 +173,7 @@ module Rudy::Routines
           end
 
           puts "Mounting #{this_path} to #{vol[:aws_device]}".bright
-          ssh_command machine.dns_name_public, keypairpath, @global.user, "mkdir -p #{this_path} && mount -t ext3 #{vol[:aws_device]} #{this_path}"
+          ssh_command machine.dns_name_public, keypairpath, @@global.user, "mkdir -p #{this_path} && mount -t ext3 #{vol[:aws_device]} #{this_path}"
 
           sleep 1
         rescue => ex

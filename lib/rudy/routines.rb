@@ -30,11 +30,11 @@ module Rudy
       # removed and a warning printed. Otherwise, the routines config
       # is merged on top of the machine config and that's what we return.
       def fetch_routine(action)
-        raise "No configuration" unless @config
-        raise "No globals" unless @global
+        raise "No configuration" unless @@config
+        raise "No globals" unless @@global
         
-        disk_definitions = @config.machines.find_deferred(@global.environment, @global.role, :disks)
-        routine = @config.routines.find(@global.environment, @global.role, action)
+        disk_definitions = @@config.machines.find_deferred(@@global.environment, @@global.role, :disks)
+        routine = @@config.routines.find(@@global.environment, @@global.role, action)
         routine.disks.each_pair do |raction,disks|
           disks.each_pair do |path, props|
             routine.disks[raction][path] = disk_definitions[path].merge(props) if disk_definitions.has_key?(path)

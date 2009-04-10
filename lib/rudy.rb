@@ -64,14 +64,14 @@ require 'net/ssh/gateway'
 module Rudy
   extend self
   
-  unless defined?(RUDY_DOMAIN) # We can assume all constants are defined
+  unless defined?(Rudy::DOMAIN) # We can assume all constants are defined
     # SimpleDB accepts dashes in the domain name on creation and with the query syntax. 
     # However, with select syntax it says: "The specified query expression syntax is not valid"
-    RUDY_DOMAIN = "rudy_state".freeze
-    RUDY_DELIM  = '-'.freeze
+    DOMAIN = "rudy_state".freeze
+    DELIM  = '-'.freeze
   
-    RUDY_CONFIG_DIR = File.join(ENV['HOME'] || ENV['USERPROFILE'], '.rudy').freeze
-    RUDY_CONFIG_FILE = File.join(RUDY_CONFIG_DIR, 'config').freeze
+    CONFIG_DIR = File.join(ENV['HOME'] || ENV['USERPROFILE'], '.rudy').freeze
+    CONFIG_FILE = File.join(Rudy::CONFIG_DIR, 'config').freeze
   
     DEFAULT_REGION = 'us-east-1'.freeze 
     DEFAULT_ZONE = 'us-east-1b'.freeze 
@@ -213,7 +213,9 @@ module Rudy
     el.shift
     el.join('-')
   end
-    
+  
+
+  
   # +msg+ The message to return as a banner
   # +size+ One of: :normal (default), :huge
   # +colour+ a valid 
@@ -269,12 +271,13 @@ module Rudy
   end
 end
 
-require 'rudy/aws'
-require 'rudy/utils'               # The
 require 'rudy/config'              # order
-require 'rudy/huxtable'            # of
-require 'rudy/command/addresses'   # require
+require 'rudy/huxtable'
+require 'rudy/utils'               # The
+require 'rudy/aws'
+require 'rudy/metadata'
 require 'rudy/command/keypairs'
+require 'rudy/command/addresses'   # require
 require 'rudy/command/instances'   # statements
 require 'rudy/command/manager'     # is
 require 'rudy/command/domains'

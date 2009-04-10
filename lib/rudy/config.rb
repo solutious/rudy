@@ -36,7 +36,7 @@ module Rudy
       # The "core" config file can have any or all configuration
       # but it should generally only contain the access identifiers
       # and defaults. That's why we only load one of them. 
-      core_config_paths = [adhoc_path, cwd_path, RUDY_CONFIG_FILE]
+      core_config_paths = [adhoc_path, cwd_path, Rudy::CONFIG_FILE]
       core_config_paths.each do |path|
         next unless path && File.exists?(path)
         @paths << path
@@ -54,16 +54,15 @@ module Rudy
     end
 
     
-    
     def self.init_config_dir
       
-      unless File.exists?(RUDY_CONFIG_DIR)
-        puts "Creating #{RUDY_CONFIG_DIR}"
-        Dir.mkdir(RUDY_CONFIG_DIR, 0700)
+      unless File.exists?(Rudy::CONFIG_DIR)
+        puts "Creating #{Rudy::CONFIG_DIR}"
+        Dir.mkdir(Rudy::CONFIG_DIR, 0700)
       end
 
-      unless File.exists?(RUDY_CONFIG_FILE)
-        puts "Creating #{RUDY_CONFIG_FILE}"
+      unless File.exists?(Rudy::CONFIG_FILE)
+        puts "Creating #{Rudy::CONFIG_FILE}"
         rudy_config = Rudy::Utils.without_indent %Q{
           # Amazon Web Services 
           # Account access indentifiers.
@@ -104,7 +103,7 @@ module Rudy
             user ENV['USER'].to_sym
           end
         }
-        Rudy::Utils.write_to_file(RUDY_CONFIG_FILE, rudy_config, 'w', 0600)
+        Rudy::Utils.write_to_file(Rudy::CONFIG_FILE, rudy_config, 'w', 0600)
       end
     end
 

@@ -1,18 +1,25 @@
 RUDY, CHANGES
 
 
-#### 0.5.0 (2009-04-??) ###############################
+#### 0.5.1 (2009-04-10) ###############################
+
+* CHANGE: Removed require 'rubygems'
+* FIXED: Resolved Drydock namespace issue for rudy and ird
+
+
+#### 0.5.0 (2009-04-09) ###############################
 
 NOTE: This is a significant re-write from 0.4
 
 * CHANGE: Recommend keypair config to be in ~/.rudy/config
 * FIX: Rudy now checks for user keys specified by env-role, env, and global
 * FIX: gemspec dependency net-ssh-multi
-* NEW: rerelease command
-* NEW: --nocolor option 
-* NEW: Ruby API
-* NEW: Tests with 55% coverage
-
+* ADDED: --nocolor option 
+* ADDED: Ruby API
+* ADDED: Tests with 55% coverage
+* ADDED: Ruby API (Rudy::Instances, etc...)
+* ADDED: ird, a REPL (experimental)
+* ADDED: Now uses Rye 0.4.1
 
 #### 0.4 (2009-03-12) ###############################
 
@@ -23,18 +30,18 @@ NOTE: This is a significant re-write from 0.3
 * CHANGE: Moved generic EC2 commands to bin/rudy-ec2
 * CHANGE: Removed ambiguity of pluralized command names.
   * OLD: backups, disks, configs
-  * NEW: backup, disk, config
-* NEW: ssh and scp commands for connecting to and copying files to/from machines
-* NEW: New dependencies (trying out net-ssh)
-* NEW: Domain specific language for configuration
-* NEW: "Routines" for handling common actions. Starting, stopping, releasing, deploying. 
-* NEW: "rudy release" will create a release from the current working copy, start an instance, 
+  * ADDED: backup, disk, config
+* ADDED: ssh and scp commands for connecting to and copying files to/from machines
+* ADDED: New dependencies (trying out net-ssh)
+* ADDED: Domain specific language for configuration
+* ADDED: "Routines" for handling common actions. Starting, stopping, releasing, deploying. 
+* ADDED: "rudy release" will create a release from the current working copy, start an instance, 
 checkout the release, run routines. It needs some work still, but this already functions as
 a single command release process. 
-* NEW: "rudy start|destroy|restart|update|status". Routines allow us to have generic commands 
+* ADDED: "rudy start|destroy|restart|update|status". Routines allow us to have generic commands 
 that can be used for any machine group. These commands relate to starting new instances.
-* NEW: Extra caution when running destructive commands
-* NEW: Default ~/.rudy/config created if it doesn't exist. 
+* ADDED: Extra caution when running destructive commands
+* ADDED: Default ~/.rudy/config created if it doesn't exist. 
 
 
 #### 0.3 (2009-02-26) ###############################
@@ -43,9 +50,9 @@ NOTE: This is a significant re-write from 0.2
 
 * CHANGE: Re-written support/rudy-ec2-startup
 * CHANGE: upgrade to Drydock 0.4
-* NEW: More functionality for disks and backups
-* NEW: config commands
-* NEW: Per machine configuration (via ~/.rudy)
+* ADDED: More functionality for disks and backups
+* ADDED: config commands
+* ADDED: Per machine configuration (via ~/.rudy)
 
 
 #### 0.2 (2009-02-23) ###############################
@@ -54,18 +61,18 @@ NOTE: This is a complete re-write from 0.1
 
 * CHANGE: Added Environment variables
 * CHANGE: upgrade to drydock 0.3.3
-* NEW: All time references are converted to UTC
-* NEW: Safer "Are you sure?". Number of characters to enter is 
+* ADDED: All time references are converted to UTC
+* ADDED: Safer "Are you sure?". Number of characters to enter is 
        commiserate with amount of danger.  
-* NEW: CLIs: myaddress, addresses, images, instances, 
+* ADDED: CLIs: myaddress, addresses, images, instances, 
        disks, connect, copy, stage, backups, volumes
-* NEW: Metadata storage to SimpleDB for disks, backups
-* NEW: Creates EBS volumes based on startup from metadata
-* NEW: Automated release process
-* NEW: Automated creation of machine images
-* NEW: Partial support for regions and zones
-* NEW: Manage system based on security groups. 
-* NEW: "rudy groups" overhaul. Display, creates, destroys groups. 
+* ADDED: Metadata storage to SimpleDB for disks, backups
+* ADDED: Creates EBS volumes based on startup from metadata
+* ADDED: Automated release process
+* ADDED: Automated creation of machine images
+* ADDED: Partial support for regions and zones
+* ADDED: Manage system based on security groups. 
+* ADDED: "rudy groups" overhaul. Display, creates, destroys groups. 
 
 
 

@@ -3,28 +3,38 @@
 Rudy is a development and deployment tool for Amazon EC2. It's both a command-line tool and Ruby library. Here's an example from both for creating an EC2 security group:
 
      $ rudy group --create
-		 
-		 OR
-		 
+
+     OR
+     
      rgroup = Rudy::Groups.new
      rgroup.create
 
 
 == Installation
 
-Step 1 (install the gem):
+=== Step 1 (get Rudy on to your machine):
 
-     $ sudo gem install rudy
-     $ sudo gem install solutious-rudy --source http://gems.github.com/
-     $ git clone git://github.com/solutious/rudy.git
+Via Rubygems, one of:
 
-Step 2 (initialize your configuration):
+  $ sudo gem install rudy
+  $ sudo gem install solutious-rudy --source http://gems.github.com/
+
+Via GitHub:
+  $ git clone git://github.com/solutious/rudy.git
+
+Via download:
+* rudy-0.5.1.tar.gz[http://github.com/solutious/rudy/tarball/rudy-0.5.1]
+* rudy-0.5.1.zip[http://github.com/solutious/rudy/zipball/rudy-0.5.1]
+
+NOTE: If your are not installing via RubyGems, you will need to make sure the Ruby dependencies (see below) are installed and in your LOAD_PATH. 
+
+=== Step 2 (initialize your configuration):
 
      $ rudy generate-config
      [modify ~/.rudy/config]
      $ rudy init
 
-Step 3 (get to work with EC2):
+=== Step 3 (start working with EC2):
 
      $ rudy group --create
      $ rudy keypair --create
@@ -33,22 +43,25 @@ Step 3 (get to work with EC2):
 
 == Dependencies:
 
-* OpenSSH
-* Net::SSH
-* Net::SCP
-* amazon-ec2
-* aws_sdb
-* Drydock
-* Caesars
-* Rye
+* OpenSSH[http://www.openssh.com/]
+* Net::SSH[http://net-ssh.rubyforge.org/]
+* Net::SCP[http://net-ssh.rubyforge.org/]
+* amazon-ec2[http://github.com/grempe/amazon-ec2]
+* aws_sdb[http://rubyforge.org/projects/aws-sdb/]
+* Drydock[http://github.com/delano/drydock]
+* Caesars[http://github.com/delano/caesars]
+* Rye[http://github.com/delano/rye]
 
 
 == Common Errors
 
-* "The request signature we calculated does not match the signature you provided."
+* <tt>`require': no such file to load -- amazon-ec2 (LoadError)</tt>
+  * You're probably running a mix of Rubygem and non-Rubygem libraries. Ryan Tomayko has you covered: http://gist.github.com/54177
+
+* <tt>The request signature we calculated does not match the signature you provided.</tt>
   * Check that your Amazon Web Service access key and secret key are correct
 
-* "AWS was not able to validate the provided access credentials"
+* <tt>AWS was not able to validate the provided access credentials</tt>
   * If it's a new Amazon Accounts, you need to sign up for EC2, SDB, and S3. 
 
 
@@ -72,7 +85,7 @@ Step 3 (get to work with EC2):
 
 * Delano Mandelbaum (delano@solutious.com)
 * Keshia Knight Pulliam (rudy@solutious.com)
-	
+  
 == License
 
 See: LICENSE.txt

@@ -3,25 +3,20 @@ require 'ostruct'
 
 module Tryouts
   
-  def before(&b)
-    b.call
-  end
-  def after(&b)
-    at_exit &b
-  end
-  
-  
   #    tryout :name do
   #       ...
   #    end
   def tryout(name, &b)
+    puts '-'*50
     puts "Running#{@poop}: #{name}"
     begin
       b.call
-      puts $/*2
-      sleep 1
+      sleep 0.1
     rescue Interrupt
-    end
+    rescue => ex
+      STDERR.puts "Tryout error: #{ex.message}"
+    end  
+      puts $/*2
   end
   
   # Ignore everything
@@ -36,5 +31,3 @@ module Tryouts
   end
   
 end
-
-include Tryouts

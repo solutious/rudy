@@ -49,6 +49,7 @@ module Rudy
       @paths += Dir.glob(File.join(cwd, 'config', 'rudy', '*.rb')) || []
       @paths += Dir.glob(File.join(cwd, '.rudy', '*.rb')) || []
       @paths &&= @paths.uniq
+      
       refresh
     end
 

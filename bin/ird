@@ -9,8 +9,6 @@
 
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib') # Put our local lib in first place
 
-require 'rubygems' unless defined?(Gem)
-
 # SEE: http://github.com/rubyspec/matzruby/blob/a34130eb7c4ecc164115a59aa1b76c643bd98202/lib/irb/xmp.rb
 # SEE: http://github.com/blackwinter/wirble/tree/master
 require "irb"
@@ -45,7 +43,7 @@ end
 
 
 default :interactive
-debug :off
+debug :on
 desc "An interactive REPL for Rudy."
 usage "#{$0} [global options]"
 command :interactive do |obj|

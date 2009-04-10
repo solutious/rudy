@@ -58,11 +58,6 @@ Step 3 (get to work with EC2):
 * RubyForge[http://rubyforge.org/projects/rudy]
 * Inspiration[http://www.youtube.com/watch?v=CgaiIW5Rzes]
 
-== Credits
-
-* Delano Mandelbaum (delano@solutious.com)
-* Keshia Knight Pulliam (rudy@solutious.com)
-
 
 == Thanks
 
@@ -72,6 +67,12 @@ Step 3 (get to work with EC2):
   * Caleb Buxton
   * Colin Brumelle
 
+
+== Credits
+
+* Delano Mandelbaum (delano@solutious.com)
+* Keshia Knight Pulliam (rudy@solutious.com)
+	
 == License
 
 See: LICENSE.txt

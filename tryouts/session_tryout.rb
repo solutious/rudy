@@ -2,8 +2,6 @@
 
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 
-
-require 'rubygems'
 require 'session'
 require 'net/ssh'
 require 'rye'

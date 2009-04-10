@@ -5,6 +5,8 @@ module Rudy
   module Huxtable
     include Rudy::AWS
     
+    # TODO: investigate @@debug bug. When this is true, Caesars.debug? returns true
+    # too. It's probably some include thing. 
     @@debug = false
 
     attr_accessor :config
@@ -90,7 +92,7 @@ module Rudy
       Rudy.enable_quiet if @global.quiet
     end
     
-    def debug?; @@debug && @@debug == true; end
+    def debug?; @@debug == true; end
     
     def check_keys
       raise "No EC2 .pem keys provided" unless has_pem_keys?

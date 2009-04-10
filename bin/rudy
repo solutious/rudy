@@ -9,7 +9,6 @@
 
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib') # Put our local lib in first place
 
-require 'rubygems' unless defined? Gem
 require 'date'
 require 'drydock'
 require 'rudy'

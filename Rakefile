@@ -1,4 +1,4 @@
-require 'rubygems'
+
 require 'rake/clean'
 require 'rake/gempackagetask'
 require 'hanna/rdoctask'
@@ -76,7 +76,6 @@ namespace :shoulda do
     $LOAD_PATH.unshift("test")
 
     require 'test/unit'
-    require 'rubygems'
     require 'active_support'
 
     # bug in test unit.  Set to true to stop from running.

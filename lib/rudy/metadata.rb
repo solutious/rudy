@@ -27,7 +27,6 @@ module Rudy
     module ObjectBase
       include Rudy::AWS
       
-      def name; raise "#{self.class} must override 'name'"; end
       def valid?; raise "#{self.class} must override 'valid?'"; end
       
       def to_query(more=[], less=[])
@@ -37,7 +36,12 @@ module Rudy
       def to_select(more=[], less=[])
         Rudy::AWS::SimpleDB.generate_select ['*'], Rudy::DOMAIN, build_criteria(more, less)
       end
-    
+      
+      def name(identifier, zon, env, rol, pos, *other)
+        pos = pos.to_s.rjust 2, '0'
+        [identifier, zon, env, rol, pos, *other].flatten.compact.join(Rudy::DELIM)
+      end
+      
       def save(replace=true)
         replace = true if replace.nil?
         @@sdb.store(Rudy::DOMAIN, name, self.to_hash, replace) # Always returns nil

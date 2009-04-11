@@ -18,7 +18,7 @@ module Rudy
     field :created
     field :started
     
-    def init
+    def initialize
       #@created = 
       @rtype = 'm'
       @region = @@global.region

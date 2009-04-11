@@ -76,15 +76,15 @@ module Rudy::AWS
       def create(opts={})
 
         old_opts = {
-          :image_id => opts[:ami],
+          :image_id => opts[:ami].to_s,
           :min_count => 1,
           :max_count => 1,
           :key_name => (opts[:keypair] || '').to_s,
           :group_id => [opts[:group]].flatten.compact,
-          :user_data => opts[:machine_data],
-          :availability_zone => opts[:zone],
+          :user_data => opts[:machine_data].to_s,
+          :availability_zone => opts[:zone].to_s,
           :addressing_type => 'public',
-          :instance_type => opts[:size],
+          :instance_type => opts[:size] || 'm1.small',
           :kernel_id => nil
         }
       

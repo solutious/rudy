@@ -5,7 +5,7 @@ module Rudy::Test
 
     context "#{name}_20 Groups" do
       setup do
-        @rgroup = Rudy::Groups.new(:logger => @@logger)
+        @rgroup = Rudy::Groups.new
         stop_test !@rgroup.is_a?(Rudy::Groups), "We need Rudy::Groups (#{@rgroup})"
       end
       

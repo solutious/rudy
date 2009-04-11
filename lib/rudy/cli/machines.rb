@@ -86,10 +86,10 @@ module Rudy::CLI
       opts[:id] = @argv.awsid if @argv.awsid
       opts[:id] &&= [opts[:id]].flatten
       
-      unless @rmach.any?
-        puts "No machines running"
-        return
-      end
+      #unless @rmach.any?
+      #  puts "No machines running"
+      #  return
+      #end
       
       console = @rmach.console(opts[:group], opts[:id])
       

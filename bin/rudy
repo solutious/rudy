@@ -154,9 +154,9 @@ module RudyCLI
   command :machine => Rudy::CLI::Machines
   command_alias :machine, :machines
 
-  #usage "rudy images [-C -i name [-b bucket -a account]] [-D AMI-ID]"
+  #usage "rudy images [-C -i name [-b bucket -a accountnum]] [-D AMI-ID]"
   #desc "Manage EC2 Machine Images (AMIs)"
-  #option :a, :account, String, "Your Amazon Account Number"
+  #option :a, :accountnum, String, "Your Amazon Account Number"
   #option :i, :image_name, String, "The name of the image"     # TODO: change to --ami
   #option :p, :print, "Print-only (don't execute commands)"
   #option :b, :bucket_name, String, "The name of the bucket that will store the image"

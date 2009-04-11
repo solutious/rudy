@@ -11,24 +11,27 @@ require 'tryouts'
 include Tryouts
 
 #
-mach7 = Rudy::Machine.new
-mach7.position = "07"
-#y mach1.start
-#mach1.save
-p Rudy::Machines.get(mach7.name)
+#mach7 = Rudy::Machine.new
+#mach7.position = "07"
+##y mach1.start
+##mach1.save
+#p Rudy::Machines.get(mach7.name)
+#
+#
 
-
+disk1 = Rudy::Disk.new('/mnt/ride', 1, '/dev/sdh')
+p disk1.valid?
+p disk1.name
+#disk1.save
+#disk2 = Rudy::Disks.get("disk-poop-stage-app-01-")
+#
+#p disk1
+#p disk2
+#puts disk2 == disk1
+#puts disk2.destroy
 
 __END__
-disk1 = Rudy::Disk.new
-disk1.zone = 'poop'
-disk1.save
-disk2 = Rudy::Disks.get("disk-poop-stage-app-01-")
 
-p disk1
-p disk2
-puts disk2 == disk1
-puts disk2.destroy
 
 #puts disk1.to_select
 #p disk1.to_query(nil, [:path])

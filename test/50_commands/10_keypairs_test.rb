@@ -5,7 +5,7 @@ module Rudy::Test
 
     context "#{name}_10 KeyPairs" do
       setup do
-        @rkey = Rudy::KeyPairs.new(:logger => @@logger)
+        @rkey = Rudy::KeyPairs.new
         # So we can test with and without user specified keypairs
         # (stage should have keypairs configured in ./.rudy/config or Rudyfile)
         @rkey.global.environment = :test

@@ -46,9 +46,10 @@ module Rudy
         
         @option.account ||= @config.accounts.aws.accountnum
         
+        # TODO: Don't reset global here
         unless @option.account
           puts "Enter your 12 digit Amazon account number:"
-          @global.account = gets.chomp
+          @global.accountnum = gets.chomp
         end
         
         unless @option.image_name

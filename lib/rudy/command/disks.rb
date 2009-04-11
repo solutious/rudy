@@ -9,6 +9,10 @@ class Disks
     Rudy::Disk.from_hash(super(rname)) # Returns nil if empty
   end
   
+  def self.list
+    
+  end
+  
 end
 end
 

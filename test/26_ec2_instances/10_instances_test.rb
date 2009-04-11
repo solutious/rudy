@@ -11,7 +11,7 @@ module Rudy::Test
       
       should "(10) create instance" do
         stop_test @@ec2.instances.any?(:running), "Destroy the existing instances"
-        instances = @@ec2.instances.create('ami-235fba4a') # Amazon Getting Started AMI
+        instances = @@ec2.instances.create(:ami => 'ami-235fba4a') # Amazon Getting Started AMI
         assert instances.is_a?(Array), "Not an Array of instances"
         instances.each do |instance|
           Rudy.waiter(2, 120, @@logger) { @@ec2.instances.running?(instance) }
@@ -62,7 +62,7 @@ module Rudy::Test
       end
       
       should "(99) destroy instance" do
-        Rudy.waiter(2, 60, @@logger) { @@ec2.instances.any?(:running) }
+        assert @@ec2.instances.any?(:running), "No instances running"
         instances = @@ec2.instances.list(:running) 
         return skip("No running instances") unless instances
         instances.each do |instance|

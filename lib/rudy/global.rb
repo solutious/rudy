@@ -16,7 +16,8 @@ module Rudy
     
     field :accesskey
     field :secretkey
-    field :account
+    field :accountnum
+    field :accountname  # TODO: use this. And accounttype (aws)
     field :cert
     field :privatekey
     
@@ -25,7 +26,7 @@ module Rudy
     
     field :config => String
     
-    def init
+    def initialize
       postprocess
       @verbose ||= 0
       @nocolor ||= false
@@ -42,7 +43,7 @@ module Rudy
       end
       
       if config.accounts? && config.accounts.aws
-        %w[accesskey secretkey account cert privatekey].each do |name|
+        %w[accesskey secretkey accountnum cert privatekey].each do |name|
           val = config.accounts.aws.send(name)
           self.send("#{name}=", val) if val
         end
@@ -83,7 +84,7 @@ module Rudy
     def apply_environment_variables
       @accesskey ||= ENV['AWS_ACCESS_KEY']
       @secretkey ||= ENV['AWS_SECRET_KEY'] || ENV['AWS_SECRET_ACCESS_KEY']
-      @account ||= ENV['AWS_ACCOUNT_NUMBER']
+      @accountnum ||= ENV['AWS_ACCOUNT_NUMBER']
       @cert ||= ENV['EC2_CERT']
       @privatekey ||= ENV['EC2_PRIVATE_KEY']
       @local_user = ENV['USER'] || :rudy

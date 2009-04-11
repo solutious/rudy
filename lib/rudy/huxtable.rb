@@ -55,10 +55,8 @@ module Rudy
     def update_config(path=nil); Rudy::Huxtable.update_config(path); end
     def update_global(path=nil); Rudy::Huxtable.update_global(path); end
     
-    # This will setup the config and global class variables until
-    # otherwise specified. init_config must come before init_global.
     update_config
-    update_global
+    
         
     def debug?; @@debug == true; end
     

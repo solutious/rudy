@@ -6,7 +6,7 @@ module Rudy::Test
     context "#{name}_40 Volumes" do
       
       setup do
-        @rvol = Rudy::Volumes.new(:logger => @@logger)
+        @rvol = Rudy::Volumes.new
         stop_test !@rvol.is_a?(Rudy::Volumes), "We need Rudy::Volumes (#{@rvol})"
       end
       

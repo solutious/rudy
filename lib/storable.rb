@@ -29,6 +29,9 @@ class Storable
     @format = v
   end
   
+  def postprocess
+  end
+  
   # TODO: from_args([HASH or ordered params])
   
   # Accepts field definitions in the one of the follow formats:
@@ -143,6 +146,8 @@ class Storable
       
       me.send("#{key}=", value) if self.method_defined?("#{key}=")  
     end
+    
+    me.postprocess
     
     me
   end

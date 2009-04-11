@@ -7,7 +7,8 @@ module Rudy; module AWS
     attr_reader :domains
     attr_reader :aws
     
-    def initialize(access_key, secret_key, logger=StringIO.new)
+    def initialize(access_key, secret_key, logger=nil)
+      logger = Logger.new(StringIO.new)
       @aws = AwsSdb::Service.new(:access_key_id => access_key, :secret_access_key => secret_key, :logger => logger)
     end
     

@@ -19,24 +19,22 @@ class Disk < Storable
   field :size
   #field :backups => Array
   
-  def init
+  def initialize(path=nil, size=nil, device=nil)
+    @path, @size, @device = path, size, device
     @rtype = 'disk'
     @region = @@global.region
     @zone = @@global.zone
     @environment = @@global.environment
     @role = @@global.role
     @position = @@global.position
+    postprocess
   end
   
   def name
-    Disk.generate_name(@zone, @environment, @role, @position, @path)
-  end
-
-  def Disk.generate_name(zon, env, rol, pos, pat, sep=File::SEPARATOR)
-    pos = pos.to_s.rjust 2, '0'
-    dirs = pat.split sep if pat && !pat.empty?
+    sep=File::SEPARATOR
+    dirs = @path.split sep if @path && !@path.empty?
     dirs.shift while dirs && (dirs[0].nil? || dirs[0].empty?)
-    ["disk", zon, env, rol, pos, *dirs].join(Rudy::DELIM)
+    super("disk", @zone, @environment, @role, @position, *dirs)
   end
   
   def to_query(more=[], less=[])
@@ -45,6 +43,19 @@ class Disk < Storable
   
   def to_select(more=[], less=[])
     super([:path, *more], less) 
+  end
+  
+  # Does this disk have enough info to be saved or used?
+  # The test is based on the same criteria for building
+  # SimpleDB queries. 
+  def valid?
+    criteria = build_criteria([:path]).flatten
+    criteria.size == criteria.compact.size
+  end
+  
+  
+  def postprocess
+    @size &&= @size.to_i
   end
   
 end

@@ -6,16 +6,16 @@ module Rudy::Test
       
       setup do
         
-        @rmach = Rudy::Machines.new(:logger => @@logger)
+        @rmach = Rudy::Machines.new
         stop_test !@rmach.is_a?(Rudy::Machines), "We needRudy::Machiness (#{@rmach})"
         
-        @rgroup = Rudy::Groups.new(:logger => @@logger)
+        @rgroup = Rudy::Groups.new
         stop_test !@rgroup.is_a?(Rudy::Groups), "We need Rudy::Machines (#{@rgroup})"
 
-        @rkey = Rudy::KeyPairs.new(:logger => @@logger)
+        @rkey = Rudy::KeyPairs.new
         stop_test !@rkey.is_a?(Rudy::KeyPairs), "We need Rudy::KeyPairs (#{@rkey})"
         
-        @rvol = Rudy::Volumes.new(:logger => @@logger)
+        @rvol = Rudy::Volumes.new
         stop_test !@rvol.is_a?(Rudy::Volumes), "We need Rudy::Volumes (#{@rvol})"
         
         @rkey.global.environment = :test

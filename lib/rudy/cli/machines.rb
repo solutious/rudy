@@ -55,7 +55,7 @@ module Rudy::CLI
       opts[:group] = @option.group if @option.group
       opts[:state] = @option.state if @option.state
       
-      # A nil value forces the @ec2.instances.list to return all instances
+      # A nil value forces the @ec2.machines.list to return all machines
       if @option.all
         opts[:state] = :any
         opts[:group] = :any
@@ -71,9 +71,9 @@ module Rudy::CLI
         puts "Instance: #{inst.awsid.bright} (AMI: #{inst.ami})"
         puts inst.to_s
       end
-      puts "No instances running" if !lt || lt.empty?
+      puts "No machines running" if !lt || lt.empty?
     end
-    alias :instance :status
+    alias :machine :status
     
     def console_valid?
       
@@ -88,7 +88,7 @@ module Rudy::CLI
       opts[:id] &&= [opts[:id]].flatten
       
       unless @rmach.any?
-        puts "No instances running"
+        puts "No machines running"
         return
       end
       
@@ -103,7 +103,7 @@ module Rudy::CLI
     end
     
     
-    def instance_create
+    def machine_create
       puts "Create Instance".bright
       opts = {}
       [:group, :ami, :address, :itype, :keypair].each do |n|
@@ -111,17 +111,17 @@ module Rudy::CLI
       end
 
       rmach = Rudy::Machines.new(:config => @config, :global => @global)
-      # TODO: Print number of instances running. If more than 0, use Annoy.are_you_sure?
+      # TODO: Print number of machines running. If more than 0, use Annoy.are_you_sure?
       rmach.create(opts) do |inst| # Rudy::AWS::EC2::Instance objects
         puts '-'*60
-        puts "Instance: #{inst.awsid.bright} (AMI: #{inst.ami})"
+        puts "Machine: #{inst.awsid.bright} (AMI: #{inst.ami})"
         puts inst.to_s
       end
     
     end
     
     
-    def instance_destroy
+    def machine_destroy
       puts "Destroy Instances".bright
       opts = {}
       opts[:group] = @option.group if @option.group
@@ -129,9 +129,9 @@ module Rudy::CLI
       opts[:id] &&= [opts[:id]].flatten
       
       rmach = Rudy::Machines.new(:config => @config, :global => @global)
-      instances = rmach.list(:running, opts[:group], opts[:id])
-      raise "No instances running" if instances.nil? || instances.empty?
-      puts "Destroying #{instances.size} instances in #{instances.first.groups.first}"
+      machines = rmach.list(:running, opts[:group], opts[:id])
+      raise "No machines running" if machines.nil? || machines.empty?
+      puts "Destroying #{machines.size} machines in #{machines.first.groups.first}"
       exit unless Annoy.are_you_sure?(:low)
       rmach.destroy(opts[:group], opts[:id])
       puts "Done!"

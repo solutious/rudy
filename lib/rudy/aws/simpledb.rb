@@ -48,7 +48,7 @@ module Rudy; module AWS
       q.each do |n,v| 
         query << "#{Rudy::AWS.escape n}='#{Rudy::AWS.escape v}'"
       end
-      "select * from #{} where " << query.join(' and ')
+      "select * from #{domain} where " << query.join(' and ')
     end
     
     def destroy(domain, item)

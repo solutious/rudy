@@ -62,21 +62,33 @@ module Rudy::AWS
       # Return an Array of Instance objects. Note: These objects will not have
       # DNS data because they will still be in pending state. The DNS info becomes
       # available once the instance enters the running state.
-      def create(ami, group='default', keypair_name=nil, user_data=nil, zone=nil)
-        opts = {
-          :image_id => ami.to_s,
+      #
+      # +opts+ supports the following parameters:
+      #
+      # * +:ami+          
+      # * +:group+        
+      # * +:user+         
+      # * +:size+          
+      # * +:keypair+      
+      # * +:address+      
+      # * +:machine_data+ 
+      #
+      def create(opts={})
+
+        old_opts = {
+          :image_id => opts[:ami],
           :min_count => 1,
           :max_count => 1,
-          :key_name => keypair_name.to_s,
-          :group_id => [group].flatten,
-          :user_data => user_data,
-          :availability_zone => zone.to_s, 
+          :key_name => (opts[:keypair] || '').to_s,
+          :group_id => [opts[:group]].flatten.compact,
+          :user_data => opts[:machine_data],
+          :availability_zone => opts[:zone],
           :addressing_type => 'public',
-          :instance_type => 'm1.small',
+          :instance_type => opts[:size],
           :kernel_id => nil
         }
       
-        response = execute_request({}) { @aws.run_instances(opts) }
+        response = execute_request({}) { @aws.run_instances(old_opts) }
         
         # reservationId: r-f393149a
         # groupSet: 

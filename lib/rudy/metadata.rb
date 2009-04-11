@@ -18,6 +18,12 @@ module Rudy
     #  @@sdb.destroy(Rudy::DOMAIN, rname)
     #end
 
+    # 20090224-1813-36
+    def format_timestamp(dat)
+      mon, day, hour, min, sec = [dat.mon, dat.day, dat.hour, dat.min, dat.sec].collect { |v| v.to_s.rjust(2, "0") }
+      [dat.year, mon, day, Rudy::DELIM, hour, min, Rudy::DELIM, sec].join
+    end
+    
     module ObjectBase
       include Rudy::AWS
       
@@ -32,9 +38,9 @@ module Rudy
         Rudy::AWS::SimpleDB.generate_select ['*'], Rudy::DOMAIN, build_criteria(more, less)
       end
     
-    
-      def save
-        @@sdb.store(Rudy::DOMAIN, name, self.to_hash, :replace) # Always returns nil
+      def save(replace=true)
+        replace = true if replace.nil?
+        @@sdb.store(Rudy::DOMAIN, name, self.to_hash, replace) # Always returns nil
         true
       end
     
@@ -47,6 +53,20 @@ module Rudy
         h = @@sdb.get(Rudy::DOMAIN, name) || {}
         from_hash(h)
       end
+      
+      def ==(other)
+        self.name == other.name
+      end
+      
+      def to_s
+        str = ""
+        field_names.each do |key|
+          str << sprintf(" %22s: %s#{$/}", key, self.send(key.to_sym))
+        end
+        str
+      end
+
+      
       
     protected
     

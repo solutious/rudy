@@ -4,19 +4,17 @@ module Rudy
   class Machines
     include Rudy::Huxtable
     include Rudy::AWS
+    extend Rudy::MetaData
+    
+    def self.get(rname)
+      machine = Rudy::Machine.from_hash(super(rname)) # Returns nil if empty
+    end
+    
     
     def create(opts={}, &each_inst)
       
       rgroup = Rudy::Groups.new(:config => @@config, :global => @@global)
-      
-      # TODO: Handle itype on create
-      opts = { :ami => current_machine_image, 
-               :group => current_machine_group, 
-               :user => current_user,
-               :size => "m1.small",
-               :keypair => user_keypairpath(:root), # Must be a root key
-               :address => current_machine_address,
-               :machine_data => machine_data.to_yaml }.merge(opts)
+
 
       raise NoGroup.new(opts[:group]) unless rgroup.exists?(opts[:group])
       raise NoRootKeyPair.new(opts[:group]) if !opts[:keypair] && !has_keypair?(:root)

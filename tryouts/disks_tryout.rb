@@ -10,7 +10,16 @@ require 'rudy'
 require 'tryouts'
 include Tryouts
 
+#
+mach7 = Rudy::Machine.new
+mach7.position = "07"
+#y mach1.start
+#mach1.save
+p Rudy::Machines.get(mach7.name)
 
+
+
+__END__
 disk1 = Rudy::Disk.new
 disk1.zone = 'poop'
 disk1.save

@@ -222,6 +222,16 @@ module Rudy
       ami
     end
     
+    
+    def current_machine_size
+      zon, env, rol = @@global.zone, @@global.environment, @@global.role
+      size = @@config.machines.find_deferred(zon, env, rol, :size)
+      size ||= @@config.machines.find_deferred(env, rol, :size)
+      size ||= @@config.machines.find_deferred(rol, :size)
+      size = 'm1.small' unless size
+      size
+    end
+    
     def current_machine_address
       @@config.machines.find_deferred(@@global.environment, @@global.role, :address)
     end

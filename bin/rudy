@@ -151,8 +151,8 @@ module RudyCLI
   action :C, :create, "Create a machine instance"
   action :D, :destroy, "Destroy a machine instance"
   argv :awsid
-  command :instance => Rudy::CLI::Machines
-  command_alias :instance, :instances
+  command :machine => Rudy::CLI::Machines
+  command_alias :machine, :machines
 
   #usage "rudy images [-C -i name [-b bucket -a account]] [-D AMI-ID]"
   #desc "Manage EC2 Machine Images (AMIs)"

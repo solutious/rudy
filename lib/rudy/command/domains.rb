@@ -6,7 +6,7 @@ module Rudy
     include Rudy::AWS
     
     def list
-      @@sdb.domains.list || []
+      @@sdb.list_domains || []
     end
     
     def get(n=nil)
@@ -27,7 +27,7 @@ module Rudy
     
     def create(n=nil)
       n = name(n)
-      @@sdb.domains.create(n)
+      @@sdb.create_domain(n)
     end
       
   end

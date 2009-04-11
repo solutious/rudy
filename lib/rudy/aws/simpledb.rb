@@ -3,13 +3,12 @@
 
 module Rudy; module AWS
   class SimpleDB
-    include Rudy::Huxtable
-    
+
     attr_reader :domains
     attr_reader :aws
     
-    def initialize(access_key=@@global.accesskey, secret_key=@@global.secretkey)
-      @aws = AwsSdb::Service.new(:access_key_id => access_key, :secret_access_key => secret_key, :logger => Logger.new(@@logger))
+    def initialize(access_key, secret_key, logger=StringIO.new)
+      @aws = AwsSdb::Service.new(:access_key_id => access_key, :secret_access_key => secret_key, :logger => logger)
     end
     
     

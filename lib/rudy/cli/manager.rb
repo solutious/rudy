@@ -25,7 +25,7 @@ module Rudy
       
       def create_domain
         puts "Creating SimpleDB Domain called #{Rudy::DOMAIN}".bright
-        rmanager = Rudy::Manager.new(:config => @config, :global => @global)
+        rmanager = Rudy::Manager.new
         rmanager.create_domain(Rudy::DOMAIN)
         doms = rmanager.domains || []
         puts "Domains: #{doms.join(", ")}"
@@ -33,7 +33,7 @@ module Rudy
       
       def info
         puts "Rudy Manager".bright
-        rmanager = Rudy::Manager.new(:config => @config, :global => @global)
+        rmanager = Rudy::Manager.new
         doms = rmanager.domains
         puts "Domains: #{doms.join(", ")}"
       end

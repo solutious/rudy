@@ -24,117 +24,41 @@ module Rudy
     @@debug = false
     
     @@config = Rudy::Config.new
-    @@global = OpenStruct.new
+    @@global = Rudy::Global.new
     @@logger = StringIO.new    # BUG: memory-leak for long-running apps
     
     def config; @@config; end
     def global; @@global; end
     def logger; @@logger; end
     
-    # Initializes config, global, and logger. Calls +init+ if present.
-    #
-    # +opts+ is a hash which expects any of the following keys:
-    #
-    # * +:config+ a path or an instance of Rudy::Config
-    # * +:global+ a hash of global parameters
-    # * +:logger+ an IO object or nil (default: STDERR)
-    #
-    # NOTE: These values are shared across all classes which include
-    # Rudy::Huxtable. If anything has changed, the connections to AWS
-    # will automatically reconnect. 
-    # 
-    def initialize(opts={})
-      
-      # TODO: Syncronize this code. Only a single thread should set this at a time.
-      
-      @@logger = opts[:logger] if opts[:logger].kind_of?(IO) || opts[:logger].kind_of?(StringIO)
-      @@config = opts[:config] if opts[:config].is_a?(Rudy::Config)
-      
-      conf_path = opts[:global] ? opts[:global].config : nil
-      
-      self.init_config conf_path
-      self.init_global opts[:global]
-      
-      String.disable_color if @@global.nocolor
-      Rudy.enable_quiet if @@global.quiet
-      
-      raise Rudy::NoConfig unless has_keys?
-      
-      # Reconnect if anything has changed. 
-      # I have a hunch this huxtable arrangement is going to haunt me.
-      Rudy::AWS.reconnect if opts[:global] || opts[:config] || opts[:logger]
-      
-      self.init if self.respond_to? :init
-    end
     
-    def self.init_config(path=nil)
+    def self.update_config(path=nil)
       # nil or otherwise bad paths send to look_and_load are ignored
       @@config.look_and_load(path || nil)
+      @@global.apply_config(@@config)
+      if (@@global.accesskey && @@global.secretkey)
+        Rudy::AWS.reconnect(@@global.accesskey, @@global.secretkey)
+      end
     end
     
-    def self.init_global(ghash={})
-      ghash = ghash.marshal_dump if ghash.is_a?(OpenStruct)
-      
-      ghash.each_pair { |n,v| @@global.send("#{n}=", v) } if ghash.is_a?(Hash)
-      
-      @@global.verbose ||= 0
-      
-      @@global.cert = File.expand_path(@@global.cert || '')
-      @@global.privatekey = File.expand_path(@@global.privatekey || '')
-      
-      # ATROCIOUS!
-      
-      if @@config.defaults?
-        @@global.region ||= @@config.defaults.region
-        @@global.zone ||= @@config.defaults.zone
-        @@global.environment ||= @@config.defaults.environment
-        @@global.role ||= @@config.defaults.role 
-        @@global.position ||= @@config.defaults.position
-        @@global.user ||= @@config.defaults.user 
-        @@global.nocolor = @@config.defaults.nocolor
-        @@global.quiet = @@config.defaults.quiet
+    def self.update_global(ghash={})
+      @@global.update(ghash)
+      if (@@global.accesskey && @@global.secretkey)
+        Rudy::AWS.reconnect(@@global.accesskey, @@global.secretkey)
       end
-            
-      @@global.region ||= DEFAULT_REGION
-      @@global.zone ||= DEFAULT_ZONE
-      @@global.environment ||= DEFAULT_ENVIRONMENT
-      @@global.role ||= DEFAULT_ROLE
-      @@global.position ||= DEFAULT_POSITION
-      @@global.user ||= DEFAULT_USER
-      @@global.nocolor = false
-      @@global.quiet = false
-      
-      @@global.position &&= @@global.position.to_s.rjust(2, '0')
-      
-      if @@config.accounts? && @@config.accounts.aws
-        @@global.accesskey ||= @@config.accounts.aws.accesskey 
-        @@global.secretkey ||= @@config.accounts.aws.secretkey 
-        @@global.account ||= @@config.accounts.aws.accountnum
-        
-        @@global.cert ||= @@config.accounts.aws.cert
-        @@global.privatekey ||= @@config.accounts.aws.privatekey
-      end
-      
-      @@global.accesskey ||= ENV['AWS_ACCESS_KEY']
-      @@global.secretkey ||= ENV['AWS_SECRET_KEY'] || ENV['AWS_SECRET_ACCESS_KEY']
-      @@global.account ||= ENV['AWS_ACCOUNT_NUMBER']
-      
-      @@global.cert ||= ENV['EC2_CERT']
-      @@global.privatekey ||= ENV['EC2_PRIVATE_KEY']
-      
-      @@global.local_user = ENV['USER'] || :rudy
-      @@global.local_hostname = Socket.gethostname || :localhost
-      
-
     end
     
-    def init_config(path=nil); Rudy::Huxtable.init_config(path); end
-    def init_global(path=nil); Rudy::Huxtable.init_global(path); end
+    def self.update_logger(logger)
+      @@logger = logger
+    end
+      
+    def update_config(path=nil); Rudy::Huxtable.update_config(path); end
+    def update_global(path=nil); Rudy::Huxtable.update_global(path); end
     
     # This will setup the config and global class variables until
     # otherwise specified. init_config must come before init_global.
-    init_config
-    init_global
+    update_config
+    update_global
         
     def debug?; @@debug == true; end
     
@@ -292,6 +216,44 @@ module Rudy
 end
 
 __END__
+      
+      
+      
+      # Initializes config, global, and logger. Calls +init+ if present.
+      #
+      # +opts+ is a hash which expects any of the following keys:
+      #
+      # * +:config+ a path or an instance of Rudy::Config
+      # * +:global+ a hash of global parameters
+      # * +:logger+ an IO object or nil (default: STDERR)
+      #
+      # NOTE: These values are shared across all classes which include
+      # Rudy::Huxtable. If anything has changed, the connections to AWS
+      # will automatically reconnect. 
+      # 
+      def initialize2(opts={})
+
+        # TODO: Syncronize this code. Only a single thread should set this at a time.
+
+        @@logger = opts[:logger] if opts[:logger].kind_of?(IO) || opts[:logger].kind_of?(StringIO)
+        @@config = opts[:config] if opts[:config].is_a?(Rudy::Config)
+
+        conf_path = opts[:global] ? opts[:global].config : nil
+
+        self.update_config conf_path
+        self.update_global opts[:global]
+
+        String.disable_color if @@global.nocolor
+        Rudy.enable_quiet if @@global.quiet
+
+        raise Rudy::NoConfig unless has_keys?
+
+        # Reconnect if anything has changed. 
+        # I have a hunch this huxtable arrangement is going to haunt me.
+        Rudy::AWS.reconnect if opts[:global] || opts[:config] || opts[:logger]
+
+        self.init if self.respond_to? :init
+      end
       
       # An instance of Rye::Box for the local machine (running Rudy)
       @@rbox = Rye::Box.new('localhost')

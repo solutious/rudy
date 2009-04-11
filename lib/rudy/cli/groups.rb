@@ -9,7 +9,7 @@ module Rudy
         puts "Machine Groups".bright
         opts = {}
         name = @option.all ? nil : @argv.name
-        rudy = Rudy::Groups.new(:config => @config, :global => @global)
+        rudy = Rudy::Groups.new
         rudy.list(name).each do |grp|
           puts '-'*60
           puts grp.to_s
@@ -17,7 +17,7 @@ module Rudy
       end
       
       def destroy_group_valid?
-        @rgroup = Rudy::Groups.new(:config => @config, :global => @global)
+        @rgroup = Rudy::Groups.new
         raise "Group #{@rgroup.name(@argv.name)} does not exist" unless @rgroup.exists?(@argv.name)
         true
       end
@@ -36,7 +36,7 @@ module Rudy
         puts "Creating Machine Group".bright
         opts = check_options
         exit unless Annoy.are_you_sure?(:medium)
-        rudy = Rudy::Groups.new(:config => @config, :global => @global)
+        rudy = Rudy::Groups.new
         rudy.create(@argv.name, nil, opts)
         rudy.list(@argv.name)
       end
@@ -45,7 +45,7 @@ module Rudy
         puts "Revoke Machine Group Rule".bright
         opts = check_options
         exit unless Annoy.are_you_sure?(:medium)
-        rudy = Rudy::Groups.new(:config => @config, :global => @global)
+        rudy = Rudy::Groups.new
         rudy.revoke(@argv.name, opts)
         rudy.list(@argv.name)
       end
@@ -54,7 +54,7 @@ module Rudy
         puts "Authorize Machine Group Rule".bright
         opts = check_options
         exit unless Annoy.are_you_sure?(:medium)
-        rudy = Rudy::Groups.new(:config => @config, :global => @global)
+        rudy = Rudy::Groups.new
         rudy.authorize(opts)
         rudy.list(opts)
       end

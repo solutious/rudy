@@ -2,7 +2,33 @@
 
 module Rudy::CLI
   class Machines < Rudy::CLI::Base
+
     
+    def status
+      puts "Instance Status".bright
+      opts = {}
+      opts[:group] = @option.group if @option.group
+      opts[:state] = @option.state if @option.state
+
+      # A nil value forces the @ec2.machines.list to return all machines
+      if @option.all
+        opts[:state] = :any
+        opts[:group] = :any
+      end
+
+      opts[:id] = @argv.awsid if @argv.awsid
+      opts[:id] &&= [opts[:id]].flatten
+      
+      rudy = Rudy::Machines.new
+      lt = rudy.list(opts[:state], opts[:group], opts[:id]) do |inst|
+        puts '-'*60
+        puts "Instance: #{inst.awsid.bright} (AMI: #{inst.ami})"
+        puts inst.to_s
+      end
+      puts "No machines running" if !lt || lt.empty?
+    end
+    alias :machine :status
+
     def connect
       puts "Rudy Connect".bright
 
@@ -13,7 +39,7 @@ module Rudy::CLI
         end
       end
       
-      rudy = Rudy::Machines.new(:config => @config, :global => @global)
+      rudy = Rudy::Machines.new
       rudy.connect(@option.group, @argv.cmd, @option.awsid, @option.print)
     end
 
@@ -44,40 +70,13 @@ module Rudy::CLI
       
       #exit unless @option.print || Annoy.are_you_sure?(:low)
       
-      rudy = Rudy::Machines.new(:config => @config, :global => @global)
+      rudy = Rudy::Machines.new
       rudy.copy(opts[:group], opts[:id], opts)
     end
 
-
-    def status
-      puts "Instance Status".bright
-      opts = {}
-      opts[:group] = @option.group if @option.group
-      opts[:state] = @option.state if @option.state
-      
-      # A nil value forces the @ec2.machines.list to return all machines
-      if @option.all
-        opts[:state] = :any
-        opts[:group] = :any
-      end
-      
-      opts[:id] = @argv.awsid if @argv.awsid
-      opts[:id] &&= [opts[:id]].flatten
-
-      rudy = Rudy::Machines.new(:config => @config, :global => @global)
-      
-      lt = rudy.list(opts[:state], opts[:group], opts[:id]) do |inst|
-        puts '-'*60
-        puts "Instance: #{inst.awsid.bright} (AMI: #{inst.ami})"
-        puts inst.to_s
-      end
-      puts "No machines running" if !lt || lt.empty?
-    end
-    alias :machine :status
-    
     def console_valid?
       
-      @rmach = Rudy::Machines.new(:config => @config, :global => @global)
+      @rmach = Rudy::Machines.new
     end
     
     def console
@@ -110,7 +109,7 @@ module Rudy::CLI
         opts[n] = @option.send(n) if @option.send(n)
       end
 
-      rmach = Rudy::Machines.new(:config => @config, :global => @global)
+      rmach = Rudy::Machines.new
       # TODO: Print number of machines running. If more than 0, use Annoy.are_you_sure?
       rmach.create(opts) do |inst| # Rudy::AWS::EC2::Instance objects
         puts '-'*60
@@ -128,7 +127,7 @@ module Rudy::CLI
       opts[:id] = @argv.awsid if @argv.awsid
       opts[:id] &&= [opts[:id]].flatten
       
-      rmach = Rudy::Machines.new(:config => @config, :global => @global)
+      rmach = Rudy::Machines.new
       machines = rmach.list(:running, opts[:group], opts[:id])
       raise "No machines running" if machines.nil? || machines.empty?
       puts "Destroying #{machines.size} machines in #{machines.first.groups.first}"

@@ -8,7 +8,7 @@ module Rudy
       def destroy_volume_valid?
         raise "You must supply a volume ID. See rudy volume -h" unless @argv.volid
         
-        @rvol = Rudy::Volumes.new(:config => @config, :global => @global)
+        @rvol = Rudy::Volumes.new
         
         @volume = @rvol.get(@argv.volid)
         
@@ -45,7 +45,7 @@ module Rudy
         
         exit unless Annoy.are_you_sure?(:medium)
         
-        rvol = Rudy::Volumes.new(:config => @config, :global => @global)
+        rvol = Rudy::Volumes.new
         vol = rvol.create(@option.size, @global.zone, @option.snapshot)
         
         puts vol.to_s
@@ -55,8 +55,8 @@ module Rudy
         raise "You must supply a volume ID. See rudy volume -h" unless @argv.volid
         raise "You must supply an instance ID. See rudy volume -h" unless @argv.instid
         
-        @rvol = Rudy::Volumes.new(:config => @config, :global => @global)
-        @rmach = Rudy::Machines.new(:config => @config, :global => @global)
+        @rvol = Rudy::Volumes.new
+        @rmach = Rudy::Machines.new
         raise "Volume #{@argv.volid} does not exist" unless @rvol.exists?(@argv.volid)
         raise "Instance #{@argv.instid} does not exist" unless @rmach.exists?(@argv.instid)
         
@@ -79,7 +79,7 @@ module Rudy
       def volume_detach_valid?
         raise "You must supply a volume ID. See rudy volume -h" unless @argv.volid
         
-        @rvol = Rudy::Volumes.new(:config => @config, :global => @global)
+        @rvol = Rudy::Volumes.new
         
         @volume = @rvol.get(@argv.volid)
         
@@ -106,7 +106,7 @@ module Rudy
       def volume
         puts "Volumes".bright, $/
         
-        rvol = Rudy::Volumes.new(:config => @config, :global => @global)
+        rvol = Rudy::Volumes.new
         volumes = rvol.list || []
         volumes.each do |volume|
           puts '-'*60

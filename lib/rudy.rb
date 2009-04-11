@@ -271,10 +271,12 @@ module Rudy
   end
 end
 
+
+require 'rudy/aws'
+require 'rudy/utils'               # The
+require 'rudy/global'              
 require 'rudy/config'              # order
 require 'rudy/huxtable'
-require 'rudy/utils'               # The
-require 'rudy/aws'
 require 'rudy/metadata'
 require 'rudy/command/keypairs'
 require 'rudy/command/addresses'   # require

@@ -7,7 +7,7 @@ require 'aws_sdb'
 module Rudy
   module AWS
     extend self
-    include Rudy::Huxtable
+    
     @@ec2 = @@sdb = @@s3 = nil
     
     def ec2; @@ec2; end
@@ -15,17 +15,17 @@ module Rudy
     def  s3; @@s3;  end
     
     
-    def self.connect
-      @@ec2 ||= Rudy::AWS::EC2.new(@@global.accesskey, @@global.secretkey)
-      @@sdb ||= Rudy::AWS::SimpleDB.new(@@global.accesskey, @@global.secretkey)
-      #@@s3 ||= Rudy::AWS::S3.new(@@global.accesskey, @@global.secretkey)
+    def self.connect(akey, skey)
+      @@ec2 ||= Rudy::AWS::EC2.new(akey, skey)
+      @@sdb ||= Rudy::AWS::SimpleDB.new(akey, skey)
+      #@@s3 ||= Rudy::AWS::S3.new(akey, skey)
     end
       
-    def self.reconnect
+    def self.reconnect(akey, skey)
       # TODO: Synchronize!
-      @@ec2 = Rudy::AWS::EC2.new(@@global.accesskey, @@global.secretkey)
-      @@sdb = Rudy::AWS::SimpleDB.new(@@global.accesskey, @@global.secretkey)
-      #@@s3 ||= Rudy::AWS::S3.new(@@global.accesskey, @@global.secretkey)
+      @@ec2 = Rudy::AWS::EC2.new(akey, skey)
+      @@sdb = Rudy::AWS::SimpleDB.new(akey, skey)
+      #@@s3 ||= Rudy::AWS::S3.new(akey, skey)
     end
     
     # Modifies +str+ by removing <tt>[\0\n\r\032\\\\]</tt> and escaping <tt>[\'\"]</tt>
@@ -89,9 +89,6 @@ module Rudy
       puts "Error: #{ex.message}"
       exit 1
     end
-
-
-    connect
     
   end
   

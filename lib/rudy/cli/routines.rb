@@ -15,7 +15,7 @@ module Rudy
         opts[:group] = @option.group if @option.group
         #exit unless Annoy.are_you_sure?
 
-        rroutine = Rudy::Routines::Startup.new(:config => @config, :global => @global)
+        rroutine = Rudy::Routines::Startup.new
         instances = rroutine.startup(opts)
 
         puts "Done!"

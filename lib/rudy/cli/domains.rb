@@ -8,7 +8,7 @@ module Rudy
       def domains
         puts "Domains".bright, $/
         
-        rdom = Rudy::Domains.new(:config => @config, :global => @global)
+        rdom = Rudy::Domains.new
         puts rdom.list
       end
       

@@ -6,7 +6,7 @@ module Rudy
       
       def create_keypair
         puts "Create KeyPairs".bright
-        rkey = Rudy::KeyPairs.new(:config => @config, :global => @global)
+        rkey = Rudy::KeyPairs.new
         name = @argv.kpname
         
         rkey.create(@argv.kpname, :force => false)
@@ -18,7 +18,7 @@ module Rudy
       
       def destroy_keypair
         puts "Destroy KeyPairs".bright
-        rkey = Rudy::KeyPairs.new(:config => @config, :global => @global)
+        rkey = Rudy::KeyPairs.new
         raise "KeyPair #{rkey.name(@argv.kpname)} does not exist" unless rkey.exists?(@argv.kpname)
         kp = rkey.get(@argv.kpname)
         puts "Destroying keypair: #{kp.name}"
@@ -31,7 +31,7 @@ module Rudy
       
       def keypair
         puts "KeyPairs".bright
-        rkey = Rudy::KeyPairs.new(:config => @config, :global => @global)
+        rkey = Rudy::KeyPairs.new
         
         rkey.list.each do |kp|
           puts kp.to_s

@@ -1,4 +1,4 @@
-module AwsSdb
+module AwsSdb #:nodoc:all
 
   class Error < RuntimeError ; end
 

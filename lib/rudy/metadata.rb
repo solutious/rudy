@@ -3,20 +3,8 @@
 
 module Rudy
   module MetaData
-    include Rudy::AWS
-    extend self
+
     
-    def get(rname)
-      @@sdb.get(Rudy::DOMAIN, rname) || nil
-    end
-    
-    def query(qstr)
-      @@sdb.query_with_attributes(Rudy::DOMAIN, qstr) || nil
-    end
-    
-    #def destroy(rname)
-    #  @@sdb.destroy(Rudy::DOMAIN, rname)
-    #end
 
     # 20090224-1813-36
     def format_timestamp(dat)
@@ -70,7 +58,6 @@ module Rudy
         str
       end
 
-      
       
     protected
     

@@ -4,68 +4,58 @@ module Rudy
   class Machines
     include Rudy::Huxtable
     include Rudy::AWS
-    extend Rudy::MetaData
+    #extend Rudy::MetaData
     
-    def self.get(rname)
-      machine = Rudy::Machine.from_hash(super(rname)) # Returns nil if empty
-    end
-    
-    
+
     def create(opts={}, &each_inst)
       
-      rgroup = Rudy::Groups.new(:config => @@config, :global => @@global)
-
-
-      raise NoGroup.new(opts[:group]) unless rgroup.exists?(opts[:group])
-      raise NoRootKeyPair.new(opts[:group]) if !opts[:keypair] && !has_keypair?(:root)
-
-      keypair_name = KeyPairs.path_to_name(opts[:keypair])
+      Rudy::Huxtable.update_logger(STDERR)
       
-      instances = @@ec2.instances.create(opts[:ami], opts[:group], keypair_name, opts[:machine_data], @@global.zone)
+      rgroup = Rudy::Groups.new
 
-      
-      #instances = [@@ec2.instances.get("i-39009850")]
-      instances_with_dns = []
-      instances.each_with_index do |inst_tmp,index|
-        Rudy.bug('hs672h48') && next if inst_tmp.nil?
-
-        @@logger.puts "Instance: #{inst_tmp.awsid}"
-        if opts[:address] && index == 0  # We currently only support assigned an address to the first machine
-          @@logger.puts "Associating #{opts[:address]} to #{inst_tmp.awsid}"
-          @@ec2.addresses.associate(inst_tmp.awsid, opts[:address])
-        end
-
-        @@logger.puts "Waiting for the instance to startup "        
-        begin 
-          # TODO: Puts "it's up" and :bell => 3 into waiter 
-          Rudy.waiter(2, 120, @@logger) { !@@ec2.instances.pending?(inst_tmp.awsid) }
-          raise Exception unless @@ec2.instances.running?(inst_tmp.awsid)
-          @@logger.puts "It's up!"
-          Rudy.bell(3)
-        rescue Timeout::Error, Interrupt, Exception
-          @@logger.puts "It's not up yet. Check later: " << "rudy status #{inst_tmp.awsid}".color(:blue)
-          next
-        end
-
-        # The DNS names are now available so we need to grab that data from AWS
-        instance = @@ec2.instances.get(inst_tmp.awsid)   
-        instances_with_dns << instance
-
-        @@logger.puts $/, "Waiting for the SSH daemon "
-        begin
-          Rudy.waiter(1, 60, @@logger) { Rudy::Utils.service_available?(instance.dns_name_public, 22) }
-          @@logger.puts "It's up!"
-          Rudy.bell(2)
-        rescue Timeout::Error, Interrupt, Exception
-          @@logger.puts "SSH isn't up yet. Check later: " << "rudy status #{inst_tmp.awsid}".color(:blue)
-          next
-        end
-
-
+      unless rgroup.exists?(opts[:group])
+        @@logger.puts "Creating group #{rgroup.name(opts[:group])}"
+        rgroup.create opts[:group]
       end
       
-      instances_with_dns.each { |inst| each_inst.call(inst) } if each_inst
-      instances_with_dns
+      # We don't check via KeyPairs here b/c it's possible for a 
+      # non-Rudy keypair to be used. 
+      if !opts[:keypair] && !has_keypair?(:root)
+        rkey = Rudy::KeyPairs.new
+        @@logger.puts "Creating keypair #{rkey.name(opts[:group])}"
+        rkey.create opts[:group]
+        keypair_name = rkey.name(opts[:group])
+      else
+        keypair_name = KeyPairs.path_to_name(opts[:keypair] || user_keypairpath(:root))
+      end
+      
+      machine = Rudy::Machine.new
+      machine.start(opts)
+
+        @@logger.puts "Machine: #{machine.name} #{machine.awsid}"
+        if opts[:address] && index == 0  # We currently only support assigned an address to the first machine
+          @@logger.puts "Associating #{opts[:address]} to #{machine.awsid}"
+          @@ec2.addresses.associate(machine.awsid, opts[:address])
+        end
+
+
+        begin
+          @@logger.puts "Waiting for the instance to startup "        
+          Rudy.waiter(2, 120, @@logger, "It's up!", "Not running", 3) { machine.running? }
+
+          # The DNS names are now available so we need to grab that data from AWS
+          machine.update_dns
+
+          @@logger.puts $/, "Waiting for the SSH daemon "
+          Rudy.waiter(1, 60, @@logger, "It's up!", "Not running", 2) { 
+            Rudy::Utils.service_available?(machine.public_dns, 22) 
+          }
+        rescue Timeout::Error, Interrupt, Exception
+          @@logger.puts "Not running yet. Check later: " << "rudy status #{machine.awsid}".color(:blue)
+        end
+        
+      
+      machine
     end
     
     def destroy(group=nil, inst_id=[], &each_inst)

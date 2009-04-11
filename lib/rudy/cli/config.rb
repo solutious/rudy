@@ -6,8 +6,8 @@ module Rudy
       
       # We force the CLI::Base#print_header to be quiet
       def print_header
-        @global.quiet = true
-        super
+        #@@global.quiet = true
+        #super
       end
       
       
@@ -31,12 +31,12 @@ module Rudy
       #     $ rudy config --all
       #
       def config
-        return if @config.nil? 
+        return if @@config.nil? 
         
         
-        @option.group ||= [@global.environment, @global.role].join(Rudy::DELIM)
+        @option.group ||= [@@global.environment, @@global.role].join(Rudy::DELIM)
         
-        return if @config.empty?
+        return if @@config.empty?
         
         # We need to check whether we're running on a human's computer
         # or within EC2 (we call that running "in-situ"). The userdata
@@ -48,30 +48,30 @@ module Rudy
           if @option.all
             puts "# ACCOUNTS: not displayed"
             puts "# MACHINES: "
-            if @config.machines?
-              y @config.machines.to_hash 
+            if @@config.machines?
+              y @@config.machines.to_hash 
             end
-            if @config.routines?
+            if @@config.routines?
               puts "# ROUTINES: "
-              y @config.routines.to_hash 
+              y @@config.routines.to_hash 
             end
           elsif @option.defaults?
-            y @config.defaults.to_hash
+            y @@config.defaults.to_hash
           else
-            zon, env, rol = @global.zone, @global.environment, @global.role
-            usr, att = @global.user, @argv.name
-            val = @config.machines.find_deferred(zon, env, rol, usr, att) || ''
+            zon, env, rol = @@global.zone, @@global.environment, @@global.role
+            usr, att = @@global.user, @argv.name
+            val = @@config.machines.find_deferred(zon, env, rol, usr, att) || ''
             puts (val.is_a?(String)) ? val : val.to_hash.to_yaml
           end
           
           #name = @argv.first
-          #if name && @config.userdata.has_key?(which) 
-          #  value = @config.userdata[which][name.to_s]
+          #if name && @@config.userdata.has_key?(which) 
+          #  value = @@config.userdata[which][name.to_s]
           #  puts value if value
           #elsif @option.all
-          #  puts @config.to_yaml
+          #  puts @@config.to_yaml
           #else
-          #  value = @config.userdata[which] 
+          #  value = @@config.userdata[which] 
           #  puts value.to_yaml if value
           #end
         end

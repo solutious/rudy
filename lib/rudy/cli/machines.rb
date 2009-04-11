@@ -5,7 +5,7 @@ module Rudy::CLI
 
     
     def status
-      puts "Instance Status".bright
+      puts "Machine Status".bright
       opts = {}
       opts[:group] = @option.group if @option.group
       opts[:state] = @option.state if @option.state
@@ -80,7 +80,7 @@ module Rudy::CLI
     end
     
     def console
-      puts "Instance Console".bright
+      puts "Machine Console".bright
       opts = {}
       opts[:group] = @option.group if @option.group
       opts[:id] = @argv.awsid if @argv.awsid
@@ -103,7 +103,7 @@ module Rudy::CLI
     
     
     def machine_create
-      puts "Create Instance".bright
+      puts "Create Machine".bright
       opts = {}
       [:group, :ami, :address, :itype, :keypair].each do |n|
         opts[n] = @option.send(n) if @option.send(n)
@@ -121,7 +121,7 @@ module Rudy::CLI
     
     
     def machine_destroy
-      puts "Destroy Instances".bright
+      puts "Destroy Machine".bright
       opts = {}
       opts[:group] = @option.group if @option.group
       opts[:id] = @argv.awsid if @argv.awsid

@@ -11,13 +11,16 @@ require 'tryouts'
 include Tryouts
 
 #
-#mach7 = Rudy::Machine.new
+mach7 = Rudy::Machine.load('m-us-east-1b-stage-app-01')
+puts mach7.running?
 #mach7.position = "07"
 ##y mach1.start
 ##mach1.save
 #p Rudy::Machines.get(mach7.name)
 #
 #
+
+
 
 disk1 = Rudy::Disk.new('/mnt/ride', 1, '/dev/sdh')
 p disk1.valid?

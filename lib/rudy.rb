@@ -134,11 +134,12 @@ module Rudy
   # * +duration+ seconds to wait between tries (default: 2).
   # * +max+ maximum time to wait (default: 120). Throws an exception when exceeded.
   # * +logger+ IO object to print +dot+ to.
-  # * +dot+ the character to print after each attempt (default: .). 
+  # * +msg+ the message to print on success
+  # * +bells+ number of terminal bells to ring
   # Set to nil or false to keep the waiter silent.
   # The block must return false while waiting. Once it returns true
   # the waiter will return true too.
-  def Rudy.waiter(duration=2, max=120, logger=STDOUT, dot='.', &check)
+  def Rudy.waiter(duration=2, max=120, logger=STDOUT, msg=nil, bells=0, &check)
     # TODO: Move to Drydock
     raise "The waiter needs a block!" unless check
     duration = 1 if duration < 1
@@ -156,6 +157,8 @@ module Rudy
       retry if Annoy.pose_question(" Keep waiting?\a ", /yes|y|ya|sure|you bet!/i, logger)
       raise ex # We won't get here unless the question fails
     end
+    logger.puts msg if msg
+    Rudy.bell(bells, logger)
     success
   end
   
@@ -163,7 +166,7 @@ module Rudy
   def Rudy.bell(chimes=1, logger=nil)
     return if @@quiet
     chimed = chimes.to_i
-    logger.print "\a"*chimes if logger
+    logger.print "\a"*chimes if chimes > 0 && logger
     true # be like Rudy.bug()
   end
   

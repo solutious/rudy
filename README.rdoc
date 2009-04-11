@@ -1,46 +1,92 @@
-= Rudy - v0.5 ALPHA
+= Rudy - v0.6 ALPHA
 
-Rudy is a development and deployment tool for Amazon EC2. It's both a command-line tool and Ruby library. Here's an example from both for creating an EC2 security group:
+THE VERSION DESCRIBED IS NOT YET RELEASED.
 
-     $ rudy group --create
+Rudy is a command-line development and deployment tool for Amazon EC2. It helps you build and manage machines by organizing them into groups of _environments_ and _roles_. <tt>stage</tt> is the default environment and <tt>app</tt> is the default machine role. You can run multiple machines with the same role. These are called _positions_. Rudy also supports running machine groups across availability _zones_. 
 
-     OR
-     
-     rgroup = Rudy::Groups.new
-     rgroup.create
+When you put all this together, you have a unique name for every machine. The default machine is:
 
-NOTE: Rudy is in ALPHA territory. That means it's not ready for production use!
+             zone     env  role
+              v        v    v   
+        m-us-east-1b-stage-app-01
+        ^                       ^
+     "machine"                position
+
+All configuration is organized into the zones, environments, and roles that you specify (Rudy assumes positions are identical which is important for backups and scaling). And as you'd expect, the defaults can be changed too (in <tt>~/.rudy/config</tt>). See below for usage examples. 
+
+<b>Please note that Rudy is in ALPHA territory. That means it's not ready for production use!</b>
 
 
 == Installation
 
-=== Step 1 (get Rudy on to your machine):
+=== Step 1 of 2 (get Rudy on to your machine):
 
 Via Rubygems, one of:
 
   $ sudo gem install rudy
   $ sudo gem install solutious-rudy --source http://gems.github.com/
 
-Via GitHub:
-  $ git clone git://github.com/solutious/rudy.git
+or via download:
+* rudy-0.6.0.tar.gz[http://github.com/solutious/rudy/tarball/rudy-0.6.0]
+* rudy-0.6.0.zip[http://github.com/solutious/rudy/zipball/rudy-0.6.0]
 
-Via download:
-* rudy-0.5.1.tar.gz[http://github.com/solutious/rudy/tarball/rudy-0.5.1]
-* rudy-0.5.1.zip[http://github.com/solutious/rudy/zipball/rudy-0.5.1]
+NOTE: If you are not installing via RubyGems, you will need to make sure the Ruby dependencies (see below) are installed and in your LOAD_PATH. Ryan Tomayko talks about that here: http://gist.github.com/54177
 
-NOTE: If your are not installing via RubyGems, you will need to make sure the Ruby dependencies (see below) are installed and in your LOAD_PATH. 
-
-=== Step 2 (initialize your configuration):
+=== Step 2 of 2 (initialize your configuration):
 
      $ rudy generate-config
-     [modify ~/.rudy/config]
+       [edit ~/.rudy/config with your Amazon Web Services credentials] 
      $ rudy init
 
-=== Step 3 (start working with EC2):
+You are done!
 
-     $ rudy group --create
-     $ rudy keypair --create
-     $ rudy instance --create
+
+== Example 1 -- The Basics
+
+Before we get fancy, we'll cover the basics by using Rudy as a convenient replacement for the ec2-api tools. Let's create an instance, login via SSH, and then destroy it:
+
+    $ rudy machine --create  
+    $ rudy -u root ssh
+    $ rudy machine --destroy
+
+* <tt>rudy machine --create</tt>
+  * Checks whether the security group stage-app is exists. If it doesn't exist, it will be created and the machine your on will be authorized to access ports 22, 80, and 443 (ssh, http, and https). 
+  * Checks for an SSH keypair called key-stage-app. If it doesn't exist, it creates it and writes the public and private keys to the directory containing your Rudy config file (<tt>~/.rudy</tt>)
+  * Creates a new EC2 instance. 
+* <tt>rudy -u root ssh</tt>
+  * Opens an SSH session with the new machine instance. A password is not required because Rudy uses the keypair that is associated to this machine group.
+* <tt>rudy machine --destroy</tt>
+  * Terminates the instance. 
+
+To find out what machines are running regardless of the group, use this command:
+
+    $ rudy status --all
+
+
+== Example 2 -- The ad-hoc development environment
+
+This example creates a machine group called dev-app, where "dev" is the name of the environment and "app" is the name of the machine role. Once we've defined this group, we'll be able to create it and destroy it willy nilly from the command-line.
+
+In the top level of your project directory put the following configuration into a file called <tt>Rudyfile</tt>:
+
+    machines do
+      
+      environment :dev do
+        ami "ami-235fba4a"  # Amazon Getting Started AMI (US)
+        
+        role :app do
+          disks do
+            path "/rudy/example1" do
+              size 4
+              device "/dev/sdr"
+            end
+          end
+        end
+        
+      end    
+    end
+
+The 
 
 
 == Dependencies:

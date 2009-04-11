@@ -14,12 +14,18 @@ require 'drydock'
 require 'rudy'
 require 'rudy/cli'
 
+#---
 # Is there a bug in Ruby 1.9 open-uri?
 #$ /usr/local/bin/ruby bin/rudy myaddress
 #/usr/local/lib/ruby/1.9.1/open-uri.rb:260:in `require': Insecure operation - require (SecurityError)
 #$SAFE = 2
+#+++
+#
+#
 
-
+#
+#
+#
 module RudyCLI
   extend Drydock
   

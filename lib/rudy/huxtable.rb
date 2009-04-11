@@ -52,8 +52,11 @@ module Rudy
       @@logger = logger
     end
       
-    def update_config(path=nil); Rudy::Huxtable.update_config(path); end
-    def update_global(path=nil); Rudy::Huxtable.update_global(path); end
+    def self.change_zone(v); @@global.zone = v; end
+    def self.change_role(v); @@global.role = v; end
+    def self.change_region(v); @@global.region = v; end
+    def self.change_environment(v); @@global.environment = v; end  
+    def self.change_position(v); @@global.position = v; end
     
     update_config
     
@@ -137,7 +140,7 @@ module Rudy
     
     def current_machine_image
       zon, env, rol = @@global.zone, @@global.environment, @@global.role
-      ami = @@config.machines.find_deferred(zon, env, rol, :ami)
+      ami = @@config.machines.find_deferred([zon, env, rol], :ami)
       ami ||= @@config.machines.find_deferred(env, rol, :ami)
       ami ||= @@config.machines.find_deferred(rol, :ami)
       raise Rudy::NoMachineImage, current_machine_group unless ami

@@ -258,6 +258,23 @@ module Rudy
     response
   end
   
+  class NoGroup < RuntimeError
+    def initialize(group)
+      @group = group
+    end
+    def message
+      "Group #{@group} does not exist. See: rudy groups -h"
+    end
+  end
+  
+  class NoRootKeyPair < RuntimeError
+    def initialize(group)
+      @group = group
+    end
+    def message
+      "No root keypair for #{@group}. See: rudy keypairs -h"
+    end
+  end
   
   class NoConfig < RuntimeError
     def message

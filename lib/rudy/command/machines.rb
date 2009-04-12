@@ -1,7 +1,7 @@
 
 
 module Rudy
-  class Instances
+  class Machines
     include Rudy::Huxtable
     include Rudy::AWS
     
@@ -221,6 +221,29 @@ module Rudy
     end
     
 
+    
+    
+  private
+
+    def instance_data
+      data = {
+        # Give the instance an identity
+        :zone => @@global.zone,
+        :environment => @@global.environment,
+        :role => @@global.role,
+        :position => @@global.position,
+        
+        # Add hosts to the /etc/hosts file
+        :hosts => {
+          :dbmaster => "127.0.0.1",
+        }
+      } 
+      data.to_hash
+    end
+    
+    
+    
   end
+
   
 end

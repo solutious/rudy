@@ -86,93 +86,6 @@ module RudyCLI
 
 
 
-  # -----------------------------------  AMAZON EC2 COMMANDS  --------
-  # ------------------------------------------------------------------
-
-  usage "rudy [global options] addresses [-A address instance ID]"
-  desc "Manage Amazon Elastic IP addresses"
-  argv :ipaddress, :instid
-  action :A, :associate, "Associate an IP address to a running instance"
-  action :C, :create, "Create an IP address"
-  action :D, :destroy, "Destroy an IP address"
-  command :addresses => Rudy::CLI::Addresses
-  command_alias :addresses, :address
-
-  usage "rudy [global options] groups [-C -R -A] [-a IP addresses] [-p ports] [group name]"
-  usage "rudy groups -C               (create a group)"
-  usage "rudy -e prod groups          (list groups in the prod environment)"
-  usage "rudy groups -A -p 81,82,83   (open ports to a group from this machine)"
-  desc "Manage EC2 Security Groups"
-  option :all, "Display all security groups"
-  option :r, :protocols, Array, "Comma-separated list of protocols. One of: tcp (default), udp, icmp"
-  option :p, :ports, Array, "List of comma-separated port ranges in the form FROM:TO (default: 22,80,443)"
-  option :a, :addresses, Array, "List of comma-separated IP addresses (default: your current external IP)"
-  option :g, :group, String, "A group name to authorize or revoke network rule. Must also supply -o!"
-  option :o, :owner, String, "A group owner ID (account number). Must also supply -g!"
-  action :C, :create, "Create a security group"
-  action :D, :destroy, "Destroy a security group"
-  action :A, :authorize, "Authorize a rule for a security group"
-  action :R, :revoke, "Revoke a rule for a security group"
-  argv :name
-  command :group => Rudy::CLI::Groups
-  command_alias :group, :groups
-
-  desc "Manage EC2 Volumes"
-  usage "rudy volumes"
-  usage "rudy volume -C -s size [-d device-path]"
-  usage "rudy volume -A volume-id instance-id"
-  usage "rudy volume -N volume-id"
-  usage "rudy volume -D volume-id"
-  option :s, :size, String, "Size (in GB)"
-  option :d, :device, String, "Device path (default: /dev/sdh)"
-  action :D, :destroy, "Destroy a volume"
-  action :C, :create, "Create a volume"
-  action :A, :attach, "Attach a volume to a running instance"
-  action :N, :detach, "Detach a volume from an instance"
-  argv :volid, :insid
-  command :volume => Rudy::CLI::Volumes
-  command_alias :volume, :volumes
-
-  desc "Manage KeyPairs"
-  usage "rudy keypairs [-C] [-D] [name]"
-  action :D, :destroy, "Destroy KeyPair"
-  action :C, :create, "Create KeyPair"
-  argv :kpname
-  command :keypair => Rudy::CLI::KeyPairs
-  command_alias :keypair, :keypairs
-
-  usage "rudy console [-g group] [instance ID]"
-  desc "Displays system console output for given instance(s)"
-  option :g, :group, String, "A group name to authorize or revoke network rule. Must also supply -o!"
-  argv :awsid
-  command :console => Rudy::CLI::Instances
-
-  desc "Manage Instances"
-  usage "rudy [global options] instances [-g group-name] [-s state] [instance-ID]"
-  option :g, :group, String, "The security group name"
-  option :i, :ami, String, "The machine image ID (ami-)"
-  option :t, :itype, String, "The instance type (default: m1.small)"
-  option :k, :keypair, String, "The SSH keypair to use for launch"
-  option :a, :address, String, "The IP address to associate"
-  action :C, :create, "Create a machine instance"
-  action :D, :destroy, "Destroy a machine instance"
-  argv :awsid
-  command :instance => Rudy::CLI::Instances
-  command_alias :instance, :instances
-
-  #usage "rudy images [-C -i name [-b bucket -a accountnum]] [-D AMI-ID]"
-  #desc "Manage EC2 Machine Images (AMIs)"
-  #option :a, :accountnum, String, "Your Amazon Account Number"
-  #option :i, :image_name, String, "The name of the image"     # TODO: change to --ami
-  #option :p, :print, "Print-only (don't execute commands)"
-  #option :b, :bucket_name, String, "The name of the bucket that will store the image"
-  #action :C, :create, "Create an image"
-  ##action :P, :prepare, "Prepare a running instance to be used as an image"
-  #action :D, :destroy, "Deregister an image (currently _does not_ remove images files from S3)"
-  #argv :ami
-  #command :images => Rudy::CLI::Images
-  #command_alias :images, :image
-
 
   # --------------------------------  MISCELLANEOUS COMMANDS  --------
   # ------------------------------------------------------------------
@@ -199,6 +112,7 @@ module RudyCLI
       puts "%10s: %s" % ['Internal', ia] unless obj.option.external && !obj.option.internal
       puts "%10s: %s" % ['External', ea] unless obj.option.internal && !obj.option.external
     end
+    obj.global.quiet = true  # don't print elapsed time
   end
 
   usage "rudy [global options] annoy [-h -m -l] [-e]"
@@ -216,11 +130,13 @@ module RudyCLI
     factor = [:insane, :high, :medium, :low].detect { |v| obj.option.send(v) } || :medium
     success = Annoy.challenge?("Is this annoying?", factor, flavor)
     puts (success ? "Correct!" : "WRONG!").bright
+    obj.global.quiet = true  # don't print elapsed time
   end
 
   desc "Display the current Rudy slogan"
-  command :slogan do
+  command :slogan do |obj|
     puts "Rudy: Not your grandparent's deployment tool!"
+    obj.global.quiet = true  # don't print elapsed time
   end
 
   desc "Generates a configuration template to #{Rudy::CONFIG_FILE}"
@@ -261,8 +177,7 @@ module RudyCLI
       exit 1
     end
   
-
-  
+    obj.global.quiet = true  # don't print elapsed time
   end
 
   desc "Displays the SimpleDB domains associated to your account"

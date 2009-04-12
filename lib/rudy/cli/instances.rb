@@ -27,7 +27,7 @@ module Rudy::CLI
       end
       puts "No instances running" if !lt || lt.empty?
     end
-    alias :instance :status
+    alias :instances :status
 
     def connect
       puts "Rudy Connect".bright
@@ -102,9 +102,13 @@ module Rudy::CLI
     end
     
     
-    def instance_create
-      puts "Create Instance".bright
-      opts = {}
+    def instances_start
+      puts "Start Instances".bright
+      opts = {
+        :group => 'default',
+        :
+      }
+      
       [:group, :ami, :address, :itype, :keypair].each do |n|
         opts[n] = @option.send(n) if @option.send(n)
       end
@@ -120,8 +124,8 @@ module Rudy::CLI
     end
     
     
-    def instance_destroy
-      puts "Destroy Instance".bright
+    def instances_terminate
+      puts "Terminate Instances".bright
       opts = {}
       opts[:group] = @option.group if @option.group
       opts[:id] = @argv.awsid if @argv.awsid

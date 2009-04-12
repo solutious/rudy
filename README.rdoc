@@ -23,23 +23,22 @@ All configuration is organized into the zones, environments, and roles that you 
 
 Via Rubygems, one of:
 
-  $ sudo gem install rudy
-  $ sudo gem install solutious-rudy --source http://gems.github.com/
+    $ sudo gem install rudy
+    $ sudo gem install solutious-rudy --source http://gems.github.com/
 
 or via download:
 * rudy-0.6.0.tar.gz[http://github.com/solutious/rudy/tarball/rudy-0.6.0]
 * rudy-0.6.0.zip[http://github.com/solutious/rudy/zipball/rudy-0.6.0]
 
-NOTE: If you are not installing via RubyGems, you will need to make sure the Ruby dependencies (see below) are installed and in your LOAD_PATH. Ryan Tomayko talks about that here: http://gist.github.com/54177
+NOTE: <em>If you are not installing via RubyGems, you need to make sure the Ruby dependencies (see the [README](http://github.com/solutious/rudy/blob/master/README.rdoc)) are installed and in your LOAD_PATH. Ryan Tomayko wrote [a gist](http://gist.github.com/54177) about it.</em>
 
 === Step 2 of 2 (initialize your configuration):
 
-     $ rudy generate-config
-       [edit ~/.rudy/config with your Amazon Web Services credentials] 
-     $ rudy init
+    $ rudy generate-config
+      [edit ~/.rudy/config with your Amazon Web Services credentials] 
+    $ rudy init
 
-You are done!
-
+NOTE: <em>You need an <a href="http://aws.amazon.com/">Amazon Web Services account</a> to use Rudy. Sign up for EC2[http://aws.amazon.com/ec2/], SimpleDB[http://aws.amazon.com/simpledb/], S3[http://aws.amazon.com/s3/].</em>
 
 == Example 1 -- The Basics
 

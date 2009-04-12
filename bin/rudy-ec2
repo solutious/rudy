@@ -1,0 +1,132 @@
+#!/usr/bin/ruby
+
+# = Rudy EC2
+# 
+# === A Rudy interface to Amazon EC2
+#
+# 
+# 
+# See rudy-ec2 -h for usage
+# 
+
+$:.unshift File.join(File.dirname(__FILE__), '..', 'lib') # Put our local lib in first place
+%w{drydock caesars rye}.each { |dir| $: << File.join(File.dirname(__FILE__), '..', '..', dir, 'lib') }
+
+require 'drydock'
+require 'rudy'
+require 'rudy/cli'
+
+
+module RudyEC2CLI
+  extend Drydock
+  
+  global :A, :accesskey, String, "AWS Access Key"
+  global :S, :secretkey, String, "AWS Secret Access Key"
+  #global :R, :region, String, "Connect to a specific EC2 region (ie: #{Rudy::DEFAULT_REGION})"
+  global :n, :nocolor, "Disable output colors"
+  global :f, :config, String, "Specify another configuration file to read (ie: #{Rudy::CONFIG_FILE})"
+  global :z, :zone, String, "Connect to a specific EC2 zone (ie: #{Rudy::DEFAULT_ZONE})"
+  global :u, :user, String, "Provide a username (ie: #{Rudy::DEFAULT_USER})"
+  global :q, :quiet, "Run with less output"
+  global :v, :verbose, "Increase verbosity of output (i.e. -v or -vv or -vvv)" do
+    @verbose ||= 0
+    @verbose += 1
+  end
+  global :V, :version, "Display version number" do
+    puts "Rudy version: #{Rudy::VERSION}"
+    exit 0
+  end
+  
+  
+  
+  
+  # -----------------------------------  AMAZON EC2 COMMANDS  --------
+  # ------------------------------------------------------------------
+
+  usage "rudy [global options] addresses [-A address instance ID]"
+  desc "Manage Amazon Elastic IP addresses"
+  argv :ipaddress, :instid
+  action :A, :associate, "Associate an IP address to a running instance"
+  action :C, :create, "Create an IP address"
+  action :D, :destroy, "Destroy an IP address"
+  command :addresses => Rudy::CLI::Addresses
+  command_alias :addresses, :address
+
+  usage "rudy [global options] groups [-C -R -A] [-a IP addresses] [-p ports] [group name]"
+  usage "rudy groups -C               (create a group)"
+  usage "rudy -e prod groups          (list groups in the prod environment)"
+  usage "rudy groups -A -p 81,82,83   (open ports to a group from this machine)"
+  desc "Manage EC2 Security Groups"
+  option :all, "Display all security groups"
+  option :r, :protocols, Array, "Comma-separated list of protocols. One of: tcp (default), udp, icmp"
+  option :p, :ports, Array, "List of comma-separated port ranges in the form FROM:TO (default: 22,80,443)"
+  option :a, :addresses, Array, "List of comma-separated IP addresses (default: your current external IP)"
+  option :g, :group, String, "A group name to authorize or revoke network rule. Must also supply -o!"
+  option :o, :owner, String, "A group owner ID (account number). Must also supply -g!"
+  action :C, :create, "Create a security group"
+  action :D, :destroy, "Destroy a security group"
+  action :A, :authorize, "Authorize a rule for a security group"
+  action :R, :revoke, "Revoke a rule for a security group"
+  argv :name
+  command :groups => Rudy::CLI::Groups
+  command_alias :groups, :group
+
+  desc "Manage EC2 Volumes"
+  usage "rudy volumes"
+  usage "rudy volume -C -s size [-d device-path]"
+  usage "rudy volume -A volume-id instance-id"
+  usage "rudy volume -N volume-id"
+  usage "rudy volume -D volume-id"
+  option :s, :size, String, "Size (in GB)"
+  option :d, :device, String, "Device path (default: /dev/sdh)"
+  action :D, :destroy, "Destroy a volume"
+  action :C, :create, "Create a volume"
+  action :A, :attach, "Attach a volume to a running instance"
+  action :N, :detach, "Detach a volume from an instance"
+  argv :volid, :insid
+  command :volumes => Rudy::CLI::Volumes
+  command_alias :volumes, :volume
+
+  desc "Manage KeyPairs"
+  usage "rudy keypairs [-C] [-D] [name]"
+  action :D, :destroy, "Destroy KeyPair"
+  action :C, :create, "Create KeyPair"
+  argv :kpname
+  command :keypairs => Rudy::CLI::KeyPairs
+  command_alias :keypairs, :keypair
+
+  usage "rudy console [-g group] [instance ID]"
+  desc "Displays system console output for given instance(s)"
+  option :g, :group, String, "A group name to authorize or revoke network rule. Must also supply -o!"
+  argv :awsid
+  command :console => Rudy::CLI::Instances
+
+  desc "Manage Instances"
+  usage "rudy [global options] instances [-g group-name] [-s state] [instance-ID]"
+  option :g, :group, String, "The security group name"
+  option :i, :ami, String, "The machine image ID (ami-)"
+  option :t, :itype, String, "The instance type (default: m1.small)"
+  option :k, :keypair, String, "The SSH keypair to use for launch"
+  option :a, :address, String, "The IP address to associate"
+  action :S, :start, "Start a machine instance"
+  action :T, :terminate, "Terminate a machine instance"
+  argv :awsid
+  command :instances => Rudy::CLI::Instances
+  command_alias :instances, :instance
+  command_alias :instances, :status
+
+  #usage "rudy images [-C -i name [-b bucket -a accountnum]] [-D AMI-ID]"
+  #desc "Manage EC2 Machine Images (AMIs)"
+  #option :a, :accountnum, String, "Your Amazon Account Number"
+  #option :i, :image_name, String, "The name of the image"     # TODO: change to --ami
+  #option :p, :print, "Print-only (don't execute commands)"
+  #option :b, :bucket_name, String, "The name of the bucket that will store the image"
+  #action :C, :create, "Create an image"
+  ##action :P, :prepare, "Prepare a running instance to be used as an image"
+  #action :D, :destroy, "Deregister an image (currently _does not_ remove images files from S3)"
+  #argv :ami
+  #command :images => Rudy::CLI::Images
+  #command_alias :images, :image
+
+
+end

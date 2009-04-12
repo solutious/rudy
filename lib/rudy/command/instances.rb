@@ -1,10 +1,9 @@
 
 
 module Rudy
-  class Machines
+  class Instances
     include Rudy::Huxtable
     include Rudy::AWS
-    #extend Rudy::MetaData
     
 
     def create(opts={}, &each_inst)
@@ -29,38 +28,38 @@ module Rudy
         keypair_name = KeyPairs.path_to_name(opts[:keypair] || user_keypairpath(:root))
       end
       
-      machine = Rudy::Machine.new
-      machine.start(opts)
+      instance = Rudy::Instance.new
+      instance.start(opts)
 
-        @@logger.puts "Machine: #{machine.name} #{machine.awsid}"
-        if opts[:address] && index == 0  # We currently only support assigned an address to the first machine
-          @@logger.puts "Associating #{opts[:address]} to #{machine.awsid}"
-          @@ec2.addresses.associate(machine.awsid, opts[:address])
+        @@logger.puts "Instance: #{instance.name} #{instance.awsid}"
+        if opts[:address] && index == 0  # We currently only support assigned an address to the first instance
+          @@logger.puts "Associating #{opts[:address]} to #{instance.awsid}"
+          @@ec2.addresses.associate(instance.awsid, opts[:address])
         end
 
 
         begin
           @@logger.puts "Waiting for the instance to startup "        
-          Rudy.waiter(2, 120, @@logger, "It's up!", "Not running", 3) { machine.running? }
+          Rudy.waiter(2, 120, @@logger, "It's up!", "Not running", 3) { instance.running? }
 
           # The DNS names are now available so we need to grab that data from AWS
-          machine.update_dns
+          instance.update_dns
 
           @@logger.puts $/, "Waiting for the SSH daemon "
           Rudy.waiter(1, 60, @@logger, "It's up!", "Not running", 2) { 
-            Rudy::Utils.service_available?(machine.public_dns, 22) 
+            Rudy::Utils.service_available?(instance.public_dns, 22) 
           }
         rescue Timeout::Error, Interrupt, Exception
-          @@logger.puts "Not running yet. Check later: " << "rudy status #{machine.awsid}".color(:blue)
+          @@logger.puts "Not running yet. Check later: " << "rudy status #{instance.awsid}".color(:blue)
         end
         
       
-      machine
+      instance
     end
     
     def destroy(group=nil, inst_id=[], &each_inst)
       group ||= current_machine_group
-      raise "No machines running in #{group}" unless running?(group)
+      raise "No instances running in #{group}" unless running?(group)
       instances = @@ec2.instances.list_group(group, :running, inst_id)
       instances &&= [instances].flatten
       instances.each { |inst| each_inst.call(inst) } if each_inst
@@ -69,9 +68,9 @@ module Rudy
     end
     
     # * +state+ instance state (:running, :terminated, :pending, :shutting_down)
-    # * +group+ machine group name. The default is the current machine group
+    # * +group+ instance group name. The default is the current instance group
     # (as determined by the globals) if none is supplied. A value of :any will 
-    # return machines from all groups.
+    # return instances from all groups.
     # * +inst_ids+ An Array of instance IDs (Strings) or Instance objects to 
     # filter the list by. Any instances not in the group will be ignored. 
     # * +each_inst+ a block to execute for every instance in the list. 
@@ -87,7 +86,7 @@ module Rudy
       instances
     end
     
-    # See Rudy::Machines#list for arguments.
+    # See Rudy::Instances#list for arguments.
     # Returns a Hash of Rudy::AWS::EC2::Instance objects (the keys are instance IDs)
     def list_as_hash(state=nil, group=nil, inst_ids=[], &each_inst)
       group ||= current_machine_group
@@ -105,7 +104,7 @@ module Rudy
     # NOTE: Amazon sends the console output as a Base64 encoded string. This method
     # decrypts it before returning it.
     #
-    # Returns output for the first machine in the group (if provided) or the first
+    # Returns output for the first instance in the group (if provided) or the first
     # instance ID (if provided)
     def console(group=nil, inst_ids=[])
       group ||= current_machine_group
@@ -119,7 +118,7 @@ module Rudy
     def connect(group=nil, cmd=nil, inst_ids=[], print_only=false)
       group ||= current_machine_group
       instances = @@ec2.instances.list_group(group, :running, inst_ids)
-      raise "No machines running" if instances.nil?
+      raise "No instances running" if instances.nil?
       raise "No keypair configured for user #{current_user}" unless current_user_keypairpath
       
       # TODO: If a group is supplied we need to discover the keypair.
@@ -140,7 +139,7 @@ module Rudy
     def copy(group=nil, inst_ids=[], opts={})
       group ||= current_machine_group
       instances = @@ec2.instances.list_group(group, :running, inst_ids)
-      raise "No machines running" if instances.nil?
+      raise "No instances running" if instances.nil?
       raise "No keypair configured for user #{current_user}" unless current_user_keypairpath
       raise "You must supply at least one source path" if !opts[:paths] || opts[:paths].empty?
       raise "You must supply a destination path" unless opts[:dest]
@@ -176,7 +175,7 @@ module Rudy
     end
     
     
-    # * +group+ machine group name
+    # * +group+ instance group name
     def any?(group=nil)
       group ||= current_machine_group
       
@@ -226,9 +225,9 @@ module Rudy
     
   private
 
-    def machine_data
+    def instance_data
       data = {
-        # Give the machine an identity
+        # Give the instance an identity
         :zone => @@global.zone,
         :environment => @@global.environment,
         :role => @@global.role,

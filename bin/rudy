@@ -54,35 +54,35 @@ module RudyCLI
   # ------------------------------------------------------------------
 
 
-  desc "Machine Status"
-  usage "rudy [global options] status [-g group-name] [-s state] [--all] [instance-ID]"
-  option :g, :group, String, "A security group name"
-  option :s, :state, String, "Machine state. One of: running (default), pending, terminated"
-  option :l, :all, "Show all machines in this group, regardless of state."
-  argv :awsid
-  command :status => Rudy::CLI::Machines
-
-  usage "rudy [global options] connect [-g group-name] [-i instance-ID] [cmd]"
-  desc "Open an SSH connection"
-  option :print, "Only print the SSH command, don't connect"
-  option :g, :group, String, "A security group name"
-  option :i, :awsid, String, "An instance ID"
-  argv :cmd
-  command :connect => Rudy::CLI::Machines 
-  command_alias :connect, :ssh
-
-  usage "rudy [global options] copy [-p] [-r] source target"
-  desc "Copy files to or from machines. NOTE: You must use quotes when using a tilda for your remote dir ('~/')."
-  option :r, :recursive, "Recursively copy entire directories"
-  option :p, :preserve, "Preserve atimes and ctimes."
-  option :d, :download, "Download FROM the remote machine to the local machine"
-  option :print, "Only print the SSH command, don't connect"
-  option :g, :group, String, "A security group name"
-  option :i, :awsid, String, "An instance ID"
-  command :copy => Rudy::CLI::Machines
-  command_alias :copy, :scp
-  command_alias :copy, :upload
-  command_alias :copy, :download
+  #desc "Machine Status"
+  #usage "rudy [global options] status [-g group-name] [-s state] [--all] [instance-ID]"
+  #option :g, :group, String, "A security group name"
+  #option :s, :state, String, "Machine state. One of: running (default), pending, terminated"
+  #option :l, :all, "Show all machines in this group, regardless of state."
+  #argv :awsid
+  #command :status => Rudy::CLI::Machines
+  #
+  #usage "rudy [global options] connect [-g group-name] [-i instance-ID] [cmd]"
+  #desc "Open an SSH connection"
+  #option :print, "Only print the SSH command, don't connect"
+  #option :g, :group, String, "A security group name"
+  #option :i, :awsid, String, "An instance ID"
+  #argv :cmd
+  #command :connect => Rudy::CLI::Machines 
+  #command_alias :connect, :ssh
+  #
+  #usage "rudy [global options] copy [-p] [-r] source target"
+  #desc "Copy files to or from machines. NOTE: You must use quotes when using a tilda for your remote dir ('~/')."
+  #option :r, :recursive, "Recursively copy entire directories"
+  #option :p, :preserve, "Preserve atimes and ctimes."
+  #option :d, :download, "Download FROM the remote machine to the local machine"
+  #option :print, "Only print the SSH command, don't connect"
+  #option :g, :group, String, "A security group name"
+  #option :i, :awsid, String, "An instance ID"
+  #command :copy => Rudy::CLI::Machines
+  #command_alias :copy, :scp
+  #command_alias :copy, :upload
+  #command_alias :copy, :download
 
 
 
@@ -145,10 +145,10 @@ module RudyCLI
   desc "Displays system console output for given instance(s)"
   option :g, :group, String, "A group name to authorize or revoke network rule. Must also supply -o!"
   argv :awsid
-  command :console => Rudy::CLI::Machines
+  command :console => Rudy::CLI::Instances
 
-  desc "Manage Machines"
-  usage "rudy [global options] machines [-g group-name] [-s state] [instance-ID]"
+  desc "Manage Instances"
+  usage "rudy [global options] instances [-g group-name] [-s state] [instance-ID]"
   option :g, :group, String, "The security group name"
   option :i, :ami, String, "The machine image ID (ami-)"
   option :t, :itype, String, "The instance type (default: m1.small)"
@@ -157,8 +157,8 @@ module RudyCLI
   action :C, :create, "Create a machine instance"
   action :D, :destroy, "Destroy a machine instance"
   argv :awsid
-  command :machine => Rudy::CLI::Machines
-  command_alias :machine, :machines
+  command :instance => Rudy::CLI::Instances
+  command_alias :instance, :instances
 
   #usage "rudy images [-C -i name [-b bucket -a accountnum]] [-D AMI-ID]"
   #desc "Manage EC2 Machine Images (AMIs)"

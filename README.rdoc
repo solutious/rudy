@@ -130,9 +130,9 @@ The
 
 == Credits
 
+* Delano Mandelbaum (delano@solutious.com)
 * aws_sdb code by Tim Dysinger (http://dysinger.net)
 * Escape, Copyright (C) 2006,2007 Tanaka Akira  <akr@fsij.org>
-* Delano Mandelbaum (delano@solutious.com)
 * Keshia Knight Pulliam (rudy@solutious.com)
 
 

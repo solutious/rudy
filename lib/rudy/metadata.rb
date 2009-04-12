@@ -13,16 +13,16 @@ module Rudy
     end
     
     module ObjectBase
-      include Rudy::AWS
+      include Rudy::Huxtable
       
       def valid?; raise "#{self.class} must override 'valid?'"; end
       
       def to_query(more=[], less=[])
-        Rudy::AWS::SimpleDB.generate_query build_criteria(more, less)
+        Rudy::AWS::SDB.generate_query build_criteria(more, less)
       end
     
       def to_select(more=[], less=[])
-        Rudy::AWS::SimpleDB.generate_select ['*'], Rudy::DOMAIN, build_criteria(more, less)
+        Rudy::AWS::SDB.generate_select ['*'], Rudy::DOMAIN, build_criteria(more, less)
       end
       
       def name(identifier, zon, env, rol, pos, *other)
@@ -32,17 +32,20 @@ module Rudy
       
       def save(replace=true)
         replace = true if replace.nil?
-        @@sdb.store(Rudy::DOMAIN, name, self.to_hash, replace) # Always returns nil
+        @sdb ||= Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey)
+        @sdb.put(Rudy::DOMAIN, name, self.to_hash, replace) # Always returns nil
         true
       end
     
       def destroy
-        @@sdb.destroy(Rudy::DOMAIN, name)
+        @sdb ||= Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey)
+        @sdb.destroy(Rudy::DOMAIN, name)
         true
       end
     
       def refresh
-        h = @@sdb.get(Rudy::DOMAIN, name) || {}
+        @sdb ||= Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey)
+        h = @sdb.get(Rudy::DOMAIN, name) || {}
         from_hash(h)
       end
       

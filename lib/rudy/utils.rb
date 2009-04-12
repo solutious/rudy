@@ -114,6 +114,53 @@ module Rudy
       str.gsub(/^[[:blank:]]{#{indent}}/, '')
     end
       
+    
+    
+    def sh(command, chdir=false, verbose=false)
+      prevdir = Dir.pwd
+      Dir.chdir chdir if chdir
+      puts command if verbose
+      system(command)
+      Dir.chdir prevdir if chdir
+    end
+
+
+    def ssh_command(host, keypair, user, command=false, printonly=false, verbose=false)
+      #puts "CONNECTING TO #{host}..."
+      cmd = "ssh -i #{keypair} #{user}@#{host} "
+      cmd += " '#{command}'" if command
+      puts cmd if verbose
+      return cmd if printonly
+      # backticks returns STDOUT
+      # exec replaces current process (it's just like running ssh)
+      # -- UPDATE -- Some problem with exec. "Operation not supported"
+      # using system (http://www.mail-archive.com/mongrel-users@rubyforge.org/msg02018.html)
+      (command) ? `#{cmd}` : Kernel.system(cmd)
+    end
+
+
+    def scp_command(host, keypair, user, paths, to_path, to_local=false, verbose=false, printonly=false)
+
+      paths = [paths] unless paths.is_a?(Array)
+      from_paths = ""
+      if to_local
+        paths.each do |path|
+          from_paths << "#{user}@#{host}:#{path} "
+        end  
+        puts "Copying FROM remote TO this machine", $/
+
+      else
+        to_path = "#{user}@#{host}:#{to_path}"
+        from_paths = paths.join(' ')
+        puts "Copying FROM this machine TO remote", $/
+      end
+
+
+      cmd = "scp -r -i #{keypair} #{from_paths} #{to_path}"
+
+      puts cmd if verbose
+      printonly ? (puts cmd) : system(cmd)
+    end
 
   end
 end

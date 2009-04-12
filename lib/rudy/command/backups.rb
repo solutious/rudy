@@ -52,7 +52,7 @@ end
 def Backup.destroy(sdb, name)
   back = Backup.get(sdb, name) # get raises an exception if the disk doesn't exist
   sdb.destroy(Rudy::DOMAIN, name)
-  true # wtf: RightAws::SimpleDB doesn't tell us whether it succeeds. We'll assume!
+  true 
 end
 
 

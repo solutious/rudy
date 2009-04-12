@@ -5,18 +5,19 @@ module Rudy::Test
     context "#{name}_10 Disks" do
       
       setup do
+        @sdb = Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey)
         #@ami = @@config.machines.find(@@zone.to_sym, :ami)
       end
       
       
-      xshould "(00) have global setup" do
+      should "(00) have global setup" do
         [:region, :zone, :environment, :role, :position].each do |n|
           assert @@global.respond_to?(n), "No global #{n}"
         end
       end
       
-      xshould "(01) have domain" do
-        assert @@sdb.create_domain(Rudy::DOMAIN), "Domain not created (#{Rudy::DOMAIN})"
+      should "(01) have domain" do
+        assert @sdb.create_domain(Rudy::DOMAIN), "Domain not created (#{Rudy::DOMAIN})"
       end
       
       
@@ -44,27 +45,27 @@ module Rudy::Test
         assert disk.save, "Did not save #{disk.name}"
       end
       
-      xshould "(20) list metadata with select" do
+      should "(20) list metadata with select" do
         q = "select * from #{Rudy::DOMAIN}"
 
-        items = @@sdb.select(q)
+        items = @sdb.select(q)
         assert_equal Hash, items.class
         assert items.size > 0, "No disks"
         assert_equal @@global.zone.to_s, items.values.first['zone'].first.to_s
       end
       
-      xshould "(22) list disk metadata with select" do
+      should "(22) list disk metadata with select" do
         q = "select * from #{Rudy::DOMAIN} where rtype = 'disk'"
-        items = @@sdb.select(q)
+        items = @sdb.select(q)
         assert_equal Hash, items.class
         assert items.size > 0, "No disks"
         assert_equal @@global.zone.to_s, items.values.first['zone'].first.to_s
       end
       
-      xshould "(23) list disk metadata with query" do
+      should "(23) list disk metadata with query" do
         q = "select * from #{Rudy::DOMAIN} where rtype = 'disk'"
         
-        items = @@sdb.query_with_attributes(Rudy::DOMAIN, "['rtype' = 'disk']")
+        items = @sdb.query_with_attributes(Rudy::DOMAIN, "['rtype' = 'disk']")
         assert_equal Hash, items.class
         assert items.size > 0, "No disks"
         assert_equal @@global.zone.to_s, items.values.first['zone'].first.to_s
@@ -84,17 +85,17 @@ module Rudy::Test
       end
       
       
-      xshould "(90) destroy all disk metadata" do
+      should "(90) destroy all disk metadata" do
         q = "select * from #{Rudy::DOMAIN} where rtype = 'disk'"
-        items = @@sdb.select(q)
+        items = @sdb.select(q)
         assert_equal Hash, items.class
         items.keys.each do |item|
-          @@sdb.destroy(Rudy::DOMAIN, item)
+          @sdb.destroy(Rudy::DOMAIN, item)
         end
       end
       
-      xshould "(99) destroy domain" do
-        assert @@sdb.destroy_domain(Rudy::DOMAIN), "Domain not destroyed (#{Rudy::DOMAIN})"
+      should "(99) destroy domain" do
+        assert @sdb.destroy_domain(Rudy::DOMAIN), "Domain not destroyed (#{Rudy::DOMAIN})"
       end
       
     end

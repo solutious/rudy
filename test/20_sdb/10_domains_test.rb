@@ -1,5 +1,5 @@
 module Rudy::Test
-  class Case_20_SimpleDB
+  class Case_20_AWS_SDB
     
     
     def get_domain
@@ -9,17 +9,18 @@ module Rudy::Test
     context "#{name}_10 Domains" do
       
       setup do
-        @domain_list = @@sdb.list_domains || []
+        @sdb = Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey)
+        @domain_list = @sdb.list_domains || []
         @domain = @domain_list.first
       end
       
       should "(10) create domain" do
         dname = 'test_' << Rudy::Utils.strand
-        assert @@sdb.create_domain(dname), "Domain not created (#{dname})"
+        assert @sdb.create_domain(dname), "Domain not created (#{dname})"
       end
       
       should "(20) list domains" do
-        domain_list = @@sdb.list_domains
+        domain_list = @sdb.list_domains
         assert domain_list.is_a?(Array), "Not an Array"
         assert !domain_list.empty?, "No Domains"
       end
@@ -36,8 +37,8 @@ module Rudy::Test
           }
         }
         
-        @@sdb.store(@domain, 'produce1', produce.call, :replace)
-        @@sdb.store(@domain, 'produce2', produce.call, :replace)
+        @sdb.put(@domain, 'produce1', produce.call, :replace)
+        @sdb.put(@domain, 'produce2', produce.call, :replace)
         
         # TODO: Need assertion here!
         
@@ -45,7 +46,7 @@ module Rudy::Test
       
       should "(40) get objects" do
         assert !@domain.nil?, "No domain"
-        item = @@sdb.get(@domain, 'produce1')
+        item = @sdb.get(@domain, 'produce1')
         assert_equal Hash, item.class # good stuff
         assert_equal ['green'], item['grapes']
       end
@@ -54,7 +55,7 @@ module Rudy::Test
         
         assert !@domain.nil?, "No domain"
         
-        items = @@sdb.query(@domain, "[ 'grapes' = 'green' ]")
+        items = @sdb.query(@domain, "[ 'grapes' = 'green' ]")
         assert items.is_a?(Array), "Not an Array"
         assert_equal 2, items.size, "More than 2 objects"
       end
@@ -63,7 +64,7 @@ module Rudy::Test
         
         assert !@domain.nil?, "No domain"
         
-        items = @@sdb.query_with_attributes(@domain, "[ 'grapes' = 'green' ]")
+        items = @sdb.query_with_attributes(@domain, "[ 'grapes' = 'green' ]")
         assert items.is_a?(Hash), "Not a Hash"
         assert_equal 2, items.keys.size, "More than 2 objects"
         assert items['produce1']['celery'].first.to_i > 1000, "Celery less than 1000"
@@ -73,7 +74,7 @@ module Rudy::Test
         assert !@domain.nil?, "No domain"
         q = "select * from #{@domain}"
 
-        items = @@sdb.select(q)
+        items = @sdb.select(q)
         assert items.is_a?(Hash), "Not a Hash"
         assert_equal 2, items.keys.size, "More than 2 objects"
         
@@ -85,13 +86,13 @@ module Rudy::Test
       should "(70) destroy objects" do
         assert !@domain.nil?, "No domain"
         q = "select * from #{@domain}"
-        items = @@sdb.select(q)
+        items = @sdb.select(q)
         assert items.is_a?(Hash), "Not a Hash"
         items.keys.each do |item|
-          assert @@sdb.destroy(@domain, item), "Not destroyed (#{item})"
+          assert @sdb.destroy(@domain, item), "Not destroyed (#{item})"
         end
         q = "select * from #{@domain}"
-        items = @@sdb.select(q)
+        items = @sdb.select(q)
         assert items.nil?, "Some items not destroyed (#{items})"
       end
       
@@ -100,10 +101,10 @@ module Rudy::Test
         assert !@domain.nil?, "No domain"
         
         @domain_list.each do |domain|
-          assert @@sdb.destroy_domain(domain), "Not destroyed (#{domain})"
+          assert @sdb.destroy_domain(domain), "Not destroyed (#{domain})"
         end
         
-        domain_list = @@sdb.list_domains
+        domain_list = @sdb.list_domains
         assert domain_list.empty?, "Not empty"
       end
       

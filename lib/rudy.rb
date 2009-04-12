@@ -258,6 +258,24 @@ module Rudy
     response
   end
   
+  # <tt>require</tt> a glob of files. 
+  # * +path+ is a list of path elements which is sent to File.join 
+  # and then to Dir.glob. The list of files found are sent to require. 
+  # Nothing is returned but LoadError exceptions are caught. The message
+  # is printed to STDERR and the program exits with 7. 
+  def require_glob(*path)
+    begin
+      # TODO: Use autoload
+      Dir.glob(File.join(*path.flatten)).each do |path|
+        require path
+      end
+    rescue LoadError => ex
+      puts "Error: #{ex.message}"
+      exit 7
+    end
+  
+  end
+  
   class NoGroup < RuntimeError
     def initialize(group)
       @group = group

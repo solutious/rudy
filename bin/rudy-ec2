@@ -49,7 +49,7 @@ module RudyEC2CLI
   action :A, :associate, "Associate an IP address to a running instance"
   action :C, :create, "Create an IP address"
   action :D, :destroy, "Destroy an IP address"
-  command :addresses => Rudy::CLI::Addresses
+  command :addresses => Rudy::CLI::AWS::EC2::Addresses
   command_alias :addresses, :address
 
   usage "rudy [global options] groups [-C -R -A] [-a IP addresses] [-p ports] [group name]"
@@ -68,7 +68,7 @@ module RudyEC2CLI
   action :A, :authorize, "Authorize a rule for a security group"
   action :R, :revoke, "Revoke a rule for a security group"
   argv :name
-  command :groups => Rudy::CLI::Groups
+  command :groups => Rudy::CLI::AWS::EC2::Groups
   command_alias :groups, :group
 
   desc "Manage EC2 Volumes"
@@ -84,7 +84,7 @@ module RudyEC2CLI
   action :A, :attach, "Attach a volume to a running instance"
   action :N, :detach, "Detach a volume from an instance"
   argv :volid, :insid
-  command :volumes => Rudy::CLI::Volumes
+  command :volumes => Rudy::CLI::AWS::EC2::Volumes
   command_alias :volumes, :volume
 
   desc "Manage KeyPairs"
@@ -92,14 +92,14 @@ module RudyEC2CLI
   action :D, :destroy, "Destroy KeyPair"
   action :C, :create, "Create KeyPair"
   argv :kpname
-  command :keypairs => Rudy::CLI::KeyPairs
+  command :keypairs => Rudy::CLI::AWS::EC2::KeyPairs
   command_alias :keypairs, :keypair
 
   usage "rudy console [-g group] [instance ID]"
   desc "Displays system console output for given instance(s)"
   option :g, :group, String, "A group name to authorize or revoke network rule. Must also supply -o!"
   argv :awsid
-  command :console => Rudy::CLI::Instances
+  command :console => Rudy::CLI::AWS::EC2::Instances
 
   desc "Manage Instances"
   usage "rudy [global options] instances [-g group-name] [-s state] [instance-ID]"
@@ -111,7 +111,7 @@ module RudyEC2CLI
   action :S, :start, "Start a machine instance"
   action :T, :terminate, "Terminate a machine instance"
   argv :awsid
-  command :instances => Rudy::CLI::Instances
+  command :instances => Rudy::CLI::AWS::EC2::Instances
   command_alias :instances, :instance
   command_alias :instances, :status
 
@@ -125,8 +125,20 @@ module RudyEC2CLI
   ##action :P, :prepare, "Prepare a running instance to be used as an image"
   #action :D, :destroy, "Deregister an image (currently _does not_ remove images files from S3)"
   #argv :ami
-  #command :images => Rudy::CLI::Images
+  #command :images => Rudy::CLI::AWS::EC2::Images
   #command_alias :images, :image
 
-
+  before do
+    @start = Time.now
+  end
+  after do |obj|
+    unless obj.global.quiet
+      @elapsed = Time.now - @start
+      puts $/, "Elapsed: %.2f seconds" % @elapsed.to_f if @elapsed > 0.1
+    end
+  end
+  
 end
+
+
+

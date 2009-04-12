@@ -181,7 +181,7 @@ module RudyCLI
   end
 
   desc "Displays the SimpleDB domains associated to your account"
-  command :domains => Rudy::CLI::Domains
+  command :domains => Rudy::CLI::AWS::SDB::Domains
 
 
   # ---------------------------------  RUDY MANAGER COMMANDS  --------

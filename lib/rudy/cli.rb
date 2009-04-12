@@ -76,15 +76,7 @@ module Rudy
   end
 end
 
-# Require EC2, S3, Simple DB class
-begin
-  # TODO: Use autoload
-  Dir.glob(File.join(RUDY_LIB, 'rudy', 'cli', "*.rb")).each do |path|
-    require path
-  end
-rescue LoadError => ex
-  puts "Error: #{ex.message}"
-  exit 1
-end
+
+Rudy.require_glob(RUDY_LIB, 'rudy', 'cli', '**', '*.rb')
 
 

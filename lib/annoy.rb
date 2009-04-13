@@ -1,7 +1,7 @@
 
 require 'timeout'
 require 'sysinfo'
-
+require 'highline'
 
 # Annoy - your annoying friend that asks you questions all the time.
 #
@@ -18,9 +18,9 @@ class Annoy #:nodoc:all
   attr_accessor :system
   
   @@operators = {
-    :low      => %w(+ - *),
-    :medium   => %w(* % + -),
-    :high     => %w(* % + -),
+    :low      => %w(+ -),
+    :medium   => %w(* + -),
+    :high     => %w(& * + -),
     :insane   => %w(** << | & *)
   }.freeze
   
@@ -33,8 +33,8 @@ class Annoy #:nodoc:all
   
   @@randsize = {
     :low      => 10,
-    :medium   => 100,
-    :high     => 1000,
+    :medium   => 10,
+    :high     => 100,
     :insane   => 1000
   }.freeze
   
@@ -104,10 +104,21 @@ class Annoy #:nodoc:all
       success = Timeout::timeout(period || @@period) do
         flavor = Annoy.get_flavor(flavor)
         question, answer = Annoy.question(factor, flavor)
-        writer.print "#{msg} To continue, #{Annoy.verb(flavor)} #{question}: "
-        writer.print "(#{answer}) " if ![:high, :insane].member?(factor) && flavor == :numeric
-        writer.flush
-        response = Annoy.get_response(writer)
+        msg = "#{msg} To continue, #{Annoy.verb(flavor)} #{question}: "
+        #writer.print msg
+        #if ![:medium, :high, :insane].member?(factor) && flavor == :numeric
+        #writer.print "(#{answer}) " 
+        #writer.flush
+        #end
+        #response = Annoy.get_response(writer)
+        
+        highline = HighLine.new 
+        response = highline.ask(msg) { |q| 
+          q.echo = false           # Don't display response
+          q.overwrite = true       # Erase the question afterwards
+          q.whitespace = :strip    # Remove whitespace from the response
+        }
+        
         response = response.to_i if flavor == :numeric
         (response == answer)
       end

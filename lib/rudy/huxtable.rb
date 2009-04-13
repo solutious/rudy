@@ -36,16 +36,10 @@ module Rudy
       # nil or otherwise bad paths send to look_and_load are ignored
       @@config.look_and_load(path || nil)
       @@global.apply_config(@@config)
-      if (@@global.accesskey && @@global.secretkey)
-        Rudy::AWS.reconnect(@@global.accesskey, @@global.secretkey)
-      end
     end
     
     def self.update_global(ghash={})
       @@global.update(ghash)
-      if (@@global.accesskey && @@global.secretkey)
-        Rudy::AWS.reconnect(@@global.accesskey, @@global.secretkey)
-      end
     end
     
     def self.update_logger(logger)

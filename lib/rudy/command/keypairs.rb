@@ -2,39 +2,7 @@
 module Rudy
   class KeyPairs
     include Rudy::Huxtable
-    include Rudy::AWS
-    
-    
-    def create(n=nil, opts={})
-      raise KeyPairAlreadyDefined.new(current_machine_group) if !n && has_root_keypair?
 
-      n ||= name(n)
-        
-      opts = {
-        :force => false
-      }.merge(opts)
-      
-      delete_pk(n) if opts[:force] == true && File.exists?(self.path(n))
-      raise KeyPairExists, self.path(n) if File.exists?(self.path(n))
-      
-      kp = @@ec2.keypairs.create(n)
-      raise ErrorCreatingKeyPair, n unless kp.is_a?(Rudy::AWS::EC2::KeyPair)
-      
-      Rudy.trap_known_errors do
-        @@logger.puts "Writing #{self.path(n)}"
-        Rudy::Utils.write_to_file(self.path(n), kp.private_key, 'w', 0600)
-      end
-      
-      Rudy.trap_known_errors do
-        @@logger.puts "Writing #{self.public_path(n)}"
-        Rudy::Utils.write_to_file(self.public_path(n), kp.public_key, 'w', 0600)
-      end
-      
-      @@logger.puts "NOTE: If you move #{self.path(n)} you need to also update your Rudy machines config.".color(:blue)
-      
-      kp
-    end
-    
     #def check_permissions(n=nil)
     #  n ||= name(n)
     #  raise NoPrivateKeyFile, self.path(n) unless File.exists?(self.path(n))
@@ -129,27 +97,11 @@ module Rudy
     end
 
   end
-  class Keypairs
-    def initialize(*args)
-      raise "Oops! The correct class uses a capital 'P': Rudy::KeyPairs"
-    end
-  end
+
 end
 
 module Rudy
   class KeyPairs
-    class InsecureKeyPairPermissions < RuntimeError; end
-    class NoPrivateKeyFile < RuntimeError; end
-    class ErrorCreatingKeyPair < RuntimeError; end
-    class KeyPairExists < RuntimeError; end
-    class KeyPairAlreadyDefined < RuntimeError
-      attr_reader :group
-      def initialize(group)
-        @group = group
-      end
-      def message
-        "A keypair is defined for #{group}. Check your Rudy config."
-      end
-    end
+
   end
 end

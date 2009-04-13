@@ -35,15 +35,12 @@ module Rudy
       # Print a default header to the screen for every command.
       #
       def print_header
-        puts Rudy::CLI.generate_header(@@global, @@config)
+        puts Rudy::CLI.generate_header(@@global, @@config) if @@global.print_header
         unless @@global.quiet
-          puts # a new line
-          
           if @@global.environment == "prod"
             msg = "YOU ARE PLAYING WITH PRODUCTION"
             puts Rudy.banner(msg, :huge, :red), $/
           end
-        
           puts Rudy.banner("THIS IS EC2"), $/ if Rudy.in_situ?
         end
       end

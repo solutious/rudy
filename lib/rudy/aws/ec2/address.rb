@@ -2,7 +2,7 @@
 
 module Rudy::AWS
   
-  class EC2
+  module EC2
     
     class Address < Storable
       field :ipaddress

@@ -26,11 +26,14 @@ module Rudy
     
     field :config => String
     
+    attr_accessor :print_header
+    
     def initialize
       postprocess
       @verbose ||= 0
       @nocolor ||= false
       @quiet ||= false
+      @print_header ||= true
     end
       
     def apply_config(config)

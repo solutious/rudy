@@ -1,7 +1,7 @@
 
 
 module Rudy::AWS
-  class EC2
+  module EC2
     class Volume < Storable
     field :awsid
     field :status

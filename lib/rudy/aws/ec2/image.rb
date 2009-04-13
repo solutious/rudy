@@ -1,7 +1,7 @@
 
 
 module Rudy::AWS
-  class EC2
+  module EC2
     
     class Images
       include Rudy::AWS::ObjectBase

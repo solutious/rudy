@@ -52,7 +52,7 @@ module Rudy::AWS
   end
   
   
-  class EC2
+  module EC2
     class Instances
       include Rudy::AWS::ObjectBase
       unless defined?(KNOWN_STATES)

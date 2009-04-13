@@ -4,11 +4,15 @@ module Rudy::Test
   class Case_25_EC2
     
     context "#{name}_10 KeyPairs" do
+      setup do
+        @@test_name ||= 'test-' << Rudy::Utils.strand
+        @ec2key = Rudy::AWS::EC2::KeyPairs.new(@@global.accesskey, @@global.secretkey)
+        #@ami = @@config.machines.find(@@zone.to_sym, :ami)
+      end
       
       
       should "(10) create keypair" do
-        name = 'test-' << Rudy::Utils.strand
-        keypair = @@ec2.keypairs.create(name)
+        keypair = @ec2key.create(@@test_name)
         assert keypair.is_a?(Rudy::AWS::EC2::KeyPair), "Not a KeyPair"
         assert !keypair.name.empty?, "No name"
         assert !keypair.fingerprint.empty?, "No fingerprint"
@@ -16,15 +20,19 @@ module Rudy::Test
       end
       
       should "(20) list keypairs" do
-        keypairs = @@ec2.keypairs.list || []
+        keypairs = @ec2key.list || []
         assert keypairs.size > 0, "No keypairs"
       end
       
+      should "(21) get specific keypair" do
+        assert @ec2key.get(@@test_name).is_a?(Rudy::AWS::EC2::KeyPair), "Not a KeyPair (#{@@test_name})"
+      end
+      
       should "(50) destroy keypairs" do
-        keypairs = @@ec2.keypairs.list || []
+        keypairs = @ec2key.list || []
         assert keypairs.size > 0, "No keypairs"
         keypairs.each do |kp|
-          @@ec2.keypairs.destroy(kp.name)
+          @ec2key.destroy(kp.name)
         end
       end
     end

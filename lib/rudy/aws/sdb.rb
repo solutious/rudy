@@ -12,7 +12,6 @@ module Rudy
   module AWS
     class SDB
       
-
       require 'rudy/aws/sdb/error'
       
       def initialize(access_key=nil, secret_key=nil, url=nil, debug=nil)

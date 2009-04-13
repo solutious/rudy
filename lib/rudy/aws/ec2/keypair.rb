@@ -1,7 +1,6 @@
-require 'rye'
 
 module Rudy::AWS
-  class EC2
+  module EC2
     
     class KeyPair < Storable
       attr_accessor :private_key  # not a storable field
@@ -9,8 +8,9 @@ module Rudy::AWS
       field :name
       field :fingerprint
       
-      def to_s
-        "%-20s   %s" % [self.name, self.fingerprint]
+      def to_s(titles=false)
+        str = titles ? "%-20s   %s#{$/}" % ['name', 'fingerprint'] : ""
+        str << "%-20s   %s" % [self.name, self.fingerprint]
       end
       
       def public_key
@@ -23,17 +23,18 @@ module Rudy::AWS
     
     class KeyPairs
       include Rudy::AWS::ObjectBase
+      include Rudy::AWS::EC2::Base
       
       def create(name)
         raise "No name provided" unless name
-        ret = @aws.create_keypair(:key_name => name)
+        ret = @ec2.create_keypair(:key_name => name)
         self.class.from_hash(ret)
       end
       
       def destroy(name)
         name = name.name if name.is_a?(Rudy::AWS::EC2::KeyPair)
         raise "No name provided" unless name.is_a?(String)
-        ret = @aws.delete_keypair(:key_name => name)
+        ret = @ec2.delete_keypair(:key_name => name)
         (ret && ret['return'] == 'true') # BUG? Always returns true
       end
       
@@ -45,7 +46,7 @@ module Rudy::AWS
       
       def list_as_hash(*names)
         names = names.flatten
-        klist = @aws.describe_keypairs(:key_name => names)
+        klist = @ec2.describe_keypairs(:key_name => names)
         return unless klist['keySet'].is_a?(Hash)
         keypairs = {}
         klist['keySet']['item'].each do |oldkp| 
@@ -87,6 +88,33 @@ module Rudy::AWS
           false
         end
       end
+      
+    end
+    
+    class Keypairs
+      def initialize(*args)
+        raise "Oops! The correct class uses a capital 'P': Rudy::AWS::EC2::KeyPairs"
+      end
+    end
+    
+  end
+end
+
+
+class Rudy::AWS::EC2::KeyPairs
+  
+  class InsecureKeyPairPermissions < RuntimeError; end
+  class NoPrivateKeyFile < RuntimeError; end
+  class ErrorCreatingKeyPair < RuntimeError; end
+  class KeyPairExists < RuntimeError; end
+  class KeyPairAlreadyDefined < RuntimeError
+    attr_reader :group
+    def initialize(group)
+      @group = group
+    end
+    def message
+      "A keypair is defined for #{group}. Check your Rudy config."
     end
   end
+  
 end

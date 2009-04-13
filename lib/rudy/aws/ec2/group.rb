@@ -60,7 +60,7 @@ module Rudy::AWS
   
   
   
-  class EC2
+  module EC2
     class Groups
       include Rudy::AWS::ObjectBase
   

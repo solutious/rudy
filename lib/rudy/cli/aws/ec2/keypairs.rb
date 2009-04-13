@@ -5,34 +5,42 @@ module AWS; module EC2;
   
   class KeyPairs < Rudy::CLI::Base
     
-    def create_keypairs
-      puts "Create KeyPairs".bright
-      rkey = Rudy::KeyPairs.new
-      name = @argv.kpname
-      
-      rkey.create(@argv.kpname, :force => false)
-      rkey.list.each do |kp|
-        puts kp.to_s
-      end
+    def create_keypairs_valid?
+      raise "No name provided" unless @argv.kpname
+      true
     end
     
+    def create_keypairs
+      puts "Create KeyPairs".bright
+      rkey = Rudy::AWS::EC2::KeyPairs.new(@@global.accesskey, @@global.secretkey)
+      name = @argv.kpname
+      
+      kp = rkey.create(@argv.kpname)
+      puts "Name: #{kp.name}"
+      puts "Fingerprint: #{kp.fingerprint}"
+      puts kp.private_key
+    end
     
+    def destroy_keypairs_valid?
+      raise "No name provided" unless @argv.kpname
+      true
+    end
     def destroy_keypairs
       puts "Destroy KeyPairs".bright
-      rkey = Rudy::KeyPairs.new
-      raise "KeyPair #{rkey.name(@argv.kpname)} does not exist" unless rkey.exists?(@argv.kpname)
+      rkey = Rudy::AWS::EC2::KeyPairs.new(@@global.accesskey, @@global.secretkey)
+      raise "KeyPair #{@argv.kpname} does not exist" unless rkey.exists?(@argv.kpname)
       kp = rkey.get(@argv.kpname)
       puts "Destroying keypair: #{kp.name}"
-      puts "NOTE: the private key file will also be deleted and you will not be able to".color(:blue)
-      puts "connect to instances started with this keypair.".color(:blue)
-      exit unless Annoy.are_you_sure?(:low)
+      #puts "NOTE: the private key file will also be deleted and you will not be able to".color(:blue)
+      #puts "connect to instances started with this keypair.".color(:blue)
+      exit unless Annoy.are_you_sure?(:medium)
       ret = rkey.destroy(@argv.kpname)
       puts ret ? "Success" : "Failed"
     end
     
     def keypairs
       puts "KeyPairs".bright
-      rkey = Rudy::KeyPairs.new
+      rkey = Rudy::AWS::EC2::KeyPairs.new(@@global.accesskey, @@global.secretkey)
       
       rkey.list.each do |kp|
         puts kp.to_s

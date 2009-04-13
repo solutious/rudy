@@ -8,26 +8,6 @@ module Rudy
   module AWS
     extend self
     
-    @@ec2 = @@sdb = @@s3 = nil
-    
-    def ec2; @@ec2; end
-    def sdb; @@sdb; end
-    def  s3; @@s3;  end
-    
-    
-    def self.connect(akey, skey)
-      @@ec2 ||= Rudy::AWS::EC2.new(akey, skey)
-      #@@sdb ||= Rudy::AWS::SDB.new(akey, skey)
-      #@@s3 ||= Rudy::AWS::S3.new(akey, skey)
-    end
-      
-    def self.reconnect(akey, skey)
-      # TODO: Synchronize!
-      @@ec2 = Rudy::AWS::EC2.new(akey, skey)
-      #@@sdb = Rudy::AWS::SDB.new(akey, skey)
-      #@@s3 ||= Rudy::AWS::S3.new(akey, skey)
-    end
-    
     # Modifies +str+ by removing <tt>[\0\n\r\032\\\\]</tt> and escaping <tt>[\'\"]</tt>
     def escape(str)
       str.to_s.tr("[\0\n\r\032\\\\]", '').gsub(/([\'\"])/, '\\1\\1')

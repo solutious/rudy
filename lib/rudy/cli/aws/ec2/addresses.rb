@@ -5,49 +5,10 @@ module AWS; module EC2;
   
   class Addresses < Rudy::CLI::Base
 
-
-    def associate_addresses_valid?
-      raise "You have not supplied an IP addresses" unless @argv.ipaddress
-      raise "You did not supply an instance ID" unless @argv.instanceid
-      
-      @rmach = Rudy::Machines.new
-      @radd = Rudy::Addresses.new
-      
-      raise "Instance #{@argv.instid} does not exist!" unless @rmach.exists?(@argv.instid)
-      
-      raise "#{@argv.ipaddress} is not allocated to you" unless @radd.exists?(@argv.ipaddress)
-      raise "#{@argv.ipaddress} is already associated!" if @radd.associated?(@argv.ipaddress)
-      
-      true
-    end
-    
-    def associate_addresses
-      puts "Associating #{@argv.address} to #{@inst[:aws_groups]}: #{@inst[:dns_name]}"
-      
-      address = @radd.get(@argv.ipaddress)
-      puts address.to_s
-      
-      puts "Done!"
-      puts
-    end
-    
-    def addresses
-      puts "Addresses".bright, $/
-      
-      radd = Rudy::Addresses.new
-      addresses = radd.list || []
-      
-      addresses.each do |address|
-        puts address.to_s
-      end
-      
-      puts "No Addresses" if addresses.empty?
-    end
-    
     
     def addresses_create
       puts "Create Address".bright, $/
-      radd = Rudy::Addresses.new
+      radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey)
       address = radd.create
       puts address.to_s
     end
@@ -55,8 +16,7 @@ module AWS; module EC2;
     def addresses_destroy_valid?
       raise "You have not supplied an IP addresses" unless @argv.ipaddress
       
-      @radd = Rudy::Addresses.new
-      @rmach = Rudy::Machines.new
+      @radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey)
       
       raise "#{@argv.ipaddress} is not allocated to you" unless @radd.exists?(@argv.ipaddress)
       raise "#{@argv.ipaddress} is associated!" if @radd.associated?(@argv.ipaddress)
@@ -71,15 +31,47 @@ module AWS; module EC2;
       
       puts "Destroying address: #{@argv.ipaddress}"
       puts "NOTE: this IP address will become available to other EC2 customers.".color(:blue)
-      exit unless Annoy.are_you_sure?(:low)
+      exit unless Annoy.are_you_sure?(:medium)
       
-      ret = @radd.destroy(@argv.ipaddress)
-      raise "Destroy failed" unless ret
+      execute_action { @radd.destroy(@argv.ipaddress) }
       
-      puts
-      puts "Done"
     end
+
+    def associate_addresses_valid?
+      raise "You have not supplied an IP addresses" unless @argv.ipaddress
+      raise "You did not supply an instance ID" unless @argv.instanceid
       
+      true
+    end
+    def associate_addresses
+      puts "Associate Address".bright, $/
+      
+      radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey)
+      #@rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
+      #raise "Instance #{@argv.instid} does not exist!" unless @rinst.exists?(@argv.instid)
+
+      raise "#{@argv.ipaddress} is not allocated to you" unless radd.exists?(@argv.ipaddress)
+      raise "#{@argv.ipaddress} is already associated!" if radd.associated?(@argv.ipaddress)
+      
+      puts "Associating #{@argv.address} to #{@inst[:aws_groups]}: #{@inst[:dns_name]}"
+      ret = radd.associate(@argv.ipaddress, @argv.instid)
+      
+    end
+    
+    def addresses
+      puts "Addresses".bright, $/
+      
+      radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey)
+      addresses = radd.list || []
+      
+      addresses.each do |address|
+        puts address.to_s
+      end
+      
+      puts "No Addresses" if addresses.empty?
+    end
+    
+    
   end
 
 end; end

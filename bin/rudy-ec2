@@ -34,7 +34,7 @@ module RudyEC2CLI
     @verbose += 1
   end
   global :V, :version, "Display version number" do
-    puts "rudy-ec2 version: #{Rudy::VERSION}"
+    puts "Rudy version: #{Rudy::VERSION}"
     exit 0
   end
   

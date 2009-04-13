@@ -24,7 +24,7 @@ module AWS; module EC2;
     
     def destroy_groups
       puts "Destroying Machine Group".bright
-      puts "Destroying group: #{@argv.name}".color(:red)
+      puts "Destroying group: #{@argv.name}"
       exit unless Annoy.are_you_sure?(:medium)
       @rgroups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
       ret = @rgroups.destroy(@argv.name)

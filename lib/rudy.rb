@@ -105,8 +105,8 @@ module Rudy
   module VERSION #:nodoc:
     unless defined?(MAJOR)
       MAJOR = 0.freeze
-      MINOR = 5.freeze
-      TINY  = 1.freeze
+      MINOR = 6.freeze
+      TINY  = 0.freeze
     end
     def self.to_s; [MAJOR, MINOR, TINY].join('.'); end
     def self.to_f; self.to_s.to_f; end
@@ -314,14 +314,12 @@ require 'rudy/aws'
 require 'rudy/utils'               # The
 require 'rudy/global'              
 require 'rudy/config'              # order
-require 'rudy/huxtable'
-require 'rudy/metadata'
-require 'rudy/command/addresses'   # require
+require 'rudy/huxtable'            # of
+require 'rudy/metadata'            # require
 require 'rudy/command/instances'   # statements
 require 'rudy/command/manager'     # is
 require 'rudy/command/backups'     # important.
 require 'rudy/command/volumes'
-require 'rudy/command/groups'
 require 'rudy/command/disks'
 require 'rudy/routines'    
 

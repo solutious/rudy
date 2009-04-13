@@ -16,7 +16,47 @@ module Rudy::AWS
   
     class Addresses
       include Rudy::AWS::ObjectBase
+      include Rudy::AWS::EC2::Base
     
+      
+      def create
+        ret = @ec2.allocate_address
+        return false unless ret && ret['publicIp']
+        address = Rudy::AWS::EC2::Address.new
+        address.ipaddress = ret['publicIp']
+        address
+      end
+
+      def destroy(address)
+        address = address.ipaddress if address.is_a?(Rudy::AWS::EC2::Address)
+        raise UnknownAddress unless exists?(address)
+        
+        opts ={
+          :public_ip => address || raise("No public IP address supplied")
+        }
+        ret = @ec2.release_address(opts)
+        (ret && ret['return'] == 'true')
+      end
+
+
+      # Associate an elastic IP to an instance
+      def associate(address, instance)
+        raise NoInstanceID unless instance
+        raise NoAddress unless address
+        
+        address = address.ipaddress if address.is_a?(Rudy::AWS::EC2::Address)
+        instance = instance.awsid if instance.is_a?(Rudy::AWS::EC2::Instance)
+        raise UnknownAddress unless exists?(address)
+        opts ={
+          :instance_id => instance,
+          :public_ip => address
+        }
+        ret = @ec2.associate_address(opts)
+        (ret && ret['return'] == 'true')
+      end
+
+
+
       # Returns a Array of Rudy::AWS::EC2::Address objects. 
       def list(addresses=[])
         addresses = list_as_hash(addresses)
@@ -28,7 +68,7 @@ module Rudy::AWS
       def list_as_hash(addresses=[])
         addresses ||= []
         addresses = [addresses].flatten.compact
-        alist = @aws.describe_addresses(:addresses=> addresses)
+        alist = @ec2.describe_addresses(:addresses=> addresses)
         
         return nil unless alist['addressesSet'].is_a?(Hash)
       
@@ -43,7 +83,7 @@ module Rudy::AWS
     
     
       def any?
-        !(list_as_hash || {}).empty?
+        !list_as_hash.nil?
       end
       
       def get(address)
@@ -62,38 +102,6 @@ module Rudy::AWS
         address.ipaddress = h['publicIp']
         address.instid = h['instanceId'] if h['instanceId'] && !h['instanceId'].empty?
         address
-      end
-    
-      # Associate an elastic IP to an instance
-      def associate(instance, address)
-        address = address.ipaddress if address.is_a?(Rudy::AWS::EC2::Address)
-        instance = instance.awsid if instance.is_a?(Rudy::AWS::EC2::Instance)
-        raise "Not a valid address" unless exists?(address)
-        opts ={
-          :instance_id => instance || raise("No instance ID supplied"),
-          :public_ip => address || raise("No public IP address supplied")
-        }
-        ret = @aws.associate_address(opts)
-        (ret && ret['return'] == 'true')
-      end
-    
-    
-      def create
-        ret = @aws.allocate_address
-        return false unless ret && ret['publicIp']
-        address = Rudy::AWS::EC2::Address.new
-        address.ipaddress = ret['publicIp']
-        address
-      end
-    
-      def destroy(address)
-        address = address.ipaddress if address.is_a?(Rudy::AWS::EC2::Address)
-        raise "Not a valid address" unless exists?(address)
-        opts ={
-          :public_ip => address || raise("No public IP address supplied")
-        }
-        ret = @aws.release_address(opts)
-        (ret && ret['return'] == 'true')
       end
     
     
@@ -117,5 +125,18 @@ module Rudy::AWS
         false
       end
     end
+    
   end
+end
+
+
+class Rudy::AWS::EC2::Addresses
+  
+  # TODO: Look for a generic insecure permissions exception (via OpenSSL?)
+  class InsecureKeyPairPermissions < RuntimeError; end
+  class ErrorCreatingAddress < RuntimeError; end
+  class UnknownAddress < RuntimeError; end
+  class NoInstanceID < RuntimeError; end
+  class NoAddress < RuntimeError; end
+  
 end

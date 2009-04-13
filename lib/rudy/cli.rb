@@ -15,6 +15,7 @@ module Rudy
     protected
       def init
         
+        # Send The Huxtables the global values from the command-line
         Rudy::Huxtable.update_global @global
         
         unless @@global.accesskey && @@global.secretkey
@@ -31,6 +32,9 @@ module Rudy
         
       end
       
+      def execute_action(&action)
+        puts action.call ? "Success" : "Failed"
+      end
       
       # Print a default header to the screen for every command.
       #

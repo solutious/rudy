@@ -71,7 +71,8 @@ module Rudy::Test
         ports = [[3100,3150],[3200,3250]]
         
         ret = @ec2group.authorize(test_name, addresses, ports, protocols)
-
+        assert ret, "Authorize did not return true"
+        
         group = @ec2group.get(test_name)
         
         assert group.is_a?(Rudy::AWS::EC2::Group), "Not a group (#{group})"
@@ -84,7 +85,8 @@ module Rudy::Test
         end
         
         ret = @ec2group.revoke(test_name, addresses, ports, protocols)
-
+        assert ret, "Revoke did not return true"
+        
         group = @ec2group.get(test_name)
         assert group.addresses.is_a?(Hash), "Addresses is not a hash"
         assert group.addresses.empty?, "Some addresses not revoked #{group.addresses.to_s}"

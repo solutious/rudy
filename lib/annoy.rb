@@ -172,7 +172,8 @@ class Annoy #:nodoc:all
  private 
   def Annoy.get_response(writer=STDOUT)
     return true unless STDIN.tty? # Humans only
-    # TODO: Count the number of keystrokes to prevent copy/paste
+    # TODO: Count the number of keystrokes to prevent copy/paste.
+    # We can probably use Highline. 
     # We likely need to be more specific but this will do for now.
     #if ::SystemInfo.new.os == :unix 
     #  begin

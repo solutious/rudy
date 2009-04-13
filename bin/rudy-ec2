@@ -128,9 +128,26 @@ module RudyEC2CLI
   option :g, :group, String, "A security group name"
   option :k, :pkey, String, "Path to the private SSH key"
   option :u, :user, String, "Username to connect as"
+  option :print, "Print SSH command. Don't connect."
   argv :cmd
   command :ssh => Rudy::CLI::AWS::EC2::Instances 
   command_alias :ssh, :connect
+  
+  usage "rudy-ec2 copy [-p] [-r] source target"
+  usage "rudy-ec2 upload [-p] local-source target"
+  usage "rudy-ec2 download [-p] remote-source target"
+  desc "Copy files to or from machines. NOTE: You must use quotes when using a tilda for your remote dir ('~/')."
+  option :r, :recursive, "Recursively copy entire directories"
+  option :p, :preserve, "Preserve atimes and ctimes."
+  option :d, :download, "Download FROM the remote machine to the local machine"
+  option :print, "Only print the SSH command, don't connect"
+  option :k, :pkey, String, "Path to the private SSH key"
+  option :g, :group, String, "A security group name"
+  option :i, :awsid, String, "An instance ID"
+  command :copy => Rudy::CLI::AWS::EC2::Instances 
+  command_alias :copy, :scp
+  command_alias :copy, :upload
+  command_alias :copy, :download
   
   #usage "rudy-ec2 images [-C -i name [-b bucket -a accountnum]] [-D AMI-ID]"
   #desc "Manage EC2 Machine Images (AMIs)"

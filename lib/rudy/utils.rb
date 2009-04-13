@@ -138,7 +138,8 @@ module Rudy
       (command) ? `#{cmd}` : Kernel.system(cmd)
     end
 
-
+    
+    # TODO: This is old and insecure. 
     def scp_command(host, keypair, user, paths, to_path, to_local=false, verbose=false, printonly=false)
 
       paths = [paths] unless paths.is_a?(Array)
@@ -147,16 +148,18 @@ module Rudy
         paths.each do |path|
           from_paths << "#{user}@#{host}:#{path} "
         end  
-        puts "Copying FROM remote TO this machine", $/
+        #puts "Copying FROM remote TO this machine", $/
 
       else
         to_path = "#{user}@#{host}:#{to_path}"
         from_paths = paths.join(' ')
-        puts "Copying FROM this machine TO remote", $/
+        #puts "Copying FROM this machine TO remote", $/
       end
 
 
-      cmd = "scp -r -i #{keypair} #{from_paths} #{to_path}"
+      cmd = "scp -r "
+      cmd << "-i #{keypair}" if keypair
+      cmd << " #{from_paths} #{to_path}"
 
       puts cmd if verbose
       printonly ? (puts cmd) : system(cmd)

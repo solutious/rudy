@@ -182,24 +182,23 @@ module Rudy
       @sdb.query_with_attributes(Rudy::DOMAIN, query)
     end
     
-    # * +opts+
-    # :recursive => false, :preserve => false, :chunk_size => 16384
-    def scp(task, host, user, keypairpath, paths, dest, opts)
-      opts = { 
-        :recursive => false, :preserve => false, :chunk_size => 16384
-      }.merge(opts)
+    def Huxtable.scp(task, host, user, keypairpath, paths, dest, opts)
       
-      Net::SCP.start(host, user, :keys => [keypairpath]) do |scp|
+      connect_opts = {}
+      connect_opts[:keys] = [keypairpath] if keypairpath
+      
+      Net::SCP.start(host, user, connect_opts) do |scp|
+        
         paths.each do |path| 
           prev_path = nil
           scp.send("#{task}!", path, dest, opts) do |ch, name, sent, total|
             msg = ((prev_path == name) ? "\r" : "\n") # new line for new file
             msg << "#{name}: #{sent}/#{total}"  # otherwise, update the same line
-            @@logger.print msg
-            @@logger.flush        # update the screen every cycle
+            print msg
+            STDOUT.flush        # update the screen every cycle
             prev_path = name
           end
-          @@logger.puts unless prev_path == path
+          puts unless prev_path == path
         end
       end
     end

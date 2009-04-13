@@ -13,11 +13,13 @@ module AWS; module EC2;
     def create_keypairs
       puts "Create KeyPairs".bright
       rkey = Rudy::AWS::EC2::KeyPairs.new(@@global.accesskey, @@global.secretkey)
-      name = @argv.kpname
       
       kp = rkey.create(@argv.kpname)
       puts "Name: #{kp.name}"
       puts "Fingerprint: #{kp.fingerprint}"
+      
+      puts "Copy the following private key data into a file."
+      puts "Set the permissions to 0600 and keep it safe."
       puts kp.private_key
     end
     

@@ -7,13 +7,12 @@ module AWS; module SDB;
     
     
     def domains
-      puts "Domains".bright, $/
+      puts "Domains".bright
       
       sdb = Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey)
       
-      #puts sdb.create_domain('crazy')
-      p sdb.list_domains
-      #puts sdb.destroy_domain('crazy')
+      puts sdb.list_domains
+
     end
     
   end

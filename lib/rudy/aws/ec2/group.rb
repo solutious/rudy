@@ -67,57 +67,49 @@ module Rudy::AWS
   
       
       # Create a new EC2 security group
-      # Returns true/false whether successful
-      def create(name, desc=nil, addresses=[], ports=[], protocols=[])
+      # Returns list of created groups
+      def create(name, desc=nil, addresses=[], ports=[], protocols=[], &each_group)
         desc ||= "Security Group #{name}"
         ret = @ec2.create_security_group(:group_name => name, :group_description => desc)
         return false unless (ret && ret['return'] == 'true')
         authorize(name, addresses, ports, protocols)
-        get(name)
+        groups = list(name, &each_group)
+        groups
       end
     
       # Delete an EC2 security group
       # Returns true/false whether successful
-      def destroy(name)
+      def destroy(name, &each_group)
+        list(name, &each_group) if each_group
         ret = @ec2.delete_security_group(:group_name => name)
         (ret && ret['return'] == 'true')
       end
       
       
       # Authorize a port/protocol for a specific IP address
-      def authorize(name, addresses=[], ports=[], protocols=[])
-        ports = [[22,22],[80,80],[443,443]] if !ports || ports.empty?
-        protocols = ["tcp"] if !protocols || protocols.empty?
-        addresses = [Rudy::Utils::external_ip_address] if !addresses || addresses.empty?
-        # Make sure the IP addresses have ranges
-        addresses.collect! { |ip| (ip.match /\/\d+/) ? ip : "#{ip}/32" }
-        modify_rules(:authorize, name, addresses, ports, protocols)
+      def authorize(name, addresses=[], ports=[], protocols=[], &each_group)
+        modify_rules(:authorize, name, addresses, ports, protocols, &each_group)
       end
       alias :authorise :authorize
       
       # Revoke a port/protocol for a specific IP address
       # Takes the same arguments as authorize
-      def revoke(name, addresses=[], ports=[], protocols=[])
-        ports = [[22,22],[80,80],[443,443]] if !ports || ports.empty?
-        protocols = ["tcp"] if !protocols || protocols.empty?
-        addresses = [Rudy::Utils::external_ip_address] if !addresses || addresses.empty?
-        # Make sure the IP addresses have ranges
-        addresses.collect! { |ip| (ip.match /\/\d+/) ? ip : "#{ip}/32" }
-        modify_rules(:revoke, name, addresses, ports, protocols)
+      def revoke(name, addresses=[], ports=[], protocols=[], &each_group)
+        modify_rules(:revoke, name, addresses, ports, protocols, &each_group)
       end
       
-      def authorize_group(name, gname, owner)
-        modify_group_rules(:authorize, name, gname, owner)
+      def authorize_group(name, gname, owner, &each_group)
+        modify_group_rules(:authorize, name, gname, owner, &each_group)
       end
       alias :authorise_group :authorize_group
       
-      def revoke_group(name, gname, owner)
-        modify_group_rules(:revoke, name, gname, owner)
+      def revoke_group(name, gname, owner, &each_group)
+        modify_group_rules(:revoke, name, gname, owner, &each_group)
       end
       
-      def list(group_names=[])
+      def list(group_names=[], &each_group)
         group_names ||= []
-        groups = list_as_hash(group_names)
+        groups = list_as_hash(group_names, &each_group)
         groups &&= groups.values
         groups
       end
@@ -126,7 +118,7 @@ module Rudy::AWS
       # associated to the account will be returned.
       #
       # Returns an Array of Rudy::AWS::EC2::Group objects
-      def list_as_hash(group_names=[])
+      def list_as_hash(group_names=[], &each_group)
         group_names ||= []
         glist = @ec2.describe_security_groups(:group_name => group_names) || {}
         return unless glist['securityGroupInfo'].is_a?(Hash)
@@ -135,6 +127,7 @@ module Rudy::AWS
           g = Groups.from_hash(oldg)
           groups[g.name] = g
         end
+        groups.each_value { |g| each_group.call(g) } if each_group
         groups
       end
       
@@ -216,7 +209,7 @@ module Rudy::AWS
           end
           if oldp['ipRanges'].is_a?(Hash)
             oldp['ipRanges']['item'].each do |olda|
-              name = "#{olda['cidrIp']}}"
+              name = "#{olda['cidrIp']}"
               newg.add_address(name, newp)   # ipaddress/mask/protocol
             end
           end
@@ -228,12 +221,21 @@ module Rudy::AWS
     private
       
 
-      def modify_rules(meth, name, addresses, ports, protocols)
+      def modify_rules(meth, name, addresses, ports, protocols, &each_group)
+        list(name, &each_group) if each_group
+        
+        ports = [[22,22],[80,80],[443,443]] if !ports || ports.empty?
+        protocols = ["tcp"] if !protocols || protocols.empty?
+        addresses = [Rudy::Utils::external_ip_address] if !addresses || addresses.empty?
+        
+        # Make sure the IP addresses have ranges
+        addresses.collect! { |ip| (ip.match /\/\d+/) ? ip : "#{ip}/32" }
+        protocols.collect! { |p| p.to_s }
         ret = false
         protocols.each do |protocol|
           addresses.each do |address|
             ports.each do |port|
-              #port_lo, port_hi = port.is_a?(Array) ? (port[0], port[1]) : (port, port)
+              port_lo, port_hi = port.is_a?(Array) ? [port[0], port[1]] : [port, port]
               @logger.puts "#{meth} for ports #{port[0]}:#{port[1]} (#{protocol}) for #{addresses.join(', ')}" if @logger
               ret = modify_rule(meth, name, port[0].to_i, (port[1] || port[0]).to_i, protocol, address)
               raise "Unknown error during #{meth}" unless ret
@@ -245,6 +247,8 @@ module Rudy::AWS
       end
       
       def modify_rule(meth, name, from_port, to_port, protocol, ipa)
+        
+        
         opts = {
           :group_name => name,
           :ip_protocol => protocol,
@@ -257,7 +261,9 @@ module Rudy::AWS
       end
       
       
-      def modify_group_rules(meth, name, gname, gowner)
+      def modify_group_rules(meth, name, gname, gowner, &each_group)
+        list(name, &each_group) if each_group
+        
         opts = {
           :group_name => name,
           :source_security_group_name => gname,

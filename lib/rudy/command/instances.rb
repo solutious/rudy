@@ -73,7 +73,6 @@ module Rudy
     # return instances from all groups.
     # * +inst_ids+ An Array of instance IDs (Strings) or Instance objects to 
     # filter the list by. Any instances not in the group will be ignored. 
-    # * +each_inst+ a block to execute for every instance in the list. 
     # Returns an Array of Rudy::AWS::EC2::Instance objects
     def list(state=nil, group=nil, inst_ids=[], &each_inst)
       group ||= current_machine_group

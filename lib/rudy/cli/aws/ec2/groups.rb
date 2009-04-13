@@ -23,7 +23,7 @@ module AWS; module EC2;
     end
     
     def destroy_groups
-      puts "Destroying Machine Group".bright
+      puts "Security Group".bright
       puts "Destroying group: #{@argv.name}"
       exit unless Annoy.are_you_sure?(:medium)
       @rgroups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
@@ -32,30 +32,45 @@ module AWS; module EC2;
     end
     
     def create_groups
-      puts "Creating Machine Group".bright
+      puts "Security Group".bright
       opts = check_options
       exit unless Annoy.are_you_sure?(:medium)
-      rudy = Rudy::Groups.new
-      rudy.create(@argv.name, nil, opts)
-      rudy.list(@argv.name)
+      rudy = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
+      rudy.create(@argv.name, opts[:addresses], opts[:ports], opts[:protocols])
+      rudy.list(@argv.name) do |group|
+        puts '-'*60
+        puts group.to_s
+      end
     end
     
     def revoke_groups
-      puts "Revoke Machine Group Rule".bright
+      puts "Security Group".bright
       opts = check_options
+      raise "Must specify group to modify. #{$0} groups -A NAME" unless @argv.name
+      puts "This will revoke #{opts[:addresses].join(', ')} access to group: #{@argv.name}"
+      puts "on #{opts[:protocols].join(', ')} ports: #{opts[:ports].map { |p| "#{p.join(':')}" }.join(', ')}"
       exit unless Annoy.are_you_sure?(:medium)
-      rudy = Rudy::Groups.new
-      rudy.revoke(@argv.name, opts)
-      rudy.list(@argv.name)
+      rudy = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
+      rudy.revoke(@argv.name, opts[:addresses], opts[:ports], opts[:protocols])
+      rudy.list(@argv.name) do |group|
+        puts '-'*60
+        puts group.to_s
+      end
     end
     
     def authorize_groups
-      puts "Authorize Machine Group Rule".bright
+      puts "Security Group".bright
       opts = check_options
+      raise "Must specify group to modify. #{$0} groups -A NAME" unless @argv.name
+      puts "This will authorize #{opts[:addresses].join(', ')} to access group: #{@argv.name}"
+      puts "on #{opts[:protocols].join(', ')} ports: #{opts[:ports].map { |p| "#{p.join(' to ')}" }.join(', ')}"
       exit unless Annoy.are_you_sure?(:medium)
-      rudy = Rudy::Groups.new
-      rudy.authorize(opts)
-      rudy.list(opts)
+      rudy = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
+      rudy.authorize(@argv.name, opts[:addresses], opts[:ports], opts[:protocols])
+      rudy.list(@argv.name) do |group|
+        puts '-'*60
+        puts group.to_s
+      end
     end
 
     
@@ -66,7 +81,10 @@ module AWS; module EC2;
       [:addresses, :protocols, :owner, :group, :ports].each do |opt|
         opts[opt] = @option.send(opt) if @option.respond_to?(opt)
       end
-      opts[:ports].collect! { |port| port.split(/:/) } if opts[:ports]
+      opts[:ports].collect! { |port| port.split(/[:-]/) } if opts[:ports]
+      opts[:ports] ||= [[22,22],[80,80],[443,443]]
+      opts[:addresses] ||= [Rudy::Utils::external_ip_address]
+      opts[:protocols] ||= [:tcp]
       opts
     end
     

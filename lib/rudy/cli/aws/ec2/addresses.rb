@@ -7,7 +7,7 @@ module AWS; module EC2;
 
     
     def addresses_create
-      puts "Create Address".bright, $/
+      puts "Create Address".bright
       radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey)
       address = radd.create
       puts address.to_s
@@ -24,7 +24,7 @@ module AWS; module EC2;
       true
     end
     def addresses_destroy
-      puts "Destroy Address".bright, $/
+      puts "Destroy Address".bright
       
       address = @radd.get(@argv.ipaddress)
       raise "Could not fetch #{address.ipaddress}" unless address
@@ -44,7 +44,7 @@ module AWS; module EC2;
     #  true
     #end
     #def associate_addresses
-    #  puts "Associate Address".bright, $/
+    #  puts "Associate Address".bright
     #  
     #  radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey)
     #  #@rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
@@ -59,7 +59,7 @@ module AWS; module EC2;
     #end
     
     def addresses
-      puts "Addresses".bright, $/
+      puts "Addresses".bright
       
       radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey)
       addresses = radd.list || []

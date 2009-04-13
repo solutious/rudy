@@ -22,7 +22,6 @@ module Rudy::AWS
       @groups || []
     end
     
-        
     def to_s
       lines = []
       field_names.each do |key|
@@ -33,21 +32,11 @@ module Rudy::AWS
       lines.join($/)
     end
     
-    def running?
-      self.state && self.state == 'running'
-    end
-    
-    def pending?
-      self.state && self.state == 'pending'
-    end
-    
-    def terminated?
-      self.state && self.state == 'terminated'
-    end
-    
-    def shutting_down?
-      self.state && self.state == 'shutting-down'
-    end
+    def running?; self.state && self.state == 'running'; end
+    def pending?; self.state && self.state == 'pending'; end
+    def terminated?; self.state && self.state == 'terminated'; end
+    def degraded?; self.state && self.state == 'degraded'; end
+    def shutting_down?; self.state && self.state == 'shutting-down'; end
       
   end
   
@@ -55,8 +44,10 @@ module Rudy::AWS
   module EC2
     class Instances
       include Rudy::AWS::ObjectBase
+      include Rudy::AWS::EC2::Base
+      
       unless defined?(KNOWN_STATES)
-        KNOWN_STATES = [:running, :pending, :shutting_down, :terminated].freeze 
+        KNOWN_STATES = [:running, :pending, :shutting_down, :terminated, :degraded].freeze 
       end
     
       # Return an Array of Instance objects. Note: These objects will not have
@@ -70,11 +61,19 @@ module Rudy::AWS
       # * +:user+         
       # * +:size+          
       # * +:keypair+      
-      # * +:address+      
+      # * +:address+
+      # * +:private+ true or false (default)
       # * +:machine_data+ 
       #
-      def create(opts={})
-
+      def create(opts={}, &each_inst)
+        raise NoAMI unless opts[:ami]
+        raise NoGroup unless opts[:group]
+        #raise NoAMI unless opts[:ami]
+        
+        opts = {
+          :size => 'm1.small'
+        }.merge(opts)
+        
         old_opts = {
           :image_id => opts[:ami].to_s,
           :min_count => 1,
@@ -83,12 +82,12 @@ module Rudy::AWS
           :group_id => [opts[:group]].flatten.compact,
           :user_data => opts[:machine_data].to_s,
           :availability_zone => opts[:zone].to_s,
-          :addressing_type => 'public',
-          :instance_type => opts[:size] || 'm1.small',
+          :addressing_type => opts[:private] ? 'private' : 'public',
+          :instance_type => opts[:size].to_s,
           :kernel_id => nil
         }
-      
-        response = execute_request({}) { @aws.run_instances(old_opts) }
+        
+        response = execute_request({}) { @ec2.run_instances(old_opts) }
         
         # reservationId: r-f393149a
         # groupSet: 
@@ -98,39 +97,38 @@ module Rudy::AWS
         # instancesSet: 
         #   item:
         #     ... # see Instances.from_hash
-        raise "The request failed to return instance data" unless response['instancesSet'].is_a?(Hash)
+        return nil unless response['instancesSet'].is_a?(Hash)
         instances = response['instancesSet']['item'].collect do |inst|
           self.class.from_hash(inst)
         end
         
+        instances.each { |inst| each_inst.call(inst) } if each_inst
+        
         instances
       end
     
-      def restart(inst_ids=[], skip_check=false)
-        unless skip_check
-          instances = list(:running, inst_ids) || []
-          raise "No matching running instances found" if instances.empty?
-        end
-      
+      def restart(inst_ids=[], &each_inst)
+        instances = list(:running, inst_ids, &each_inst) || []
+        raise NoRunningInstances if instances.empty?
+
         inst_ids = objects_to_instance_ids(inst_ids)
-            
+        
+        
         response = execute_request({}) {
-          @aws.reboot_instances(:instance_id => inst_ids)
+          @ec2.reboot_instances(:instance_id => inst_ids)
         }
       
         response['return'] == 'true'
       end
     
-      def destroy(inst_ids=[], skip_check=false)
-        unless skip_check
-          instances = list(:running, inst_ids) || [] 
-          raise "No matching running instances found" if instances.empty?
-        end
+      def destroy(inst_ids=[], &each_inst)
+        instances = list(:running, inst_ids, &each_inst) || [] 
+        raise NoRunningInstances if instances.empty?
       
         inst_ids = objects_to_instance_ids(inst_ids)
             
         response = execute_request({}) {
-          @aws.terminate_instances(:instance_id => inst_ids)
+          @ec2.terminate_instances(:instance_id => inst_ids)
         }
       
         #instancesSet: 
@@ -143,7 +141,7 @@ module Rudy::AWS
         #      code: "48"
         #      name: terminated
       
-        raise "The request failed to return instance data" unless response['instancesSet'].is_a?(Hash)
+        raise MalformedResponse unless response['instancesSet'].is_a?(Hash)
         instances_shutdown = []
         response['instancesSet']['item'].collect do |inst|
           next unless inst['shutdownState'].is_a?(Hash) && inst['shutdownState']['name'] == 'shutting-down'
@@ -154,14 +152,14 @@ module Rudy::AWS
         success
       end
     
-      def restart_group(group)
-        instances = list_group(group, :running) || []
+      def restart_group(group, &each_inst)
+        instances = list_group(group, :running, &each_inst) || []
         inst_ids = objects_to_instance_ids(instances)
         restart(inst_ids, :skip_check)
       end
     
-      def destroy_group(group)
-        instances = list_group(group, :running) || []
+      def destroy_group(group, &each_inst)
+        instances = list_group(group, :running, &each_inst) || []
         inst_ids = objects_to_instance_ids(instances)
         destroy(inst_ids, :skip_check)
       end
@@ -169,8 +167,8 @@ module Rudy::AWS
       # * +state+ is an optional instance state. If specified, must be one of: running (default), pending, terminated.
       # * +inst_ids+ is an Array of instance IDs.
       # Returns an Array of Rudy::AWS::EC2::Instance objects. 
-      def list(state=nil, inst_ids=[])
-        instances = list_as_hash(state, inst_ids)
+      def list(state=nil, inst_ids=[], &each_inst)
+        instances = list_as_hash(state, inst_ids, &each_inst)
         instances &&= instances.values
         instances = nil if instances && instances.empty? # Don't return an empty hash
         instances
@@ -179,9 +177,8 @@ module Rudy::AWS
       # * +group+ is a security group name.
       # * +state+ is an optional instance state. If specified, must be one of: running (default), pending, terminated.
       # * +inst_ids+ is an Array of instance IDs.
-      def list_group(group=nil, state=nil, inst_ids=[])
-        raise "No group specified" unless group
-        instances = list_group_as_hash(group, state, inst_ids)
+      def list_group(group=nil, state=nil, inst_ids=[], &each_inst)
+        instances = list_group_as_hash(group, state, inst_ids, &each_inst)
         instances &&= instances.values
         instances = nil if instances && instances.empty? # Don't return an empty hash
         instances
@@ -191,9 +188,8 @@ module Rudy::AWS
       # * +group+ is a security group name.
       # * +state+ is an optional instance state. If specified, must be one of: running (default), pending, terminated.
       # * +inst_ids+ is an Array of instance IDs.
-      def list_group_as_hash(group=nil, state=nil, inst_ids=[])
-        raise "No group specified" unless group
-        instances = list_as_hash(state, inst_ids)
+      def list_group_as_hash(group=nil, state=nil, inst_ids=[], &each_inst)
+        instances = list_as_hash(state, inst_ids, &each_inst)
         # Remove instances that are not in the specified group
         instances &&= instances.reject { |id,inst| !inst.groups.member?(group) } if group
         instances = nil if instances && instances.empty? # Don't return an empty hash
@@ -204,7 +200,8 @@ module Rudy::AWS
       # one of: running (default), pending, terminated, any
       # * +inst_ids+ is an Array of instance IDs or Rudy::AWS::EC2::Instance objects.
       # Returns a Hash of Rudy::AWS::EC2::Instance objects. The key is the instance ID. 
-      def list_as_hash(state=nil, inst_ids=[])
+      # * +each_inst+ a block to execute for every instance in the list.
+      def list_as_hash(state=nil, inst_ids=[], &each_inst)
         state &&= state.to_sym
         state = nil if state == :any
         raise "Unknown state: #{state}" if state && !Instances.known_state?(state)
@@ -215,7 +212,7 @@ module Rudy::AWS
         inst_ids = objects_to_instance_ids(inst_ids)
       
         response = execute_request({}) {
-          @aws.describe_instances(:instance_id => inst_ids)
+          @ec2.describe_instances(:instance_id => inst_ids)
         }
       
         # requestId: c16878ac-28e4-4859-9878-ef93af45789c
@@ -244,7 +241,9 @@ module Rudy::AWS
             instances[inst.awsid] = inst
           end
         end
-
+        
+        instances.each_value { |inst| each_inst.call(inst) } if each_inst
+        
         instances = nil if instances.empty? # Don't return an empty hash
         instances
       end
@@ -262,10 +261,10 @@ module Rudy::AWS
       #      require 'base64'
       #      Base64.decode64(output)
       #
-      def console_output(inst_id)
+      def console(inst_id, &each_inst)
         inst_ids = objects_to_instance_ids([inst_id])
         response = execute_request({}) { 
-          @aws.get_console_output(:instance_id => inst_ids.first)
+          @ec2.get_console_output(:instance_id => inst_ids.first)
         }
         response['output']
       end
@@ -279,8 +278,10 @@ module Rudy::AWS
       end
     
       def volumes(id)
-        list = Rudy::AWS::EC2::Volumes.new(@aws).list || []
-        list.select { |v| v.status != "deleting" && v.instid === id }
+        rvol = Rudy::AWS::EC2::Volumes.new
+        rvol.ec2 = @ec2 
+        rvol.list || []
+        list.select { |v| v.attached? && v.instid === id }
       end
     
       def device_volume(id, device)
@@ -416,4 +417,15 @@ module Rudy::AWS
   
     end
   end
+end
+
+class Rudy::AWS::EC2::Instances
+  
+  class MalformedResponse < RuntimeError; end
+  class NoRunningInstances < RuntimeError; end
+  class UnknownState < RuntimeError; end
+  class NoGroup < RuntimeError; end
+  class NoKeyPair < RuntimeError; end
+  class NoAMI < RuntimeError; end
+  
 end

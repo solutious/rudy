@@ -27,7 +27,6 @@ module RudyEC2CLI
   global :n, :nocolor, "Disable output colors"
   global :f, :config, String, "Specify another configuration file to read (ie: #{Rudy::CONFIG_FILE})"
   global :z, :zone, String, "Connect to a specific EC2 zone (ie: #{Rudy::DEFAULT_ZONE})"
-  global :u, :user, String, "Provide a username (ie: #{Rudy::DEFAULT_USER})"
   global :q, :quiet, "Run with less output"
   global :v, :verbose, "Increase verbosity of output (i.e. -v or -vv or -vvv)" do
     @verbose ||= 0
@@ -111,17 +110,28 @@ module RudyEC2CLI
   usage "rudy-ec2 instances [-g group-name] [-s state] [instance-ID]"
   option :g, :group, String, "The security group name"
   option :i, :ami, String, "The machine image ID (ami-)"
-  option :t, :itype, String, "The instance type (default: m1.small)"
+  option :s, :size, String, "The instance size (default: m1.small)"
   option :k, :keypair, String, "The SSH keypair to use for launch"
   option :a, :address, String, "The IP address to associate"
-  action :S, :start, "Start a machine instance"
-  action :T, :terminate, "Terminate a machine instance"
+  option :p, :private, "Do not give the instance a public IP address"
+  action :C, :create, "Create a machine instance"
+  action :D, :destroy, "Destroy a machine instance"
   argv :awsid
   command :instances => Rudy::CLI::AWS::EC2::Instances
   command_alias :instances, :i
   command_alias :instances, :status
   command_alias :instances, :instance
 
+  usage "rudy-ec2 ssh [-g group-name] [-i instance-ID] [cmd]"
+  desc "Open an SSH connection"
+  option :print, "Only print the SSH command, don't connect"
+  option :g, :group, String, "A security group name"
+  option :k, :pkey, String, "Path to the private SSH key"
+  option :u, :user, String, "Username to connect as"
+  argv :cmd
+  command :ssh => Rudy::CLI::AWS::EC2::Instances 
+  command_alias :ssh, :connect
+  
   #usage "rudy-ec2 images [-C -i name [-b bucket -a accountnum]] [-D AMI-ID]"
   #desc "Manage EC2 Machine Images (AMIs)"
   #option :a, :accountnum, String, "Your Amazon Account Number"
@@ -136,6 +146,7 @@ module RudyEC2CLI
   #command_alias :images, :image
 
 
+  default :instances
   debug :on
   
   before do |obj|
@@ -153,4 +164,14 @@ module RudyEC2CLI
 end
 
 
+# We call Drydock specifically otherwise it will run at_exit. Rye also
+# uses at_exit for shutting down the ssh-agent. Ruby executes at_exit
+# blocks in reverse order so if Drydock is required first, it's block
+# will run after Rye shuts down the ssh-agent. 
+begin
+  Drydock.run!(ARGV, STDIN) if Drydock.run? && !Drydock.has_run?
+rescue => ex
+  STDERR.puts "ERROR (#{ex.class.to_s}): #{ex.message}"
+  STDERR.puts ex.backtrace if Drydock.debug?
+end
 

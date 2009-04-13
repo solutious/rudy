@@ -12,7 +12,7 @@ module AWS; module EC2;
       true
     end
     def volumes_create
-      puts "Create Volume".bright, $/
+      puts "Create Volume".bright
       
       puts "Creating #{@option.size}GB volume in #{@@global.zone}"
       exit unless Annoy.are_you_sure?(:medium)
@@ -30,7 +30,7 @@ module AWS; module EC2;
     end
     
     def destroy_volumes
-      puts "Destroy Volume".bright, $/
+      puts "Destroy Volume".bright
       
       @rvol = Rudy::AWS::EC2::Volumes.new(@@global.accesskey, @@global.secretkey)
       
@@ -66,7 +66,7 @@ module AWS; module EC2;
     #  true
     #end
     #def volumes_attach
-    #  puts "Attach Volume".bright, $/
+    #  puts "Attach Volume".bright
     #  
     #  @option.device ||= "/dev/sdh"
     #  
@@ -94,7 +94,7 @@ module AWS; module EC2;
     #  true
     #end
     #def volumes_detach
-    #  puts "Detach Volume".bright, $/
+    #  puts "Detach Volume".bright
     #  
     #  puts "Detaching #{@volume.awsid} from #{@volume.instid}"
     #  exit unless Annoy.are_you_sure?(:low)
@@ -107,7 +107,7 @@ module AWS; module EC2;
     
     
     def volumes
-      puts "Volumes".bright, $/
+      puts "Volumes".bright
       
       rvol = Rudy::AWS::EC2::Volumes.new(@@global.accesskey, @@global.secretkey)
       volumes = rvol.list || []

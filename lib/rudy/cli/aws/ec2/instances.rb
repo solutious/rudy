@@ -4,7 +4,61 @@ module AWS; module EC2;
   
   class Instances < Rudy::CLI::Base
 
-  
+
+    def instances_create
+      puts "Create Instances".bright
+      opts = {
+        :group => 'default'
+      }
+
+      [:group, :ami, :address, :size, :keypair, :private].each do |n|
+        opts[n] = @option.send(n) if @option.send(n)
+      end
+      
+      opts[:size] ||= 'm1.small'
+      opts[:zone] = @@global.zone
+      
+      puts "Creating #{opts[:itype]} instance in #{@@global.zone}"
+      
+      rmach = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
+      
+      unless opts[:keypair]
+        puts "You did not specify a keypair. Unless you've prepared a user account".color(:blue)
+        puts "on this image (#{opts[:ami]}) you will not be able to log in to it.".color(:blue)
+        exit unless Annoy.are_you_sure?(:low)
+      end
+      
+      # TODO: Print number of instances running. If more than 0, use Annoy.are_you_sure?
+      rmach.create(opts) do |inst| # Rudy::AWS::EC2::Instance objects
+        puts '-'*60
+        puts "Instance: #{inst.awsid.bright} (AMI: #{inst.ami})"
+        puts inst.to_s
+      end
+
+    end
+
+
+    def instances_destroy
+      puts "Destroy Instances".bright
+      opts = {}
+      opts[:group] = @option.group if @option.group
+      opts[:id] = @argv.awsid if @argv.awsid
+      opts[:id] &&= [opts[:id]].flatten
+      
+      raise "You must provide a group or instance ID" unless opts[:group] || opts[:id]
+      
+      rmach = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
+      instances = rmach.list_group(opts[:group], :running, opts[:id])
+      inst_ids = instances.collect { |inst| inst.awsid }
+      raise "No instances running" if instances.nil? || instances.empty?
+      print "Destroying #{instances.size} (#{inst_ids.join(', ')}) "
+      print "in #{opts[:group]}" if opts[:group]
+      puts
+      exit unless Annoy.are_you_sure?(:medium)
+      rmach.destroy(inst_ids)
+      puts "Done!"
+    end
+    
     def status
       puts "Instance Status".bright
       opts = {}
@@ -20,8 +74,8 @@ module AWS; module EC2;
       opts[:id] = @argv.awsid if @argv.awsid
       opts[:id] &&= [opts[:id]].flatten
     
-      rudy = Rudy::Instances.new
-      lt = rudy.list(opts[:state], opts[:group], opts[:id]) do |inst|
+      rudy = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
+      lt = rudy.list_group(opts[:group], opts[:state], opts[:id]) do |inst|
         puts '-'*60
         puts "Instance: #{inst.awsid.bright} (AMI: #{inst.ami})"
         puts inst.to_s
@@ -30,18 +84,32 @@ module AWS; module EC2;
     end
     alias :instances :status
 
-    def connect
-      puts "Rudy Connect".bright
+    def ssh
+      
+      opts = {}
+      opts[:group] = @option.group if @option.group
+      opts[:group] = :any if @option.all
 
-      if @argv.cmd
-        @argv.cmd = [@argv.cmd].flatten.join(' ')
-        if @global.user.to_s == "root"
-          exit unless Annoy.are_you_sure?(:medium)
-        end
+      opts[:id] = @argv.shift if Rudy.is_id?(:instance, @argv.first)
+      opts[:id] &&= [opts[:id]].flatten
+      
+      if @argv.first
+        @argv.first = [@argv.first].flatten.join(' ')
+        exit unless Annoy.are_you_sure?(:medium) if @option.user == "root"
       end
-    
-      rudy = Rudy::Instances.new
-      rudy.connect(@option.group, @argv.cmd, @option.awsid, @option.print)
+      
+      
+      if @option.pkey
+        raise "Cannot find file #{@option.pkey}" unless File.exists?(@option.pkey)
+        raise "Insecure permissions for #{@option.pkey}" unless (File.stat(@option.pkey).mode & 600) == 0
+      end
+      
+      rudy = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
+      lt = rudy.list_group(opts[:group], opts[:state], opts[:id]) do |inst|
+        puts "Connecting to: #{inst.awsid.bright} (group: #{inst.groups.join(', ')})"
+        rbox = Rye::Box.new(inst.dns_name_public, :keys => @option.pkey, :user => @option.user || 'root')
+        puts rbox.uname(:a)
+      end
     end
 
     def copy_valid?
@@ -71,13 +139,13 @@ module AWS; module EC2;
     
       #exit unless @option.print || Annoy.are_you_sure?(:low)
     
-      rudy = Rudy::Instances.new
+      rudy = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
       rudy.copy(opts[:group], opts[:id], opts)
     end
 
     def consoles_valid?
     
-      @rmach = Rudy::Instances.new
+      @rmach = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
     end
   
     def consoles
@@ -86,16 +154,18 @@ module AWS; module EC2;
       opts[:group] = @option.group if @option.group
       opts[:id] = @argv.awsid if @argv.awsid
       opts[:id] &&= [opts[:id]].flatten
-    
-      #unless @rmach.any?
-      #  puts "No instances running"
-      #  return
-      #end
-    
-      console = @rmach.console(opts[:group], opts[:id])
+      
+      unless @rmach.any?
+        puts "No instances running"
+        return
+      end
+      
+      raise "You must provide a group or instance ID" unless opts[:group] || opts[:id]
+      
+      console = @rmach.console(opts[:id])
     
       if console
-        puts console
+        puts Base64.decode64(console)
       else
         puts "Console output is not available"
       end
@@ -103,43 +173,6 @@ module AWS; module EC2;
     end
   
   
-    def instances_start
-      puts "Start Instances".bright
-      opts = {
-        :group => 'default'
-      
-      }
-    
-      [:group, :ami, :address, :itype, :keypair].each do |n|
-        opts[n] = @option.send(n) if @option.send(n)
-      end
-
-      rmach = Rudy::Instances.new
-      # TODO: Print number of instances running. If more than 0, use Annoy.are_you_sure?
-      rmach.create(opts) do |inst| # Rudy::AWS::EC2::Instance objects
-        puts '-'*60
-        puts "Instance: #{inst.awsid.bright} (AMI: #{inst.ami})"
-        puts inst.to_s
-      end
-  
-    end
-  
-  
-    def instances_terminate
-      puts "Terminate Instances".bright
-      opts = {}
-      opts[:group] = @option.group if @option.group
-      opts[:id] = @argv.awsid if @argv.awsid
-      opts[:id] &&= [opts[:id]].flatten
-    
-      rmach = Rudy::Instances.new
-      instances = rmach.list(:running, opts[:group], opts[:id])
-      raise "No instances running" if instances.nil? || instances.empty?
-      puts "Destroying #{instances.size} instances in #{instances.first.groups.first}"
-      exit unless Annoy.are_you_sure?(:low)
-      rmach.destroy(opts[:group], opts[:id])
-      puts "Done!"
-    end
   end
 
 end; end

@@ -26,89 +26,22 @@ module Rudy::AWS
       status
     end
     
-    def available?
-      (status && status == "available")
-    end
-    
-    def creating?
-      (status && status == "creating")
-    end
-    
-    def deleting?
-      (status && status == "deleting")
-    end
-    
-    def attached?
-      (status && (status == "attached"))
-    end
-    
-    def in_use?
-      (status && (status == "in-use"))
-    end
+    def available?; (status && status == "available"); end
+    def creating?; (status && status == "creating"); end
+    def deleting?; (status && status == "deleting"); end
+    def attached?; (status && status == "attached"); end
+    def in_use?; (status && status == "in-use"); end
     
   end
   
   
   class EC2::Volumes
     include Rudy::AWS::ObjectBase
+    include Rudy::AWS::EC2::Base
     
     unless defined?(KNOWN_STATES)
       KNOWN_STATES = [:available, :creating, :deleting, :attached, :detaching].freeze 
     end
-    
-    def attach(inst_id, vol_id, device)
-      vol_id = (vol_id.is_a?(Rudy::AWS::EC2::Volume)) ? vol_id.awsid : vol_id
-      inst_id = inst_id.is_a?(Rudy::AWS::EC2::Instance) ? inst_id.awsid : inst_id
-      
-      ret = execute_request(false) {
-        @aws.attach_volume(:volume_id => vol_id, :instance_id => inst_id, :device => device)
-      }
-      (ret['status'] == 'attaching')
-    end
-    
-    def detach(vol_id)
-      vol_id = (vol_id.is_a?(Rudy::AWS::EC2::Volume)) ? vol_id.awsid : vol_id
-      
-      ret = execute_request({}) {
-        @aws.detach_volume(:volume_id => vol_id)
-      }
-      (ret['status'] == 'detaching') 
-    end
-    
-    
-    def list(state=nil, vol_id=[])
-      list_as_hash(state, vol_id).values
-    end
-    
-    def list_as_hash(state=nil, vol_id=[])
-      state &&= state.to_sym
-      state = nil if state == :any
-      raise "Unknown state: #{state}" if state && !Volumes.known_state?(state)
-      
-      opts = { 
-        :volume_id => vol_id ? [vol_id].flatten : [] 
-      }
-      begin
-        
-        vlist = execute_request({}) {
-          @aws.describe_volumes(opts)
-        }
-        
-      # NOTE: The InternalError is returned for non-existent volume IDs. 
-      # It's probably a bug so we're ignoring it -- Dave. 
-      rescue ::EC2::InternalError => ex 
-        vlist = {}
-      end
-      volumes = {}
-      return volumes unless vlist['volumeSet'].is_a?(Hash)
-      vlist['volumeSet']['item'].each do |vol|
-        v = Volumes.from_hash(vol)
-        next if state && v.state != state.to_s
-        volumes[v.awsid] = v
-      end
-      volumes
-    end
-    
     
     # * +size+ the number of GB
     def create(size, zone, snapid=nil)
@@ -126,43 +59,122 @@ module Rudy::AWS
       # "availabilityZone"=>"us-east-1b", 
       # "createTime"=>"2009-03-17T20:10:48.000Z", 
       # "volumeId"=>"vol-48826421"
-      vol = execute_request({}) { 
-        @aws.create_volume(opts)
-      }
+      vol = execute_request({}) { @ec2.create_volume(opts) }
+      
+      # TODO: use a waiter?
+      #Rudy.waiter(1, 30) do
+      #  ret = @@ec2.volumes.available?(volume.awsid)
+      #end
       
       reqid = vol['requestId']
       Volumes.from_hash(vol) || nil
     end
     
-    
     def destroy(vol_id)
-      vol_id = (vol_id.is_a?(Rudy::AWS::EC2::Volume)) ? vol_id.awsid : vol_id
-      ret = execute_request({}) { 
-         @aws.delete_volume(:volume_id => vol_id)
-      }
+      vol_id = Volumes.get_vol_id(vol_id)
+      raise VolumeNotAvailable, vol_id unless available?(vol_id)
+      ret = execute_request({}) { @ec2.delete_volume(:volume_id => vol_id) }
       (ret['return'] == 'true') 
     end
     
+    def attach(vol_id, inst_id, device)
+      vol_id = Volumes.get_vol_id(vol_id)
+      inst_id = inst_id.is_a?(Rudy::AWS::EC2::Instance) ? inst_id.awsid : inst_id
+      raise NoVolumeID unless vol_id
+      raise VolumeAlreadyAttached, vol_id if attached?(vol_id)
+      raise NoInstanceID unless inst_id
+      raise NoDevice unless device
+      
+      opts = {
+        :volume_id => vol_id, 
+        :instance_id => inst_id, 
+        :device => device
+      }
+      ret = execute_request(false) { @ec2.attach_volume(opts) }
+      (ret['status'] == 'attaching')
+    end
+    
+    def detach(vol_id)
+      vol_id = Volumes.get_vol_id(vol_id)
+      raise NoVolumeID unless vol_id
+      raise VolumeNotAttached, vol_id unless attached?(vol_id)
+      ret = execute_request({}) { @ec2.detach_volume(:volume_id => vol_id) }
+      (ret['status'] == 'detaching') 
+    end
+    
+    
+    def list(state=nil, vol_id=[])
+      list_as_hash(state, vol_id).values
+    end
+    
+    def list_as_hash(state=nil, vol_id=[])
+      state &&= state.to_sym
+      state = nil if state == :any
+      # A nil state is fine, but we don't want an unknown one!
+      raise UnknownState, state if state && !Volumes.known_state?(state)
+      
+      opts = { 
+        :volume_id => vol_id ? [vol_id].flatten : [] 
+      }
+
+      vlist = execute_request({}) { @ec2.describe_volumes(opts) }
+
+      volumes = {}
+      return volumes unless vlist['volumeSet'].is_a?(Hash)
+      vlist['volumeSet']['item'].each do |vol|
+        v = Volumes.from_hash(vol)
+        next if state && v.state != state.to_s
+        volumes[v.awsid] = v
+      end
+      volumes
+    end
+    
+    def any?(state=nil,vol_id=[])
+      !list(state, vol_id).nil?
+    end
+    
+    def exists?(vol_id)
+      vol_id = Volumes.get_vol_id(vol_id)
+      !get(vol_id).nil?
+    end
+    
+    def get(vol_id)
+      vol_id = Volumes.get_vol_id(vol_id)
+      list(:any, vol_id).first || nil
+    end
+    
+    # deleting?, available?, etc...
+    %w[deleting available attached in-use].each do |state|
+      define_method("#{state.tr('-', '_')}?") do |vol_id|
+        vol_id = Volumes.get_vol_id(vol_id)
+        return false unless vol_id
+        vol = get(vol_id)
+        (vol && vol.status == state)
+      end
+    end
+    
+    # Creates a Rudy::AWS::EC2::Volume object from:
+    #
+    #     volumeSet: 
+    #       item: 
+    #       - status: available
+    #         size: "1"
+    #         snapshotId: 
+    #         availabilityZone: us-east-1b
+    #         attachmentSet: 
+    #         createTime: "2009-03-17T20:10:48.000Z"
+    #         volumeId: vol-48826421
+    #         attachmentSet: 
+    #           item: 
+    #           - attachTime: "2009-03-17T21:49:54.000Z"
+    #             status: attached
+    #             device: /dev/sdh
+    #             instanceId: i-956af3fc
+    #             volumeId: vol-48826421
+    #         
+    #     requestId: 8fc30e5b-a9c3-4fe0-a979-0f71e639a7c7
+    #
     def self.from_hash(h)
-      # --- 
-      # volumeSet: 
-      #   item: 
-      #   - status: available
-      #     size: "1"
-      #     snapshotId: 
-      #     availabilityZone: us-east-1b
-      #     attachmentSet: 
-      #     createTime: "2009-03-17T20:10:48.000Z"
-      #     volumeId: vol-48826421
-      #     attachmentSet: 
-      #       item: 
-      #       - attachTime: "2009-03-17T21:49:54.000Z"
-      #         status: attached
-      #         device: /dev/sdh
-      #         instanceId: i-956af3fc
-      #         volumeId: vol-48826421
-      #     
-      # requestId: 8fc30e5b-a9c3-4fe0-a979-0f71e639a7c7
       vol = Rudy::AWS::EC2::Volume.new
       vol.status = h['status']
       vol.size = h['size']
@@ -180,49 +192,12 @@ module Rudy::AWS
       vol
     end
 
-    
-    def any?(state=nil,vol_id=[])
-      !(list(state, vol_id) || []).empty?
+    # * +vol_id+ is a String or Rudy::AWS::EC2::Volume
+    # Returns the volume ID
+    def self.get_vol_id(vol_id)
+      (vol_id.is_a?(Rudy::AWS::EC2::Volume)) ? vol_id.awsid : vol_id
     end
-    
-    def exists?(vol_id)
-      vol_id = (vol_id.is_a?(Rudy::AWS::EC2::Volume)) ? vol_id.awsid : vol_id
-      !get(vol_id).nil?
-    end
-    
-    def get(vol_id)
-      vol_id = (vol_id.is_a?(Rudy::AWS::EC2::Volume)) ? vol_id.awsid : vol_id
-      list(:any, vol_id).first || nil
-    end
-    
-    def deleting?(vol_id)
-      vol_id = (vol_id.is_a?(Rudy::AWS::EC2::Volume)) ? vol_id.awsid : vol_id
-      return false unless vol_id
-      vol = get(vol_id)
-      (vol && vol.status == "deleting")
-    end
-    
-    def available?(vol_id)
-      vol_id = (vol_id.is_a?(Rudy::AWS::EC2::Volume)) ? vol_id.awsid : vol_id
-      return false unless vol_id
-      vol = get(vol_id)
-      (vol && vol.status == "available")
-    end
-    
-    def attached?(vol_id)
-      vol_id = (vol_id.is_a?(Rudy::AWS::EC2::Volume)) ? vol_id.awsid : vol_id
-      return false unless vol_id
-      vol = get(vol_id)
-      (vol && (vol.status == "attached"))
-    end
-    
-    def in_use?(vol_id)
-      vol_id = (vol_id.is_a?(Rudy::AWS::EC2::Volume)) ? vol_id.awsid : vol_id
-      return false unless vol_id
-      vol = get(vol_id)
-      (vol && (vol.status == "in-use"))
-    end
-      
+
     # Is +state+ a known EC2 volume state? See: KNOWN_STATES
     def self.known_state?(state)
       return false unless state
@@ -231,4 +206,17 @@ module Rudy::AWS
     end
   end
 end
+end
+
+
+class Rudy::AWS::EC2::Volumes
+  
+  class NoVolumeID < RuntimeError; end
+  class VolumeAlreadyAttached < RuntimeError; end
+  class VolumeNotAttached < RuntimeError; end
+  class VolumeNotAvailable < RuntimeError; end
+  class NoInstanceID < RuntimeError; end
+  class NoDevice < RuntimeError; end
+  class UnknownState < RuntimeError; end
+  
 end

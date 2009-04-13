@@ -34,10 +34,18 @@ module Rudy
           Timeout::timeout(timeout) do
             response = request.call
           end
-        rescue ::EC2::Error => ex
+        rescue ::EC2::Error => ex  
           STDERR.puts ex.message
+          STDERR.puts ex.backtrace if Rudy.debug?
+          
+          # NOTE: The InternalError is returned for non-existent volume IDs. 
+          # It's probably a bug so we're ignoring it -- Dave. 
+        rescue ::EC2::InternalError => ex
+          STDERR.puts ex.message
+          STDERR.puts ex.backtrace if Rudy.debug?
         rescue ::EC2::InvalidInstanceIDMalformed => ex
           STDERR.puts ex.message
+          STDERR.puts ex.backtrace if Rudy.debug?
         rescue Timeout::Error => ex
           STDERR.puts "Timeout (#{timeout}): #{ex.message}!"
         rescue SocketError => ex

@@ -1,7 +1,7 @@
 @spec = Gem::Specification.new do |s|
 	s.name = "rudy"
   s.rubyforge_project = 'rudy'
-	s.version = "0.5.1"
+	s.version = "0.6.0"
 	s.summary = "Rudy: Not your grandparent's deployment tool."
 	s.description = s.summary
 	s.author = "Delano Mandelbaum"
@@ -18,11 +18,11 @@
   Rudyfile
   bin/ird
   bin/rudy
+  bin/rudy-ec2
   lib/annoy.rb
-  lib/aws_sdb.rb
-  lib/aws_sdb/error.rb
-  lib/aws_sdb/service.rb
+  lib/caesars.rb
   lib/console.rb
+  lib/drydock.rb
   lib/escape.rb
   lib/rudy.rb
   lib/rudy/aws.rb
@@ -35,35 +35,34 @@
   lib/rudy/aws/ec2/snapshot.rb
   lib/rudy/aws/ec2/volume.rb
   lib/rudy/aws/s3.rb
-  lib/rudy/aws/simpledb.rb
+  lib/rudy/aws/sdb.rb
+  lib/rudy/aws/sdb/error.rb
   lib/rudy/cli.rb
-  lib/rudy/cli/addresses.rb
+  lib/rudy/cli/aws/ec2/addresses.rb
+  lib/rudy/cli/aws/ec2/groups.rb
+  lib/rudy/cli/aws/ec2/images.rb
+  lib/rudy/cli/aws/ec2/instances.rb
+  lib/rudy/cli/aws/ec2/keypairs.rb
+  lib/rudy/cli/aws/ec2/volumes.rb
+  lib/rudy/cli/aws/sdb/domains.rb
   lib/rudy/cli/backups.rb
   lib/rudy/cli/config.rb
   lib/rudy/cli/deploy.rb
   lib/rudy/cli/disks.rb
-  lib/rudy/cli/domains.rb
-  lib/rudy/cli/groups.rb
-  lib/rudy/cli/images.rb
-  lib/rudy/cli/instances.rb
-  lib/rudy/cli/keypairs.rb
   lib/rudy/cli/manager.rb
   lib/rudy/cli/release.rb
   lib/rudy/cli/routines.rb
-  lib/rudy/cli/volumes.rb
-  lib/rudy/command/addresses.rb
   lib/rudy/command/backups.rb
-  lib/rudy/command/disks-old.rb
   lib/rudy/command/disks.rb
-  lib/rudy/command/domains.rb
-  lib/rudy/command/groups.rb
   lib/rudy/command/instances.rb
-  lib/rudy/command/keypairs.rb
+  lib/rudy/command/machines.rb
   lib/rudy/command/manager.rb
   lib/rudy/command/volumes.rb
   lib/rudy/config.rb
   lib/rudy/config/objects.rb
+  lib/rudy/global.rb
   lib/rudy/huxtable.rb
+  lib/rudy/metadata.rb
   lib/rudy/metadata/backup.rb
   lib/rudy/metadata/disk.rb
   lib/rudy/metadata/machine.rb
@@ -106,12 +105,8 @@
   test/50_commands/50_instances_test.rb
   test/coverage.txt
   test/helper.rb
-  tryouts/console_tryout.rb
-  tryouts/disks.rb
-  tryouts/nested_methods.rb
-  tryouts/session_tryout.rb
   )
-  s.executables = %w[rudy ird]
+  s.executables = %w[ird rudy rudy-ec2]
   
   s.extra_rdoc_files = %w[README.rdoc LICENSE.txt CHANGES.txt]
   s.has_rdoc = true
@@ -141,4 +136,11 @@ RELEASE CHECKLIST
 
 * Disable debug mode
 * Disable dev $LOAD_PATH 
+* Update manifest
+  * Remove tryouts
+* Update executables
+* Version number? 
+  * rudy.rb
+  * gemspec
+
 

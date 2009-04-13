@@ -23,7 +23,6 @@ module Rudy
           STDERR.puts "Try: #{$0} init"
           exit 1
         end
-           
         
         if @@global.environment =~ /^prod/ && Drydock.debug?
           puts Rudy.banner("PRODUCTION ACCESS IS DISABLED IN DEBUG MODE")

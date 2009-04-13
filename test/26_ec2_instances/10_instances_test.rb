@@ -48,7 +48,7 @@ module Rudy::Test
           next if instance.terminated? || instance.shutting_down?
           assigned += 1
           address = @@ec2.addresses.create
-          assert @@ec2.addresses.associate(instance, address), "Did not assign"
+          assert @@ec2.addresses.associate(address, instance), "Did not assign"
         end
         assert assigned > 0, "No machine running"
       end

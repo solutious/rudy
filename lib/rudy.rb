@@ -115,7 +115,13 @@ module Rudy
   @@quiet = false
   def Rudy.enable_quiet; @@quiet = true; end
   def Rudy.disable_quiet; @@quiet = false; end
-    
+  def Rudy.quiet?; @@quiet == true; end
+  
+  @@debug = false
+  def Rudy.enable_debug; @@debug = true; end
+  def Rudy.disable_debug; @@debug = false; end
+  def Rudy.debug?; @@debug == true; end
+  
   def Rudy.sysinfo; @@sysinfo; end
   def sysinfo; @@sysinfo;  end
   
@@ -319,7 +325,6 @@ require 'rudy/metadata'            # require
 require 'rudy/command/instances'   # statements
 require 'rudy/command/manager'     # is
 require 'rudy/command/backups'     # important.
-require 'rudy/command/volumes'
 require 'rudy/command/disks'
 require 'rudy/routines'    
 

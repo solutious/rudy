@@ -63,7 +63,58 @@ module Rudy::AWS
   module EC2
     class Groups
       include Rudy::AWS::ObjectBase
+      include Rudy::AWS::EC2::Base
   
+      
+      # Create a new EC2 security group
+      # Returns true/false whether successful
+      def create(name, desc=nil, addresses=[], ports=[], protocols=[])
+        desc ||= "Security Group #{name}"
+        ret = @ec2.create_security_group(:group_name => name, :group_description => desc)
+        return false unless (ret && ret['return'] == 'true')
+        authorize(name, addresses, ports, protocols)
+        get(name)
+      end
+    
+      # Delete an EC2 security group
+      # Returns true/false whether successful
+      def destroy(name)
+        ret = @ec2.delete_security_group(:group_name => name)
+        (ret && ret['return'] == 'true')
+      end
+      
+      
+      # Authorize a port/protocol for a specific IP address
+      def authorize(name, addresses=[], ports=[], protocols=[])
+        ports = [[22,22],[80,80],[443,443]] if !ports || ports.empty?
+        protocols = ["tcp"] if !protocols || protocols.empty?
+        addresses = [Rudy::Utils::external_ip_address] if !addresses || addresses.empty?
+        # Make sure the IP addresses have ranges
+        addresses.collect! { |ip| (ip.match /\/\d+/) ? ip : "#{ip}/32" }
+        modify_rules(:authorize, name, addresses, ports, protocols)
+      end
+      alias :authorise :authorize
+      
+      # Revoke a port/protocol for a specific IP address
+      # Takes the same arguments as authorize
+      def revoke(name, addresses=[], ports=[], protocols=[])
+        ports = [[22,22],[80,80],[443,443]] if !ports || ports.empty?
+        protocols = ["tcp"] if !protocols || protocols.empty?
+        addresses = [Rudy::Utils::external_ip_address] if !addresses || addresses.empty?
+        # Make sure the IP addresses have ranges
+        addresses.collect! { |ip| (ip.match /\/\d+/) ? ip : "#{ip}/32" }
+        modify_rules(:revoke, name, addresses, ports, protocols)
+      end
+      
+      def authorize_group(name, gname, owner)
+        modify_group_rules(:authorize, name, gname, owner)
+      end
+      alias :authorise_group :authorize_group
+      
+      def revoke_group(name, gname, owner)
+        modify_group_rules(:revoke, name, gname, owner)
+      end
+      
       def list(group_names=[])
         group_names ||= []
         groups = list_as_hash(group_names)
@@ -77,7 +128,7 @@ module Rudy::AWS
       # Returns an Array of Rudy::AWS::EC2::Group objects
       def list_as_hash(group_names=[])
         group_names ||= []
-        glist = @aws.describe_security_groups(:group_name => group_names) || {}
+        glist = @ec2.describe_security_groups(:group_name => group_names) || {}
         return unless glist['securityGroupInfo'].is_a?(Hash)
         groups = {}
         glist['securityGroupInfo']['item'].each do |oldg| 
@@ -92,21 +143,6 @@ module Rudy::AWS
         !groups.empty?
       end
       
-      # Create a new EC2 security group
-      # Returns true/false whether successful
-      def create(name, desc=nil)
-        ret = @aws.create_security_group(:group_name => name, :group_description => desc || "Group #{name}")
-        return false unless (ret && ret['return'] == 'true')
-        get(name)
-      end
-    
-      # Delete an EC2 security group
-      # Returns true/false whether successful
-      def destroy(name)
-        ret = @aws.delete_security_group(:group_name => name)
-        (ret && ret['return'] == 'true')
-      end
-    
       # * +name+ a string
       def get(name)
         (list([name]) || []).first
@@ -116,53 +152,6 @@ module Rudy::AWS
       #def save(group)
       #  
       #end
-    
-      def modify_rules(meth, name, from_port, to_port, protocol='tcp', ipa='0.0.0.0/0')
-        opts = {
-          :group_name => name,
-          :ip_protocol => protocol,
-          :from_port => from_port,
-          :to_port => to_port,
-          :cidr_ip => ipa
-        }
-        
-        ret = @aws.send("#{meth}_security_group_ingress", opts)
-        (ret && ret['return'] == 'true')
-      end
-      private :modify_rules
-    
-      def modify_group_rules(meth, name, gname=nil, gowner=nil)
-        opts = {
-          :group_name => name,
-          :source_security_group_name => gname,
-          :source_security_group_owner_id => gowner
-        }
-        ret = @aws.send("#{meth}_security_group_ingress", opts)
-        (ret && ret['return'] == 'true')
-      end
-      private :modify_group_rules
-      
-      # Authorize a port/protocol for a specific IP address
-      def authorize(*args)
-        modify_rules(:authorize, *args)
-      end
-      alias :authorise :authorize
-      
-      def authorize_group(*args)
-        modify_group_rules(:authorize, *args)
-      end
-      alias :authorise_group :authorize_group
-      
-      def revoke_group(*args)
-        modify_group_rules(:revoke, *args)
-      end
-      
-      # Revoke a port/protocol for a specific IP address
-      # Takes the same arguments as authorize
-      def revoke(*args)
-        modify_rules(:revoke, *args)
-      end
-      
     
       # Does the security group +name+ exist?
       def exists?(name)
@@ -227,13 +216,58 @@ module Rudy::AWS
           end
           if oldp['ipRanges'].is_a?(Hash)
             oldp['ipRanges']['item'].each do |olda|
-              name = "#{olda['cidrIp']}/#{oldp['ipProtocol']}"
+              name = "#{olda['cidrIp']}}"
               newg.add_address(name, newp)   # ipaddress/mask/protocol
             end
           end
         end
         newg
       end
+      
+      
+    private
+      
+
+      def modify_rules(meth, name, addresses, ports, protocols)
+        ret = false
+        protocols.each do |protocol|
+          addresses.each do |address|
+            ports.each do |port|
+              #port_lo, port_hi = port.is_a?(Array) ? (port[0], port[1]) : (port, port)
+              @logger.puts "#{meth} for ports #{port[0]}:#{port[1]} (#{protocol}) for #{addresses.join(', ')}" if @logger
+              ret = modify_rule(meth, name, port[0].to_i, (port[1] || port[0]).to_i, protocol, address)
+              raise "Unknown error during #{meth}" unless ret
+            end
+          end
+        end
+        
+        ret
+      end
+      
+      def modify_rule(meth, name, from_port, to_port, protocol, ipa)
+        opts = {
+          :group_name => name,
+          :ip_protocol => protocol,
+          :from_port => from_port,
+          :to_port => to_port,
+          :cidr_ip => ipa
+        }
+        ret = @ec2.send("#{meth}_security_group_ingress", opts)
+        (ret && ret['return'] == 'true')
+      end
+      
+      
+      def modify_group_rules(meth, name, gname, gowner)
+        opts = {
+          :group_name => name,
+          :source_security_group_name => gname,
+          :source_security_group_owner_id => gowner
+        }
+        ret = @ec2.send("#{meth}_security_group_ingress", opts)
+        (ret && ret['return'] == 'true')
+      end
+
+      
     
     end
   end

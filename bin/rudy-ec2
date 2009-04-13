@@ -34,7 +34,7 @@ module RudyEC2CLI
     @verbose += 1
   end
   global :V, :version, "Display version number" do
-    puts "Rudy version: #{Rudy::VERSION}"
+    puts "rudy-ec2 version: #{Rudy::VERSION}"
     exit 0
   end
   
@@ -43,7 +43,7 @@ module RudyEC2CLI
   # -----------------------------------  AMAZON EC2 COMMANDS  --------
   # ------------------------------------------------------------------
 
-  usage "rudy [global options] addresses [-A address instance ID]"
+  usage "rudy-ec2 [global options] addresses [-A address instance ID]"
   desc "Manage Amazon Elastic IP addresses"
   argv :ipaddress, :instid
   action :A, :associate, "Associate an IP address to a running instance"
@@ -51,11 +51,12 @@ module RudyEC2CLI
   action :D, :destroy, "Destroy an IP address"
   command :addresses => Rudy::CLI::AWS::EC2::Addresses
   command_alias :addresses, :address
-
-  usage "rudy [global options] groups [-C -R -A] [-a IP addresses] [-p ports] [group name]"
-  usage "rudy groups -C               (create a group)"
-  usage "rudy -e prod groups          (list groups in the prod environment)"
-  usage "rudy groups -A -p 81,82,83   (open ports to a group from this machine)"
+  command_alias :addresses, :a
+  
+  usage "rudy-ec2 [global options] groups [-C -R -A] [-a IP addresses] [-p ports] [group name]"
+  usage "rudy-ec2 groups -C               (create a group)"
+  usage "rudy-ec2 -e prod groups          (list groups in the prod environment)"
+  usage "rudy-ec2 groups -A -p 81,82,83   (open ports to a group from this machine)"
   desc "Manage EC2 Security Groups"
   option :all, "Display all security groups"
   option :r, :protocols, Array, "Comma-separated list of protocols. One of: tcp (default), udp, icmp"
@@ -70,13 +71,14 @@ module RudyEC2CLI
   argv :name
   command :groups => Rudy::CLI::AWS::EC2::Groups
   command_alias :groups, :group
-
+  command_alias :groups, :g
+  
   desc "Manage EC2 Volumes"
-  usage "rudy volumes"
-  usage "rudy volume -C -s size [-d device-path]"
-  usage "rudy volume -A volume-id instance-id"
-  usage "rudy volume -N volume-id"
-  usage "rudy volume -D volume-id"
+  usage "rudy-ec2 volumes"
+  usage "rudy-ec2 volume -C -s size [-d device-path]"
+  usage "rudy-ec2 volume -A volume-id instance-id"
+  usage "rudy-ec2 volume -N volume-id"
+  usage "rudy-ec2 volume -D volume-id"
   option :s, :size, String, "Size (in GB)"
   option :d, :device, String, "Device path (default: /dev/sdh)"
   action :D, :destroy, "Destroy a volume"
@@ -86,23 +88,27 @@ module RudyEC2CLI
   argv :volid, :insid
   command :volumes => Rudy::CLI::AWS::EC2::Volumes
   command_alias :volumes, :volume
-
+  command_alias :volumes, :v
+  
   desc "Manage KeyPairs"
-  usage "rudy keypairs [-C] [-D] [name]"
+  usage "rudy-ec2 keypairs [-C] [-D] [name]"
   action :D, :destroy, "Destroy KeyPair"
   action :C, :create, "Create KeyPair"
   argv :kpname
   command :keypairs => Rudy::CLI::AWS::EC2::KeyPairs
   command_alias :keypairs, :keypair
-
-  usage "rudy console [-g group] [instance ID]"
+  command_alias :keypairs, :k
+  
+  usage "rudy-ec2 console [-g group] [instance ID]"
   desc "Displays system console output for given instance(s)"
   option :g, :group, String, "A group name to authorize or revoke network rule. Must also supply -o!"
   argv :awsid
-  command :console => Rudy::CLI::AWS::EC2::Instances
-
+  command :consoles => Rudy::CLI::AWS::EC2::Instances
+  command_alias :consoles, :console
+  command_alias :consoles, :c
+  
   desc "Manage Instances"
-  usage "rudy [global options] instances [-g group-name] [-s state] [instance-ID]"
+  usage "rudy-ec2 instances [-g group-name] [-s state] [instance-ID]"
   option :g, :group, String, "The security group name"
   option :i, :ami, String, "The machine image ID (ami-)"
   option :t, :itype, String, "The instance type (default: m1.small)"
@@ -112,10 +118,11 @@ module RudyEC2CLI
   action :T, :terminate, "Terminate a machine instance"
   argv :awsid
   command :instances => Rudy::CLI::AWS::EC2::Instances
-  command_alias :instances, :instance
+  command_alias :instances, :i
   command_alias :instances, :status
+  command_alias :instances, :instance
 
-  #usage "rudy images [-C -i name [-b bucket -a accountnum]] [-D AMI-ID]"
+  #usage "rudy-ec2 images [-C -i name [-b bucket -a accountnum]] [-D AMI-ID]"
   #desc "Manage EC2 Machine Images (AMIs)"
   #option :a, :accountnum, String, "Your Amazon Account Number"
   #option :i, :image_name, String, "The name of the image"     # TODO: change to --ami
@@ -135,8 +142,8 @@ module RudyEC2CLI
     obj.global.print_header = false  # Don't print Rudy Header
     @start = Time.now
   end
-  after do |obj|
-    
+  
+  after do |obj|  
     unless obj.global.quiet
       @elapsed = Time.now - @start
       puts $/, "Elapsed: %.2f seconds" % @elapsed.to_f if @elapsed > 0.1

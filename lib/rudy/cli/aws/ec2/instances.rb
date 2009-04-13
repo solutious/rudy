@@ -75,12 +75,12 @@ module AWS; module EC2;
       rudy.copy(opts[:group], opts[:id], opts)
     end
 
-    def console_valid?
+    def consoles_valid?
     
       @rmach = Rudy::Instances.new
     end
   
-    def console
+    def consoles
       puts "Instance Console".bright
       opts = {}
       opts[:group] = @option.group if @option.group

@@ -5,30 +5,30 @@ module AWS; module EC2;
   class Groups < Rudy::CLI::Base
     
     def groups
-      puts "Machine Groups".bright
+      puts "Security Groups".bright
       opts = {}
       name = @option.all ? nil : @argv.name
-      rudy = Rudy::Groups.new
-      rudy.list(name).each do |grp|
+      rgroups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
+      rgroups.list(name).each do |grp|
         puts '-'*60
         puts grp.to_s
       end
     end
     
     def destroy_groups_valid?
-      @rgroup = Rudy::Groups.new
-      raise "Group #{@rgroup.name(@argv.name)} does not exist" unless @rgroup.exists?(@argv.name)
+      @rgroups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
+      raise "No group name provided" unless @argv.name
+      raise "Group #{@rgroup.name(@argv.name)} does not exist" unless @rgroups.exists?(@argv.name)
       true
     end
     
     def destroy_groups
       puts "Destroying Machine Group".bright
-      opts = {}
-      puts "Destroying group: #{@rgroup.name(@argv.name)}"
+      puts "Destroying group: #{@argv.name}".color(:red)
       exit unless Annoy.are_you_sure?(:medium)
-      
-      @rgroup.destroy(@argv.name)
-      puts "Done!"
+      @rgroups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
+      ret = @rgroups.destroy(@argv.name)
+      puts ret ? "Success" : "Failed"
     end
     
     def create_groups

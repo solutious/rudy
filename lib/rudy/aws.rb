@@ -17,11 +17,6 @@ module Rudy
     end
     
     module ObjectBase
-      attr_accessor :aws
-      def initialize(aws_connection)
-        @aws = aws_connection
-      end
-      
       
     protected
 

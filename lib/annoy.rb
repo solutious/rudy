@@ -19,8 +19,8 @@ class Annoy #:nodoc:all
   
   @@operators = {
     :low      => %w(+ -),
-    :medium   => %w(* + -),
-    :high     => %w(& * + -),
+    :medium   => %w(* -),
+    :high     => %w(& * -),
     :insane   => %w(** << | & *)
   }.freeze
   

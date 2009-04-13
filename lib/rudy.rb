@@ -316,7 +316,6 @@ require 'rudy/global'
 require 'rudy/config'              # order
 require 'rudy/huxtable'
 require 'rudy/metadata'
-require 'rudy/command/keypairs'
 require 'rudy/command/addresses'   # require
 require 'rudy/command/instances'   # statements
 require 'rudy/command/manager'     # is

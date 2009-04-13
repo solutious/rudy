@@ -1,6 +1,16 @@
 RUDY, CHANGES
 
 
+#### 0.6.0 (2009-04-??) ###############################
+
+NOTE: This is a significant re-write from 0.5
+
+* CHANGE: Rebuilt Rudy::AWS::*
+* CHANGE: Removed lib/rudy/commands/* and lib/rudy/metadata/*
+* ADDED: rudy-ec2 executable
+* CHANGE: have local copies of Caesars and Drydock to reduce external dependencies. 
+
+
 #### 0.5.1 (2009-04-10) ###############################
 
 * CHANGE: Removed require 'rubygems'

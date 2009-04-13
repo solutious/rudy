@@ -94,8 +94,6 @@ The
 * Net::SSH[http://net-ssh.rubyforge.org/]
 * Net::SCP[http://net-ssh.rubyforge.org/]
 * amazon-ec2[http://github.com/grempe/amazon-ec2]
-* Drydock[http://github.com/delano/drydock]
-* Caesars[http://github.com/delano/caesars]
 * Rye[http://github.com/delano/rye]
 
 

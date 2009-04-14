@@ -1,7 +1,8 @@
 RUDY, CHANGES
 
 TODO: Remove string messages for non-string output formats
-
+TODO: Support for reserved instances
+TODO: Region and Zone tests
 
 #### 0.6.0 (2009-04-??) ###############################
 

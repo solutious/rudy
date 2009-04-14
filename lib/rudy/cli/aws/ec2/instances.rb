@@ -1,20 +1,32 @@
 
+
 module Rudy; module CLI; 
 module AWS; module EC2;
   
   class Instances < Rudy::CLI::Base
-
-
+    
+    def instances_create_valid?
+      
+      raise "Cannot supply an instance ID" if @option.instid
+      
+      if @option.group
+        rgroup = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
+        raise "Group #{@option.group} does not exist" unless rgroup.exists?(@option.group)
+      end
+      
+      true
+    end
+      
     def instances_create
-      # Defaults
-      opts = {
+      
+      opts = {                 # Defaults
         :group => 'default',
         :size => 'm1.small',
         :zone => @@global.zone
       }
       
       radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey)
-      rmach = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
+      rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
       
       if @option.address
         raise "Cannot specify both -a and -n" if @option.newaddress
@@ -35,7 +47,7 @@ module AWS; module EC2;
         exit unless Annoy.proceed?(:low)
       end
       
-      instances = rmach.list_group(opts[:group], :running)
+      instances = rinst.list_group(opts[:group], :running)
       
       if instances && instances.size > 0
         instance_count = (instances.size == 1) ? 'is 1 instance' : "are #{instances.size} instances"
@@ -51,7 +63,7 @@ module AWS; module EC2;
       end
             
       first_instance = true
-      rmach.create(opts) do |inst| # Rudy::AWS::EC2::Instance objects
+      rinst.create(opts) do |inst| # Rudy::AWS::EC2::Instance objects
         
         # Assign IP address to only the first instance
         if first_instance && @option.address
@@ -65,32 +77,31 @@ module AWS; module EC2;
 
     end
 
-
+    def instances_restart_valid?
+      raise "You cannot provide a group and an instance ID" if @option.group && @argv.instid
+      raise "You must provide a group or instance ID" unless @option.group || @argv.instid
+      
+      if @option.group
+        rgroup = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
+        raise "Group #{@option.group} does not exist" unless rgroup.exists?(@option.group)
+      end
+      
+      if @option.private
+        raise "Cannot allocate public IP for private instance" if @option.address || @option.newadress
+      end
+      
+      @rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
+      raise "No instances" unless @rinst.any?
+      true
+    end
+    alias :instances_destroy_valid? :instances_restart_valid?
+    
     def instances_destroy
-      opts = {}
-      opts[:group] = @option.group if @option.group
-      opts[:id] = @argv.awsid if @argv.awsid
-      opts[:id] &&= [opts[:id]].flatten
-      
-      raise "You must provide a group or instance ID" unless opts[:group] || opts[:id]
-      
-      rmach = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
-      instances = rmach.list_group(opts[:group], :running, opts[:id])
-      inst_names = instances.collect { |inst| inst.dns_public || inst.awsid}
-      inst_ids = instances.collect { |inst| inst.awsid}
-      raise "No instances running" if instances.nil? || instances.empty?
-      
-      instance_count = (instances.size == 1) ? '1 instance' : "#{instances.size} instances"
-      
-      print "Destroying #{instance_count} (#{inst_names.join(', ')}) "
-      print "in #{opts[:group]}" if opts[:group]
-      puts
-      execute_check(:medium)
-      
-      execute_action("Destroy Failed") { 
-        rmach.destroy(inst_ids)
-      }
-      
+      instances_action :destroy
+    end
+    
+    def instances_restart
+      instances_action :restart
     end
     
     def consoles_valid?
@@ -101,7 +112,7 @@ module AWS; module EC2;
     def consoles
       opts = {}
       opts[:group] = @option.group if @option.group
-      opts[:id] = @argv.awsid if @argv.awsid
+      opts[:id] = @argv.instid if @argv.instid
       opts[:id] &&= [opts[:id]].flatten
       
       lt = @rinst.list_group(opts[:group], :any, opts[:id]) do |inst|
@@ -126,7 +137,7 @@ module AWS; module EC2;
         opts[:group] = :any
       end
 
-      opts[:id] = @argv.awsid if @argv.awsid
+      opts[:id] = @argv.instid if @argv.instid
       opts[:id] &&= [opts[:id]].flatten
     
       rudy = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
@@ -138,6 +149,35 @@ module AWS; module EC2;
     alias :instances :status
 
 
+    private
+    
+    # * +action+ is one of :destroy, :restart
+    def instances_action(action)
+      opts = {}
+      opts[:group] = @option.group if @option.group
+      opts[:id] = @argv.instid if @argv.instid
+      opts[:id] &&= [opts[:id]].flatten
+      
+      instances = @rinst.list_group(opts[:group], :running, opts[:id])
+      raise "No matching instances running" if instances.nil?
+      
+      inst_names = instances.collect { |inst| inst.dns_public || inst.awsid }
+      inst_ids = instances.collect { |inst| inst.awsid }
+      
+      instance_count = (instances.size == 1) ? '1 instance' : "#{instances.size} instances"
+      
+      print "#{action.to_s.capitalize} #{instance_count} (#{inst_names.join(', ')}) "
+      print "in #{opts[:group]}" if opts[:group]
+      puts
+      execute_check(:medium)
+      
+      execute_action("#{action.to_s.capitalize} Failed") { 
+        @rinst.send(action, inst_ids)
+      }
+      
+    end
+    
+    
   end
 
 end; end

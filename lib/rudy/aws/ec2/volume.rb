@@ -3,7 +3,7 @@
 module Rudy::AWS
   module EC2
     class Volume < Storable
-      @@sformat = "   -> %10s;%4sGB; %s" # cram the terabyte
+      @@sformat = "   -> %10s;%4sGB;  %s" # cram the terabyte
       
       field :awsid
       field :status
@@ -28,7 +28,7 @@ module Rudy::AWS
       def inspect
         lines = [liner_note]
         field_names.each do |n|
-           lines << sprintf(" %12s: %s", n, self.send(n)) if self.send(n)
+           lines << sprintf(" %12s:  %s", n, self.send(n)) if self.send(n)
          end
         lines.join($/)
       end

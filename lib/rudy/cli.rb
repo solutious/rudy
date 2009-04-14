@@ -8,6 +8,12 @@ module Rudy
     class NoCred < RuntimeError #:nodoc
     end
     
+    class Output < Storable
+      # Use for all CLI responses
+      # Messages and errors should be in @@global.format
+      # Should print messages as they come
+    end
+    
     class Base < Drydock::Command
       include Rudy::Huxtable
       
@@ -21,7 +27,7 @@ module Rudy
         
         unless @@global.accesskey && @@global.secretkey
           STDERR.puts "No AWS credentials. Check your configs!"
-          STDERR.puts "Try: #{$0} init"
+          STDERR.puts "Try: rudy init"
           exit 1
         end
         

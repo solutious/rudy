@@ -89,7 +89,7 @@ class Storable
   end
   
   def to_string(*args)
-    to_s(args)
+    to_s(*args)
   end
   
   # Create a new instance of the object using data from file. 

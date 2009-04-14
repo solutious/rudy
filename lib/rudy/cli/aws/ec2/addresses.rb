@@ -62,7 +62,7 @@ module AWS; module EC2;
       puts "Associating #{address} to #{instance_name} (#{instance.groups.join(', ')})"
       execute_check(:low)
       execute_action { radd.associate(address, instance.awsid) }
-      address = radd.get(@argv.ipaddress)
+      address = radd.get(address)
       puts address.dump(@@global.format)
     end
     

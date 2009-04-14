@@ -107,38 +107,23 @@ module Rudy::AWS
           :kernel_id => nil
         }
         
-        
         response = execute_request({}) { @ec2.run_instances(old_opts) }
-        
-        # reservationId: r-f393149a
-        # groupSet: 
-        #   item: 
-        #   - groupId: default
-        # requestId: a4de33de-6da1-4f43-a3f5-f987f5f1f1cf
-        # instancesSet: 
-        #   item:
-        #     ... # see Instances.from_hash
+
         return nil unless response['instancesSet'].is_a?(Hash)
         instances = response['instancesSet']['item'].collect do |inst|
           self.class.from_hash(inst)
         end
-        
         instances.each { |inst| each_inst.call(inst) } if each_inst
-        
         instances
       end
     
       def restart(inst_ids=[], &each_inst)
         instances = list(:running, inst_ids, &each_inst) || []
         raise NoRunningInstances if instances.empty?
-
         inst_ids = objects_to_instance_ids(inst_ids)
-        
-        
         response = execute_request({}) {
           @ec2.reboot_instances(:instance_id => inst_ids)
         }
-      
         response['return'] == 'true'
       end
     
@@ -169,7 +154,6 @@ module Rudy::AWS
           instances_shutdown << inst['instanceId']
         end
         success = instances_shutdown.size == inst_ids.size
-        #puts "SUC: #{success} #{instances_shutdown.size} #{inst_ids.size}"
         success
       end
     
@@ -256,7 +240,7 @@ module Rudy::AWS
           # And each reservation can have 1 or more instances
           next unless res['instancesSet'].is_a?(Hash)
           res['instancesSet']['item'].each do |props|
-            inst = self.class.from_hash(props)
+            inst = Instances.from_hash(props)
             next if state && inst.state != state.to_s
             inst.groups = groups
             #puts "STATE: #{inst.state} #{state}"

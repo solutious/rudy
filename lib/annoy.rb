@@ -33,7 +33,7 @@ class Annoy #:nodoc:all
   
   @@randsize = {
     :low      => 10,
-    :medium   => 12,
+    :medium   => 14,
     :high     => 50,
     :insane   => 1000
   }.freeze

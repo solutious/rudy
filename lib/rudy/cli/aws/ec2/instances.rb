@@ -119,6 +119,30 @@ module AWS; module EC2;
     end
     alias :instances :status
 
+
+    def consoles_valid?
+      @rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
+      raise "No instances" unless @rinst.any?
+      true
+    end
+    def consoles
+      opts = {}
+      opts[:group] = @option.group if @option.group
+      opts[:id] = @argv.awsid if @argv.awsid
+      opts[:id] &&= [opts[:id]].flatten
+      
+      lt = @rinst.list_group(opts[:group], :any, opts[:id]) do |inst|
+        puts '-'*50
+        puts "Console for: #{inst.liner_note}", $/
+        console = @rinst.console(inst.awsid)
+        output = console ? Base64.decode64(console) : "Unavailable"
+        puts output.noansi # Remove color and clear, etc...
+      end
+      
+    end
+  
+
+
     def ssh
       
       opts = {}
@@ -221,35 +245,6 @@ module AWS; module EC2;
 
     end
 
-    def consoles_valid?
-    
-      @rmach = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
-    end
-  
-    def consoles
-      opts = {}
-      opts[:group] = @option.group if @option.group
-      opts[:id] = @argv.awsid if @argv.awsid
-      opts[:id] &&= [opts[:id]].flatten
-      
-      unless @rmach.any?
-        puts "No instances running"
-        return
-      end
-      
-      raise "You must provide a group or instance ID" unless opts[:group] || opts[:id]
-      
-      console = @rmach.console(opts[:id])
-    
-      if console
-        puts Base64.decode64(console)
-      else
-        puts "Console output is not available"
-      end
-    
-    end
-  
-  
   end
 
 end; end

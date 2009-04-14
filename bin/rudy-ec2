@@ -73,10 +73,12 @@ module RudyEC2CLI
   command_alias :consoles, :console
   command_alias :consoles, :c
   
-  usage "rudy-ec2 copy [-p] [-r] source target"
-  usage "rudy-ec2 upload [-p] local-source target"
-  usage "rudy-ec2 download [-p] remote-source target"
-  desc "Copy files to or from machines. NOTE: You must use quotes when using a tilda for your remote dir ('~/')."
+  usage "rudy-ec2 copy [-p] [-r] [-u user] [-k path/2/privatekey] source target"
+  usage "rudy-ec2 upload -k path/2/privatekey -u username local-source target"
+  usage "rudy-ec2 download remote-source target"
+  usage "NOTE: Use quotes when using a tilda or asterisk in remote paths ('~/')."
+  usage "rudy-ec2 download '~/*' /tmp/"
+  desc "Copy files to or from machines."
   option :r, :recursive, "Recursively copy entire directories"
   option :p, :preserve, "Preserve atimes and ctimes."
   option :d, :download, "Download FROM the remote machine to the local machine"
@@ -84,6 +86,7 @@ module RudyEC2CLI
   option :k, :pkey, String, "Path to the private SSH key"
   option :g, :group, String, "A security group name"
   option :i, :awsid, String, "An instance ID"
+  option :u, :user, String, "Username"
   command :copy => Rudy::CLI::AWS::EC2::Candy 
   command_alias :copy, :scp
   command_alias :copy, :upload

@@ -49,7 +49,7 @@ module AWS; module EC2;
         
         # Print header
         if @@global.quiet
-          print "You are #{@option.user.bright}. " if !checked # only the 1st
+          print "You are #{ssh_opts[:user].bright}. " if !checked # only the 1st
         else
           print "Connecting #{ssh_opts[:user].bright}@#{inst.dns_public} "
           puts "(#{inst.awsid}, groups: #{inst.groups.join(', ')})"
@@ -83,8 +83,6 @@ module AWS; module EC2;
       opts[:id] = @argv.shift if Rudy.is_id?(:instance, @argv.first)
       opts[:id] &&= [opts[:id]].flatten
       
-      @option.user ||= Rudy.sysinfo.user
-    
       # * +:recursive: recursively transfer directories (default: false)
       # * +:preserve: preserve atimes and ctimes (default: false)
       # * +:task+ one of: :upload (default), :download.
@@ -99,27 +97,38 @@ module AWS; module EC2;
       opts[:task] = :upload if @alias == 'upload'
       opts[:task] ||= :upload
     
-      #exit unless @option.print || Annoy.are_you_sure?(:low)
+      # Options to be sent to Net::SSH
+      ssh_opts = { :user => @option.user || Rudy.sysinfo.user, :debug => nil  }
+      ssh_opts[:keys] = @option.pkey if @option.pkey
 
       if @option.pkey
         raise "Cannot find file #{@option.pkey}" unless File.exists?(@option.pkey)
         raise "Insecure permissions for #{@option.pkey}" unless (File.stat(@option.pkey).mode & 600) == 0
       end
 
-
+      checked = false
       rudy = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
-      lt = rudy.list_group(opts[:group], opts[:state], opts[:id]) do |inst|
-        puts "Connecting to: #{inst.awsid.bright} as #{@option.user.bright} (group: #{inst.groups.join(', ')})"
-
-
-        msg = opts[:task] == :upload ? "Upload to" : "Download from"
-        @@logger.puts $/, "#{msg} #{inst.awsid}"
-
+      lt = rudy.list_group(opts[:group], :running, opts[:id]) do |inst|
+        
         if @option.print
           Rudy::Utils.scp_command inst.dns_public, @option.pkey, @option.user, opts[:paths], opts[:dest], (opts[:task] == :download), false, @option.print
-          return
+          next
         end
-
+        
+        # Print header
+        if @@global.quiet
+          print "You are #{ssh_opts[:user].bright}. " if !checked # only the 1st
+        else
+          print "Connecting #{ssh_opts[:user].bright}@#{inst.dns_public} "
+          puts "(#{inst.awsid}, groups: #{inst.groups.join(', ')})"
+        end
+        
+        # Make sure we want to run this command on all instances
+        if !checked
+          execute_check(:medium) if ssh_opts[:user] == "root"
+          checked = true
+        end
+        
         scp_opts = {
           :recursive => opts[:recursive],
           :preserve => opts[:preserve],
@@ -128,6 +137,7 @@ module AWS; module EC2;
 
         Rudy::Huxtable.scp(opts[:task], inst.dns_public, @option.user, @option.pkey, opts[:paths], opts[:dest], scp_opts)
         puts 
+        puts unless @@global.quiet
       end
 
     end

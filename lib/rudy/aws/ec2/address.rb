@@ -10,7 +10,7 @@ module Rudy::AWS
       
       def liner_note
         info = self.associated? ? @instid : "available"
-        "%s (%s)" % [@ipaddress, info]
+        "%s (%s)" % [@ipaddress.to_s.bright, info]
       end
       
       def to_s(with_titles=false)

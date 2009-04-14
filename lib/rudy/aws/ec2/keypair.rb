@@ -9,7 +9,7 @@ module Rudy::AWS
       field :private_key  
       
       def liner_note
-        "%-20s   %s" % [self.name, self.fingerprint]
+        "%-20s   %s" % [self.name.bright, self.fingerprint]
       end
       
       def to_s(titles=false)

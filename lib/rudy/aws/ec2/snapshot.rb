@@ -3,7 +3,7 @@
 module Rudy::AWS
   module EC2
     class Snapshot < Storable
-      @@sformat = "%s -> %10s; %s"
+      @@sformat = "%s <- %10s; %s"
       
       field :awsid
       field :progress
@@ -13,8 +13,7 @@ module Rudy::AWS
       
       def liner_note
         t = Time.parse(@created)
-        t = t.strftime("%Y-%m-%d %H:%M:%S")
-        info = completed? ? t : "#{@progress} of #{@volid}"
+        info = t.strftime("%Y-%m-%d %H:%M:%S")
         "%s (%s)" % [(self.awsid || '').bright, info]
       end
       
@@ -34,7 +33,9 @@ module Rudy::AWS
 
       def list(snap_id=[])
         snapshots = list_as_hash(snap_id)
-        snapshots &&= snapshots.values
+        if snapshots
+          snapshots = snapshots.values.sort { |a,b| a.created <=> b.created }
+        end
         snapshots
       end
       def list_as_hash(snap_id=[])

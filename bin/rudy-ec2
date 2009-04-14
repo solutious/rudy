@@ -183,7 +183,7 @@ module RudyEC2CLI
   argv :snapid
   command :snapshots => Rudy::CLI::AWS::EC2::Snapshots
   command_alias :snapshots, :snapshot
-  command_alias :snapshots, :s
+  command_alias :snapshots, :t
   
   usage "rudy-ec2 ssh"
   usage "rudy-ec2 ssh -k path/2/key -u root"
@@ -209,6 +209,7 @@ module RudyEC2CLI
   usage "rudy-ec2 volumes -D volume-id"
   option :i, :instance, String, "Instance ID"
   option :s, :size, String, "Size (in GB)"
+  option :t, :snapshot, String, "Snapshot ID (snap)"
   option :d, :device, String, "Device path (default: /dev/sdh)"
   action :D, :destroy, "Destroy a volume (this is permanent!)"
   action :C, :create, "Create a volume"

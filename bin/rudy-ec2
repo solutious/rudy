@@ -68,7 +68,7 @@ module RudyEC2CLI
   desc "Displays system console output for given instance(s)"
   option :g, :group, String, "A group name to authorize or revoke network rule. Must also supply -o!"
   argv :awsid
-  command :consoles => Rudy::CLI::AWS::EC2::Instances
+  command :consoles => Rudy::CLI::AWS::EC2::Candy
   command_alias :consoles, :console
   command_alias :consoles, :c
   
@@ -83,7 +83,7 @@ module RudyEC2CLI
   option :k, :pkey, String, "Path to the private SSH key"
   option :g, :group, String, "A security group name"
   option :i, :awsid, String, "An instance ID"
-  command :copy => Rudy::CLI::AWS::EC2::Instances 
+  command :copy => Rudy::CLI::AWS::EC2::Candy 
   command_alias :copy, :scp
   command_alias :copy, :upload
   command_alias :copy, :download
@@ -161,7 +161,7 @@ module RudyEC2CLI
   option :u, :user, String, "Username to connect as"
   option :print, "Print SSH command. Don't connect."
   argv :cmd
-  command :ssh => Rudy::CLI::AWS::EC2::Instances 
+  command :ssh => Rudy::CLI::AWS::EC2::Candy 
   command_alias :ssh, :connect
   
   desc "Manage Volumes"

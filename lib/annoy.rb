@@ -112,6 +112,8 @@ class Annoy #:nodoc:all
         #end
         #response = Annoy.get_response(writer)
         
+        trap("SIGINT") { raise Annoy::GiveUp  }
+        
         highline = HighLine.new 
         response = highline.ask(msg) { |q| 
           q.echo = false           # Don't display response
@@ -122,6 +124,9 @@ class Annoy #:nodoc:all
         response = response.to_i if flavor == :numeric
         (response == answer)
       end
+    rescue Annoy::GiveUp => ex
+      writer.puts $/, "Giving up!"
+      false
     rescue Timeout::Error => ex
       writer.puts $/, "Times up!"
       false
@@ -235,5 +240,7 @@ class Annoy #:nodoc:all
   
 end
 
+class Annoy::GiveUp < RuntimeError
+end
 
 

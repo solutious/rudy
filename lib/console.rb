@@ -58,7 +58,8 @@ class String
     Console.print_at(self, args)
   end
   
-  # Returns the string with escape code attributes removed.
+  # Returns the string with ANSI escape codes removed.
+  #
   # NOTE: The non-printable attributes count towards the string size. 
   # You can use this method to get the "visible" size:
   #
@@ -66,8 +67,10 @@ class String
   #     "\e[34;47;5mMONKEY_JUNK\e[39;49;0m".size            # => 31
   #
   def noatt
-    gsub(/\e\[[\d;]*m/, '')
+    gsub(/\e\[?[0-9;]*[mc]?/, '')
   end
+  alias :noansi :noatt
+  
 end
 
 class Object #:nodoc:all

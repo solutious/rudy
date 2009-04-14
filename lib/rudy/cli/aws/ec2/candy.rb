@@ -7,41 +7,64 @@ module AWS; module EC2;
     
 
 
-
-    def ssh
-      opts = {}
-      opts[:group] = @option.group if @option.group
-      opts[:group] = :any if @option.all
-
-      opts[:id] = @argv.shift if Rudy.is_id?(:instance, @argv.first)
-      opts[:id] &&= [opts[:id]].flatten
-      
-      @option.user ||= Rudy.sysinfo.user
-      
-      if @argv.first
-        command, command_args = [@argv.first].flatten.join(' ')
-        execute_check(:medium) if @option.user == "root"
-      end
-      
+    def ssh_valid?
       if @option.pkey
         raise "Cannot find file #{@option.pkey}" unless File.exists?(@option.pkey)
         raise "Insecure permissions for #{@option.pkey}" unless (File.stat(@option.pkey).mode & 600) == 0
       end
+      if @option.group
+        rgroup = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
+        raise "Cannot supply group and instance ID" if @option.instid
+        raise "Group #{@option.group} does not exist" unless rgroup.exists?(@option.group)
+      end
+      if @option.instid && !Rudy.is_id?(:instance, @option.instid)
+        raise "#{@option.instid} is not an instance ID" 
+      end
+      true
+    end
+    def ssh
+      opts = {}
+      opts[:group] = @option.group if @option.group
+      opts[:group] = :any if @option.all
+      opts[:id] = @option.instid if @option.instid
       
+      # Options to be sent to Net::SSH
+      ssh_opts = { :user => @option.user || Rudy.sysinfo.user, :debug => nil  }
+      ssh_opts[:keys] = @option.pkey if @option.pkey
+      
+      # The user specified a command to run. We won't create an interactive
+      # session so we need to prepare the command and its arguments
+      if @argv.first
+        command, command_args = @argv.shift, @argv || []
+        puts "#{command} #{command_args.join(' ')}" if @@global.verbose > 1
+      
+      # otherwise, we'll open an ssh session or print command
+      else
+        command, command_args = :interactive_ssh, @option.print.nil?
+      end
+      
+      checked = false
       rudy = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
       lt = rudy.list_group(opts[:group], :running, opts[:id]) do |inst|
-        puts "Connecting to: #{inst.awsid.bright} as #{@option.user.bright} (group: #{inst.groups.join(', ')})", $/
-        ssh_opts = {
-          #:debug => STDERR,
-          :user => @option.user
-        }
-        ssh_opts[:keys] = @option.pkey if @option.pkey
         
+        # Print header
+        if @@global.quiet
+          print "You are #{@option.user.bright}. " if !checked # only the 1st
+        else
+          print "Connecting #{ssh_opts[:user].bright}@#{inst.dns_public} "
+          puts "(#{inst.awsid}, groups: #{inst.groups.join(', ')})"
+        end
+        
+        # Make sure we want to run this command on all instances
+        if !checked && command != :interactive_ssh 
+          execute_check(:medium) if ssh_opts[:user] == "root"
+          checked = true
+        end
+        
+        # Open the connection and run the command
         rbox = Rye::Box.new(inst.dns_public, ssh_opts)
-          
-        command, command_args = :interactive_ssh, @option.print.nil? unless command
-        puts rbox.send(command, command_args)
-        
+        ret = rbox.send(command, command_args)
+        puts ret unless command == :interactive_ssh
       end
     end
 

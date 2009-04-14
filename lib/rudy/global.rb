@@ -13,6 +13,7 @@ module Rudy
     field :nocolor
     field :quiet
     field :verbose
+    field :format
     
     field :accesskey
     field :secretkey
@@ -33,6 +34,7 @@ module Rudy
       @verbose ||= 0
       @nocolor ||= false
       @quiet ||= false
+      @format ||= 'string' # as in, to_s
       @print_header ||= true
     end
       

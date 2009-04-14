@@ -6,8 +6,6 @@ module AWS; module EC2;
 
 
     def instances_create
-      puts "Instances".bright
-      
       # Defaults
       opts = {
         :group => 'default',
@@ -69,7 +67,6 @@ module AWS; module EC2;
 
 
     def instances_destroy
-      puts "Instances".bright
       opts = {}
       opts[:group] = @option.group if @option.group
       opts[:id] = @argv.awsid if @argv.awsid
@@ -134,7 +131,7 @@ module AWS; module EC2;
     
       rudy = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
       lt = rudy.list_group(opts[:group], opts[:state], opts[:id]) do |inst|
-        puts @@global.verbose > 0 ? inst.inspect : inst.to_s
+        puts @@global.verbose > 0 ? inst.inspect : inst.dump(@@global.format)
       end
       puts "No instances running" if !lt || lt.empty?
     end

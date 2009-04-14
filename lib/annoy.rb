@@ -122,7 +122,9 @@ class Annoy #:nodoc:all
           q.answer_type = Integer  if flavor == :numeric
         }
 
-        (response == answer)
+        ret = (response == answer)
+        writer.puts "Incorrect" unless ret
+        ret
       end
     rescue Annoy::GiveUp => ex
       writer.puts $/, "Giving up!"

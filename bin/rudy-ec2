@@ -27,6 +27,7 @@ module RudyEC2CLI
   
   global :A, :accesskey, String, "AWS Access Key"
   global :S, :secretkey, String, "AWS Secret Access Key"
+  global :F, :format, String, "Output format"
   #global :R, :region, String, "Connect to a specific EC2 region (ie: #{Rudy::DEFAULT_REGION})"
   global :n, :nocolor, "Disable output colors"
   global :f, :config, String, "Specify another configuration file to read (ie: #{Rudy::CONFIG_FILE})"
@@ -68,7 +69,7 @@ module RudyEC2CLI
   desc "Displays system console output for given instance(s)"
   option :g, :group, String, "A group name to authorize or revoke network rule. Must also supply -o!"
   argv :awsid
-  command :consoles => Rudy::CLI::AWS::EC2::Candy
+  command :consoles => Rudy::CLI::AWS::EC2::Instances
   command_alias :consoles, :console
   command_alias :consoles, :c
   
@@ -153,10 +154,15 @@ module RudyEC2CLI
   command_alias :keypairs, :keypair
   command_alias :keypairs, :k
   
-  usage "rudy-ec2 ssh [-g group-name] [-i instance-ID] [cmd]"
+  usage "rudy-ec2 ssh"
+  usage "rudy-ec2 ssh -k path/2/key -u root"
+  usage "rudy-ec2 ssh -k path/2/key -u root uname -a"
+  usage "rudy-ec2 ssh -g group-name"
+  usage "rudy-ec2 ssh -i instance-id"
   desc "Open an SSH connection"
   option :print, "Only print the SSH command, don't connect"
   option :g, :group, String, "A security group name"
+  option :i, :instid, String, "An instance ID"
   option :k, :pkey, String, "Path to the private SSH key"
   option :u, :user, String, "Username to connect as"
   option :print, "Print SSH command. Don't connect."

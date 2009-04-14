@@ -40,10 +40,7 @@ module Rudy
       
       def execute_check(level=:medium)
         ret = Annoy.are_you_sure?(:medium)
-        unless ret
-          puts "Incorrect"
-          exit 0
-        end
+        exit 0 unless ret
         ret
       end
       

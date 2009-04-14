@@ -3,7 +3,7 @@
 
 module Rudy::AWS
   class EC2::Instance < Storable
-    @@sformat = "%10s; %10s; %12s; %10s; groups: %s"
+    @@sformat = " -> %10s; %10s; %12s; %10s; groups: %s"
     field :aki
     field :ari
     field :launch_index => Time
@@ -210,9 +210,10 @@ module Rudy::AWS
       # * +state+ is an optional instance state. If specified, must be one of: running (default), pending, terminated.
       # * +inst_ids+ is an Array of instance IDs.
       def list_group_as_hash(group=nil, state=nil, inst_ids=[], &each_inst)
-        instances = list_as_hash(state, inst_ids, &each_inst)
+        instances = list_as_hash(state, inst_ids)
         # Remove instances that are not in the specified group
         instances &&= instances.reject { |id,inst| !inst.groups.member?(group) } if group
+        instances.each_value { |inst| each_inst.call(inst) } if each_inst
         instances = nil if instances && instances.empty? # Don't return an empty hash
         instances
       end

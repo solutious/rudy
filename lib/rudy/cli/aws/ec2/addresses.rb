@@ -4,17 +4,15 @@ module Rudy; module CLI;
 module AWS; module EC2;
   
   class Addresses < Rudy::CLI::Base
-
     
     def addresses_create
-      puts "Addresses".bright
       radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey)
       address = radd.create
       puts address.to_s
     end
     
     def addresses_destroy_valid?
-      raise "You have not supplied an IP addresses" unless @argv.ipaddress
+      raise ArgumentError, "You have not supplied an IP addresses" unless @argv.ipaddress
       
       @radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey)
       
@@ -24,27 +22,22 @@ module AWS; module EC2;
       true
     end
     def addresses_destroy
-      puts "Addresses".bright
-      
       address = @radd.get(@argv.ipaddress)
       raise "Could not fetch #{address.ipaddress}" unless address
       
       puts "Destroying address: #{@argv.ipaddress}"
       puts "NOTE: this IP address will become available to other EC2 customers.".color(:blue)
       execute_check(:medium)
-      
       execute_action { @radd.destroy(@argv.ipaddress) }
-      
+      self.addresses
     end
 
     def associate_addresses_valid?
-      raise "You have not supplied an IP addresses" if !@argv.ipaddress && !@option.newaddress
-      raise "You did not supply an instance ID" unless @option.instance
+      raise ArgumentError, "You have not supplied an IP addresses" if !@argv.ipaddress && !@option.newaddress
+      raise OptionError, "You did not supply an instance ID" unless @option.instance
       true
     end
     def associate_addresses
-      puts "Addresses".bright
-      
       radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey)
       rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
       
@@ -71,10 +64,9 @@ module AWS; module EC2;
       
       puts "Associating #{address} to #{instance_name} (#{instance.groups.join(', ')})"
       execute_check(:low)
-      
-      
       execute_action { radd.associate(address, instance.awsid) }
-      
+      address = radd.get(@argv.ipaddress)
+      puts address
     end
     
     def disassociate_addresses_valid?
@@ -82,8 +74,6 @@ module AWS; module EC2;
       true
     end
     def disassociate_addresses
-      puts "Addresses".bright
-      
       radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey)
       rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
       raise "#{@argv.ipaddress} is not allocated to you" unless radd.exists?(@argv.ipaddress)
@@ -94,14 +84,12 @@ module AWS; module EC2;
       
       puts "Disassociating #{address.ipaddress} from #{instance.awsid} (#{instance.groups.join(', ')})"
       execute_check(:medium)
-      
       execute_action { radd.disassociate(@argv.ipaddress) }
-      
+      address = radd.get(@argv.ipaddress)
+      puts address
     end
     
     def addresses
-      puts "Addresses".bright
-      
       radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey)
       addresses = radd.list || []
       

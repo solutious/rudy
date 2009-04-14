@@ -5,6 +5,7 @@ module Rudy::AWS
     class Rule < Storable
       field :ports => Range          # Port range
       field :protocol => String
+      
       def to_s
         if self.ports.first == self.ports.last
           "%s(%s)" % [self.protocol, self.ports.last]
@@ -22,22 +23,43 @@ module Rudy::AWS
     field :addresses => Hash         # key: address/mask, value Array of Rule object
     field :groups => Hash            # key: group, value Array of Rule object
     
+    
+    def liner_note
+      info = @groups.empty? ? 'none' : @groups.keys.join(', ')
+      "%s (authorized accounts: %s)" % [@name.bright, info]
+    end
+    
+    
     # Print info about a security group
     #
     # * +group+ is a Rudy::AWS::EC2::Group object
     def to_s
-      lines = ["%12s: %s" % ['GROUP', self.name.bright]]
-      
+      lines = [liner_note]
       (self.addresses || {}).each_pair do |address,rules|
-        lines << "%6s %s:  %s" % ['', address.to_s, rules.collect { |p| p.to_s}.join(', ')]
+        lines << "%18s -> %s" % [address.to_s, rules.collect { |p| p.to_s}.join(', ')]
       end
-      
-      (self.groups || {}).each_pair do |group,rules|
-        lines << "%6s %s:  %s" % ['', group, rules.collect { |p| p.to_s}.join(', ') ]
-      end
-      
       lines.join($/)
     end
+    
+    def inspect
+      lines = [@name.bright]
+      field_names.each do |key|
+        next unless self.respond_to?(key)
+        next if [:addresses, :groups].member?(key)
+        val = self.send(key)
+        lines << sprintf(" %12s: %s", key, (val.is_a?(Array) ? val.join(', ') : val))
+      end
+      @addresses.each_pair do |a,r|
+        rules = r.collect { |r| r.to_s }.join(', ') if r
+        lines << sprintf(" %12s: %s (%s)", 'address', a.to_s, rules)
+      end
+      @groups.each_pair do |g,r|
+        rules = r.collect { |r| r.to_s }.join(', ')
+        lines << sprintf(" %12s: %s (%s)", 'group', g.to_s, rules)
+      end
+      lines.join($/)
+    end
+
     
     # * +ipaddress+ is a String, ipaddress/mask/protocol
     # * +rule+ is a Rule object

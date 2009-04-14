@@ -88,10 +88,13 @@ module RudyEC2CLI
   command_alias :copy, :upload
   command_alias :copy, :download
   
-  usage "rudy-ec2 groups -C               (create a group)"
-  usage "rudy-ec2 -e prod groups          (list groups in the prod environment)"
-  usage "rudy-ec2 groups -A -p 81,82,83   (open ports to a group from this machine)"
-  usage "rudy-ec2 [global options] groups [-C -R -A] [-a IP addresses] [-p ports] [group name]"
+  usage "rudy-ec2 groups"
+  usage "rudy-ec2 groups -C [-p ports] [-a addresses] [-r protocols] name"
+  usage "rudy-ec2 groups -A [-p ports] [-a addresses] [-r protocols] name"
+  usage "rudy-ec2 groups -A -p 81,8000-9000 -a 127.0.0.1,127.0.0.2 name"
+  usage "rudy-ec2 groups -A -g default -o 123456789012 name"
+  usage "rudy-ec2 groups -R -g default -o 123456789012 name"
+  usage "rudy-ec2 groups -D name"
   desc "Manage EC2 Security Groups"
   option :all, "Display all security groups"
   option :r, :protocols, Array, "Comma-separated list of protocols. One of: tcp (default), udp, icmp"
@@ -99,6 +102,7 @@ module RudyEC2CLI
   option :a, :addresses, Array, "List of comma-separated IP addresses (default: your current external IP)"
   option :g, :group, String, "A group name to authorize or revoke network rule. Must also supply -o!"
   option :o, :owner, String, "A group owner ID (account number). Must also supply -g!"
+  option :d, :description, String, "A group description"
   action :C, :create, "Create a security group"
   action :D, :destroy, "Destroy a security group"
   action :A, :authorize, "Authorize a rule for a security group"
@@ -120,7 +124,6 @@ module RudyEC2CLI
   #argv :ami
   #command :images => Rudy::CLI::AWS::EC2::Images
   #command_alias :images, :image
-  
   
   desc "Manage Instances"
   usage "rudy-ec2 instances [-g group-name] [-s state] [instance-ID]"

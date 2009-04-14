@@ -30,7 +30,7 @@ module Rudy::Test
         test_name ||= 'test-' << Rudy::Utils.strand
         str = Rudy::Utils.strand
         group = @ec2group.create(test_name)
-        assert group.is_a?(Rudy::AWS::EC2::Group), "Not a Group object"
+        assert group.is_a?(Rudy::AWS::EC2::Group), "Not a Group object (#{group.class.to_s})"
         assert_equal group.name, test_name, "Group name not set"
         assert_equal group.description, "Security Group #{test_name}", "Group description not 'Security Group #{test_name}'"
         assert @ec2group.exists?(test_name), "Group #{test_name} doesn't exist"
@@ -80,13 +80,13 @@ module Rudy::Test
         
         group.addresses.each_pair do |address,rules|
           assert rules.is_a?(Array), "Not an Array"
-          assert_equal 2, rules.size, "Not 2 rules"
+          assert_equal 7, rules.size, "Not 7 rules"
           puts "TODO: Check port ranges"
         end
         
         ret = @ec2group.revoke(test_name, addresses, ports, protocols)
         assert ret, "Revoke did not return true"
-        
+        sleep 1 # Wait for eventual consistency
         group = @ec2group.get(test_name)
         assert group.addresses.is_a?(Hash), "Addresses is not a hash"
         assert group.addresses.empty?, "Some addresses not revoked #{group.addresses.to_s}"

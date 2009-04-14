@@ -143,5 +143,12 @@ RELEASE CHECKLIST
   * rudy.rb
   * gemspec
 * Removed "THIS VERSION IS NOT YET RELEASED"
+* For rudy-ec2 commands
+  * to_s
+  * consistent layout
+  * all actions tested
+  * all options tested
+  * help has command usages
+  * make sure option input checks occur before argv checks
 
 

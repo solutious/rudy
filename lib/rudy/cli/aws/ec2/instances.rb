@@ -174,7 +174,7 @@ module AWS; module EC2;
       execute_action("#{action.to_s.capitalize} Failed") { 
         @rinst.send(action, inst_ids)
       }
-      
+      status
     end
     
     

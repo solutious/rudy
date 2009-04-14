@@ -91,6 +91,7 @@ module Rudy::Test
         items.keys.each do |item|
           assert @sdb.destroy(@domain, item), "Not destroyed (#{item})"
         end
+        sleep 1 # Eventual consistency. Items may still appear. 
         q = "select * from #{@domain}"
         items = @sdb.select(q)
         assert items.nil?, "Some items not destroyed (#{items})"

@@ -39,7 +39,7 @@ module AWS; module EC2;
     
     def keypairs
       rkey = Rudy::AWS::EC2::KeyPairs.new(@@global.accesskey, @@global.secretkey)
-      rkey.list.each do |kp|
+      (rkey.list || []).each do |kp|
         puts @@global.verbose > 0 ? kp.inspect : kp.dump(@@global.format)
       end
       puts "No keypairs" unless rkey.any?

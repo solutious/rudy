@@ -95,8 +95,7 @@ module Rudy::AWS
         ret = @ec2.create_security_group(:group_name => name, :group_description => desc)
         return false unless (ret && ret['return'] == 'true')
         authorize(name, addresses, ports, protocols)
-        groups = list(name, &each_group)
-        groups
+        get(name, &each_group)
       end
     
       # Delete an EC2 security group
@@ -141,7 +140,7 @@ module Rudy::AWS
       #
       # Returns an Array of Rudy::AWS::EC2::Group objects
       def list_as_hash(group_names=[], &each_group)
-        group_names ||= []
+        group_names = [group_names].flatten.compact
         glist = @ec2.describe_security_groups(:group_name => group_names) || {}
         return unless glist['securityGroupInfo'].is_a?(Hash)
         groups = {}

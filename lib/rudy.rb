@@ -153,10 +153,11 @@ module Rudy
     duration = 1 if duration < 1
     max = duration*2 if max < duration
     success = false
+    dot = '.'
     begin
       success = Timeout::timeout(max) do
         while !check.call
-          logger.print dot if dot && logger.respond_to?(:print)
+          logger.print dot if logger.respond_to?(:print)
           logger.flush if logger.respond_to?(:flush)
           sleep duration
         end

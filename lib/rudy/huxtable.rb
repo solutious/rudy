@@ -27,16 +27,20 @@ module Rudy
     @@global = Rudy::Global.new
     @@logger = StringIO.new    # BUG: memory-leak for long-running apps
     
-    def config; @@config; end
-    def global; @@global; end
-    def logger; @@logger; end
-    
+    # NOTE: These methods conflict with Drydock::Command classes. It's
+    # probably a good idea to not expose these anyway since it can be
+    # done via Rudy::Huxtable.update_global etc...
+    #def config; @@config; end
+    #def global; @@global; end
+    #def logger; @@logger; end
     
     def self.update_config(path=nil)
       # nil or otherwise bad paths send to look_and_load are ignored
       @@config.look_and_load(path || nil)
       @@global.apply_config(@@config)
     end
+    
+    update_config
     
     def self.update_global(ghash={})
       @@global.update(ghash)
@@ -51,8 +55,6 @@ module Rudy
     def self.change_region(v); @@global.region = v; end
     def self.change_environment(v); @@global.environment = v; end  
     def self.change_position(v); @@global.position = v; end
-    
-    update_config
     
         
     def debug?; @@debug == true; end

@@ -13,10 +13,10 @@ require 'fileutils'
 # Storable.field method which tells Storable the order and 
 # name.
 class Storable
-  unless defined?(VERSION) # We can assume all are defined
-    VERSION = 4
+  unless defined?(SUPPORTED_FORMATS) # We can assume all are defined
+    VERSION = 5
     NICE_TIME_FORMAT  = "%Y-%m-%d@%H:%M:%S".freeze 
-    SUPPORTED_FORMATS = %w{tsv csv yaml json}.freeze 
+    SUPPORTED_FORMATS = %w{tsv csv yaml json s string}.freeze 
   end
   
   # This value will be used as a default unless provided on-the-fly.
@@ -83,9 +83,13 @@ class Storable
 
   # Dump the object data to the given format. 
   def dump(format=nil, with_titles=true)
-    format ||= @format
+    format ||= 's' # as in, to_s
     raise "Format not defined (#{format})" unless SUPPORTED_FORMATS.member?(format)
     send("to_#{format}", with_titles) 
+  end
+  
+  def to_string(*args)
+    to_s(args)
   end
   
   # Create a new instance of the object using data from file. 

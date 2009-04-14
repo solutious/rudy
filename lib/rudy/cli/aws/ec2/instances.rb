@@ -60,7 +60,7 @@ module AWS; module EC2;
           first_instance = false
         end
         
-        puts @@global.verbose > 0 ? inst.inspect : inst.to_s
+        puts @@global.verbose > 0 ? inst.inspect : inst.dump(@@global.format)
       end
 
     end

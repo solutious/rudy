@@ -6,7 +6,7 @@ require 'socket'
 # A container for the system platform information. 
 # Portions of this code is from Amazon's EC2 AMI tools, lib/platform.rb. 
 class SystemInfo < Storable
-  unless defined?(VERSION)
+  unless defined?(IMPLEMENTATIONS)
     VERSION = 2.freeze
     IMPLEMENTATIONS = [
     

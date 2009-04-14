@@ -6,7 +6,7 @@ module Rudy::AWS
       field :ports => Range          # Port range
       field :protocol => String
       
-      def to_s
+      def to_s(with_titles=false)
         if self.ports.first == self.ports.last
           "%s(%s)" % [self.protocol, self.ports.last]
         else

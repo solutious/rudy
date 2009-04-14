@@ -16,11 +16,11 @@ module AWS; module EC2;
       
       rvol = Rudy::AWS::EC2::Volumes.new(@@global.accesskey, @@global.secretkey)
       execute_check(:low)
-      execute_action("Create Failed") { 
+      vol = execute_action("Create Failed") { 
         rvol.create(@option.size, @@global.zone, @option.snapshot) 
       }
       
-      puts @global.verbose > 1 ? vol.inspect : vol.to_s
+      puts @global.verbose > 1 ? vol.inspect : vol.dump(@@global.format)
     end
 
 
@@ -45,7 +45,7 @@ module AWS; module EC2;
       execute_action("Destroy Failed") { @rvol.destroy(@volume.awsid) }
       
       vol = @rvol.get(@volume.awsid)
-      puts @global.verbose > 1 ? vol.inspect : vol.to_s
+      puts @global.verbose > 1 ? vol.inspect : vol.dump(@@global.format)
     end
     
     
@@ -71,7 +71,7 @@ module AWS; module EC2;
       }
       
       vol = rvol.get(@argv.volid)
-      puts @global.verbose > 1 ? vol.inspect : vol.to_s
+      puts @global.verbose > 1 ? vol.inspect : vol.dump(@@global.format)
     end
     
     def volumes_detach_valid?
@@ -91,7 +91,7 @@ module AWS; module EC2;
       execute_action("Detach Failed") { rvol.detach(vol.awsid) }
       
       vol = rvol.get(vol.awsid)
-      puts @global.verbose > 1 ? vol.inspect : vol.to_s
+      puts @global.verbose > 1 ? vol.inspect : vol.dump(@@global.format)
     end
     
     
@@ -99,7 +99,7 @@ module AWS; module EC2;
       rvol = Rudy::AWS::EC2::Volumes.new(@@global.accesskey, @@global.secretkey)
       volumes = rvol.list || []
       volumes.each do |vol|
-        puts @global.verbose > 1 ? vol.inspect : vol.to_s
+        puts @global.verbose > 1 ? vol.inspect : vol.dump(@@global.format)
       end
       puts "No volumes" if volumes.empty?
     end

@@ -101,10 +101,8 @@ The
 
 * <tt>"`require': no such file to load -- amazon-ec2 (LoadError)"</tt>
   * You're probably running a mix of Rubygem and non-Rubygem libraries. Ryan Tomayko has you covered: http://gist.github.com/54177
-
 * <tt>"The request signature we calculated does not match the signature you provided."</tt>
   * Check that your Amazon Web Service access key and secret key are correct
-
 * <tt>"AWS was not able to validate the provided access credentials"</tt>
   * If it's a new Amazon Accounts, you need to sign up for EC2, SDB, and S3. 
 

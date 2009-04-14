@@ -3,10 +3,10 @@ module Rudy::AWS
   module EC2
     
     class KeyPair < Storable
-      attr_accessor :private_key  # not a storable field
       
       field :name
       field :fingerprint
+      field :private_key  
       
       def liner_note
         "%-20s   %s" % [self.name, self.fingerprint]

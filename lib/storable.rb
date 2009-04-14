@@ -82,7 +82,7 @@ class Storable
   end
 
   # Dump the object data to the given format. 
-  def dump(format=nil, with_titles=true)
+  def dump(format=nil, with_titles=false)
     format ||= 's' # as in, to_s
     raise "Format not defined (#{format})" unless SUPPORTED_FORMATS.member?(format)
     send("to_#{format}", with_titles) 

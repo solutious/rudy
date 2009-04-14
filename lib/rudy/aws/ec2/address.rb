@@ -13,7 +13,7 @@ module Rudy::AWS
         "%s (%s)" % [@ipaddress, info]
       end
       
-      def to_s
+      def to_s(with_titles=false)
         liner_note
       end
       

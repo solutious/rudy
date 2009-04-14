@@ -8,17 +8,14 @@ module AWS; module EC2;
     def addresses_create
       radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey)
       address = radd.create
-      puts address.to_s
+      puts address.dump(@@global.format)
     end
     
     def addresses_destroy_valid?
       raise ArgumentError, "You have not supplied an IP addresses" unless @argv.ipaddress
-      
       @radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey)
-      
       raise "#{@argv.ipaddress} is not allocated to you" unless @radd.exists?(@argv.ipaddress)
       raise "#{@argv.ipaddress} is associated!" if @radd.associated?(@argv.ipaddress)
-      
       true
     end
     def addresses_destroy
@@ -66,7 +63,7 @@ module AWS; module EC2;
       execute_check(:low)
       execute_action { radd.associate(address, instance.awsid) }
       address = radd.get(@argv.ipaddress)
-      puts address
+      puts address.dump(@@global.format)
     end
     
     def disassociate_addresses_valid?
@@ -86,7 +83,7 @@ module AWS; module EC2;
       execute_check(:medium)
       execute_action { radd.disassociate(@argv.ipaddress) }
       address = radd.get(@argv.ipaddress)
-      puts address
+      puts address.dump(@@global.format)
     end
     
     def addresses
@@ -94,7 +91,7 @@ module AWS; module EC2;
       addresses = radd.list || []
       
       addresses.each do |address|
-        puts address.to_s
+        puts address.dump(@@global.format)
       end
       
       puts "No Addresses" if addresses.empty?

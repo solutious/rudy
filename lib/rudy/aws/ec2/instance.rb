@@ -3,7 +3,7 @@
 
 module Rudy::AWS
   class EC2::Instance < Storable
-    @@sformat = " -> %10s; %10s; %12s; %10s; groups: %s"
+    @@sformat = "   -> %10s; %10s; %12s; %10s; groups: %s"
     field :aki
     field :ari
     field :launch_index => Time

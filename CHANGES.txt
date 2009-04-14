@@ -1,5 +1,7 @@
 RUDY, CHANGES
 
+TODO: Remove string messages for non-string output formats
+
 
 #### 0.6.0 (2009-04-??) ###############################
 
@@ -9,6 +11,7 @@ NOTE: This is a significant re-write from 0.5
 * CHANGE: Removed lib/rudy/commands/* and lib/rudy/metadata/*
 * ADDED: rudy-ec2 executable
 * CHANGE: have local copies of Caesars and Drydock to reduce external dependencies. 
+* ADDED: new output formats: yaml, json, csv, tsv
 
 
 #### 0.5.1 (2009-04-10) ###############################

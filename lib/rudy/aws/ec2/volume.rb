@@ -3,7 +3,7 @@
 module Rudy::AWS
   module EC2
     class Volume < Storable
-      @@sformat = " -> %10s;%4sGB; %s" # cram the terabyte
+      @@sformat = "   -> %10s;%4sGB; %s" # cram the terabyte
       
       field :awsid
       field :status
@@ -20,7 +20,7 @@ module Rudy::AWS
         "%s (%s)" % [(self.awsid || '').bright, info]
       end
       
-      def to_s
+      def to_s(with_title=false)
         lines = [liner_note]
         lines << @@sformat % [@zone, @size, @device]
       end

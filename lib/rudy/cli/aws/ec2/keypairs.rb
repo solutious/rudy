@@ -12,11 +12,15 @@ module AWS; module EC2;
     def create_keypairs
       rkey = Rudy::AWS::EC2::KeyPairs.new(@@global.accesskey, @@global.secretkey)
       kp = execute_action { rkey.create(@argv.name) }
-      puts "Name: #{kp.name}"
-      puts "Fingerprint: #{kp.fingerprint}", $/
-      puts "Copy the following private key data into a file."
-      puts "Set the permissions to 0600 and keep it safe.", $/
-      puts kp.private_key
+      if %w[s string].member?(@@global.format)
+        puts "Name: #{kp.name}"
+        puts "Fingerprint: #{kp.fingerprint}", $/
+        puts "Copy the following private key data into a file."
+        puts "Set the permissions to 0600 and keep it safe.", $/
+        puts kp.private_key
+      else
+        puts kp.dump(@@global.format)
+      end
     end
     
     def destroy_keypairs_valid?
@@ -36,7 +40,7 @@ module AWS; module EC2;
     def keypairs
       rkey = Rudy::AWS::EC2::KeyPairs.new(@@global.accesskey, @@global.secretkey)
       rkey.list.each do |kp|
-        puts kp.to_s
+        puts kp.dump(@@global.format)
       end
       puts "No keypairs" unless rkey.any?
     end

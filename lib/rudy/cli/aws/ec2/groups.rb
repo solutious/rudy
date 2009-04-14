@@ -21,7 +21,7 @@ module AWS; module EC2;
       }
       
       @rgroups.list(@argv.name) do |group|
-        puts @@global.verbose > 0 ? group.inspect : group.to_s
+        puts @@global.verbose > 0 ? group.inspect : group.dump(@@global.format)
       end
     end
     
@@ -105,7 +105,7 @@ module AWS; module EC2;
       name = @option.all ? nil : @argv.name
       rgroups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
       rgroups.list(name).each do |group|
-        puts @@global.verbose > 0 ? group.inspect : group.to_s
+        puts @@global.verbose > 0 ? group.inspect : group.dump(@@global.format)
       end
     end
     

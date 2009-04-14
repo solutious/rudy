@@ -9,7 +9,7 @@ module Rudy::AWS
       field :volid
       field :status
       
-      def to_s
+      def to_s(with_titles=false)
         "%s:%s (%s) %s" [self.awsid, self.volid, self.created, self.status]
       end
       

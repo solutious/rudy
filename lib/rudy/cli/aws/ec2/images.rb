@@ -97,7 +97,7 @@ module AWS; module EC2;
     
     
     def print_image(img)
-      puts '-'*60
+      puts 
       puts "Image: #{img[:aws_id].bright}"
       img.each_pair do |key, value|
          printf(" %22s: %s#{$/}", key, value) if value

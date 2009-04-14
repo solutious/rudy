@@ -10,7 +10,7 @@ module AWS; module EC2;
       name = @option.all ? nil : @argv.name
       rgroups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
       rgroups.list(name).each do |grp|
-        puts '-'*60
+        puts 
         puts grp.to_s
       end
     end
@@ -38,7 +38,7 @@ module AWS; module EC2;
       rudy = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
       rudy.create(@argv.name, opts[:addresses], opts[:ports], opts[:protocols])
       rudy.list(@argv.name) do |group|
-        puts '-'*60
+        puts 
         puts group.to_s
       end
     end
@@ -53,7 +53,7 @@ module AWS; module EC2;
       rudy = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
       rudy.revoke(@argv.name, opts[:addresses], opts[:ports], opts[:protocols])
       rudy.list(@argv.name) do |group|
-        puts '-'*60
+        puts 
         puts group.to_s
       end
     end
@@ -68,7 +68,7 @@ module AWS; module EC2;
       rudy = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
       rudy.authorize(@argv.name, opts[:addresses], opts[:ports], opts[:protocols])
       rudy.list(@argv.name) do |group|
-        puts '-'*60
+        puts 
         puts group.to_s
       end
     end

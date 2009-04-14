@@ -27,7 +27,7 @@ module Rudy
       
       def print_disk(disk, backups=[])
         return unless disk
-        puts '-'*60
+        puts 
         puts "Disk: #{disk.name.bright}"
         puts disk.to_s
         puts "#{backups.size} most recent backups:", backups.collect { |back| "#{back.nice_time} (#{back.awsid})" }

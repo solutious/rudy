@@ -847,6 +847,8 @@ at_exit {
   rescue => ex
     STDERR.puts "ERROR (#{ex.class.to_s}): #{ex.message}"
     STDERR.puts ex.backtrace if Drydock.debug?
+  rescue SystemExit
+    # Don't balk
   end
 }
 

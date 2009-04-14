@@ -20,6 +20,10 @@ require 'rudy/cli'
 
 module RudyEC2CLI
   extend Drydock
+
+  
+  # --------------------------------------  RUDY-EC2 GLOBALS  --------
+  # ------------------------------------------------------------------
   
   global :A, :accesskey, String, "AWS Access Key"
   global :S, :secretkey, String, "AWS Secret Access Key"
@@ -55,6 +59,30 @@ module RudyEC2CLI
   command_alias :addresses, :address
   command_alias :addresses, :a
   
+  usage "rudy-ec2 console [-g group] [instance ID]"
+  desc "Displays system console output for given instance(s)"
+  option :g, :group, String, "A group name to authorize or revoke network rule. Must also supply -o!"
+  argv :awsid
+  command :consoles => Rudy::CLI::AWS::EC2::Instances
+  command_alias :consoles, :console
+  command_alias :consoles, :c
+  
+  usage "rudy-ec2 copy [-p] [-r] source target"
+  usage "rudy-ec2 upload [-p] local-source target"
+  usage "rudy-ec2 download [-p] remote-source target"
+  desc "Copy files to or from machines. NOTE: You must use quotes when using a tilda for your remote dir ('~/')."
+  option :r, :recursive, "Recursively copy entire directories"
+  option :p, :preserve, "Preserve atimes and ctimes."
+  option :d, :download, "Download FROM the remote machine to the local machine"
+  option :print, "Only print the SSH command, don't connect"
+  option :k, :pkey, String, "Path to the private SSH key"
+  option :g, :group, String, "A security group name"
+  option :i, :awsid, String, "An instance ID"
+  command :copy => Rudy::CLI::AWS::EC2::Instances 
+  command_alias :copy, :scp
+  command_alias :copy, :upload
+  command_alias :copy, :download
+  
   usage "rudy-ec2 groups -C               (create a group)"
   usage "rudy-ec2 -e prod groups          (list groups in the prod environment)"
   usage "rudy-ec2 groups -A -p 81,82,83   (open ports to a group from this machine)"
@@ -75,40 +103,19 @@ module RudyEC2CLI
   command_alias :groups, :group
   command_alias :groups, :g
   
-  desc "Manage EC2 Volumes"
-  usage "rudy-ec2 volumes"
-  usage "rudy-ec2 volumes -C -s size [-d device-path]"
-  usage "rudy-ec2 volumes -A volume-id instance-id"
-  usage "rudy-ec2 volumes -N volume-id"
-  usage "rudy-ec2 volumes -D volume-id"
-  option :i, :instance, String, "Instance ID"
-  option :s, :size, String, "Size (in GB)"
-  option :d, :device, String, "Device path (default: /dev/sdh)"
-  action :D, :destroy, "Destroy a volume"
-  action :C, :create, "Create a volume"
-  action :A, :attach, "Attach a volume to a running instance"
-  action :N, :detach, "Detach a volume from an instance"
-  argv :volid
-  command :volumes => Rudy::CLI::AWS::EC2::Volumes
-  command_alias :volumes, :volume
-  command_alias :volumes, :v
+  #usage "rudy-ec2 images [-C -i name [-b bucket -a accountnum]] [-D AMI-ID]"
+  #desc "Manage EC2 Machine Images (AMIs)"
+  #option :a, :accountnum, String, "Your Amazon Account Number"
+  #option :i, :image_name, String, "The name of the image"     # TODO: change to --ami
+  #option :p, :print, "Print-only (don't execute commands)"
+  #option :b, :bucket_name, String, "The name of the bucket that will store the image"
+  #action :C, :create, "Create an image"
+  ##action :P, :prepare, "Prepare a running instance to be used as an image"
+  #action :D, :destroy, "Deregister an image (currently _does not_ remove images files from S3)"
+  #argv :ami
+  #command :images => Rudy::CLI::AWS::EC2::Images
+  #command_alias :images, :image
   
-  desc "Manage KeyPairs"
-  usage "rudy-ec2 keypairs [-C] [-D] [name]"
-  action :D, :destroy, "Destroy KeyPair"
-  action :C, :create, "Create KeyPair"
-  argv :kpname
-  command :keypairs => Rudy::CLI::AWS::EC2::KeyPairs
-  command_alias :keypairs, :keypair
-  command_alias :keypairs, :k
-  
-  usage "rudy-ec2 console [-g group] [instance ID]"
-  desc "Displays system console output for given instance(s)"
-  option :g, :group, String, "A group name to authorize or revoke network rule. Must also supply -o!"
-  argv :awsid
-  command :consoles => Rudy::CLI::AWS::EC2::Instances
-  command_alias :consoles, :console
-  command_alias :consoles, :c
   
   desc "Manage Instances"
   usage "rudy-ec2 instances [-g group-name] [-s state] [instance-ID]"
@@ -126,7 +133,18 @@ module RudyEC2CLI
   command_alias :instances, :i
   command_alias :instances, :status
   command_alias :instances, :instance
-
+  
+  desc "Manage KeyPairs"
+  usage "rudy-ec2 keypairs"
+  usage "rudy-ec2 keypairs -C name"
+  usage "rudy-ec2 keypairs -D name"
+  action :D, :destroy, "Unregister keypair from EC2 (this is permanent!)"
+  action :C, :create, "Create and register a keypair with EC2"
+  argv :name
+  command :keypairs => Rudy::CLI::AWS::EC2::KeyPairs
+  command_alias :keypairs, :keypair
+  command_alias :keypairs, :k
+  
   usage "rudy-ec2 ssh [-g group-name] [-i instance-ID] [cmd]"
   desc "Open an SSH connection"
   option :print, "Only print the SSH command, don't connect"
@@ -138,38 +156,31 @@ module RudyEC2CLI
   command :ssh => Rudy::CLI::AWS::EC2::Instances 
   command_alias :ssh, :connect
   
-  usage "rudy-ec2 copy [-p] [-r] source target"
-  usage "rudy-ec2 upload [-p] local-source target"
-  usage "rudy-ec2 download [-p] remote-source target"
-  desc "Copy files to or from machines. NOTE: You must use quotes when using a tilda for your remote dir ('~/')."
-  option :r, :recursive, "Recursively copy entire directories"
-  option :p, :preserve, "Preserve atimes and ctimes."
-  option :d, :download, "Download FROM the remote machine to the local machine"
-  option :print, "Only print the SSH command, don't connect"
-  option :k, :pkey, String, "Path to the private SSH key"
-  option :g, :group, String, "A security group name"
-  option :i, :awsid, String, "An instance ID"
-  command :copy => Rudy::CLI::AWS::EC2::Instances 
-  command_alias :copy, :scp
-  command_alias :copy, :upload
-  command_alias :copy, :download
+  desc "Manage Volumes"
+  usage "rudy-ec2 volumes"
+  usage "rudy-ec2 volumes -C -s size [-d device-path]"
+  usage "rudy-ec2 volumes -A volume-id instance-id"
+  usage "rudy-ec2 volumes -N volume-id"
+  usage "rudy-ec2 volumes -D volume-id"
+  option :i, :instance, String, "Instance ID"
+  option :s, :size, String, "Size (in GB)"
+  option :d, :device, String, "Device path (default: /dev/sdh)"
+  action :D, :destroy, "Destroy a volume"
+  action :C, :create, "Create a volume"
+  action :A, :attach, "Attach a volume to a running instance"
+  action :N, :detach, "Detach a volume from an instance"
+  argv :volid
+  command :volumes => Rudy::CLI::AWS::EC2::Volumes
+  command_alias :volumes, :volume
+  command_alias :volumes, :v
   
-  #usage "rudy-ec2 images [-C -i name [-b bucket -a accountnum]] [-D AMI-ID]"
-  #desc "Manage EC2 Machine Images (AMIs)"
-  #option :a, :accountnum, String, "Your Amazon Account Number"
-  #option :i, :image_name, String, "The name of the image"     # TODO: change to --ami
-  #option :p, :print, "Print-only (don't execute commands)"
-  #option :b, :bucket_name, String, "The name of the bucket that will store the image"
-  #action :C, :create, "Create an image"
-  ##action :P, :prepare, "Prepare a running instance to be used as an image"
-  #action :D, :destroy, "Deregister an image (currently _does not_ remove images files from S3)"
-  #argv :ami
-  #command :images => Rudy::CLI::AWS::EC2::Images
-  #command_alias :images, :image
-
-
+  
+  
+  # --------------------------------  RUDY-EC2 MISCELLANEOUS  --------
+  # ------------------------------------------------------------------
+  
   default :instances
-  debug :off
+  debug :on
   
   before do |obj|
     obj.global.print_header = false  # Don't print Rudy Header
@@ -192,10 +203,10 @@ end
 # will run after Rye shuts down the ssh-agent. 
 begin
   Drydock.run!(ARGV, STDIN) if Drydock.run? && !Drydock.has_run?
-  
-rescue Interrupt => ex
 rescue => ex
   STDERR.puts "ERROR (#{ex.class.to_s}): #{ex.message}"
   STDERR.puts ex.backtrace if Drydock.debug?
+rescue SystemExit
+  # Don't balk
 end
 

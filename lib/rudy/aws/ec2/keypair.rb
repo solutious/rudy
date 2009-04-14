@@ -8,9 +8,13 @@ module Rudy::AWS
       field :name
       field :fingerprint
       
+      def liner_note
+        "%-20s   %s" % [self.name, self.fingerprint]
+      end
+      
       def to_s(titles=false)
         str = titles ? "%-20s   %s#{$/}" % ['name', 'fingerprint'] : ""
-        str << "%-20s   %s" % [self.name, self.fingerprint]
+        str << liner_note
       end
       
       def public_key

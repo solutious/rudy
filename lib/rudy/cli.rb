@@ -32,8 +32,10 @@ module Rudy
       end
       
       def execute_action(emsg="Failed", &action)
-        raise emsg unless action.call
+        ret = action.call
+        raise emsg unless ret
         puts "Success"
+        ret
       end
       
       # Print a default header to the screen for every command.

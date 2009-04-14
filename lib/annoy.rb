@@ -33,8 +33,8 @@ class Annoy #:nodoc:all
   
   @@randsize = {
     :low      => 10,
-    :medium   => 10,
-    :high     => 100,
+    :medium   => 12,
+    :high     => 50,
     :insane   => 1000
   }.freeze
   
@@ -119,9 +119,9 @@ class Annoy #:nodoc:all
           q.echo = false           # Don't display response
           q.overwrite = true       # Erase the question afterwards
           q.whitespace = :strip    # Remove whitespace from the response
+          q.answer_type = Integer  if flavor == :numeric
         }
-        
-        response = response.to_i if flavor == :numeric
+
         (response == answer)
       end
     rescue Annoy::GiveUp => ex

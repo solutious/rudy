@@ -61,7 +61,7 @@ module AWS; module EC2;
           first_instance = false
         end
         
-        puts '-'*60
+        puts 
         puts @@global.verbose > 0 ? inst.inspect : inst.to_s
       end
 
@@ -89,8 +89,11 @@ module AWS; module EC2;
       print "in #{opts[:group]}" if opts[:group]
       puts
       exit unless Annoy.are_you_sure?(:medium)
-      rmach.destroy(inst_ids)
-      puts "Done!"
+      
+      execute_action("Destroy Failed") { 
+        rmach.destroy(inst_ids)
+      }
+      
     end
     
     def status

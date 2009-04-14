@@ -15,7 +15,7 @@ module Rudy
         
         # TODO: .list for debugging, .create for actual use
         instances = rmach.list(opts) do |instance| # Rudy::AWS::EC2::Instance objects
-          puts '-'*60
+          puts 
           puts "Instance: #{instance.awsid.bright} (AMI: #{instance.ami})"
           puts instance.to_s
         

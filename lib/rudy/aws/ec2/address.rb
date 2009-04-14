@@ -47,11 +47,28 @@ module Rudy::AWS
         address = address.ipaddress if address.is_a?(Rudy::AWS::EC2::Address)
         instance = instance.awsid if instance.is_a?(Rudy::AWS::EC2::Instance)
         raise UnknownAddress unless exists?(address)
+        raise AddressAssociated if associated?(address)
+        
         opts ={
           :instance_id => instance,
           :public_ip => address
         }
         ret = @ec2.associate_address(opts)
+        (ret && ret['return'] == 'true')
+      end
+
+      # Disssociate an elastic IP from an instance
+      def disassociate(address)
+        raise NoAddress unless address
+        address = address.ipaddress if address.is_a?(Rudy::AWS::EC2::Address)
+        instance = instance.awsid if instance.is_a?(Rudy::AWS::EC2::Instance)
+        raise UnknownAddress unless exists?(address)
+        raise AddressNotAssociated unless associated?(address)
+        
+        opts ={
+          :public_ip => address
+        }
+        ret = @ec2.disassociate_address(opts)
         (ret && ret['return'] == 'true')
       end
 
@@ -138,5 +155,7 @@ class Rudy::AWS::EC2::Addresses
   class UnknownAddress < RuntimeError; end
   class NoInstanceID < RuntimeError; end
   class NoAddress < RuntimeError; end
+  class AddressNotAssociated < RuntimeError; end
+  class AddressAssociated < RuntimeError; end
   
 end

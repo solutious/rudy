@@ -98,7 +98,7 @@ module Rudy
       :cert => 'cert',
       :reservation => 'r',
       :dns_public => 'ec2',
-      :dns_public => 'domU',
+      :dns_private => 'domU',
     }.freeze
     
     @@sysinfo = SystemInfo.new.freeze

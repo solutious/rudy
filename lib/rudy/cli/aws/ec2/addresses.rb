@@ -7,7 +7,7 @@ module AWS; module EC2;
 
     
     def addresses_create
-      puts "Create Address".bright
+      puts "Addresses".bright
       radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey)
       address = radd.create
       puts address.to_s
@@ -24,7 +24,7 @@ module AWS; module EC2;
       true
     end
     def addresses_destroy
-      puts "Destroy Address".bright
+      puts "Addresses".bright
       
       address = @radd.get(@argv.ipaddress)
       raise "Could not fetch #{address.ipaddress}" unless address
@@ -37,26 +37,56 @@ module AWS; module EC2;
       
     end
 
-    #def associate_addresses_valid?
-    #  raise "You have not supplied an IP addresses" unless @argv.ipaddress
-    #  raise "You did not supply an instance ID" unless @argv.instanceid
-    #  
-    #  true
-    #end
-    #def associate_addresses
-    #  puts "Associate Address".bright
-    #  
-    #  radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey)
-    #  #@rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
-    #  #raise "Instance #{@argv.instid} does not exist!" unless @rinst.exists?(@argv.instid)
-    #
-    #  raise "#{@argv.ipaddress} is not allocated to you" unless radd.exists?(@argv.ipaddress)
-    #  raise "#{@argv.ipaddress} is already associated!" if radd.associated?(@argv.ipaddress)
-    #  
-    #  puts "Associating #{@argv.address} to #{@inst[:aws_groups]}: #{@inst[:dns_name]}"
-    #  ret = radd.associate(@argv.ipaddress, @argv.instid)
-    #  
-    #end
+    def associate_addresses_valid?
+      raise "You have not supplied an IP addresses" unless @argv.ipaddress
+      raise "You did not supply an instance ID" unless @option.instance
+      true
+    end
+    def associate_addresses
+      puts "Addresses".bright
+      
+      radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey)
+      rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
+      raise "#{@argv.ipaddress} is not allocated to you" unless radd.exists?(@argv.ipaddress)
+      raise "Instance #{@argv.instid} does not exist!" unless rinst.exists?(@option.instance)
+      raise "#{@argv.ipaddress} is already associated!" if radd.associated?(@argv.ipaddress)
+          
+      instance = rinst.get(@option.instance)
+      
+      # If an instance was recently disassoiciated, the dns_name_public may
+      # not be updated yet
+      instance_name = instance.dns_name_public
+      instance_name = instance.awsid if !instance_name || instance_name.empty?
+      
+      puts "Associating #{@argv.ipaddress} to #{instance_name} (#{instance.groups.join(', ')})"
+      exit unless Annoy.are_you_sure?(:low)
+      
+      
+      execute_action { radd.associate(@argv.ipaddress, instance.awsid) }
+      
+    end
+    
+    def disassociate_addresses_valid?
+      raise "You have not supplied an IP addresses" unless @argv.ipaddress
+      true
+    end
+    def disassociate_addresses
+      puts "Addresses".bright
+      
+      radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey)
+      rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
+      raise "#{@argv.ipaddress} is not allocated to you" unless radd.exists?(@argv.ipaddress)
+      raise "#{@argv.ipaddress} is not associated!" unless radd.associated?(@argv.ipaddress)
+      
+      address = radd.get(@argv.ipaddress)
+      instance = rinst.get(address.instid)
+      
+      puts "Disassociating #{address.ipaddress} from #{instance.awsid} (#{instance.groups.join(', ')})"
+      exit unless Annoy.are_you_sure?(:low)
+      
+      execute_action { radd.disassociate(@argv.ipaddress) }
+      
+    end
     
     def addresses
       puts "Addresses".bright

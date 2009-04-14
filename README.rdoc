@@ -38,7 +38,7 @@ NOTE: <em>If you are not installing via RubyGems, you need to make sure the Ruby
       [edit ~/.rudy/config with your Amazon Web Services credentials] 
     $ rudy init
 
-NOTE: <em>You need an <a href="http://aws.amazon.com/">Amazon Web Services account</a> to use Rudy. Sign up for EC2[http://aws.amazon.com/ec2/], SimpleDB[http://aws.amazon.com/simpledb/], S3[http://aws.amazon.com/s3/].</em>
+NOTE: <em>You need an Amazon[http://aws.amazon.com/] account to use Rudy. Sign up for EC2[http://aws.amazon.com/ec2/] and SimpleDB[http://aws.amazon.com/simpledb/].</em>
 
 == Example 1 -- The Basics
 

@@ -142,5 +142,6 @@ RELEASE CHECKLIST
 * Version number? 
   * rudy.rb
   * gemspec
+* Removed "THIS VERSION IS NOT YET RELEASED"
 
 

@@ -44,8 +44,10 @@ module RudyEC2CLI
 
   usage "rudy-ec2 [global options] addresses [-A address instance ID]"
   desc "Manage Amazon Elastic IP addresses"
-  argv :ipaddress, :instid
+  argv :ipaddress
+  option :i, :instance, String, "Instance ID"
   action :A, :associate, "Associate an IP address to a running instance"
+  action :N, :disassociate, "Disassociate an IP address from an instance"
   action :C, :create, "Create an IP address"
   action :D, :destroy, "Destroy an IP address"
   command :addresses => Rudy::CLI::AWS::EC2::Addresses
@@ -164,7 +166,7 @@ module RudyEC2CLI
 
 
   default :instances
-  debug :on
+  debug :off
   
   before do |obj|
     obj.global.print_header = false  # Don't print Rudy Header
@@ -187,6 +189,8 @@ end
 # will run after Rye shuts down the ssh-agent. 
 begin
   Drydock.run!(ARGV, STDIN) if Drydock.run? && !Drydock.has_run?
+  
+rescue Interrupt => ex
 rescue => ex
   STDERR.puts "ERROR (#{ex.class.to_s}): #{ex.message}"
   STDERR.puts ex.backtrace if Drydock.debug?

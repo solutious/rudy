@@ -831,7 +831,7 @@ end
 
 
 trap ("SIGINT") do
-  puts "#{$/}Exiting..."
+  puts "#{$/}Exiting... #{$@}"
   exit 1
 end
 

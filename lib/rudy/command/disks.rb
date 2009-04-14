@@ -303,7 +303,7 @@ __END__
 #      sleep 3
 #
 #      puts "Mounting #{disk.device} to #{disk.path}".bright
-#      ssh_command machine.dns_name_public, keypairpath, @@global.user, "mkdir -p #{disk.path} && mount -t ext3 #{disk.device} #{disk.path}"
+#      ssh_command machine.dns_public, keypairpath, @@global.user, "mkdir -p #{disk.path} && mount -t ext3 #{disk.device} #{disk.path}"
 #
 #      puts "Creating disk metadata for #{disk.name}"
 #      disk.awsid = volume[:aws_id]
@@ -328,7 +328,7 @@ __END__
 #
 #def device_to_path(machine, device)
 #  # /dev/sdr            10321208    154232   9642688   2% /rilli/app
-#  dfoutput = ssh_command(machine.dns_name_public, keypairpath, @@global.user, "df #{device} | tail -1").chomp
+#  dfoutput = ssh_command(machine.dns_public, keypairpath, @@global.user, "df #{device} | tail -1").chomp
 #  dfvals = dfoutput.scan(/(#{device}).+\s(.+?)$/).flatten  # ["/dev/sdr", "/rilli/app"]
 #  dfvals.last
 #end

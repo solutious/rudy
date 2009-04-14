@@ -31,13 +31,19 @@ module Rudy
         
       end
       
-      def execute_action(&action)
-        puts action.call ? "Success" : "Failed"
+      def execute_action(emsg="Failed", &action)
+        raise emsg unless action.call
+        puts "Success"
       end
       
       # Print a default header to the screen for every command.
       #
       def print_header
+        
+        # Send The Huxtables the global values again because they could be
+        # updated after initialization but before the command was executed
+        Rudy::Huxtable.update_global @global
+        
         puts Rudy::CLI.generate_header(@@global, @@config) if @@global.print_header
         unless @@global.quiet
           if @@global.environment == "prod"

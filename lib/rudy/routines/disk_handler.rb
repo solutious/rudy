@@ -22,7 +22,7 @@ module Rudy::Routines
         return
       end
     
-      unless machine.dns_name_public
+      unless machine.dns_public
         @logger.puts "Machine given has no DNS name: #{machine.awsid}. Skipping disk routines."
         return
       end
@@ -62,11 +62,11 @@ module Rudy::Routines
           sleep 6
           
           puts "Creating the filesystem (mkfs.ext3 -F #{disk.device})".bright
-          ssh_command machine.dns_name_public, keypairpath, @@global.user, "mkfs.ext3 -F #{disk.device}"
+          ssh_command machine.dns_public, keypairpath, @@global.user, "mkfs.ext3 -F #{disk.device}"
           sleep 3
           
           puts "Mounting #{disk.device} to #{disk.path}".bright
-          ssh_command machine.dns_name_public, keypairpath, @@global.user, "mkdir -p #{disk.path} && mount -t ext3 #{disk.device} #{disk.path}"
+          ssh_command machine.dns_public, keypairpath, @@global.user, "mkdir -p #{disk.path} && mount -t ext3 #{disk.device} #{disk.path}"
         
           puts "Creating disk metadata for #{disk.name}"
           disk.awsid = volume[:aws_id]
@@ -108,7 +108,7 @@ module Rudy::Routines
           
           begin
             puts "Unmounting #{this_path}..."
-            ssh_command machine.dns_name_public, keypairpath, @@global.user, "umount #{this_path}"
+            ssh_command machine.dns_public, keypairpath, @@global.user, "umount #{this_path}"
             sleep 3
           rescue => ex
             puts "Error while unmounting #{this_path}: #{ex.message}"
@@ -173,7 +173,7 @@ module Rudy::Routines
           end
 
           puts "Mounting #{this_path} to #{vol[:aws_device]}".bright
-          ssh_command machine.dns_name_public, keypairpath, @@global.user, "mkdir -p #{this_path} && mount -t ext3 #{vol[:aws_device]} #{this_path}"
+          ssh_command machine.dns_public, keypairpath, @@global.user, "mkdir -p #{this_path} && mount -t ext3 #{vol[:aws_device]} #{this_path}"
 
           sleep 1
         rescue => ex

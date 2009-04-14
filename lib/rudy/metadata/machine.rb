@@ -55,8 +55,8 @@ module Rudy
       return false unless @awsid
       @instance = @@ec2.instances.get(@awsid) 
       if @instance.is_a?(Rudy::AWS::EC2::Instance)
-        @public_dns = @instance.dns_name_public
-        @private_dns = @instance.dns_name_private
+        @public_dns = @instance.dns_public
+        @private_dns = @instance.dns_private
       end
     end
     

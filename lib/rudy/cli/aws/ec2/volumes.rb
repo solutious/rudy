@@ -12,7 +12,7 @@ module AWS; module EC2;
       true
     end
     def volumes_create
-      puts "Create Volume".bright
+      puts "Volumes".bright
       
       puts "Creating #{@option.size}GB volume in #{@@global.zone}"
       exit unless Annoy.are_you_sure?(:medium)
@@ -20,7 +20,8 @@ module AWS; module EC2;
       rvol = Rudy::AWS::EC2::Volumes.new(@@global.accesskey, @@global.secretkey)
       vol = rvol.create(@option.size, @@global.zone, @option.snapshot)
       
-      puts vol.to_s
+      puts
+      puts @global.verbose > 0 ? vol.inspect : vol.to_s
     end
 
 
@@ -30,7 +31,7 @@ module AWS; module EC2;
     end
     
     def destroy_volumes
-      puts "Destroy Volume".bright
+      puts "Volumes".bright
       
       @rvol = Rudy::AWS::EC2::Volumes.new(@@global.accesskey, @@global.secretkey)
       
@@ -50,60 +51,63 @@ module AWS; module EC2;
       
       vol = @rvol.get(@volume.awsid)
       
-      puts vol.to_s
+      puts
+      puts @global.verbose > 0 ? vol.inspect : vol.to_s
     end
     
     
-    #def volumes_attach_valid?
-    #  raise "You must supply a volume ID. See rudy volume -h" unless @argv.volid
-    #  raise "You must supply an instance ID. See rudy volume -h" unless @argv.instid
-    #  
-    #  @rvol = Rudy::Volumes.new
-    #  @rmach = Rudy::Machines.new
-    #  raise "Volume #{@argv.volid} does not exist" unless @rvol.exists?(@argv.volid)
-    #  raise "Instance #{@argv.instid} does not exist" unless @rmach.exists?(@argv.instid)
-    #  
-    #  true
-    #end
-    #def volumes_attach
-    #  puts "Attach Volume".bright
-    #  
-    #  @option.device ||= "/dev/sdh"
-    #  
-    #  puts "Attaching #{@argv.volid} to #{@argv.instid} on #{@option.device}"
-    #  exit unless Annoy.are_you_sure?(:low)
-    #  
-    #  ret = @rvol.attach(@argv.volid, @argv.instid, @option.device)
-    #  raise "Attach failed" unless ret
-    #  volume = @rvol.get(@argv.volid)
-    #  puts volume.to_s
-    #end
-    #
-    #def volumes_detach_valid?
-    #  raise "You must supply a volume ID. See rudy volume -h" unless @argv.volid
-    #  
-    #  @rvol = Rudy::Volumes.new
-    #  
-    #  @volume = @rvol.get(@argv.volid)
-    #  
-    #  raise "Volume #{@argv.volid} does not exist" unless @volume
-    #  
-    #  #raise "Volume #{@argv.volid} is in use" unless @volume.in_use?
-    #  raise "Volume #{@argv.volid} is not attached" unless @volume.attached?
-    #  
-    #  true
-    #end
-    #def volumes_detach
-    #  puts "Detach Volume".bright
-    #  
-    #  puts "Detaching #{@volume.awsid} from #{@volume.instid}"
-    #  exit unless Annoy.are_you_sure?(:low)
-    #  
-    #  ret = @rvol.detach(@volume.awsid)
-    #  raise "Detach failed" unless ret
-    #  volume = @rvol.get(@volume.awsid)
-    #  puts volume.to_s
-    #end
+    def volumes_attach_valid?
+      raise "You must supply a volume ID." unless @argv.volid
+      raise "You must supply an instance ID." unless @option.instance
+      
+      true
+    end
+    def volumes_attach
+      puts "Volumes".bright
+      
+      @option.device ||= "/dev/sdh"
+      
+      rvol = Rudy::AWS::EC2::Volumes.new(@@global.accesskey, @@global.secretkey)
+      rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
+      raise "Volume #{@argv.volid} does not exist" unless rvol.exists?(@argv.volid)
+      raise "Volume #{@argv.volid} is already attached" if rvol.attached?(@argv.volid)
+      raise "Instance #{@option.instance} does not exist" unless rinst.exists?(@option.instance)
+      
+      puts "Attaching #{@argv.volid} to #{@option.instance} on #{@option.device}"
+      exit unless Annoy.are_you_sure?(:low)
+      
+      execute_action("Attach Failed") { 
+        rvol.attach(@argv.volid, @option.instance, @option.device) 
+      }
+
+      vol = rvol.get(@argv.volid)
+      puts
+      puts @global.verbose > 0 ? vol.inspect : vol.to_s
+    end
+    
+    def volumes_detach_valid?
+      raise "You must supply a volume ID." unless @argv.volid
+      true
+    end
+    
+    def volumes_detach
+      puts "Volumes".bright
+      
+      rvol = Rudy::AWS::EC2::Volumes.new(@@global.accesskey, @@global.secretkey)
+      raise "Volume #{@argv.volid} does not exist" unless rvol.exists?(@argv.volid)
+      
+      vol = rvol.get(@argv.volid)
+      raise "Volume #{vol.awsid} is not attached" unless vol.attached?
+      
+      puts "Detaching #{vol.awsid} from #{vol.instid}"
+      exit unless Annoy.are_you_sure?(:low)
+      
+      execute_action("Detach Failed") { rvol.detach(vol.awsid) }
+      
+      vol = rvol.get(vol.awsid)
+      puts
+      puts @global.verbose > 0 ? vol.inspect : vol.to_s
+    end
     
     
     def volumes
@@ -111,9 +115,9 @@ module AWS; module EC2;
       
       rvol = Rudy::AWS::EC2::Volumes.new(@@global.accesskey, @@global.secretkey)
       volumes = rvol.list || []
-      volumes.each do |volume|
-        puts '-'*60
-        puts volume.to_s
+      volumes.each do |vol|
+        puts
+        puts @global.verbose > 0 ? vol.inspect : vol.to_s
       end
       puts "No volumes" if volumes.empty?
     end

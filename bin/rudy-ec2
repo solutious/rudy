@@ -42,22 +42,23 @@ module RudyEC2CLI
   # -----------------------------------  AMAZON EC2 COMMANDS  --------
   # ------------------------------------------------------------------
 
-  usage "rudy-ec2 [global options] addresses [-A address instance ID]"
+  usage "rudy-ec2 addresses"
+  usage "rudy-ec2 addresses -A -i instance-id address"
   desc "Manage Amazon Elastic IP addresses"
-  argv :ipaddress
   option :i, :instance, String, "Instance ID"
   action :A, :associate, "Associate an IP address to a running instance"
   action :N, :disassociate, "Disassociate an IP address from an instance"
   action :C, :create, "Create an IP address"
   action :D, :destroy, "Destroy an IP address"
+  argv :ipaddress
   command :addresses => Rudy::CLI::AWS::EC2::Addresses
   command_alias :addresses, :address
   command_alias :addresses, :a
   
-  usage "rudy-ec2 [global options] groups [-C -R -A] [-a IP addresses] [-p ports] [group name]"
   usage "rudy-ec2 groups -C               (create a group)"
   usage "rudy-ec2 -e prod groups          (list groups in the prod environment)"
   usage "rudy-ec2 groups -A -p 81,82,83   (open ports to a group from this machine)"
+  usage "rudy-ec2 [global options] groups [-C -R -A] [-a IP addresses] [-p ports] [group name]"
   desc "Manage EC2 Security Groups"
   option :all, "Display all security groups"
   option :r, :protocols, Array, "Comma-separated list of protocols. One of: tcp (default), udp, icmp"
@@ -76,17 +77,18 @@ module RudyEC2CLI
   
   desc "Manage EC2 Volumes"
   usage "rudy-ec2 volumes"
-  usage "rudy-ec2 volume -C -s size [-d device-path]"
-  usage "rudy-ec2 volume -A volume-id instance-id"
-  usage "rudy-ec2 volume -N volume-id"
-  usage "rudy-ec2 volume -D volume-id"
+  usage "rudy-ec2 volumes -C -s size [-d device-path]"
+  usage "rudy-ec2 volumes -A volume-id instance-id"
+  usage "rudy-ec2 volumes -N volume-id"
+  usage "rudy-ec2 volumes -D volume-id"
+  option :i, :instance, String, "Instance ID"
   option :s, :size, String, "Size (in GB)"
   option :d, :device, String, "Device path (default: /dev/sdh)"
   action :D, :destroy, "Destroy a volume"
   action :C, :create, "Create a volume"
   action :A, :attach, "Attach a volume to a running instance"
   action :N, :detach, "Detach a volume from an instance"
-  argv :volid, :insid
+  argv :volid
   command :volumes => Rudy::CLI::AWS::EC2::Volumes
   command_alias :volumes, :volume
   command_alias :volumes, :v
@@ -111,10 +113,11 @@ module RudyEC2CLI
   desc "Manage Instances"
   usage "rudy-ec2 instances [-g group-name] [-s state] [instance-ID]"
   option :g, :group, String, "The security group name"
-  option :i, :ami, String, "The machine image ID (ami-)"
+  option :m, :ami, String, "The machine image ID (ami)"
   option :s, :size, String, "The instance size (default: m1.small)"
   option :k, :keypair, String, "The SSH keypair to use for launch"
-  option :a, :address, String, "The IP address to associate"
+  option :a, :address, String, "The IP address to associate to the new instance"
+  option :n, :newaddress, "Assign the instance a new elastic IP"
   option :p, :private, "Do not give the instance a public IP address"
   action :C, :create, "Create a machine instance"
   action :D, :destroy, "Destroy a machine instance"

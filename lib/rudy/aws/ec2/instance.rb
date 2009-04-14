@@ -8,10 +8,10 @@ module Rudy::AWS
     field :launch_index => Time
     field :launch_time
     field :keyname
-    field :instance_type
+    field :size
     field :ami
-    field :dns_name_private
-    field :dns_name_public
+    field :dns_private
+    field :dns_public
     field :awsid
     field :state
     field :zone
@@ -22,8 +22,21 @@ module Rudy::AWS
       @groups || []
     end
     
+    def liner_note
+      info = self.running? ? self.dns_public : self.state
+      "%s (%s)" % [self.awsid.bright, info]
+    end
+    
     def to_s
       lines = []
+      lines << liner_note
+      lines << "groups: %s; %s, %s, %s" % [@groups.join(', '), @ami, @size, @keyname || 'no-keypair']
+      lines.join($/)
+    end
+    
+    def inspect
+      lines = []
+      lines << liner_note
       field_names.each do |key|
         next unless self.respond_to?(key)
         val = self.send(key)
@@ -86,6 +99,7 @@ module Rudy::AWS
           :instance_type => opts[:size].to_s,
           :kernel_id => nil
         }
+        
         
         response = execute_request({}) { @ec2.run_instances(old_opts) }
         
@@ -361,9 +375,9 @@ module Rudy::AWS
         inst.launch_time = h['launchTime']
         inst.keyname = h['keyName']
         inst.launch_index = h['amiLaunchIndex']
-        inst.instance_type = h['instanceType']
-        inst.dns_name_private = h['privateDnsName']
-        inst.dns_name_public = h['dnsName']
+        inst.size = h['instanceType']
+        inst.dns_private = h['privateDnsName']
+        inst.dns_public = h['dnsName']
         inst.reason = h['reason']
         inst.zone = h['placement']['availabilityZone']
         inst.awsid = h['instanceId']
@@ -426,6 +440,10 @@ class Rudy::AWS::EC2::Instances
   class UnknownState < RuntimeError; end
   class NoGroup < RuntimeError; end
   class NoKeyPair < RuntimeError; end
-  class NoAMI < RuntimeError; end
+  class NoAMI < RuntimeError
+    def message
+      "You must specify a machine image (ami)"
+    end
+  end
   
 end

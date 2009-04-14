@@ -53,9 +53,9 @@ module AWS; module EC2;
           
       instance = rinst.get(@option.instance)
       
-      # If an instance was recently disassoiciated, the dns_name_public may
+      # If an instance was recently disassoiciated, the dns_public may
       # not be updated yet
-      instance_name = instance.dns_name_public
+      instance_name = instance.dns_public
       instance_name = instance.awsid if !instance_name || instance_name.empty?
       
       puts "Associating #{@argv.ipaddress} to #{instance_name} (#{instance.groups.join(', ')})"

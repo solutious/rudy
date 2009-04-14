@@ -72,7 +72,7 @@ def format(instance)
 
   begin
     puts "Creating the filesystem (mkfs.ext3 -F #{disk.device})".bright
-    ssh_command instance.dns_name_public, current_user_keypairpath, @@global.user, "mkfs.ext3 -F #{disk.device}"
+    ssh_command instance.dns_public, current_user_keypairpath, @@global.user, "mkfs.ext3 -F #{disk.device}"
     sleep 1
   rescue => ex
     @logger.puts ex.backtrace if debug?
@@ -87,7 +87,7 @@ def mount(instance)
   switch_user(:root)
   begin
     puts "Mounting #{disk.device} to #{disk.path}".bright
-    ssh_command instance.dns_name_public, current_user_keypairpath, @@global.user, "mkdir -p #{disk.path} && mount -t ext3 #{disk.device} #{disk.path}"
+    ssh_command instance.dns_public, current_user_keypairpath, @@global.user, "mkdir -p #{disk.path} && mount -t ext3 #{disk.device} #{disk.path}"
   rescue => ex
     @logger.puts ex.backtrace if debug?
     raise "Error mounting #{disk.path}: #{ex.message}"
@@ -102,7 +102,7 @@ def unmount(instance)
   switch_user(:root)
   begin
     puts "Unmounting #{disk.path}...".bright
-    ssh_command instance.dns_name_public, current_user_keypairpath, global.user, "umount #{disk.path}"
+    ssh_command instance.dns_public, current_user_keypairpath, global.user, "umount #{disk.path}"
     sleep 1
   rescue => ex
     @logger.puts ex.backtrace if debug?

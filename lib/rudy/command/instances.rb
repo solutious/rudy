@@ -124,8 +124,8 @@ module Rudy
       
       instances.each do |inst|
         msg = cmd ? %Q{"#{cmd}" on} : "Connecting to"
-        @@logger.puts $/, "#{msg} #{inst.dns_name_public}", $/
-        ret = ssh_command(inst.dns_name_public, current_user_keypairpath, @@global.user, cmd, print_only)
+        @@logger.puts $/, "#{msg} #{inst.dns_public}", $/
+        ret = ssh_command(inst.dns_public, current_user_keypairpath, @@global.user, cmd, print_only)
         puts ret if ret  # ssh command returns false with "ssh_exchange_identification: Connection closed by remote host"
       end
     end
@@ -156,7 +156,7 @@ module Rudy
         @@logger.puts $/, "#{msg} #{inst.awsid}"
         
         if opts[:print]
-          scp_command inst.dns_name_public, current_user_keypairpath, @@global.user, opts[:paths], opts[:dest], (opts[:task] == :download), false, opts[:print]
+          scp_command inst.dns_public, current_user_keypairpath, @@global.user, opts[:paths], opts[:dest], (opts[:task] == :download), false, opts[:print]
           return
         end
         
@@ -166,7 +166,7 @@ module Rudy
           :chunk_size => 16384
         }
         
-        scp(opts[:task], inst.dns_name_public, @@global.user, current_user_keypairpath, opts[:paths], opts[:dest], scp_opts)
+        scp(opts[:task], inst.dns_public, @@global.user, current_user_keypairpath, opts[:paths], opts[:dest], scp_opts)
         
       end
       

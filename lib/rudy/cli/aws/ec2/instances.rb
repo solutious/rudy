@@ -6,21 +6,30 @@ module AWS; module EC2;
 
 
     def instances_create
-      puts "Create Instances".bright
+      puts "Instances".bright
+      
+      # Defaults
       opts = {
-        :group => 'default'
+        :group => 'default',
+        :size => 'm1.small',
+        :zone => @@global.zone
       }
-
-      [:group, :ami, :address, :size, :keypair, :private].each do |n|
+      
+      radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey)
+      rmach = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
+      
+      if @option.address
+        raise "Cannot specify both -a and -n" if @option.newaddress
+        raise "#{@argv.ipaddress} is not allocated to you" unless radd.exists?(@option.address)
+        raise "#{@argv.ipaddress} is already associated!" if radd.associated?(@option.address)
+      end
+      
+      # These can be sent directly to EC2 class
+      [:group, :ami, :size, :keypair, :private].each do |n|
         opts[n] = @option.send(n) if @option.send(n)
       end
       
-      opts[:size] ||= 'm1.small'
-      opts[:zone] = @@global.zone
-      
       puts "Creating #{opts[:itype]} instance in #{@@global.zone}"
-      
-      rmach = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
       
       unless opts[:keypair]
         puts "You did not specify a keypair. Unless you've prepared a user account".color(:blue)
@@ -28,18 +37,39 @@ module AWS; module EC2;
         exit unless Annoy.are_you_sure?(:low)
       end
       
-      # TODO: Print number of instances running. If more than 0, use Annoy.are_you_sure?
+      instances = rmach.list_group(opts[:group], :running)
+      
+      if instances && instances.size > 0
+        puts "There are #{instances.size} running in the #{opts[:group]} group."
+        exit unless Annoy.are_you_sure?(:low)
+      end
+      
+      if @option.newaddress
+        print "Creating address... "
+        address = radd.create
+        puts "#{address.ipaddress}"
+        @option.address = address.ipaddress
+      end
+            
+      first_instance = true
       rmach.create(opts) do |inst| # Rudy::AWS::EC2::Instance objects
+        
+        # Assign IP address to only the first instance
+        if first_instance && @option.address
+          puts "Associating #{@option.address} to #{inst.awsid}"
+          radd.associate(@option.address, inst.awsid)
+          first_instance = false
+        end
+        
         puts '-'*60
-        puts "Instance: #{inst.awsid.bright} (AMI: #{inst.ami})"
-        puts inst.to_s
+        puts @@global.verbose > 0 ? inst.inspect : inst.to_s
       end
 
     end
 
 
     def instances_destroy
-      puts "Destroy Instances".bright
+      puts "Instances".bright
       opts = {}
       opts[:group] = @option.group if @option.group
       opts[:id] = @argv.awsid if @argv.awsid
@@ -49,9 +79,13 @@ module AWS; module EC2;
       
       rmach = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
       instances = rmach.list_group(opts[:group], :running, opts[:id])
-      inst_ids = instances.collect { |inst| inst.awsid }
+      inst_names = instances.collect { |inst| inst.dns_public || inst.awsid}
+      inst_ids = instances.collect { |inst| inst.awsid}
       raise "No instances running" if instances.nil? || instances.empty?
-      print "Destroying #{instances.size} instances (#{inst_ids.join(', ')}) "
+      
+      instance_count = (instances.size == 1) ? '1 instance' : "#{instances.size} instances"
+      
+      print "Destroying #{instance_count} (#{inst_names.join(', ')}) "
       print "in #{opts[:group]}" if opts[:group]
       puts
       exit unless Annoy.are_you_sure?(:medium)
@@ -60,8 +94,9 @@ module AWS; module EC2;
     end
     
     def status
-      puts "Instance Status".bright
+      puts "Instances".bright
       opts = {}
+      
       opts[:group] = @option.group if @option.group
       opts[:state] = @option.state if @option.state
 
@@ -76,9 +111,8 @@ module AWS; module EC2;
     
       rudy = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
       lt = rudy.list_group(opts[:group], opts[:state], opts[:id]) do |inst|
-        puts '-'*60
-        puts "Instance: #{inst.awsid.bright} (AMI: #{inst.ami})"
-        puts inst.to_s
+        puts
+        puts @@global.verbose > 0 ? inst.inspect : inst.to_s
       end
       puts "No instances running" if !lt || lt.empty?
     end
@@ -114,7 +148,7 @@ module AWS; module EC2;
         }
         ssh_opts[:keys] = @option.pkey if @option.pkey
         
-        rbox = Rye::Box.new(inst.dns_name_public, ssh_opts)
+        rbox = Rye::Box.new(inst.dns_public, ssh_opts)
           
         command, command_args = :interactive_ssh, @option.print.nil? unless command
         puts rbox.send(command, command_args)
@@ -170,7 +204,7 @@ module AWS; module EC2;
         @@logger.puts $/, "#{msg} #{inst.awsid}"
 
         if @option.print
-          Rudy::Utils.scp_command inst.dns_name_public, @option.pkey, @option.user, opts[:paths], opts[:dest], (opts[:task] == :download), false, @option.print
+          Rudy::Utils.scp_command inst.dns_public, @option.pkey, @option.user, opts[:paths], opts[:dest], (opts[:task] == :download), false, @option.print
           return
         end
 
@@ -180,7 +214,7 @@ module AWS; module EC2;
           :chunk_size => 16384
         }
 
-        Rudy::Huxtable.scp(opts[:task], inst.dns_name_public, @option.user, @option.pkey, opts[:paths], opts[:dest], scp_opts)
+        Rudy::Huxtable.scp(opts[:task], inst.dns_public, @option.user, @option.pkey, opts[:paths], opts[:dest], scp_opts)
         puts 
       end
 
@@ -192,7 +226,6 @@ module AWS; module EC2;
     end
   
     def consoles
-      puts "Instance Console".bright
       opts = {}
       opts[:group] = @option.group if @option.group
       opts[:id] = @argv.awsid if @argv.awsid

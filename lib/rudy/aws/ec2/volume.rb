@@ -13,8 +13,18 @@ module Rudy::AWS
       field :instid
       field :device
     
+      def liner_note
+        info = attached? ? "attached to #{@instid}" : @status
+        "%s (%s)" % [self.awsid.bright, info]
+      end
+      
       def to_s
-        lines = ["Volume: #{self.awsid.bright}"]
+        lines = [liner_note]
+        lines << "size: %sGB; zone: %s; device: %s" % [@size, @zone, @device]
+      end
+      
+      def inspect
+        lines = [liner_note]
         field_names.each do |n|
            lines << sprintf(" %12s: %s", n, self.send(n)) if self.send(n)
          end

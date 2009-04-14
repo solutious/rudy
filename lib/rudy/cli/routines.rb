@@ -30,7 +30,7 @@ module Rudy
       def restart
         puts "Restarting #{machine_group}: #{@list.keys.join(', ')}".bright
         switch_user("root")
-        exit unless Annoy.are_you_sure?(:medium)
+        execute_check(:medium)
 
         @list.each do |id, inst|
           execute_routines(@list.values, :restart, :before)
@@ -71,7 +71,7 @@ module Rudy
       
         msg = opts[:id] ? "instances: #{opts[:id].join(', ')}" : (opts[:group] ? "group: #{opts[:group]}" : '')
         puts "This command also affects the disks on these machines! (according to your routines config)"
-        #exit unless Annoy.are_you_sure?(:medium)        # TODO: Check if instances are running before this
+        #execute_check(:medium)        # TODO: Check if instances are running before this
         
         puts "TBD"
       end

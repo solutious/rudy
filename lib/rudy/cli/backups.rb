@@ -59,7 +59,7 @@ module Rudy
       
       def destroy_backup_valid?
         raise "No backup specified" if argv.empty?
-        exit unless Annoy.are_you_sure?(:high)
+        execute_check(:high)
         true
       end
       

@@ -31,7 +31,7 @@ module AWS; module EC2;
       
       puts "Destroying address: #{@argv.ipaddress}"
       puts "NOTE: this IP address will become available to other EC2 customers.".color(:blue)
-      exit unless Annoy.are_you_sure?(:medium)
+      execute_check(:medium)
       
       execute_action { @radd.destroy(@argv.ipaddress) }
       
@@ -70,7 +70,7 @@ module AWS; module EC2;
       instance_name = instance.awsid if !instance_name || instance_name.empty?
       
       puts "Associating #{address} to #{instance_name} (#{instance.groups.join(', ')})"
-      exit unless Annoy.are_you_sure?(:low)
+      execute_check(:low)
       
       
       execute_action { radd.associate(address, instance.awsid) }
@@ -93,7 +93,7 @@ module AWS; module EC2;
       instance = rinst.get(address.instid)
       
       puts "Disassociating #{address.ipaddress} from #{instance.awsid} (#{instance.groups.join(', ')})"
-      exit unless Annoy.are_you_sure?(:medium)
+      execute_check(:medium)
       
       execute_action { radd.disassociate(@argv.ipaddress) }
       

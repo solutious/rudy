@@ -25,7 +25,7 @@ module AWS; module EC2;
     def destroy_groups
       puts "Security Group".bright
       puts "Destroying group: #{@argv.name}"
-      exit unless Annoy.are_you_sure?(:medium)
+      execute_check(:medium)
       @rgroups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
       ret = @rgroups.destroy(@argv.name)
       puts ret ? "Success" : "Failed"
@@ -34,7 +34,7 @@ module AWS; module EC2;
     def create_groups
       puts "Security Group".bright
       opts = check_options
-      exit unless Annoy.are_you_sure?(:medium)
+      execute_check(:medium)
       rudy = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
       rudy.create(@argv.name, opts[:addresses], opts[:ports], opts[:protocols])
       rudy.list(@argv.name) do |group|
@@ -49,7 +49,7 @@ module AWS; module EC2;
       raise "Must specify group to modify. #{$0} groups -A NAME" unless @argv.name
       puts "This will revoke #{opts[:addresses].join(', ')} access to group: #{@argv.name}"
       puts "on #{opts[:protocols].join(', ')} ports: #{opts[:ports].map { |p| "#{p.join(':')}" }.join(', ')}"
-      exit unless Annoy.are_you_sure?(:medium)
+      execute_check(:medium)
       rudy = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
       rudy.revoke(@argv.name, opts[:addresses], opts[:ports], opts[:protocols])
       rudy.list(@argv.name) do |group|
@@ -64,7 +64,7 @@ module AWS; module EC2;
       raise "Must specify group to modify. #{$0} groups -A NAME" unless @argv.name
       puts "This will authorize #{opts[:addresses].join(', ')} to access group: #{@argv.name}"
       puts "on #{opts[:protocols].join(', ')} ports: #{opts[:ports].map { |p| "#{p.join(' to ')}" }.join(', ')}"
-      exit unless Annoy.are_you_sure?(:medium)
+      execute_check(:medium)
       rudy = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
       rudy.authorize(@argv.name, opts[:addresses], opts[:ports], opts[:protocols])
       rudy.list(@argv.name) do |group|

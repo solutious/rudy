@@ -34,7 +34,15 @@ module Rudy
       def execute_action(emsg="Failed", &action)
         ret = action.call
         raise emsg unless ret
-        puts "Success"
+        ret
+      end
+      
+      def execute_check(level=:medium)
+        ret = Annoy.are_you_sure?(:medium)
+        unless ret
+          puts "Incorrect"
+          exit 0
+        end
         ret
       end
       

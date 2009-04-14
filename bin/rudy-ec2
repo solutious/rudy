@@ -170,7 +170,7 @@ module RudyEC2CLI
   option :i, :instance, String, "Instance ID"
   option :s, :size, String, "Size (in GB)"
   option :d, :device, String, "Device path (default: /dev/sdh)"
-  action :D, :destroy, "Destroy a volume"
+  action :D, :destroy, "Destroy a volume (this is permanent!)"
   action :C, :create, "Create a volume"
   action :A, :attach, "Attach a volume to a running instance"
   action :N, :detach, "Detach a volume from an instance"
@@ -193,7 +193,8 @@ module RudyEC2CLI
   end
   
   after do |obj|  
-    unless obj.global.quiet
+    if obj.global.verbose > 0
+      puts
       @elapsed = Time.now - @start
       puts "Elapsed: %.2f seconds" % @elapsed.to_f if @elapsed > 0.1
     end

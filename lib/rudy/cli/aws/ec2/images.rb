@@ -34,7 +34,7 @@ module AWS; module EC2;
       
       # ~/.rudy, /etc/motd, history -c, /etc/hosts, /var/log/rudy*
       
-      exit unless Annoy.are_you_sure?(:medium)
+      execute_check(:medium)
       
       
       machine_list = @ec2.instances.list(machine_group)

@@ -3,6 +3,7 @@
 
 module Rudy::AWS
   class EC2::Instance < Storable
+    @@sformat = "%10s; %10s; %12s; %10s; groups: %s"
     field :aki
     field :ari
     field :launch_index => Time
@@ -28,12 +29,14 @@ module Rudy::AWS
       info = self.running? ? self.dns_public : self.state
       "%s (%s)" % [self.awsid.bright, info]
     end
-    
-    def to_s
+
+    def to_s(with_title=false)
       lines = []
       lines << liner_note
       if self.running?
-        lines << "groups: %s; %s, %s, %s" % [self.groups.join(', '), @ami, @size, @keyname || 'no-keypair']
+        k, g = @keyname || 'no-keypair', self.groups.join(', ')
+        lines << @@sformat % %w{zone size ami keyname groups} if with_title
+        lines << @@sformat % [@zone, @size, @ami, k, g]
       end
       lines.join($/)
     end

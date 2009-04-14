@@ -3,6 +3,8 @@
 module Rudy::AWS
   module EC2
     class Volume < Storable
+      @@sformat = "%10s;%4sGB; %s" # cram the terabyte
+      
       field :awsid
       field :status
       field :size
@@ -15,12 +17,12 @@ module Rudy::AWS
     
       def liner_note
         info = attached? ? "attached to #{@instid}" : @status
-        "%s (%s)" % [self.awsid.bright, info]
+        "%s (%s)" % [(self.awsid || '').bright, info]
       end
       
       def to_s
         lines = [liner_note]
-        lines << "size: %sGB; zone: %s; device: %s" % [@size, @zone, @device]
+        lines << @@sformat % [@zone, @size, @device]
       end
       
       def inspect

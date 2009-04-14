@@ -33,7 +33,7 @@ module AWS; module EC2;
       raise "KeyPair #{@argv.name} does not exist" unless rkey.exists?(@argv.name)
       kp = rkey.get(@argv.name)
       puts "Destroying: #{kp.name}"
-      exit unless Annoy.are_you_sure?(:medium)
+      execute_check(:medium)
       execute_action { rkey.destroy(kp.name) }
     end
     

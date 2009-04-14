@@ -43,7 +43,7 @@ module Rudy
       
       def create_disk
         puts "Creating Disk".bright
-        exit unless Annoy.are_you_sure?(:low)
+        execute_check(:low)
         opts = {}
         [:path, :device, :size, :group].each do |v| 
           opts[v] = @option.send(v) if @option.respond_to?(v)
@@ -69,7 +69,7 @@ module Rudy
       
       def destroy_disk
         puts "Destroying Disk".bright
-        exit unless Annoy.are_you_sure?(:medium)
+        execute_check(:medium)
         opts = {}
         if @argv.diskname
           key = @argv.diskname =~ /^disk-/ ? :name : :path
@@ -96,7 +96,7 @@ module Rudy
       def attach_disk
         puts "Attaching #{name}"
         switch_user("root")
-        exit unless Annoy.are_you_sure?(:medium)
+        execute_check(:medium)
   
         machine = @instances.values.first  # AK! Assumes single machine
         

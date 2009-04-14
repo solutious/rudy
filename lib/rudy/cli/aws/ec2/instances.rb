@@ -88,7 +88,7 @@ module AWS; module EC2;
       print "Destroying #{instance_count} (#{inst_names.join(', ')}) "
       print "in #{opts[:group]}" if opts[:group]
       puts
-      exit unless Annoy.are_you_sure?(:medium)
+      execute_check(:medium)
       
       execute_action("Destroy Failed") { 
         rmach.destroy(inst_ids)
@@ -97,7 +97,6 @@ module AWS; module EC2;
     end
     
     def status
-      puts "Instances".bright
       opts = {}
       
       opts[:group] = @option.group if @option.group
@@ -114,7 +113,6 @@ module AWS; module EC2;
     
       rudy = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
       lt = rudy.list_group(opts[:group], opts[:state], opts[:id]) do |inst|
-        puts
         puts @@global.verbose > 0 ? inst.inspect : inst.to_s
       end
       puts "No instances running" if !lt || lt.empty?
@@ -134,7 +132,7 @@ module AWS; module EC2;
       
       if @argv.first
         command, command_args = [@argv.first].flatten.join(' ')
-        exit unless Annoy.are_you_sure?(:medium) if @option.user == "root"
+        execute_check(:medium) if @option.user == "root"
       end
       
       if @option.pkey

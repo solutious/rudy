@@ -116,21 +116,35 @@ module RudyEC2CLI
   command_alias :groups, :group
   command_alias :groups, :g
   
-  #usage "rudy-ec2 images [-C -i name [-b bucket -a accountnum]] [-D AMI-ID]"
-  #desc "Manage EC2 Machine Images (AMIs)"
-  #option :a, :accountnum, String, "Your Amazon Account Number"
-  #option :i, :image_name, String, "The name of the image"     # TODO: change to --ami
-  #option :p, :print, "Print-only (don't execute commands)"
+  usage "rudy-ec2 im"
+  usage "rudy-ec2 image"
+  usage "rudy-ec2 images image-id"
+  usage "rudy-ec2 images -o 123456789012"
+  usage "rudy-ec2 images -o amazon"
+  usage "rudy-ec2 images -o self"
+  desc "Manage Machine Images (AMIs)"
+  option :o, :owner, String, "Amazon Account Number or one of: amazon, self"
+  #option :p, :private, "Private images only"
   #option :b, :bucket_name, String, "The name of the bucket that will store the image"
   #action :C, :create, "Create an image"
-  ##action :P, :prepare, "Prepare a running instance to be used as an image"
-  #action :D, :destroy, "Deregister an image (currently _does not_ remove images files from S3)"
-  #argv :ami
-  #command :images => Rudy::CLI::AWS::EC2::Images
-  #command_alias :images, :image
+  #action :P, :prepare, "Prepare a running instance to be used as an image"
+  #action :D, :destroy, "Deregister an image (does not remove image files from S3)"
+  argv :ami
+  command :images => Rudy::CLI::AWS::EC2::Images
+  command_alias :images, :image
+  command_alias :images, :im
   
   desc "Manage Instances"
-  usage "rudy-ec2 instances [-g group-name] [-s state] [instance-ID]"
+  usage "rudy-ec2 i"
+  usage "rudy-ec2 instance"
+  usage "rudy-ec2 instances"
+  usage "rudy-ec2 instances [-g group-name] [instance-ID]"
+  usage "rudy-ec2 instances -C -g group-name -s m1.small -k keypair-name"
+  usage "rudy-ec2 instances -C -a 255.255.255.255 -k keypair-name"
+  usage "rudy-ec2 instances -R instance-ID"
+  usage "rudy-ec2 instances -D instance-ID"
+  usage "rudy-ec2 instances -R -g group-name"
+  usage "rudy-ec2 instances -D -g group-name"
   option :g, :group, String, "The security group name"
   option :m, :ami, String, "The machine image ID (ami)"
   option :s, :size, String, "The instance size (default: m1.small)"
@@ -139,12 +153,14 @@ module RudyEC2CLI
   option :n, :newaddress, "Create and assign a new elastic IP"
   option :p, :private, "Do not give the instance a public IP address"
   action :C, :create, "Create a machine instance"
+  action :R, :restart, "Restart a machine instance"
   action :D, :destroy, "Destroy a machine instance"
-  argv :awsid
+  argv :instid
   command :instances => Rudy::CLI::AWS::EC2::Instances
-  command_alias :instances, :i
-  command_alias :instances, :status
   command_alias :instances, :instance
+  command_alias :instances, :status
+  command_alias :instances, :in
+  command_alias :instances, :i
   
   desc "Manage KeyPairs"
   usage "rudy-ec2 keypairs"

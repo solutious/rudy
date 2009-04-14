@@ -196,8 +196,10 @@ module Rudy::AWS
       def list_group_as_hash(group=nil, state=nil, inst_ids=[], &each_inst)
         instances = list_as_hash(state, inst_ids)
         # Remove instances that are not in the specified group
-        instances &&= instances.reject { |id,inst| !inst.groups.member?(group) } if group
-        instances.each_value { |inst| each_inst.call(inst) } if each_inst
+        if instances
+          instances = instances.reject { |id,inst| !inst.groups.member?(group) } if group
+          instances.each_value { |inst| each_inst.call(inst) } if each_inst
+        end
         instances = nil if instances && instances.empty? # Don't return an empty hash
         instances
       end

@@ -13,13 +13,11 @@ module AWS; module EC2;
     end
     def volumes_create
       puts "Creating #{@option.size}GB volume in #{@@global.zone}"
-      
       rvol = Rudy::AWS::EC2::Volumes.new(@@global.accesskey, @@global.secretkey)
       execute_check(:low)
       vol = execute_action("Create Failed") { 
         rvol.create(@option.size, @@global.zone, @option.snapshot) 
       }
-      
       puts @global.verbose > 1 ? vol.inspect : vol.dump(@@global.format)
     end
 
@@ -31,14 +29,11 @@ module AWS; module EC2;
     
     def destroy_volumes
       @rvol = Rudy::AWS::EC2::Volumes.new(@@global.accesskey, @@global.secretkey)
-      
       @volume = @rvol.get(@argv.volid)
-      
-      raise "Volume #{@argv.volid} does not exist" unless @volume
-      
-      raise "Volume #{@argv.volid} is still in-use" if @volume.in_use?
-      raise "Volume #{@argv.volid} is still attached" if @volume.attached?
-      raise "Volume #{@argv.volid} is not available (#{@volume.state})" unless @volume.available?
+      raise "Volume #{@volume.awsid} does not exist" unless @volume
+      raise "Volume #{@volume.awsid} is still in-use" if @volume.in_use?
+      raise "Volume #{@volume.awsid} is still attached" if @volume.attached?
+      raise "Volume #{@volume.awsid} is not available (#{@volume.state})" unless @volume.available?
       
       puts "Destroying #{@volume.awsid}"
       execute_check(:medium)
@@ -52,7 +47,6 @@ module AWS; module EC2;
     def volumes_attach_valid?
       raise "You must supply an instance ID." unless @option.instance
       raise "You must supply a volume ID." unless @argv.volid
-      
       true
     end
     def volumes_attach

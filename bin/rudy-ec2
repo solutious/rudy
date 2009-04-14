@@ -173,6 +173,18 @@ module RudyEC2CLI
   command_alias :keypairs, :keypair
   command_alias :keypairs, :k
   
+  desc "Manage Snapshots"
+  usage "rudy-ec2 snapshots"
+  usage "rudy-ec2 snapshots -C -v volume-id"
+  usage "rudy-ec2 snapshots -D snapshot-id"
+  option :v, :volume, String, "Volume ID"
+  action :D, :destroy, "Destroy a snapshot (this is permanent!)"
+  action :C, :create, "Create a snapshot"
+  argv :snapid
+  command :snapshots => Rudy::CLI::AWS::EC2::Snapshots
+  command_alias :snapshots, :snapshot
+  command_alias :snapshots, :s
+  
   usage "rudy-ec2 ssh"
   usage "rudy-ec2 ssh -k path/2/key -u root"
   usage "rudy-ec2 ssh -k path/2/key -u root uname -a"
@@ -207,6 +219,11 @@ module RudyEC2CLI
   command_alias :volumes, :volume
   command_alias :volumes, :v
   
+  desc "Availability Zones"
+  argv :name
+  command :zones => Rudy::CLI::AWS::EC2::Zones
+  command_alias :zones, :zone
+  command_alias :zones, :z
   
   
   # --------------------------------  RUDY-EC2 MISCELLANEOUS  --------

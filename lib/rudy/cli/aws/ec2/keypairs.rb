@@ -19,7 +19,7 @@ module AWS; module EC2;
         puts "Set the permissions to 0600 and keep it safe.", $/
         puts kp.private_key
       else
-        puts kp.dump(@@global.format)
+        puts @@global.verbose > 0 ? kp.inspect : kp.dump(@@global.format)
       end
     end
     
@@ -40,7 +40,7 @@ module AWS; module EC2;
     def keypairs
       rkey = Rudy::AWS::EC2::KeyPairs.new(@@global.accesskey, @@global.secretkey)
       rkey.list.each do |kp|
-        puts kp.dump(@@global.format)
+        puts @@global.verbose > 0 ? kp.inspect : kp.dump(@@global.format)
       end
       puts "No keypairs" unless rkey.any?
     end

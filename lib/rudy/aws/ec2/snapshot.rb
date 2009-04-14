@@ -3,14 +3,23 @@
 module Rudy::AWS
   module EC2
     class Snapshot < Storable
+      @@sformat = "%s -> %10s; %s"
+      
       field :awsid
       field :progress
       field :created
       field :volid
       field :status
       
-      def to_s(with_titles=false)
-        "%s:%s (%s) %s" [self.awsid, self.volid, self.created, self.status]
+      def liner_note
+        t = Time.parse(@created)
+        t = t.strftime("%Y-%m-%d %H:%M:%S")
+        info = completed? ? t : "#{@progress} of #{@volid}"
+        "%s (%s)" % [(self.awsid || '').bright, info]
+      end
+      
+      def to_s(with_title=false)
+        @@sformat % [liner_note,  @volid, @status]
       end
       
       def completed?
@@ -21,16 +30,16 @@ module Rudy::AWS
     
     class Snapshots
       include Rudy::AWS::ObjectBase
-      
+      include Rudy::AWS::EC2::Base
 
-      def list(*snap_id)
+      def list(snap_id=[])
         snapshots = list_as_hash(snap_id)
         snapshots &&= snapshots.values
         snapshots
       end
-      def list_as_hash(*snap_id)
-        snap_id = snap_id.flatten
-        slist = @aws.describe_snapshots(:snapshot_id => snap_id)
+      def list_as_hash(snap_id=[])
+        snap_id = [snap_id].flatten.compact
+        slist = @ec2.describe_snapshots(:snapshot_id => snap_id)
         return unless slist['snapshotSet'].is_a?(Hash)
         snapshots = {}
         slist['snapshotSet']['item'].each do |snap| 
@@ -42,12 +51,13 @@ module Rudy::AWS
       
       def create(vol_id)
         vol_id = (vol_id.is_a?(Rudy::AWS::EC2::Volume)) ? vol_id.awsid : vol_id
-        snap = @aws.create_snapshot(:volume_id => vol_id)
-        self.class.from_hash(snap)
+        shash = @ec2.create_snapshot(:volume_id => vol_id)
+        snap = Snapshots.from_hash(shash)
+        snap
       end
       
       def destroy(snap_id)
-        ret = @aws.delete_snapshot(:snapshot_id => snap_id)
+        ret = @ec2.delete_snapshot(:snapshot_id => snap_id)
         (ret && ret['return'] == 'true') 
       end
       

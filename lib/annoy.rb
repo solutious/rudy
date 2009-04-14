@@ -139,6 +139,12 @@ class Annoy #:nodoc:all
     Annoy.challenge?("Are you sure?", factor, flavor, writer)
   end
   
+  # Runs a challenge with the message, "Proceed?"
+  # See: Annoy.challenge?
+  def Annoy.proceed?(factor=:medium, flavor=:rand, writer=STDOUT)
+    Annoy.challenge?("Proceed?", factor, flavor, writer)
+  end
+  
   # See: Annoy.challenge?
   # Uses the value of @flavor, @factor, and @writer
   def challenge?(msg="Please confirm.")

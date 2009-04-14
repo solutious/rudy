@@ -20,8 +20,8 @@ module AWS; module EC2;
       
       if @option.address
         raise "Cannot specify both -a and -n" if @option.newaddress
-        raise "#{@argv.ipaddress} is not allocated to you" unless radd.exists?(@option.address)
-        raise "#{@argv.ipaddress} is already associated!" if radd.associated?(@option.address)
+        raise "#{@option.address} is not allocated to you" unless radd.exists?(@option.address)
+        raise "#{@option.address} is already associated!" if radd.associated?(@option.address)
       end
       
       # These can be sent directly to EC2 class
@@ -29,19 +29,20 @@ module AWS; module EC2;
         opts[n] = @option.send(n) if @option.send(n)
       end
       
-      puts "Creating #{opts[:itype]} instance in #{@@global.zone}"
+      puts "Creating #{opts[:size]} instance in #{@@global.zone}"
       
       unless opts[:keypair]
         puts "You did not specify a keypair. Unless you've prepared a user account".color(:blue)
         puts "on this image (#{opts[:ami]}) you will not be able to log in to it.".color(:blue)
-        exit unless Annoy.are_you_sure?(:low)
+        exit unless Annoy.proceed?(:low)
       end
       
       instances = rmach.list_group(opts[:group], :running)
       
       if instances && instances.size > 0
-        puts "There are #{instances.size} running in the #{opts[:group]} group."
-        exit unless Annoy.are_you_sure?(:low)
+        instance_count = (instances.size == 1) ? 'is 1 instance' : "are #{instances.size} instances"
+        puts "There #{instance_count} running in the #{opts[:group]} group."
+        exit unless Annoy.proceed?(:low)
       end
       
       if @option.newaddress
@@ -61,7 +62,6 @@ module AWS; module EC2;
           first_instance = false
         end
         
-        puts 
         puts @@global.verbose > 0 ? inst.inspect : inst.to_s
       end
 
@@ -143,7 +143,7 @@ module AWS; module EC2;
       end
       
       rudy = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
-      lt = rudy.list_group(opts[:group], opts[:state], opts[:id]) do |inst|
+      lt = rudy.list_group(opts[:group], :running, opts[:id]) do |inst|
         puts "Connecting to: #{inst.awsid.bright} as #{@option.user.bright} (group: #{inst.groups.join(', ')})", $/
         ssh_opts = {
           #:debug => STDERR,

@@ -18,6 +18,8 @@ module Rudy::AWS
     field :reason
     field :groups => Array
     
+    # Groups aren't returned when creating an instance so this
+    # method returns an empty Array if +@groups+ is not set.
     def groups
       @groups || []
     end
@@ -30,7 +32,9 @@ module Rudy::AWS
     def to_s
       lines = []
       lines << liner_note
-      lines << "groups: %s; %s, %s, %s" % [@groups.join(', '), @ami, @size, @keyname || 'no-keypair']
+      if self.running?
+        lines << "groups: %s; %s, %s, %s" % [self.groups.join(', '), @ami, @size, @keyname || 'no-keypair']
+      end
       lines.join($/)
     end
     

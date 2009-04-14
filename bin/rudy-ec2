@@ -48,12 +48,17 @@ module RudyEC2CLI
 
   usage "rudy-ec2 addresses"
   usage "rudy-ec2 addresses -A -i instance-id address"
+  usage "rudy-ec2 addresses -A -i instance-id -n"
+  usage "rudy-ec2 addresses -N address"
+  usage "rudy-ec2 addresses -D address"
+  usage "rudy-ec2 addresses -C"
   desc "Manage Amazon Elastic IP addresses"
   option :i, :instance, String, "Instance ID"
+  option :n, :newaddress, "Create and assign a new elastic IP"
   action :A, :associate, "Associate an IP address to a running instance"
   action :N, :disassociate, "Disassociate an IP address from an instance"
-  action :C, :create, "Create an IP address"
-  action :D, :destroy, "Destroy an IP address"
+  action :C, :create, "Request an IP address from Amazon"
+  action :D, :destroy, "Return an IP address to Amazon (this is permanent!)"
   argv :ipaddress
   command :addresses => Rudy::CLI::AWS::EC2::Addresses
   command_alias :addresses, :address
@@ -124,7 +129,7 @@ module RudyEC2CLI
   option :s, :size, String, "The instance size (default: m1.small)"
   option :k, :keypair, String, "The SSH keypair to use for launch"
   option :a, :address, String, "The IP address to associate to the new instance"
-  option :n, :newaddress, "Assign the instance a new elastic IP"
+  option :n, :newaddress, "Create and assign a new elastic IP"
   option :p, :private, "Do not give the instance a public IP address"
   action :C, :create, "Create a machine instance"
   action :D, :destroy, "Destroy a machine instance"
@@ -190,7 +195,7 @@ module RudyEC2CLI
   after do |obj|  
     unless obj.global.quiet
       @elapsed = Time.now - @start
-      puts $/, "Elapsed: %.2f seconds" % @elapsed.to_f if @elapsed > 0.1
+      puts "Elapsed: %.2f seconds" % @elapsed.to_f if @elapsed > 0.1
     end
   end
   

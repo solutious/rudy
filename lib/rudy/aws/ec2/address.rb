@@ -7,10 +7,18 @@ module Rudy::AWS
     class Address < Storable
       field :ipaddress
       field :instid
+      
+      def liner_note
+        info = self.associated? ? @instid : "available"
+        "%s (%s)" % [@ipaddress, info]
+      end
+      
       def to_s
-        msg = "Address: #{self.ipaddress}"
-        msg << ", instance: #{self.instid}" if self.instid
-        msg
+        liner_note
+      end
+      
+      def associated?
+        !@instid.nil? && !@instid.empty?
       end
     end
   

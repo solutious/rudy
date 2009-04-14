@@ -64,7 +64,6 @@ module Rudy
     def start(opts={})
       raise "#{name} is already running" if running?
       
-      # TODO: Handle itype on create
       opts = { :ami => current_machine_image, 
                :zone => @@global.zone.to_s,
                :group => current_machine_group,

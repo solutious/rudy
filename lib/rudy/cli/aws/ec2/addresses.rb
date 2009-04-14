@@ -38,7 +38,7 @@ module AWS; module EC2;
     end
 
     def associate_addresses_valid?
-      raise "You have not supplied an IP addresses" unless @argv.ipaddress
+      raise "You have not supplied an IP addresses" if !@argv.ipaddress && !@option.newaddress
       raise "You did not supply an instance ID" unless @option.instance
       true
     end
@@ -47,9 +47,20 @@ module AWS; module EC2;
       
       radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey)
       rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
-      raise "#{@argv.ipaddress} is not allocated to you" unless radd.exists?(@argv.ipaddress)
+      
       raise "Instance #{@argv.instid} does not exist!" unless rinst.exists?(@option.instance)
-      raise "#{@argv.ipaddress} is already associated!" if radd.associated?(@argv.ipaddress)
+      
+      if @option.newaddress
+        print "Creating address... "
+        tmp = radd.create
+        puts "#{tmp.ipaddress}"
+        address = tmp.ipaddress
+      else
+        address = @argv.ipaddress
+      end
+      
+      raise "#{address} is not allocated to you" unless radd.exists?(address)
+      raise "#{address} is already associated!" if radd.associated?(address)
           
       instance = rinst.get(@option.instance)
       
@@ -58,11 +69,11 @@ module AWS; module EC2;
       instance_name = instance.dns_public
       instance_name = instance.awsid if !instance_name || instance_name.empty?
       
-      puts "Associating #{@argv.ipaddress} to #{instance_name} (#{instance.groups.join(', ')})"
+      puts "Associating #{address} to #{instance_name} (#{instance.groups.join(', ')})"
       exit unless Annoy.are_you_sure?(:low)
       
       
-      execute_action { radd.associate(@argv.ipaddress, instance.awsid) }
+      execute_action { radd.associate(address, instance.awsid) }
       
     end
     
@@ -82,7 +93,7 @@ module AWS; module EC2;
       instance = rinst.get(address.instid)
       
       puts "Disassociating #{address.ipaddress} from #{instance.awsid} (#{instance.groups.join(', ')})"
-      exit unless Annoy.are_you_sure?(:low)
+      exit unless Annoy.are_you_sure?(:medium)
       
       execute_action { radd.disassociate(@argv.ipaddress) }
       

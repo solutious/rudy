@@ -42,6 +42,12 @@ module AWS; module EC2;
     end
     
     def revoke_groups_valid?
+      
+      if @option.owner == 'self'
+        raise "AWS_ACCOUNT_NUMBER not set" unless @@global.accountnum 
+        @option.owner = @@global.accountnum 
+      end
+      
       if (@option.addresses || @option.ports) && (@option.group || @option.owner)
         raise OptionError, "Cannot mix group and nextwork authorization" 
       end
@@ -49,55 +55,13 @@ module AWS; module EC2;
       raise ArgumentError, "Must specify group to modify." unless @argv.name
       @groups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
     end
-    
     def revoke_groups
-      opts = check_options
-      if (@option.group || @option.owner)
-        g = "#{opts[:group]}:#{opts[:owner]}"
-        puts "Revoke access to #{@argv.name.bright} from #{g.bright}"
-      else
-        puts "Revoke access to #{@argv.name.bright} from #{opts[:addresses].join(', ').bright}"
-        puts "on #{opts[:protocols].join(', ').bright} ports: #{opts[:ports].map { |p| "#{p.join(' to ').bright}" }.join(', ')}"
-      end
-      rgroups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
-      execute_check(:medium)
-      execute_action { 
-        if (@option.group || @option.owner)
-          rgroups.revoke_group(@argv.name, opts[:group], opts[:owner])
-        else
-          rgroups.revoke(@argv.name, opts[:addresses], opts[:ports], opts[:protocols])
-        end
-      }
-      groups # prints on the modified group b/c of @argv.name
+      modify_group(:revoke)
     end
     
-    def authorize_groups_valid?
-      if (@option.addresses || @option.ports) && (@option.group || @option.owner)
-        raise OptionError, "Cannot mix group and network authorization" 
-      end
-      raise OptionError, "Must provide -g with -o" if @option.owner && !@option.group
-      raise ArgumentError, "Must specify group to modify." unless @argv.name
-      @groups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
-    end
+    alias :authorize_groups_valid? :revoke_groups_valid?
     def authorize_groups
-      opts = check_options
-      if (@option.group || @option.owner)
-        g = [opts[:owner], opts[:group]].join(':')
-        puts "Authorize access to #{@argv.name.bright} from #{g.bright}"
-      else
-        puts "Authorize access to #{@argv.name.bright} from #{opts[:addresses].join(', ').bright}"
-        puts "on #{opts[:protocols].join(', ').bright} ports: #{opts[:ports].map { |p| "#{p.join(' to ').bright}" }.join(', ')}"
-      end
-      rgroups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
-      execute_check(:medium)
-      execute_action { 
-        if (@option.group || @option.owner)
-          rgroups.authorize_group(@argv.name, opts[:group], opts[:owner])
-        else
-          rgroups.authorize(@argv.name, opts[:addresses], opts[:ports], opts[:protocols])
-        end
-      }
-      groups
+      modify_group(:authorize)
     end
 
     def groups
@@ -110,6 +74,29 @@ module AWS; module EC2;
     end
     
   private
+    
+    def modify_group(action)
+      opts = check_options
+      if (@option.group || @option.owner)
+        g = [opts[:owner], opts[:group]].join(':')
+        puts "#{action.to_s.capitalize} access to #{@argv.name.bright} from #{g.bright}"
+      else
+        print "#{action.to_s.capitalize} access to #{@argv.name.bright}"
+         puts " from #{opts[:addresses].join(', ').bright}"
+        print "on #{opts[:protocols].join(', ').bright} "
+         puts "ports: #{opts[:ports].map { |p| "#{p.join(' to ').bright}" }.join(', ')}"
+      end
+      rgroups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
+      execute_check(:medium)
+      execute_action { 
+        if (@option.group || @option.owner)
+          rgroups.send("#{action.to_s}_group", @argv.name, opts[:group], opts[:owner])
+        else
+          rgroups.send(action, @argv.name, opts[:addresses], opts[:ports], opts[:protocols])
+        end
+      }
+      groups # prints on the modified group b/c of @argv.name
+    end
     
     def check_options
       opts = {}

@@ -6,7 +6,7 @@ module Rudy::AWS
       field :ports => Range          # Port range
       field :protocol => String
       
-      def to_s(with_titles=false)
+      def to_s(with_title=false)
         if self.ports.first == self.ports.last
           "%s(%s)" % [self.protocol, self.ports.last]
         else
@@ -33,7 +33,7 @@ module Rudy::AWS
     # Print info about a security group
     #
     # * +group+ is a Rudy::AWS::EC2::Group object
-    def to_s
+    def to_s(with_title=false)
       lines = [liner_note]
       (self.addresses || {}).each_pair do |address,rules|
         lines << "%18s -> %s" % [address.to_s, rules.collect { |p| p.to_s}.join(', ')]
@@ -269,8 +269,6 @@ module Rudy::AWS
       end
       
       def modify_rule(meth, name, from_port, to_port, protocol, ipa)
-        
-        
         opts = {
           :group_name => name,
           :ip_protocol => protocol,
@@ -285,6 +283,8 @@ module Rudy::AWS
       
       def modify_group_rules(meth, name, gname, gowner, &each_group)
         list(name, &each_group) if each_group
+        # probably works, needs to be tested
+        #gowner &&= gowner.tr!('-', '') # Remove dashes from aws account number
         
         opts = {
           :group_name => name,

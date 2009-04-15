@@ -40,7 +40,7 @@ module Drydock
       @msg = args.shift if args.size == 1
       @arg, @cmd, @msg = *args
       @cmd ||= 'COMMAND'
-      @msg = nil if @msg.empty?
+      @msg = nil if @msg && @msg.empty?
     end
     def message; @msg || "Error: No #{@arg} provided"; end
     def usage; "See: #{$0} #{@cmd} -h"; end
@@ -98,6 +98,8 @@ module Drydock
     attr_accessor :argv  
       # Either an IO handle to STDIN or the output of the Drydock#stdin handler. 
     attr_reader :stdin
+      # The basename of the executable or script: File.basename($0)
+    attr_reader :executable
     
     # The default constructor sets the short name of the command
     # and stores a reference to the block (if supplied).
@@ -114,7 +116,7 @@ module Drydock
       @stdin = STDIN
       @option = OpenStruct.new
       @global = OpenStruct.new
-      
+      @executable = File.basename($0)
       @global.verbose = 0
       @global.quiet = false
     end
@@ -243,9 +245,9 @@ module Drydock
     # this default behaviour. 
     def show_commands
       project = " for #{Drydock.project}" if Drydock.project?
-      puts "Available commands#{project}:", ""
       cmds = {}
       Drydock.commands.keys.each do |cmd|
+        next if cmd == :show_commands
         pretty = Drydock.decanonize(cmd)
         # Out to sea
         cmds[Drydock.commands[cmd].cmd] ||= {}
@@ -254,18 +256,51 @@ module Drydock
           next
         end
         cmds[cmd][:desc] = Drydock.commands[cmd].desc
+        cmds[cmd][:desc] = nil if cmds[cmd][:desc] && cmds[cmd][:desc].empty?
         cmds[cmd][:pretty] = pretty
       end
+    
+      cmd_names_sorted = cmds.keys.sort{ |a,b| a.to_s <=> b.to_s }
       
-      cmds.keys.sort{ |a,b| a.to_s <=> b.to_s }.each do |cmd|
-        p = cmds[cmd]
-        puts " %16s: %s" % [p[:pretty], p[:desc]]
-        puts " %17s (%s: %s)" % ['', "aliases", cmds[cmd][:aliases].join(', ')] if cmds[cmd][:aliases]
+      puts "Available commands: "
+      
+      if @global.quiet
+        line = []
+        cmd_names_sorted.each_with_index do |cmd,i|
+          line << cmd
+          if (line.size % 4 == 0) || i == (cmd_names_sorted.size - 1)
+            puts "  %s" % line.join(', ')
+            line.clear
+          end
+        end
+        return
       end
       
-      puts 
-      puts "%6s: %s" % ["Try", "#{$0} -h"] 
-      puts "%6s  %s" % ["", "#{$0} COMMAND -h"]
+      if @global.verbose > 0
+        puts # empty line
+        cmd_names_sorted.each do |cmd|
+          puts "%s %s" % [@executable, cmds[cmd][:pretty]]
+          puts "%10s: %s" % ["About", cmds[cmd][:desc]] if cmds[cmd][:desc]
+          if cmds[cmd][:aliases]
+            cmds[cmd][:aliases].sort!{ |a,b| a.size <=> b.size }
+            puts "%10s: %s" % ["Aliases", cmds[cmd][:aliases].join(', ')]
+          end
+          puts
+        end
+
+      else
+        puts # empty line
+        cmd_names_sorted.each do |cmd|
+          aliases = cmds[cmd][:aliases] || []
+          aliases.sort!{ |a,b| a.size <=> b.size }
+          aliases = aliases.empty? ? '' : "(#{aliases.join(', ')})"
+          puts "  %-12s %s" % [cmds[cmd][:pretty], aliases]
+        end
+      end
+      puts
+      puts "%6s: %s" % ["Try", "#{@executable} -h"] 
+      puts "%6s  %s" % ["", "#{@executable} COMMAND -h"]
+      puts "%6s: %s" % ["Usage", "#{@executable} [global options] COMMAND [command options]"]
       puts
     end
     
@@ -565,7 +600,9 @@ module Drydock
     # Default Usage Banner. 
     # Without this, there's no help displayed for the command. 
     option_parser = get_option_parser(@@command_index)
-    usage "#{$0} #{c.cmd}" if option_parser.is_a?(OptionParser) && option_parser.banner !~ /^USAGE/
+    if option_parser.is_a?(OptionParser) && option_parser.banner !~ /^USAGE/
+      usage "#{c.executable} #{c.cmd}"
+    end
     
     @@commands[c.cmd] = c
     @@command_index_map[c.cmd] = @@command_index
@@ -835,8 +872,8 @@ module Drydock
   #
   # These are the "reel" defaults
   #
-  @@global_opts_parser.banner = "USAGE: #{$0} [global options] COMMAND [command options]"
-  @@global_opts_parser.on "  TRY: #{$0} show-commands #{$/}"
+  @@global_opts_parser.banner = "  Try: #{$0} show-commands"
+  @@global_opts_parser.on "Usage: #{$0} [global options] COMMAND [command options] #{$/}"
   @@command_descriptions = ["Display available commands with descriptions"]
   @@default_command = Drydock.command(:show_commands).cmd
   

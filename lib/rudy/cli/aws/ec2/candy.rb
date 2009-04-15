@@ -1,12 +1,36 @@
 
-
 module Rudy; module CLI; 
 module AWS; module EC2;
   
   class Candy < Rudy::CLI::Base
     
-
-
+    def status_valid?
+      avail = Rudy::Utils.service_available?('status.aws.amazon.com', 80, 5)
+      raise ServiceUnavailable, 'status.aws.amazon.com' unless avail
+      true
+    end
+    def status
+      url = 'http://status.aws.amazon.com/rss/EC2.rss'
+      # TODO: Move to Rudy::AWS
+      ec2 = Rudy::Utils::RSSReader.run(url) || {}
+      
+      # TODO: Create Storable object
+      if @@global.format == 'yaml'
+        puts ec2.to_yaml
+      elsif @@global.format == 'json'
+        require 'json'
+        puts ec2.to_json
+      else
+        puts "Updated: #{ec2[:pubdate]} (updated every #{ec2[:ttl]} minutes)"
+        ec2[:items].each do |i|
+          puts
+          puts '%s' % i[:title]
+          puts '  %s: %s' % [i[:pubdate], i[:description]]
+          
+        end
+      end
+    end
+    
     def ssh_valid?
       if @option.pkey
         raise "Cannot find file #{@option.pkey}" unless File.exists?(@option.pkey)

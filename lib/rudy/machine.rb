@@ -2,8 +2,7 @@
 
 
 module Rudy
-  class Machine < Storable
-    include Rudy::Huxtable
+  class Machine < Storable 
     include Rudy::MetaData::ObjectBase
   
     field :rtype

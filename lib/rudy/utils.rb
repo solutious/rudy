@@ -320,3 +320,53 @@ module Rudy
 
   end
 end
+
+# = RSSReader
+#
+# A rudimentary way to read an RSS feed as a hash.
+# Adapted from: http://snippets.dzone.com/posts/show/68
+#
+module Rudy::Utils::RSSReader
+  extend self
+  require 'net/http'
+  require 'rexml/document'
+  
+  # Returns a feed as a hash. 
+  # * +uri+ to RSS feed
+  def run(uri)
+    begin
+      xmlstr = Net::HTTP.get(URI.parse(uri))
+    rescue SocketError, Errno::ETIMEDOUT
+      STDERR.puts "Connection Error. Check your internets!"
+    end
+    
+    xml = REXML::Document.new xmlstr
+    
+    data = { :items => [] }
+    xml.elements.each '//channel' do |item|
+      item.elements.each do |e| 
+        n = e.name.downcase.gsub(/^dc:(\w)/,"\1").to_sym
+        next if n == :item
+        data[n] = e.text
+      end
+    end
+    
+    #data = {
+    #  :title    => xml.root.elements['channel/title'].text,
+    #  :link => xml.root.elements['channel/link'].text,
+    #  :updated => xml.root.elements['channel/lastBuildDate'].text,
+    #  :uri  => uri,
+    #  :items    => []
+    #}
+    #data[:updated] &&= DateTime.parse(data[:updated])
+    
+    xml.elements.each '//item' do |item|
+      new_items = {} and item.elements.each do |e| 
+        n = e.name.downcase.gsub(/^dc:(\w)/,"\1").to_sym
+        new_items[n] = e.text
+      end
+      data[:items] << new_items
+    end
+    data
+  end
+end

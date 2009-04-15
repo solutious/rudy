@@ -129,18 +129,23 @@ module Rudy
   def Rudy.sysinfo; @@sysinfo; end
   def sysinfo; @@sysinfo;  end
   
-  class InsecureKeyPermissions
-    def initialize(file); @file = file; end
-    def message
-      puts "Insecure file permissions for #{file}"
-      puts "Try: chmod 600 #{file}"
-    end
+  class SimpleError < RuntimeError
+    def initialize(obj); @obj = obj; end
   end
   
-  class NoConfig < RuntimeError
+  class InsecureKeyPermissions < SimpleError
+    def message
+      puts "Insecure file permissions for #{@obj}"
+      puts "Try: chmod 600 #{@obj}"
+    end
+  end
+  class NoConfig < SimpleError
     def message; "No AWS credentials. Check your configs!"; end
   end
-
+  
+  class ServiceUnavailable < SimpleError
+    def message; "#{@obj} is not available. Check your internets!"; end
+  end
 end
 
 require 'rudy/utils'      # The
@@ -149,6 +154,9 @@ require 'rudy/config'     # of
 require 'rudy/huxtable'   # requires
 require 'rudy/aws'        # is
 require 'rudy/metadata'   # important
+
+
+require 'rudy/machine'
 
 #Rudy::Utils.require_glob(RUDY_LIB, 'rudy', '*.rb')
 

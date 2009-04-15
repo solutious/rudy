@@ -31,11 +31,16 @@ require 'rudy/cli'
 module RudyCLI
   extend Drydock
   
+  # ------------------------------------------  RUDY GLOBALS  --------
+  # ------------------------------------------------------------------
+  
   global :A, :accesskey, String, "AWS Access Key"
   global :S, :secretkey, String, "AWS Secret Access Key"
   #global :R, :region, String, "Connect to a specific EC2 region (ie: #{Rudy::DEFAULT_REGION})"
+  global :f, :format, String, "Output format"
   global :n, :nocolor, "Disable output colors"
-  global :f, :config, String, "Specify another configuration file to read (ie: #{Rudy::CONFIG_FILE})"
+  global :C, :config, String, "Specify another configuration file to read (ie: #{Rudy::CONFIG_FILE})"
+  global :Y, :yes, "Assume a correct answer to confirmation questions"
   global :z, :zone, String, "Connect to a specific EC2 zone (ie: #{Rudy::DEFAULT_ZONE})"
   global :e, :environment, String, "Connect to the specified environment (ie: #{Rudy::DEFAULT_ENVIRONMENT})"
   global :r, :role, String, "Connect to a machine with the specified role (ie: #{Rudy::DEFAULT_ROLE})"
@@ -170,9 +175,6 @@ module RudyCLI
         puts "Already Initialized"
       end
     
-    
-      exit 0 # a quick hack to not print elapsed time
-    
     rescue Rudy::NoConfig => ex
       puts "AWS credentials must be configured to continue."
       puts "You can modify these in #{Rudy::CONFIG_FILE}"
@@ -188,19 +190,6 @@ module RudyCLI
 
   # ---------------------------------  RUDY MANAGER COMMANDS  --------
   # ------------------------------------------------------------------
-
-  #usage "rudy init"
-  #desc "Run this the first time you use Rudy (it's immutable so running it again does no harm)."
-  #command :create_domain => Rudy::CLI::Manager
-  #
-  #usage "rudy info"
-  #desc "Displays info about the current Rudy configuration"
-  #command :info => Rudy::CLI::Manager
-
-  #desc "Update a Machine Group with the current version of Rudy"
-  #option :g, :group, String, "A security group name"
-  #command :update => Rudy::CLI::Manager
-
 
   #usage "#{$/} [global options] disks [-C -p path -d device -s size] [-A] [-D] [path]"
   #desc "Manage Disks"
@@ -273,19 +262,11 @@ module RudyCLI
   #command :restart => Rudy::CLI::Routines
   #
 
-  command :message do
-    puts Rudy::Utils.without_indent(%Q{
-      Welcome to Rudy #{Rudy::VERSION}
-      
-      See rudy-ec2. 
-    })
-  end
-  
   
   # -------------------------------------------  UGLY STUFFS  --------
   # ------------------------------------------------------------------
-  debug :off
-  default :message
+  debug :on
+  #default :message
   #capture :stderr       
   before do
     @start = Time.now

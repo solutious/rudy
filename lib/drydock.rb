@@ -302,9 +302,9 @@ module Drydock
         end
       end
       puts
+      puts "%6s: %s" % ["Usage", "#{@executable} [global options] COMMAND [command options]"]
       puts "%6s: %s" % ["Try", "#{@executable} -h"] 
       puts "%6s  %s" % ["", "#{@executable} COMMAND -h"]
-      puts "%6s: %s" % ["Usage", "#{@executable} [global options] COMMAND [command options]"]
       puts
     end
     

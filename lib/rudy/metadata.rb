@@ -4,8 +4,6 @@
 module Rudy
   module MetaData
 
-    
-
     # 20090224-1813-36
     def format_timestamp(dat)
       mon, day, hour, min, sec = [dat.mon, dat.day, dat.hour, dat.min, dat.sec].collect { |v| v.to_s.rjust(2, "0") }

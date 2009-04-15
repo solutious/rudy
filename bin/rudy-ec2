@@ -23,13 +23,13 @@ module RudyEC2CLI
   extend Drydock
   
   
-  # --------------------------------------  RUDY-EC2 GLOBALS  --------
+  # ------------------------------------------  RUDY GLOBALS  --------
   # ------------------------------------------------------------------
   
   global :A, :accesskey, String, "AWS Access Key"
   global :S, :secretkey, String, "AWS Secret Access Key"
-  global :f, :format, String, "Output format"
   #global :R, :region, String, "Connect to a specific EC2 region (ie: #{Rudy::DEFAULT_REGION})"
+  global :f, :format, String, "Output format"
   global :n, :nocolor, "Disable output colors"
   global :C, :config, String, "Specify another configuration file to read (ie: #{Rudy::CONFIG_FILE})"
   global :Y, :yes, "Assume a correct answer to confirmation questions"
@@ -202,8 +202,8 @@ module RudyEC2CLI
   command :ssh => Rudy::CLI::AWS::EC2::Candy 
   command_alias :ssh, :connect
   
-  #desc "Amazon EC2 status"
-  #command :status => Rudy::CLI::AWS::EC2::Instances
+  desc "Amazon EC2 status"
+  command :status => Rudy::CLI::AWS::EC2::Candy
   
   desc "Amazon EC2 Volumes"
   usage "rudy-ec2 volumes"
@@ -252,7 +252,7 @@ module RudyEC2CLI
   
 end
 
-puts Rudy::Utils.banner("THIS IS RUBY #{RUBY_VERSION}") if Drydock.debug?
+#puts Rudy::Utils.banner("THIS IS RUBY #{RUBY_VERSION}") if Drydock.debug?
 
 # We call Drydock specifically otherwise it will run at_exit. Rye also
 # uses at_exit for shutting down the ssh-agent. Ruby executes at_exit

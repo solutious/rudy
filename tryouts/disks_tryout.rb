@@ -6,6 +6,7 @@
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 %w{drydock caesars rye}.each { |dir| $: << File.join(File.dirname(__FILE__), '..', '..', dir, 'lib') }
 
+require 'rubygems'
 require 'rudy'
 require 'tryouts'
 include Tryouts

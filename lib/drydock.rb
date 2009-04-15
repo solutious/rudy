@@ -34,7 +34,21 @@ module Drydock
     end
   end
   
-    
+  class ArgError < RuntimeError
+    attr_reader :arg, :cmd, :msg
+    def initialize(*args)
+      @msg = args.shift if args.size == 1
+      @arg, @cmd, @msg = *args
+      @cmd ||= 'COMMAND'
+      @msg = nil if @msg.empty?
+    end
+    def message; @msg || "Error: No #{@arg} provided"; end
+    def usage; "See: #{$0} #{@cmd} -h"; end
+  end
+  class OptError < ArgError
+    def message; @msg || "Error: No #{@arg} provided"; end
+  end
+  
   # The base class for all command objects. There is an instance of this class
   # for every command defined. Global and command-specific options are added
   # as attributes to this class dynamically. 

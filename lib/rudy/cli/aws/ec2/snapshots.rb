@@ -6,7 +6,7 @@ module AWS; module EC2;
   class Snapshots < Rudy::CLI::Base
     
     def create_snapshots_valid?
-      raise ArgumentError, "No volume ID provided (vol)" unless @option.volume
+      raise Drydock::ArgError.new('volume ID', @alias) unless @option.volume
       @rvol = Rudy::AWS::EC2::Volumes.new(@@global.accesskey, @@global.secretkey)
       @volume = @rvol.get(@argv.volid)
       raise "Volume #{@volume.awsid} does not exist" unless @volume
@@ -19,7 +19,7 @@ module AWS; module EC2;
     end
     
     def destroy_snapshots_valid?
-      raise ArgumentError, "No snapshot ID provided (snap)" unless @argv.snapid
+      raise Drydock::ArgError.new('snapshot ID', @alias) unless @argv.snapid
       @rsnap = Rudy::AWS::EC2::Snapshots.new(@@global.accesskey, @@global.secretkey)
       @snap = @rsnap.get(@argv.snapid)
       raise "Snapshot #{@snap.awsid} does not exist" unless @snap

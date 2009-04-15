@@ -8,7 +8,7 @@ module AWS; module EC2;
     
     def create_groups_valid?
       @rgroups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
-      raise ArgumentError, "No group name provided" unless @argv.name
+      raise Drydock::ArgError.new('group name', @alias) unless @argv.name
       raise "Group #{@argv.name} alread exists" if @rgroups.exists?(@argv.name)
       true
     end
@@ -28,7 +28,7 @@ module AWS; module EC2;
     
     def destroy_groups_valid?
       @rgroups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
-      raise ArgumentError, "No group name provided" unless @argv.name
+      raise Drydock::ArgError.new('group name', @alias) unless @argv.name
       raise "Group #{@argv.name} does not exist" unless @rgroups.exists?(@argv.name)
       true
     end
@@ -41,28 +41,11 @@ module AWS; module EC2;
       groups
     end
     
-    def revoke_groups_valid?
-      
-      if @option.owner == 'self'
-        raise "AWS_ACCOUNT_NUMBER not set" unless @@global.accountnum 
-        @option.owner = @@global.accountnum 
-      end
-      
-      if (@option.addresses || @option.ports) && (@option.group || @option.owner)
-        raise OptionError, "Cannot mix group and nextwork authorization" 
-      end
-      raise OptionError, "Must provide -g with -o" if @option.owner && !@option.group
-      raise ArgumentError, "Must specify group to modify." unless @argv.name
-      @groups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
-    end
-    def revoke_groups
-      modify_group(:revoke)
-    end
+    def revoke_groups_valid?; modify_group_valid?; end
+    def revoke_groups; modify_group(:revoke); end
     
-    alias :authorize_groups_valid? :revoke_groups_valid?
-    def authorize_groups
-      modify_group(:authorize)
-    end
+    def authorize_groups_valid?; modify_group_valid?; end
+    def authorize_groups; modify_group(:authorize); end
 
     def groups
       opts = {}
@@ -74,6 +57,23 @@ module AWS; module EC2;
     end
     
   private
+    
+    def modify_group_valid?
+      if @option.owner == 'self'
+        raise "AWS_ACCOUNT_NUMBER not set" unless @@global.accountnum 
+        @option.owner = @@global.accountnum 
+      end
+      
+      if (@option.addresses || @option.ports) && (@option.group || @option.owner)
+        raise Drydock::OptError.new('', @alias, "Cannot mix group and network authorization")
+      end
+      if @option.owner && !@option.group
+        raise Drydock::OptError.new('', @alias, "Must provide -g with -o")
+      end
+      
+      raise Drydock::ArgError.new('group name', @alias) unless @argv.name
+      @groups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
+    end
     
     def modify_group(action)
       opts = check_options
@@ -108,6 +108,8 @@ module AWS; module EC2;
         opts[:ports] ||= [[22,22],[80,80],[443,443]]
         opts[:addresses] ||= [Rudy::Utils::external_ip_address]
         opts[:protocols] ||= [:tcp]
+      else
+        opts[:owner] ||= @@global.accountnum
       end
       opts
     end

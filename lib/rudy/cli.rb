@@ -1,8 +1,6 @@
 
 require 'drydock'
 
-class OptionError < RuntimeError; end
-  
 module Rudy
   module CLI
     class NoCred < RuntimeError #:nodoc

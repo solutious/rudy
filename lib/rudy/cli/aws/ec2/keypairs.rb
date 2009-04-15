@@ -6,7 +6,7 @@ module AWS; module EC2;
   class KeyPairs < Rudy::CLI::Base
     
     def create_keypairs_valid?
-      raise ArgumentError, "No name provided" unless @argv.name
+      raise Drydock::ArgError.new('name', @alias) unless @argv.name
       true
     end
     def create_keypairs
@@ -24,7 +24,7 @@ module AWS; module EC2;
     end
     
     def destroy_keypairs_valid?
-      raise ArgumentError, "No name provided" unless @argv.name
+      raise Drydock::ArgError.new('name', @alias) unless @argv.name
       true
     end
     def destroy_keypairs

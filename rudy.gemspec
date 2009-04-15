@@ -34,16 +34,20 @@
   lib/rudy/aws/ec2/keypair.rb
   lib/rudy/aws/ec2/snapshot.rb
   lib/rudy/aws/ec2/volume.rb
+  lib/rudy/aws/ec2/zone.rb
   lib/rudy/aws/s3.rb
   lib/rudy/aws/sdb.rb
   lib/rudy/aws/sdb/error.rb
   lib/rudy/cli.rb
   lib/rudy/cli/aws/ec2/addresses.rb
+  lib/rudy/cli/aws/ec2/candy.rb
   lib/rudy/cli/aws/ec2/groups.rb
   lib/rudy/cli/aws/ec2/images.rb
   lib/rudy/cli/aws/ec2/instances.rb
   lib/rudy/cli/aws/ec2/keypairs.rb
+  lib/rudy/cli/aws/ec2/snapshots.rb
   lib/rudy/cli/aws/ec2/volumes.rb
+  lib/rudy/cli/aws/ec2/zones.rb
   lib/rudy/cli/aws/sdb/domains.rb
   lib/rudy/cli/backups.rb
   lib/rudy/cli/config.rb
@@ -57,7 +61,6 @@
   lib/rudy/command/instances.rb
   lib/rudy/command/machines.rb
   lib/rudy/command/manager.rb
-  lib/rudy/command/volumes.rb
   lib/rudy/config.rb
   lib/rudy/config/objects.rb
   lib/rudy/global.rb
@@ -138,7 +141,7 @@ RELEASE CHECKLIST
 * Disable dev $LOAD_PATH 
 * Update manifest
   * Remove tryouts
-* Update executables
+* Update executables list in gemspec
 * Version number? 
   * rudy.rb
   * gemspec

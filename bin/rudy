@@ -8,8 +8,8 @@
 # 
 
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib') # Put our local lib in first place
-%w{drydock caesars rye}.each { |dir| $: << File.join(File.dirname(__FILE__), '..', '..', dir, 'lib') }
-require 'rubygems'
+#%w{drydock caesars rye}.each { |dir| $: << File.join(File.dirname(__FILE__), '..', '..', dir, 'lib') }
+#require 'rubygems'
 
 require 'drydock'
 require 'rudy'
@@ -272,12 +272,19 @@ module RudyCLI
   #command :restart => Rudy::CLI::Routines
   #
 
-
-
+  command :message do
+    puts Rudy::Utils.without_indent(%Q{
+      Welcome to Rudy #{Rudy::VERSION}
+      
+      See rudy-ec2. 
+    })
+  end
+  
+  
   # -------------------------------------------  UGLY STUFFS  --------
   # ------------------------------------------------------------------
-  debug :on
-  default :status
+  debug :off
+  default :message
   #capture :stderr       
   before do
     @start = Time.now

@@ -12,7 +12,7 @@ module AWS; module EC2;
     end
     
     def addresses_destroy_valid?
-      raise ArgumentError, "You have not supplied an IP addresses" unless @argv.ipaddress
+      raise Drydock::ArgError.new("IP address", @alias) unless @argv.ipaddress
       @radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey)
       raise "#{@argv.ipaddress} is not allocated to you" unless @radd.exists?(@argv.ipaddress)
       raise "#{@argv.ipaddress} is associated!" if @radd.associated?(@argv.ipaddress)
@@ -30,8 +30,8 @@ module AWS; module EC2;
     end
 
     def associate_addresses_valid?
-      raise ArgumentError, "You have not supplied an IP addresses" if !@argv.ipaddress && !@option.newaddress
-      raise OptionError, "You did not supply an instance ID" unless @option.instance
+      raise Drydock::ArgError.new('IP address', @alias) if !@argv.ipaddress && !@option.newaddress
+      raise Drydock::OptError.new('instance ID', @alias) if !@option.instance
       true
     end
     def associate_addresses

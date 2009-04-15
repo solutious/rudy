@@ -25,8 +25,9 @@ module Rudy::AWS
     
     
     def liner_note
-      info = @groups.empty? ? 'none' : @groups.keys.join(', ')
-      "%s (authorized accounts: %s)" % [@name.bright, info]
+      info = "(authorized accounts: #{@groups.keys.join(', ')})" 
+      info = '' if @groups.empty?
+      "%s %s" % [@name.bright, info]
     end
     
     
@@ -87,7 +88,6 @@ module Rudy::AWS
       include Rudy::AWS::ObjectBase
       include Rudy::AWS::EC2::Base
   
-      
       # Create a new EC2 security group
       # Returns list of created groups
       def create(name, desc=nil, addresses=[], ports=[], protocols=[], &each_group)
@@ -105,7 +105,6 @@ module Rudy::AWS
         ret = @ec2.delete_security_group(:group_name => name)
         (ret && ret['return'] == 'true')
       end
-      
       
       # Authorize a port/protocol for a specific IP address
       def authorize(name, addresses=[], ports=[], protocols=[], &each_group)

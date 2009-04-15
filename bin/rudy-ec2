@@ -97,7 +97,7 @@ module RudyEC2CLI
   usage "rudy-ec2 groups -A [-p ports] [-a addresses] [-r protocols] name"
   usage "rudy-ec2 groups -A -p 81,8000-9000 -a 127.0.0.1,127.0.0.2 name"
   usage "rudy-ec2 groups -A -g default -o 123456789012 name"
-  usage "rudy-ec2 groups -R -g default -o 123456789012 name"
+  usage "rudy-ec2 groups -R -g default name"
   usage "rudy-ec2 groups -D name"
   desc "Manage EC2 Security Groups"
   option :all, "Display all security groups"
@@ -255,6 +255,9 @@ end
 # will run after Rye shuts down the ssh-agent. 
 begin
   Drydock.run!(ARGV, STDIN) if Drydock.run? && !Drydock.has_run?
+rescue Drydock::ArgError, Drydock::OptError => ex
+  STDERR.puts ex.message
+  STDERR.puts ex.usage
 rescue => ex
   STDERR.puts "ERROR (#{ex.class.to_s}): #{ex.message}"
   STDERR.puts ex.backtrace if Drydock.debug?

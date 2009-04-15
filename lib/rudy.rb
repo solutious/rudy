@@ -64,6 +64,16 @@ require 'net/ssh/gateway'
 module Rudy
   extend self
   
+  module VERSION #:nodoc:
+    unless defined?(MAJOR)
+      MAJOR = 0.freeze
+      MINOR = 6.freeze
+      TINY  = 0.freeze
+    end
+    def self.to_s; [MAJOR, MINOR, TINY].join('.'); end
+    def self.to_f; self.to_s.to_f; end
+  end
+  
   unless defined?(Rudy::DOMAIN) # We can assume all constants are defined
     # SimpleDB accepts dashes in the domain name on creation and with the query syntax. 
     # However, with select syntax it says: "The specified query expression syntax is not valid"
@@ -102,16 +112,6 @@ module Rudy
     }.freeze
     
     @@sysinfo = SystemInfo.new.freeze
-  end
-  
-  module VERSION #:nodoc:
-    unless defined?(MAJOR)
-      MAJOR = 0.freeze
-      MINOR = 6.freeze
-      TINY  = 0.freeze
-    end
-    def self.to_s; [MAJOR, MINOR, TINY].join('.'); end
-    def self.to_f; self.to_s.to_f; end
   end
 
   @@quiet = false

@@ -11,13 +11,13 @@
 
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib') # Put our local lib in first place
 $:.unshift File.join(File.dirname(__FILE__), '..', 'vendor', 'highline-1.5.1', 'lib')
-%w{drydock caesars rye}.each { |dir| $:.unshift File.join(File.dirname(__FILE__), '..', '..', dir, 'lib') }
+%w{caesars rye}.each { |dir| $:.unshift File.join(File.dirname(__FILE__), '..', '..', dir, 'lib') }
 require 'rubygems'
 
-require 'drydock'
 require 'rudy'
 require 'rudy/cli'
 
+require 'drydock'
 
 module RudyEC2CLI
   extend Drydock
@@ -43,8 +43,6 @@ module RudyEC2CLI
     exit 0
   end
   
-  
-  
   # -----------------------------------  AMAZON EC2 COMMANDS  --------
   # ------------------------------------------------------------------
 
@@ -54,7 +52,7 @@ module RudyEC2CLI
   usage "rudy-ec2 addresses -N address"
   usage "rudy-ec2 addresses -D address"
   usage "rudy-ec2 addresses -C"
-  desc "Manage Amazon Elastic IP addresses"
+  desc "Amazon EC2 Amazon Elastic IP addresses"
   option :i, :instance, String, "Instance ID"
   option :n, :newaddress, "Create and assign a new elastic IP"
   action :A, :associate, "Associate an IP address to a running instance"
@@ -100,7 +98,7 @@ module RudyEC2CLI
   usage "rudy-ec2 groups -A -g default -o 123456789012 name"
   usage "rudy-ec2 groups -R -g default name"
   usage "rudy-ec2 groups -D name"
-  desc "Manage EC2 Security Groups"
+  desc "Amazon EC2 EC2 Security Groups"
   option :all, "Display all security groups"
   option :r, :protocols, Array, "List of protocols. One of: tcp (default), udp, icmp"
   option :p, :ports, Array, "List of port ranges (default: 22,80,443)"
@@ -123,7 +121,7 @@ module RudyEC2CLI
   usage "rudy-ec2 images -o 123456789012"
   usage "rudy-ec2 images -o amazon"
   usage "rudy-ec2 images -o self"
-  desc "Manage Machine Images (AMIs)"
+  desc "Amazon EC2 Machine Images (AMIs)"
   option :o, :owner, String, "Amazon Account Number or one of: amazon, self"
   #option :p, :private, "Private images only"
   #option :b, :bucket_name, String, "The name of the bucket that will store the image"
@@ -135,7 +133,7 @@ module RudyEC2CLI
   command_alias :images, :image
   command_alias :images, :im
   
-  desc "Manage Instances"
+  desc "Amazon EC2 Instances"
   usage "rudy-ec2 i"
   usage "rudy-ec2 instance"
   usage "rudy-ec2 instances"
@@ -159,11 +157,10 @@ module RudyEC2CLI
   argv :instid
   command :instances => Rudy::CLI::AWS::EC2::Instances
   command_alias :instances, :instance
-  command_alias :instances, :status
   command_alias :instances, :in
   command_alias :instances, :i
   
-  desc "Manage KeyPairs"
+  desc "Amazon EC2 KeyPairs"
   usage "rudy-ec2 keypairs"
   usage "rudy-ec2 keypairs -C name"
   usage "rudy-ec2 keypairs -D name"
@@ -174,7 +171,9 @@ module RudyEC2CLI
   command_alias :keypairs, :keypair
   command_alias :keypairs, :k
   
-  desc "Manage Snapshots"
+  command :money
+  
+  desc "Amazon EC2 Snapshots"
   usage "rudy-ec2 snapshots"
   usage "rudy-ec2 snapshots -C -v volume-id"
   usage "rudy-ec2 snapshots -D snapshot-id"
@@ -202,7 +201,10 @@ module RudyEC2CLI
   command :ssh => Rudy::CLI::AWS::EC2::Candy 
   command_alias :ssh, :connect
   
-  desc "Manage Volumes"
+  desc "Amazon EC2 status"
+  command :status => Rudy::CLI::AWS::EC2::Instances
+  
+  desc "Amazon EC2 Volumes"
   usage "rudy-ec2 volumes"
   usage "rudy-ec2 volumes -C -s size [-d device-path]"
   usage "rudy-ec2 volumes -A volume-id instance-id"
@@ -232,7 +234,7 @@ module RudyEC2CLI
   # ------------------------------------------------------------------
   
   default :instances
-  debug :off
+  debug :on
   
   before do |obj|
     obj.global.print_header = false  # Don't print Rudy Header

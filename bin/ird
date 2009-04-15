@@ -8,6 +8,9 @@
 #
 
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib') # Put our local lib in first place
+$:.unshift File.join(File.dirname(__FILE__), '..', 'vendor', 'highline-1.5.1', 'lib')
+%w{drydock caesars rye}.each { |dir| $:.unshift File.join(File.dirname(__FILE__), '..', '..', dir, 'lib') }
+require 'rubygems'
 
 # SEE: http://github.com/rubyspec/matzruby/blob/a34130eb7c4ecc164115a59aa1b76c643bd98202/lib/irb/xmp.rb
 # SEE: http://github.com/blackwinter/wirble/tree/master

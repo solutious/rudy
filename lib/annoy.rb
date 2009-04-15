@@ -8,7 +8,7 @@ require 'highline'
 # TODO: Use Matrix to give a more accurate annoyance factor
 # TODO: Add trivia questions
 #
-class Annoy #:nodoc:all
+class Annoy
   
   attr_accessor :factor
   attr_accessor :flavor
@@ -39,9 +39,16 @@ class Annoy #:nodoc:all
   }.freeze
   
   @@period = 60.freeze    # max seconds to wait
-  
   @@flavors = [:numeric, :string].freeze
+  @@skip = false          # skip questions
   
+  # Calling this method tells Annoy to not prompt for
+  # a response. All questions will return true. 
+  def Annoy.enable_skip; @@skip = true; end
+  # Tells annoy to prompt for a response. 
+  def Annoy.disable_skip; @@skip = false; end
+  # Returns true of Annoy is in skip mode
+  def Annoy.skip?; @@skip; end
   
   # * +factor+ annoyance factor, one of :low (default), :medium, :high, :insane
   # * +flavor+ annoyance flavor, one of :rand (default), :numeric, string
@@ -100,6 +107,7 @@ class Annoy #:nodoc:all
   # Returns true when the answer is correct, otherwise false.
   def Annoy.challenge?(msg="Please confirm.", factor=:medium, flavor=:rand, writer=STDOUT, period=nil)
     return true unless STDIN.tty? # Humans only!
+    return true if Annoy.skip?
     begin
       success = Timeout::timeout(period || @@period) do
         flavor = Annoy.get_flavor(flavor)
@@ -167,6 +175,7 @@ class Annoy #:nodoc:all
   # * +regexp+ The regular expression to match the answer. 
   def Annoy.pose_question(msg, regexp, writer=STDOUT, period=nil)
     return true unless STDIN.tty? # Only ask a question if there's a human
+    return true if Annoy.skip?
     begin
       success = Timeout::timeout(period || @@period) do
         regexp &&= Regexp.new regexp
@@ -185,6 +194,7 @@ class Annoy #:nodoc:all
  private 
   def Annoy.get_response(writer=STDOUT)
     return true unless STDIN.tty? # Humans only
+    return true if Annoy.skip?
     # TODO: Count the number of keystrokes to prevent copy/paste.
     # We can probably use Highline. 
     # We likely need to be more specific but this will do for now.

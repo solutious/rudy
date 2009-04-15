@@ -243,6 +243,10 @@ module Drydock
     # "default" command unless another default commands is supplied. You 
     # can also write your own Drydock::Command#show_commands to override
     # this default behaviour. 
+    #
+    # The output was worked on here:
+    # http://etherpad.com/SXjqQGRr8M
+    #
     def show_commands
       project = " for #{Drydock.project}" if Drydock.project?
       cmds = {}

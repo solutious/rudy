@@ -61,20 +61,21 @@ module AWS; module EC2;
         puts "#{address.ipaddress}"
         @option.address = address.ipaddress
       end
-            
-      first_instance = true
-      rinst.create(opts) do |inst| # Rudy::AWS::EC2::Instance objects
+         
+      execute_action do
+        first_instance = true
+        rinst.create(opts) do |inst| # Rudy::AWS::EC2::Instance objects
         
-        # Assign IP address to only the first instance
-        if first_instance && @option.address
-          puts "Associating #{@option.address} to #{inst.awsid}"
-          radd.associate(@option.address, inst.awsid)
-          first_instance = false
+          # Assign IP address to only the first instance
+          if first_instance && @option.address
+            puts "Associating #{@option.address} to #{inst.awsid}"
+            radd.associate(@option.address, inst.awsid)
+            first_instance = false
+          end
+        
+          puts @@global.verbose > 0 ? inst.inspect : inst.dump(@@global.format)
         end
-        
-        puts @@global.verbose > 0 ? inst.inspect : inst.dump(@@global.format)
       end
-
     end
 
     def instances_restart_valid?

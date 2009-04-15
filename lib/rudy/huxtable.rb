@@ -56,7 +56,6 @@ module Rudy
     def self.change_environment(v); @@global.environment = v; end  
     def self.change_position(v); @@global.position = v; end
     
-        
     def debug?; @@debug == true; end
     
     def check_keys
@@ -91,8 +90,6 @@ module Rudy
       return unless kp
       KeyPairs.path_to_name(kp)
     end
-    
-
     
     def user_keypairpath(name)
       raise "No user provided" unless name
@@ -139,10 +136,11 @@ module Rudy
       ami = @@config.machines.find_deferred([zon, env, rol], :ami)
       ami ||= @@config.machines.find_deferred(env, rol, :ami)
       ami ||= @@config.machines.find_deferred(rol, :ami)
-      raise Rudy::NoMachineImage, current_machine_group unless ami
+      # I commented this out while cleaning (start of 0.6 branch) . It
+      # seems like a bad idea. I don't want Huxtables throwing exceptions. 
+      #raise Rudy::NoMachineImage, current_machine_group unless ami
       ami
     end
-    
     
     def current_machine_size
       zon, env, rol = @@global.zone, @@global.environment, @@global.role
@@ -161,8 +159,6 @@ module Rudy
     def current_machine_name
       [@@global.zone, current_machine_group, @@global.position].join(Rudy::DELIM)
     end
-
-    
 
     # +name+ the name of the remote user to use for the remainder of the command
     # (or until switched again). If no name is provided, the user will be revert
@@ -184,73 +180,7 @@ module Rudy
       @sdb.query_with_attributes(Rudy::DOMAIN, query)
     end
     
-    def Huxtable.scp(task, host, user, keypairpath, paths, dest, opts)
-      
-      connect_opts = {}
-      connect_opts[:keys] = [keypairpath] if keypairpath
-      
-      Net::SCP.start(host, user, connect_opts) do |scp|
-        
-        paths.each do |path| 
-          prev_path = nil
-          scp.send("#{task}!", path, dest, opts) do |ch, name, sent, total|
-            msg = ((prev_path == name) ? "\r" : "\n") # new line for new file
-            msg << "#{name}: #{sent}/#{total}"  # otherwise, update the same line
-            print msg
-            STDOUT.flush        # update the screen every cycle
-            prev_path = name
-          end
-          puts unless prev_path == path
-        end
-        
-      end
-    end
-    
-    
   private 
     
   end
 end
-
-__END__
-      
-      
-      
-      # Initializes config, global, and logger. Calls +init+ if present.
-      #
-      # +opts+ is a hash which expects any of the following keys:
-      #
-      # * +:config+ a path or an instance of Rudy::Config
-      # * +:global+ a hash of global parameters
-      # * +:logger+ an IO object or nil (default: STDERR)
-      #
-      # NOTE: These values are shared across all classes which include
-      # Rudy::Huxtable. If anything has changed, the connections to AWS
-      # will automatically reconnect. 
-      # 
-      def initialize2(opts={})
-
-        # TODO: Syncronize this code. Only a single thread should set this at a time.
-
-        @@logger = opts[:logger] if opts[:logger].kind_of?(IO) || opts[:logger].kind_of?(StringIO)
-        @@config = opts[:config] if opts[:config].is_a?(Rudy::Config)
-
-        conf_path = opts[:global] ? opts[:global].config : nil
-
-        self.update_config conf_path
-        self.update_global opts[:global]
-
-        String.disable_color if @@global.nocolor
-        Rudy.enable_quiet if @@global.quiet
-
-        raise Rudy::NoConfig unless has_keys?
-
-        # Reconnect if anything has changed. 
-        # I have a hunch this huxtable arrangement is going to haunt me.
-        Rudy::AWS.reconnect if opts[:global] || opts[:config] || opts[:logger]
-
-        self.init if self.respond_to? :init
-      end
-      
-      # An instance of Rye::Box for the local machine (running Rudy)
-      @@rbox = Rye::Box.new('localhost')

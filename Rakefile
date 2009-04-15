@@ -152,6 +152,7 @@ Rake::RDocTask.new do |t|
 	t.rdoc_files.include('LICENSE.txt')
 	t.rdoc_files.include('README.rdoc')
 	t.rdoc_files.include('CHANGES.txt')
+	#t.rdoc_files.include('Rudyfile')  # why is the formatting f'd?
 	t.rdoc_files.include('bin/*')
 	t.rdoc_files.include('lib/**/*.rb')
 end

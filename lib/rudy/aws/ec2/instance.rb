@@ -415,7 +415,7 @@ module Rudy::AWS
         inst_ids = [inst_ids].flatten    # Make sure it's an Array
         inst_ids = inst_ids.collect do |inst|
           next if inst.nil? || inst.to_s.empty?
-          if !inst.is_a?(Rudy::AWS::EC2::Instance) && !Rudy.is_id?(:instance, inst)
+          if !inst.is_a?(Rudy::AWS::EC2::Instance) && !Rudy::Utils.is_id?(:instance, inst)
             raise %Q("#{inst}" is not an instance ID or object)
           end
           inst.is_a?(Rudy::AWS::EC2::Instance) ? inst.awsid : inst

@@ -28,10 +28,11 @@ module RudyEC2CLI
   
   global :A, :accesskey, String, "AWS Access Key"
   global :S, :secretkey, String, "AWS Secret Access Key"
-  global :F, :format, String, "Output format"
+  global :f, :format, String, "Output format"
   #global :R, :region, String, "Connect to a specific EC2 region (ie: #{Rudy::DEFAULT_REGION})"
   global :n, :nocolor, "Disable output colors"
-  global :f, :config, String, "Specify another configuration file to read (ie: #{Rudy::CONFIG_FILE})"
+  global :C, :config, String, "Specify another configuration file to read (ie: #{Rudy::CONFIG_FILE})"
+  global :Y, :yes, "Assume a correct answer to confirmation questions"
   global :z, :zone, String, "Connect to a specific EC2 zone (ie: #{Rudy::DEFAULT_ZONE})"
   global :q, :quiet, "Run with less output"
   global :v, :verbose, "Increase verbosity of output (i.e. -v or -vv or -vvv)" do
@@ -45,14 +46,14 @@ module RudyEC2CLI
   
   # -----------------------------------  AMAZON EC2 COMMANDS  --------
   # ------------------------------------------------------------------
-
+  
+  desc "Amazon EC2 Elastic IP addresses"
   usage "rudy-ec2 addresses"
   usage "rudy-ec2 addresses -A -i instance-id address"
   usage "rudy-ec2 addresses -A -i instance-id -n"
   usage "rudy-ec2 addresses -N address"
   usage "rudy-ec2 addresses -D address"
   usage "rudy-ec2 addresses -C"
-  desc "Amazon EC2 Amazon Elastic IP addresses"
   option :i, :instance, String, "Instance ID"
   option :n, :newaddress, "Create and assign a new elastic IP"
   action :A, :associate, "Associate an IP address to a running instance"
@@ -64,20 +65,20 @@ module RudyEC2CLI
   command_alias :addresses, :address
   command_alias :addresses, :a
   
+  desc "Amazon EC2 instance console output"
   usage "rudy-ec2 console [-g group] [instance ID]"
-  desc "Displays system console output for given instance(s)"
   option :g, :group, String, "A security group name"
   argv :awsid
   command :consoles => Rudy::CLI::AWS::EC2::Instances
   command_alias :consoles, :console
   command_alias :consoles, :c
   
+  desc "Copy files to or from machines."
   usage "rudy-ec2 copy [-p] [-r] [-u user] [-k path/2/privatekey] source target"
   usage "rudy-ec2 upload -k path/2/privatekey -u username local-source target"
   usage "rudy-ec2 download remote-source target"
   usage "NOTE: Use quotes when using a tilda or asterisk in remote paths ('~/')."
   usage "rudy-ec2 download '~/*' /tmp/"
-  desc "Copy files to or from machines."
   option :r, :recursive, "Recursively copy entire directories"
   option :p, :preserve, "Preserve atimes and ctimes."
   option :d, :download, "Download FROM the remote machine to the local machine"
@@ -87,10 +88,13 @@ module RudyEC2CLI
   option :i, :awsid, String, "An instance ID"
   option :u, :user, String, "Username"
   command :copy => Rudy::CLI::AWS::EC2::Candy 
+  command_alias :copy, :ul
+  command_alias :copy, :dl
   command_alias :copy, :scp
   command_alias :copy, :upload
   command_alias :copy, :download
   
+  desc "Amazon EC2 EC2 Security Groups"
   usage "rudy-ec2 groups"
   usage "rudy-ec2 groups -C [-p ports] [-a addresses] [-r protocols] name"
   usage "rudy-ec2 groups -A [-p ports] [-a addresses] [-r protocols] name"
@@ -98,7 +102,6 @@ module RudyEC2CLI
   usage "rudy-ec2 groups -A -g default -o 123456789012 name"
   usage "rudy-ec2 groups -R -g default name"
   usage "rudy-ec2 groups -D name"
-  desc "Amazon EC2 EC2 Security Groups"
   option :all, "Display all security groups"
   option :r, :protocols, Array, "List of protocols. One of: tcp (default), udp, icmp"
   option :p, :ports, Array, "List of port ranges (default: 22,80,443)"
@@ -115,13 +118,13 @@ module RudyEC2CLI
   command_alias :groups, :group
   command_alias :groups, :g
   
+  desc "Amazon EC2 Machine Images (AMIs)"
   usage "rudy-ec2 im"
   usage "rudy-ec2 image"
   usage "rudy-ec2 images image-id"
   usage "rudy-ec2 images -o 123456789012"
   usage "rudy-ec2 images -o amazon"
   usage "rudy-ec2 images -o self"
-  desc "Amazon EC2 Machine Images (AMIs)"
   option :o, :owner, String, "Amazon Account Number or one of: amazon, self"
   #option :p, :private, "Private images only"
   #option :b, :bucket_name, String, "The name of the bucket that will store the image"
@@ -171,8 +174,6 @@ module RudyEC2CLI
   command_alias :keypairs, :keypair
   command_alias :keypairs, :k
   
-  command :money
-  
   desc "Amazon EC2 Snapshots"
   usage "rudy-ec2 snapshots"
   usage "rudy-ec2 snapshots -C -v volume-id"
@@ -185,12 +186,12 @@ module RudyEC2CLI
   command_alias :snapshots, :snapshot
   command_alias :snapshots, :t
   
+  desc "Open an SSH connection"
   usage "rudy-ec2 ssh"
   usage "rudy-ec2 ssh -k path/2/key -u root"
   usage "rudy-ec2 ssh -k path/2/key -u root uname -a"
   usage "rudy-ec2 ssh -g group-name"
   usage "rudy-ec2 ssh -i instance-id"
-  desc "Open an SSH connection"
   option :print, "Only print the SSH command, don't connect"
   option :g, :group, String, "A security group name"
   option :i, :instid, String, "An instance ID"
@@ -201,8 +202,8 @@ module RudyEC2CLI
   command :ssh => Rudy::CLI::AWS::EC2::Candy 
   command_alias :ssh, :connect
   
-  desc "Amazon EC2 status"
-  command :status => Rudy::CLI::AWS::EC2::Instances
+  #desc "Amazon EC2 status"
+  #command :status => Rudy::CLI::AWS::EC2::Instances
   
   desc "Amazon EC2 Volumes"
   usage "rudy-ec2 volumes"
@@ -251,7 +252,7 @@ module RudyEC2CLI
   
 end
 
-puts Rudy.banner("THIS IS RUBY #{RUBY_VERSION}") if Drydock.debug?
+puts Rudy::Utils.banner("THIS IS RUBY #{RUBY_VERSION}") if Drydock.debug?
 
 # We call Drydock specifically otherwise it will run at_exit. Rye also
 # uses at_exit for shutting down the ssh-agent. Ruby executes at_exit

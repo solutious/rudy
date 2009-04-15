@@ -17,7 +17,7 @@ module AWS; module EC2;
         raise "Cannot supply group and instance ID" if @option.instid
         raise "Group #{@option.group} does not exist" unless rgroup.exists?(@option.group)
       end
-      if @option.instid && !Rudy.is_id?(:instance, @option.instid)
+      if @option.instid && !Rudy::Utils.is_id?(:instance, @option.instid)
         raise "#{@option.instid} is not an instance ID" 
       end
       true
@@ -30,7 +30,13 @@ module AWS; module EC2;
       
       # Options to be sent to Net::SSH
       ssh_opts = { :user => @option.user || Rudy.sysinfo.user, :debug => nil  }
-      ssh_opts[:keys] = @option.pkey if @option.pkey
+      
+      
+      if @option.pkey 
+        raise "Cannot find file #{@option.pkey}" unless File.exists?(@option.pkey)
+        raise InsecureKeyPermissions, @option.pkey unless File.stat(@option.pkey).mode == 33152
+        ssh_opts[:keys] = @option.pkey 
+      end
       
       # The user specified a command to run. We won't create an interactive
       # session so we need to prepare the command and its arguments
@@ -80,7 +86,7 @@ module AWS; module EC2;
       opts[:group] = @option.group if @option.group
       opts[:group] = :any if @option.all
 
-      opts[:id] = @argv.shift if Rudy.is_id?(:instance, @argv.first)
+      opts[:id] = @argv.shift if Rudy::Utils.is_id?(:instance, @argv.first)
       opts[:id] &&= [opts[:id]].flatten
       
       # * +:recursive: recursively transfer directories (default: false)
@@ -93,8 +99,8 @@ module AWS; module EC2;
       opts[:paths] = @argv
       opts[:dest] = opts[:paths].pop
     
-      opts[:task] = :download if @alias == 'download' || @option.download
-      opts[:task] = :upload if @alias == 'upload'
+      opts[:task] = :download if %w(dl download).member?(@alias) || @option.download
+      opts[:task] = :upload if %w(ul upload).member?(@alias)
       opts[:task] ||= :upload
     
       # Options to be sent to Net::SSH
@@ -135,12 +141,39 @@ module AWS; module EC2;
           :chunk_size => 16384
         }
 
-        Rudy::Huxtable.scp(opts[:task], inst.dns_public, @option.user, @option.pkey, opts[:paths], opts[:dest], scp_opts)
+        Candy.scp(opts[:task], inst.dns_public, @option.user, @option.pkey, opts[:paths], opts[:dest], scp_opts)
         puts 
         puts unless @@global.quiet
       end
 
     end
+    
+    
+  private
+    
+    def Candy.scp(task, host, user, keypairpath, paths, dest, opts)
+      
+      connect_opts = {}
+      connect_opts[:keys] = [keypairpath] if keypairpath
+      
+      Net::SCP.start(host, user, connect_opts) do |scp|
+        
+        paths.each do |path| 
+          prev_path = nil
+          scp.send("#{task}!", path, dest, opts) do |ch, name, sent, total|
+            msg = ((prev_path == name) ? "\r" : "\n") # new line for new file
+            msg << "#{name}: #{sent}/#{total}"  # otherwise, update the same line
+            print msg
+            STDOUT.flush        # update the screen every cycle
+            prev_path = name
+          end
+          puts unless prev_path == path
+        end
+        
+      end
+    end
+    
+    
     
   end
   

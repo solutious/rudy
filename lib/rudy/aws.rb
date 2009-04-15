@@ -58,7 +58,7 @@ module Rudy
     require 'rudy/aws/ec2'
     require 'rudy/aws/s3'
     
-    Rudy.require_glob(RUDY_LIB, 'rudy', 'aws', '{ec2,s3,sdb}', "*.rb")
+    Rudy::Utils.require_glob(RUDY_LIB, 'rudy', 'aws', '{ec2,s3,sdb}', "*.rb")
     
     class Error < ::EC2::Error; end
   end

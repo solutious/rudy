@@ -38,6 +38,7 @@
   lib/rudy/aws/s3.rb
   lib/rudy/aws/sdb.rb
   lib/rudy/aws/sdb/error.rb
+  lib/rudy/backup.rb
   lib/rudy/cli.rb
   lib/rudy/cli/aws/ec2/addresses.rb
   lib/rudy/cli/aws/ec2/candy.rb
@@ -63,12 +64,11 @@
   lib/rudy/command/manager.rb
   lib/rudy/config.rb
   lib/rudy/config/objects.rb
+  lib/rudy/disk.rb
   lib/rudy/global.rb
   lib/rudy/huxtable.rb
+  lib/rudy/machine.rb
   lib/rudy/metadata.rb
-  lib/rudy/metadata/backup.rb
-  lib/rudy/metadata/disk.rb
-  lib/rudy/metadata/machine.rb
   lib/rudy/routines.rb
   lib/rudy/routines/disk_handler.rb
   lib/rudy/routines/release.rb
@@ -108,10 +108,46 @@
   test/50_commands/50_instances_test.rb
   test/coverage.txt
   test/helper.rb
+  tryouts/console_tryout.rb
+  tryouts/disks_tryout.rb
+  tryouts/drydock_tryout.rb
+  tryouts/nested_methods.rb
+  tryouts/session_tryout.rb
+  tryouts/usage_tryout.rb
+  vendor/highline-1.5.1/CHANGELOG
+  vendor/highline-1.5.1/INSTALL
+  vendor/highline-1.5.1/LICENSE
+  vendor/highline-1.5.1/README
+  vendor/highline-1.5.1/Rakefile
+  vendor/highline-1.5.1/TODO
+  vendor/highline-1.5.1/examples/ansi_colors.rb
+  vendor/highline-1.5.1/examples/asking_for_arrays.rb
+  vendor/highline-1.5.1/examples/basic_usage.rb
+  vendor/highline-1.5.1/examples/color_scheme.rb
+  vendor/highline-1.5.1/examples/limit.rb
+  vendor/highline-1.5.1/examples/menus.rb
+  vendor/highline-1.5.1/examples/overwrite.rb
+  vendor/highline-1.5.1/examples/page_and_wrap.rb
+  vendor/highline-1.5.1/examples/password.rb
+  vendor/highline-1.5.1/examples/trapping_eof.rb
+  vendor/highline-1.5.1/examples/using_readline.rb
+  vendor/highline-1.5.1/lib/highline.rb
+  vendor/highline-1.5.1/lib/highline/color_scheme.rb
+  vendor/highline-1.5.1/lib/highline/compatibility.rb
+  vendor/highline-1.5.1/lib/highline/import.rb
+  vendor/highline-1.5.1/lib/highline/menu.rb
+  vendor/highline-1.5.1/lib/highline/question.rb
+  vendor/highline-1.5.1/lib/highline/system_extensions.rb
+  vendor/highline-1.5.1/setup.rb
+  vendor/highline-1.5.1/test/tc_color_scheme.rb
+  vendor/highline-1.5.1/test/tc_highline.rb
+  vendor/highline-1.5.1/test/tc_import.rb
+  vendor/highline-1.5.1/test/tc_menu.rb
+  vendor/highline-1.5.1/test/ts_all.rb
   )
   s.executables = %w[ird rudy rudy-ec2]
   
-  s.extra_rdoc_files = %w[README.rdoc LICENSE.txt CHANGES.txt]
+  s.extra_rdoc_files = %w[README.rdoc Rudyfile LICENSE.txt CHANGES.txt ]
   s.has_rdoc = true
   s.rdoc_options = ["--line-numbers", "--title", s.summary, "--main", "README.rdoc"]
   s.require_paths = %w[lib]
@@ -153,5 +189,5 @@ RELEASE CHECKLIST
   * all options tested
   * help has command usages
   * make sure option input checks occur before argv checks
-
+* Ruby 1.8, 1.9; JRuby 1.1, 1.2
 

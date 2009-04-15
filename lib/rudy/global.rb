@@ -14,6 +14,7 @@ module Rudy
     field :quiet
     field :verbose
     field :format
+    field :yes
     
     field :accesskey
     field :secretkey
@@ -31,11 +32,13 @@ module Rudy
     
     def initialize
       postprocess
+      # These attributes MUST have values. 
       @verbose ||= 0
       @nocolor ||= false
       @quiet ||= false
       @format ||= 'string' # as in, to_s
       @print_header ||= true
+      @yes = false if @yes.nil?
     end
       
     def apply_config(config)
@@ -84,6 +87,7 @@ module Rudy
       
       String.disable_color if @nocolor
       Rudy.enable_quiet if @quiet
+      Annoy.enable_skip if @yes
     end
     
     def apply_environment_variables

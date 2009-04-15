@@ -30,16 +30,20 @@ module Rudy
         end
         
         if @@global.environment =~ /^prod/ && Drydock.debug?
-          puts Rudy.banner("PRODUCTION ACCESS IS DISABLED IN DEBUG MODE")
+          puts Rudy::Utils.banner("PRODUCTION ACCESS IS DISABLED IN DEBUG MODE")
           exit 1
         end
         
       end
       
       def execute_action(emsg="Failed", &action)
-        ret = action.call
-        raise emsg unless ret
-        ret
+        begin
+          ret = action.call
+          raise emsg unless ret
+          ret
+        rescue Rudy::AWS::EC2::NoAMI => ex
+          raise Drydock::OptError.new('-a', @alias)
+        end
       end
       
       def execute_check(level=:medium)
@@ -60,9 +64,9 @@ module Rudy
         unless @@global.quiet
           if @@global.environment == "prod"
             msg = "YOU ARE PLAYING WITH PRODUCTION"
-            puts Rudy.banner(msg, :huge, :red), $/
+            puts Rudy::Utils.banner(msg, :huge, :red), $/
           end
-          puts Rudy.banner("THIS IS EC2"), $/ if Rudy.in_situ?
+          puts Rudy::Utils.banner("THIS IS EC2"), $/ if Rudy.in_situ?
         end
       end
       
@@ -95,6 +99,6 @@ module Rudy
 end
 
 
-Rudy.require_glob(RUDY_LIB, 'rudy', 'cli', '**', '*.rb')
+Rudy::Utils.require_glob(RUDY_LIB, 'rudy', 'cli', '**', '*.rb')
 
 

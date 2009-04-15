@@ -44,10 +44,10 @@ module Rudy
       end
       
       # Rudy then looks for the rest of the config in these locations
-      @paths += Dir.glob(File.join('/etc', 'rudy', '*.rb')) || []
       @paths += Dir.glob(File.join(cwd, 'Rudyfile')) || []
       @paths += Dir.glob(File.join(cwd, 'config', 'rudy', '*.rb')) || []
       @paths += Dir.glob(File.join(cwd, '.rudy', '*.rb')) || []
+      @paths += Dir.glob(File.join('/etc', 'rudy', '*.rb')) || []
       @paths &&= @paths.uniq
       
       refresh
@@ -74,21 +74,6 @@ module Rudy
               secretkey ""
               privatekey "~/path/2/pk-xxxx.pem"
               cert "~/path/2/cert-xxxx.pem"
-            end
-          end
-
-          # Machine Configuration
-          # Specify your private keys here. These can be defined globally
-          # or by environment and role like in machines.rb.
-          machines do
-            users do
-              #root :keypair => "path/2/root-private-key"
-            end
-            zone :"us-east-1b" do
-              ami 'ami-235fba4a'    # Amazon Getting Started AMI (US)
-            end
-            zone :"eu-west-1b" do
-              ami 'ami-e40f2790'    # Amazon Getting Started AMI (EU)
             end
           end
           

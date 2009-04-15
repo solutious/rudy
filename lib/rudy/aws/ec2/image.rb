@@ -154,7 +154,7 @@ module Rudy::AWS
         img_ids = [img_ids].flatten    # Make sure it's an Array
         img_ids = img_ids.collect do |img|
           next if img.nil? || img.to_s.empty?
-          if !img.is_a?(Rudy::AWS::EC2::Image) && !Rudy.is_id?(:image, img)
+          if !img.is_a?(Rudy::AWS::EC2::Image) && !Rudy::Utils.is_id?(:image, img)
             raise %Q("#{img}" is not an image ID or object)
           end
           img.is_a?(Rudy::AWS::EC2::Image) ? img.awsid : img

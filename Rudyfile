@@ -1,22 +1,24 @@
-# Rudyfile -- An example Rudy configuration. 
-#
+# = Rudy
+# 
+# This is an example Rudy configuration.
 #
 # Rudy automatically looks for configuration files in the 
-# following locations:
+# following locations (in this order):
 #
 #     ~/.rudy/config
 #     ./.rudy/config
 #
-#     /etc/rudy/*.rb
-#     ./.rudy/*.rb
 #     ./Rudyfile
 #     ./config/rudy/*.rb
+#     ./.rudy/*.rb
+#     /etc/rudy/*.rb
 #
 # When multuple files are found, the configuration is 
 # NOT OVERRIDDEN. It's ADDED / APPENDED. This means you can 
 # split configuration across many files as you please. 
 #
 # There are three sections: accounts, defaults, machines. 
+# 
 # By convention, accounts and defaults go in ~/.rudy/config or ./.rudy/config 
 # machines configuration goes in ./Rudyfile or ./config/rudy/machines.rb
 
@@ -25,20 +27,40 @@
 # The machines block describes the "physical" characteristics
 # of your environments. 
 machines do
-  env :rudydev do
+  
+  users do
+    # If you already have private keys for logging in to your EC2 instances
+    # EC2 instances you can specify them here and Rudy will use these instead.
+    #root :keypair => "path/2/root-private-key"
+  end
+  
+  zone :"us-east-1b" do
+    ami 'ami-235fba4a'    # Amazon Getting Started AMI (US)
+  end
+  zone :"eu-west-1b" do
+    ami 'ami-e40f2790'    # Amazon Getting Started AMI (EU)
+  end
+  
+  # We've defined an environment called "stage" with one role: "app". 
+  # The configuration inside the env block is available to all its 
+  # roles. The configuration inside the role blocks is available only
+  # to machines in that specific role. 
+  env :stage do
     role :app do
-              
+      
+      # We've given the stage-app machines two disks.
       disks do
         path "/rudy/example1" do
-          size 4
+          size 2
           device "/dev/sdr"
         end
         path "/rudy/example2" do
-          size 5 # Ignored when restoring from a snapshot
+          size 1 
           device "/dev/sdm"
         end
       end
       
     end
   end
+  
 end

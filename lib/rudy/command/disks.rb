@@ -164,7 +164,7 @@ module Rudy
       
       # If a disk name was supplied, the user knows what she's looking for.
       # If we don't find it, we can throw an error.
-      if Rudy.is_id?(:disk, disk)
+      if Rudy::Utils.is_id?(:disk, disk)
         disc_obj = get(disk)
       
       # Otherwise we assume it's a path

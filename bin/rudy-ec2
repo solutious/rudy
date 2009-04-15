@@ -68,7 +68,7 @@ module RudyEC2CLI
   
   usage "rudy-ec2 console [-g group] [instance ID]"
   desc "Displays system console output for given instance(s)"
-  option :g, :group, String, "A group name to authorize or revoke network rule. Must also supply -o!"
+  option :g, :group, String, "A security group name"
   argv :awsid
   command :consoles => Rudy::CLI::AWS::EC2::Instances
   command_alias :consoles, :console
@@ -102,11 +102,11 @@ module RudyEC2CLI
   usage "rudy-ec2 groups -D name"
   desc "Manage EC2 Security Groups"
   option :all, "Display all security groups"
-  option :r, :protocols, Array, "Comma-separated list of protocols. One of: tcp (default), udp, icmp"
-  option :p, :ports, Array, "List of comma-separated port ranges in the form FROM:TO (default: 22,80,443)"
-  option :a, :addresses, Array, "List of comma-separated IP addresses (default: your current external IP)"
-  option :g, :group, String, "A group name to authorize or revoke network rule. Must also supply -o!"
-  option :o, :owner, String, "A group owner ID (account number). Must also supply -g!"
+  option :r, :protocols, Array, "List of protocols. One of: tcp (default), udp, icmp"
+  option :p, :ports, Array, "List of port ranges (default: 22,80,443)"
+  option :a, :addresses, Array, "List of IP addresses (default: your current external IP)"
+  option :g, :group, String, "Other group to authorize or revoke. Use with -o!"
+  option :o, :owner, String, "Other group owner ID (account number). Use with -g!"
   option :d, :description, String, "A group description"
   action :C, :create, "Create a security group"
   action :D, :destroy, "Destroy a security group"

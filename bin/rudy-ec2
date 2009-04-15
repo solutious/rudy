@@ -10,7 +10,8 @@
 # 
 
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib') # Put our local lib in first place
-%w{drydock caesars rye}.each { |dir| $: << File.join(File.dirname(__FILE__), '..', '..', dir, 'lib') }
+$:.unshift File.join(File.dirname(__FILE__), '..', 'vendor', 'highline-1.5.1', 'lib')
+%w{drydock caesars rye}.each { |dir| $:.unshift File.join(File.dirname(__FILE__), '..', '..', dir, 'lib') }
 require 'rubygems'
 
 require 'drydock'
@@ -20,7 +21,7 @@ require 'rudy/cli'
 
 module RudyEC2CLI
   extend Drydock
-
+  
   
   # --------------------------------------  RUDY-EC2 GLOBALS  --------
   # ------------------------------------------------------------------
@@ -231,7 +232,7 @@ module RudyEC2CLI
   # ------------------------------------------------------------------
   
   default :instances
-  debug :on
+  debug :off
   
   before do |obj|
     obj.global.print_header = false  # Don't print Rudy Header
@@ -248,6 +249,7 @@ module RudyEC2CLI
   
 end
 
+puts Rudy.banner("THIS IS RUBY #{RUBY_VERSION}") if Drydock.debug?
 
 # We call Drydock specifically otherwise it will run at_exit. Rye also
 # uses at_exit for shutting down the ssh-agent. Ruby executes at_exit

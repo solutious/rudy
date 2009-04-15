@@ -116,7 +116,7 @@ class Annoy #:nodoc:all
         
         highline = HighLine.new 
         response = highline.ask(msg) { |q| 
-          q.echo = false           # Don't display response
+          q.echo = '*'             # Don't display response
           q.overwrite = true       # Erase the question afterwards
           q.whitespace = :strip    # Remove whitespace from the response
           q.answer_type = Integer  if flavor == :numeric

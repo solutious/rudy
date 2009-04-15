@@ -105,20 +105,3 @@ module Rudy::AWS
 end
 
 
-class Rudy::AWS::EC2::KeyPairs
-  
-  class InsecureKeyPairPermissions < RuntimeError; end
-  class NoPrivateKeyFile < RuntimeError; end
-  class ErrorCreatingKeyPair < RuntimeError; end
-  class KeyPairExists < RuntimeError; end
-  class KeyPairAlreadyDefined < RuntimeError
-    attr_reader :group
-    def initialize(group)
-      @group = group
-    end
-    def message
-      "A keypair is defined for #{group}. Check your Rudy config."
-    end
-  end
-  
-end

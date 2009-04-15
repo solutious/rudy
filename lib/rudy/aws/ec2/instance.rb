@@ -427,17 +427,3 @@ module Rudy::AWS
   end
 end
 
-class Rudy::AWS::EC2::Instances
-  
-  class MalformedResponse < RuntimeError; end
-  class NoRunningInstances < RuntimeError; end
-  class UnknownState < RuntimeError; end
-  class NoGroup < RuntimeError; end
-  class NoKeyPair < RuntimeError; end
-  class NoAMI < RuntimeError
-    def message
-      "You must specify a machine image (ami)"
-    end
-  end
-  
-end

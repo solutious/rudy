@@ -155,15 +155,3 @@ module Rudy::AWS
 end
 
 
-class Rudy::AWS::EC2::Addresses
-  
-  # TODO: Look for a generic insecure permissions exception (via OpenSSL?)
-  class InsecureKeyPairPermissions < RuntimeError; end
-  class ErrorCreatingAddress < RuntimeError; end
-  class UnknownAddress < RuntimeError; end
-  class NoInstanceID < RuntimeError; end
-  class NoAddress < RuntimeError; end
-  class AddressNotAssociated < RuntimeError; end
-  class AddressAssociated < RuntimeError; end
-  
-end

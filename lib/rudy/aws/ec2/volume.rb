@@ -225,12 +225,5 @@ end
 
 class Rudy::AWS::EC2::Volumes
   
-  class NoVolumeID < RuntimeError; end
-  class VolumeAlreadyAttached < RuntimeError; end
-  class VolumeNotAttached < RuntimeError; end
-  class VolumeNotAvailable < RuntimeError; end
-  class NoInstanceID < RuntimeError; end
-  class NoDevice < RuntimeError; end
-  class UnknownState < RuntimeError; end
-  
+
 end

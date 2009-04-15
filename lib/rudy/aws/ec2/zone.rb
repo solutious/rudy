@@ -75,8 +75,3 @@ module Rudy::AWS
 end
 
 
-class Rudy::AWS::EC2::Zone
-  
-#  class InsecureKeyPairPermissions < RuntimeError; end
- 
-end

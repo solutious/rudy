@@ -11,7 +11,7 @@
 
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib') # Put our local lib in first place
 $:.unshift File.join(File.dirname(__FILE__), '..', 'vendor', 'highline-1.5.1', 'lib')
-%w{caesars rye}.each { |dir| $:.unshift File.join(File.dirname(__FILE__), '..', '..', dir, 'lib') }
+%w{amazon-ec2 caesars rye}.each { |dir| $:.unshift File.join(File.dirname(__FILE__), '..', '..', dir, 'lib') }
 require 'rubygems'
 
 require 'rudy'
@@ -22,27 +22,6 @@ require 'drydock'
 module RudyEC2CLI
   extend Drydock
   
-  
-  # ------------------------------------------  RUDY GLOBALS  --------
-  # ------------------------------------------------------------------
-  
-  global :A, :accesskey, String, "AWS Access Key"
-  global :S, :secretkey, String, "AWS Secret Access Key"
-  #global :R, :region, String, "Connect to a specific EC2 region (ie: #{Rudy::DEFAULT_REGION})"
-  global :f, :format, String, "Output format"
-  global :n, :nocolor, "Disable output colors"
-  global :C, :config, String, "Specify another configuration file to read (ie: #{Rudy::CONFIG_FILE})"
-  global :Y, :yes, "Assume a correct answer to confirmation questions"
-  global :z, :zone, String, "Connect to a specific EC2 zone (ie: #{Rudy::DEFAULT_ZONE})"
-  global :q, :quiet, "Run with less output"
-  global :v, :verbose, "Increase verbosity of output (i.e. -v or -vv or -vvv)" do
-    @verbose ||= 0
-    @verbose += 1
-  end
-  global :V, :version, "Display version number" do
-    puts "Rudy version: #{Rudy::VERSION}"
-    exit 0
-  end
   
   # -----------------------------------  AMAZON EC2 COMMANDS  --------
   # ------------------------------------------------------------------
@@ -238,7 +217,8 @@ module RudyEC2CLI
   debug :on
   
   before do |obj|
-    obj.global.print_header = false  # Don't print Rudy Header
+#    obj.global.print_header = false  # Don't print Rudy Header
+
     @start = Time.now
   end
   

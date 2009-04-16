@@ -47,6 +47,7 @@ machines do
   # to machines in that specific role. 
   env :stage do
     role :app do
+      instances 1
       
       # We've given the stage-app machines two disks.
       disks do
@@ -63,4 +64,44 @@ machines do
     end
   end
   
+end
+
+# ----------------------------------------------------------- ROUTINES --------
+# The routines block describes the repeatable processes for each machine group.
+routines do
+  
+  env :stage do
+    role :app do
+      
+      startup do
+        disks do
+          create "/rudy/example1"
+          create "/rudy/example2"
+        end
+        
+        after :root => "pwd"
+        after :rudy => "pwd"
+      end
+      
+      restart do
+        before :root => "pwd"
+        after :root => "pwd"
+        after :rudy => "pwd"
+        
+        disks do
+          mount "/rudy/example1"
+          mount "/rudy/example2"
+        end
+      end
+      
+      shutdown do
+        before :root => "echo 'BEFORE' && pwd"
+        disks do
+          destroy "/rudy/example1"
+          destroy "/rudy/example2"
+        end
+      end
+      
+    end
+  end
 end

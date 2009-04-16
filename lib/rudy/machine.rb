@@ -21,7 +21,7 @@ module Rudy
     attr_reader :private_dns
     attr_reader :instance
     
-    def initialize
+    def init
       #@created = 
       @rtype = 'm'
       @region = @@global.region
@@ -32,7 +32,7 @@ module Rudy
     end
     
     def find_next_position
-      list = @@sdb.select(self.to_select(nil, [:position])) || []
+      list = @sdb.select(self.to_select(nil, [:position])) || []
       pos = list.size + 1
       pos.to_s.rjust(2, '0')
     end
@@ -46,60 +46,58 @@ module Rudy
       ["m", zon, env, rol, pos].join(Rudy::DELIM)
     end
     
-    def self.load(rname=nil)
-      Rudy::Machine.from_hash(@@sdb.get(Rudy::DOMAIN, rname)) # Returns nil if empty
-    end
+
     
     def update_dns
-      return false unless @awsid
-      @instance = @@ec2.instances.get(@awsid) 
-      if @instance.is_a?(Rudy::AWS::EC2::Instance)
-        @public_dns = @instance.dns_public
-        @private_dns = @instance.dns_private
-      end
+      #return false unless @awsid
+      #@instance = @@ec2.instances.get(@awsid) 
+      #if @instance.is_a?(Rudy::AWS::EC2::Instance)
+      #  @public_dns = @instance.dns_public
+      #  @private_dns = @instance.dns_private
+      #end
     end
     
     
     def start(opts={})
       raise "#{name} is already running" if running?
       
-      opts = { :ami => current_machine_image, 
-               :zone => @@global.zone.to_s,
-               :group => current_machine_group,
-               :user => current_user,
-               :size => current_machine_size,
-               :keypair => KeyPairs.path_to_name(user_keypairpath(:root)), # Must be a root key
-               :address => current_machine_address,
-               :machine_data => generate_machine_data.to_yaml }.merge(opts)
-      
-      raise "NoKeyPair" unless opts[:keypair]
-      
-      inst = @@ec2.instances.create(opts)
-      
-      self.awsid = inst.first.awsid
-      save
-      self
+      #opts = { :ami => current_machine_image, 
+      #         :zone => @@global.zone.to_s,
+      #         :group => current_machine_group,
+      #         :user => current_user,
+      #         :size => current_machine_size,
+      #         :keypair => KeyPairs.path_to_name(user_keypairpath(:root)), # Must be a root key
+      #         :address => current_machine_address,
+      #         :machine_data => generate_machine_data.to_yaml }.merge(opts)
+      #
+      #raise "NoKeyPair" unless opts[:keypair]
+      #
+      #inst = @@ec2.instances.create(opts)
+      #
+      #self.awsid = inst.first.awsid
+      #save
+      #self
     end
     
-    def running?
-      return false unless @awsid
-      @@ec2.instances.running?(@awsid)
-    end
-    
-    def pending?
-      return false unless @awsid
-      @@ec2.instances.pending?(@awsid)
-    end
-    
-    def terminated?
-      return false unless @awsid
-      @@ec2.instances.terminated?(@awsid)
-    end
-    
-    def shutting_down?
-      return false unless @awsid
-      @@ec2.instances.shutting_down?(@awsid)
-    end
+    #def running?
+    #  return false unless @awsid
+    #  @@ec2.instances.running?(@awsid)
+    #end
+    #
+    #def pending?
+    #  return false unless @awsid
+    #  @@ec2.instances.pending?(@awsid)
+    #end
+    #
+    #def terminated?
+    #  return false unless @awsid
+    #  @@ec2.instances.terminated?(@awsid)
+    #end
+    #
+    #def shutting_down?
+    #  return false unless @awsid
+    #  @@ec2.instances.shutting_down?(@awsid)
+    #end
     
     def destroy
       
@@ -128,4 +126,19 @@ module Rudy
     
     
   end
+  
+  
+  
+  class Machines
+    
+    def initialize()
+      
+    end
+    
+    def load(rname=nil)
+      Rudy::Machine.from_hash(@sdb.get(Rudy::DOMAIN, rname)) # Returns nil if empty
+    end
+    
+  end
+  
 end

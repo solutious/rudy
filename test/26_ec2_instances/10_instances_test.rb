@@ -5,8 +5,8 @@ module Rudy::Test
     context "#{name}_10 Instances" do
       
       setup do
-        @ec2inst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
-        @ec2add = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey)
+        @ec2inst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey, @@global.region)
+        @ec2add = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey, @@global.region)
         @us_ami = @@config.machines.find(:"us-east-1b", :ami)
         @eu_ami = @@config.machines.find(:"eu-west-1b", :ami)
       end

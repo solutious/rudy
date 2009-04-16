@@ -13,6 +13,14 @@ module Rudy
     module ObjectBase
       include Rudy::Huxtable
       
+      def initialize
+        @sdb = Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey, @@global.region)
+        @ec2inst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey, @@global.region)
+        init
+      end
+      
+      def init; raise "Must override init"; end
+      
       def valid?; raise "#{self.class} must override 'valid?'"; end
       
       def to_query(more=[], less=[])
@@ -30,19 +38,19 @@ module Rudy
       
       def save(replace=true)
         replace = true if replace.nil?
-        @sdb ||= Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey)
+        @sdb ||= Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey, @@global.region)
         @sdb.put(Rudy::DOMAIN, name, self.to_hash, replace) # Always returns nil
         true
       end
     
       def destroy
-        @sdb ||= Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey)
+        @sdb ||= Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey, @@global.region)
         @sdb.destroy(Rudy::DOMAIN, name)
         true
       end
     
       def refresh
-        @sdb ||= Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey)
+        @sdb ||= Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey, @@global.region)
         h = @sdb.get(Rudy::DOMAIN, name) || {}
         from_hash(h)
       end

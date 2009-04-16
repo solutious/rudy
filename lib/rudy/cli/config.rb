@@ -2,7 +2,7 @@
 
 module Rudy
   module CLI
-    class Config < Rudy::CLI::Base
+    class Config < Rudy::CLI::CommandBase
       
       # We force the CLI::Base#print_header to be quiet
       def print_header

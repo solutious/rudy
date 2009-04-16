@@ -266,9 +266,9 @@ module Drydock
     
       cmd_names_sorted = cmds.keys.sort{ |a,b| a.to_s <=> b.to_s }
       
-      puts "Available commands: "
       
       if @global.quiet
+        puts "Commands: "
         line = []
         cmd_names_sorted.each_with_index do |cmd,i|
           line << cmd
@@ -280,6 +280,12 @@ module Drydock
         return
       end
       
+      puts "%5s: %s" % ["Usage", "#{@executable} [global options] COMMAND [command options]"]
+      puts "%5s: %s" % ["Try", "#{@executable} -h"] 
+      puts "%5s  %s" % ["", "#{@executable} COMMAND -h"]
+      puts
+      
+      puts "Commands: "
       if @global.verbose > 0
         puts # empty line
         cmd_names_sorted.each do |cmd|
@@ -293,19 +299,13 @@ module Drydock
         end
 
       else
-        puts # empty line
         cmd_names_sorted.each do |cmd|
           aliases = cmds[cmd][:aliases] || []
           aliases.sort!{ |a,b| a.size <=> b.size }
-          aliases = aliases.empty? ? '' : "(#{aliases.join(', ')})"
-          puts "  %-12s %s" % [cmds[cmd][:pretty], aliases]
+          aliases = aliases.empty? ? '' : "(aliases: #{aliases.join(', ')})"
+          puts "  %-16s %s" % [cmds[cmd][:pretty], aliases]
         end
       end
-      puts
-      puts "%6s: %s" % ["Usage", "#{@executable} [global options] COMMAND [command options]"]
-      puts "%6s: %s" % ["Try", "#{@executable} -h"] 
-      puts "%6s  %s" % ["", "#{@executable} COMMAND -h"]
-      puts
     end
     
     # The name of the command

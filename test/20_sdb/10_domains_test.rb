@@ -9,7 +9,7 @@ module Rudy::Test
     context "#{name}_10 Domains" do
       
       setup do
-        @sdb = Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey)
+        @sdb = Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey, @@global.region)
         @domain_list = @sdb.list_domains || []
         @domain = @domain_list.first
       end

@@ -3,17 +3,17 @@
 module Rudy; module CLI; 
 module AWS; module EC2;
   
-  class Addresses < Rudy::CLI::Base
+  class Addresses < Rudy::CLI::CommandBase
     
     def addresses_create
-      radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey)
+      radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey, @@global.region)
       address = radd.create
       puts @@global.verbose > 0 ? address.inspect : address.dump(@@global.format)
     end
     
     def addresses_destroy_valid?
       raise Drydock::ArgError.new("IP address", @alias) unless @argv.ipaddress
-      @radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey)
+      @radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey, @@global.region)
       raise "#{@argv.ipaddress} is not allocated to you" unless @radd.exists?(@argv.ipaddress)
       raise "#{@argv.ipaddress} is associated!" if @radd.associated?(@argv.ipaddress)
       true
@@ -35,8 +35,8 @@ module AWS; module EC2;
       true
     end
     def associate_addresses
-      radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey)
-      rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
+      radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey, @@global.region)
+      rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey, @@global.region)
       
       raise "Instance #{@argv.instid} does not exist!" unless rinst.exists?(@option.instance)
       
@@ -71,8 +71,8 @@ module AWS; module EC2;
       true
     end
     def disassociate_addresses
-      radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey)
-      rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
+      radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey, @@global.region)
+      rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey, @@global.region)
       raise "#{@argv.ipaddress} is not allocated to you" unless radd.exists?(@argv.ipaddress)
       raise "#{@argv.ipaddress} is not associated!" unless radd.associated?(@argv.ipaddress)
       
@@ -87,7 +87,7 @@ module AWS; module EC2;
     end
     
     def addresses
-      radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey)
+      radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey, @@global.region)
       addresses = radd.list || []
       
       addresses.each do |address|

@@ -4,7 +4,7 @@ module Rudy::Test
     
     context "#{name}_40 Volumes" do
       setup do
-        @ec2vol = Rudy::AWS::EC2::Volumes.new(@@global.accesskey, @@global.secretkey)
+        @ec2vol = Rudy::AWS::EC2::Volumes.new(@@global.accesskey, @@global.secretkey, @@global.region)
       end
       
       should "(00) not be existing volumes" do

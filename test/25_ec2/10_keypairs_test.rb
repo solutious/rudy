@@ -6,7 +6,7 @@ module Rudy::Test
     context "#{name}_10 KeyPairs" do
       setup do
         @@test_name ||= 'test-' << Rudy::Utils.strand
-        @ec2key = Rudy::AWS::EC2::KeyPairs.new(@@global.accesskey, @@global.secretkey)
+        @ec2key = Rudy::AWS::EC2::KeyPairs.new(@@global.accesskey, @@global.secretkey, @@global.region)
         #@ami = @@config.machines.find(@@zone.to_sym, :ami)
       end
       

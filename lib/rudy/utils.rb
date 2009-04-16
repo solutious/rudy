@@ -15,9 +15,14 @@ module Rudy
     # Return the external IP address (the one seen by the internet)
     def external_ip_address
       ip = nil
-      %w{solutious.com/ip myip.dk/ whatismyip.com }.each do |sponge| # w/ backup
-        ip = (open("http://#{sponge}") { |f| /([0-9]{1,3}\.){3}[0-9]{1,3}/.match(f.read) }).to_s rescue nil
-        break if !ip.nil?
+      begin
+        %w{solutious.com/ip/ myip.dk/ whatismyip.com }.each do |sponge| # w/ backup
+          ipstr = Net::HTTP.get(URI.parse("http://#{sponge}")) || ''
+          ip = /([0-9]{1,3}\.){3}[0-9]{1,3}/.match(ipstr).to_s
+          break if ip && !ip.empty?
+        end
+      rescue SocketError, Errno::ETIMEDOUT
+        STDERR.puts "Connection Error. Check your internets!"
       end
       ip += "/32" if ip
       ip

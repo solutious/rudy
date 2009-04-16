@@ -9,7 +9,7 @@
 
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib') # Put our local lib in first place
 $:.unshift File.join(File.dirname(__FILE__), '..', 'vendor', 'highline-1.5.1', 'lib')
-%w{drydock caesars rye}.each { |dir| $:.unshift File.join(File.dirname(__FILE__), '..', '..', dir, 'lib') }
+%w{caesars rye}.each { |dir| $:.unshift File.join(File.dirname(__FILE__), '..', '..', dir, 'lib') }
 require 'rubygems'
 
 require 'drydock'
@@ -20,7 +20,7 @@ require 'rudy/cli'
 # Is there a bug in Ruby 1.9 open-uri?
 #$ /usr/local/bin/ruby bin/rudy myaddress
 #/usr/local/lib/ruby/1.9.1/open-uri.rb:260:in `require': Insecure operation - require (SecurityError)
-#$SAFE = 2
+$SAFE = 2
 #+++
 #
 #
@@ -28,34 +28,17 @@ require 'rudy/cli'
 #
 #
 #
-module RudyCLI
-  extend Drydock
+class RudyCLI < Rudy::CLI::Base
   
   # ------------------------------------------  RUDY GLOBALS  --------
   # ------------------------------------------------------------------
   
-  global :A, :accesskey, String, "AWS Access Key"
-  global :S, :secretkey, String, "AWS Secret Access Key"
-  #global :R, :region, String, "Connect to a specific EC2 region (ie: #{Rudy::DEFAULT_REGION})"
-  global :f, :format, String, "Output format"
-  global :n, :nocolor, "Disable output colors"
-  global :C, :config, String, "Specify another configuration file to read (ie: #{Rudy::CONFIG_FILE})"
-  global :Y, :yes, "Assume a correct answer to confirmation questions"
-  global :z, :zone, String, "Connect to a specific EC2 zone (ie: #{Rudy::DEFAULT_ZONE})"
   global :e, :environment, String, "Connect to the specified environment (ie: #{Rudy::DEFAULT_ENVIRONMENT})"
   global :r, :role, String, "Connect to a machine with the specified role (ie: #{Rudy::DEFAULT_ROLE})"
   global :p, :position, String, "Position in the machine in its group (ie: #{Rudy::DEFAULT_POSITION})"
   global :u, :user, String, "Provide a username (ie: #{Rudy::DEFAULT_USER})"
-  global :q, :quiet, "Run with less output"
-  global :v, :verbose, "Increase verbosity of output (i.e. -v or -vv or -vvv)" do
-    @verbose ||= 0
-    @verbose += 1
-  end
-  global :V, :version, "Display version number" do
-    puts "Rudy version: #{Rudy::VERSION}"
-    exit 0
-  end
-
+  
+  
 
   # ---------------------------------  RUDY MACHINE COMMANDS  --------
   # ------------------------------------------------------------------
@@ -165,11 +148,10 @@ module RudyCLI
     end
   
     begin
-      rdom = Rudy::Domains.new(:global => obj.global)
-  
-      unless rdom.exists?
-        puts "Creating SimpleDB domain #{rdom.name}"
-        rdom.create
+
+      unless Rudy::Huxtable.domain_exists?
+        puts "Creating SimpleDB domain #{Rudy::Huxtable.domain}"
+        Rudy::Huxtable.create_domain
         puts "Initialized"
       else
         puts "Already Initialized"
@@ -223,8 +205,12 @@ module RudyCLI
   #desc "Display Rudy metadata."
   #command :metadata => Rudy::CLI::Manager
   #command_alias :metadata, :md
-
-
+  
+  desc "Startup machines."
+  usage "rudy [global options] startup"
+  command :startup => Rudy::CLI::Routine::Startup
+  command_alias :startup, :s
+  
   # --------------------------  RUDY RELEASE/DEPLOY COMMANDS  --------
   # ------------------------------------------------------------------
 
@@ -266,19 +252,10 @@ module RudyCLI
   # -------------------------------------------  UGLY STUFFS  --------
   # ------------------------------------------------------------------
   debug :on
-  #default :message
-  #capture :stderr       
-  before do
-    @start = Time.now
-  end
-  after do |obj|
-    unless obj.global.quiet
-      @elapsed = Time.now - @start
-      puts $/, "Elapsed: %.2f seconds" % @elapsed.to_f if @elapsed > 0.1
-    end
-  end
-end
+  default :startup
+  
 
+end
 
 # We call Drydock specifically otherwise it will run at_exit. Rye also
 # uses at_exit for shutting down the ssh-agent. Ruby executes at_exit

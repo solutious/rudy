@@ -3,14 +3,14 @@
 module Rudy; module CLI; 
 module AWS; module EC2;
   
-  class Instances < Rudy::CLI::Base
+  class Instances < Rudy::CLI::CommandBase
     
     def instances_create_valid?
       
       raise "Cannot supply an instance ID" if @option.instid
       
       if @option.group
-        rgroup = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
+        rgroup = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey, @@global.region)
         raise "Group #{@option.group} does not exist" unless rgroup.exists?(@option.group)
       end
       
@@ -25,8 +25,8 @@ module AWS; module EC2;
         :zone => @@global.zone
       }
       
-      radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey)
-      rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
+      radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey, @@global.region)
+      rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey, @@global.region)
       
       if @option.address
         raise "Cannot specify both -a and -n" if @option.newaddress
@@ -83,7 +83,7 @@ module AWS; module EC2;
       raise "You must provide a group or instance ID" unless @option.group || @argv.instid
       
       if @option.group
-        rgroup = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
+        rgroup = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey, @@global.region)
         raise "Group #{@option.group} does not exist" unless rgroup.exists?(@option.group)
       end
       
@@ -91,7 +91,7 @@ module AWS; module EC2;
         raise "Cannot allocate public IP for private instance" if @option.address || @option.newadress
       end
       
-      @rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
+      @rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey, @@global.region)
       raise "No instances" unless @rinst.any?
       true
     end
@@ -106,7 +106,7 @@ module AWS; module EC2;
     end
     
     def consoles_valid?
-      @rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
+      @rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey, @@global.region)
       raise "No instances" unless @rinst.any?
       true
     end
@@ -141,7 +141,7 @@ module AWS; module EC2;
       opts[:id] = @argv.instid if @argv.instid
       opts[:id] &&= [opts[:id]].flatten
     
-      rudy = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
+      rudy = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey, @@global.region)
       lt = rudy.list_group(opts[:group], opts[:state], opts[:id]) do |inst|
         puts @@global.verbose > 0 ? inst.inspect : inst.dump(@@global.format)
       end

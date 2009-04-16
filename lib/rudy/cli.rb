@@ -12,7 +12,7 @@ module Rudy
       # Should print messages as they come
     end
     
-    class Base < Drydock::Command
+    class CommandBase < Drydock::Command
       include Rudy::Huxtable
       
       attr_reader :config
@@ -80,10 +80,10 @@ module Rudy
       title = "RUDY v#{Rudy::VERSION}" unless global.quiet
       now_utc = Time.now.utc.strftime("%Y-%m-%d %H:%M:%S")
       criteria = []
-      [:zone, :environment, :role, :position].each do |n|
-        val = global.send(n)
+      [:region, :zone, :environment, :role, :position].each do |n|
+        key, val = n.to_s.slice(0,1).att, global.send(n) 
         next unless val
-        criteria << "#{n.to_s.slice(0,1).att :normal}:#{val.to_s.bright}"
+        criteria << "#{key.att}:#{val.to_s.bright}"
       end
       if config.accounts && config.accounts.aws
         header.puts '%s -- %s -- %s UTC' % [title, config.accounts.aws.name, now_utc] unless global.quiet
@@ -94,10 +94,46 @@ module Rudy
       header.read
     end
 
-
+    # A base for all Drydock executables (bin/rudy etc...). 
+    class Base
+      extend Drydock
+      
+      #capture :stderr       
+      before do
+        @start = Time.now
+      end
+      after do |obj|
+        unless obj.global.quiet
+          @elapsed = Time.now - @start
+          puts $/, "Elapsed: %.2f seconds" % @elapsed.to_f if @elapsed > 0.1
+        end
+      end
+      
+      # These globals are used by all bin/ executables
+      global :A, :accesskey, String, "AWS Access Key"
+      global :S, :secretkey, String, "AWS Secret Access Key"
+      global :R, :region, String, "Amazon service region (ie: #{Rudy::DEFAULT_REGION})"
+      global :z, :zone, String, "Amazon Availability zone (ie: #{Rudy::DEFAULT_ZONE})"
+      global :f, :format, String, "Output format"
+      global :n, :nocolor, "Disable output colors"
+      global :C, :config, String, "Specify another configuration file to read (ie: #{Rudy::CONFIG_FILE})"
+      global :Y, :yes, "Assume a correct answer to confirmation questions"
+      global :q, :quiet, "Run with less output"
+      global :v, :verbose, "Increase verbosity of output (i.e. -v or -vv or -vvv)" do
+        @verbose ||= 0
+        @verbose += 1
+      end
+      global :V, :version, "Display version number" do
+        puts "Rudy version: #{Rudy::VERSION}"
+        exit 0
+      end
+      
+    end
+    
+    
   end
-end
 
+end
 
 Rudy::Utils.require_glob(RUDY_LIB, 'rudy', 'cli', '**', '*.rb')
 

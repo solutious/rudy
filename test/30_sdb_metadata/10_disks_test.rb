@@ -5,7 +5,7 @@ module Rudy::Test
     context "#{name}_10 Disks" do
       
       setup do
-        @sdb = Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey)
+        @sdb = Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey, @@global.region)
         #@ami = @@config.machines.find(@@zone.to_sym, :ami)
       end
       

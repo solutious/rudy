@@ -8,6 +8,12 @@ module Rudy
   module AWS
     extend self
     
+    unless defined?(Rudy::AWS::VALID_REGIONS)
+      VALID_REGIONS = ['eu-west-1', 'us-east-1'].freeze
+    end
+    
+    def valid_region?(r); VALID_REGIONS.member?(r.to_s || ''); end
+    
     # Modifies +str+ by removing <tt>[\0\n\r\032\\\\]</tt> and escaping <tt>[\'\"]</tt>
     def escape(str)
       str.to_s.tr("[\0\n\r\032\\\\]", '').gsub(/([\'\"])/, '\\1\\1')
@@ -47,6 +53,8 @@ module Rudy
           STDERR.puts "Timeout (#{timeout}): #{ex.message}!"
         rescue SocketError => ex
           STDERR.puts "Socket Error. Check your Internets!"
+          STDERR.puts ex.message
+          STDERR.puts ex.backtrace
         ensure
           response ||= default
         end

@@ -49,7 +49,21 @@ module Rudy
     def self.update_logger(logger)
       @@logger = logger
     end
-      
+    
+    def self.create_domain
+      @sdb = Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey, @@global.region)
+      @sdb.create_domain Rudy::DOMAIN
+    end
+    
+    def self.domain_exists?
+      @sdb = Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey, @@global.region)
+      (@sdb.list_domains || []).member? Rudy::DOMAIN
+    end
+    
+    def self.domain
+      Rudy::DOMAIN
+    end
+    
     def self.change_zone(v); @@global.zone = v; end
     def self.change_role(v); @@global.role = v; end
     def self.change_region(v); @@global.region = v; end

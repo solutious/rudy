@@ -6,8 +6,8 @@ module Rudy::Test
        
    context "#{name}_50 Snapshots" do
      setup do
-       @ec2vol = Rudy::AWS::EC2::Volumes.new(@@global.accesskey, @@global.secretkey)
-       @ec2snap = Rudy::AWS::EC2::Snapshots.new(@@global.accesskey, @@global.secretkey)
+       @ec2vol = Rudy::AWS::EC2::Volumes.new(@@global.accesskey, @@global.secretkey, @@global.region)
+       @ec2snap = Rudy::AWS::EC2::Snapshots.new(@@global.accesskey, @@global.secretkey, @@global.region)
      end
      
      

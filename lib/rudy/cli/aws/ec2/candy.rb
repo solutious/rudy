@@ -2,7 +2,7 @@
 module Rudy; module CLI; 
 module AWS; module EC2;
   
-  class Candy < Rudy::CLI::Base
+  class Candy < Rudy::CLI::CommandBase
     
     def status_valid?
       avail = Rudy::Utils.service_available?('status.aws.amazon.com', 80, 5)
@@ -37,7 +37,7 @@ module AWS; module EC2;
         raise "Insecure permissions for #{@option.pkey}" unless (File.stat(@option.pkey).mode & 600) == 0
       end
       if @option.group
-        rgroup = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
+        rgroup = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey, @@global.region)
         raise "Cannot supply group and instance ID" if @option.instid
         raise "Group #{@option.group} does not exist" unless rgroup.exists?(@option.group)
       end
@@ -74,7 +74,7 @@ module AWS; module EC2;
       end
       
       checked = false
-      rudy = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
+      rudy = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey, @@global.region)
       lt = rudy.list_group(opts[:group], :running, opts[:id]) do |inst|
         
         # Print header
@@ -137,7 +137,7 @@ module AWS; module EC2;
       end
 
       checked = false
-      rudy = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey)
+      rudy = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey, @@global.region)
       lt = rudy.list_group(opts[:group], :running, opts[:id]) do |inst|
         
         if @option.print

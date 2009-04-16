@@ -14,8 +14,15 @@ module Rudy
       
       require 'rudy/aws/sdb/error'
       
-      def initialize(access_key=nil, secret_key=nil, url=nil, debug=nil)
+      def initialize(access_key=nil, secret_key=nil, region=nil, debug=nil)
+       
         url ||= 'http://sdb.amazonaws.com'
+        # There is a bug with passing :server to EC2::Base.new so 
+        # we'll use the environment variable for now. 
+        #if region && Rudy::AWS.valid_region?(region)
+        #  "#{region}.sdb.amazonaws.com"
+        #end
+        
         @access_key_id = access_key || ENV['AWS_ACCESS_KEY']
         @secret_access_key = secret_key || ENV['AWS_SECRET_KEY']
         @base_url = url
@@ -51,6 +58,18 @@ module Rudy
       end
       
       
+      # Takes a zipped Array or Hash of criteria.
+      # Returns a string suitable for a SimpleDB Select
+      def self.generate_select(*args)
+        fields, domain, args = *args
+        q = args.is_a?(Hash) ? args : Hash[*args.flatten]
+        query = []
+        q.each do |n,v| 
+          query << "#{Rudy::AWS.escape n}='#{Rudy::AWS.escape v}'"
+        end
+        "select * from #{domain} where " << query.join(' and ')
+      end
+
       
       # Takes a zipped Array or Hash of criteria.
       # Returns a string suitable for a SimpleDB Query
@@ -63,19 +82,38 @@ module Rudy
         query.join(" intersection ")
       end
 
-      # Takes a zipped Array or Hash of criteria.
-      # Returns a string suitable for a SimpleDB Select
-      def self.generate_select(*args)
-        fields, domain, args = *args
-        q = args.is_a?(Hash) ? args : Hash[*args.flatten]
-        query = []
-        q.each do |n,v| 
-          query << "#{Rudy::AWS.escape n}='#{Rudy::AWS.escape v}'"
+
+      def select(select, token = nil)
+        params = {
+          'Action' => 'Select',
+          'SelectExpression' => select,
+        }
+        params['NextToken'] =
+          token unless token.nil? || token.empty?
+
+        doc = call(:get, params)
+        results = []
+        REXML::XPath.each(doc, "//Item") do |item|
+          name = REXML::XPath.first(item, './Name/text()').to_s
+
+          attributes = {'Name' => name}
+          REXML::XPath.each(item, "./Attribute") do |attr|
+            key = REXML::XPath.first(attr, './Name/text()').to_s
+            value = REXML::XPath.first(attr, './Value/text()').to_s
+            ( attributes[key] ||= [] ) << value
+          end
+          results << attributes
         end
-        "select * from #{domain} where " << query.join(' and ')
+        #return results, REXML::XPath.first(doc, '//NextToken/text()').to_s
+        
+        hash_results = {}
+        results.each do |item|
+          hash_results[item.delete('Name')] = item
+        end
+        
+        hash_results.empty? ? nil : hash_results
       end
       
-
       # <QueryResult><ItemName>in-c2ffrw</ItemName><ItemName>in-72yagt</ItemName><ItemName>in-52j8gj</ItemName>
       def query(domain, query, max = nil, token = nil)
         params = {
@@ -194,36 +232,6 @@ module Rudy
       alias :destroy :delete_attributes
       
 
-      def select(select, token = nil)
-        params = {
-          'Action' => 'Select',
-          'SelectExpression' => select,
-        }
-        params['NextToken'] =
-          token unless token.nil? || token.empty?
-
-        doc = call(:get, params)
-        results = []
-        REXML::XPath.each(doc, "//Item") do |item|
-          name = REXML::XPath.first(item, './Name/text()').to_s
-
-          attributes = {'Name' => name}
-          REXML::XPath.each(item, "./Attribute") do |attr|
-            key = REXML::XPath.first(attr, './Name/text()').to_s
-            value = REXML::XPath.first(attr, './Value/text()').to_s
-            ( attributes[key] ||= [] ) << value
-          end
-          results << attributes
-        end
-        #return results, REXML::XPath.first(doc, '//NextToken/text()').to_s
-        
-        hash_results = {}
-        results.each do |item|
-          hash_results[item.delete('Name')] = item
-        end
-        
-        hash_results.empty? ? nil : hash_results
-      end
 
     protected
 

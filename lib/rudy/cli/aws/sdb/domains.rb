@@ -3,13 +3,12 @@
 module Rudy; module CLI; 
 module AWS; module SDB;
   
-  class Domains < Rudy::CLI::Base
+  class Domains < Rudy::CLI::CommandBase
     
     
     def domains
-      puts "Domains".bright
-      
-      sdb = Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey)
+
+      sdb = Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey, @@global.region)
       
       puts sdb.list_domains
 

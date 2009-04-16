@@ -12,8 +12,10 @@ require 'tryouts'
 include Tryouts
 
 #
-mach7 = Rudy::Machine.load('m-us-east-1b-stage-app-01')
-puts mach7.running?
+#mach7 = Rudy::Machine.load('m-us-east-1b-stage-app-01')
+mach7 = Rudy::Machine.new
+
+#puts mach7.running?
 #mach7.position = "07"
 ##y mach1.start
 ##mach1.save
@@ -23,9 +25,9 @@ puts mach7.running?
 
 
 
-disk1 = Rudy::Disk.new('/mnt/ride', 1, '/dev/sdh')
-p disk1.valid?
-p disk1.name
+#disk1 = Rudy::Disk.new('/mnt/ride', 1, '/dev/sdh')
+#p disk1.valid?
+#p disk1.name
 #disk1.save
 #disk2 = Rudy::Disks.get("disk-poop-stage-app-01-")
 #

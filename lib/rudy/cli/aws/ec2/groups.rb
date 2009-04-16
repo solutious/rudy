@@ -2,12 +2,12 @@
 module Rudy; module CLI; 
 module AWS; module EC2;
   
-  class Groups < Rudy::CLI::Base
+  class Groups < Rudy::CLI::CommandBase
     
 
     
     def create_groups_valid?
-      @rgroups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
+      @rgroups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey, @@global.region)
       raise Drydock::ArgError.new('group name', @alias) unless @argv.name
       raise "Group #{@argv.name} alread exists" if @rgroups.exists?(@argv.name)
       true
@@ -27,7 +27,7 @@ module AWS; module EC2;
     
     
     def destroy_groups_valid?
-      @rgroups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
+      @rgroups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey, @@global.region)
       raise Drydock::ArgError.new('group name', @alias) unless @argv.name
       raise "Group #{@argv.name} does not exist" unless @rgroups.exists?(@argv.name)
       true
@@ -50,7 +50,7 @@ module AWS; module EC2;
     def groups
       opts = {}
       name = @option.all ? nil : @argv.name
-      rgroups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
+      rgroups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey, @@global.region)
       rgroups.list(name).each do |group|
         puts @@global.verbose > 0 ? group.inspect : group.dump(@@global.format)
       end
@@ -72,7 +72,7 @@ module AWS; module EC2;
       end
       
       raise Drydock::ArgError.new('group name', @alias) unless @argv.name
-      @groups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
+      @groups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey, @@global.region)
     end
     
     def modify_group(action)
@@ -86,7 +86,7 @@ module AWS; module EC2;
         print "on #{opts[:protocols].join(', ').bright} "
          puts "ports: #{opts[:ports].map { |p| "#{p.join(' to ').bright}" }.join(', ')}"
       end
-      rgroups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
+      rgroups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey, @@global.region)
       execute_check(:medium)
       execute_action { 
         if (@option.group || @option.owner)

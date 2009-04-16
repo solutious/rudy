@@ -14,7 +14,7 @@ module Rudy::Test
     
     context "#{name}_20 Groups" do
       setup do
-        @ec2group = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey)
+        @ec2group = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey, @@global.region)
         @accountnum = @@config.accounts.aws.accountnum
       end
       

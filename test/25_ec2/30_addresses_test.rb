@@ -5,7 +5,7 @@ module Rudy::Test
     
     context "#{name}_30 Addresses" do
       setup do
-        @ec2add = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey)
+        @ec2add = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey, @@global.region)
       end
       
       should "(00) not be existing addresses" do

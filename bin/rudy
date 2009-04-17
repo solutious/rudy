@@ -1,5 +1,6 @@
 #!/usr/bin/ruby
 
+
 # = Rudy
 # 
 # === Not your granparent's deployment tool
@@ -9,21 +10,14 @@
 
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib') # Put our local lib in first place
 $:.unshift File.join(File.dirname(__FILE__), '..', 'vendor', 'highline-1.5.1', 'lib')
-%w{caesars rye}.each { |dir| $:.unshift File.join(File.dirname(__FILE__), '..', '..', dir, 'lib') }
+%w{amazon-ec2 rye}.each { |dir| $:.unshift File.join(File.dirname(__FILE__), '..', '..', dir, 'lib') }
 require 'rubygems'
 
 require 'drydock'
 require 'rudy'
 require 'rudy/cli'
 
-#---
-# Is there a bug in Ruby 1.9 open-uri?
-#$ /usr/local/bin/ruby bin/rudy myaddress
-#/usr/local/lib/ruby/1.9.1/open-uri.rb:260:in `require': Insecure operation - require (SecurityError)
-$SAFE = 2
-#+++
-#
-#
+#$SAFE = 1   # require is unsafe in Ruby 1.9??
 
 #
 #
@@ -263,6 +257,11 @@ end
 # will run after Rye shuts down the ssh-agent. 
 begin
   Drydock.run!(ARGV, STDIN) if Drydock.run? && !Drydock.has_run?
+rescue Drydock::ArgError, Drydock::OptError=> ex
+  STDERR.puts ex.message
+  STDERR.puts ex.usage
+rescue Rudy::Error => ex
+  STDERR.puts ex.message
 rescue => ex
   STDERR.puts "ERROR (#{ex.class.to_s}): #{ex.message}"
   STDERR.puts ex.backtrace if Drydock.debug?

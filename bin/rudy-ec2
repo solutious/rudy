@@ -214,11 +214,11 @@ module RudyEC2CLI
   # ------------------------------------------------------------------
   
   default :instances
-  debug :on
+  debug :off
   
   before do |obj|
-#    obj.global.print_header = false  # Don't print Rudy Header
-
+    # Don't print Rudy header unless requested to
+    obj.global.print_header = false  if (obj.global.verbose == 0)
     @start = Time.now
   end
   
@@ -240,9 +240,11 @@ end
 # will run after Rye shuts down the ssh-agent. 
 begin
   Drydock.run!(ARGV, STDIN) if Drydock.run? && !Drydock.has_run?
-rescue Drydock::ArgError, Drydock::OptError => ex
+rescue Drydock::ArgError, Drydock::OptError=> ex
   STDERR.puts ex.message
   STDERR.puts ex.usage
+rescue Rudy::Error => ex
+  STDERR.puts ex.message
 rescue => ex
   STDERR.puts "ERROR (#{ex.class.to_s}): #{ex.message}"
   STDERR.puts ex.backtrace if Drydock.debug?

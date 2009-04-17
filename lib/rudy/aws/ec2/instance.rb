@@ -83,7 +83,9 @@ module Rudy::AWS
       # * +:keypair+      
       # * +:address+
       # * +:private+ true or false (default)
-      # * +:machine_data+ 
+      # * +:machine_data+
+      # * +:min+ count
+      # * +:max+ count
       #
       def create(opts={}, &each_inst)
         raise NoAMI unless opts[:ami]
@@ -91,13 +93,15 @@ module Rudy::AWS
         #raise NoAMI unless opts[:ami]
         
         opts = {
-          :size => 'm1.small'
+          :size => 'm1.small',
+          :min => 1,
+          :max => nil
         }.merge(opts)
         
         old_opts = {
           :image_id => opts[:ami].to_s,
-          :min_count => 1,
-          :max_count => 1,
+          :min_count => opts[:min],
+          :max_count => opts[:max] || opts[:min],
           :key_name => (opts[:keypair] || '').to_s,
           :group_id => [opts[:group]].flatten.compact,
           :user_data => opts[:machine_data].to_s,

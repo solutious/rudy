@@ -12,9 +12,11 @@ module Rudy; module CLI; module Routine;
     def startup
       
       rr = Rudy::Routine::Startup.new
-      rmach = Rudy::Machines.new
       rr.execute
-      rmach.list.each do |machine|
+      
+      
+      rmach = Rudy::Machines.new
+      rmach.list do |machine|
         puts machines.to_s
       end
       

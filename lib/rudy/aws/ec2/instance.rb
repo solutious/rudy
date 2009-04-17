@@ -33,11 +33,11 @@ module Rudy::AWS
     def to_s(with_title=false)
       lines = []
       lines << liner_note
-      if self.running?
-        k, g = @keyname || 'no-keypair', self.groups.join(', ')
-        lines << @@sformat % %w{zone size ami keyname groups} if with_title
-        lines << @@sformat % [@zone, @size, @ami, k, g]
-      end
+      #if self.running?
+      #  k, g = @keyname || 'no-keypair', self.groups.join(', ')
+      #  lines << @@sformat % %w{zone size ami keyname groups} if with_title
+      #  lines << @@sformat % [@zone, @size, @ami, k, g]
+      #end
       lines.join($/)
     end
     

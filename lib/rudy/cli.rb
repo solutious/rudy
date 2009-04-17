@@ -100,16 +100,18 @@ module Rudy
     class Base
       extend Drydock
       
-      #capture :stderr       
-      before do
+      before do |obj|
         @start = Time.now
       end
-      after do |obj|
-        unless obj.global.quiet
+
+      after do |obj|  
+        if obj.global.verbose > 0
+          puts
           @elapsed = Time.now - @start
-          puts $/, "Elapsed: %.2f seconds" % @elapsed.to_f if @elapsed > 0.1
+          puts "Elapsed: %.2f seconds" % @elapsed.to_f if @elapsed > 0.1
         end
       end
+      
       
       # These globals are used by all bin/ executables
       global :A, :accesskey, String, "AWS Access Key"

@@ -85,12 +85,9 @@ module Rudy::AWS
       end
       
       def exists?(name)
-        begin
-          kp = get(name)
-          kp.is_a?(Rudy::AWS::EC2::KeyPair)
-        rescue => ex
-          false
-        end
+        return false unless name
+        kp = get(name) rescue nil
+        !kp.nil?
       end
       
     end

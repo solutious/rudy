@@ -73,7 +73,14 @@ class RudyCLI < Rudy::CLI::Base
 
   # --------------------------------  MISCELLANEOUS COMMANDS  --------
   # ------------------------------------------------------------------
-
+  
+  desc "Display time (in UTC)"
+  option :l, :local, "Display local time"
+  command :time do |obj|
+    t = obj.option.local ? Time.now : Time.now.utc
+    puts '%s' % t.strftime("%Y-%m-%d %T %Z (%z)")
+  end
+  
   usage "rudy [-f config-file] config [param-name]"
   desc "Check Rudy configuration."
   option :l, :all, "Display configs for all machines"
@@ -200,14 +207,15 @@ class RudyCLI < Rudy::CLI::Base
   #command :metadata => Rudy::CLI::Manager
   #command_alias :metadata, :md
   
-  desc "Startup machines."
+  desc "Startup a machine group"
   usage "rudy [global options] startup"
   command :startup => Rudy::CLI::Routine::Startup
   command_alias :startup, :s
   
+  desc "Manage Machines"
+  action :W, :wash, "Wash machine metadata."
   command :machines => Rudy::CLI::Machines
   command_alias :machines, :m
-  
   
   # --------------------------  RUDY RELEASE/DEPLOY COMMANDS  --------
   # ------------------------------------------------------------------
@@ -253,6 +261,7 @@ class RudyCLI < Rudy::CLI::Base
   default :startup
   
 
+  
 end
 
 # We call Drydock specifically otherwise it will run at_exit. Rye also

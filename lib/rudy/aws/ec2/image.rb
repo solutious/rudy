@@ -20,18 +20,18 @@ module Rudy::AWS
       #info = info.split(/\//) 
       #info[-1].gsub!(/(.+?)((\.img)?\.manifest\.xml)/) { |m,n| ($1 || "").bright << $2 }
       #info = info.join('/')
-      "%s (%s)" % [self.awsid.bright, info] 
+      "%s %-6s (%s)" % [self.awsid.bright, self.arch, info] 
     end
         
     def to_s(with_title=false)
       lines = []
       lines << liner_note
-      if self.available?
-        p = public? ? "public" : "private" 
-        k, r = @aki || 'aki-unknown', @ari || 'ari-unknown'
-        lines << @@sformat % %w{arch owner aki ari visibility} if with_title
-        lines << @@sformat % [@arch, @owner, k, r, p]
-      end
+      #if self.available?
+      #  p = public? ? "public" : "private" 
+      #  k, r = @aki || 'aki-unknown', @ari || 'ari-unknown'
+      #  lines << @@sformat % %w{arch owner aki ari visibility} if with_title
+      #  lines << @@sformat % [@arch, @owner, k, r, p]
+      #end
       lines.join($/)
     end
     

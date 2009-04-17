@@ -99,10 +99,24 @@ module Rudy
       (!kp.nil? && File.exists?(kp))
     end
     
+    # Returns the name of the current keypair for the given user. 
+    # If there's a private key path in the config this will return
+    # the basename (it's assumed the Amazon KeyPair has the same
+    # name as the file). Otherwise this returns the Rudy style
+    # name: <tt>key-ENV-ROLE-USER</tt>. Or if this the user is 
+    # root: <tt>key-ENV-ROLE</tt>
     def user_keypairname(user)
       kp = user_keypairpath(user)
-      return unless kp
-      KeyPairs.path_to_name(kp)
+      if kp
+        KeyPairs.path_to_name(kp)
+      else
+        n = user.to_s == 'root' ? '' : "-#{user}"
+        "key-%s%s" % [current_machine_group, n]
+      end
+      
+    end
+    def root_keypairname
+      user_keypairname :poop
     end
     
     def user_keypairpath(name)
@@ -229,7 +243,8 @@ module Rudy
       disk_defs = fetch_machine_param(:disks)
       
       routine = @@config.routines.find(@@global.environment, @@global.role, action)
-
+      return nil unless routine
+      
       routine.disks.each_pair do |raction,disks|
 
         disks.each_pair do |path, props|
@@ -245,6 +260,17 @@ module Rudy
       end
 
       routine
+    end
+    
+    # Looks for ENV-ROLE configuration in machines. There must be
+    # at least one definition in the config for this to return true
+    # That's how Rudy knows the current group is defined. 
+    def known_machine_group?
+      return false if !@@config && !@@global
+      zon, env, rol = @@global.zone, @@global.environment, @@global.role
+      conf = @@config.machines.find_deferred(@@global.region, zon, [env, rol])
+      conf ||= @@config.machines.find_deferred(zon, [env, rol])
+      !conf.nil?
     end
     
     def fetch_machine_param(parameter)
@@ -265,6 +291,7 @@ module Rudy
       hashes.reverse.each do |conf|
         compilation.merge! conf if conf
       end
+      compilation = nil if compilation.empty?
       compilation
     end
     

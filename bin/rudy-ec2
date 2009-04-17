@@ -222,14 +222,6 @@ module RudyEC2CLI
     @start = Time.now
   end
   
-  after do |obj|  
-    if obj.global.verbose > 0
-      puts
-      @elapsed = Time.now - @start
-      puts "Elapsed: %.2f seconds" % @elapsed.to_f if @elapsed > 0.1
-    end
-  end
-  
 end
 
 #puts Rudy::Utils.banner("THIS IS RUBY #{RUBY_VERSION}") if Drydock.debug?

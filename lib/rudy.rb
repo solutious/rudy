@@ -154,6 +154,9 @@ module Rudy
   class MachineGroupAlreadyRunning < Rudy::Error; 
     def message; "Machine group #{@obj} is already running."; end
   end
+  class MachineGroupNotDefined < Rudy::Error; 
+    def message; "Machine group #{@obj} is not defined."; end
+  end
 end
 
 require 'rudy/utils'      # The

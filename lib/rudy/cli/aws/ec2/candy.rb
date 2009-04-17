@@ -54,13 +54,12 @@ module AWS; module EC2;
       
       # Options to be sent to Net::SSH
       ssh_opts = { :user => @option.user || Rudy.sysinfo.user, :debug => nil  }
-      
-      
       if @option.pkey 
         raise "Cannot find file #{@option.pkey}" unless File.exists?(@option.pkey)
         raise InsecureKeyPermissions, @option.pkey unless File.stat(@option.pkey).mode == 33152
         ssh_opts[:keys] = @option.pkey 
       end
+      
       
       # The user specified a command to run. We won't create an interactive
       # session so we need to prepare the command and its arguments

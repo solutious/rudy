@@ -138,26 +138,62 @@ module Rudy
     include Rudy::MetaData
     
     def init
-      @ec2inst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey, @@global.region)
+      a, s, r = @@global.accesskey, @@global.secretkey, @@global.region
+      @rinst = Rudy::AWS::EC2::Instances.new(a, s, r)
+      @rgrp = Rudy::AWS::EC2::Groups.new(a, s, r)
+      @rkey = Rudy::AWS::EC2::KeyPairs.new(a, s, r)
     end
     
-    def load(rname=nil)
-      Rudy::Machine.from_hash(@sdb.get(Rudy::DOMAIN, rname)) # Returns nil if empty
+    def create(&each_mach)
+      raise MachineGroupAlreadyRunning, current_machine_group if running?
+      raise MachineGroupNotDefined, current_machine_group unless known_machine_group?
+      
+      opts = {
+        :min  => current_machine_count,
+        :size => current_machine_size,
+        :ami => current_machine_image,
+        :group => current_machine_group
+      }
+      
+      unless (1..MAX_INSTANCES).member?(opts[:max] || opts[:min])
+        raise "Instance count must be more than 0, less than #{MAX_INSTANCES}"
+      end
+      
+      unless @rgrp.exists?(current_machine_group)
+        puts "Creating group: #{current_machine_group}"
+      end
+      
+      unless @rkey.exists?(root_keypairname)
+        puts "Creating keypair: #{root_keypairname}"
+      end
+      
+      #@rinst.create(opts) do |instance|
+      #  puts instance.awsid
+      #end
     end
     
-    def list
-      list_as_hash.values
+    def list(more=[], less=[], &each_mach)
+      machines = list_as_hash(&each_mach)
+      machines &&= machines.values
+      machines
     end
     
-    def list_as_hash
-      list = @sdb.select(to_select([:rtype, 'm'])) || []
+    def list_as_hash(more=[], less=[], &each_mach)
+      query = to_select([:rtype, 'm'], less)
+      list = @sdb.select(query) || {}
       machines = {}
       list.each_pair do |n,m|
         machines[n] = Rudy::Machine.from_hash(m)
       end
+      machines.each_pair { |n,mach| each_mach.call(mach) } if each_mach
       machines = nil if machines.empty?
       machines
     end
+    
+    def get(rname=nil)
+      Rudy::Machine.from_hash(@sdb.get(Rudy::DOMAIN, rname)) # Returns nil if empty
+    end
+    
     
     def running?
       !list.nil?

@@ -1,6 +1,6 @@
 
 
-module Rudy; module Routine;
+module Rudy; module Routines;
 
   class Startup < Rudy::Routines::Base
     

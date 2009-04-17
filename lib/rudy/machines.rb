@@ -19,6 +19,7 @@ module Rudy
     
     field :dns_public
     field :dns_private
+    field :state
     
     attr_reader :instance
     
@@ -30,10 +31,11 @@ module Rudy
       @environment = @@global.environment
       @role = @@global.role
       @position = find_next_position || '01'
+      @state = 'no-instance'
     end
     
     def liner_note
-      info = self.running? ? self.dns_public : 'down'
+      info = @dns_public && !@dns_public.empty? ? @dns_public : @state
       "%s (%s)" % [self.name.bright, info]
     end
     
@@ -102,7 +104,7 @@ module Rudy
       @ec2inst.create(opts) do |inst|
         @awsid = inst.awsid
         @created = @starts = Time.now
-        @instance = inst
+        @state = inst.state
       end
       
       self.save
@@ -165,9 +167,12 @@ module Rudy
         kp = @rkey.create(root_keypairname)
         puts "Saving #{kp_file}"
         Rudy::Utils.write_to_file(kp_file, kp.private_key, 'w', 0600)
+      else
+        kp_file = root_keypairpath
+        # This means we found a keypair in the config but we cannot find the private key file. 
+        raise PrivateKeyNotFound, kp_file if kp_file && !File.exists?(kp_file)
       end
       
-      return
       current_machine_count.times do  |i|
         machine = Rudy::Machine.new
         puts "Starting %s" % machine.name

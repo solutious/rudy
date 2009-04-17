@@ -158,7 +158,10 @@ module Rudy
     def message; "Machine group #{@obj} is not defined."; end
   end
   class PrivateKeyFileExists < Rudy::Error
-    def message; "Private key #{obj} already exists."; end
+    def message; "Private key #{@obj} already exists."; end
+  end
+  class PrivateKeyNotFound < Rudy::Error
+    def message; "Private key #{@obj} not found."; end
   end
 end
 
@@ -169,7 +172,7 @@ require 'rudy/huxtable'   # requires
 require 'rudy/aws'        # is
 require 'rudy/metadata'   # important
 
-require 'rudy/machine'
-require 'rudy/routine'
+require 'rudy/machines'
+require 'rudy/routines'
 
 

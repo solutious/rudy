@@ -209,7 +209,7 @@ class RudyCLI < Rudy::CLI::Base
   
   desc "Startup a machine group"
   usage "rudy [global options] startup"
-  command :startup => Rudy::CLI::Routine::Startup
+  command :startup => Rudy::CLI::Routines::Startup
   command_alias :startup, :s
   
   desc "Manage Machines"

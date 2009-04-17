@@ -108,13 +108,12 @@ module Rudy
     def user_keypairname(user)
       kp = user_keypairpath(user)
       if kp
-        KeyPairs.path_to_name(kp)
+        kp = Huxtable.keypair_path_to_name(kp)
       else
-        n = user.to_s == 'root' ? '' : "-#{user}"
+        n = (user.to_s == 'root') ? '' : "-#{user}"
         "key-%s%s" % [current_machine_group, n]
       end    
     end
-    
     def root_keypairname
       user_keypairname :root
     end
@@ -138,7 +137,10 @@ module Rudy
       kp &&= File.expand_path(kp)
       kp
     end
-
+    def root_keypairpath
+      user_keypairpath :root
+    end
+    
     def has_root_keypair?
       path = user_keypairpath(:root)
       (!path.nil? && !path.empty?)
@@ -210,6 +212,12 @@ module Rudy
     def group_metadata(env=@@global.environment, role=@@global.role)
       query = "['environment' = '#{env}'] intersection ['role' = '#{role}']"
       @sdb.query_with_attributes(Rudy::DOMAIN, query)
+    end
+    
+    def self.keypair_path_to_name(kp)
+      return nil unless kp
+      name = File.basename kp
+      #name.gsub(/key-/, '')   # We keep the key- now
     end
     
   private 

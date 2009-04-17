@@ -1,6 +1,6 @@
 
 
-module Rudy; module CLI; module Routine;
+module Rudy; module CLI; module Routines;
 
   class Startup < Rudy::CLI::CommandBase
   
@@ -11,7 +11,7 @@ module Rudy; module CLI; module Routine;
     
     def startup
       
-      rr = Rudy::Routine::Startup.new
+      rr = Rudy::Routines::Startup.new
       rr.execute
       
       

@@ -190,7 +190,7 @@ class Caesars
     # BUG: Attributes can be stored as strings and here we only look for symbols
     str = criteria.collect { |v| "[:'#{v}']" if v }.join
     eval_str = "@caesars_properties#{str} if defined?(@caesars_properties#{str})"
-    val = eval eval_str
+    val = eval eval_str.untaint
     val
   end
   

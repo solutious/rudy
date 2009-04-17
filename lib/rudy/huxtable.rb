@@ -145,24 +145,24 @@ module Rudy
       [@@global.environment, @@global.role].join(Rudy::DELIM)
     end
     
+    def current_machine_count
+      fetch_machine_param(:positions)
+    end
+    
     def current_machine_image
-      zon, env, rol = @@global.zone, @@global.environment, @@global.role
-      ami = @@config.machines.find_deferred([zon, env, rol], :ami)
-      ami ||= @@config.machines.find_deferred(env, rol, :ami)
-      ami ||= @@config.machines.find_deferred(rol, :ami)
-      # I commented this out while cleaning (start of 0.6 branch) . It
-      # seems like a bad idea. I don't want Huxtables throwing exceptions. 
-      #raise Rudy::NoMachineImage, current_machine_group unless ami
-      ami
+      fetch_machine_param(:ami)
+      #zon, env, rol = @@global.zone, @@global.environment, @@global.role
+      #ami = @@config.machines.find_deferred([zon, env, rol]) || {}
+      #ami.merge!(@@config.machines.find_deferred(env, rol, :ami))
+      #ami.merge!(@@config.machines.find_deferred(rol, :ami))
+      ## I commented this out while cleaning (start of 0.6 branch) . It
+      ## seems like a bad idea. I don't want Huxtables throwing exceptions. 
+      ##raise Rudy::NoMachineImage, current_machine_group unless ami
+      #ami
     end
     
     def current_machine_size
-      zon, env, rol = @@global.zone, @@global.environment, @@global.role
-      size = @@config.machines.find_deferred(zon, env, rol, :size)
-      size ||= @@config.machines.find_deferred(env, rol, :size)
-      size ||= @@config.machines.find_deferred(rol, :size)
-      size = 'm1.small' unless size
-      size
+      fetch_machine_param(:size) || 'm1.small'
     end
     
     def current_machine_address
@@ -195,6 +195,79 @@ module Rudy
     end
     
   private 
+    
+    
+    
+    # We grab the appropriate routines config and check the paths
+    # against those defined for the matching machine group. 
+    # Disks that appear in a routine but not in a machine will be
+    # removed and a warning printed. Otherwise, the routines config
+    # is merged on top of the machine config and that's what we return.
+    #
+    # This means that all the disk info is returned so we know what
+    # size they are and stuff. 
+    # Return a hash:
+    #
+    #     :after: 
+    #     - :root: pwd
+    #     - :rudy: pwd
+    #     :disks: 
+    #       :create: 
+    #         /rudy/example1: 
+    #           :device: /dev/sdr
+    #           :size: 2
+    #         /rudy/example2: 
+    #           :device: /dev/sdm
+    #           :size: 1
+    #     
+    def fetch_routine_config(action)
+      raise "No configuration" unless @@config
+      raise "No globals" unless @@global
+      
+      zon, env, rol = @@global.zone, @@global.environment, @@global.role
+      
+      disk_defs = fetch_machine_param(:disks)
+      
+      routine = @@config.routines.find(@@global.environment, @@global.role, action)
+
+      routine.disks.each_pair do |raction,disks|
+
+        disks.each_pair do |path, props|
+          unless disk_defs.has_key?(path)
+            @logger.puts "#{path} is not defined. Check your #{action} routines config.".color(:red)
+            routine.disks[raction].delete(path) 
+            next
+          end
+          
+          routine.disks[raction][path] = disk_defs[path].merge(props) 
+          
+        end
+      end
+
+      routine
+    end
+    
+    def fetch_machine_param(parameter)
+      fetch_machine_config[parameter]
+    end
+    
+    def fetch_machine_config
+      raise "No configuration" unless @@config
+      raise "No globals" unless @@global
+      zon, env, rol = @@global.zone, @@global.environment, @@global.role
+      hashes = []
+      hashes << @@config.machines.find(env, rol)
+      hashes << @@config.machines.find(zon, env, rol)
+      hashes << @@config.machines.find(zon, [env, rol])
+      hashes << @@config.machines.find(zon, env)
+      hashes << @@config.machines.find(zon)
+      compilation = {}
+      hashes.reverse.each do |conf|
+        compilation.merge! conf if conf
+      end
+      compilation
+    end
+    
     
   end
 end

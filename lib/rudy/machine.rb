@@ -14,11 +14,11 @@ module Rudy
     field :role
     field :position
     
-    field :created
-    field :started
+    field :created => Time
+    field :started => Time
     
-    attr_reader :public_dns
-    attr_reader :private_dns
+    attr_reader :dns_public
+    attr_reader :dns_private
     attr_reader :instance
     
     def init
@@ -31,6 +31,33 @@ module Rudy
       @position = find_next_position || '01'
     end
     
+    def liner_note
+      info = self.running? ? self.dns_public : 'down'
+      "%s (%s)" % [self.name.bright, info]
+    end
+    
+    def to_s(with_title=false)
+      lines = []
+      lines << liner_note
+      #if self.running?
+      #  k, g = @keyname || 'no-keypair', self.groups.join(', ')
+      #  lines << @@sformat % %w{zone size ami keyname groups} if with_title
+      #  lines << @@sformat % [@zone, @size, @ami, k, g]
+      #end
+      lines.join($/)
+    end
+    
+    def inspect
+      lines = []
+      lines << liner_note
+      field_names.each do |key|
+        next unless self.respond_to?(key)
+        val = self.send(key)
+        lines << sprintf(" %22s: %s", key, (val.is_a?(Array) ? val.join(', ') : val))
+      end
+      lines.join($/)
+    end
+      
     def find_next_position
       list = @sdb.select(self.to_select(nil, [:position])) || []
       pos = list.size + 1
@@ -46,15 +73,14 @@ module Rudy
       ["m", zon, env, rol, pos].join(Rudy::DELIM)
     end
     
-
     
     def update_dns
-      #return false unless @awsid
-      #@instance = @@ec2.instances.get(@awsid) 
-      #if @instance.is_a?(Rudy::AWS::EC2::Instance)
-      #  @public_dns = @instance.dns_public
-      #  @private_dns = @instance.dns_private
-      #end
+      return false unless @awsid
+      @instance = @ec2inst.get(@awsid) 
+      if @instance.is_a?(Rudy::AWS::EC2::Instance)
+        @dns_public = @instance.dns_public
+        @dns_private = @instance.dns_private
+      end
     end
     
     
@@ -78,31 +104,7 @@ module Rudy
       #save
       #self
     end
-    
-    #def running?
-    #  return false unless @awsid
-    #  @@ec2.instances.running?(@awsid)
-    #end
-    #
-    #def pending?
-    #  return false unless @awsid
-    #  @@ec2.instances.pending?(@awsid)
-    #end
-    #
-    #def terminated?
-    #  return false unless @awsid
-    #  @@ec2.instances.terminated?(@awsid)
-    #end
-    #
-    #def shutting_down?
-    #  return false unless @awsid
-    #  @@ec2.instances.shutting_down?(@awsid)
-    #end
-    
-    def destroy
-      
-    end
-    
+
     def generate_machine_data
       Machine.generate_machine_data
     end
@@ -123,21 +125,46 @@ module Rudy
       data.to_hash
     end
     
-    
-    
+    def running?(doublecheck=false)
+      return (!@awsid && !@awsid.empty?) unless doublecheck
+      raise "TODO: support doublecheck"
+    end
+      
   end
   
   
   
   class Machines
+    include Rudy::MetaData
     
-    def initialize()
-      
+    def init
+      @ec2inst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey, @@global.region)
     end
     
     def load(rname=nil)
       Rudy::Machine.from_hash(@sdb.get(Rudy::DOMAIN, rname)) # Returns nil if empty
     end
+    
+    def list
+      list_as_hash.values
+    end
+    
+    def list_as_hash
+      list = @sdb.select(to_select([:rtype, 'm'])) || []
+      machines = {}
+      list.each_pair do |n,m|
+        machines[n] = Rudy::Machine.from_hash(m)
+      end
+      machines = nil if machines.empty?
+      machines
+    end
+    
+    def running?
+      !list.nil?
+      # TODO: add logic that checks whether the instances are running.
+    end
+    
+
     
   end
   

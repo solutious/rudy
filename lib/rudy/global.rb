@@ -14,6 +14,7 @@ module Rudy
     field :quiet
     field :verbose
     field :format
+    field :print_header
     field :yes
     
     field :accesskey
@@ -37,7 +38,7 @@ module Rudy
       @nocolor ||= false
       @quiet ||= false
       @format ||= 'string' # as in, to_s
-      @print_header ||= true
+      @print_header = true if @print_header == nil
       @yes = false if @yes.nil?
     end
       

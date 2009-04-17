@@ -46,8 +46,11 @@ machines do
   # roles. The configuration inside the role blocks is available only
   # to machines in that specific role. 
   env :stage do
+    positions 1
+    ami "ami-11111111"
+    
     role :app do
-      instances 1
+      positions 3
       
       # We've given the stage-app machines two disks.
       disks do
@@ -61,6 +64,12 @@ machines do
         end
       end
       
+    end
+    
+      size :ooop
+    role :poop do
+      #positions 2
+      ami "ami-22222222"
     end
   end
   

@@ -61,6 +61,7 @@ module Rudy
         Rudy::Huxtable.update_global @global
         
         puts Rudy::CLI.generate_header(@@global, @@config) if @@global.print_header
+        
         unless @@global.quiet
           if @@global.environment == "prod"
             msg = "YOU ARE PLAYING WITH PRODUCTION"
@@ -70,29 +71,30 @@ module Rudy
         end
       end
       
-
     end
 
-
-
     def self.generate_header(global, config)
+      return "" if global.quiet
       header = StringIO.new
-      title = "RUDY v#{Rudy::VERSION}" unless global.quiet
+      title, name = "RUDY v#{Rudy::VERSION}", config.accounts.aws.name
       now_utc = Time.now.utc.strftime("%Y-%m-%d %H:%M:%S")
       criteria = []
       [:region, :zone, :environment, :role, :position].each do |n|
         key, val = n.to_s.slice(0,1).att, global.send(n) 
+        key = 'R' if n == :region
         next unless val
         criteria << "#{key.att}:#{val.to_s.bright}"
       end
       if config.accounts && config.accounts.aws
-        header.puts '%s -- %s -- %s UTC' % [title, config.accounts.aws.name, now_utc] unless global.quiet
-        header.puts '[%s]' % criteria.join("  ") unless global.quiet
+        if global.verbose > 0
+          header.puts '%s -- %s -- %s UTC' % [title, name, now_utc]
+        end
+        header.puts '[%s]' % [criteria.join("  ")], $/
       end
-      
       header.rewind
       header.read
     end
+
 
     # A base for all Drydock executables (bin/rudy etc...). 
     class Base

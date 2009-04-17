@@ -4,7 +4,11 @@ module Rudy; module CLI;
 module AWS; module EC2;
   
   class Images < Rudy::CLI::CommandBase
-
+    
+    #def print_header
+    #  puts @global.print_header, @@global.print_header
+    #end
+    
    #def create_images_valid?
    #  puts "Make sure the machine is clean. I don't want archive no crud!"
    #  switch_user("root")
@@ -99,9 +103,10 @@ module AWS; module EC2;
     end
     def images
       
+      rimages = Rudy::AWS::EC2::Images.new(@@global.accesskey, @@global.secretkey, @@global.region)
+      
       @option.owner ||= 'amazon'
       puts "Images owned by #{@option.owner.bright}" unless @argv.awsid
-      rimages = Rudy::AWS::EC2::Images.new(@@global.accesskey, @@global.secretkey, @@global.region)
       images = rimages.list(@option.owner, @argv) || []
       images.each do |img|
         puts @@global.verbose > 0 ? img.inspect : img.dump(@@global.format)

@@ -92,6 +92,11 @@ module Rudy
     
     DEFAULT_USER = 'rudy'.freeze
     
+    DEFAULT_EC2_HOST = "ec2.amazonaws.com"
+    DEFAULT_EC2_PORT = 443
+    
+    MAX_INSTANCES = 2.freeze
+    
     SUPPORTED_SCM_NAMES = [:svn, :git].freeze
   
     ID_MAP = {
@@ -129,22 +134,25 @@ module Rudy
   def Rudy.sysinfo; @@sysinfo; end
   def sysinfo; @@sysinfo;  end
   
-  class SimpleError < RuntimeError
+  class Error < RuntimeError
     def initialize(obj); @obj = obj; end
+    def message; "#{self.class}: #{@obj}"; end
   end
-  
-  class InsecureKeyPermissions < SimpleError
+  class InsecureKeyPermissions < Rudy::Error
     def message
-      puts "Insecure file permissions for #{@obj}"
-      puts "Try: chmod 600 #{@obj}"
+      lines = ["Insecure file permissions for #{@obj}"]
+      lines << "Try: chmod 600 #{@obj}"
+      lines.join($/)
     end
   end
-  class NoConfig < SimpleError
+  class NoConfig < Rudy::Error
     def message; "No AWS credentials. Check your configs!"; end
   end
-  
-  class ServiceUnavailable < SimpleError
+  class ServiceUnavailable < Rudy::Error
     def message; "#{@obj} is not available. Check your internets!"; end
+  end
+  class MachineGroupAlreadyRunning < Rudy::Error; 
+    def message; "Machine group #{@obj} is already running."; end
   end
 end
 

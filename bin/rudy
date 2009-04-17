@@ -205,6 +205,10 @@ class RudyCLI < Rudy::CLI::Base
   command :startup => Rudy::CLI::Routine::Startup
   command_alias :startup, :s
   
+  command :machines => Rudy::CLI::Machines
+  command_alias :machines, :m
+  
+  
   # --------------------------  RUDY RELEASE/DEPLOY COMMANDS  --------
   # ------------------------------------------------------------------
 

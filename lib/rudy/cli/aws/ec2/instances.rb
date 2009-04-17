@@ -2,6 +2,12 @@
 
 module Rudy; module CLI; 
 module AWS; module EC2;
+  class InstanceAndGroupError < Drydock::ArgError
+    def message; "You cannot provide a group and an instance ID"; end
+  end
+  class NoInstanceError < Drydock::ArgError
+    def message; "You must provide a group or instance ID"; end
+  end
   
   class Instances < Rudy::CLI::CommandBase
     
@@ -79,8 +85,8 @@ module AWS; module EC2;
     end
 
     def instances_restart_valid?
-      raise "You cannot provide a group and an instance ID" if @option.group && @argv.instid
-      raise "You must provide a group or instance ID" unless @option.group || @argv.instid
+      raise InstanceAndGroupError.new(nil, @alias) if @option.group && @argv.instid
+      raise NoInstanceError.new(nil, @alias) if !@option.group && !@argv.instid
       
       if @option.group
         rgroup = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey, @@global.region)
@@ -88,7 +94,7 @@ module AWS; module EC2;
       end
       
       if @option.private
-        raise "Cannot allocate public IP for private instance" if @option.address || @option.newadress
+        raise Drydock::OptsError.new(nil, @alias, "Cannot allocate public IP for private instance") if @option.address || @option.newadress
       end
       
       @rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey, @@global.region)

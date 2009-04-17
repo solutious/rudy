@@ -50,7 +50,7 @@ machines do
     ami "ami-11111111"
     
     role :app do
-      positions 2
+      positions 1
       
       # We've given the stage-app machines two disks.
       disks do

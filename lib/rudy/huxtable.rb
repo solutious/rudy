@@ -112,11 +112,11 @@ module Rudy
       else
         n = user.to_s == 'root' ? '' : "-#{user}"
         "key-%s%s" % [current_machine_group, n]
-      end
-      
+      end    
     end
+    
     def root_keypairname
-      user_keypairname :poop
+      user_keypairname :root
     end
     
     def user_keypairpath(name)
@@ -159,8 +159,12 @@ module Rudy
       [@@global.environment, @@global.role].join(Rudy::DELIM)
     end
     
+    def current_group_name
+      "g-#{current_machine_group}"
+    end
+    
     def current_machine_count
-      fetch_machine_param(:positions)
+      fetch_machine_param(:positions) || 1
     end
     
     def current_machine_image

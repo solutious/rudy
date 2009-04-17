@@ -17,7 +17,7 @@ module Rudy; module CLI; module Routine;
       
       rmach = Rudy::Machines.new
       rmach.list do |machine|
-        puts machines.to_s
+        puts machine.to_s
       end
       
     end

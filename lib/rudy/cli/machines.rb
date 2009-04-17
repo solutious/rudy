@@ -14,7 +14,7 @@ module Rudy
       
       def machines_wash
         rmach = Rudy::Machines.new
-        dirt = rmach.list.select { |m| !m.running? }
+        dirt = (rmach.list || []).select { |m| !m.running? }
         if dirt.empty?
           puts "Nothing to wash in #{rmach.current_machine_group}"
           return

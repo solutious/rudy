@@ -17,8 +17,9 @@ module Rudy
     field :created => Time
     field :started => Time
     
-    attr_reader :dns_public
-    attr_reader :dns_private
+    field :dns_public
+    field :dns_private
+    
     attr_reader :instance
     
     def init
@@ -87,47 +88,47 @@ module Rudy
     def start(opts={})
       raise "#{name} is already running" if running?
       
-      #opts = { :ami => current_machine_image, 
-      #         :zone => @@global.zone.to_s,
-      #         :group => current_machine_group,
-      #         :user => current_user,
-      #         :size => current_machine_size,
-      #         :keypair => KeyPairs.path_to_name(user_keypairpath(:root)), # Must be a root key
-      #         :address => current_machine_address,
-      #         :machine_data => generate_machine_data.to_yaml }.merge(opts)
-      #
-      #raise "NoKeyPair" unless opts[:keypair]
-      #
-      #inst = @@ec2.instances.create(opts)
-      #
-      #self.awsid = inst.first.awsid
-      #save
-      #self
+      opts = {
+        :min  => 1,
+        :size => current_machine_size,
+        :ami => current_machine_image,
+        :group => current_group_name,
+        :keypair => root_keypairname, 
+        :zone => @@global.zone.to_s,
+        :address => current_machine_address,
+        :machine_data => Machine.generate_machine_data.to_yaml
+      }.merge(opts)
+      
+      @ec2inst.create(opts) do |inst|
+        @awsid = inst.awsid
+        @created = @starts = Time.now
+        @instance = inst
+      end
+      
+      self.save
+      
+      self
     end
 
-    def generate_machine_data
-      Machine.generate_machine_data
-    end
     
     def Machine.generate_machine_data
-      data = {
-        # Give the machine an identity
-        :zone => @@global.zone,
-        :environment => @@global.environment,
-        :role => @@global.role,
-        :position => @@global.position,
+      data = {      # Give the machine an identity
+        :region => @@global.region.to_s,
+        :zone => @@global.zone.to_s,
+        :environment => @@global.environment.to_s,
+        :role => @@global.role.to_s,
+        :position => @@global.position.to_s,
         
-        # Add hosts to the /etc/hosts file
-        :hosts => {
+        :hosts => { # Add hosts to the /etc/hosts file 
           :dbmaster => "127.0.0.1",
         }
       } 
-      data.to_hash
+      data
     end
     
-    def running?(doublecheck=false)
-      return (!@awsid && !@awsid.empty?) unless doublecheck
-      raise "TODO: support doublecheck"
+    def running?
+      return false if @awsid.nil? || !@awsid.empty?
+      @ec2inst.running?(@awsid)
     end
       
   end
@@ -148,28 +149,38 @@ module Rudy
       raise MachineGroupAlreadyRunning, current_machine_group if running?
       raise MachineGroupNotDefined, current_machine_group unless known_machine_group?
       
-      opts = {
-        :min  => current_machine_count,
-        :size => current_machine_size,
-        :ami => current_machine_image,
-        :group => current_machine_group
-      }
-      
-      unless (1..MAX_INSTANCES).member?(opts[:max] || opts[:min])
+      unless (1..MAX_INSTANCES).member?(current_machine_count)
         raise "Instance count must be more than 0, less than #{MAX_INSTANCES}"
       end
       
-      unless @rgrp.exists?(current_machine_group)
-        puts "Creating group: #{current_machine_group}"
+      unless @rgrp.exists?(current_group_name)
+        puts "Creating group: #{current_group_name}"
+        @rgrp.create(current_group_name)
       end
       
       unless @rkey.exists?(root_keypairname)
+        kp_file = File.join(Rudy::CONFIG_DIR, root_keypairname)
+        raise PrivateKeyFileExists, kp_file if File.exists?(kp_file)
         puts "Creating keypair: #{root_keypairname}"
+        kp = @rkey.create(root_keypairname)
+        puts "Saving #{kp_file}"
+        Rudy::Utils.write_to_file(kp_file, kp.private_key, 'w', 0600)
       end
       
-      #@rinst.create(opts) do |instance|
-      #  puts instance.awsid
-      #end
+      return
+      current_machine_count.times do  |i|
+        machine = Rudy::Machine.new
+        puts "Starting %s" % machine.name
+        machine.start
+      end
+      
+    end
+    
+    
+    def destroy(&each_mach)
+      #raise MachineGroupAlreadyRunning, current_machine_group if running?
+      #raise MachineGroupNotDefined, current_machine_group unless known_machine_group?
+      
     end
     
     def list(more=[], less=[], &each_mach)

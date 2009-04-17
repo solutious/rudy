@@ -78,7 +78,6 @@ module Rudy::AWS
       #
       # * +:ami+          
       # * +:group+        
-      # * +:user+         
       # * +:size+          
       # * +:keypair+      
       # * +:address+
@@ -104,13 +103,14 @@ module Rudy::AWS
           :max_count => opts[:max] || opts[:min],
           :key_name => (opts[:keypair] || '').to_s,
           :group_id => [opts[:group]].flatten.compact,
-          :user_data => opts[:machine_data].to_s,
+          #:user_data => opts[:machine_data],  # Error: Invalid BASE64 encoding of user data ??
           :availability_zone => opts[:zone].to_s,
           :addressing_type => opts[:private] ? 'private' : 'public',
           :instance_type => opts[:size].to_s,
           :kernel_id => nil
         }
-        
+        #p opts[:machine_data]
+        #exit
         response = execute_request({}) { @ec2.run_instances(old_opts) }
 
         return nil unless response['instancesSet'].is_a?(Hash)

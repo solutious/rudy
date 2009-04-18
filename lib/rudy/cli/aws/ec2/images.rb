@@ -33,7 +33,66 @@ module AWS; module EC2;
       puts "No images" if images.empty?
     end
 
-  
+    
+    def create_images_valid?
+      raise "No account number" unless @@global.accountnum 
+      true
+    end
+    
+    def create_images
+      opts = {}
+      opts[:group] = @option.group if @option.group
+      opts[:group] = :any if @option.all
+      opts[:id] = @option.instid if @option.instid
+      
+      # Options to be sent to Net::SSH
+      ssh_opts = { :user => @option.user || Rudy.sysinfo.user, :debug => nil  }
+      if @option.pkey 
+        raise "Cannot find file #{@option.pkey}" unless File.exists?(@option.pkey)
+        raise InsecureKeyPermissions, @option.pkey unless File.stat(@option.pkey).mode == 33152
+        ssh_opts[:keys] = @option.pkey 
+      end
+      
+      unless @option.name
+        puts "Enter the image name:"
+        @option.image_name = gets.chomp
+      end
+
+      unless @option.bucket
+        puts "Enter the S3 bucket that will store the image:"
+        @option.bucket_name = gets.chomp
+      end
+      
+      #execute_check(:medium)
+      
+      checked = false
+      rudy = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey, @@global.region)
+      lt = rudy.list_group(opts[:group], :running, opts[:id]) do |inst|
+        
+        puts inst.dns_public
+        
+        # Open the connection and run the command
+        rbox = Rye::Box.new(inst.dns_public, ssh_opts)
+        
+        # ~/.rudy, /etc/motd, history -c, /etc/hosts, /var/log/rudy*
+        
+        #puts "Copying .pem keys to /mnt (they will not be included in the AMI)"
+        #scp_command machine[:dns_name], keypairpath, @global.user, @global.cert, "/mnt/"
+        #scp_command machine[:dns_name], keypairpath, @global.user, @global.privatekey, "/mnt/"
+        #
+        #session.exec!("touch /root/firstrun")
+        #
+        #puts "Starting bundling process...".bright
+        #puts ssh_command(machine[:dns_name], keypairpath, @global.user, "ec2-bundle-vol -r i386 -p #{@option.image_name} -k /mnt/pk-*pem -c /mnt/cert*pem -u #{@option.account}", @option.print)
+        #puts ssh_command(machine[:dns_name], keypairpath, @global.user, "ec2-upload-bundle -b #{@option.bucket_name} -m /tmp/#{@option.image_name}.manifest.xml -a #{@global.accesskey} -s #{@global.secretkey}", @option.print)
+        #
+        #@ec2.images.register("#{@option.bucket_name}/#{@option.image_name}.manifest.xml") unless @option.print
+        
+        break
+      end
+      
+    end
+    
    #def create_images_valid?
    #  puts "Make sure the machine is clean. I don't want archive no crud!"
    #  switch_user("root")
@@ -51,56 +110,7 @@ module AWS; module EC2;
    #end
    #
    #
-   #def create_images
-   #  puts "Creating image from #{machine_group}"
-   #  
-   #  # ~/.rudy, /etc/motd, history -c, /etc/hosts, /var/log/rudy*
-   #  
-   #  execute_check(:medium)
-   #  
-   #  
-   #  machine_list = @ec2.instances.list(machine_group)
-   #  machine = machine_list.values.first  # NOTE: Only one machine per group, for now...
-   #
-   #  raise "There's no machine running in #{machine_group}" unless machine
-   #  raise "The primary machine in #{machine_group} is not in a running state" unless machine[:aws_state] == 'running'
-   #  
-   #  puts "The new image will be based on #{machine_group}_01"
-   #  
-   #  @option.account ||= @config.accounts.aws.accountnum
-   #  
-   #  # TODO: Don't reset global here
-   #  unless @option.account
-   #    puts "Enter your 12 digit Amazon account number:"
-   #    @global.accountnum = gets.chomp
-   #  end
-   #  
-   #  unless @option.image_name
-   #    puts "Enter the image name:"
-   #    @option.image_name = gets.chomp
-   #  end
-   #  
-   #  unless @option.bucket_name
-   #    puts "Enter the S3 bucket that will store the image:"
-   #    @option.bucket_name = gets.chomp
-   #  end
-   #  
-   #  unless @option.print
-   #    puts "Copying .pem keys to /mnt (they will not be included in the AMI)"
-   #    scp_command machine[:dns_name], keypairpath, @global.user, @global.cert, "/mnt/"
-   #    scp_command machine[:dns_name], keypairpath, @global.user, @global.privatekey, "/mnt/"
-   #  end
-   #  
-   #  ssh do |session|
-   #    session.exec!("touch /root/firstrun")
-   #  end
-   #  
-   #  puts "Starting bundling process...".bright
-   #  puts ssh_command(machine[:dns_name], keypairpath, @global.user, "ec2-bundle-vol -r i386 -p #{@option.image_name} -k /mnt/pk-*pem -c /mnt/cert*pem -u #{@option.account}", @option.print)
-   #  puts ssh_command(machine[:dns_name], keypairpath, @global.user, "ec2-upload-bundle -b #{@option.bucket_name} -m /tmp/#{@option.image_name}.manifest.xml -a #{@global.accesskey} -s #{@global.secretkey}", @option.print)
-   #
-   #  @ec2.images.register("#{@option.bucket_name}/#{@option.image_name}.manifest.xml") unless @option.print
-   #end
+   
    #
    #def deregister
    #  ami = @argv.first

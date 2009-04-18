@@ -96,17 +96,15 @@ routines do
         
         after :root => '/bad/script'
         after :root => [:ls, :l, '/']
-        after_local Rudy.sysinfo.user => [:echo, 'LOCAL AFTER STARTUP']
+        after_local Rudy.sysinfo.user => :date
       end
       
       restart do
-        before :root => "pwd"
-        after :root => "pwd"
-        after :rudy => "pwd"
+        before :root => [:which, 'date']
+        after :rudy => "/usr/bin/date"
         
         disks do
           mount "/rudy/example1"
-          mount "/rudy/example2"
         end
       end
       
@@ -120,3 +118,4 @@ routines do
     end
   end
 end
+

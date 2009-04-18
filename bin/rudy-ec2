@@ -107,8 +107,9 @@ module RudyEC2CLI
   option :o, :owner, String, "Amazon Account Number or one of: amazon, self"
   option :l, :all, "Display all registered machine images (warning: slow)"
   #option :p, :private, "Private images only"
-  #option :b, :bucket_name, String, "The name of the bucket that will store the image"
-  #action :C, :create, "Create an image"
+  option :b, :bucket, String, "The name of the bucket that will store the image"
+  option :n, :name, String, "The name of the image file (to create)"
+  action :C, :create, "Create an image"
   #action :P, :prepare, "Prepare a running instance to be used as an image"
   #action :D, :destroy, "Deregister an image (does not remove image files from S3)"
   argv :ami

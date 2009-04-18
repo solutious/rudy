@@ -1,0 +1,75 @@
+#!/usr/bin/ruby
+
+# = Rudy S3
+# 
+# === A Rudy interface to Amazon Simple Storage Service
+#
+# 
+# 
+# See rudy-s3 -h for usage
+# 
+
+$:.unshift File.join(File.dirname(__FILE__), '..', 'lib') # Put our local lib in first place
+$:.unshift File.join(File.dirname(__FILE__), '..', 'vendor', 'highline-1.5.1', 'lib')
+%w{amazon-ec2 caesars rye}.each { |dir| $:.unshift File.join(File.dirname(__FILE__), '..', '..', dir, 'lib') }
+require 'rubygems'
+
+require 'rudy'
+require 'rudy/cli'
+require 'drydock'
+
+module RudyS3CLI
+  extend Drydock
+  
+  # ------------------------------------  AMAZON S3 COMMANDS  --------
+  # ------------------------------------------------------------------
+  
+  desc "Amazon S3 Buckets"
+  usage "rudy-s3 buckets"
+  option :l, :list, "List bucket objects"
+  action :C, :create, "Create a bucket"
+  action :D, :destroy, "Destroy a bucket"
+  argv :name
+  command :buckets => Rudy::CLI::AWS::S3::Buckets
+  command_alias :buckets, :b
+
+  #desc "Amazon S3 Storage Interface"
+  #usage "rudy-s3 store file-path"
+  #option :b, :bucket, String, "Bucket name"
+  #argv :path
+  #command :store => Rudy::CLI::AWS::S3::Store
+  #command_alias :store, :s
+
+  
+  
+  # ---------------------------------  RUDY-S3 MISCELLANEOUS  --------
+  # ------------------------------------------------------------------
+  
+  default :buckets
+  debug :on
+  
+  
+end
+
+
+#puts Rudy::Utils.banner("THIS IS RUBY #{RUBY_VERSION}") if Drydock.debug?
+
+# We call Drydock specifically otherwise it will run at_exit. Rye also
+# uses at_exit for shutting down the ssh-agent. Ruby executes at_exit
+# blocks in reverse order so if Drydock is required first, it's block
+# will run after Rye shuts down the ssh-agent. 
+begin
+  Drydock.run!(ARGV, STDIN) if Drydock.run? && !Drydock.has_run?
+rescue Drydock::ArgError, Drydock::OptError=> ex
+  STDERR.puts ex.message
+  STDERR.puts ex.usage
+rescue Rudy::Error => ex
+  STDERR.puts ex.message
+rescue => ex
+  STDERR.puts "ERROR (#{ex.class.to_s}): #{ex.message}"
+  STDERR.puts ex.backtrace if Drydock.debug?
+rescue SystemExit
+  # Don't balk
+end
+
+

@@ -168,9 +168,6 @@ class RudyCLI < Rudy::CLI::Base
     obj.global.quiet = true  # don't print elapsed time
   end
 
-  desc "Displays the SimpleDB domains associated to your account"
-  command :domains => Rudy::CLI::AWS::SDB::Domains
-
 
   # ---------------------------------  RUDY MANAGER COMMANDS  --------
   # ------------------------------------------------------------------

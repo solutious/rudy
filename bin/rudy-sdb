@@ -1,0 +1,66 @@
+#!/usr/bin/ruby
+
+# = Rudy SDB
+# 
+# === A Rudy interface to Amazon Simple Storage Service
+#
+# 
+# 
+# See rudy-sdb -h for usage
+# 
+
+$:.unshift File.join(File.dirname(__FILE__), '..', 'lib') # Put our local lib in first place
+$:.unshift File.join(File.dirname(__FILE__), '..', 'vendor', 'highline-1.5.1', 'lib')
+%w{amazon-ec2 caesars rye}.each { |dir| $:.unshift File.join(File.dirname(__FILE__), '..', '..', dir, 'lib') }
+require 'rubygems'
+
+require 'rudy'
+require 'rudy/cli'
+require 'drydock'
+
+module RudySDBCLI
+  extend Drydock
+  
+  # -----------------------------------  AMAZON SDB COMMANDS  --------
+  # ------------------------------------------------------------------
+  
+  
+  desc "Displays the SimpleDB domains associated to your account"
+  action :C, :create, "Create a domain"
+  action :D, :destroy, "Destroy a domain"
+  argv :name
+  command :domains => Rudy::CLI::AWS::SDB::Domains
+  
+  
+  # --------------------------------  RUDY-SDB MISCELLANEOUS  --------
+  # ------------------------------------------------------------------
+  
+  default :domains
+  debug :on
+  
+  
+end
+
+
+#puts Rudy::Utils.banner("THIS IS RUBY #{RUBY_VERSION}") if Drydock.debug?
+
+# We call Drydock specifically otherwise it will run at_exit. Rye also
+# uses at_exit for shutting down the ssh-agent. Ruby executes at_exit
+# blocks in reverse order so if Drydock is required first, it's block
+# will run after Rye shuts down the ssh-agent. 
+begin
+  Drydock.run!(ARGV, STDIN) if Drydock.run? && !Drydock.has_run?
+rescue Drydock::ArgError, Drydock::OptError=> ex
+  STDERR.puts ex.message
+  STDERR.puts ex.usage
+rescue Rudy::Error => ex
+  STDERR.puts ex.message
+rescue => ex
+  STDERR.puts "ERROR (#{ex.class.to_s}): #{ex.message}"
+  STDERR.puts ex.backtrace if Drydock.debug?
+rescue SystemExit
+  # Don't balk
+end
+
+
+

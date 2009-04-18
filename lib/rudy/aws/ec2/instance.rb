@@ -119,7 +119,11 @@ module Rudy::AWS
           self.class.from_hash(inst)
         end
         puts "instance4"
-        instances.each { |inst| each_inst.call(inst) } if each_inst
+        instances.each { |inst| 
+          puts "instance5"
+          each_inst.call(inst) 
+        } if each_inst
+        puts "instance6"
         instances
       end
     

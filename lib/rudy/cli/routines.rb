@@ -16,9 +16,10 @@ module Rudy; module CLI;
     end
     
     def release
+      rr = Rudy::Routines::Release.new
       rmach = Rudy::Machines.new
       startup unless rmach.running?
-      puts "do release stuff"
+      rr.execute
     end
     
     def shutdown

@@ -1,8 +1,8 @@
 
 
-require 'EC2'
-require 'aws_sdb'
-
+require 'EC2'       # What a
+require 'aws_sdb'   # motley
+require 'aws/s3'    # crew
 
 module Rudy
   module AWS

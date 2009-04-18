@@ -26,8 +26,8 @@ module Rudy
       
       
       def task_separator(title)
-        dashes = 40 - title.size
-        ("%s-- %s %s" % [$/, title, '-'*dashes]).bright
+        dashes = 52 - title.size # 
+        ("%s---  %s  %s" % [$/, title, '-'*dashes]).bright
       end
 
 

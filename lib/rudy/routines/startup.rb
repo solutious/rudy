@@ -17,13 +17,14 @@ module Rudy; module Routines;
       
       #rmach.create do |machine|
       rmach.list do |machine|
-      
-        isup = Rudy::Utils.waiter(2, 60, STDOUT, "SSH is available", nil) { 
+        
+        print "SSH daemon is... "
+        isup = Rudy::Utils.waiter(2, 60, STDOUT, "up!", nil) { 
           machine.update
           hostname = machine.dns_public
           machine.dns_public? && Rudy::Utils.service_available?(hostname, 22)
         }
-        
+
         opts = { :keys =>  root_keypairpath, :user => 'root', :debug => nil }
         rbox = Rye::Box.new(machine.dns_public, opts)
         

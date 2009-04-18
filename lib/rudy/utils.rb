@@ -84,9 +84,9 @@ module Rudy
       begin
         Timeout::timeout(max) do
           while !check.call
+            sleep duration
             logger.print dot if logger.respond_to?(:print)
             logger.flush if logger.respond_to?(:flush)
-            sleep duration
           end
         end
       rescue Timeout::Error => ex

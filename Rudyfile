@@ -85,7 +85,7 @@ routines do
       startup do
         disks do
           create "/rudy/example1"
-          create "/rudy/example2"
+          #create "/rudy/example2"
         end
         
         after :root => "uname"
@@ -107,7 +107,7 @@ routines do
         before :root => "echo 'BEFORE' && pwd"
         disks do
           destroy "/rudy/example1"
-          destroy "/rudy/example2"
+          #destroy "/rudy/example2"
         end
       end
       

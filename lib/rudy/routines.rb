@@ -26,9 +26,11 @@ module Rudy
       end
       
     end
+    
   end
 end
 
+Rudy::Utils.require_glob(RUDY_LIB, 'rudy', 'routines', 'helpers', '*.rb')
 Rudy::Utils.require_glob(RUDY_LIB, 'rudy', 'routines', '*.rb')
 
 

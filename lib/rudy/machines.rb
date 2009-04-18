@@ -165,16 +165,16 @@ module Rudy
     def create(&each_mach)
       raise MachineGroupAlreadyRunning, current_machine_group if running?
       raise MachineGroupNotDefined, current_machine_group unless known_machine_group?
-      
+      puts "create1"
       unless (1..MAX_INSTANCES).member?(current_machine_count)
         raise "Instance count must be more than 0, less than #{MAX_INSTANCES}"
       end
-      
+      puts "create2"
       unless @rgrp.exists?(current_group_name)
         puts "Creating group: #{current_group_name}"
         @rgrp.create(current_group_name)
       end
-      
+      puts "create3"
       unless @rkey.exists?(root_keypairname)
         kp_file = File.join(Rudy::CONFIG_DIR, root_keypairname)
         raise PrivateKeyFileExists, kp_file if File.exists?(kp_file)
@@ -187,7 +187,7 @@ module Rudy
         # This means we found a keypair in the config but we cannot find the private key file. 
         raise PrivateKeyNotFound, kp_file if kp_file && !File.exists?(kp_file)
       end
-      
+      puts "create4"
       machines = []
       current_machine_count.times do  |i|
         machine = Rudy::Machine.new
@@ -195,7 +195,7 @@ module Rudy
         machine.start
         machines << machine
       end
-      
+      puts "create5"
       machines.each { |m| each_mach.call(m) } if each_mach
       machines
     end

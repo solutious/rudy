@@ -33,9 +33,57 @@ module AWS; module EC2;
       puts "No images" if images.empty?
     end
 
+    def prepare_images_valid?
+      true
+    end
+    def prepare_images
+      opts = {}
+      opts[:group] = @option.group if @option.group
+      opts[:group] = :any if @option.all
+      opts[:id] = @option.instid if @option.instid
+      
+      puts "This will do the following:"
+      puts "- Clear bash history"
+      # NOTE: We can't delete the host keys here. Otherwise we can't create the image. 
+      #puts "- Delete host SSH keys (this is permanent!)"
+      puts "" 
+      
+      # Options to be sent to Net::SSH
+      ssh_opts = { :user => @option.user || Rudy.sysinfo.user, :debug => STDERR  }
+      if @option.pkey 
+        raise "Cannot find file #{@option.pkey}" unless File.exists?(@option.pkey)
+        raise InsecureKeyPermissions, @option.pkey unless File.stat(@option.pkey).mode == 33152
+        ssh_opts[:keys] = @option.pkey 
+      end
+      
+      execute_check(:medium)
+      
+      rudy = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey, @@global.region)
+      lt = rudy.list_group(opts[:group], :running, opts[:id]) do |inst|
+        
+        puts "Preparing #{inst.dns_public}..."
+        
+        # Open the connection and run the command
+        rbox = Rye::Box.new(inst.dns_public, ssh_opts)
+        rbox.safe = false
+        # We need to explicitly add the rm command for rbox so we
+        # can delete the SSH host keys. This is will force the instance
+        # to re-create it's SSH keys on first boot.
+        def rbox.rm(*args); cmd('rm', args); end
+        p ret = rbox.history(:c)
+        p ret.exit_code
+        p ret.stderr
+        p ret.stdout
+        
+      end
+      
+      puts "done"
+    end
     
     def create_images_valid?
-      raise "No account number" unless @@global.accountnum 
+      raise "No account number" unless @@global.accountnum
+      raise "No Amazon cert-***.pem" unless @@global.cert
+      raise "No Amazon pk-***.pem" unless @@global.privatekey
       true
     end
     
@@ -45,8 +93,13 @@ module AWS; module EC2;
       opts[:group] = :any if @option.all
       opts[:id] = @option.instid if @option.instid
       
+      puts "You may want to run rudy-ec2 #{@alias} --prepare before this.".color(:blue)
+      puts "This feature is experimental. Make sure you enter the bucket"
+      puts "and image names correctly because if they're wrong the image"
+      puts "won't get created and you'll be annoyed that you waited."
+      
       # Options to be sent to Net::SSH
-      ssh_opts = { :user => @option.user || Rudy.sysinfo.user, :debug => nil  }
+      ssh_opts = { :user => @option.user || Rudy.sysinfo.user, :debug => STDERR  }
       if @option.pkey 
         raise "Cannot find file #{@option.pkey}" unless File.exists?(@option.pkey)
         raise InsecureKeyPermissions, @option.pkey unless File.stat(@option.pkey).mode == 33152
@@ -54,18 +107,17 @@ module AWS; module EC2;
       end
       
       unless @option.name
-        puts "Enter the image name:"
+        print "Enter the image name: "
         @option.image_name = gets.chomp
       end
 
       unless @option.bucket
-        puts "Enter the S3 bucket that will store the image:"
+        print "Enter the S3 bucket that will store the image: "
         @option.bucket_name = gets.chomp
       end
       
-      #execute_check(:medium)
+      execute_check(:medium)
       
-      checked = false
       rudy = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey, @@global.region)
       lt = rudy.list_group(opts[:group], :running, opts[:id]) do |inst|
         
@@ -75,13 +127,21 @@ module AWS; module EC2;
         rbox = Rye::Box.new(inst.dns_public, ssh_opts)
         
         # ~/.rudy, /etc/motd, history -c, /etc/hosts, /var/log/rudy*
+        cert = File.read(@@global.cert)
+        pk = File.read(@@global.privatekey)
+        rbox.safe = false
+        rbox.echo("'#{cert}' > /mnt/cert-temporary.pem")
+        rbox.echo("'#{pk}' > /mnt/pk-temporary.pem")
+        rbox.safe = true
+        rbox.touch("/root/firstrun")
         
-        #puts "Copying .pem keys to /mnt (they will not be included in the AMI)"
-        #scp_command machine[:dns_name], keypairpath, @global.user, @global.cert, "/mnt/"
-        #scp_command machine[:dns_name], keypairpath, @global.user, @global.privatekey, "/mnt/"
-        #
-        #session.exec!("touch /root/firstrun")
-        #
+        # TODO: 
+        # We have to delete the host keys just before we run the bundle command. 
+        # The problem is that if we lose the connection we won't be able to connect
+        # to the instance again. A better solution is to ass the keys to the ignore
+        # list for the bundle command. 
+        
+        #ret = rbox.rm('/etc/ssh/ssh_host_*_key*')
         #puts "Starting bundling process...".bright
         #puts ssh_command(machine[:dns_name], keypairpath, @global.user, "ec2-bundle-vol -r i386 -p #{@option.image_name} -k /mnt/pk-*pem -c /mnt/cert*pem -u #{@option.account}", @option.print)
         #puts ssh_command(machine[:dns_name], keypairpath, @global.user, "ec2-upload-bundle -b #{@option.bucket_name} -m /tmp/#{@option.image_name}.manifest.xml -a #{@global.accesskey} -s #{@global.secretkey}", @option.print)

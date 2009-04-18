@@ -109,8 +109,10 @@ module RudyEC2CLI
   #option :p, :private, "Private images only"
   option :b, :bucket, String, "The name of the bucket that will store the image"
   option :n, :name, String, "The name of the image file (to create)"
+  option :u, :user, String, "Username to connect as (used for creating an image)"
+  option :k, :pkey, String, "Path to the private SSH key"
   action :C, :create, "Create an image"
-  #action :P, :prepare, "Prepare a running instance to be used as an image"
+  action :P, :prepare, "Prepare a running instance to be used as an image"
   #action :D, :destroy, "Deregister an image (does not remove image files from S3)"
   argv :ami
   command :images => Rudy::CLI::AWS::EC2::Images

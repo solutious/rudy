@@ -42,8 +42,7 @@ module Rudy
         # or within EC2 (we call that running "in-situ"). The userdata
         # available when running in-situ is in a different format.
         if Rudy.in_situ?
-          
-          
+          puts "TODO: do something intelligent with config when running on EC2"
         else
           if @option.all
             puts "# ACCOUNTS: not displayed"
@@ -57,6 +56,8 @@ module Rudy
             end
           elsif @option.defaults?
             y @@config.defaults.to_hash
+          elsif @option.script
+            y fetch_script_config.to_hash
           else
             zon, env, rol = @@global.zone, @@global.environment, @@global.role
             usr, att = @@global.user, @argv.name

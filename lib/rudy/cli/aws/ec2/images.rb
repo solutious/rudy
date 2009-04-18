@@ -9,6 +9,31 @@ module AWS; module EC2;
     #  puts @global.print_header, @@global.print_header
     #end
     
+    
+    def images_valid?
+      if @option.owner == 'self'
+        raise "AWS_ACCOUNT_NUMBER not set" unless @@global.accountnum 
+        @option.owner = @@global.accountnum 
+      end
+      
+      true  
+    end
+    def images
+      
+      rimages = Rudy::AWS::EC2::Images.new(@@global.accesskey, @@global.secretkey, @@global.region)
+      unless @option.all
+        @option.owner ||= 'amazon' 
+        puts "Images owned by #{@option.owner.bright}" unless @argv.awsid
+      end
+      
+      images = rimages.list(@option.owner, @argv) || []
+      images.each do |img|
+        puts @@global.verbose > 0 ? img.inspect : img.dump(@@global.format)
+      end
+      puts "No images" if images.empty?
+    end
+
+  
    #def create_images_valid?
    #  puts "Make sure the machine is clean. I don't want archive no crud!"
    #  switch_user("root")
@@ -91,31 +116,8 @@ module AWS; module EC2;
    #  end
    #  
    #end
-    
-    
-    def images_valid?
-      if @option.owner == 'self'
-        raise "AWS_ACCOUNT_NUMBER not set" unless @@global.accountnum 
-        @option.owner = @@global.accountnum 
-      end
-      
-      true  
-    end
-    def images
-      
-      rimages = Rudy::AWS::EC2::Images.new(@@global.accesskey, @@global.secretkey, @@global.region)
-      
-      @option.owner ||= 'amazon'
-      puts "Images owned by #{@option.owner.bright}" unless @argv.awsid
-      images = rimages.list(@option.owner, @argv) || []
-      images.each do |img|
-        puts @@global.verbose > 0 ? img.inspect : img.dump(@@global.format)
-      end
-      puts "No images" if images.empty?
-    end
 
-    
-    end
+  end
 
 
 end; end

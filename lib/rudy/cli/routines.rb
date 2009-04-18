@@ -7,17 +7,20 @@ module Rudy; module CLI;
       rr = Rudy::Routines::Startup.new
       rr.execute
       
+      puts $/, "The following machines are now running:"
       rmach = Rudy::Machines.new
-      
-      
-      puts $/, "The following machines are ready:"
       rmach.list do |machine|
         puts machine.to_s
       end
       
     end
-  
-  
+    
+    def release
+      rmach = Rudy::Machines.new
+      startup unless rmach.running?
+      puts "do release stuff"
+    end
+    
     def shutdown
       rr = Rudy::Routines::Shutdown.new
       routine = fetch_routine_config(:shutdown)
@@ -26,7 +29,7 @@ module Rudy; module CLI;
       if routine.disks
         if routine.disks.destroy
           puts "The following filesystems will be destroyed:".color(:red)
-          puts routine.disks.destroy.keys
+          puts routine.disks.destroy.keys.join($/).bright
         end
       end
       
@@ -34,6 +37,11 @@ module Rudy; module CLI;
       
       rr.execute
       
+      rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey, @@global.region)
+      lt = rinst.list_group(current_machine_group, :any) do |inst|
+        puts @@global.verbose > 0 ? inst.inspect : inst.dump(@@global.format)
+      end
+      puts "No instances running" if !lt || lt.empty?
     end
     
 

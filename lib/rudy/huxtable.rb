@@ -288,8 +288,9 @@ module Rudy
     end
     
     def fetch_machine_param(parameter)
-      top_level = @@config.machines.find(parameter) || {}
-      top_level.merge fetch_machine_config[parameter] || {}
+      top_level = @@config.machines.find(parameter)
+      mc = fetch_machine_config
+      mc[parameter] || top_level || nil
     end
     
     def fetch_machine_config
@@ -301,6 +302,7 @@ module Rudy
       hashes << @@config.machines.find(zon, env, rol)
       hashes << @@config.machines.find(zon, [env, rol])
       hashes << @@config.machines.find(zon, env)
+      hashes << @@config.machines.find(env)
       hashes << @@config.machines.find(zon)
       compilation = {}
       hashes.reverse.each do |conf|

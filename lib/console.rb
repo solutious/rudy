@@ -178,8 +178,8 @@ module Console #:nodoc:all
   end
   def print_at(str, props={})
     print_at_lamb = lambda {
-      #props[:x] ||= 0
-      #props[:y] ||= 0
+      props[:x] ||= 0
+      props[:y] ||= 0
       props[:minus] = false unless props.has_key?(:minus)
       props[:x] = props[:x]-str.noatt.size if props[:x] && props[:minus] # Subtract the str length from the position
       Cursor.save

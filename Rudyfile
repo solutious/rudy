@@ -46,8 +46,8 @@ machines do
   # roles. The configuration inside the role blocks is available only
   # to machines in that specific role. 
   env :stage do
-    positions 1
-    ami "ami-11111111"
+    ami "ami-eb7c9982"    # fork/gentoo-base/200804200903.manifest.xml
+    size 'm1.small'
     
     role :app do
       positions 1
@@ -88,16 +88,15 @@ routines do
     role :app do
       
       startup do
-        before_local Rudy.sysinfo.user => ["uname", :a]
+        before_local Rudy.sysinfo.user => [:uname, :a]
         
         disks do
-          #create "/rudy/example1"
-          #create "/rudy/example2"
+          create "/rudy/example1"
         end
         
-        #after :root => ["uname", :a]
-        after :root => ["ls", :l]
-        after :delano => ["ls", :l]
+        after :root => '/bad/script'
+        after :root => [:ls, :l, '/']
+        after_local Rudy.sysinfo.user => [:echo, 'LOCAL AFTER STARTUP']
       end
       
       restart do
@@ -112,10 +111,9 @@ routines do
       end
       
       shutdown do
-        before :root => "echo 'BEFORE' && pwd"
+        before :root => [:echo, 'BEFORE SHUTDOWN']
         disks do
-          #destroy "/rudy/example1"
-          #destroy "/rudy/example2"
+          destroy "/rudy/example1"
         end
       end
       

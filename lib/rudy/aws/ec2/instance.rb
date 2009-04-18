@@ -90,7 +90,7 @@ module Rudy::AWS
         raise NoAMI unless opts[:ami]
         raise NoGroup unless opts[:group]
         #raise NoAMI unless opts[:ami]
-        
+        puts "instance1"
         opts = {
           :size => 'm1.small',
           :min => 1,
@@ -111,12 +111,14 @@ module Rudy::AWS
         }
         #p opts[:machine_data]
         #exit
+        puts "instance2"
         response = execute_request({}) { @ec2.run_instances(old_opts) }
-
+        puts "instance3"
         return nil unless response['instancesSet'].is_a?(Hash)
         instances = response['instancesSet']['item'].collect do |inst|
           self.class.from_hash(inst)
         end
+        puts "instance4"
         instances.each { |inst| each_inst.call(inst) } if each_inst
         instances
       end

@@ -47,8 +47,8 @@ module Rudy; module Routines;
       # add the method on for the instance of rbox we are using. 
       def rbox.rm(*args); cmd('rm', args); end
       
-      puts "On #{hostname} (#{timing})"
       if routine.has_key?(timing)
+        puts "Connecting to #{hostname}"
         original_user = rbox.user
         scripts = [routine[timing]].flatten
         scripts.each do |script|
@@ -59,13 +59,27 @@ module Rudy; module Routines;
           puts rbox.echo("'#{sconf.to_hash.to_yaml}' > #{@@script_config_file}")
           rbox.safe = true
           rbox.chmod(600, @@script_config_file)
-          puts "Running #{rbox.preview_command(command, args)} (#{user})"
-          puts rbox.send(command, args)
+          puts %Q{Running (as #{user}): #{rbox.preview_command(command, args)}}
+          
+          begin
+            ret = rbox.send(command, args)
+            if ret.exit_code > 0
+              puts "  Exit code: #{ret.exit_code}".color(:red)
+              puts "  STDERR: #{ret.stderr.join("#{$/}  ")}".color(:red)
+              puts "  STDOUT: #{ret.stdout.join("#{$/}  ")}".color(:red)
+            else
+              puts '  ' << ret.stdout.join("#{$/}  ")
+            end
+          rescue Rye::CommandNotFound => ex
+            puts "  CommandNotFound: #{ex.message}".color(:red)
+          end
+          
+          
           rbox.rm(@@script_config_file)
         end
         rbox.switch_user original_user
       else
-        puts "Nothing to do"
+        #puts "Nothing to do"
       end
       
       tf.delete # delete local copy of script config

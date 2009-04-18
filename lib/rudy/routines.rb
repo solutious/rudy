@@ -19,12 +19,18 @@ module Rudy
       def init
       end
       
-      #
-      #
+
       def execute
         raise "Override execute method"
       end
       
+      
+      def task_separator(title)
+        dashes = 40 - title.size
+        ("%s-- %s %s" % [$/, title, '-'*dashes]).bright
+      end
+
+
     end
     
   end

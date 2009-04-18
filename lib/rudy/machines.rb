@@ -35,7 +35,7 @@ module Rudy
     end
     
     def liner_note
-      update if !dns_public? && @awsid
+      update #if !dns_public? && @awsid
       info = @dns_public && !@dns_public.empty? ? @dns_public : @state
       "%s  %s" % [self.name.bright, info]
     end
@@ -52,7 +52,7 @@ module Rudy
     end
     
     def inspect
-      update if !dns_public? && @awsid
+      update #if !dns_public? && @awsid
       lines = []
       lines << liner_note
       field_names.each do |key|
@@ -84,6 +84,7 @@ module Rudy
       if @instance.is_a?(Rudy::AWS::EC2::Instance)
         @dns_public = @instance.dns_public
         @dns_private = @instance.dns_private
+        @state = @instance.state
         save
       end
     end
@@ -119,14 +120,19 @@ module Rudy
         :machine_data => Machine.generate_machine_data.to_yaml
       }.merge(opts)
       
+      puts "start1"
       @ec2inst.create(opts) do |inst|
+      puts "start2"
         @awsid = inst.awsid
         @created = @starts = Time.now
         @state = inst.state
+        puts "start3"
       end
+        puts "start4"
       
       self.save
       
+        puts "start5"
       self
     end
     
@@ -190,12 +196,14 @@ module Rudy
       puts "create4"
       machines = []
       current_machine_count.times do  |i|
+        puts "create5"
         machine = Rudy::Machine.new
         puts "Starting %s" % machine.name
         machine.start
+        puts "create6"
         machines << machine
       end
-      puts "create5"
+      puts "create7"
       machines.each { |m| each_mach.call(m) } if each_mach
       machines
     end

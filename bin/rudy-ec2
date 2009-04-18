@@ -105,6 +105,7 @@ module RudyEC2CLI
   usage "rudy-ec2 images -o amazon"
   usage "rudy-ec2 images -o self"
   option :o, :owner, String, "Amazon Account Number or one of: amazon, self"
+  option :l, :all, "Display all registered machine images (warning: slow)"
   #option :p, :private, "Private images only"
   #option :b, :bucket_name, String, "The name of the bucket that will store the image"
   #action :C, :create, "Create an image"

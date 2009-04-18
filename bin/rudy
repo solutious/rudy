@@ -175,23 +175,6 @@ class RudyCLI < Rudy::CLI::Base
   # ---------------------------------  RUDY MANAGER COMMANDS  --------
   # ------------------------------------------------------------------
 
-  #usage "#{$/} [global options] disks [-C -p path -d device -s size] [-A] [-D] [path]"
-  #desc "Manage Disks"
-  #option :l, :all, "Display all disk definitions"
-  #option :i, :awsid, String, "EC2 Instance ID"
-  #option :g, :group, String, "Machine group name"
-  #option :p, :path, String, "The filesystem path to use as the mount point"
-  #option :d, :device, String, "The device id (default: /dev/sdh)"
-  #option :s, :size, Integer, "The size of disk (in GB)"
-  #action :C, :create, "Create a disk definition"
-  #action :D, :destroy, "Destroy a disk definition"
-  #action :A, :attach, "Attach a disk"
-  #action :N, :unattach, "Unattach a disk"
-  #argv :diskname
-  #command :disk => Rudy::CLI::Disks
-  #command_alias :disk, :disks
-
-
   #usage "rudy [global options] backups [-C] [disk name]"
   #desc "Manage Backups"
   #option :s, :snapshot, String, "Create a backup entry from an existing snapshot"
@@ -202,11 +185,6 @@ class RudyCLI < Rudy::CLI::Base
   #argv :disk
   #command :'backup' => Rudy::CLI::Backups
   #command_alias :backup, :bu
-
-  #usage "rudy [global options] metadata instance-ID"
-  #desc "Display Rudy metadata."
-  #command :metadata => Rudy::CLI::Manager
-  #command_alias :metadata, :md
   
   desc "Startup a machine group"
   usage "rudy startup"
@@ -216,6 +194,11 @@ class RudyCLI < Rudy::CLI::Base
   desc "Shutdown a machine group"
   usage "rudy shutdown"
   command :shutdown => Rudy::CLI::Routines
+  
+  desc "Create a release"
+  usage "rudy release"
+  command :release => Rudy::CLI::Routines
+  command_alias :release, :r
 
   desc "Manage Machines"
   action :W, :wash, "Wash machine metadata."

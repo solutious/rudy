@@ -8,6 +8,9 @@ module Rudy; module CLI;
       rr.execute
       
       rmach = Rudy::Machines.new
+      
+      
+      puts $/, "The following machines are ready:"
       rmach.list do |machine|
         puts machine.to_s
       end

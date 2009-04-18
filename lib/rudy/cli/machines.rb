@@ -34,8 +34,10 @@ module Rudy
       def ssh
         # TODO: Give this methos a good look over
         pkey = user_keypairpath(@@global.user)
-        raise "No private key configured for #{@@global.user} in #{current_machine_group}" unless pkey
-
+        unless pkey
+          puts "No private key configured for #{@@global.user} in #{current_machine_group}"
+        end
+        
         # Options to be sent to Net::SSH
         ssh_opts = { :user => @@global.user || Rudy.sysinfo.user, :debug => nil  }
         if pkey 
@@ -62,9 +64,9 @@ module Rudy
         lt = rudy.list do |machine|
           # Print header
           if @@global.quiet
-            print "You are #{ssh_opts[:user].bright}. " if !checked # only the 1st
+            print "You are #{ssh_opts[:user].to_s.bright}. " if !checked # only the 1st
           else
-            print "Connecting #{ssh_opts[:user].bright}@#{machine.dns_public} "
+            print "Connecting #{ssh_opts[:user].to_s.bright}@#{machine.dns_public} "
             puts "#{machine.name} (#{machine.awsid})"
           end
 
@@ -73,7 +75,7 @@ module Rudy
             execute_check(:medium) if ssh_opts[:user] == "root"
             checked = true
           end
-          p ssh_opts
+          
           # Open the connection and run the command
           rbox = Rye::Box.new(machine.dns_public, ssh_opts)
           ret = rbox.send(command, command_args)

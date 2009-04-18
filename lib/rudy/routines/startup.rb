@@ -8,7 +8,11 @@ module Rudy; module Routines;
       rmach = Rudy::Machines.new
       
       routine = fetch_routine_config(:startup)
-
+      
+      rbox_local = Rye::Box.new('localhost')
+      Rudy::Routines::ScriptHelper.before_local(routine, rbox_local)
+      Rudy::Routines::ScriptHelper.before(routine, rbox_local)
+      
       #rmach.create do |machine|
       rmach.list do |machine|
       
@@ -22,6 +26,8 @@ module Rudy; module Routines;
         
         Rudy::Routines::DiskHelper.execute(routine, machine, rbox)
         
+        Rudy::Routines::ScriptHelper.after_local(routine, machine, rbox)
+        Rudy::Routines::ScriptHelper.after(routine, machine, rbox)
         
         puts $/, "Filesystem on #{machine.name}:"
         puts rbox.df(:h)

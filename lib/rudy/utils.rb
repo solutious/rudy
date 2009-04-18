@@ -239,7 +239,7 @@ module Rudy
     end
 
     # A basic file writer
-    def write_to_file(filename, content, mode, chmod=nil)
+    def write_to_file(filename, content, mode, chmod=600)
       mode = (mode == :append) ? 'a' : 'w'
       f = File.open(filename,mode)
       f.puts content

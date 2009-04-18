@@ -27,6 +27,8 @@ module Rudy
     @@global = Rudy::Global.new
     @@logger = StringIO.new    # BUG: memory-leak for long-running apps
     
+    @@sacred_params = [:accesskey, :secretkey, :cert, :privatekey]
+    
     # NOTE: These methods conflict with Drydock::Command classes. It's
     # probably a good idea to not expose these anyway since it can be
     # done via Rudy::Huxtable.update_global etc...
@@ -286,7 +288,8 @@ module Rudy
     end
     
     def fetch_machine_param(parameter)
-      fetch_machine_config[parameter]
+      top_level = @@config.machines.find(parameter) || {}
+      top_level.merge fetch_machine_config[parameter] || {}
     end
     
     def fetch_machine_config
@@ -305,6 +308,22 @@ module Rudy
       end
       compilation = nil if compilation.empty?
       compilation
+    end
+    
+    # Returns the appropriate config block from the machines config.
+    # Also adds the following unless otherwise specified:
+    # :region, :zone, :environment, :role, :position
+    def fetch_script_config
+      sconf = fetch_machine_param :config
+      extras = {
+        :region => @@global.region,
+        :zone => @@global.zone,
+        :environment => @@global.environment,
+        :role => @@global.role,
+        :position => @@global.position
+      }
+      sconf.merge! extras
+      sconf
     end
     
     

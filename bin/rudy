@@ -84,6 +84,7 @@ class RudyCLI < Rudy::CLI::Base
   usage "rudy [-f config-file] config [param-name]"
   desc "Check Rudy configuration."
   option :l, :all, "Display configs for all machines"
+  option :s, :script, "Generate script config (identical to what is provided scripts called in routines)"
   option :d, :defaults, "Display the default value for the supplied parameter"
   option :g, :group, String, "Display configuration for a specific group"
   argv :name

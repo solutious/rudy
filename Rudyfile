@@ -40,7 +40,7 @@ machines do
   zone :"eu-west-1b" do
     ami 'ami-e40f2790'    # Amazon Getting Started AMI (EU)
   end
-  
+
   # We've defined an environment called "stage" with one role: "app". 
   # The configuration inside the env block is available to all its 
   # roles. The configuration inside the role blocks is available only
@@ -65,13 +65,18 @@ machines do
       end
       
     end
-    
-      size :ooop
-    role :poop do
-      positions 3
-      ami "ami-22222222"
-    end
+
+  end  
+
+  # The routines section below contains calls to local and remote
+  # scripts. The config contained in this block is made available
+  # those scripts in the form of a yaml file. The file is called
+  # rudy-config.yml. 
+  config do
+    dbmaster 'localhost'
+    newparam 573114
   end
+  
   
 end
 
@@ -83,6 +88,8 @@ routines do
     role :app do
       
       startup do
+        before_local Rudy.sysinfo.user => ["uname", :a]
+        
         disks do
           #create "/rudy/example1"
           #create "/rudy/example2"

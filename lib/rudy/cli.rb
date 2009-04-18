@@ -19,6 +19,9 @@ module Rudy
       
     protected
       def init
+
+        # The CLI wants output!
+        Rudy::Huxtable.update_logger STDOUT
         
         # Send The Huxtables the global values from the command-line
         Rudy::Huxtable.update_global @global

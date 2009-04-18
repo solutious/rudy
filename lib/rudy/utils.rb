@@ -75,15 +75,14 @@ module Rudy
     # Set to nil or false to keep the waiter silent.
     # The block must return false while waiting. Once it returns true
     # the waiter will return true too.
-    def Rudy.waiter(duration=2, max=120, logger=STDOUT, msg=nil, bells=0, &check)
-      # TODO: Move to Drydock
+    def waiter(duration=2, max=120, logger=STDOUT, msg=nil, bells=0, &check)
+      # TODO: Move to Drydock. [ed-why?]
       raise "The waiter needs a block!" unless check
       duration = 1 if duration < 1
       max = duration*2 if max < duration
-      success = false
       dot = '.'
       begin
-        success = Timeout::timeout(max) do
+        Timeout::timeout(max) do
           while !check.call
             logger.print dot if logger.respond_to?(:print)
             logger.flush if logger.respond_to?(:flush)
@@ -92,16 +91,17 @@ module Rudy
         end
       rescue Timeout::Error => ex
         retry if Annoy.pose_question(" Keep waiting?\a ", /yes|y|ya|sure|you bet!/i, logger)
-        raise ex # We won't get here unless the question fails
+        return false
       end
       logger.puts msg if msg
-      bell(bells, logger)
-      success
+      Rudy::Utils.bell(bells, logger)
+      true
     end
 
     # Make a terminal bell chime
     def bell(chimes=1, logger=nil)
-      return if @@quiet
+      chimes ||= 0
+      return unless logger
       chimed = chimes.to_i
       logger.print "\a"*chimes if chimes > 0 && logger
       true # be like Rudy.bug()

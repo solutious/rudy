@@ -88,8 +88,8 @@ routines do
           create "/rudy/example2"
         end
         
-        after :root => "pwd"
-        after :rudy => "pwd"
+        after :root => "uname"
+        after :root => "uptime"
       end
       
       restart do

@@ -5,13 +5,15 @@ module Rudy
     module ObjectBase
       include Rudy::Huxtable
       
-      def initialize
-        @sdb = Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey, @@global.region)
-        @ec2inst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey, @@global.region)
-        init
+      def initialize(*args)
+        a, s, r = @@global.accesskey, @@global.secretkey, @@global.region
+        @sdb = Rudy::AWS::SDB.new(a, s, r)
+        @ec2inst = Rudy::AWS::EC2::Instances.new(a, s, r)
+        @rvol = Rudy::AWS::EC2::Volumes.new(a, s, r)
+        init(*args)
       end
       
-      def init; raise "Must override init"; end
+      def init(*args); raise "Must override init"; end
       
       def valid?; raise "#{self.class} must override 'valid?'"; end
       
@@ -87,10 +89,16 @@ module Rudy
   module MetaData
     include Rudy::Huxtable
     
-    def initialize
-      @sdb = Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey, @@global.region)
-      @ec2inst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey, @@global.region)
-      init
+    def initialize(*args)
+      a, s, r = @@global.accesskey, @@global.secretkey, @@global.region
+      @sdb = Rudy::AWS::SDB.new(a, s, r)
+      @rinst = Rudy::AWS::EC2::Instances.new(a, s, r)
+      @rgrp = Rudy::AWS::EC2::Groups.new(a, s, r)
+      @rkey = Rudy::AWS::EC2::KeyPairs.new(a, s, r)
+      init(*args)
+    end
+    
+    def init(*args)
     end
     
     # 20090224-1813-36

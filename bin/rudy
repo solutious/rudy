@@ -208,14 +208,26 @@ class RudyCLI < Rudy::CLI::Base
   #command_alias :metadata, :md
   
   desc "Startup a machine group"
-  usage "rudy [global options] startup"
-  command :startup => Rudy::CLI::Routines::Startup
+  usage "rudy startup"
+  command :startup => Rudy::CLI::Routines
   command_alias :startup, :s
-  
+
+  desc "Shutdown a machine group"
+  usage "rudy shutdown"
+  command :shutdown => Rudy::CLI::Routines
+
   desc "Manage Machines"
   action :W, :wash, "Wash machine metadata."
   command :machines => Rudy::CLI::Machines
   command_alias :machines, :m
+  
+  desc "Log in to a machine"
+  command :ssh => Rudy::CLI::Machines
+  
+  desc "Manage Disks"
+  action :W, :wash, "Wash disk metadata."
+  command :disks => Rudy::CLI::Disks
+  command_alias :disks, :d
   
   # --------------------------  RUDY RELEASE/DEPLOY COMMANDS  --------
   # ------------------------------------------------------------------
@@ -258,7 +270,7 @@ class RudyCLI < Rudy::CLI::Base
   # -------------------------------------------  UGLY STUFFS  --------
   # ------------------------------------------------------------------
   debug :on
-  default :startup
+  default :machines
   
 
   

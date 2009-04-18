@@ -83,7 +83,7 @@ module Rudy::Test
       
       should "(95) destroy security group" do
         # We can't delete the instance group until all instances are terminated
-        Rudy.waiter(2, 60, @@logger) { !@rmach.running? }
+        Rudy::Utils.waiter(2, 60, @@logger) { !@rmach.running? }
         @rgroup.list do |group|
           next if group.name == 'default' # The default group is invisible
           assert @rgroup.destroy(group.name), "Did not destroy #{group.name}"
@@ -93,7 +93,7 @@ module Rudy::Test
       
       should "(96) destroy test keypair" do
         # We can't delete the keypair until all instances are terminated
-        Rudy.waiter(2, 60, @@logger) { !@rmach.running? }
+        Rudy::Utils.waiter(2, 60, @@logger) { !@rmach.running? }
         assert @rkey.destroy, "Keypair (#{@rkey.name}) not destroyed"
       end
       

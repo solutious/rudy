@@ -35,8 +35,9 @@ module Rudy
     end
     
     def liner_note
+      update if !dns_public? && @awsid
       info = @dns_public && !@dns_public.empty? ? @dns_public : @state
-      "%s (%s)" % [self.name.bright, info]
+      "%s  %s" % [self.name.bright, info]
     end
     
     def to_s(with_title=false)
@@ -51,6 +52,7 @@ module Rudy
     end
     
     def inspect
+      update if !dns_public? && @awsid
       lines = []
       lines << liner_note
       field_names.each do |key|
@@ -76,16 +78,32 @@ module Rudy
       ["m", zon, env, rol, pos].join(Rudy::DELIM)
     end
     
-    
-    def update_dns
+    def update
       return false unless @awsid
       @instance = @ec2inst.get(@awsid) 
       if @instance.is_a?(Rudy::AWS::EC2::Instance)
         @dns_public = @instance.dns_public
         @dns_private = @instance.dns_private
+        save
       end
     end
     
+    def dns_public
+      update unless dns_public?
+      @dns_public
+    end
+    
+    def dns_private
+      update unless dns_private?
+      @dns_private
+    end
+    
+    def dns_public?
+      !@dns_public.nil? && !@dns_public.empty?
+    end
+    def dns_private?
+      !@dns_private.nil? && !@dns_private.empty?
+    end
     
     def start(opts={})
       raise "#{name} is already running" if running?
@@ -111,7 +129,12 @@ module Rudy
       
       self
     end
-
+    
+    def destroy
+      @ec2inst.destroy(@awsid) if running?
+      super
+    end
+    
     
     def Machine.generate_machine_data
       data = {      # Give the machine an identity
@@ -120,7 +143,6 @@ module Rudy
         :environment => @@global.environment.to_s,
         :role => @@global.role.to_s,
         :position => @@global.position.to_s,
-        
         :hosts => { # Add hosts to the /etc/hosts file 
           :dbmaster => "127.0.0.1",
         }
@@ -129,7 +151,7 @@ module Rudy
     end
     
     def running?
-      return false if @awsid.nil? || !@awsid.empty?
+      return false if @awsid.nil? || @awsid.empty?
       @ec2inst.running?(@awsid)
     end
       
@@ -139,14 +161,7 @@ module Rudy
   
   class Machines
     include Rudy::MetaData
-    
-    def init
-      a, s, r = @@global.accesskey, @@global.secretkey, @@global.region
-      @rinst = Rudy::AWS::EC2::Instances.new(a, s, r)
-      @rgrp = Rudy::AWS::EC2::Groups.new(a, s, r)
-      @rkey = Rudy::AWS::EC2::KeyPairs.new(a, s, r)
-    end
-    
+        
     def create(&each_mach)
       raise MachineGroupAlreadyRunning, current_machine_group if running?
       raise MachineGroupNotDefined, current_machine_group unless known_machine_group?
@@ -173,19 +188,27 @@ module Rudy
         raise PrivateKeyNotFound, kp_file if kp_file && !File.exists?(kp_file)
       end
       
+      machines = []
       current_machine_count.times do  |i|
         machine = Rudy::Machine.new
         puts "Starting %s" % machine.name
         machine.start
+        machines << machine
       end
       
+      machines.each { |m| each_mach.call(m) } if each_mach
+      machines
     end
     
     
     def destroy(&each_mach)
-      #raise MachineGroupAlreadyRunning, current_machine_group if running?
-      #raise MachineGroupNotDefined, current_machine_group unless known_machine_group?
-      
+      raise MachineGroupNotRunning, current_machine_group unless running?
+      raise MachineGroupNotDefined, current_machine_group unless known_machine_group?
+      list.each { |m| each_mach.call(m); } if each_mach
+      list do |mach|
+        puts "Destroying #{mach.name}"
+        mach.destroy
+      end
     end
     
     def list(more=[], less=[], &each_mach)

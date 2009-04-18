@@ -16,7 +16,7 @@ module Rudy::Test
         instances = @ec2inst.create(:ami => 'ami-235fba4a', :group => "default") # Amazon Getting Started AMI
         assert instances.is_a?(Array), "Not an Array of instances"
         instances.each do |instance|
-          Rudy.waiter(2, 120, @@logger) { @ec2inst.running?(instance) }
+          Rudy::Utils.waiter(2, 120, @@logger) { @ec2inst.running?(instance) }
           assert instance.is_a?(Rudy::AWS::EC2::Instance), "Not an Rudy::AWS::EC2::Instance object"
         end
       end

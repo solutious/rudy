@@ -3,7 +3,7 @@
 module Rudy::AWS
   module EC2
     class Volume < Storable
-      @@sformat = "%s   %10s;%4sGB;  %s  " # cram the terabyte
+      @@sformat = "%s  %10s;%4sGB;  %s  " # cram the terabyte
       
       field :awsid
       field :status
@@ -148,7 +148,8 @@ module Rudy::AWS
     
       def exists?(vol_id)
         vol_id = Volumes.get_vol_id(vol_id)
-        !get(vol_id).nil?
+        vol = get(vol_id)
+        !vol.nil?
       end
     
       def get(vol_id)

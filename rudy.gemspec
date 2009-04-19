@@ -14,13 +14,16 @@
   s.require_paths = %w[lib]
   s.rubygems_version = '1.1.1'
   
+  s.add_dependency 'drydock', '>= 0.5.5'  
+  s.add_dependency 'caesars', '>= 0.5.4'  
+  s.add_dependency 'rye', '>= 0.5.1'
+  
   s.add_dependency 'echoe'
   s.add_dependency 'amazon-ec2', '>= 0.3.8'  # region fix
-  s.add_dependency 'net-ssh'
-  s.add_dependency 'net-scp'
+  s.add_dependency 'net-ssh', '>=2.0.9'
+  s.add_dependency 'net-scp', '>1.0.2'
   s.add_dependency 'net-ssh-gateway'
   s.add_dependency 'net-ssh-multi'
-  s.add_dependency 'rye', '>= 0.4.3'
   
   # http://bit.ly/2WaAgV
   #s.add_runtime_dependency('xml-simple', '>= 1.0.11')
@@ -28,7 +31,7 @@
   #s.add_development_dependency('jgre-monkeyspecdoc', '>= 0.1.0')
   #s.add_development_dependency('thoughtbot-shoulda', '>= 0.1.0')
   
-  s.executables = %w[ird rudy rudy-ec2]
+  s.executables = %w[ird rudy rudy-ec2 rudy-sdb rudy-s3]
   
   # = MANIFEST =
   # git ls-files
@@ -120,13 +123,14 @@
   test/30_sdb_metadata/00_setup_test.rb
   test/30_sdb_metadata/10_disks_test.rb
   test/30_sdb_metadata/20_backups_test.rb
-  test/50_commands/00_setup_test.rb
-  test/50_commands/10_keypairs_test.rb
-  test/50_commands/20_groups_test.rb
-  test/50_commands/40_volumes_test.rb
-  test/50_commands/50_instances_test.rb
   test/coverage.txt
   test/helper.rb
+  tryouts/console_tryout.rb
+  tryouts/disks_tryout.rb
+  tryouts/drydock_tryout.rb
+  tryouts/nested_methods.rb
+  tryouts/session_tryout.rb
+  tryouts/usage_tryout.rb
   vendor/highline-1.5.1/CHANGELOG
   vendor/highline-1.5.1/INSTALL
   vendor/highline-1.5.1/LICENSE

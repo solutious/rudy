@@ -49,6 +49,7 @@ module Rudy; module Routines;
       
       if routine.has_key?(timing)
         puts "Connecting to #{hostname}"
+        rbox.connect
         original_user = rbox.user
         scripts = [routine[timing]].flatten
         scripts.each do |script|

@@ -20,6 +20,7 @@ module AWS; module SDB;
     end
     def domains_create
       @sdb.create_domain @argv.name
+      execute_check(:low)
       domains
     end
     
@@ -29,6 +30,7 @@ module AWS; module SDB;
       true
     end
     def domains_destroy
+      execute_check(:medium)
       @sdb.destroy_domain @argv.name
       domains
     end

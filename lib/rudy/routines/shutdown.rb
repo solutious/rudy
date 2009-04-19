@@ -17,7 +17,6 @@ module Rudy; module Routines;
       rmach.destroy do |machine|
       #rmach.list do |machine|
         
-        puts machine_separator(machine.liner_note)
         print "Waiting for instance..."
         isup = Rudy::Utils.waiter(3, 120, STDOUT, "it's up!", 0) {
           inst = machine.get_instance
@@ -40,6 +39,7 @@ module Rudy; module Routines;
         puts task_separator("DISK ROUTINES")
         Rudy::Routines::DiskHelper.execute(routine, machine, rbox)
         
+        puts machine_separator(machine.liner_note)
       end
       
         

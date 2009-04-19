@@ -11,11 +11,15 @@ require 'rexml/xpath'
 module Rudy
   module AWS
     class SDB
-      
+      class NoAccessKey < RuntimeError; end
+      class NoSecretKey < RuntimeError; end
+        
       require 'rudy/aws/sdb/error'
       
       def initialize(access_key=nil, secret_key=nil, region=nil, debug=nil)
-       
+        raise NoAccessKey if access_key.nil? || access_key.empty?
+        raise NoSecretKey if secret_key.nil? || secret_key.empty?
+          
         url ||= 'http://sdb.amazonaws.com'
         # There is a bug with passing :server to EC2::Base.new so 
         # we'll use the environment variable for now. 

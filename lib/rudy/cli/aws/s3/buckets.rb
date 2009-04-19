@@ -26,8 +26,9 @@ module AWS; module S3;
       true
     end
     def create_buckets
+      execute_check(:low)
       s3 = Rudy::AWS::S3.new(@@global.accesskey, @@global.secretkey, @@global.region)
-      puts "Success: %s" % s3.create_bucket(@argv.name)
+      s3.create_bucket(@argv.name)
       buckets
     end
     
@@ -36,8 +37,9 @@ module AWS; module S3;
       true
     end
     def destroy_buckets
+      execute_check(:medium)
       s3 = Rudy::AWS::S3.new(@@global.accesskey, @@global.secretkey, @@global.region)
-      puts "Success: %s" % s3.destroy_bucket(@argv.name)
+      s3.destroy_bucket(@argv.name)
       buckets
     end
     

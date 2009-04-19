@@ -27,7 +27,7 @@ or via download:
 * rudy-0.6.0.tar.gz[http://github.com/solutious/rudy/tarball/rudy-0.6.0]
 * rudy-0.6.0.zip[http://github.com/solutious/rudy/zipball/rudy-0.6.0]
 
-NOTE: <em>If you are not installing via RubyGems, you need to make sure the Ruby dependencies are installed and in your LOAD_PATH. Ryan Tomayko wrote a gist[http://gist.github.com/54177] about it.</em>
+NOTE: <em>If you are not installing via RubyGems, you need to make sure the Ruby dependencies are in your LOAD_PATH (<tt>$:</tt>). Ryan Tomayko wrote a gist[http://gist.github.com/54177] about it.</em>
 
 === Step 2 of 2 (initialize your configuration):
 

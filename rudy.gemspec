@@ -158,25 +158,3 @@
   
 end
 
-__END__
-
-RELEASE CHECKLIST
-
-* Disable debug mode
-* Disable dev $LOAD_PATH 
-* Update manifest
-  * Remove tryouts
-* Update executables list in gemspec
-* Version number? 
-  * rudy.rb
-  * gemspec
-* Removed "THIS VERSION IS NOT YET RELEASED"
-* For rudy-ec2 commands
-  * to_s
-  * consistent layout
-  * all actions tested
-  * all options tested
-  * help has command usages
-  * make sure option input checks occur before argv checks
-* Ruby 1.8, 1.9; JRuby 1.1, 1.2
-

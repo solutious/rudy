@@ -13,8 +13,8 @@ module Rudy; module CLI;
         puts machine.to_s
       end
       
-      if @@global.environment == @@config.default.environment && 
-         @@global.role == @@config.default.role
+      if @@global.environment == @@config.defaults.environment && 
+         @@global.role == @@config.defaults.role
          puts
          puts "Try: #{$0} -u root ssh"
       end

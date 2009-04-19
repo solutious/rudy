@@ -15,6 +15,8 @@ module Rudy; module Routines;
       puts task_separator("BEFORE SCRIPTS (local)")
       Rudy::Routines::ScriptHelper.before_local(routine, sconf, rbox_local)
       
+      puts
+      
       rmach.destroy do |machine|
       #rmach.list do |machine|
         

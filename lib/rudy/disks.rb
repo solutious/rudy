@@ -178,8 +178,10 @@ class Disks
   end
 
   def get(rname=nil)
-    d = Rudy::Disk.from_hash(@sdb.get(Rudy::DOMAIN, rname)) # Returns nil if empty
-    d.update
+    dhash = @sdb.get(Rudy::DOMAIN, rname)
+    return nil if dhash.nil? || dhash.empty?
+    d = Rudy::Disk.from_hash(dhash)
+    d.update if d
     d
   end
 

@@ -21,7 +21,7 @@
   s.add_dependency 'echoe'
   s.add_dependency 'amazon-ec2', '>= 0.3.8'  # region fix
   s.add_dependency 'net-ssh', '>=2.0.9'
-  s.add_dependency 'net-scp', '>1.0.2'
+  s.add_dependency 'net-scp', '>=1.0.2'
   s.add_dependency 'net-ssh-gateway'
   s.add_dependency 'net-ssh-multi'
   

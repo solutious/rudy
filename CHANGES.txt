@@ -1,14 +1,14 @@
 RUDY, CHANGES
 
-TODO: Remove string messages for non-string output formats
-TODO: Support for reserved instances
-TODO: Test for zone and region support
-TODO: Support for machine image attributes
-TODO: Support for product codes
-TODO: HTTPS
+* TODO: Remove string messages for non-string output formats
+* TODO: Support for reserved instances
+* TODO: Test for zone and region support
+* TODO: Support for machine image attributes
+* TODO: Support for product codes
+* TODO: HTTPS
 
 
-#### 0.6.0 (2009-04-??) ###############################
+#### 0.6.0 (2009-04-19) ###############################
 
 NOTE: This is a significant re-write from 0.5
 

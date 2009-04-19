@@ -22,7 +22,7 @@ require 'drydock'
 require 'rudy/cli'
 
 
-module InteractiveRudyCLI
+module RudyCLI_Interactive # :nodoc:all
   extend self
   extend Drydock
   include Readline

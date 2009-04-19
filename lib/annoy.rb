@@ -1,12 +1,15 @@
+#---
+# TODO: Use Matrix to give a more accurate annoyance factor
+# TODO: Add trivia questions
+#+++
 
 require 'timeout'
 require 'sysinfo'
 require 'highline'
 
-# Annoy - your annoying friend that asks you questions all the time.
+# = Annoy 
 #
-# TODO: Use Matrix to give a more accurate annoyance factor
-# TODO: Add trivia questions
+# Like your annoying friend that asks you questions all the time.
 #
 class Annoy
   
@@ -258,6 +261,9 @@ class Annoy
   
 end
 
+# = Annoy::GiveUp
+#
+# This is what happens when you don't answer Annoy's questions. 
 class Annoy::GiveUp < RuntimeError
 end
 

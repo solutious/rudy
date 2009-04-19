@@ -67,7 +67,7 @@ class Storable
   def self.field_names
     class_variable_get(:@@field_names)
   end
-  # Ditto.
+  # Returns an array of field names defined by self.field
   def field_names
     self.class.send(:class_variable_get, :@@field_names)
   end
@@ -76,7 +76,8 @@ class Storable
   def self.field_types
     class_variable_get(:@@field_types)
   end
-  # Ditto.
+  # Returns an array of field types defined by self.field. Fields that did 
+  # not receive a type are set to nil.
   def field_types
     self.class.send(:class_variable_get, :@@field_types)
   end

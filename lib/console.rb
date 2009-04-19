@@ -4,7 +4,9 @@
 # See: man terminfo
 #+++
 
-
+#
+#
+#
 class String
   @@print_with_attributes = true
   def String.disable_colour; @@print_with_attributes = false; end

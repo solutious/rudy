@@ -19,7 +19,7 @@ require 'rudy/cli'
 require 'drydock'
 
 # Command-line interface for bin/rudy-s3
-module RudyS3CLI
+module RudyCLI_S3
   extend Drydock
   
   # ------------------------------------  AMAZON S3 COMMANDS  --------

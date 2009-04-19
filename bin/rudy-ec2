@@ -20,7 +20,7 @@ require 'rudy/cli'
 require 'drydock'
 
 # Command-line interface for bin/rudy-ec2
-module RudyEC2CLI
+module RudyCLI_EC2
   extend Drydock
   
   

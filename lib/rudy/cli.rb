@@ -2,12 +2,18 @@
 require 'drydock'
 
 module Rudy
+    
+  # = CLI
+  # 
+  # These classes provide the functionality for the Command
+  # line interfaces. See the bin/ files if you're interested. 
+  # 
   module CLI
     class NoCred < RuntimeError #:nodoc
     end
     
     class Output < Storable
-      # Use for all CLI responses
+      # TODO: Use for all CLI responses
       # Messages and errors should be in @@global.format
       # Should print messages as they come
     end

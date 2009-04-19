@@ -19,7 +19,7 @@ require 'rudy/cli'
 require 'drydock'
 
 # Command-line interface for bin/rudy-sdb
-module RudySDBCLI
+module RudyCLI_SDB
   extend Drydock
   
   # -----------------------------------  AMAZON SDB COMMANDS  --------

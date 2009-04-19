@@ -228,7 +228,6 @@ module Rudy
   private 
     
     
-    
     # We grab the appropriate routines config and check the paths
     # against those defined for the matching machine group. 
     # Disks that appear in a routine but not in a machine will be
@@ -239,18 +238,18 @@ module Rudy
     # size they are and stuff. 
     # Return a hash:
     #
-    #     :after: 
-    #     - :root: pwd
-    #     - :rudy: pwd
-    #     :disks: 
-    #       :create: 
-    #         /rudy/example1: 
-    #           :device: /dev/sdr
-    #           :size: 2
-    #         /rudy/example2: 
-    #           :device: /dev/sdm
-    #           :size: 1
-    #     
+    #      :after: 
+    #      - :root: pwd
+    #      - :rudy: pwd
+    #      :disks: 
+    #        :create: 
+    #          /rudy/example1: 
+    #            :device: /dev/sdr
+    #            :size: 2
+    #          /rudy/example2: 
+    #            :device: /dev/sdm
+    #            :size: 1
+    #      
     def fetch_routine_config(action)
       raise "No configuration" unless @@config
       raise "No routines configuration" unless @@config.routines

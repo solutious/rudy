@@ -1,8 +1,6 @@
 = Rudy - v0.6 ALPHA
 
-THE VERSION DESCRIBED IS NOT YET RELEASED.
-
-Rudy is a command-line development and deployment tool for Amazon EC2. It helps you build and manage machines by organizing them into groups of _environments_ and _roles_. <tt>stage</tt> is the default environment and <tt>app</tt> is the default machine role. You can run multiple machines with the same role. These are called _positions_. Rudy also supports running machine groups across availability _zones_. 
+Rudy is a command-line development and deployment tool for Amazon Web Services. It helps you build and manage machines in EC2 by organizing them into groups of _environments_ and _roles_. These are called _machine groups_. <tt>stage</tt> is the default environment and <tt>app</tt> is the default role. You can run multiple machines with the same role. These are called _positions_. Rudy also supports running machine groups across availability _zones_. 
 
 When you put all this together, you have a unique name for every machine. The default machine is:
 
@@ -14,54 +12,7 @@ When you put all this together, you have a unique name for every machine. The de
 
 All configuration is organized into the zones, environments, and roles that you specify (Rudy assumes positions are identical which is important for backups and scaling). And as you'd expect, the defaults can be changed too (in <tt>~/.rudy/config</tt>). See below for usage examples. 
 
-<b>Please note that this is an ALPHA release. That means it's not ready for production use!</b>
-
-
-== Example 1 -- The Basics
-
-Before we get fancy, we'll cover the basics by using Rudy as a convenient replacement for the ec2-api tools. Let's create an instance, login via SSH, and then destroy it:
-
-    $ rudy machine --create  
-    $ rudy -u root ssh
-    $ rudy machine --destroy
-
-* <tt>rudy machine --create</tt>
-  * Checks whether the security group stage-app is exists. If it doesn't exist, it will be created and the machine your on will be authorized to access ports 22, 80, and 443 (ssh, http, and https). 
-  * Checks for an SSH keypair called key-stage-app. If it doesn't exist, it creates it and writes the public and private keys to the directory containing your Rudy config file (<tt>~/.rudy</tt>)
-  * Creates a new EC2 instance. 
-* <tt>rudy -u root ssh</tt>
-  * Opens an SSH session with the new machine instance. A password is not required because Rudy uses the keypair that is associated to this machine group.
-* <tt>rudy machine --destroy</tt>
-  * Terminates the instance. 
-
-To find out what machines are running regardless of the group, use this command:
-
-    $ rudy status --all
-
-
-== Example 2 -- The ad-hoc development environment
-
-This example creates a machine group called dev-app, where "dev" is the name of the environment and "app" is the name of the machine role. Once we've defined this group, we'll be able to create it and destroy it willy nilly from the command-line.
-
-In the top level of your project directory put the following configuration into a file called <tt>Rudyfile</tt>:
-
-    machines do
-      
-      environment :dev do
-        ami "ami-235fba4a"  # Amazon Getting Started AMI (US)
-        
-        role :app do
-          disks do
-            path "/rudy/example1" do
-              size 4
-              device "/dev/sdr"
-            end
-          end
-        end
-        
-      end    
-    end
-
+<b>NOTE: This is an ALPHA release. That means Rudy's not ready for production use! See Alpha Warning.</b>
 
 == Installation
 
@@ -76,7 +27,7 @@ or via download:
 * rudy-0.6.0.tar.gz[http://github.com/solutious/rudy/tarball/rudy-0.6.0]
 * rudy-0.6.0.zip[http://github.com/solutious/rudy/zipball/rudy-0.6.0]
 
-NOTE: <em>If you are not installing via RubyGems, you need to make sure the Ruby dependencies (see the [README](http://github.com/solutious/rudy/blob/master/README.rdoc)) are installed and in your LOAD_PATH. Ryan Tomayko wrote [a gist](http://gist.github.com/54177) about it.</em>
+NOTE: <em>If you are not installing via RubyGems, you need to make sure the Ruby dependencies are installed and in your LOAD_PATH. Ryan Tomayko wrote a gist[http://gist.github.com/54177] about it.</em>
 
 === Step 2 of 2 (initialize your configuration):
 
@@ -84,7 +35,32 @@ NOTE: <em>If you are not installing via RubyGems, you need to make sure the Ruby
       [edit ~/.rudy/config with your Amazon Web Services credentials] 
     $ rudy init
 
-NOTE: <em>You need an Amazon[http://aws.amazon.com/] account to use Rudy. Sign up for EC2[http://aws.amazon.com/ec2/] and SimpleDB[http://aws.amazon.com/simpledb/].</em>
+NOTE: <em>You need an Amazon[http://aws.amazon.com/] account to use Rudy. Sign up for EC2[http://aws.amazon.com/ec2/],  SimpleDB[http://aws.amazon.com/simpledb/], and S3[http://aws.amazon.com/s3/]</em>
+
+
+== Example -- Launch a Machine Group
+
+Machine groups are named after the current environment and role. The default machine group is <tt>stage-app</tt>. In this example, Rudy will create the default machine group from scratch. 
+
+<b>Note: Make sure your <tt>~/.rudy/config</tt> contains your AWS credentials</b>
+
+We need to tell Rudy what this machine group should look like. We can generate a default machine configuration with this command:
+
+    $ rudy config --rudy > Rudyfile
+
+This will generate a config file called <tt>Rudyfile</tt> which contains a default machines and routines configuration. The machine configuration describes the "physical" characteristics of your machine groups. The routine configuration describes what happens when you startup and shutdown a machine group (Rudy refers to these as _routines_).
+    
+We can launch the default machine group (stage-app) with this command:
+
+    $ rudy startup
+
+You now have a new EC2 instance called <tt>m-us-east-1b-stage-app-01</tt> to work with. You can log into it with:
+
+    $ rudy -u root ssh
+    
+The <tt>-u root</tt> tells Rudy to open a connection as the root user. If you create an account on that instance, you can login as that user too. When you don't feel like paying for the instance you can run the following command to destroy it forever:
+
+    $ rudy shutdown
 
 
 == Dependencies:
@@ -103,7 +79,15 @@ NOTE: <em>You need an Amazon[http://aws.amazon.com/] account to use Rudy. Sign u
 * <tt>"The request signature we calculated does not match the signature you provided."</tt>
   * Check that your Amazon Web Service access key and secret key are correct
 * <tt>"AWS was not able to validate the provided access credentials"</tt>
-  * If it's a new Amazon Accounts, you need to sign up for EC2, SDB, and S3. 
+  * If it's a new Amazon Account, you need to sign up for EC2, SDB, and S3. 
+
+== Alpha Warning
+
+Although Rudy has been pretty well tested and is currently being used in production in a private beta, it's not ready for general production use. There are a few things to keep in mind while Rudy is in alpha status.
+
+* If you already have private SSH keys, back them up. Rudy is quite safe but hasn't been audited so backup your keys as a precaution.
+* If you're running EC2 instances in production, create a new set of AWS credentials (access key and secret key) to use with Rudy. This will ensure that Rudy has no access to your production instances. 
+* Rudy commands and APIs may change in later releases. This means that if you create an environment with an alpha release and later upgrade Rudy, some things may not work as expected. 
 
 
 == More Info

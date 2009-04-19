@@ -33,16 +33,11 @@ require 'logger'
 # == About
 #
 # Rudy is a development and deployment tool for the Amazon Elastic Compute Cloud
-# (EC2). There are two interfaces: a command-line executable and a Ruby library.
-# You can use Rudy as a development tool to simply the management of instances, 
-# security groups, etc... on an ad-hoc basic. You can also define complex machine 
-# environments using a simple domain specific language (DSL) and use Rudy to build
-# and deploy these environments. 
-#
+# (EC2). See README.rdoc for more information. 
 #
 # == Status: Alpha
 # 
-# The current release (0.5) is not ready for general production use. Use it for 
+# The current release (0.6) is not ready for general production use. Use it for 
 # exploring EC2 and operating your development / ad-hoc instances. We've put in 
 # a lot of effort to make sure Rudy plays safe, but it's possible we missed
 # something. That's why we consider it alpha code. 
@@ -52,14 +47,15 @@ require 'logger'
 #     $ rudy -h
 #     $ rudy show-commands
 #
+# Also:
+#
+#     $ rudy-ec2 -h
+#     $ rudy-ec2 show-commands
+#
 # And if you're feeling particularly saucey, try Rudy's REPL interface:
 #
 #     $ ird
 # 
-# == Next Release (0.6): May 2009.
-#
-#     $ rudy slogan
-#     Rudy: Not your grandparent's deployment tool! 
 #
 #
 module Rudy

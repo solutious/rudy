@@ -93,11 +93,11 @@ class Disk < Storable
       if !force
         raise Rudy::AWS::EC2::VolumeNotAvailable, @awsid if attached?
       else
-        detach if attached?
+        detach if exists? && attached?
         sleep 0.1
       end
       raise Rudy::AWS::EC2::VolumeNotAvailable, @awsid if in_use?
-      @rvol.destroy(@awsid)
+      @rvol.destroy(@awsid) if exists? && available?
     end
     super() # quotes, otherwise Ruby will send this method's args
   end

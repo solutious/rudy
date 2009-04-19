@@ -1,8 +1,9 @@
 
 libdir = File.join(File.dirname(__FILE__), '..', 'lib')
 $:.unshift libdir
-%w{drydock caesars rye}.each { |dir| $: << File.join(File.dirname(__FILE__), '..', '..', dir, 'lib') }
- 
+%w{amazon-ec2 drydock caesars rye}.each { |dir| $: << File.join(File.dirname(__FILE__), '..', '..', dir, 'lib') }
+
+require 'rubygems'
 require 'test/unit'
 require 'shoulda'
 

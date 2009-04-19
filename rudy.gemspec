@@ -41,6 +41,8 @@
   bin/ird
   bin/rudy
   bin/rudy-ec2
+  bin/rudy-s3
+  bin/rudy-sdb
   lib/annoy.rb
   lib/caesars.rb
   lib/console.rb
@@ -71,30 +73,25 @@
   lib/rudy/cli/aws/ec2/snapshots.rb
   lib/rudy/cli/aws/ec2/volumes.rb
   lib/rudy/cli/aws/ec2/zones.rb
+  lib/rudy/cli/aws/s3/buckets.rb
+  lib/rudy/cli/aws/s3/store.rb
   lib/rudy/cli/aws/sdb/domains.rb
-  lib/rudy/cli/backups.rb
+  lib/rudy/cli/candy.rb
   lib/rudy/cli/config.rb
-  lib/rudy/cli/deploy.rb
   lib/rudy/cli/disks.rb
-  lib/rudy/cli/manager.rb
-  lib/rudy/cli/release.rb
+  lib/rudy/cli/machines.rb
   lib/rudy/cli/routines.rb
-  lib/rudy/command/backups.rb
-  lib/rudy/command/disks.rb
-  lib/rudy/command/instances.rb
-  lib/rudy/command/machines.rb
-  lib/rudy/command/manager.rb
   lib/rudy/config.rb
   lib/rudy/config/objects.rb
-  lib/rudy/disk.rb
+  lib/rudy/disks.rb
   lib/rudy/global.rb
   lib/rudy/huxtable.rb
-  lib/rudy/machine.rb
+  lib/rudy/machines.rb
   lib/rudy/metadata.rb
   lib/rudy/routines.rb
-  lib/rudy/routines/disk_handler.rb
+  lib/rudy/routines/helpers/diskhelper.rb
+  lib/rudy/routines/helpers/scripthelper.rb
   lib/rudy/routines/release.rb
-  lib/rudy/routines/script_runner.rb
   lib/rudy/routines/shutdown.rb
   lib/rudy/routines/startup.rb
   lib/rudy/scm/svn.rb
@@ -130,12 +127,6 @@
   test/50_commands/50_instances_test.rb
   test/coverage.txt
   test/helper.rb
-  tryouts/console_tryout.rb
-  tryouts/disks_tryout.rb
-  tryouts/drydock_tryout.rb
-  tryouts/nested_methods.rb
-  tryouts/session_tryout.rb
-  tryouts/usage_tryout.rb
   vendor/highline-1.5.1/CHANGELOG
   vendor/highline-1.5.1/INSTALL
   vendor/highline-1.5.1/LICENSE

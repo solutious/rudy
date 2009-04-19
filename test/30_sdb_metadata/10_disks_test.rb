@@ -35,8 +35,6 @@ module Rudy::Test
         assert_equal disk_name, disk.name, "Unexpected disk name #{disk.name}"
         assert disk.valid?, "Disk not valid"
         
-        puts disk.name
-        #disk.save
       end
       
       should "(11) save a disk object" do
@@ -49,6 +47,7 @@ module Rudy::Test
         q = "select * from #{Rudy::DOMAIN}"
 
         items = @sdb.select(q)
+        #p items
         assert_equal Hash, items.class
         assert items.size > 0, "No disks"
         assert_equal @@global.zone.to_s, items.values.first['zone'].first.to_s
@@ -73,21 +72,24 @@ module Rudy::Test
       
       should "(30) get disk from Rudy::Disks, modify, and save" do
         disk_tmp = Rudy::Disk.new('/rudy/disk', 1, '/dev/sdh')
-        disk_orig = Rudy::Disks.get(disk_tmp.name)
+        rdisk = Rudy::Disks.new
+        disk_orig = rdisk.get(disk_tmp.name)
         assert_equal Rudy::Disk, disk_orig.class, "Not a Rudy::Disk #{disk_orig}"
         assert_equal @@global.zone.to_s, disk_orig.zone.to_s, "Unexpected zone #{disk_orig.zone}"
-        
+        sleep 1
         disk_orig.size = 2
         assert disk_orig.save, "Did not save #{disk_orig.name}"
-        disk_new = Rudy::Disks.get(disk_orig.name)
+        disk_new = rdisk.get(disk_orig.name)
         assert_equal disk_orig.size, disk_new.size, "Different size #{disk_new.size}"
         assert disk_new.destroy, "Did not destroy #{disk_new.name}"
       end
       
       
-      should "(90) destroy all disk metadata" do
+      xshould "(90) destroy all disk metadata" do
+        # disabled b/c there are disks at this point. Previous tests delete them. 
         q = "select * from #{Rudy::DOMAIN} where rtype = 'disk'"
         items = @sdb.select(q)
+        p items
         assert_equal Hash, items.class
         items.keys.each do |item|
           @sdb.destroy(Rudy::DOMAIN, item)

@@ -85,7 +85,7 @@ The <tt>-u root</tt> tells Rudy to open a connection as the root user. If you cr
 
 == Alpha Warning
 
-Although Rudy has been pretty well tested and is currently being used in production in a private beta, it's not ready for general production use. There are a few things to keep in mind while Rudy is in alpha status.
+Although Rudy has been well tested and is currently being used in production in a private beta, it's not ready for general production use. There are a few things to keep in mind while Rudy is in alpha status.
 
 * If you already have private SSH keys, back them up. Rudy is quite safe but hasn't been audited so backup your keys as a precaution.
 * If you're running EC2 instances in production, create a new set of AWS credentials (access key and secret key) to use with Rudy. This will ensure that Rudy has no access to your production instances. 

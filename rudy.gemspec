@@ -1,7 +1,7 @@
 @spec = Gem::Specification.new do |s|
 	s.name = "rudy"
   s.rubyforge_project = 'rudy'
-	s.version = "0.6.1"
+	s.version = "0.6.2"
 	s.summary = "Rudy: Not your grandparent's deployment tool."
 	s.description = s.summary
 	s.author = "Delano Mandelbaum"
@@ -31,7 +31,7 @@
   #s.add_development_dependency('jgre-monkeyspecdoc', '>= 0.1.0')
   #s.add_development_dependency('thoughtbot-shoulda', '>= 0.1.0')
   
-  s.executables = %w[ird rudy rudy-ec2 rudy-sdb rudy-s3]
+  s.executables = %w[ird rudy rudy-ec2 rudy-sdb]
   
   # = MANIFEST =
   # git ls-files
@@ -44,7 +44,6 @@
   bin/ird
   bin/rudy
   bin/rudy-ec2
-  bin/rudy-s3
   bin/rudy-sdb
   lib/annoy.rb
   lib/console.rb

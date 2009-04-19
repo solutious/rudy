@@ -50,7 +50,7 @@ module Rudy
       end
       
       def execute_check(level=:medium)
-        ret = Annoy.are_you_sure?(:medium)
+        ret = Annoy.are_you_sure?(level)
         exit 0 unless ret
         ret
       end

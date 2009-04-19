@@ -31,7 +31,7 @@ machines do
   users do
     # If you already have private keys for logging in to your EC2 instances
     # EC2 instances you can specify them here and Rudy will use these instead.
-    #root :keypair => "path/2/root-private-key"
+    # root :keypair => "/#{Rudy.sysinfo.home}/.rudy/root-private-key"
   end
   
   zone :"us-east-1b" do
@@ -54,11 +54,11 @@ machines do
       
       # We define two disks for the stage-app machines
       disks do
-        path "/rudy/example1" do
+        path "/rudy/disk1" do
           size 2
           device "/dev/sdr"
         end
-        path "/rudy/example2" do
+        path "/rudy/disk2" do
           size 1 
           device "/dev/sdm"
         end
@@ -66,6 +66,11 @@ machines do
       
     end
 
+    
+    role :SUCCESS do
+      
+    end
+    
   end  
 
   # The routines section below contains calls to local and remote
@@ -88,30 +93,23 @@ routines do
     role :app do
       
       startup do
-        before_local Rudy.sysinfo.user => [:uname, :a]
+        before_local Rudy.sysinfo.user => :uname
         
         disks do
-          create "/rudy/example1"
+          create "/rudy/disk1"
         end
         
-        after :root => '/bad/script'
-        after :root => [:ls, :l, '/']
+        after :root => [:uname, :a]
+        after :root => [:touch, '/rudy/disk1/rudy-was-here']
         after_local Rudy.sysinfo.user => :date
       end
       
-      restart do
-        before :root => [:which, 'date']
-        after :rudy => "/usr/bin/date"
+      shutdown do
+        before :root => '/a/nonexistent/script'
+        before :root => :uptime 
         
         disks do
-          mount "/rudy/example1"
-        end
-      end
-      
-      shutdown do
-        before :root => [:echo, 'BEFORE SHUTDOWN']
-        disks do
-          destroy "/rudy/example1"
+          destroy "/rudy/disk1"
         end
       end
       

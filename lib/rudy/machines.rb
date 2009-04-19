@@ -182,8 +182,10 @@ module Rudy
         Rudy::Utils.write_to_file(kp_file, kp.private_key, 'w', 0600)
       else
         kp_file = root_keypairpath
+        # This means no keypair file can be found
+        raise PrivateKeyNotFound, root_keypairname if kp_file.nil?
         # This means we found a keypair in the config but we cannot find the private key file. 
-        raise PrivateKeyNotFound, kp_file if kp_file && !File.exists?(kp_file)
+        raise PrivateKeyNotFound, kp_file if !File.exists?(kp_file)
       end
       
       machines = []

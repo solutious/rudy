@@ -5,6 +5,8 @@ module Rudy; module Routines;
   class Startup < Rudy::Routines::Base
 
     def execute
+      # There's no keypair check here because Rudy::Machines will attempt 
+      # to create one. 
       rmach = Rudy::Machines.new
       routine = fetch_routine_config(:startup)
       rbox_local = Rye::Box.new('localhost')

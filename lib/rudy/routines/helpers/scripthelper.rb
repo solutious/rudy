@@ -47,7 +47,7 @@ module Rudy; module Routines;
       # add the method on for the instance of rbox we are using. 
       def rbox.rm(*args); cmd('rm', args); end
       
-      if routine.has_key?(timing)
+      if routine.is_a?(Caesars::Hash) && routine.has_key?(timing)
         puts "Connecting to #{hostname}"
         rbox.connect
         original_user = rbox.user

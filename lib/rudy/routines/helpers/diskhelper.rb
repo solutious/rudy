@@ -5,6 +5,7 @@ module Rudy; module Routines;
     extend self
     
     def execute(routine, machine, rbox)
+      return unless routine
       raise "Not a Rudy::Machine" unless machine.is_a?(Rudy::Machine)
       raise "Not a Rye::Box" unless rbox.is_a?(Rye::Box)
       

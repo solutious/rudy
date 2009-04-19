@@ -120,24 +120,25 @@ module Rudy
       user_keypairname :root
     end
     
+    
     def user_keypairpath(name)
       raise "No user provided" unless name
+      raise "No configuration" unless @@config
+      raise "No machines configuration" unless @@config.machines
       zon, env, rol = @@global.zone, @@global.environment, @@global.role
       #Caesars.enable_debug
-      kp = @@config.machines.find_deferred(zon, env, rol, [:users, name, :keypair])
-      kp ||= @@config.machines.find_deferred(env, rol, [:users, name, :keypair])
-      kp ||= @@config.machines.find_deferred(rol, [:users, name, :keypair])
+      path = @@config.machines.find_deferred(zon, env, rol, [:users, name, :keypair])
+      path ||= @@config.machines.find_deferred(env, rol, [:users, name, :keypair])
+      path ||= @@config.machines.find_deferred(rol, [:users, name, :keypair])
       
       # EC2 Keypairs that were created are intended for starting the machine instances. 
       # These are used as the root SSH keys. If we can find a user defined key, we'll 
       # check the config path for a generated one. 
-      if !kp && name.to_s == 'root'
+      if !path && name.to_s == 'root'
         path = File.join(self.config_dirname, "key-#{current_machine_group}")
-        kp = path if File.exists?(path)
       end
-      
-      kp &&= File.expand_path(kp)
-      kp
+      path = File.expand_path(path) if path && File.exists?(path)
+      path
     end
     def root_keypairpath
       user_keypairpath :root
@@ -188,6 +189,8 @@ module Rudy
     end
     
     def current_machine_address
+      raise "No configuration" unless @@config
+      raise "No machines configuration" unless @@config.machines
       @@config.machines.find_deferred(@@global.environment, @@global.role, :address)
     end
     
@@ -250,6 +253,7 @@ module Rudy
     #     
     def fetch_routine_config(action)
       raise "No configuration" unless @@config
+      raise "No routines configuration" unless @@config.routines
       raise "No globals" unless @@global
       
       zon, env, rol = @@global.zone, @@global.environment, @@global.role
@@ -288,6 +292,9 @@ module Rudy
     end
     
     def fetch_machine_param(parameter)
+      raise "No configuration" unless @@config
+      raise "No machines configuration" unless @@config.machines
+      raise "No globals" unless @@global
       top_level = @@config.machines.find(parameter)
       mc = fetch_machine_config
       mc[parameter] || top_level || nil
@@ -295,6 +302,7 @@ module Rudy
     
     def fetch_machine_config
       raise "No configuration" unless @@config
+      raise "No machines configuration" unless @@config.machines
       raise "No globals" unless @@global
       zon, env, rol = @@global.zone, @@global.environment, @@global.role
       hashes = []

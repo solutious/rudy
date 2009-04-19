@@ -7,10 +7,16 @@ module Rudy; module CLI;
       rr = Rudy::Routines::Startup.new
       rr.execute
       
-      puts $/, "The following machines are now running:"
+      puts $/, "The following machines are now available:"
       rmach = Rudy::Machines.new
       rmach.list do |machine|
         puts machine.to_s
+      end
+      
+      if @@global.environment == @@config.default.environment && 
+         @@global.role == @@config.default.role
+         puts
+         puts "Try: #{$0} -u root ssh"
       end
       
     end
@@ -27,7 +33,7 @@ module Rudy; module CLI;
       routine = fetch_routine_config(:shutdown)
 
       puts "All machines in #{current_machine_group} will be shutdown and"
-      if routine.disks
+      if routine && routine.disks
         if routine.disks.destroy
           puts "the following filesystems will be destroyed:".color(:red)
           puts routine.disks.destroy.keys.join($/).bright

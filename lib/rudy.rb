@@ -158,13 +158,13 @@ module Rudy
     def message; "Machine group #{@obj} is not running."; end
   end
   class MachineGroupNotDefined < Rudy::Error 
-    def message; "Machine group #{@obj} is not defined."; end
+    def message; "#{@obj} is not defined in machines config."; end
   end
   class PrivateKeyFileExists < Rudy::Error
     def message; "Private key #{@obj} already exists."; end
   end
   class PrivateKeyNotFound < Rudy::Error
-    def message; "Private key #{@obj} not found."; end
+    def message; "Private key file #{@obj} not found."; end
   end
 end
 

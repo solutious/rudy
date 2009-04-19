@@ -17,30 +17,6 @@ All configuration is organized into the zones, environments, and roles that you 
 <b>Please note that this is an ALPHA release. That means it's not ready for production use!</b>
 
 
-== Installation
-
-=== Step 1 of 2 (get Rudy on to your machine):
-
-Via Rubygems, one of:
-
-    $ sudo gem install rudy
-    $ sudo gem install solutious-rudy --source http://gems.github.com/
-
-or via download:
-* rudy-0.6.0.tar.gz[http://github.com/solutious/rudy/tarball/rudy-0.6.0]
-* rudy-0.6.0.zip[http://github.com/solutious/rudy/zipball/rudy-0.6.0]
-
-NOTE: <em>If you are not installing via RubyGems, you need to make sure the Ruby dependencies (see the [README](http://github.com/solutious/rudy/blob/master/README.rdoc)) are installed and in your LOAD_PATH. Ryan Tomayko wrote [a gist](http://gist.github.com/54177) about it.</em>
-
-=== Step 2 of 2 (initialize your configuration):
-
-    $ rudy generate-config
-      [edit ~/.rudy/config with your Amazon Web Services credentials] 
-    $ rudy init
-
-NOTE: <em>You need an Amazon[http://aws.amazon.com/] account to use Rudy. Sign up for EC2[http://aws.amazon.com/ec2/] and SimpleDB[http://aws.amazon.com/simpledb/].</em>
-
-
 == Example 1 -- The Basics
 
 Before we get fancy, we'll cover the basics by using Rudy as a convenient replacement for the ec2-api tools. Let's create an instance, login via SSH, and then destroy it:
@@ -86,7 +62,29 @@ In the top level of your project directory put the following configuration into 
       end    
     end
 
-The 
+
+== Installation
+
+=== Step 1 of 2 (get Rudy on to your machine):
+
+Via Rubygems, one of:
+
+    $ sudo gem install rudy
+    $ sudo gem install solutious-rudy --source http://gems.github.com/
+
+or via download:
+* rudy-0.6.0.tar.gz[http://github.com/solutious/rudy/tarball/rudy-0.6.0]
+* rudy-0.6.0.zip[http://github.com/solutious/rudy/zipball/rudy-0.6.0]
+
+NOTE: <em>If you are not installing via RubyGems, you need to make sure the Ruby dependencies (see the [README](http://github.com/solutious/rudy/blob/master/README.rdoc)) are installed and in your LOAD_PATH. Ryan Tomayko wrote [a gist](http://gist.github.com/54177) about it.</em>
+
+=== Step 2 of 2 (initialize your configuration):
+
+    $ rudy generate-config
+      [edit ~/.rudy/config with your Amazon Web Services credentials] 
+    $ rudy init
+
+NOTE: <em>You need an Amazon[http://aws.amazon.com/] account to use Rudy. Sign up for EC2[http://aws.amazon.com/ec2/] and SimpleDB[http://aws.amazon.com/simpledb/].</em>
 
 
 == Dependencies:
@@ -111,6 +109,7 @@ The
 == More Info
 
 * GitHub[http://github.com/solutious/rudy]
+* Issues[http://github.com/solutious/rudy/issues]
 * RubyForge[http://rubyforge.org/projects/rudy]
 * Inspiration[http://www.youtube.com/watch?v=CgaiIW5Rzes]
 

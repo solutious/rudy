@@ -24,7 +24,6 @@ module Rudy
         raise "Override execute method"
       end
       
-      
       def task_separator(title)
         dashes = 52 - title.size # 
         dashes = 0 if dashes < 1

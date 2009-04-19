@@ -7,7 +7,12 @@ module Rudy
       
       def machines
         rmach = Rudy::Machines.new
-        rmach.list do |m|
+        mlist = rmach.list || []
+        if mlist.empty?
+          puts "No machines running in #{current_machine_group}" 
+          puts "Try: #{$0} startup"
+        end
+        mlist.each do |m|
           puts @@global.verbose > 0 ? m.inspect : m.dump(@@global.format)
         end
       end

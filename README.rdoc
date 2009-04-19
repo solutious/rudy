@@ -70,6 +70,8 @@ The <tt>-u root</tt> tells Rudy to open a connection as the root user. If you cr
 * Net::SCP[http://net-ssh.rubyforge.org/]
 * amazon-ec2[http://github.com/grempe/amazon-ec2]
 * Rye[http://github.com/delano/rye]
+* Drydock[http://github.com/delano/drydock]
+* Caesars[http://github.com/delano/caesars]
 
 
 == Common Errors

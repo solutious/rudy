@@ -216,6 +216,7 @@ module Rudy
           value = REXML::XPath.first(attr, './Value/text()').to_s
           ( attributes[key] ||= [] ) << value
         end
+        attributes = nil if attributes.empty?
         attributes
       end
       alias :get :get_attributes

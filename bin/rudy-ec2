@@ -11,7 +11,7 @@
 
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib') # Put our local lib in first place
 $:.unshift File.join(File.dirname(__FILE__), '..', 'vendor', 'highline-1.5.1', 'lib')
-%w{amazon-ec2 caesars rye}.each { |dir| $:.unshift File.join(File.dirname(__FILE__), '..', '..', dir, 'lib') }
+%w{net-scp amazon-ec2 caesars rye}.each { |dir| $:.unshift File.join(File.dirname(__FILE__), '..', '..', dir, 'lib') }
 require 'rubygems'
 
 require 'rudy'
@@ -62,7 +62,6 @@ module RudyEC2CLI
   option :p, :preserve, "Preserve atimes and ctimes."
   option :d, :download, "Download FROM the remote machine to the local machine"
   option :print, "Only print the SSH command, don't connect"
-  option :k, :pkey, String, "Path to the private SSH key"
   option :g, :group, String, "A security group name"
   option :i, :awsid, String, "An instance ID"
   option :u, :user, String, "Username"
@@ -110,7 +109,6 @@ module RudyEC2CLI
   option :b, :bucket, String, "The name of the bucket that will store the image"
   option :n, :name, String, "The name of the image file (to create)"
   option :u, :user, String, "Username to connect as (used for creating an image)"
-  option :k, :pkey, String, "Path to the private SSH key"
   action :C, :create, "Create an image"
   action :P, :prepare, "Prepare a running instance to be used as an image"
   #action :D, :destroy, "Deregister an image (does not remove image files from S3)"
@@ -171,16 +169,13 @@ module RudyEC2CLI
   
   desc "Open an SSH connection"
   usage "rudy-ec2 ssh"
-  usage "rudy-ec2 ssh -k path/2/key -u root"
-  usage "rudy-ec2 ssh -k path/2/key -u root uname -a"
+  usage "rudy-ec2 -u root -k path/2/key ssh"
+  usage "rudy-ec2 -u root -k path/2/key ssh uname -a"
   usage "rudy-ec2 ssh -g group-name"
   usage "rudy-ec2 ssh -i instance-id"
   option :print, "Only print the SSH command, don't connect"
   option :g, :group, String, "A security group name"
   option :i, :instid, String, "An instance ID"
-  option :k, :pkey, String, "Path to the private SSH key"
-  option :u, :user, String, "Username to connect as"
-  option :print, "Print SSH command. Don't connect."
   argv :cmd
   command :ssh => Rudy::CLI::AWS::EC2::Candy 
   command_alias :ssh, :connect
@@ -218,7 +213,7 @@ module RudyEC2CLI
   # ------------------------------------------------------------------
   
   default :instances
-  debug :off
+  debug :on
   
 end
 

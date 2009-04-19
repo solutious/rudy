@@ -26,10 +26,10 @@ module Rudy; module CLI;
       rr = Rudy::Routines::Shutdown.new
       routine = fetch_routine_config(:shutdown)
 
-      puts "All machines in #{current_machine_group} will be shutdown".color(:red)
+      puts "All machines in #{current_machine_group} will be shutdown and"
       if routine.disks
         if routine.disks.destroy
-          puts "The following filesystems will be destroyed:".color(:red)
+          puts "the following filesystems will be destroyed:".color(:red)
           puts routine.disks.destroy.keys.join($/).bright
         end
       end

@@ -46,7 +46,7 @@ machines do
   # roles. The configuration inside the role blocks is available only
   # to machines in that specific role. 
   env :stage do
-    ami "ami-eb7c9982"    # fork/gentoo-base/200804200903.manifest.xml
+    ami "ami-5394733a"    # ec2onrails/ec2onrails-v0_9_9_1-i386.manifest.xml
     size 'm1.small'
     
     role :app do

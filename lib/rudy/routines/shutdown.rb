@@ -10,8 +10,8 @@ module Rudy; module Routines;
       rbox_local = Rye::Box.new('localhost')
       sconf = fetch_script_config
 
-      #rmach.destroy do |machine|
-      rmach.list do |machine|
+      rmach.destroy do |machine|
+      #rmach.list do |machine|
         
         isup = Rudy::Utils.waiter(2, 60, STDOUT, nil, nil) { 
           machine.update

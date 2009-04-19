@@ -89,8 +89,7 @@ module Rudy::AWS
       def create(opts={}, &each_inst)
         raise NoAMI unless opts[:ami]
         raise NoGroup unless opts[:group]
-        #raise NoAMI unless opts[:ami]
-        puts "instance1"
+        
         opts = {
           :size => 'm1.small',
           :min => 1,
@@ -111,19 +110,15 @@ module Rudy::AWS
         }
         #p opts[:machine_data]
         #exit
-        puts "instance2"
+        
         response = execute_request({}) { @ec2.run_instances(old_opts) }
-        puts "instance3"
         return nil unless response['instancesSet'].is_a?(Hash)
         instances = response['instancesSet']['item'].collect do |inst|
           self.class.from_hash(inst)
         end
-        puts "instance4"
         instances.each { |inst| 
-          puts "instance5"
           each_inst.call(inst) 
         } if each_inst
-        puts "instance6"
         instances
       end
     
@@ -310,9 +305,9 @@ module Rudy::AWS
       # Returns an Instance object
       def get(inst_id)
         inst_id = inst_id.awsid if inst_id.is_a?(Rudy::AWS::EC2::Instance)
-        inst = list(:any, inst_id)
-        raise "Unknown instance: #{inst_id}" unless inst
-        inst.first
+        inst = list(:any, inst_id) 
+        inst &&= inst.first
+        inst
       end
       
       def any?(state=:any, inst_ids=[])

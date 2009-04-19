@@ -117,19 +117,21 @@ The
 
 == Thanks
 
-* The Rilli.com team -- for the initial use case, the ongoing feedback and support, and the good times!
+* The Rilli.com[http://rilli.com] team -- for the initial use case, the ongoing feedback and support, and the good times!
   * Adam Bognar
   * Andrew Simpson
   * Caleb Buxton
   * Colin Brumelle
+* Everyone at Utrecht.rb[http://groups.google.com/group/utrecht-rb]
+* Jamis Buck for writing Net::SSH and friends. 
 
 
 == Credits
 
-* Delano Mandelbaum (delano@solutious.com)
-* aws_sdb code by Tim Dysinger (http://dysinger.net)
+* Rudy::AWS::SDB adapted from aws_sdb by Tim Dysinger (http://dysinger.net)
 * Escape, Copyright (C) 2006,2007 Tanaka Akira  <akr@fsij.org>
 * Keshia Knight Pulliam (rudy@solutious.com)
+* Delano Mandelbaum (delano@solutious.com)
 
 
 == License

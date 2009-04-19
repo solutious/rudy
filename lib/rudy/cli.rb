@@ -123,6 +123,8 @@ module Rudy
       global :S, :secretkey, String, "AWS Secret Access Key"
       global :R, :region, String, "Amazon service region (ie: #{Rudy::DEFAULT_REGION})"
       global :z, :zone, String, "Amazon Availability zone (ie: #{Rudy::DEFAULT_ZONE})"
+      global :u, :user, String, "Provide a username (ie: #{Rudy::DEFAULT_USER})"
+      global :k, :pkey, String, "Path to the private SSH key"
       global :f, :format, String, "Output format"
       global :n, :nocolor, "Disable output colors"
       global :C, :config, String, "Specify another configuration file to read (ie: #{Rudy::CONFIG_FILE})"

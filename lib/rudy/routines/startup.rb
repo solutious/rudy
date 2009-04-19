@@ -15,22 +15,25 @@ module Rudy; module Routines;
       puts task_separator("BEFORE SCRIPTS")
       Rudy::Routines::ScriptHelper.before_local(routine, sconf, rbox_local)
       
-      #rmach.create do |machine|
-      rmach.list do |machine|
-        
-        print "SSH daemon is... "
-        isup = Rudy::Utils.waiter(2, 60, STDOUT, "up!", nil) { 
-          machine.update
-          hostname = machine.dns_public
-          machine.dns_public? && Rudy::Utils.service_available?(hostname, 22)
+      rmach.create do |machine|
+      #rmach.list do |machine|
+        print "Waiting for instances..."
+        isup = Rudy::Utils.waiter(3, 120, STDOUT, "it's up!", 2) {
+          inst = machine.get_instance
+          inst && inst.running?
+        } 
+        machine.update # Add instance info to machine and save it
+        print "Waiting for SSH daemon..."
+        isup = Rudy::Utils.waiter(1, 30, STDOUT, "it's up!", 3) {
+          Rudy::Utils.service_available?(machine.dns_public, 22)
         }
-
+        
         opts = { :keys =>  root_keypairpath, :user => 'root', :debug => nil }
         rbox = Rye::Box.new(machine.dns_public, opts)
         
         puts task_separator("DISK ROUTINES")
         # Runs "disk" portion of routines config
-        #Rudy::Routines::DiskHelper.execute(routine, machine, rbox)
+        Rudy::Routines::DiskHelper.execute(routine, machine, rbox)
         
         puts task_separator("AFTER SCRIPTS")
         # Runs "after_local", then "after" scripts of routines config

@@ -185,6 +185,7 @@ module Rudy
           'ItemName' => item.to_s
         }
         count = 0
+        
         attributes.each do | key, values |
           ([]<<values).flatten.each do |value|
             params["Attribute.#{count}.Name"] = key.to_s
@@ -193,7 +194,9 @@ module Rudy
             count += 1
           end
         end
+        
         call(:put, params)
+        
         true
       end
       alias :put :put_attributes
@@ -245,10 +248,12 @@ module Rudy
         )
         data = ''
         query = []
+        
         params.keys.sort_by { |k| k.upcase }.each do |key|
           data << "#{key}#{params[key].to_s}"
           query << "#{key}=#{CGI::escape(params[key].to_s)}"
         end
+        
         digest = OpenSSL::Digest::Digest.new('sha1')
         hmac = OpenSSL::HMAC.digest(digest, @secret_access_key, data)
         signature = Base64.encode64(hmac).strip
@@ -257,12 +262,14 @@ module Rudy
         url = "#{@base_url}?#{query}"
         uri = URI.parse(url)
         @debug.puts("#{url}") if @debug
+        
         response =
           Net::HTTP.new(uri.host, uri.port).send_request(method, uri.request_uri)
         @debug.puts("#{response.code}\n#{response.body}") if @debug
         raise(ConnectionError.new(response)) unless (200..400).include?(
           response.code.to_i
         )
+        
         doc = REXML::Document.new(response.body)
         error = doc.get_elements('*/Errors/Error')[0]
         raise(
@@ -273,6 +280,7 @@ module Rudy
             doc.get_elements('*/RequestID')[0].text
           )
         ) unless error.nil?
+        
         doc
       end
     end

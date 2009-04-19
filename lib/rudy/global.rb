@@ -1,6 +1,12 @@
 
 
 module Rudy
+  
+  # = Rudy::Global
+  #
+  # This global class is used by all Huxtable objects.
+  # When a new CLI global is added, the appropriate field must
+  # be added to this class (optional: a default value in initialize).
   class Global < Storable
     
     field :region
@@ -9,6 +15,7 @@ module Rudy
     field :role
     field :position
     field :user
+    field :pkey
     
     field :nocolor
     field :quiet

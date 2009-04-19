@@ -32,9 +32,9 @@ module AWS; module EC2;
     end
     
     def ssh_valid?
-      if @option.pkey
-        raise "Cannot find file #{@option.pkey}" unless File.exists?(@option.pkey)
-        raise "Insecure permissions for #{@option.pkey}" unless (File.stat(@option.pkey).mode & 600) == 0
+      if @@global.pkey
+        raise "Cannot find file #{@@global.pkey}" unless File.exists?(@@global.pkey)
+        raise "Insecure permissions for #{@@global.pkey}" unless (File.stat(@@global.pkey).mode & 600) == 0
       end
       if @option.group
         rgroup = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey, @@global.region)
@@ -53,11 +53,11 @@ module AWS; module EC2;
       opts[:id] = @option.instid if @option.instid
       
       # Options to be sent to Net::SSH
-      ssh_opts = { :user => @option.user || Rudy.sysinfo.user, :debug => nil  }
-      if @option.pkey 
-        raise "Cannot find file #{@option.pkey}" unless File.exists?(@option.pkey)
-        raise InsecureKeyPermissions, @option.pkey unless File.stat(@option.pkey).mode == 33152
-        ssh_opts[:keys] = @option.pkey 
+      ssh_opts = { :user => @global.user || Rudy.sysinfo.user, :debug => nil  }
+      if @@global.pkey 
+        raise "Cannot find file #{@@global.pkey}" unless File.exists?(@@global.pkey)
+        raise InsecureKeyPermissions, @@global.pkey unless File.stat(@@global.pkey).mode == 33152
+        ssh_opts[:keys] = @@global.pkey 
       end
       
       
@@ -125,14 +125,15 @@ module AWS; module EC2;
       opts[:task] = :download if %w(dl download).member?(@alias) || @option.download
       opts[:task] = :upload if %w(ul upload).member?(@alias)
       opts[:task] ||= :upload
+      opts[:user] = @global.user || Rudy.sysinfo.user
     
       # Options to be sent to Net::SSH
-      ssh_opts = { :user => @option.user || Rudy.sysinfo.user, :debug => nil  }
-      ssh_opts[:keys] = @option.pkey if @option.pkey
+      ssh_opts = { :user => opts[:user], :debug => nil  }
+      ssh_opts[:keys] = @@global.pkey if @@global.pkey
 
-      if @option.pkey
-        raise "Cannot find file #{@option.pkey}" unless File.exists?(@option.pkey)
-        raise "Insecure permissions for #{@option.pkey}" unless (File.stat(@option.pkey).mode & 600) == 0
+      if @@global.pkey
+        raise "Cannot find file #{@@global.pkey}" unless File.exists?(@@global.pkey)
+        raise "Insecure permissions for #{@@global.pkey}" unless (File.stat(@@global.pkey).mode & 600) == 0
       end
 
       checked = false
@@ -140,7 +141,7 @@ module AWS; module EC2;
       lt = rudy.list_group(opts[:group], :running, opts[:id]) do |inst|
         
         if @option.print
-          Rudy::Utils.scp_command inst.dns_public, @option.pkey, @option.user, opts[:paths], opts[:dest], (opts[:task] == :download), false, @option.print
+          Rudy::Utils.scp_command inst.dns_public, @@global.pkey, opts[:user], opts[:paths], opts[:dest], (opts[:task] == :download), false, @option.print
           next
         end
         
@@ -154,7 +155,7 @@ module AWS; module EC2;
         
         # Make sure we want to run this command on all instances
         if !checked
-          execute_check(:medium) if ssh_opts[:user] == "root"
+          #execute_check(:medium) if opts[:user] == "root"
           checked = true
         end
         
@@ -164,7 +165,7 @@ module AWS; module EC2;
           :chunk_size => 16384
         }
 
-        Candy.scp(opts[:task], inst.dns_public, @option.user, @option.pkey, opts[:paths], opts[:dest], scp_opts)
+        Candy.scp(opts[:task], inst.dns_public, opts[:user], @@global.pkey, opts[:paths], opts[:dest], scp_opts)
         puts 
         puts unless @@global.quiet
       end
@@ -183,12 +184,14 @@ module AWS; module EC2;
         
         paths.each do |path| 
           prev_path = nil
-          scp.send("#{task}!", path, dest, opts) do |ch, name, sent, total|
+          scp.send("#{task}", path, dest, opts) do |ch, name, sent, total|
+            #print "#{name}: #{sent}/#{total}\r"
             msg = ((prev_path == name) ? "\r" : "\n") # new line for new file
             msg << "#{name}: #{sent}/#{total}"  # otherwise, update the same line
             print msg
             STDOUT.flush        # update the screen every cycle
             prev_path = name
+            break if sent == total
           end
           puts unless prev_path == path
         end

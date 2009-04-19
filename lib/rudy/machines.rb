@@ -78,25 +78,22 @@ module Rudy
       ["m", zon, env, rol, pos].join(Rudy::DELIM)
     end
     
+    def get_instance
+      @ec2inst.get(@awsid)
+    end
+    
     def update
       return false unless @awsid
-      @instance = @ec2inst.get(@awsid) 
+      @instance = get_instance
       if @instance.is_a?(Rudy::AWS::EC2::Instance)
         @dns_public = @instance.dns_public
         @dns_private = @instance.dns_private
         @state = @instance.state
         save
+      elsif @instance.nil?
+        @dns_public = @dns_private = nil
+        @state = 'unknown'
       end
-    end
-    
-    def dns_public
-      update unless dns_public?
-      @dns_public
-    end
-    
-    def dns_private
-      update unless dns_private?
-      @dns_private
     end
     
     def dns_public?
@@ -120,19 +117,14 @@ module Rudy
         :machine_data => Machine.generate_machine_data.to_yaml
       }.merge(opts)
       
-      puts "start1"
       @ec2inst.create(opts) do |inst|
-      puts "start2"
         @awsid = inst.awsid
         @created = @starts = Time.now
         @state = inst.state
-        puts "start3"
       end
-        puts "start4"
       
       self.save
       
-        puts "start5"
       self
     end
     
@@ -171,16 +163,16 @@ module Rudy
     def create(&each_mach)
       raise MachineGroupAlreadyRunning, current_machine_group if running?
       raise MachineGroupNotDefined, current_machine_group unless known_machine_group?
-      puts "create1"
+      
       unless (1..MAX_INSTANCES).member?(current_machine_count)
         raise "Instance count must be more than 0, less than #{MAX_INSTANCES}"
       end
-      puts "create2"
+      
       unless @rgrp.exists?(current_group_name)
         puts "Creating group: #{current_group_name}"
         @rgrp.create(current_group_name)
       end
-      puts "create3"
+      
       unless @rkey.exists?(root_keypairname)
         kp_file = File.join(Rudy::CONFIG_DIR, root_keypairname)
         raise PrivateKeyFileExists, kp_file if File.exists?(kp_file)
@@ -193,17 +185,14 @@ module Rudy
         # This means we found a keypair in the config but we cannot find the private key file. 
         raise PrivateKeyNotFound, kp_file if kp_file && !File.exists?(kp_file)
       end
-      puts "create4"
+      
       machines = []
       current_machine_count.times do  |i|
-        puts "create5"
         machine = Rudy::Machine.new
         puts "Starting %s" % machine.name
         machine.start
-        puts "create6"
         machines << machine
       end
-      puts "create7"
       machines.each { |m| each_mach.call(m) } if each_mach
       machines
     end

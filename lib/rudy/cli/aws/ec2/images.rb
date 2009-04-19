@@ -49,11 +49,11 @@ module AWS; module EC2;
       puts "" 
       
       # Options to be sent to Net::SSH
-      ssh_opts = { :user => @option.user || Rudy.sysinfo.user, :debug => STDERR  }
-      if @option.pkey 
-        raise "Cannot find file #{@option.pkey}" unless File.exists?(@option.pkey)
-        raise InsecureKeyPermissions, @option.pkey unless File.stat(@option.pkey).mode == 33152
-        ssh_opts[:keys] = @option.pkey 
+      ssh_opts = { :user => @global.user || Rudy.sysinfo.user, :debug => STDERR  }
+      if @@global.pkey 
+        raise "Cannot find file #{@@global.pkey}" unless File.exists?(@@global.pkey)
+        raise InsecureKeyPermissions, @@global.pkey unless File.stat(@@global.pkey).mode == 33152
+        ssh_opts[:keys] = @@global.pkey 
       end
       
       execute_check(:medium)
@@ -99,11 +99,11 @@ module AWS; module EC2;
       puts "won't get created and you'll be annoyed that you waited."
       
       # Options to be sent to Net::SSH
-      ssh_opts = { :user => @option.user || Rudy.sysinfo.user, :debug => STDERR  }
-      if @option.pkey 
-        raise "Cannot find file #{@option.pkey}" unless File.exists?(@option.pkey)
-        raise InsecureKeyPermissions, @option.pkey unless File.stat(@option.pkey).mode == 33152
-        ssh_opts[:keys] = @option.pkey 
+      ssh_opts = { :user => @global.user || Rudy.sysinfo.user, :debug => STDERR  }
+      if @@global.pkey 
+        raise "Cannot find file #{@@global.pkey}" unless File.exists?(@@global.pkey)
+        raise InsecureKeyPermissions, @@global.pkey unless File.stat(@@global.pkey).mode == 33152
+        ssh_opts[:keys] = @@global.pkey 
       end
       
       unless @option.name

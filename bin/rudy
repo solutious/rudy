@@ -30,7 +30,6 @@ class RudyCLI < Rudy::CLI::Base
   global :e, :environment, String, "Connect to the specified environment (ie: #{Rudy::DEFAULT_ENVIRONMENT})"
   global :r, :role, String, "Connect to a machine with the specified role (ie: #{Rudy::DEFAULT_ROLE})"
   global :p, :position, String, "Position in the machine in its group (ie: #{Rudy::DEFAULT_POSITION})"
-  global :u, :user, String, "Provide a username (ie: #{Rudy::DEFAULT_USER})"
   
   
 

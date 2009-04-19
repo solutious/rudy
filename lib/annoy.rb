@@ -102,10 +102,10 @@ class Annoy
     [equation, answer]
   end
   
-  # Prints a question to @writer and waits for a response on STDIN. 
-  # It checks whether STDIN is connected a tty so it doesn't block on gets.
+  # Prints a question to +writer+ and waits for a response on STDIN. 
+  # It checks whether STDIN is connected a tty so it doesn't block on gets
   # when there's no human around to annoy. It will return <b>TRUE</b> when
-  # STDIN is NOT connected to a tty.
+  # STDIN is NOT connected to a tty (when STDIN.tty? returns false).
   # * +msg+ The message to print. Default: "Please confirm."
   # Returns true when the answer is correct, otherwise false.
   def Annoy.challenge?(msg="Please confirm.", factor=:medium, flavor=:rand, writer=STDOUT, period=nil)

@@ -71,9 +71,9 @@ module Rudy
     # * +max+ maximum time to wait (default: 120). Throws an exception when exceeded.
     # * +logger+ IO object to print +dot+ to.
     # * +msg+ the message to print on success
-    # * +bells+ number of terminal bells to ring
-    # Set to nil or false to keep the waiter silent.
-    # The block must return false while waiting. Once it returns true
+    # * +bells+ number of terminal bells to ring. Set to nil or false to keep the waiter silent
+    #
+    # The +check+ block must return false while waiting. Once it returns true
     # the waiter will return true too.
     def waiter(duration=2, max=120, logger=STDOUT, msg=nil, bells=0, &check)
       # TODO: Move to Drydock. [ed-why?]
@@ -274,6 +274,9 @@ module Rudy
     
     ######### Everything below here is TO BE REMOVED. 
     
+    #
+    #
+    # Run a shell command (TO BE REMOVED)
     def sh(command, chdir=false, verbose=false)
       prevdir = Dir.pwd
       Dir.chdir chdir if chdir
@@ -282,7 +285,8 @@ module Rudy
       Dir.chdir prevdir if chdir
     end
 
-
+    #
+    # Run an SSH command  (TO BE REMOVED)
     def ssh_command(host, keypair, user, command=false, printonly=false, verbose=false)
       #puts "CONNECTING TO #{host}..."
       cmd = "ssh -i #{keypair} #{user}@#{host} "
@@ -297,6 +301,7 @@ module Rudy
     end
 
     
+    # (TO BE REMOVED)
     # TODO: This is old and insecure. 
     def scp_command(host, keypair, user, paths, to_path, to_local=false, verbose=false, printonly=false)
 

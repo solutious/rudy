@@ -47,9 +47,7 @@
   bin/rudy-s3
   bin/rudy-sdb
   lib/annoy.rb
-  lib/caesars.rb
   lib/console.rb
-  lib/drydock.rb
   lib/escape.rb
   lib/rudy.rb
   lib/rudy/aws.rb
@@ -125,12 +123,6 @@
   test/30_sdb_metadata/20_backups_test.rb
   test/coverage.txt
   test/helper.rb
-  tryouts/console_tryout.rb
-  tryouts/disks_tryout.rb
-  tryouts/drydock_tryout.rb
-  tryouts/nested_methods.rb
-  tryouts/session_tryout.rb
-  tryouts/usage_tryout.rb
   vendor/highline-1.5.1/CHANGELOG
   vendor/highline-1.5.1/INSTALL
   vendor/highline-1.5.1/LICENSE

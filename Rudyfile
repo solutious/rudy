@@ -5,8 +5,8 @@
 # Rudy automatically looks for configuration files in the 
 # following locations (in this order):
 #
-#     ~/.rudy/config
 #     ./.rudy/config
+#     ~/.rudy/config
 #
 #     ./Rudyfile
 #     ./config/rudy/*.rb
@@ -17,11 +17,12 @@
 # NOT OVERRIDDEN. It's ADDED / APPENDED. This means you can 
 # split configuration across many files as you please. 
 #
-# There are three sections: accounts, defaults, machines. 
+# There are three sections: accounts, defaults, machines, and routines.
 # 
 # By convention, accounts and defaults go in ~/.rudy/config or ./.rudy/config 
-# machines configuration goes in ./Rudyfile or ./config/rudy/machines.rb
-
+# machines and routines configuration goes in ./Rudyfile or 
+# ./config/rudy/machines.rb and ./config/rudy/routines.rb
+#
 
 # ---------------------------------------------------------  MACHINES  --------
 # The machines block describes the "physical" characteristics

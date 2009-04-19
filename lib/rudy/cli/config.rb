@@ -58,6 +58,10 @@ module Rudy
             y @@config.defaults.to_hash
           elsif @option.script
             y fetch_script_config.to_hash
+          elsif @option.rudy
+            rf = File.join(RUDY_HOME, 'Rudyfile')
+            raise "Cannot find: #{rf}" unless File.exists?(rf)
+            puts File.read(rf)
           else
             zon, env, rol = @@global.zone, @@global.environment, @@global.role
             usr, att = @@global.user, @argv.name

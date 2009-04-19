@@ -50,6 +50,7 @@ module Rudy
       end
       
       def ==(other)
+        return false unless other.is_a?(self.class)
         self.name == other.name
       end
       

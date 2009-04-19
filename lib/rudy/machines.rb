@@ -36,7 +36,7 @@ module Rudy
     
     def liner_note
       update #if !dns_public? && @awsid
-      info = @dns_public && !@dns_public.empty? ? @dns_public : @state
+      info = !@dns_public.nil? && !@dns_public.empty? ? @dns_public : "#{@awsid}:#{@state}"
       "%s  %s" % [self.name.bright, info]
     end
     

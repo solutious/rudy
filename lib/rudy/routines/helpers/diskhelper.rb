@@ -64,8 +64,13 @@ module Rudy; module Routines;
       rdisk = Rudy::Disks.new
       
       disks.each_pair do |path, props|
-        disk = Rudy::Disk.new(path, props[:size], props[:device], @machine.position)
-        disk = rdisk.get(disk.name)
+        adisk = Rudy::Disk.new(path, props[:size], props[:device], @machine.position)
+        disk = rdisk.get(adisk.name)
+        if disk == nil
+          puts "Not found: #{adisk.name}".color(:red)
+          return
+        end
+        
         puts "Destroying #{disk.name}"
 
         if disk.mounted?

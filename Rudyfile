@@ -52,7 +52,7 @@ machines do
     role :app do
       positions 1
       
-      # We've given the stage-app machines two disks.
+      # We define two disks for the stage-app machines
       disks do
         path "/rudy/example1" do
           size 2

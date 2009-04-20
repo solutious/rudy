@@ -14,6 +14,15 @@ All configuration is organized into the zones, environments, and roles that you 
 
 <b>NOTE: This is an ALPHA release. That means Rudy's not ready for production use! See Alpha Warning.</b>
 
+== Features
+
+* Single command startup and shutdown
+* Automatic disk creation. Define disks with a DSL and Rudy does the dirty work (creates EBS volume, attach to instance, format, and mount).
+* Supports any Amazon machine image (AMI) (Windows images should work but need more testing)
+* Complete command-line interface for EC2 (a replacement for Amazon's API tools). See bin/rudy-ec2.
+* Basic command-line interface for SDB and S3 (create and delete buckets and volumes). See bin/rudy-sdb and bin/rudy-s3. 
+
+
 == Installation
 
 === Step 1 of 2 (get Rudy on to your machine):

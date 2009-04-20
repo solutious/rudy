@@ -113,7 +113,6 @@ module Rudy
         :group => current_group_name,
         :keypair => root_keypairname, 
         :zone => @@global.zone.to_s,
-        :address => current_machine_address,
         :machine_data => Machine.generate_machine_data.to_yaml
       }.merge(opts)
       
@@ -121,6 +120,17 @@ module Rudy
         @awsid = inst.awsid
         @created = @starts = Time.now
         @state = inst.state
+        # Assign IP address to only the first instance
+        if current_machine_address(@position)
+          address = current_machine_address(@position)
+          puts "Associating #{address} to #{inst.awsid}"
+          begin
+            @radd.associate(address, inst.awsid)
+          rescue => ex 
+            STDERR.puts "Error while associating address."
+            Rudy::Utils.bug()
+          end
+        end
       end
       
       self.save

@@ -1,9 +1,9 @@
 
 
 require 'EC2'       # What a
-require 'aws_sdb'   # motley
+#require 'aws_sdb'   # motley
 # Disabled b/c it's not Ruby 1.9 compatible
-#require 'aws/s3'    # crew
+require 'aws/s3'    # crew
 
 module Rudy
   module AWS

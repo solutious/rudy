@@ -293,6 +293,4 @@ module Rudy
   end
 end
 
-require 'aws_sdb/error'
-require 'aws_sdb/service'
 

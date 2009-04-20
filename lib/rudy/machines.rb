@@ -201,8 +201,8 @@ module Rudy
     
     
     def destroy(&each_mach)
-      raise MachineGroupNotRunning, current_machine_group unless running?
       raise MachineGroupNotDefined, current_machine_group unless known_machine_group?
+      raise MachineGroupNotRunning, current_machine_group unless running?
       list.each { |m| each_mach.call(m); } if each_mach
       list do |mach|
         puts "Destroying #{mach.name}"

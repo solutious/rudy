@@ -5,8 +5,11 @@ module Rudy; module Routines;
   class Shutdown < Rudy::Routines::Base
     
     def execute
-      raise Rudy::PrivateKeyNotFound, root_keypairpath unless has_keypair?(:root)
       rmach = Rudy::Machines.new
+      raise Rudy::PrivateKeyNotFound, root_keypairpath unless has_keypair?(:root)
+      raise MachineGroupNotDefined, current_machine_group unless known_machine_group?
+      raise MachineGroupAlreadyRunning, current_machine_group if rmach.running?
+      
       routine = fetch_routine_config(:shutdown)
       rbox_local = Rye::Box.new('localhost')
       sconf = fetch_script_config

@@ -5,9 +5,12 @@ module Rudy; module Routines;
   class Startup < Rudy::Routines::Base
 
     def execute
-      # There's no keypair check here because Rudy::Machines will attempt 
-      # to create one. 
       rmach = Rudy::Machines.new
+      # There's no keypair check here because Rudy::Machines will attempt 
+      # to create one.
+      raise MachineGroupNotDefined, current_machine_group unless known_machine_group?
+      raise MachineGroupAlreadyRunning, current_machine_group if rmach.running?
+      
       routine = fetch_routine_config(:startup)
       rbox_local = Rye::Box.new('localhost')
       sconf = fetch_script_config

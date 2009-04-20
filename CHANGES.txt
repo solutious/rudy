@@ -7,6 +7,10 @@ RUDY, CHANGES
 * TODO: Support for product codes
 * TODO: HTTPS
 
+#### 0.6.5 (2009-04-??) ###############################
+
+* FIXED: Startup and Shutdown routines now check machine group status first
+* FIXED: Misc release process issues between 0.6.0 and 0.6.4
 
 #### 0.6.0 (2009-04-19) ###############################
 

@@ -225,6 +225,18 @@ module Rudy
       #name.gsub(/key-/, '')   # We keep the key- now
     end
     
+    
+    # Looks for ENV-ROLE configuration in machines. There must be
+    # at least one definition in the config for this to return true
+    # That's how Rudy knows the current group is defined. 
+    def known_machine_group?
+      return false if !@@config && !@@global
+      zon, env, rol = @@global.zone, @@global.environment, @@global.role
+      conf = @@config.machines.find_deferred(@@global.region, zon, [env, rol])
+      conf ||= @@config.machines.find_deferred(zon, [env, rol])
+      !conf.nil?
+    end
+    
   private 
     
     
@@ -279,16 +291,6 @@ module Rudy
       routine
     end
     
-    # Looks for ENV-ROLE configuration in machines. There must be
-    # at least one definition in the config for this to return true
-    # That's how Rudy knows the current group is defined. 
-    def known_machine_group?
-      return false if !@@config && !@@global
-      zon, env, rol = @@global.zone, @@global.environment, @@global.role
-      conf = @@config.machines.find_deferred(@@global.region, zon, [env, rol])
-      conf ||= @@config.machines.find_deferred(zon, [env, rol])
-      !conf.nil?
-    end
     
     def fetch_machine_param(parameter)
       raise "No configuration" unless @@config

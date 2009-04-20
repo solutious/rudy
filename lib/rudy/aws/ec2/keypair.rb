@@ -92,7 +92,7 @@ module Rudy::AWS
       
     end
     
-    class Keypairs
+    class Keypairs #:nodoc:
       def initialize(*args)
         raise "Oops! The correct class uses a capital 'P': Rudy::AWS::EC2::KeyPairs"
       end

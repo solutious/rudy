@@ -50,8 +50,10 @@ machines do
     ami "ami-5394733a"    # ec2onrails/ec2onrails-v0_9_9_1-i386.manifest.xml
     size 'm1.small'
     
+    
     role :app do
-      positions 1
+      positions 2
+      addresses '174.129.208.127', '174.129.208.169'
       
       # We define two disks for the stage-app machines
       disks do
@@ -66,10 +68,15 @@ machines do
       end
       
     end
-
     
-    role :SUCCESS do
-      
+    # Here are some examples of other roles. These can be anything.
+    role :db do
+    end
+    
+    role :analysis do
+    end
+    
+    role :balancer do
     end
     
   end  

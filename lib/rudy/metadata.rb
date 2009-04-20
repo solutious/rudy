@@ -10,6 +10,7 @@ module Rudy
         @sdb = Rudy::AWS::SDB.new(a, s, r)
         @ec2inst = Rudy::AWS::EC2::Instances.new(a, s, r)
         @rvol = Rudy::AWS::EC2::Volumes.new(a, s, r)
+        @radd = Rudy::AWS::EC2::Addresses.new(a, s, r)
         init(*args)
       end
       

@@ -46,16 +46,26 @@ module Rudy; module Routines;
         # "No such file or directory while trying to determine filesystem size"
         sleep 2 
         
-        print "Creating ext3 filesystem for #{disk.device}... "
-        @rbox.mkfs(:t, "ext3", :F, disk.device)
-        @rbox.mkdir(:p, disk.path)
-        puts "done"
+        begin
+          print "Creating ext3 filesystem for #{disk.device}... "
+          @rbox.mkfs(:t, "ext3", :F, disk.device)
+          @rbox.mkdir(:p, disk.path)
+          puts "done"
         
-        print "Mounting at #{disk.path}... "
+          print "Mounting at #{disk.path}... "
         
-        @rbox.mount(:t, 'ext3', disk.device, disk.path)
-        disk.mounted = true
-        disk.save
+          @rbox.mount(:t, 'ext3', disk.device, disk.path)
+          disk.mounted = true
+          disk.save
+        rescue Net::SSH::AuthenticationFailed, Net::SSH::HostKeyMismatch => ex  
+          STDERR.puts "Error creating disk".color(:red)
+          STDERR.puts ex.message.color(:red)
+         rescue Rye::CommandNotFound => ex
+          puts "  CommandNotFound: #{ex.message}".color(:red)
+        rescue
+          STDERR.puts "Error creating disk" .color(:red)
+          Rudy::Utils.bug
+        end
         puts "done"
         
       end

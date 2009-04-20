@@ -8,7 +8,7 @@ module Rudy; module Routines;
       rmach = Rudy::Machines.new
       raise Rudy::PrivateKeyNotFound, root_keypairpath unless has_keypair?(:root)
       raise MachineGroupNotDefined, current_machine_group unless known_machine_group?
-      raise MachineGroupAlreadyRunning, current_machine_group if rmach.running?
+      raise MachineGroupNotRunning, current_machine_group unless rmach.running?
       
       routine = fetch_routine_config(:shutdown)
       rbox_local = Rye::Box.new('localhost')

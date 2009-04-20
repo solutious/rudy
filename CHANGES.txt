@@ -11,6 +11,9 @@ RUDY, CHANGES
 
 * FIXED: Startup and Shutdown routines now check machine group status first
 * FIXED: Misc release process issues between 0.6.0 and 0.6.4
+* ADDED: Better error handling during startup and shutdown. 
+* ADDED: Support for assigning addresses on startup
+
 
 #### 0.6.0 (2009-04-19) ###############################
 

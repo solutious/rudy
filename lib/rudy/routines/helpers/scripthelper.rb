@@ -47,22 +47,30 @@ module Rudy; module Routines;
       # add the method on for the instance of rbox we are using. 
       def rbox.rm(*args); cmd('rm', args); end
       
+      
       if routine.is_a?(Caesars::Hash) && routine.has_key?(timing)
         puts "Connecting to #{hostname}"
-        rbox.connect
+        begin
+          rbox.connect
+        rescue Net::SSH::AuthenticationFailed, Net::SSH::HostKeyMismatch => ex  
+          STDERR.puts "Error connecting: #{ex.message}".color(:red)
+          STDERR.puts "Skipping scripts".color(:red)
+        end
+        
         original_user = rbox.user
         scripts = [routine[timing]].flatten
         scripts.each do |script|
-          user, command, *args = script.to_a.flatten.compact
-          rbox.switch_user user # does nothing if it's the same user
-          puts "Creating #{@@script_config_file}"
-          rbox.safe = false
-          puts rbox.echo("'#{sconf.to_hash.to_yaml}' > #{@@script_config_file}")
-          rbox.safe = true
-          rbox.chmod(600, @@script_config_file)
-          puts %Q{Running (as #{user}): #{rbox.preview_command(command, args)}}
           
           begin
+            user, command, *args = script.to_a.flatten.compact
+            rbox.switch_user user # does nothing if it's the same user
+            puts "Creating #{@@script_config_file}"
+            rbox.safe = false
+            puts rbox.echo("'#{sconf.to_hash.to_yaml}' > #{@@script_config_file}")
+            rbox.safe = true
+            rbox.chmod(600, @@script_config_file)
+            puts %Q{Running (as #{user}): #{rbox.preview_command(command, args)}}
+          
             ret = rbox.send(command, args)
             if ret.exit_code > 0
               puts "  Exit code: #{ret.exit_code}".color(:red)

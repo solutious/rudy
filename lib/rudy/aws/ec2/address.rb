@@ -71,6 +71,7 @@ module Rudy::AWS
         address = address.ipaddress if address.is_a?(Rudy::AWS::EC2::Address)
         instance = instance.awsid if instance.is_a?(Rudy::AWS::EC2::Instance)
         raise UnknownAddress unless exists?(address)
+        p address
         raise AddressNotAssociated unless associated?(address)
         
         opts ={

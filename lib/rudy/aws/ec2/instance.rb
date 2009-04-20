@@ -79,8 +79,7 @@ module Rudy::AWS
       # * +:ami+          
       # * +:group+        
       # * +:size+          
-      # * +:keypair+      
-      # * +:address+
+      # * +:keypair+
       # * +:private+ true or false (default)
       # * +:machine_data+
       # * +:min+ count

@@ -188,10 +188,12 @@ module Rudy
       fetch_machine_param(:size) || 'm1.small'
     end
     
-    def current_machine_address
+    def current_machine_address(position='01')
       raise "No configuration" unless @@config
       raise "No machines configuration" unless @@config.machines
-      @@config.machines.find_deferred(@@global.environment, @@global.role, :address)
+      raise "Position cannot be nil" if position.nil?
+      addresses = [fetch_machine_param(:addresses)].flatten.compact
+      addresses[position.to_i-1]
     end
     
     # TODO: fix machine_group to include zone

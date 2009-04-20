@@ -1,7 +1,7 @@
 @spec = Gem::Specification.new do |s|
 	s.name = "rudy"
   s.rubyforge_project = 'rudy'
-	s.version = "0.6.4"
+	s.version = "0.6.5"
 	s.summary = "Rudy: Not your grandparent's deployment tool."
 	s.description = s.summary
 	s.author = "Delano Mandelbaum"
@@ -16,7 +16,7 @@
   
   s.add_dependency 'drydock', '>= 0.5.5'  
   s.add_dependency 'caesars', '>= 0.5.4'  
-  s.add_dependency 'rye', '>= 0.5.1'
+  s.add_dependency 'rye', '>= 0.5.3'
   
   s.add_dependency 'echoe'
   s.add_dependency 'amazon-ec2', '>= 0.3.8'  # region fix

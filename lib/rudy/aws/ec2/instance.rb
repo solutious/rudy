@@ -19,10 +19,8 @@ module Rudy::AWS
     field :reason
     field :groups => Array
     
-    # Groups aren't returned when creating an instance so this
-    # method returns an empty Array if +@groups+ is not set.
-    def groups
-      @groups || []
+    def init
+      @groups ||= []
     end
     
     def liner_note

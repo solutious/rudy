@@ -29,11 +29,11 @@ module RudyCLI_EC2
   
   desc "Amazon EC2 Elastic IP addresses"
   usage "rudy-ec2 addresses"
+  usage "rudy-ec2 addresses -C"
   usage "rudy-ec2 addresses -A -i instance-id address"
   usage "rudy-ec2 addresses -A -i instance-id -n"
   usage "rudy-ec2 addresses -N address"
   usage "rudy-ec2 addresses -D address"
-  usage "rudy-ec2 addresses -C"
   option :i, :instance, String, "Instance ID"
   option :n, :newaddress, "Create and assign a new elastic IP"
   action :A, :associate, "Associate an IP address to a running instance"
@@ -98,8 +98,7 @@ module RudyCLI_EC2
   command_alias :groups, :g
   
   desc "Amazon EC2 Machine Images (AMIs)"
-  usage "rudy-ec2 im"
-  usage "rudy-ec2 image"
+  usage "rudy-ec2 images"
   usage "rudy-ec2 images image-id"
   usage "rudy-ec2 images -o 123456789012"
   usage "rudy-ec2 images -o amazon"
@@ -119,11 +118,9 @@ module RudyCLI_EC2
   command_alias :images, :im
   
   desc "Amazon EC2 Instances"
-  usage "rudy-ec2 i"
-  usage "rudy-ec2 instance"
   usage "rudy-ec2 instances"
   usage "rudy-ec2 instances [-g group-name] [instance-ID]"
-  usage "rudy-ec2 instances -C -g group-name -s m1.small -k keypair-name"
+  usage "rudy-ec2 instances -C -m ami-235fba4a -s m1.small -k keypair-name"
   usage "rudy-ec2 instances -C -a 255.255.255.255 -k keypair-name"
   usage "rudy-ec2 instances -R instance-ID"
   usage "rudy-ec2 instances -D instance-ID"
@@ -204,6 +201,7 @@ module RudyCLI_EC2
   command_alias :volumes, :v
   
   desc "Availability Zones"
+  usage "rudy-ec2 zones"
   argv :name
   command :zones => Rudy::CLI::AWS::EC2::Zones
   command_alias :zones, :zone

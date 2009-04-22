@@ -7,10 +7,17 @@ RUDY, CHANGES
 * TODO: Support for product codes
 * TODO: HTTPS
 
+#### 0.6.7 (2009-04-22) ###############################
+
+* ADDED: rudy-ec2 status can now display EU status
+* FIXED: Fixed bug on instance create. Instance.groups was nil, now it returns 
+empty Array.
+
 #### 0.6.6 (2009-04-22) ###############################
 
 * ADDED: Better error handling for Rudy::AWS::SDB
 * FIXED: Ruby 1.9.1 compatability (including requiring aws-s3 >=0.6.1)
+
 
 #### 0.6.5 (2009-04-20) ###############################
 

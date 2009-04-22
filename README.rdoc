@@ -75,12 +75,14 @@ The <tt>-u root</tt> tells Rudy to open a connection as the root user. If you cr
 == Dependencies:
 
 * OpenSSH[http://www.openssh.com/]
-* Net::SSH[http://net-ssh.rubyforge.org/]
-* Net::SCP[http://net-ssh.rubyforge.org/]
-* amazon-ec2[http://github.com/grempe/amazon-ec2]
-* Rye[http://github.com/delano/rye]
-* Drydock[http://github.com/delano/drydock]
-* Caesars[http://github.com/delano/caesars]
+* Ruby 1.8.x, 1.9.x, or JRuby 1.2
+  * Net::SSH[http://net-ssh.rubyforge.org/]
+  * Net::SCP[http://net-ssh.rubyforge.org/]
+  * amazon-ec2[http://github.com/grempe/amazon-ec2]
+  * aws-s3[http://github.com/marcel/aws-s3]
+  * Rye[http://github.com/delano/rye]
+  * Drydock[http://github.com/delano/drydock]
+  * Caesars[http://github.com/delano/caesars]
 
 
 == Common Errors
@@ -105,6 +107,7 @@ Although Rudy has been well tested and is currently being used in production in 
 
 == More Info
 
+* Rudy-Introduction[http://blog.solutious.com/2009/04/21/rudy-deployment-introduction/]
 * GitHub[http://github.com/solutious/rudy]
 * Issues[http://github.com/solutious/rudy/issues]
 * RubyForge[http://rubyforge.org/projects/rudy]
@@ -120,13 +123,13 @@ Although Rudy has been well tested and is currently being used in production in 
   * Colin Brumelle
 * Everyone at Utrecht.rb[http://groups.google.com/group/utrecht-rb]
 * Jamis Buck for writing Net::SSH and friends. 
+* Keshia Knight Pulliam
 
 
 == Credits
 
 * Rudy::AWS::SDB adapted from aws_sdb by Tim Dysinger (http://dysinger.net)
 * Escape, Copyright (C) 2006,2007 Tanaka Akira  <akr@fsij.org>
-* Keshia Knight Pulliam (rudy@solutious.com)
 * Delano Mandelbaum (delano@solutious.com)
 
 

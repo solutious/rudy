@@ -85,7 +85,7 @@ The <tt>-u root</tt> tells Rudy to open a connection as the root user. If you cr
 
 == Common Errors
 
-* <tt>"`require': no such file to load -- amazon-ec2 (LoadError)"</tt>
+* <tt>"`require': no such file to load -- logger (LoadError)"</tt>
   * You're probably running a mix of Rubygem and non-Rubygem libraries. Ryan Tomayko has you covered: http://gist.github.com/54177
 * <tt>"The request signature we calculated does not match the signature you provided."</tt>
   * Check that your Amazon Web Service access key and secret key are correct

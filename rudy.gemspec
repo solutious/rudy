@@ -1,7 +1,7 @@
 @spec = Gem::Specification.new do |s|
 	s.name = "rudy"
   s.rubyforge_project = 'rudy'
-	s.version = "0.6.5"
+	s.version = "0.6.6"
 	s.summary = "Rudy: Not your grandparent's deployment tool."
 	s.description = s.summary
 	s.author = "Delano Mandelbaum"
@@ -19,9 +19,10 @@
   s.add_dependency 'rye', '>= 0.5.3'
   
   s.add_dependency 'echoe'
-  s.add_dependency 'amazon-ec2', '>= 0.3.8'  # region fix
-  s.add_dependency 'net-ssh', '>=2.0.9'
-  s.add_dependency 'net-scp', '>=1.0.2'
+  s.add_dependency 'amazon-ec2', '>= 0.3.8'  # Region fix
+  s.add_dependency 'aws-s3', '>= 0.6.1'      # Ruby 1.9.1 compatability
+  s.add_dependency 'net-ssh', '>= 2.0.9'
+  s.add_dependency 'net-scp', '>= 1.0.2'
   s.add_dependency 'net-ssh-gateway'
   s.add_dependency 'net-ssh-multi'
   
@@ -31,7 +32,7 @@
   #s.add_development_dependency('jgre-monkeyspecdoc', '>= 0.1.0')
   #s.add_development_dependency('thoughtbot-shoulda', '>= 0.1.0')
   
-  s.executables = %w[ird rudy rudy-ec2 rudy-sdb]
+  s.executables = %w[ird rudy rudy-ec2 rudy-sdb ruby-s3]
   
   # = MANIFEST =
   # git ls-files
@@ -44,6 +45,7 @@
   bin/ird
   bin/rudy
   bin/rudy-ec2
+  bin/rudy-s3
   bin/rudy-sdb
   lib/annoy.rb
   lib/console.rb

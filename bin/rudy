@@ -10,7 +10,7 @@
 
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib') # Put our local lib in first place
 $:.unshift File.join(File.dirname(__FILE__), '..', 'vendor', 'highline-1.5.1', 'lib')
-#%w{amazon-ec2 rye}.each { |dir| $:.unshift File.join(File.dirname(__FILE__), '..', '..', dir, 'lib') }
+%w{amazon-ec2 drydock rye}.each { |dir| $:.unshift File.join(File.dirname(__FILE__), '..', '..', dir, 'lib') }
 #require 'rubygems'
 
 #$SAFE = 1   # require is unsafe in Ruby 1.9??
@@ -251,7 +251,7 @@ class RudyCLI < Rudy::CLI::Base
   
   # -------------------------------------------  UGLY STUFFS  --------
   # ------------------------------------------------------------------
-  debug :off
+  debug :on
   default :machines
   
 
@@ -272,6 +272,9 @@ rescue Rudy::Error => ex
 rescue => ex
   STDERR.puts "ERROR (#{ex.class.to_s}): #{ex.message}"
   STDERR.puts ex.backtrace if Drydock.debug?
+rescue Interrupt
+  puts "#{$/}Exiting... "
+  exit 1
 rescue SystemExit
   # Don't balk
 end

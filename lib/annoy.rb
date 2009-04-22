@@ -122,9 +122,7 @@ class Annoy
         #writer.flush
         #end
         #response = Annoy.get_response(writer)
-        
-        trap("SIGINT") { raise Annoy::GiveUp  }
-        
+                
         highline = HighLine.new 
         response = highline.ask(msg) { |q| 
           q.echo = '*'             # Don't display response
@@ -132,11 +130,14 @@ class Annoy
           q.whitespace = :strip    # Remove whitespace from the response
           q.answer_type = Integer  if flavor == :numeric
         }
-
+        
         ret = (response == answer)
         writer.puts "Incorrect" unless ret
         ret
       end
+    rescue Interrupt
+      writer.puts $/, "Giving up!"
+      false
     rescue Annoy::GiveUp => ex
       writer.puts $/, "Giving up!"
       false

@@ -234,6 +234,9 @@ rescue Rudy::Error => ex
 rescue => ex
   STDERR.puts "ERROR (#{ex.class.to_s}): #{ex.message}"
   STDERR.puts ex.backtrace if Drydock.debug?
+rescue Interrupt
+  puts "#{$/}Exiting... "
+  exit 1
 rescue SystemExit
   # Don't balk
 end

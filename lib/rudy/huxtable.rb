@@ -122,9 +122,10 @@ module Rudy
     
     
     def user_keypairpath(name)
-      raise "No user provided" unless name
-      raise "No configuration" unless @@config
-      raise "No machines configuration" unless @@config.machines
+      raise Rudy::Error, "No user provided" unless name
+      raise NoConfig unless @@config
+      raise NoMachinesConfig unless @@config.machines
+      raise NoGlobal unless @@global
       zon, env, rol = @@global.zone, @@global.environment, @@global.role
       #Caesars.enable_debug
       path = @@config.machines.find_deferred(zon, env, rol, [:users, name, :keypair])
@@ -189,8 +190,8 @@ module Rudy
     end
     
     def current_machine_address(position='01')
-      raise "No configuration" unless @@config
-      raise "No machines configuration" unless @@config.machines
+      raise NoConfig unless @@config
+      raise NoMachinesConfig unless @@config.machines
       raise "Position cannot be nil" if position.nil?
       addresses = [fetch_machine_param(:addresses)].flatten.compact
       addresses[position.to_i-1]
@@ -232,6 +233,8 @@ module Rudy
     # at least one definition in the config for this to return true
     # That's how Rudy knows the current group is defined. 
     def known_machine_group?
+      raise NoConfig unless @@config
+      raise NoMachinesConfig unless @@config.machines
       return false if !@@config && !@@global
       zon, env, rol = @@global.zone, @@global.environment, @@global.role
       conf = @@config.machines.find_deferred(@@global.region, zon, [env, rol])
@@ -265,9 +268,9 @@ module Rudy
     #            :size: 1
     #      
     def fetch_routine_config(action)
-      raise "No configuration" unless @@config
-      raise "No routines configuration" unless @@config.routines
-      raise "No globals" unless @@global
+      raise NoConfig unless @@config
+      raise NoRoutinesConfig unless @@config.routines
+      raise NoGlobal unless @@global
       
       zon, env, rol = @@global.zone, @@global.environment, @@global.role
       
@@ -295,18 +298,18 @@ module Rudy
     
     
     def fetch_machine_param(parameter)
-      raise "No configuration" unless @@config
-      raise "No machines configuration" unless @@config.machines
-      raise "No globals" unless @@global
+      raise NoConfig unless @@config
+      raise NoMachinesConfig unless @@config.machines
+      raise NoGlobal unless @@global
       top_level = @@config.machines.find(parameter)
       mc = fetch_machine_config
       mc[parameter] || top_level || nil
     end
     
     def fetch_machine_config
-      raise "No configuration" unless @@config
-      raise "No machines configuration" unless @@config.machines
-      raise "No globals" unless @@global
+      raise NoConfig unless @@config
+      raise NoMachinesConfig unless @@config.machines
+      raise NoGlobal unless @@global
       zon, env, rol = @@global.zone, @@global.environment, @@global.role
       hashes = []
       hashes << @@config.machines.find(env, rol)

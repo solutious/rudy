@@ -131,7 +131,7 @@ module Rudy
   def sysinfo; @@sysinfo;  end
   
   class Error < RuntimeError
-    def initialize(obj); @obj = obj; end
+    def initialize(obj=nil); @obj = obj; end
     def message; "#{self.class}: #{@obj}"; end
   end
   class InsecureKeyPermissions < Rudy::Error
@@ -142,7 +142,16 @@ module Rudy
     end
   end
   class NoConfig < Rudy::Error
-    def message; "No AWS credentials. Check your configs!"; end
+    def message; "No configuration found!"; end
+  end
+  class NoGlobal < Rudy::Error
+    def message; "No globals defined!"; end
+  end
+  class NoMachinesConfig < Rudy::Error
+    def message; "No machines configuration. Check your configs!"; end
+  end
+  class NoRoutinesConfig < Rudy::Error
+    def message; "No routines configuration. Check your configs!"; end
   end
   class ServiceUnavailable < Rudy::Error
     def message; "#{@obj} is not available. Check your internets!"; end

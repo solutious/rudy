@@ -32,7 +32,7 @@
   #s.add_development_dependency('jgre-monkeyspecdoc', '>= 0.1.0')
   #s.add_development_dependency('thoughtbot-shoulda', '>= 0.1.0')
   
-  s.executables = %w[ird rudy rudy-ec2 rudy-sdb ruby-s3]
+  s.executables = %w[ird rudy rudy-ec2 rudy-sdb rudy-s3]
   
   # = MANIFEST =
   # git ls-files

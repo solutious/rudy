@@ -11,6 +11,11 @@ module AWS; module EC2;
     end
     def status
       url = 'http://status.aws.amazon.com/rss/EC2.rss'
+      
+      if (@@global.region || '').to_s.strip.match(/\Aeu/)
+        url = 'http://status.aws.amazon.com/rss/EC2EU.rss'
+      end
+      
       # TODO: Move to Rudy::AWS
       ec2 = Rudy::Utils::RSSReader.run(url) || {}
       
@@ -21,14 +26,21 @@ module AWS; module EC2;
         require 'json'
         puts ec2.to_json
       else
-        puts "Updated: #{ec2[:pubdate]} (updated every #{ec2[:ttl]} minutes)"
-        ec2[:items].each do |i|
+        puts "#{ec2[:title]}"
+        puts "Updated: #{ec2[:pubdate]}"
+        (ec2[:items] || []).each do |i|
           puts
           puts '%s' % i[:title]
           puts '  %s: %s' % [i[:pubdate], i[:description]]
-          
+        end
+        if ec2.empty? || ec2[:items].empty?
+          puts "No announcements" 
+          return
         end
       end
+      
+      
+      
     end
     
     def ssh_valid?

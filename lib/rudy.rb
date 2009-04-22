@@ -9,6 +9,7 @@ require 'digest/md5'
 require 'stringio'
 require 'ostruct'
 require 'yaml'
+require 'logger'
 require 'socket'
 require 'timeout'
 require 'tempfile'
@@ -26,7 +27,6 @@ require 'net/ssh/multi'
 require 'net/ssh/gateway'
 
 
-require 'logger'
 
 # = Rudy
 #

@@ -13,7 +13,8 @@ module Rudy
     class SDB
       class NoAccessKey < RuntimeError; end
       class NoSecretKey < RuntimeError; end
-        
+      include Rudy::AWS::ObjectBase
+      
       require 'rudy/aws/sdb/error'
       
       def initialize(access_key=nil, secret_key=nil, region=nil, debug=nil)
@@ -94,7 +95,7 @@ module Rudy
         }
         params['NextToken'] =
           token unless token.nil? || token.empty?
-
+          
         doc = call(:get, params)
         results = []
         REXML::XPath.each(doc, "//Item") do |item|
@@ -268,24 +269,31 @@ module Rudy
         uri = URI.parse(url)
         @debug.puts("#{url}") if @debug
         
-        response =
+        response = execute_request(nil) {
           Net::HTTP.new(uri.host, uri.port).send_request(method, uri.request_uri)
-        @debug.puts("#{response.code}\n#{response.body}") if @debug
-        raise(ConnectionError.new(response)) unless (200..400).include?(
-          response.code.to_i
-        )
+        }
         
-        doc = REXML::Document.new(response.body)
-        error = doc.get_elements('*/Errors/Error')[0]
-        raise(
-          Module.class_eval(
-            "AwsSdb::#{error.get_elements('Code')[0].text}Error"
-          ).new(
-            error.get_elements('Message')[0].text,
-            doc.get_elements('*/RequestID')[0].text
+        if !response.nil?
+        
+          @debug.puts("#{response.code}\n#{response.body}") if @debug
+          raise(ConnectionError.new(response)) unless (200..400).include?(
+            response.code.to_i
           )
-        ) unless error.nil?
-        
+
+
+          doc = REXML::Document.new(response.body)
+          error = doc.get_elements('*/Errors/Error')[0]
+          raise(
+            Module.class_eval(
+              "AwsSdb::#{error.get_elements('Code')[0].text}Error"
+            ).new(
+              error.get_elements('Message')[0].text,
+              doc.get_elements('*/RequestID')[0].text
+            )
+          ) unless error.nil?
+        else
+          doc = nil
+        end
         doc
       end
     end

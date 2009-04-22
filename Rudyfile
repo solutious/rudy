@@ -53,7 +53,7 @@ machines do
     
     role :app do
       positions 2
-      addresses '174.129.208.127', '174.129.208.169'
+      #addresses '11.22.33.44', '55.66.77.88'
       
       # We define two disks for the stage-app machines
       disks do

@@ -1,8 +1,7 @@
 
 
-require 'EC2'       # What a
-#require 'aws_sdb'   # motley
-# Disabled b/c it's not Ruby 1.9 compatible
+require 'EC2'       # A
+require 'aws_sdb'   # motley
 require 'aws/s3'    # crew
 
 module Rudy
@@ -53,9 +52,9 @@ module Rudy
         rescue Timeout::Error => ex
           STDERR.puts "Timeout (#{timeout}): #{ex.message}!"
         rescue SocketError => ex
-          STDERR.puts "Socket Error. Check your Internets!"
-          STDERR.puts ex.message
-          STDERR.puts ex.backtrace
+          raise SocketError, "Check your Internets!"
+          #STDERR.puts ex.message
+          #STDERR.puts ex.backtrace
         ensure
           response ||= default
         end

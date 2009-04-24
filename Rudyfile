@@ -113,7 +113,7 @@ routines do
       shutdown do
         before :root => '/a/nonexistent/script'
         disks do
-          # Rudy unounts the EBS volume and deletes it. Careful! 
+          # Rudy unmounts the EBS volume and deletes it. Careful! 
           destroy "/rudy/disk1"
         end
       end

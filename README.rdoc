@@ -16,6 +16,9 @@ All configuration is organized into the zones, environments, and roles that you 
 
 <em>NOTE: This is an ALPHA release. That means Rudy's not ready for production use! See Alpha Notice.</em>
 
+<b>See Getting-Started[http://wiki.github.com/solutious/rudy/getting-started] for more info.</b>
+
+
 == Features
 
 * Create complex environments with a single command
@@ -95,7 +98,7 @@ Rudy has been well tested and is currently being used in production in a private
 I'm very open to contributions! 
 
 * For bigger features please fork the git repo and send me a pull request. 
-* For small or single file changes, send me an email with the details <tt>delano@solutious.com</tt>
+* For small or single file changes, send me an email with the details: <tt>delano@solutious.com</tt>
 
 
 == Credits

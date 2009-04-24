@@ -1,6 +1,8 @@
 = Rudy - v0.6 ALPHA
 
-Rudy is a command-line development and deployment tool for Amazon Web Services. It helps you build and manage machines in EC2 by organizing them into groups of _environments_ and _roles_. These are called _machine_ _groups_. <tt>stage</tt> is the default environment and <tt>app</tt> is the default role. You can run multiple machines with the same role. These are called _positions_. Rudy also supports running machine groups across availability _zones_. 
+*Rudy is a command-line development and deployment tool for Amazon Web Services.*
+
+It helps you build and manage machines in EC2 by organizing them into groups of _environments_ and _roles_. These are called _machine_ _groups_. <tt>stage</tt> is the default environment and <tt>app</tt> is the default role. You can run multiple machines with the same role. These are called _positions_. Rudy also supports running machine groups across availability _zones_. 
 
 When you put all this together, you have a unique name for every machine. The default machine is:
 
@@ -10,22 +12,21 @@ When you put all this together, you have a unique name for every machine. The de
         ^                       ^
      "machine"                position
 
-All configuration is organized into the zones, environments, and roles that you specify (Rudy assumes positions are identical which is important for backups and scaling). And as you'd expect, the defaults can be changed too (in <tt>~/.rudy/config</tt>). See below for usage examples. 
+All configuration is organized into the zones, environments, and roles that you specify (Rudy assumes positions are identical which is important for backups and scaling). And as you'd expect, the defaults can be changed too (in <tt>~/.rudy/config</tt>).
 
-<b>NOTE: This is an ALPHA release. That means Rudy's not ready for production use! See Alpha Warning.</b>
+<b>NOTE: This is an ALPHA release. That means Rudy's not ready for production use! See Alpha Notice.</b>
 
 == Features
 
-* Single command startup and shutdown
-* Automatic disk creation. Define disks with a DSL and Rudy does the dirty work (creates EBS volume, attach to instance, format, and mount).
-* Supports any Amazon machine image (AMI) (Windows images should work but need more testing)
-* Complete command-line interface for EC2 (a replacement for Amazon's API tools). See bin/rudy-ec2.
-* Basic command-line interface for SDB and S3 (create and delete buckets and volumes). See bin/rudy-sdb and bin/rudy-s3. 
-
+* Create complex environments with a single command
+  * Launch multiple instances
+  * Assign elastic IP addresses
+  * Create EBS volumes, attach to instances, format, and mount
+  * Run scripts locally and remotely automatically
+* Supports any Amazon machine image (AMI)
+* Complete command-line interface for EC2. See <tt>bin/rudy-ec2</tt>.
 
 == Installation
-
-=== Step 1 of 2 (get Rudy on to your machine):
 
 Via Rubygems, one of:
 
@@ -33,47 +34,19 @@ Via Rubygems, one of:
     $ sudo gem install solutious-rudy --source http://gems.github.com/
 
 or via download:
-* rudy-0.6.7.tar.gz[http://github.com/solutious/rudy/tarball/rudy-0.6.7]
-* rudy-0.6.7.zip[http://github.com/solutious/rudy/zipball/rudy-0.6.7]
+* rudy-latest.tar.gz[http://github.com/solutious/rudy/tarball/rudy-latest]
+* rudy-latest.zip[http://github.com/solutious/rudy/zipball/rudy-latest]
 
 NOTE: <em>If you are not installing via RubyGems, you need to make sure the dependencies are in your LOAD_PATH (<tt>$:</tt>). Ryan Tomayko wrote a gist[http://gist.github.com/54177] about it.</em>
 
-=== Step 2 of 2 (initialize your configuration):
+See Getting-Started[http://wiki.github.com/solutious/rudy/getting-started] for more info.
 
-    $ rudy generate-config
-      [edit ~/.rudy/config with your Amazon Web Services credentials] 
-    $ rudy init
+== Pre-Requisites
 
-NOTE: <em>You need an Amazon[http://aws.amazon.com/] account to use Rudy. Sign up for EC2[http://aws.amazon.com/ec2/],  SimpleDB[http://aws.amazon.com/simpledb/], and S3[http://aws.amazon.com/s3/]</em>
-
-
-== Example -- Launch a Machine Group
-
-Machine groups are named after the current environment and role. The default machine group is <tt>stage-app</tt>. In this example, Rudy will create the default machine group from scratch. 
-
-<b>Note: Make sure your <tt>~/.rudy/config</tt> contains your AWS credentials</b>
-
-We need to tell Rudy what this machine group should look like. We can generate a default machine configuration with this command:
-
-    $ rudy config --rudy > Rudyfile
-
-This will generate a config file called <tt>Rudyfile</tt> which contains a default machines and routines configuration. The machine configuration describes the "physical" characteristics of your machine groups. The routine configuration describes what happens when you startup and shutdown a machine group (Rudy refers to these as _routines_).
-    
-We can launch the default machine group (stage-app) with this command:
-
-    $ rudy startup
-
-You now have a new EC2 instance called <tt>m-us-east-1b-stage-app-01</tt> to work with. You can log into it with:
-
-    $ rudy -u root ssh
-    
-The <tt>-u root</tt> tells Rudy to open a connection as the root user. If you create an account on that instance, you can login as that user too. When you don't feel like paying for the instance you can run the following command to destroy it forever:
-
-    $ rudy shutdown
-
-
-== Dependencies:
-
+* Amazon AWS[http://aws.amazon.com/] Account
+  * EC2[http://aws.amazon.com/ec2/]
+  * SimpleDB[http://aws.amazon.com/simpledb/]
+  * S3[http://aws.amazon.com/s3/]
 * OpenSSH[http://www.openssh.com/]
 * Ruby 1.8.x, 1.9.x, or JRuby 1.2
   * Net::SSH[http://net-ssh.rubyforge.org/]
@@ -85,20 +58,9 @@ The <tt>-u root</tt> tells Rudy to open a connection as the root user. If you cr
   * Caesars[http://github.com/delano/caesars]
 
 
-== Common Errors
+== Alpha Notice
 
-* <tt>"fingerprint ... does not match for 'ec2-11-22-33-44.compute-1.amazonaws.com,11.22.33.44'"</tt>
-  * This means the host SSH key for that machine does not match your +~/.ssh/known_hosts+ file. Most EC2 images generate new host SSH keys on the first boot so is the most likely cause for this error message (it's safe to continue). If this is not a new instance, you should tell Rudy not to continue and investigate manually.
-* <tt>"`require': no such file to load -- logger (LoadError)"</tt>
-  * You're probably running a mix of Rubygem and non-Rubygem libraries. Ryan Tomayko has you covered: http://gist.github.com/54177
-* <tt>"The request signature we calculated does not match the signature you provided."</tt>
-  * Check that your Amazon Web Service access key and secret key are correct
-* <tt>"AWS was not able to validate the provided access credentials"</tt>
-  * If it's a new Amazon Account, you need to sign up for EC2, SDB, and S3. 
-
-== Alpha Warning
-
-Although Rudy has been well tested and is currently being used in production in a private beta, it's not ready for general production use. There are a few things to keep in mind while Rudy is in alpha status.
+Rudy has been well tested and is currently being used in production in a private beta, but it's not ready for general production use. There are a few things to keep in mind while Rudy is in alpha status.
 
 * If you already have private SSH keys, back them up. Rudy is quite safe but hasn't been audited so backup your keys as a precaution.
 * If you're running EC2 instances in production, create a new set of AWS credentials (access key and secret key) to use with Rudy. This will ensure that Rudy has no access to your production instances. 
@@ -107,12 +69,10 @@ Although Rudy has been well tested and is currently being used in production in 
 
 == More Info
 
-* Rudy-Introduction[http://blog.solutious.com/2009/04/21/rudy-deployment-introduction/]
 * GitHub[http://github.com/solutious/rudy]
+* Documentation[http://wiki.github.com/solutious/rudy]
 * Issues[http://github.com/solutious/rudy/issues]
-* RubyForge[http://rubyforge.org/projects/rudy]
 * Inspiration[http://www.youtube.com/watch?v=CgaiIW5Rzes]
-
 
 == Thanks
 
@@ -123,8 +83,12 @@ Although Rudy has been well tested and is currently being used in production in 
   * Colin Brumelle
 * Sam Aaron
 * Everyone at Utrecht.rb[http://groups.google.com/group/utrecht-rb]
-* Jamis Buck 
+* Jamis Buck for Net::SSH and friends
 * Keshia Knight Pulliam
+
+== Contributions
+
+I'm very open to contributions! For bigger features please fork the git repo and send me a pull request. For small or single file changes, send me an email with the details <tt>delano@solutious.com</tt>
 
 
 == Credits

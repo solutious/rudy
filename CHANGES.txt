@@ -7,6 +7,13 @@ RUDY, CHANGES
 * TODO: Support for product codes
 * TODO: HTTPS
 
+
+#### 0.6.8 (2009-04-24) ###############################
+
+* CHANGE: Renamed rudy config --rudy option to --project. This was important 
+to maintain consistency in documentation.
+* CHANGE: Cleaned README. See: http://wiki.github.com/solutious/rudy
+
 #### 0.6.7 (2009-04-22) ###############################
 
 * ADDED: rudy-ec2 status can now display EU status

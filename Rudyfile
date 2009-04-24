@@ -50,26 +50,23 @@ machines do
     ami "ami-5394733a"    # ec2onrails/ec2onrails-v0_9_9_1-i386.manifest.xml
     size 'm1.small'
     
-    
     role :app do
       positions 1
       #addresses '11.22.33.44', '55.66.77.88'
       
-      # We define two disks for the stage-app machines
+      # You can define disks for the stage-app machines. Rudy uses 
+      # this configuration when it executes a routine (see below).
       disks do
         path "/rudy/disk1" do
           size 2
           device "/dev/sdr"
         end
-        path "/rudy/disk2" do
-          size 1 
-          device "/dev/sdm"
-        end
       end
       
     end
     
-    # Here are some examples of other roles. These can be anything.
+    # Here are some examples of other roles. You can use these or
+    # remove them and create your own.
     role :db do
     end
     
@@ -100,23 +97,23 @@ routines do
   env :stage do
     role :app do
       
-      startup do
-        before_local Rudy.sysinfo.user => :uname
-        
+      # This routine will be executed when you run "rudy startup"
+      startup do        
         disks do
+          # Rudy creates an EBS volume for each instance, attaches
+          # it, gives it a filesystem, and mounts it. 
           create "/rudy/disk1"
         end
-        
-        after :root => [:uname, :a]
+        # You can execute a shell command on each instance after
+        # it's created. This touch command will run as root.
         after :root => [:touch, '/rudy/disk1/rudy-was-here']
-        after_local Rudy.sysinfo.user => :date
       end
       
+      # This routine will be executed when you run "rudy shutdown"
       shutdown do
         before :root => '/a/nonexistent/script'
-        before :root => :uptime 
-        
         disks do
+          # Rudy unounts the EBS volume and deletes it. Careful! 
           destroy "/rudy/disk1"
         end
       end

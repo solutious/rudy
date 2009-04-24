@@ -83,9 +83,9 @@ class RudyCLI < Rudy::CLI::Base
   desc "Check Rudy configuration."
   option :l, :all, "Display configs for all machines"
   option :s, :script, "Output configuration identical to what is provided to scripts called in routines"
-  option :r, :rudy, "Output a skeleton Rudyfile"
-  option :d, :defaults, "Display the default value for the supplied parameter"
-  option :g, :group, String, "Display configuration for a specific group"
+  option :p, :project, "Output a skeleton Rudyfile"
+  #option :d, :defaults, "Display the default value for the supplied parameter"
+  #option :g, :group, String, "Display configuration for a specific group"
   argv :name
   command :config => Rudy::CLI::Config
 

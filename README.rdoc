@@ -1,8 +1,8 @@
 = Rudy - v0.6 ALPHA
 
-*Rudy is a command-line development and deployment tool for Amazon Web Services.*
+<b>Not your grandparents' EC2 deployment tool.</b>
 
-It helps you build and manage machines in EC2 by organizing them into groups of _environments_ and _roles_. These are called _machine_ _groups_. <tt>stage</tt> is the default environment and <tt>app</tt> is the default role. You can run multiple machines with the same role. These are called _positions_. Rudy also supports running machine groups across availability _zones_. 
+Rudy is a command-line development and deployment tool for Amazon Web Services. It helps you build and manage machines in EC2 by organizing them into groups of _environments_ and _roles_. These are called _machine_ _groups_. <tt>stage</tt> is the default environment and <tt>app</tt> is the default role. You can run multiple machines with the same role. These are called _positions_. Rudy also supports running machine groups across availability _zones_. 
 
 When you put all this together, you have a unique name for every machine. The default machine is:
 
@@ -14,7 +14,7 @@ When you put all this together, you have a unique name for every machine. The de
 
 All configuration is organized into the zones, environments, and roles that you specify (Rudy assumes positions are identical which is important for backups and scaling). And as you'd expect, the defaults can be changed too (in <tt>~/.rudy/config</tt>).
 
-<b>NOTE: This is an ALPHA release. That means Rudy's not ready for production use! See Alpha Notice.</b>
+<em>NOTE: This is an ALPHA release. That means Rudy's not ready for production use! See Alpha Notice.</em>
 
 == Features
 
@@ -23,7 +23,7 @@ All configuration is organized into the zones, environments, and roles that you 
   * Assign elastic IP addresses
   * Create EBS volumes, attach to instances, format, and mount
   * Run scripts locally and remotely automatically
-* Supports any Amazon machine image (AMI)
+* Use _any_ Amazon machine image (AMI)
 * Complete command-line interface for EC2. See <tt>bin/rudy-ec2</tt>.
 
 == Installation
@@ -39,7 +39,8 @@ or via download:
 
 NOTE: <em>If you are not installing via RubyGems, you need to make sure the dependencies are in your LOAD_PATH (<tt>$:</tt>). Ryan Tomayko wrote a gist[http://gist.github.com/54177] about it.</em>
 
-See Getting-Started[http://wiki.github.com/solutious/rudy/getting-started] for more info.
+<b>See Getting-Started[http://wiki.github.com/solutious/rudy/getting-started] for more info.</b>
+
 
 == Pre-Requisites
 
@@ -48,7 +49,7 @@ See Getting-Started[http://wiki.github.com/solutious/rudy/getting-started] for m
   * SimpleDB[http://aws.amazon.com/simpledb/]
   * S3[http://aws.amazon.com/s3/]
 * OpenSSH[http://www.openssh.com/]
-* Ruby 1.8.x, 1.9.x, or JRuby 1.2
+* Ruby[http://ruby-lang.org] 1.8.x, 1.9.x, or JRuby[http://jruby.codehaus.org] 1.2
   * Net::SSH[http://net-ssh.rubyforge.org/]
   * Net::SCP[http://net-ssh.rubyforge.org/]
   * amazon-ec2[http://github.com/grempe/amazon-ec2]
@@ -74,6 +75,7 @@ Rudy has been well tested and is currently being used in production in a private
 * Issues[http://github.com/solutious/rudy/issues]
 * Inspiration[http://www.youtube.com/watch?v=CgaiIW5Rzes]
 
+
 == Thanks
 
 * The Rilli.com[http://rilli.com] team
@@ -84,11 +86,16 @@ Rudy has been well tested and is currently being used in production in a private
 * Sam Aaron
 * Everyone at Utrecht.rb[http://groups.google.com/group/utrecht-rb]
 * Jamis Buck for Net::SSH and friends
+* Glenn Rempe for amazon-ec2
 * Keshia Knight Pulliam
+
 
 == Contributions
 
-I'm very open to contributions! For bigger features please fork the git repo and send me a pull request. For small or single file changes, send me an email with the details <tt>delano@solutious.com</tt>
+I'm very open to contributions! 
+
+* For bigger features please fork the git repo and send me a pull request. 
+* For small or single file changes, send me an email with the details <tt>delano@solutious.com</tt>
 
 
 == Credits

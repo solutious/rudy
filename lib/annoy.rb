@@ -11,6 +11,9 @@ require 'highline'
 #
 # Like your annoying friend that asks you questions all the time.
 #
+# Rudy uses Annoy to present the user with a simple question before
+# continuing with a destructive action. 
+#
 class Annoy
   
   attr_accessor :factor

@@ -46,8 +46,8 @@ module Rudy
         else
           if @option.all
             puts "# ACCOUNTS: not displayed"
-            puts "# MACHINES: "
             if @@config.machines?
+              puts "# MACHINES: "
               y @@config.machines.to_hash 
             end
             if @@config.routines?
@@ -58,7 +58,7 @@ module Rudy
             y @@config.defaults.to_hash
           elsif @option.script
             y fetch_script_config.to_hash
-          elsif @option.rudy
+          elsif @option.project
             rf = File.join(RUDY_HOME, 'Rudyfile')
             raise "Cannot find: #{rf}" unless File.exists?(rf)
             puts File.read(rf)

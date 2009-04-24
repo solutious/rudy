@@ -33,8 +33,8 @@ Via Rubygems, one of:
     $ sudo gem install solutious-rudy --source http://gems.github.com/
 
 or via download:
-* rudy-0.6.6.tar.gz[http://github.com/solutious/rudy/tarball/rudy-0.6.6]
-* rudy-0.6.6.zip[http://github.com/solutious/rudy/zipball/rudy-0.6.6]
+* rudy-0.6.7.tar.gz[http://github.com/solutious/rudy/tarball/rudy-0.6.7]
+* rudy-0.6.7.zip[http://github.com/solutious/rudy/zipball/rudy-0.6.7]
 
 NOTE: <em>If you are not installing via RubyGems, you need to make sure the dependencies are in your LOAD_PATH (<tt>$:</tt>). Ryan Tomayko wrote a gist[http://gist.github.com/54177] about it.</em>
 
@@ -116,21 +116,22 @@ Although Rudy has been well tested and is currently being used in production in 
 
 == Thanks
 
-* The Rilli.com[http://rilli.com] team -- for the initial use case, the ongoing feedback and support, and the good times!
+* The Rilli.com[http://rilli.com] team
   * Adam Bognar
   * Andrew Simpson
   * Caleb Buxton
   * Colin Brumelle
+* Sam Aaron
 * Everyone at Utrecht.rb[http://groups.google.com/group/utrecht-rb]
-* Jamis Buck for writing Net::SSH and friends. 
+* Jamis Buck 
 * Keshia Knight Pulliam
 
 
 == Credits
 
+* Delano Mandelbaum (delano@solutious.com)
 * Rudy::AWS::SDB adapted from aws_sdb by Tim Dysinger (http://dysinger.net)
 * Escape, Copyright (C) 2006,2007 Tanaka Akira  <akr@fsij.org>
-* Delano Mandelbaum (delano@solutious.com)
 
 
 == License

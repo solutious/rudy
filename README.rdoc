@@ -14,10 +14,9 @@ When you put all this together, you have a unique name for every machine. The de
 
 All configuration is organized into the zones, environments, and roles that you specify (Rudy assumes positions are identical which is important for backups and scaling). And as you'd expect, the defaults can be changed too (in <tt>~/.rudy/config</tt>).
 
-<em>NOTE: This is an ALPHA release. That means Rudy's not ready for production use! See Alpha Notice.</em>
-
 <b>See Getting-Started[http://wiki.github.com/solutious/rudy/getting-started] for more info.</b>
 
+<em>NOTE: This is an ALPHA release. That means Rudy's not ready for production use! See Project-Status[http://wiki.github.com/solutious/rudy/project-status].</em>
 
 == Features
 
@@ -60,15 +59,6 @@ NOTE: <em>If you are not installing via RubyGems, you need to make sure the depe
   * Rye[http://github.com/delano/rye]
   * Drydock[http://github.com/delano/drydock]
   * Caesars[http://github.com/delano/caesars]
-
-
-== Alpha Notice
-
-Rudy has been well tested and is currently being used in production in a private beta, but it's not ready for general production use. There are a few things to keep in mind while Rudy is in alpha status.
-
-* If you already have private SSH keys, back them up. Rudy is quite safe but hasn't been audited so backup your keys as a precaution.
-* If you're running EC2 instances in production, create a new set of AWS credentials (access key and secret key) to use with Rudy. This will ensure that Rudy has no access to your production instances. 
-* Rudy commands and APIs may change in later releases. This means that if you create an environment with an alpha release and later upgrade Rudy, some things may not work as expected. 
 
 
 == More Info

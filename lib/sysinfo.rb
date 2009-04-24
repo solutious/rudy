@@ -12,6 +12,7 @@ class SystemInfo < Storable
     
       # These are for JRuby, System.getproperty('os.name'). 
       # For a list of all values, see: http://lopica.sourceforge.net/os.html
+      #regexp matcher       os        implementation
       [/mac\s*os\s*x/i,     :unix,    :osx     ],  
       [/sunos/i,            :unix,    :solaris ], 
       [/windows\s*ce/i,     :win32,   :windows ],
@@ -21,21 +22,21 @@ class SystemInfo < Storable
       # TODO: implement other windows matches: # /djgpp|(cyg|ms|bcc)win|mingw/ (from mongrel)
     
       # These are for RUBY_PLATFORM and JRuby
-      [/java/i,    :java,    :java             ],
-      [/darwin/i,  :unix,    :osx              ],
-      [/linux/i,   :unix,    :linux            ],
-      [/freebsd/i, :unix,    :freebsd          ],
-      [/netbsd/i,  :unix,    :netbsd           ],
-      [/solaris/i, :unix,    :solaris          ],
-      [/irix/i,    :unix,    :irix             ],
-      [/cygwin/i,  :unix,    :cygwin           ],
-      [/mswin/i,   :win32,   :windows          ],
-      [/mingw/i,   :win32,   :mingw            ],
-      [/bccwin/i,  :win32,   :bccwin           ],
-      [/wince/i,   :win32,   :wince            ],
-      [/vms/i,     :vms,     :vms              ],
-      [/os2/i,     :os2,     :os2              ],
-      [nil,        :unknown, :unknown          ],
+      [/java/i,             :java,    :java             ],
+      [/darwin/i,           :unix,    :osx              ],
+      [/linux/i,            :unix,    :linux            ],
+      [/freebsd/i,          :unix,    :freebsd          ],
+      [/netbsd/i,           :unix,    :netbsd           ],
+      [/solaris/i,          :unix,    :solaris          ],
+      [/irix/i,             :unix,    :irix             ],
+      [/cygwin/i,           :unix,    :cygwin           ],
+      [/mswin/i,            :win32,   :windows          ],
+      [/mingw/i,            :win32,   :mingw            ],
+      [/bccwin/i,           :win32,   :bccwin           ],
+      [/wince/i,            :win32,   :wince            ],
+      [/vms/i,              :vms,     :vms              ],
+      [/os2/i,              :os2,     :os2              ],
+      [nil,                 :unknown, :unknown          ],
     ].freeze
 
     ARCHITECTURES = [

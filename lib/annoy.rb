@@ -39,7 +39,7 @@ class Annoy
   
   @@randsize = {
     :low      => 10,
-    :medium   => 14,
+    :medium   => 12,
     :high     => 50,
     :insane   => 1000
   }.freeze

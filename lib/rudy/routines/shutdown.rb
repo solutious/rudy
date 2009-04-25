@@ -13,12 +13,12 @@ module Rudy; module Routines;
       routine = fetch_routine_config(:shutdown)
       rbox_local = Rye::Box.new('localhost')
       sconf = fetch_script_config
-
-      # Runs "before_local" scripts of routines config. 
-      puts task_separator("BEFORE SCRIPTS (local)")
-      Rudy::Routines::ScriptHelper.before_local(routine, sconf, rbox_local)
       
-      puts
+      if Rudy::Routines::ScriptHelper.before_local?(routine)
+        # Runs "before_local" scripts of routines config. 
+        puts task_separator("BEFORE SCRIPTS (local)")
+        Rudy::Routines::ScriptHelper.before_local(routine, sconf, rbox_local)
+      end
       
       rmach.destroy do |machine|
       #rmach.list do |machine|
@@ -37,23 +37,29 @@ module Rudy; module Routines;
         opts = { :keys =>  root_keypairpath, :user => 'root', :debug => nil }
         rbox = Rye::Box.new(machine.dns_public, opts)
         
-        # Runs "before" scripts of routines config. 
-        puts task_separator("BEFORE SCRIPTS")
-        Rudy::Routines::ScriptHelper.before(routine, sconf, machine, rbox)
-                
-        # Runs "disk" portion of routines config
-        puts task_separator("DISK ROUTINES")
-        Rudy::Routines::DiskHelper.execute(routine, machine, rbox)
+        if Rudy::Routines::ScriptHelper.before?(routine)
+          # Runs "before" scripts of routines config. 
+          puts task_separator("BEFORE SCRIPTS")
+          Rudy::Routines::ScriptHelper.before(routine, sconf, machine, rbox)
+        end
+      
+        if Rudy::Routines::DiskHelper.disks?(routine)
+          # Runs "disk" portion of routines config
+          puts task_separator("DISK ROUTINES")
+          Rudy::Routines::DiskHelper.execute(routine, machine, rbox)
+        end
         
-        puts machine_separator(machine.liner_note)
+        puts task_separator("SHUTDOWN")
+        puts machine.liner_note
       end
       
-        
-      # Runs "after_local" scripts
-      # NOTE: There "after" (remote) scripts are not run b/c the machines
-      # are no longer running. 
-      puts task_separator("AFTER SCRIPTS (local)")
-      Rudy::Routines::ScriptHelper.after_local(routine, sconf, rbox_local)
+      if Rudy::Routines::ScriptHelper.after_local?(routine)
+        # Runs "after_local" scripts
+        # NOTE: There "after" (remote) scripts are not run b/c the machines
+        # are no longer running. 
+        puts task_separator("AFTER SCRIPTS (local)")
+        Rudy::Routines::ScriptHelper.after_local(routine, sconf, rbox_local)
+      end
       
     end
 

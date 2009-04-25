@@ -4,6 +4,11 @@ module Rudy; module Routines;
   module DiskHelper
     extend self
     
+    def disks?(routine)
+      (routine.is_a?(Caesars::Hash) && routine.disks && 
+      routine.disks.is_a?(Caesars::Hash) && !routine.disks.empty?)
+    end
+    
     def execute(routine, machine, rbox)
       return unless routine
       raise "Not a Rudy::Machine" unless machine.is_a?(Rudy::Machine)
@@ -12,13 +17,16 @@ module Rudy; module Routines;
       @machine = machine
       @rbox = rbox
       
-      (routine.disks || {}).each_pair do |action, disks|
+      return unless disks?(routine)
+      
+      routine.disks.each_pair do |action, disks|
         unless DiskHelper.respond_to?(action)  
           STDERR.puts %Q(DiskHelper: unknown action "#{action}")
           next
         end
         send(action, disks) # create, copy, destroy, ...
       end
+      
     end
     
     def create(disks)

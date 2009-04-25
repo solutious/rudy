@@ -120,14 +120,14 @@ module Rudy
         @awsid = inst.awsid
         @created = @starts = Time.now
         @state = inst.state
-        # Assign IP address to only the first instance
+        # Assign IP address only if we have one for that position
         if current_machine_address(@position)
           address = current_machine_address(@position)
           puts "Associating #{address} to #{inst.awsid}"
           begin
             @radd.associate(address, inst.awsid)
           rescue => ex 
-            STDERR.puts "Error while associating address."
+            STDERR.puts "Error while associating address (#{ex.class.to_s})"
             Rudy::Utils.bug()
           end
         end

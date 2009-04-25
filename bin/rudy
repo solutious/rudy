@@ -251,7 +251,7 @@ class RudyCLI < Rudy::CLI::Base
   
   # -------------------------------------------  UGLY STUFFS  --------
   # ------------------------------------------------------------------
-  debug :off
+  debug :on
   default :machines
   
 

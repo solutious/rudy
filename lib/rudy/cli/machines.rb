@@ -77,7 +77,7 @@ module Rudy
 
           # Make sure we want to run this command on all instances
           if !checked && command != :interactive_ssh 
-            execute_check(:medium) if ssh_opts[:user] == "root"
+            execute_check(:low) if ssh_opts[:user] == "root"
             checked = true
           end
           

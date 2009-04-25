@@ -183,5 +183,7 @@ require 'rudy/metadata'   # important
 require 'rudy/machines'
 require 'rudy/disks'
 require 'rudy/routines'
+require 'rudy/scm/svn'
+require 'rudy/scm/git'
 
 

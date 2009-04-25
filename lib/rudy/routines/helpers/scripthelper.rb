@@ -11,24 +11,45 @@ module Rudy; module Routines;
     
     def before_local(routine, sconf, rbox)
       execute_command(:before_local, routine, sconf, 'localhost', rbox)
-    end    
+    end
+    def before_local?(routine); execute_command?(:before_local, routine); end
+      
     def after_local(routine, sconf, rbox)
       execute_command(:after_local, routine, sconf, 'localhost', rbox)
     end
-  
+    def after_local?(routine); execute_command?(:after_local, routine); end
+      
+    
     def before(routine, sconf, machine, rbox)
       raise "ScriptHelper: Not a Rudy::Machine" unless machine.is_a?(Rudy::Machine)
       execute_command(:before, routine, sconf, machine.name, rbox)
     end
+    def before?(routine); execute_command?(:before, routine); end
+    
     def after(routine, sconf, machine, rbox)
       raise "ScriptHelper: Not a Rudy::Machine" unless machine.is_a?(Rudy::Machine)
       execute_command(:after, routine, sconf, machine.name, rbox)
     end
+    def after?(routine); execute_command?(:after, routine); end
     
   
   private  
     
-    # * +timing+ is one of: after, before
+    # Does the routine have the requested script type?
+    # * +timing+ is one of: after, before, after_local, before_local
+    # * +routine+ a single routine hash (startup, shutdown, etc...)
+    def execute_command?(timing, routine)
+      (routine.is_a?(Caesars::Hash) && routine.has_key?(timing))
+    end
+    
+    def command_separator(cmd, user)
+      cmd ||= ""
+      spaces = 52 - cmd.size 
+      spaces = 0 if spaces < 1
+      ("%s%s%s(%s)" % [$/, cmd.bright, ' '*spaces, user])
+    end
+    
+    # * +timing+ is one of: after, before, after_local, before_local
     # * +routine+ a single routine hash (startup, shutdown, etc...)
     # * +sconf+ is a config hash from machines config (ignored if nil)
     # * +hostname+ machine hostname that we're working on
@@ -47,8 +68,7 @@ module Rudy; module Routines;
       # add the method on for the instance of rbox we are using. 
       def rbox.rm(*args); cmd('rm', args); end
       
-      
-      if routine.is_a?(Caesars::Hash) && routine.has_key?(timing)
+      if execute_command?(timing, routine) # i.e. before_local?
         puts "Connecting to #{hostname}"
         begin
           rbox.connect
@@ -63,21 +83,48 @@ module Rudy; module Routines;
           
           begin
             user, command, *args = script.to_a.flatten.compact
+            
+            # TODO: Move the following to Rye. 
+            # If there's a command with no args, we could have been given something
+            # like "ls -l /tmp". Safe-mode Rye requires the command to be sent 
+            # separately so this is a quick-fix to do that. 
+            if command && command.index(' ') && args.empty?
+              command, *args = command.strip.scan(/\A(.+?)\s(.+)/).flatten
+            end
+            
             rbox.switch_user user # does nothing if it's the same user
-            puts "Creating #{@@script_config_file}"
+            
+            if command.nil? || command.empty?
+              puts command_separator("No command specified", user)
+              next
+            end
+            
+            puts command_separator(rbox.preview_command(command, args), user)
+            
+            # NOTE: can we put this only in verbose mode?
+            #puts "  Creating #{@@script_config_file}"  
+            
+            # We need to create the config file for every script, 
+            # b/c the user may change and it would not be accessible.
+            # We turn off safe mode so we can write the config file via SSH. 
+            # This will need to use SCP eventually; it is unsafe and error prone.
             rbox.safe = false
-            puts rbox.echo("'#{sconf.to_hash.to_yaml}' > #{@@script_config_file}")
+            conf_str = sconf.to_hash.to_yaml.tr("'", "''")
+            puts rbox.echo("'#{conf_str}' > #{@@script_config_file}")
             rbox.safe = true
             rbox.chmod(600, @@script_config_file)
-            puts %Q{Running (as #{user}): #{rbox.preview_command(command, args)}}
+            
           
             ret = rbox.send(command, args)
+            
             if ret.exit_code > 0
               puts "  Exit code: #{ret.exit_code}".color(:red)
               puts "  STDERR: #{ret.stderr.join("#{$/}  ")}".color(:red)
               puts "  STDOUT: #{ret.stdout.join("#{$/}  ")}".color(:red)
             else
-              puts '  ' << ret.stdout.join("#{$/}  ")
+              puts '  ' << ret.stdout.join("#{$/}  ") if !ret.stdout.empty?
+              puts "  STDERR: #{ret.stderr.join("#{$/}  ")}".color(:red) if !ret.stderr.empty?
+              
             end
           rescue Rye::CommandNotFound => ex
             puts "  CommandNotFound: #{ex.message}".color(:red)
@@ -88,7 +135,7 @@ module Rudy; module Routines;
         end
         rbox.switch_user original_user
       else
-        #puts "Nothing to do"
+        puts "Nothing to do"
       end
       
       tf.delete # delete local copy of script config

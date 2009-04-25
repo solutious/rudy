@@ -278,6 +278,7 @@ module Rudy
       
       routine = @@config.routines.find(@@global.environment, @@global.role, action)
       return nil unless routine
+      return routine unless routine.has_key?(:disks)
       
       routine.disks.each_pair do |raction,disks|
 

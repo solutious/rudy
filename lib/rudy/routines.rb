@@ -27,13 +27,13 @@ module Rudy
       def task_separator(title)
         dashes = 52 - title.size # 
         dashes = 0 if dashes < 1
-        ("%s---  %s  %s" % [$/, title, '-'*dashes]).bright
+        ("%s===  %s  %s" % [$/, title, '='*dashes])
       end
       
       def machine_separator(title)
         dashes = 52 - title.size # 
         dashes = 0 if dashes < 1
-        ("%s---  %s  %s" % [$/, title.bright, '-'*dashes]).bright.color(:blue)
+        ("%s===  %s  %s" % [$/, title.bright, '='*dashes]).bright.color(:blue)
       end
 
     end

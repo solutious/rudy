@@ -102,11 +102,11 @@ routines do
         disks do
           # Rudy creates an EBS volume for each instance, attaches
           # it, gives it a filesystem, and mounts it. 
-          create "/rudy/disk1"
+          #create "/rudy/disk1"
         end
         # You can execute a shell command on each instance after
         # it's created. This touch command will run as root.
-        after :root => [:touch, '/rudy/disk1/rudy-was-here']
+        after :root => "touch /rudy/disk1/rudy-was-here"
       end
       
       # This routine will be executed when you run "rudy shutdown"
@@ -114,7 +114,7 @@ routines do
         before :root => '/a/nonexistent/script'
         disks do
           # Rudy unmounts the EBS volume and deletes it. Careful! 
-          destroy "/rudy/disk1"
+          #destroy "/rudy/disk1"
         end
       end
       

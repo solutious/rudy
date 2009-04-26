@@ -69,7 +69,7 @@ module Rudy; module Routines;
       def rbox.rm(*args); cmd('rm', args); end
       
       if execute_command?(timing, routine) # i.e. before_local?
-        puts "Connecting to #{hostname}"
+        #puts "Connecting to #{hostname}"  # TODO: verbose mode
         begin
           rbox.connect
         rescue Net::SSH::AuthenticationFailed, Net::SSH::HostKeyMismatch => ex  
@@ -117,15 +117,13 @@ module Rudy; module Routines;
           
             ret = rbox.send(command, args)
             
-            if ret.exit_code > 0
-              puts "  Exit code: #{ret.exit_code}".color(:red)
-              puts "  STDERR: #{ret.stderr.join("#{$/}  ")}".color(:red)
-              puts "  STDOUT: #{ret.stdout.join("#{$/}  ")}".color(:red)
-            else
-              puts '  ' << ret.stdout.join("#{$/}  ") if !ret.stdout.empty?
-              puts "  STDERR: #{ret.stderr.join("#{$/}  ")}".color(:red) if !ret.stderr.empty?
-              
-            end
+            puts '  ' << ret.stdout.join("#{$/}  ") if !ret.stdout.empty?
+            puts "  STDERR: #{ret.stderr.join("#{$/}  ")}".color(:red) if !ret.stderr.empty?
+
+          rescue Rye::CommandError => ex
+            puts "  Exit code: #{ex.exit_code}".color(:red)
+            puts "  STDERR: #{ex.stderr.join("#{$/}  ")}".color(:red)
+            puts "  STDOUT: #{ex.stdout.join("#{$/}  ")}".color(:red)
           rescue Rye::CommandNotFound => ex
             puts "  CommandNotFound: #{ex.message}".color(:red)
           end

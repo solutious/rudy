@@ -5,64 +5,20 @@ module Rudy; module Routines;
   class Shutdown < Rudy::Routines::Base
     
     def execute
+      routine = fetch_routine_config(:shutdown)
+      generic_machine_runner(:destroy, routine) do |machine,rbox|
+        #puts task_separator("SHUTDOWN")
+      end
+    end
+
+    # Called by generic_machine_runner
+    def raise_early_exceptions
       rmach = Rudy::Machines.new
       raise Rudy::PrivateKeyNotFound, root_keypairpath unless has_keypair?(:root)
       raise MachineGroupNotDefined, current_machine_group unless known_machine_group?
       raise MachineGroupNotRunning, current_machine_group unless rmach.running?
-      
-      routine = fetch_routine_config(:shutdown)
-      rbox_local = Rye::Box.new('localhost')
-      sconf = fetch_script_config
-      
-      if Rudy::Routines::ScriptHelper.before_local?(routine)
-        # Runs "before_local" scripts of routines config. 
-        puts task_separator("BEFORE SCRIPTS (local)")
-        Rudy::Routines::ScriptHelper.before_local(routine, sconf, rbox_local)
-      end
-      
-      rmach.destroy do |machine|
-      #rmach.list do |machine|
-        
-        print "Waiting for instance..."
-        isup = Rudy::Utils.waiter(3, 120, STDOUT, "it's up!", 0) {
-          inst = machine.get_instance
-          inst && inst.running?
-        } 
-        machine.update # Add instance info to machine and save it
-        print "Waiting for SSH daemon..."
-        isup = Rudy::Utils.waiter(2, 60, STDOUT, "it's up!", 0) {
-          Rudy::Utils.service_available?(machine.dns_public, 22)
-        }
-        
-        opts = { :keys =>  root_keypairpath, :user => 'root', :debug => nil }
-        rbox = Rye::Box.new(machine.dns_public, opts)
-        
-        if Rudy::Routines::ScriptHelper.before?(routine)
-          # Runs "before" scripts of routines config. 
-          puts task_separator("BEFORE SCRIPTS")
-          Rudy::Routines::ScriptHelper.before(routine, sconf, machine, rbox)
-        end
-      
-        if Rudy::Routines::DiskHelper.disks?(routine)
-          # Runs "disk" portion of routines config
-          puts task_separator("DISK ROUTINES")
-          Rudy::Routines::DiskHelper.execute(routine, machine, rbox)
-        end
-        
-        puts task_separator("SHUTDOWN")
-        puts machine.liner_note
-      end
-      
-      if Rudy::Routines::ScriptHelper.after_local?(routine)
-        # Runs "after_local" scripts
-        # NOTE: There "after" (remote) scripts are not run b/c the machines
-        # are no longer running. 
-        puts task_separator("AFTER SCRIPTS (local)")
-        Rudy::Routines::ScriptHelper.after_local(routine, sconf, rbox_local)
-      end
-      
     end
-
+    
   end
 
 end; end

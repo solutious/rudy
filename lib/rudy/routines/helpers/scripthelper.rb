@@ -42,6 +42,7 @@ module Rudy; module Routines;
       (routine.is_a?(Caesars::Hash) && routine.has_key?(timing))
     end
     
+    # Returns a formatted string for printing command info
     def command_separator(cmd, user)
       cmd ||= ""
       spaces = 52 - cmd.size 
@@ -69,68 +70,55 @@ module Rudy; module Routines;
       def rbox.rm(*args); cmd('rm', args); end
       
       if execute_command?(timing, routine) # i.e. before_local?
-        #puts "Connecting to #{hostname}"  # TODO: verbose mode
-        begin
-          rbox.connect
-        rescue Net::SSH::AuthenticationFailed, Net::SSH::HostKeyMismatch => ex  
-          STDERR.puts "Error connecting: #{ex.message}".color(:red)
-          STDERR.puts "Skipping scripts".color(:red)
-        end
         
         original_user = rbox.user
-        scripts = [routine[timing]].flatten
-        scripts.each do |script|
+        users = routine[timing] || {}
+        users.each_pair do |user, commands|
+          begin
+            rbox.switch_user user # does nothing if it's the same user
+            rbox.connect(false)   # does nothing if already connected
+          rescue Net::SSH::AuthenticationFailed, Net::SSH::HostKeyMismatch => ex  
+            STDERR.puts "Error connecting: #{ex.message}".color(:red)
+            STDERR.puts "Skipping user #{user}".color(:red)
+            next
+          end
           
           begin
-            user, command, *args = script.to_a.flatten.compact
-            
-            # TODO: Move the following to Rye. 
-            # If there's a command with no args, we could have been given something
-            # like "ls -l /tmp". Safe-mode Rye requires the command to be sent 
-            # separately so this is a quick-fix to do that. 
-            if command && command.index(' ') && args.empty?
-              command, *args = command.strip.scan(/\A(.+?)\s(.+)/).flatten
-            end
-            
-            rbox.switch_user user # does nothing if it's the same user
-            
-            if command.nil? || command.empty?
-              puts command_separator("No command specified", user)
-              next
-            end
-            
-            puts command_separator(rbox.preview_command(command, args), user)
-            
-            # NOTE: can we put this only in verbose mode?
-            #puts "  Creating #{@@script_config_file}"  
-            
             # We need to create the config file for every script, 
             # b/c the user may change and it would not be accessible.
             # We turn off safe mode so we can write the config file via SSH. 
             # This will need to use SCP eventually; it is unsafe and error prone.
             rbox.safe = false
+            rbox.umask = "0077" # Ensure script is not readable
             conf_str = sconf.to_hash.to_yaml.tr("'", "''")
             puts rbox.echo("'#{conf_str}' > #{@@script_config_file}")
             rbox.safe = true
             rbox.chmod(600, @@script_config_file)
-            
-          
-            ret = rbox.send(command, args)
-            
-            puts '  ' << ret.stdout.join("#{$/}  ") if !ret.stdout.empty?
-            puts "  STDERR: #{ret.stderr.join("#{$/}  ")}".color(:red) if !ret.stderr.empty?
-
-          rescue Rye::CommandError => ex
-            puts "  Exit code: #{ex.exit_code}".color(:red)
-            puts "  STDERR: #{ex.stderr.join("#{$/}  ")}".color(:red)
-            puts "  STDOUT: #{ex.stdout.join("#{$/}  ")}".color(:red)
-          rescue Rye::CommandNotFound => ex
-            puts "  CommandNotFound: #{ex.message}".color(:red)
+          rescue => ex
           end
           
-          
+            commands.each_pair do |command, calls|
+              calls.each do |args|
+                begin
+                  puts command_separator(rbox.preview_command(command, args), user)
+                  ret = rbox.send(command, args)
+                  puts '  ' << ret.stdout.join("#{$/}  ") if !ret.stdout.empty?
+                  STDERR.puts "  STDERR: #{ret.stderr.join("#{$/}  ")}".color(:red) if !ret.stderr.empty?
+                rescue Rye::CommandError => ex
+                  STDERR.puts "  Exit code: #{ex.exit_code}".color(:red)
+                  STDERR.puts "  STDERR: #{ex.stderr.join("#{$/}  ")}".color(:red)
+                  STDERR.puts "  STDOUT: #{ex.stdout.join("#{$/}  ")}".color(:red)
+                rescue Rye::CommandNotFound => ex
+                  STDERR.puts "  CommandNotFound: #{ex.message}".color(:red)
+                  STDERR.puts ex.backtrace
+                end
+              end
+            end
+            
           rbox.rm(@@script_config_file)
         end
+        
+        # Return the borrowed rbox instance to the user it was provided with
         rbox.switch_user original_user
       else
         puts "Nothing to do"

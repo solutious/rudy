@@ -15,8 +15,8 @@ module Rudy; module CLI;
       
       if @@global.environment == @@config.defaults.environment && 
          @@global.role == @@config.defaults.role
-         puts
-         puts "Login with: rudy -u root ssh"
+         #puts
+         #puts "Login with: rudy -u root ssh"
       end
       
     end

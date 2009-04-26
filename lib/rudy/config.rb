@@ -10,6 +10,7 @@ module Rudy
     dsl Rudy::Config::Routines::DSL
     dsl Rudy::Config::Machines::DSL
     dsl Rudy::Config::Networks::DSL
+    dsl Rudy::Config::Controls::DSL
     
     # TODO: auto-generate in caesars
     def accounts?; self.respond_to?(:accounts) && !self[:accounts].nil?; end

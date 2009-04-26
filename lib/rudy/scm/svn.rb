@@ -12,7 +12,7 @@ module Rudy
       
       def create_release(username=nil, msg=nil)
         local_uri, local_revision = local_info
-        rtag = generate_release_tag_name(username)
+        rtag = generate_rtag(username)
         release_uri = "#{@base_uri}/#{rtag}"
         msg ||= 'Another Release by Rudy!'
         msg.tr!("'", "\\'")
@@ -24,12 +24,12 @@ module Rudy
       end
       
       def switch_working_copy(tag)
-        raise "Invalid release tag (#{tag})." unless valid_uri?(tag)
+        raise "Invalid release tag (#{tag})." unless valid_rtag?(tag)
         `svn switch #{tag}`
       end
       
       # rel-2009-03-05-user-rev
-      def generate_release_tag_name(username=nil)
+      def generate_rtag(username=nil)
         now = Time.now
         mon = now.mon.to_s.rjust(2, '0')
         day = now.day.to_s.rjust(2, '0')
@@ -38,7 +38,7 @@ module Rudy
         criteria.insert(-2, username) if username
         tag = criteria.join(Rudy::DELIM)
         # Keep incrementing the revision number until we find the next one.
-        tag.succ! while (valid_uri?("#{@base_uri}/#{tag}"))
+        tag.succ! while (valid_rtag?("#{@base_uri}/#{tag}"))
         tag
       end
       
@@ -55,12 +55,13 @@ module Rudy
         (File.exists?(File.join(path, '.svn')))
       end
       
-      def valid_uri?(uri)
+      def valid_rtag?(uri)
         ret = `svn info #{uri} 2>&1` || '' # Valid SVN URIs will return some info
         (ret =~ /Repository UUID/) ? true : false
       end
       
-      def everything_checked_in?
+      # Are all local changes committed?
+      def clean_working_copy?
         `svn diff . 2>&1` == '' # svn diff should return nothing
       end
     end

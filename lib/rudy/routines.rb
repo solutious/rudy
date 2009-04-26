@@ -54,7 +54,8 @@ module Rudy
         end
 
         rmach.send(machine_action) do |machine|
-          puts machine.liner_note
+          puts machine_separator(machine.name, machine.awsid)
+
           print "Waiting for instance..."
           isup = Rudy::Utils.waiter(3, 120, STDOUT, "it's up!", 2) {
             inst = machine.get_instance
@@ -66,6 +67,7 @@ module Rudy
             Rudy::Utils.service_available?(machine.dns_public, 22)
           }
 
+        
           opts = { :keys =>  root_keypairpath, :user => 'root', :debug => nil }
           rbox = Rye::Box.new(machine.dns_public, opts)
 
@@ -112,10 +114,12 @@ module Rudy
         ("%s===  %s  %s" % [$/, title, '='*dashes])
       end
       
-      def machine_separator(title)
-        dashes = 52 - title.size # 
+      def machine_separator(name, awsid)
+        dashes = 60 - name.size # 
         dashes = 0 if dashes < 1
-        ("%s===  %s  %s" % [$/, title.bright, '='*dashes]).bright.color(:blue)
+        puts $/, '='*60
+        puts 'MACHINE: %-40s (%s)' % [name.bright, awsid]
+        puts '='*60, $/
       end
 
     end

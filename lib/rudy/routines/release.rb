@@ -11,8 +11,10 @@ module Rudy; module Routines;
       #puts rel
       
       generic_machine_runner(:list, routine) do |machine,rbox|
-        puts task_separator("CREATING REMOTE CHECKOUT")
-        #scm.create_remote_checkout(rbox)
+        if scm
+          puts task_separator("CREATING REMOTE CHECKOUT")
+          scm.create_remote_checkout(rbox)
+        end
       end
       
       puts "Done"

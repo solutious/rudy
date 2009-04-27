@@ -42,10 +42,10 @@ module Rudy
           raise "Unknown machine action #{machine_action}" 
         end
         #raise MachineGroupAlreadyRunning, current_machine_group if rmach.running?
-
+        
         rbox_local = Rye::Box.new('localhost')
         sconf = fetch_script_config
-
+                
         if Rudy::Routines::ScriptHelper.before_local?(routine)
           # Runs "before_local" scripts of routines config. 
           # NOTE: Does not run "before" scripts b/c there are no remote machines
@@ -55,7 +55,8 @@ module Rudy
 
         rmach.send(machine_action) do |machine|
           puts machine_separator(machine.name, machine.awsid)
-
+          puts "TODO REMOVE"
+          if false
           print "Waiting for instance..."
           isup = Rudy::Utils.waiter(3, 120, STDOUT, "it's up!", 2) {
             inst = machine.get_instance
@@ -66,11 +67,26 @@ module Rudy
           isup = Rudy::Utils.waiter(2, 60, STDOUT, "it's up!", 3) {
             Rudy::Utils.service_available?(machine.dns_public, 22)
           }
-
+          end
         
-          opts = { :keys =>  root_keypairpath, :user => 'root', :debug => nil }
+          opts = { :keys =>  root_keypairpath, :user => 'root', :info => true }
           rbox = Rye::Box.new(machine.dns_public, opts)
-
+          
+          if routine.authorize
+            puts task_separator("AUTHORIZING (#{routine.authorize})")
+            rbox.useradd(routine.authorize.to_s) rescue nil
+            begin
+              rbox.authorize_keys_remote(routine.authorize)
+            rescue Rye::CommandError => ex
+              STDERR.puts "  Exit code: #{ex.exit_code}".color(:red)
+              STDERR.puts "  STDERR: #{ex.stderr.join("#{$/}  ")}".color(:red) if ex.stderr
+              STDERR.puts "  STDOUT: #{ex.stdout.join("#{$/}  ")}".color(:red) if ex.stdout
+            rescue => ex
+              puts "Cannot authorize (#{ex.class}): #{ex.message}", "Skipping machine"
+              next
+            end
+          end
+          
           if Rudy::Routines::ScriptHelper.before?(routine)
             # Runs "before" scripts of routines config. 
             puts task_separator("BEFORE SCRIPTS")
@@ -98,6 +114,8 @@ module Rudy
             puts "Filesystem on #{machine.name}:"
             puts "  " << rbox.df(:h).join("#{$/}  ")
           end
+          
+          rbox.disconnect
         end
 
         if Rudy::Routines::ScriptHelper.after_local?(routine)
@@ -115,11 +133,11 @@ module Rudy
       end
       
       def machine_separator(name, awsid)
-        dashes = 60 - name.size # 
+        dashes = 59 - name.size # 
         dashes = 0 if dashes < 1
-        puts $/, '='*60
+        puts $/, '='*59
         puts 'MACHINE: %-40s (%s)' % [name.bright, awsid]
-        puts '='*60, $/
+        puts '='*59, $/
       end
 
     end

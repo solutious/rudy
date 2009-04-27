@@ -92,12 +92,16 @@ module Rudy; module Routines;
             rbox.umask = "0077" # Ensure script is not readable
             conf_str = sconf.to_hash.to_yaml.tr("'", "''")
             puts rbox.echo("'#{conf_str}' > #{@@script_config_file}")
+            rbox.umask = nil
             rbox.safe = true
             rbox.chmod(600, @@script_config_file)
           rescue => ex
           end
           
             commands.each_pair do |command, calls|
+              # If a command is only referred to once and it has no arguments
+              # defined, we force it through by making an array with one element.
+              calls = [[]] if calls.empty?
               calls.each do |args|
                 begin
                   puts command_separator(rbox.preview_command(command, args), user)

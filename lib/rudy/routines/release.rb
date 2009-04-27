@@ -5,16 +5,16 @@ module Rudy; module Routines;
     def execute
       routine = fetch_routine_config(:release)
       scm = find_scm(routine)
-
+      
       #puts task_separator("CREATING RELEASE TAG")
       #rel = scm.create_release
       #puts rel
       
       generic_machine_runner(:list, routine) do |machine,rbox|
-        if scm
-          puts task_separator("CREATING REMOTE CHECKOUT")
-          scm.create_remote_checkout(rbox)
-        end
+        #if scm
+        #  puts task_separator("CREATING REMOTE CHECKOUT")
+        #  scm.create_remote_checkout(rbox)
+        #end
       end
       
       puts "Done"

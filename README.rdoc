@@ -21,10 +21,14 @@ All configuration is organized into the zones, environments, and roles that you 
 == Features
 
 * Create complex environments with a single command
-  * Launch multiple instances
+  * Launch multiple instances 
   * Assign elastic IP addresses
   * Create EBS volumes, attach to instances, format, and mount
   * Run scripts locally and remotely automatically
+* Organize instances into environments and roles
+* Powerful command-line tools
+  * <tt>$ rudy -u root ssh</tt>
+  * <tt>$ rudy -e testing -r database startup</tt>
 * Use _any_ Amazon machine image (AMI)
 * Complete command-line interface for EC2. See <tt>bin/rudy-ec2</tt>.
 

@@ -26,7 +26,7 @@ module RudyCLI_SDB
   # ------------------------------------------------------------------
   
   
-  desc "Displays the SimpleDB domains associated to your account"
+  about "Displays the SimpleDB domains associated to your account"
   action :C, :create, "Create a domain"
   action :D, :destroy, "Destroy a domain"
   argv :name

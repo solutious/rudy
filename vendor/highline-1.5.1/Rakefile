@@ -26,7 +26,7 @@ Rake::RDocTask.new do |rdoc|
   rdoc.title    = "HighLine Documentation"
 end
 
-desc "Upload current documentation to Rubyforge"
+about "Upload current documentation to Rubyforge"
 task :upload_docs => [:rdoc] do
   sh "scp -r doc/html/* " +
      "bbazzarrakk@rubyforge.org:/var/www/gforge-projects/highline/doc/"
@@ -68,7 +68,7 @@ Rake::GemPackageTask.new(spec) do |pkg|
   pkg.need_tar = true
 end
 
-desc "Show library's code statistics"
+about "Show library's code statistics"
 task :stats do
   require 'code_statistics'
   CodeStatistics.new( ["HighLine", "lib"], 
@@ -76,7 +76,7 @@ task :stats do
                       ["Units", "test"] ).to_s
 end
 
-desc "Add new files to Subversion"
+about "Add new files to Subversion"
 task :add_to_svn do
   sh %Q{svn status | ruby -nae 'system "svn add \#{$F[1]}" if $F[0] == "?"' }
 end

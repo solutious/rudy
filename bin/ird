@@ -50,7 +50,7 @@ module RudyCLI_Interactive # :nodoc:all
 
   default :interactive
   debug :off
-  desc "An interactive REPL for Rudy."
+  about "An interactive REPL for Rudy."
   usage "#{$0} [global options]"
   command :interactive do |obj|
   

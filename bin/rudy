@@ -36,7 +36,7 @@ class RudyCLI < Rudy::CLI::Base
   # ------------------------------------------------------------------
 
 
-  #desc "Machine Status"
+  #about "Machine Status"
   #usage "rudy [global options] status [-g group-name] [-s state] [--all] [instance-ID]"
   #option :g, :group, String, "A security group name"
   #option :s, :state, String, "Machine state. One of: running (default), pending, terminated"
@@ -45,7 +45,7 @@ class RudyCLI < Rudy::CLI::Base
   #command :status => Rudy::CLI::Machines
   #
   #usage "rudy [global options] connect [-g group-name] [-i instance-ID] [cmd]"
-  #desc "Open an SSH connection"
+  #about "Open an SSH connection"
   #option :print, "Only print the SSH command, don't connect"
   #option :g, :group, String, "A security group name"
   #option :i, :awsid, String, "An instance ID"
@@ -54,7 +54,7 @@ class RudyCLI < Rudy::CLI::Base
   #command_alias :connect, :ssh
   #
   #usage "rudy [global options] copy [-p] [-r] source target"
-  #desc "Copy files to or from machines. NOTE: You must use quotes when using a tilda for your remote dir ('~/')."
+  #about "Copy files to or from machines. NOTE: You must use quotes when using a tilda for your remote dir ('~/')."
   #option :r, :recursive, "Recursively copy entire directories"
   #option :p, :preserve, "Preserve atimes and ctimes."
   #option :d, :download, "Download FROM the remote machine to the local machine"
@@ -72,7 +72,7 @@ class RudyCLI < Rudy::CLI::Base
   # --------------------------------  MISCELLANEOUS COMMANDS  --------
   # ------------------------------------------------------------------
   
-  desc "Display time (in UTC)"
+  about "Display time (in UTC)"
   option :l, :local, "Display local time"
   command :time do |obj|
     t = obj.option.local ? Time.now : Time.now.utc
@@ -80,7 +80,7 @@ class RudyCLI < Rudy::CLI::Base
   end
   
   usage "rudy [-f config-file] config [param-name]"
-  desc "Check Rudy configuration."
+  about "Check Rudy configuration."
   option :l, :all, "Display configs for all machines"
   option :s, :script, "Output configuration identical to what is provided to scripts called in routines"
   option :p, :project, "Output a skeleton Rudyfile"
@@ -90,7 +90,7 @@ class RudyCLI < Rudy::CLI::Base
   command :config => Rudy::CLI::Config
 
   usage "rudy myaddress [-i] [-e]"
-  desc "Displays you current internal and external IP addresses"
+  about "Displays you current internal and external IP addresses"
   option :e, :external, "Display only external IP address"
   option :i, :internal, "Display only internal IP address"
   command :myaddress do |obj|
@@ -107,7 +107,7 @@ class RudyCLI < Rudy::CLI::Base
   end
 
   usage "rudy [global options] annoy [-h -m -l] [-e]"
-  desc "Play around with Rudy's annoying challenges"
+  about "Play around with Rudy's annoying challenges"
   option :s, :string, "A numeric challenge"
   option :n, :numeric, "A numeric challenge"
   option :i, :insane, "Insane annoyance factor"
@@ -124,13 +124,13 @@ class RudyCLI < Rudy::CLI::Base
     obj.global.quiet = true  # don't print elapsed time
   end
 
-  desc "Display the current Rudy slogan"
+  about "Display the current Rudy slogan"
   command :slogan do |obj|
     puts "Rudy: Not your grandparent's deployment tool!"
     obj.global.quiet = true  # don't print elapsed time
   end
 
-  desc "Generates a configuration template to #{Rudy::CONFIG_FILE}"
+  about "Generates a configuration template to #{Rudy::CONFIG_FILE}"
   command :generate_config do |obj|
     unless File.exists?(Rudy::CONFIG_FILE)
       Rudy::Config.init_config_dir
@@ -141,7 +141,7 @@ class RudyCLI < Rudy::CLI::Base
   end
 
 
-  desc "Initialize Rudy configuration"
+  about "Initialize Rudy configuration"
   command :init do |obj|
   
     unless File.exists?(Rudy::CONFIG_FILE)
@@ -174,7 +174,7 @@ class RudyCLI < Rudy::CLI::Base
   # ------------------------------------------------------------------
 
   #usage "rudy [global options] backups [-C] [disk name]"
-  #desc "Manage Backups"
+  #about "Manage Backups"
   #option :s, :snapshot, String, "Create a backup entry from an existing snapshot"
   #action :Z, :sync, "Check for and delete backup metadata with no snapshot. DOES NOT delete snapshots."
   ##action :T, :tidy, "Tidy existing backups"
@@ -184,29 +184,29 @@ class RudyCLI < Rudy::CLI::Base
   #command :'backup' => Rudy::CLI::Backups
   #command_alias :backup, :bu
   
-  desc "Startup a machine group"
+  about "Startup a machine group"
   usage "rudy startup"
   command :startup => Rudy::CLI::Routines
   command_alias :startup, :s
 
-  desc "Shutdown a machine group"
+  about "Shutdown a machine group"
   usage "rudy shutdown"
   command :shutdown => Rudy::CLI::Routines
   
-  desc "Create a release"
+  about "Create a release"
   usage "rudy release"
   command :release => Rudy::CLI::Routines
   command_alias :release, :r
 
-  desc "Manage Machines"
+  about "Manage Machines"
   action :W, :wash, "Wash machine metadata."
   command :machines => Rudy::CLI::Machines
   command_alias :machines, :m
   
-  desc "Log in to a machine"
+  about "Log in to a machine"
   command :ssh => Rudy::CLI::Machines
   
-  desc "Manage Disks"
+  about "Manage Disks"
   action :W, :wash, "Wash disk metadata."
   command :disks => Rudy::CLI::Disks
   command_alias :disks, :d
@@ -214,46 +214,48 @@ class RudyCLI < Rudy::CLI::Base
   # --------------------------  RUDY RELEASE/DEPLOY COMMANDS  --------
   # ------------------------------------------------------------------
 
-  #desc "Release to a Machine Group"
+  #about "Release to a Machine Group"
   #option :g, :group, String, "A security group name"
   #option :s, :switch, "Switch to the release branch/tag"
   #option :m, :msg, String, "A short release note"
   #command :release => Rudy::CLI::Release
 
-  #desc "Update the release currently running in a machine group"
+  #about "Update the release currently running in a machine group"
   #command :rerelease => Rudy::CLI::Release
   #command_alias :rerelease, :rere
 
-  #desc "Deploy disk snapshots from one machine to another"
+  #about "Deploy disk snapshots from one machine to another"
   #command :deploy => Rudy::CLI::Deploy
 
 
-  #desc "Shutdown a Machine Group"
+  #about "Shutdown a Machine Group"
   #usage "rudy [global options] shutdown [-g group-name] [instance-ID]"
   #option :g, :group, String, "A security group name"
   #argv :awsid
   #command :shutdown => Rudy::CLI::Routines
   #
   #
-  #desc "Start a Machine Group"
+  #about "Start a Machine Group"
   #usage "rudy [global options] startup [-g group-name] [-i image-ID]"
   #option :ami, String, "EC2 image ID (AMI)"
   #option :g, :group, String, "A security group name"
   #command :startup => Rudy::CLI::Routines
   #command_alias :startup, :start
 
-  #desc "Restart a Machine Group"
+  #about "Restart a Machine Group"
   #option :g, :group, String, "A security group name"
   #argv :awsid
   #command :restart => Rudy::CLI::Routines
   #
 
+  command :passthrough => Rudy::CLI::Routines
+  command :open => Rudy::CLI::Candy
   
   # -------------------------------------------  UGLY STUFFS  --------
   # ------------------------------------------------------------------
   debug :on
   default :machines
-  
+  trawler :passthrough
 
   
 end

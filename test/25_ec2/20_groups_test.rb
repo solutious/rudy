@@ -39,7 +39,7 @@ module Rudy::Test
       should "(02) create group with name and description" do
         test_name ||= 'test-' << Rudy::Utils.strand
         str = Rudy::Utils.strand
-        desc = "Description for #{test_name}"
+        about = "Description for #{test_name}"
         group = @ec2group.create(test_name, desc)
         assert group.is_a?(Rudy::AWS::EC2::Group), "Not a Group object"
         assert_equal group.name, test_name, "Group name not set"

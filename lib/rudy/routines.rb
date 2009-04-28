@@ -3,13 +3,13 @@
 module Rudy
   module Routines
     class NoRoutine < Rudy::Error
-      def message; "No configuration for #{@obj} routine"; end
+      def message; "No routine configuration for #{@obj}"; end
     end
     
     class Base
       include Rudy::Huxtable
     
-      def initialize
+      def initialize(*args)
         a, s, r = @@global.accesskey, @@global.secretkey, @@global.region
         @sdb = Rudy::AWS::SDB.new(a, s, r)
         @rinst = Rudy::AWS::EC2::Instances.new(a, s, r)
@@ -17,13 +17,12 @@ module Rudy
         @rkey = Rudy::AWS::EC2::KeyPairs.new(a, s, r)
         @rvol = Rudy::AWS::EC2::Volumes.new(a, s, r)
         @rsnap = Rudy::AWS::EC2::Snapshots.new(a, s, r)
-        init
+        init(*args)
       end
       
       def init
       end
       
-
       def execute
         raise "Override execute method"
       end
@@ -51,16 +50,16 @@ module Rudy
         if Rudy::Routines::ScriptHelper.before_local?(@routine)  # before_local
           # Runs "before_local" scripts of routines config. 
           # NOTE: Does not run "before" scripts b/c there are no remote machines
-          puts task_separator("SHELL BEFORE (local)")
+          puts task_separator("LOCAL SHELL")
           Rudy::Routines::ScriptHelper.before_local(@routine, sconf, lbox)
         end
         
         # Execute the action (create, list, destroy) & apply the block to each
         rmach.send(machine_action) do |machine|
-          puts machine_separator(machine.name, machine.awsid)
+          machine_separator(machine.name, machine.awsid)
           
-          print "Waiting for instance..."
-          Rudy::Utils.waiter(3, 120, STDOUT, "it's up!", 0) {
+          msg = "Checking if instance is running..."
+          Rudy::Utils.waiter(3, 120, STDOUT, msg, 0) {
             inst = machine.get_instance
             inst && inst.running?
           } 
@@ -73,8 +72,8 @@ module Rudy
           # here ensure that the metadata is always up-to-date. 
           machine.update 
           
-          print "Waiting for SSH daemon..."
-          Rudy::Utils.waiter(2, 60, STDOUT, "it's up!", 0) {
+          msg = "Waiting for SSH daemon..."
+          Rudy::Utils.waiter(2, 60, STDOUT, msg, 0) {
             Rudy::Utils.service_available?(machine.dns_public, 22)
           }
           
@@ -94,22 +93,22 @@ module Rudy
           end
           
           if Rudy::Routines::UserHelper.adduser?(@routine)       # adduser
-            puts task_separator("ADD USER (#{@routine.adduser})")
+            puts task_separator("ADD USER")
             Rudy::Routines::UserHelper.adduser(@routine, machine, rbox)
           end
           
           if Rudy::Routines::UserHelper.authorize?(@routine)     # authorize
-            puts task_separator("AUTHORIZING (#{@routine.authorize})")
+            puts task_separator("AUTHORIZE USER")
             Rudy::Routines::UserHelper.authorize(@routine, machine, rbox)
           end
           
           if Rudy::Routines::ScriptHelper.before?(@routine)      # before
-            puts task_separator("SHELL BEFORE")
+            puts task_separator("REMOTE SHELL")
             Rudy::Routines::ScriptHelper.before(@routine, sconf, machine, rbox)
           end
           
           if Rudy::Routines::DiskHelper.disks?(@routine)         # disk
-            puts task_separator("DISK ROUTINES")
+            puts task_separator("DISKS")
             Rudy::Routines::DiskHelper.execute(@routine, machine, rbox)
           end
 
@@ -117,7 +116,7 @@ module Rudy
           routine_action.call(machine, rbox) if routine_action
 
           if Rudy::Routines::ScriptHelper.after?(@routine)       # after
-            puts task_separator("SHELL AFTER")
+            puts task_separator("REMOTE SHELL")
             # Runs "after" scripts of routines config
             Rudy::Routines::ScriptHelper.after(@routine, sconf, machine, rbox)
           end
@@ -133,7 +132,7 @@ module Rudy
         end
 
         if Rudy::Routines::ScriptHelper.after_local?(@routine)   # after_local
-          puts task_separator("SHELL AFTER (local)")
+          puts task_separator("LOCAL SHELL")
           # Runs "after_local" scripts of routines config
           Rudy::Routines::ScriptHelper.after_local(@routine, sconf, lbox)
         end
@@ -143,17 +142,25 @@ module Rudy
       def task_separator(title)
         dashes = 52 - title.size # 
         dashes = 0 if dashes < 1
-        ("%s===  %s  %s" % [$/, title, '='*dashes])
+        ("%s---  %s  %s" % [$/, title, '-'*dashes])
       end
       
       def machine_separator(name, awsid)
         dashes = 59 - name.size # 
         dashes = 0 if dashes < 1
         puts $/, '='*59
-        puts 'MACHINE: %-40s (%s)' % [name.bright, awsid]
-        puts '='*59
+        puts '%-53s (%s)' % [name.bright, awsid]
+        puts
       end
-
+      
+      def routine_separator(name)
+        name = name.to_s
+        dashes = 59 - name.size # 
+        dashes = 0 if dashes < 1
+        #puts '%-40s' % [name.bright]
+      end
+      
+      
     end
     
   end

@@ -12,11 +12,19 @@ module Rudy; module Routines;
     @@script_config_file = "rudy-config.yml"
     
     def before_local(routine, sconf, rbox)
+      # before_local generally doesn't take a user name like the remote
+      # before block so we add it here (unless the user did specify it)
+      routine[:before_local] = { 
+        rbox.user.to_sym => routine.delete(:before_local) 
+      } unless routine.has_key?(rbox.user.to_sym)
       execute_command(:before_local, routine, sconf, 'localhost', rbox)
     end
     def before_local?(routine); execute_command?(:before_local, routine); end
       
     def after_local(routine, sconf, rbox)
+      routine[:after_local] = {                 # See before_local note
+        rbox.user.to_sym => routine.delete(:after_local) 
+      } unless routine.has_key?(rbox.user.to_sym)
       execute_command(:after_local, routine, sconf, 'localhost', rbox)
     end
     def after_local?(routine); execute_command?(:after_local, routine); end
@@ -52,14 +60,6 @@ module Rudy; module Routines;
         end
       end
       false
-    end
-    
-    # Returns a formatted string for printing command info
-    def command_separator(cmd, user)
-      cmd ||= ""
-      spaces = 52 - cmd.size 
-      spaces = 0 if spaces < 1
-      ("%s%s%s(%s)" % [$/, cmd.bright, ' '*spaces, user])
     end
     
     # * +timing+ is one of: after, before, after_local, before_local

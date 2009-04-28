@@ -13,7 +13,7 @@ module Rudy
          print_response(ex)
        rescue Rye::CommandNotFound => ex
          STDERR.puts "  CommandNotFound: #{ex.message}".color(:red)
-         STDERR.puts ex.backtrace
+         STDERR.puts ex.backtrace if Rudy.debug?
        end
        
        ret
@@ -23,11 +23,10 @@ module Rudy
      def command_separator(cmd, user)
        cmd ||= ""
        cmd &&= cmd.to_s
-       spaces = 52 - cmd.size 
+       spaces = 58 - cmd.size 
        spaces = 0 if spaces < 1
-       ("%s%s%s(%s)" % [$/, cmd.bright, ' '*spaces, user])
+       ("%s%s%#{spaces}s" % [$/, cmd.bright, "(#{user})"])
      end
-     
      
   private 
     def print_response(rap)

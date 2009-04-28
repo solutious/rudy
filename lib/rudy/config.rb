@@ -11,6 +11,8 @@ module Rudy
     dsl Rudy::Config::Machines::DSL
     dsl Rudy::Config::Networks::DSL
     dsl Rudy::Config::Controls::DSL
+    dsl Rudy::Config::Commands::DSL
+    dsl Rudy::Config::Services::DSL
     
     # TODO: auto-generate in caesars
     def accounts?; self.respond_to?(:accounts) && !self[:accounts].nil?; end
@@ -18,7 +20,14 @@ module Rudy
     def machines?; self.respond_to?(:machines) && !self[:machines].nil?; end
     def routines?; self.respond_to?(:routines) && !self[:routines].nil?; end
     def networks?; self.respond_to?(:networks) && !self[:networks].nil?; end
+    def controls?; self.respond_to?(:controls) && !self[:controls].nil?; end
+    def commands?; self.respond_to?(:commands) && !self[:commands].nil?; end
+    def services?; self.respond_to?(:services) && !self[:services].nil?; end
     
+    # This method is called by Caesars::Config.refresh for every DSL 
+    # file that is loaded and parsed. If we want to run processing
+    # for a particular config (machines, @routines, etc...) we can
+    # do it here. Just wait until the instance variable is not nil.
     def postprocess
       #raise "There is no AWS info configured" if self.accounts.nil?
       
@@ -27,6 +36,9 @@ module Rudy
       #  self.accounts.aws.cert &&= File.expand_path(self.accounts.aws.cert) 
       #  self.accounts.aws.privatekey &&= File.expand_path(self.accounts.aws.privatekey)
       #end
+      
+      @commands.postprocess if @commands  # this will only run once
+      
     end
     
     def look_and_load(adhoc_path=nil)

@@ -29,7 +29,7 @@ module Rudy
 
       class FeatureDeprecatedError < RequestError ; end
 
-      class ConnectionError < Error
+      class ConnectionError < Rudy::Error
         attr_reader :response
 
         def initialize(response)
@@ -39,6 +39,7 @@ module Rudy
           )
           @response = response
         end
+        
       end
       
     end

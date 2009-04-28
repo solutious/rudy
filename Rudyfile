@@ -122,3 +122,12 @@ routines do
   end
 end
 
+
+# ----------------------------------------------------------- COMMANDS --------
+# The commands block defines shell commands to be allowed or disallowed. These
+# shells commands are the ones available in routine blocks. The default list is
+# defined by Rye::Cmd. 
+commands do
+  allow :mongrel_rails
+  disallow :ps
+end

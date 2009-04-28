@@ -3,11 +3,12 @@
 module Rudy; module Routines;
   class Shutdown < Rudy::Routines::Base
     
-    def init
+    def init(*args)
       @routine = fetch_routine_config(:shutdown)
     end
     
     def execute
+      routine_separator(:shutdown)
       generic_machine_runner(:destroy) do |machine,rbox|
         #puts task_separator("SHUTDOWN")
       end

@@ -35,6 +35,28 @@ module Rudy; module CLI;
       @rr.execute 
     end
     
+    def passthrough_valid?
+      @rr = Rudy::Routines::Passthrough.new(@alias)
+      @rr.raise_early_exceptions
+      true
+    end
+    
+    # All unknown commands are sent here (using Drydock's trawler). 
+    # By default, the generic passthrough routine is executed which
+    # does nothing other than execute the routine config block that
+    # matches +@alias+ (the name used on the command-line). Calling
+    #
+    #     $ rudy unknown
+    #
+    # would end up here because it's an unknown command. Passthrough
+    # then looks for a routine config in the current environment and
+    # role called "unknown". If found, it's executed otherwise it'll
+    # raise an exception.
+    #
+    def passthrough
+      @rr.execute
+    end
+    
     def shutdown_valid?
       @rr = Rudy::Routines::Shutdown.new
       @rr.raise_early_exceptions
@@ -46,7 +68,7 @@ module Rudy; module CLI;
       puts "All machines in #{current_machine_group} will be shutdown"
       if routine && routine.disks
         if routine.disks.destroy
-          puts "and the following filesystems will be destroyed:".color(:red)
+          puts "The following filesystems will be destroyed:".color(:red)
           puts routine.disks.destroy.keys.join($/).bright
         end
       end

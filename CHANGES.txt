@@ -2,15 +2,17 @@ RUDY, CHANGES
 
 * TODO: Remove string messages for non-string output formats
 * TODO: Support for reserved instances
-* TODO: Test for zone and region support
+* TODO: Tests for zone and region support
 * TODO: Support for machine image attributes
 * TODO: Support for product codes
-* TODO: Check HTTPS for all AWS
+* TODO: Tests for AWS HTTPS
 
 
 #### 0.7.0 (2009-04-??) ###############################
 
+* CHANGE: Upgrade to Drydock 0.6
 * ADDED: Auto-set hostname to machine name
+* ADDED: Support for arbitrary routines via passthrough
 
 
 #### 0.6.8 (2009-04-24) ###############################

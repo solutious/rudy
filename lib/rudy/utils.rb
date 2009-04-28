@@ -70,7 +70,7 @@ module Rudy
     # * +duration+ seconds to wait between tries (default: 2).
     # * +max+ maximum time to wait (default: 120). Throws an exception when exceeded.
     # * +logger+ IO object to print +dot+ to.
-    # * +msg+ the message to print on success
+    # * +msg+ the message to print before executing the block. 
     # * +bells+ number of terminal bells to ring. Set to nil or false to keep the waiter silent
     #
     # The +check+ block must return false while waiting. Once it returns true
@@ -82,6 +82,10 @@ module Rudy
       max = duration*2 if max < duration
       dot = '.'
       begin
+        if msg && logger
+          logger.print msg 
+          logger.flush
+        end
         Timeout::timeout(max) do
           while !check.call
             sleep duration
@@ -93,7 +97,12 @@ module Rudy
         retry if Annoy.pose_question(" Keep waiting?\a ", /yes|y|ya|sure|you bet!/i, logger)
         return false
       end
-      logger.puts msg if msg
+      
+      if msg && logger
+        logger.puts " done!"
+        logger.flush
+      end
+      
       Rudy::Utils.bell(bells, logger)
       true
     end
@@ -274,35 +283,8 @@ module Rudy
     
     ######### Everything below here is TO BE REMOVED. 
     
-    #
-    #
-    # Run a shell command (TO BE REMOVED)
-    def sh(command, chdir=false, verbose=false)
-      prevdir = Dir.pwd
-      Dir.chdir chdir if chdir
-      puts command if verbose
-      system(command)
-      Dir.chdir prevdir if chdir
-    end
-
-    #
-    # Run an SSH command  (TO BE REMOVED)
-    def ssh_command(host, keypair, user, command=false, printonly=false, verbose=false)
-      #puts "CONNECTING TO #{host}..."
-      cmd = "ssh -i #{keypair} #{user}@#{host} "
-      cmd += " '#{command}'" if command
-      puts cmd if verbose
-      return cmd if printonly
-      # backticks returns STDOUT
-      # exec replaces current process (it's just like running ssh)
-      # -- UPDATE -- Some problem with exec. "Operation not supported"
-      # using system (http://www.mail-archive.com/mongrel-users@rubyforge.org/msg02018.html)
-      (command) ? `#{cmd}` : Kernel.system(cmd)
-    end
-
-    
     # (TO BE REMOVED)
-    # TODO: This is old and insecure. 
+    # TODO: This is old and nasty.
     def scp_command(host, keypair, user, paths, to_path, to_local=false, verbose=false, printonly=false)
 
       paths = [paths] unless paths.is_a?(Array)

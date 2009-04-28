@@ -3,11 +3,13 @@
 module Rudy; module Routines;
   class Release < Rudy::Routines::Base
     
-    def init
+    def init(*args)
       @routine = fetch_routine_config(:release)
     end
     
     def execute
+      routine_separator(:release)
+      
       vlist = []
 
       # Some early version control system failing

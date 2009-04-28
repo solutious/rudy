@@ -25,7 +25,7 @@ end
 
 
 namespace :test do
-  desc 'Measures test coverage'
+  about 'Measures test coverage'
   task :coverage do
     rm_f "coverage"
     rm_f "coverage.data"
@@ -71,7 +71,7 @@ end
 
 # From: shoulda/tasks/list_tests.rake
 namespace :shoulda do
-  desc "List the names of the test methods in a specification like format"
+  about "List the names of the test methods in a specification like format"
   task :list_fixed do
     $LOAD_PATH.unshift("test")
 
@@ -130,12 +130,12 @@ end
 
 # Rubyforge Release / Publish Tasks ==================================
 
-desc 'Publish website to rubyforge'
+about 'Publish website to rubyforge'
 task 'publish:rdoc' => 'doc/index.html' do
   sh "scp -rp doc/* rubyforge.org:/var/www/gforge-projects/#{name}/"
 end
 
-desc 'Public release to rubyforge'
+about 'Public release to rubyforge'
 task 'publish:gem' => [:package] do |t|
   sh <<-end
     rubyforge add_release -o Any -a CHANGES.txt -f -n README.rdoc #{name} #{name} #{@spec.version} pkg/#{name}-#{@spec.version}.gem &&

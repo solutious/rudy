@@ -69,16 +69,18 @@ module Rudy; module Routines;
         # "No such file or directory while trying to determine filesystem size"
         sleep 2 
         
+        # TODO: Cleanup. See ScriptHelper
         begin
           print "Creating ext3 filesystem for #{disk.device}... "
-          
-          @rbox.mkfs(:t, "ext3", :F, disk.device)
-          @rbox.mkdir(:p, disk.path)
-          puts "done"
+          execute_rbox_command { 
+            @rbox.mkfs(:t, "ext3", :F, disk.device)
+            @rbox.mkdir(:p, disk.path)
+            puts "done"
         
-          print "Mounting at #{disk.path}... "
+            print "Mounting at #{disk.path}... "
         
-          @rbox.mount(:t, 'ext3', disk.device, disk.path)
+            @rbox.mount(:t, 'ext3', disk.device, disk.path)
+          }
           disk.mounted = true
           disk.save
         rescue Net::SSH::AuthenticationFailed, Net::SSH::HostKeyMismatch => ex  
@@ -109,14 +111,13 @@ module Rudy; module Routines;
         puts "Destroying #{disk.name}"
 
         if disk.mounted?
-          print "Unmounting #{disk.path}... "
-          @rbox.umount(disk.path)
+          puts "Unmounting #{disk.path}... "
+          execute_rbox_command { @rbox.umount(disk.path) }
           sleep 0.5
-          puts "done"
         end
         
         if disk.attached?
-          print "Detaching #{disk.awsid}... "
+          puts "Detaching #{disk.awsid}... "
           disk.detach 
           Rudy::Utils.waiter(2, 60, STDOUT, 'done', nil) { 
             disk.available? 
@@ -124,9 +125,8 @@ module Rudy; module Routines;
           sleep 0.5
         end
         
-        print "Destroying metadata... "
+        puts "Destroying metadata... "
         disk.destroy
-        puts "done"
         
       end
     end

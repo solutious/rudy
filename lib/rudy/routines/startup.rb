@@ -3,7 +3,7 @@
 module Rudy; module Routines;
   class Startup < Rudy::Routines::Base
     
-    def init
+    def init(*args)
       @routine = fetch_routine_config(:startup)
     end
     
@@ -11,8 +11,8 @@ module Rudy; module Routines;
     # disk creation and the after scripts. The will receives two 
     # arguments: instances of Rudy::Machine and Rye::Box.
     def execute(&each_mach)
+      routine_separator(:startup)
       generic_machine_runner(:create) do |machine,rbox|
-        #puts task_separator("STARTUP")
       end
     end
 

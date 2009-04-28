@@ -51,7 +51,7 @@ module Rudy
         if Rudy::Routines::ScriptHelper.before_local?(@routine)  # before_local
           # Runs "before_local" scripts of routines config. 
           # NOTE: Does not run "before" scripts b/c there are no remote machines
-          puts task_separator("BEFORE SCRIPTS (local)")
+          puts task_separator("SHELL BEFORE (local)")
           Rudy::Routines::ScriptHelper.before_local(@routine, sconf, lbox)
         end
         
@@ -83,10 +83,18 @@ module Rudy
           
           # TODO: trap rbox errors. We could get an authentication error. 
           
-          rbox.hostname(machine.name) if current_machine_hostname == :rudy
+          # Set the hostname if specified in the machines config. 
+          # :rudy -> change to Rudy's machine name
+          # :default -> leave the hostname as it is
+          # Anything else other than nil -> change to that value
+          hn = current_machine_hostname
+          if hn && hn != :asis
+            hn = machine.name if hn == :rudy
+            rbox.hostname(hn) 
+          end
           
           if Rudy::Routines::UserHelper.adduser?(@routine)       # adduser
-            puts task_separator("ADDING USER (#{@routine.adduser})")
+            puts task_separator("ADD USER (#{@routine.adduser})")
             Rudy::Routines::UserHelper.adduser(@routine, machine, rbox)
           end
           
@@ -96,7 +104,7 @@ module Rudy
           end
           
           if Rudy::Routines::ScriptHelper.before?(@routine)      # before
-            puts task_separator("BEFORE SCRIPTS")
+            puts task_separator("SHELL BEFORE")
             Rudy::Routines::ScriptHelper.before(@routine, sconf, machine, rbox)
           end
           
@@ -109,7 +117,7 @@ module Rudy
           routine_action.call(machine, rbox) if routine_action
 
           if Rudy::Routines::ScriptHelper.after?(@routine)       # after
-            puts task_separator("AFTER SCRIPTS")
+            puts task_separator("SHELL AFTER")
             # Runs "after" scripts of routines config
             Rudy::Routines::ScriptHelper.after(@routine, sconf, machine, rbox)
           end
@@ -125,7 +133,7 @@ module Rudy
         end
 
         if Rudy::Routines::ScriptHelper.after_local?(@routine)   # after_local
-          puts task_separator("AFTER SCRIPTS (local)")
+          puts task_separator("SHELL AFTER (local)")
           # Runs "after_local" scripts of routines config
           Rudy::Routines::ScriptHelper.after_local(@routine, sconf, lbox)
         end

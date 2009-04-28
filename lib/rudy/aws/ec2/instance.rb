@@ -25,7 +25,7 @@ module Rudy::AWS
     
     def liner_note
       info = self.running? ? self.dns_public : self.state
-      "%s  %s" % [self.awsid.bright, info]
+      "%s  %-30s" % [self.awsid.bright, info]
     end
 
     def to_s(with_title=false)

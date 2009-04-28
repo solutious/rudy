@@ -126,6 +126,8 @@ module AWS; module EC2;
         # Open the connection and run the command
         rbox = Rye::Box.new(inst.dns_public, ssh_opts)
         
+        # TODO: Replace with rbox.upload
+        
         # ~/.rudy, /etc/motd, history -c, /etc/hosts, /var/log/rudy*
         cert = File.read(@@global.cert)
         pk = File.read(@@global.privatekey)

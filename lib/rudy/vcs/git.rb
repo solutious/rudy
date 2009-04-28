@@ -90,9 +90,11 @@ module Rudy
             homedir = rbox.getenv['HOME']
             rbox.mkdir(:p, :m, '700', '.ssh') # :p says keep quiet if it exists
             if rbox.file_exists?(".ssh/#{key}")
-              raise "Remote private key #{key} already exists" 
+              puts "Remote private key #{key} already exists".colour(:red)
+            else
+              rbox.upload(@pkey, ".ssh/#{key}") # The trailing slash is important
             end
-            rbox.upload(@pkey, ".ssh/#{key}") # The trailing slash is important
+            
             
             # This runs fine, but "git clone" doesn't care. 
             # git config --global --replace-all http.sslKey /home/delano/.ssh/id_rsa
@@ -110,18 +112,40 @@ module Rudy
             end
             ssh_config ||= StringIO.new
             ssh_config.puts $/, "IdentityFile #{homedir}/.ssh/#{key}"
+            puts "Adding IdentityFile #{key} to #{homedir}/.ssh/config"
             rbox.upload(ssh_config, '.ssh/config')
             rbox.chmod('0600', '.ssh/config')
           end
           
-          rbox.git('clone', get_remote_uri, @path)
+          # We need to add the host keys to the user's known_hosts file
+          # to prevent the git commands from failing when it raises the
+          # "Host key verification failed." messsage.
+          if rbox.file_exists?('.ssh/known_hosts')
+            rbox.cp('.ssh/known_hosts', ".ssh/known_hosts-previous")
+            known_hosts = rbox.download('.ssh/known_hosts')
+          end
+          known_hosts ||= StringIO.new
+          remote = get_remote_uri
+          host = URI.parse(remote).host rescue nil
+          host ||= remote.scan(/\A.+?@(.+?)\:/).flatten.first
+          known_hosts.puts $/, Rye.remote_host_keys(host)
+          puts "Adding host key for #{host} to .ssh/known_hosts"
+          rbox.upload(known_hosts, '.ssh/known_hosts')
+          rbox.chmod('0600', '.ssh/known_hosts')
+          
+          execute_rbox_command {
+            rbox.git('clone', get_remote_uri, @path)
+          }
           rbox.cd(@path)
-          rbox.git('checkout', :b, @rtag)
+          execute_rbox_command {
+            rbox.git('checkout', :b, @rtag)
+          }
         rescue Rye::CommandError => ex
           puts ex.message
         ensure
-          # Return to the original user
+          # Return to the original user and directory
           rbox.switch_user(original_user)
+          rbox.cd
         end
         
       end
@@ -163,7 +187,7 @@ module Rudy
       
       def raise_early_exceptions
         raise NotAWorkingCopy, :git unless working_copy?
-        raise DirtyWorkingCopy, :git unless clean_working_copy?
+        #raise DirtyWorkingCopy, :git unless clean_working_copy?
         raise NoRemoteURI, "remote.#{@remote}.url not set" if get_remote_uri.nil?
         raise NoRemotePath, :git if @path.nil?
         raise PrivateKeyNotFound, @pkey if @pkey && !File.exists?(@pkey)

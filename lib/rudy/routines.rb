@@ -78,7 +78,7 @@ module Rudy
             Rudy::Utils.service_available?(machine.dns_public, 22)
           }
           
-          opts = { :keys =>  root_keypairpath, :user => 'root', :info => true }
+          opts = { :keys =>  root_keypairpath, :user => 'root', :info => false }
           rbox = Rye::Box.new(machine.dns_public, opts)
           
           # TODO: trap rbox errors. We could get an authentication error. 

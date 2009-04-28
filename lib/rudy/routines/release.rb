@@ -9,7 +9,7 @@ module Rudy; module Routines;
     
     def execute
       vlist = []
-      
+
       # Some early version control system failing
       if Rudy::Routines::VCSHelper.vcs?(@routine)
         vlist = Rudy::Routines::VCSHelper.create_vcs_objects(@routine)
@@ -19,6 +19,7 @@ module Rudy; module Routines;
           puts vcs.liner_note
         end
       end
+      
       
       generic_machine_runner(:list) do |machine,rbox|
         vlist.each do |vcs|

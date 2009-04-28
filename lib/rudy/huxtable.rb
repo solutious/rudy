@@ -288,7 +288,7 @@ module Rudy
 
         disks.each_pair do |path, props|
           unless disk_defs.has_key?(path)
-            @logger.puts "#{path} is not defined. Check your #{action} routines config.".color(:red)
+            @@logger.puts "#{path} is not defined. Check your #{action} routines config.".color(:red)
             routine.disks[raction].delete(path) 
             next
           end

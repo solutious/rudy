@@ -10,6 +10,11 @@ module Rudy; module Routines;
       routine.disks.is_a?(Caesars::Hash) && !routine.disks.empty?)
     end
     
+    def paths(routine)
+      return nil unless disks?(routine)
+      routine.disks.values.collect { |d| d.keys }.flatten
+    end
+    
     def execute(routine, machine, rbox)
       return unless routine
       raise "Not a Rudy::Machine" unless machine.is_a?(Rudy::Machine)
@@ -39,12 +44,17 @@ module Rudy; module Routines;
       
       disks.each_pair do |path, props|
         disk = Rudy::Disk.new(path, props[:size], props[:device], @machine.position)
-        #disk = rdisk.get(disk.name)
+        olddisk = rdisk.get(disk.name)
+        if olddisk && olddisk.exists?
+          puts "Disk exists: #{olddisk.name}".color(:red)
+          return
+        end
+        
         puts "Creating #{disk.name} "
         
         print "Creating volume... "
         disk.create
-        Rudy::Utils.waiter(2, 60, STDOUT, "done", nil) { 
+        Rudy::Utils.waiter(2, 60, STDOUT, disk.awsid, nil) { 
           disk.available?
         }
         

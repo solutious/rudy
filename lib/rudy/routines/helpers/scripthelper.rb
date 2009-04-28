@@ -86,6 +86,7 @@ module Rudy; module Routines;
         original_user = rbox.user
         users = routine[timing] || {}
         users.each_pair do |user, commands|
+          
           begin
             rbox.switch_user user # does nothing if it's the same user
             rbox.connect(false)   # does nothing if already connected
@@ -95,42 +96,34 @@ module Rudy; module Routines;
             next
           end
           
-          begin
+          execute_rbox_command {
             # We need to create the config file for every script, 
             # b/c the user may change and it would not be accessible.
             # We turn off safe mode so we can write the config file via SSH. 
             # This will need to use SCP eventually; it is unsafe and error prone.
             # TODO: Replace with rbox.upload. Make it safe again!
-            rbox.safe = false
-            rbox.umask = "0077" # Ensure script is not readable
-            conf_str = sconf.to_hash.to_yaml.tr("'", "''")
-            puts rbox.echo("'#{conf_str}' > #{@@script_config_file}")
-            rbox.umask = nil
-            rbox.safe = true
+            conf_str = StringIO.new
+            conf_str.puts sconf.to_hash.to_yaml
+            rbox.upload(conf_str, @@script_config_file)
             rbox.chmod(600, @@script_config_file)
-          rescue => ex
+          }
+        
+          commands.each_pair do |command, calls|
+            # If a command is only referred to once and it has no arguments
+            # defined, we force it through by making an array with one element.
+            calls = [[]] if calls.empty?
+            calls.each do |args|
+              puts command_separator(rbox.preview_command(command, args), user)
+              execute_rbox_command { 
+                ret = rbox.send(command, args) 
+              }
+            end
           end
           
-            commands.each_pair do |command, calls|
-              # If a command is only referred to once and it has no arguments
-              # defined, we force it through by making an array with one element.
-              calls = [[]] if calls.empty?
-              calls.each do |args|
-                begin
-                  puts command_separator(rbox.preview_command(command, args), user)
-                  ret = rbox.send(command, args)
-                  puts '  ' << ret.stdout.join("#{$/}  ") if !ret.stdout.empty?
-                  STDERR.puts "  STDERR: #{ret.stderr.join("#{$/}  ")}".color(:red) if !ret.stderr.empty?
-                rescue Rye::CommandError => ex
-                  STDERR.puts "  STDERR: #{ex.stderr.join("#{$/}  ")}".color(:red)
-                  STDERR.puts "  STDOUT: #{ex.stdout.join("#{$/}  ")}".color(:red)
-                  STDERR.puts "  Exit code: #{ex.exit_code}".color(:red)
-                rescue Rye::CommandNotFound => ex
-                  STDERR.puts "  CommandNotFound: #{ex.message}".color(:red)
-                  STDERR.puts ex.backtrace
-                end
-              end
-            end
+          # I was gettings errors about script_config_file not existing. There
+          # might be a race condition when the rm command is called too quickly. 
+          # It's also quite possible I'm off my rocker!
+          sleep 0.1
           
           rbox.cd # reset to home dir
           rbox.rm(@@script_config_file)

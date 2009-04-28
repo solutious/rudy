@@ -35,7 +35,31 @@ module Rudy
       
       def raise_early_exceptions; raise "override raise_early_exceptions"; end
       
+      # copied from routines/helper.rb
+      def execute_rbox_command(ret=nil, &command)
+        begin
+          ret = command.call
+          puts '  ' << ret.stdout.join("#{$/}  ") if !ret.stdout.empty?
+          print_response(ret)
+        rescue Rye::CommandError => ex
+          print_response(ex)
+        rescue Rye::CommandNotFound => ex
+          STDERR.puts "  CommandNotFound: #{ex.message}".color(:red)
+          STDERR.puts ex.backtrace
+        end
+
+        ret
+      end
       
+      private 
+        def print_response(rap)
+          [:stderr].each do |sumpin|
+            next if rap.send(sumpin).empty?
+            STDERR.puts "  #{sumpin}: #{rap.send(sumpin).join("#{$/}  ")}".color(:red)
+          end
+          STDERR.puts "  Exit code: #{rap.exit_code}".color(:red) if rap.exit_code != 0
+        end
+        
     end
     
   end

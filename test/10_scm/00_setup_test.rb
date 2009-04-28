@@ -2,7 +2,7 @@ require File.join(File.dirname(__FILE__), '..', 'helper')
 
 module Rudy::Test
 
-  class Case_10_VCS < Test::Unit::TestCase
+  class Case_10_SCM < Test::Unit::TestCase
     include Rudy::Huxtable
     
     @@logger = STDERR #StringIO.new

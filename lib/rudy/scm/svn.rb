@@ -2,7 +2,7 @@
 require 'date'
 
 module Rudy
-  module VCS
+  module SCM
     class SVN
       attr_accessor :base_uri
       

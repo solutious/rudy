@@ -71,7 +71,7 @@ module Rudy
     
     MAX_INSTANCES = 3.freeze
     
-    SUPPORTED_VCS_NAMES = [:svn, :git].freeze
+    SUPPORTED_SCM_NAMES = [:svn, :git].freeze
   
     ID_MAP = {
       :instance => 'i',
@@ -161,6 +161,6 @@ require 'rudy/metadata'   # important
 require 'rudy/disks'
 require 'rudy/machines'
 require 'rudy/routines'
-require 'rudy/vcs'
+require 'rudy/scm'
 
 

@@ -3,10 +3,10 @@ require 'date'
 
   
 module Rudy
-  module VCS
+  module SCM
     class GIT
       require 'grit'
-      include Rudy::VCS::ObjectBase
+      include Rudy::SCM::ObjectBase
       include Grit
       
       attr_accessor :base_uri

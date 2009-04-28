@@ -11,20 +11,20 @@ module Rudy; module Routines;
       vlist = []
 
       # Some early version control system failing
-      if Rudy::Routines::VCSHelper.vcs?(@routine)
-        vlist = Rudy::Routines::VCSHelper.create_vcs_objects(@routine)
+      if Rudy::Routines::SCMHelper.scm?(@routine)
+        vlist = Rudy::Routines::SCMHelper.create_scm_objects(@routine)
         puts task_separator("CREATING RELEASE TAG#{'S' if vlist.size > 1}")
-        vlist.each do |vcs|
-          vcs.create_release(Rudy.sysinfo.user)
-          puts vcs.liner_note
+        vlist.each do |scm|
+          scm.create_release(Rudy.sysinfo.user)
+          puts scm.liner_note
         end
       end
       
       
       generic_machine_runner(:list) do |machine,rbox|
-        vlist.each do |vcs|
-          puts task_separator("CREATING REMOTE #{vcs.engine.to_s.upcase} CHECKOUT")
-          vcs.create_remote_checkout(rbox)
+        vlist.each do |scm|
+          puts task_separator("CREATING REMOTE #{scm.engine.to_s.upcase} CHECKOUT")
+          scm.create_remote_checkout(rbox)
         end
       end
       

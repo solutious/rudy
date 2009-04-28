@@ -1,35 +1,35 @@
 
 module Rudy; module Routines; 
-  module VCSHelper
+  module SCMHelper
     include Rudy::Routines::HelperBase
     extend self
     
-    # Does the routine config contain VCS routines?
+    # Does the routine config contain SCM routines?
     # Raises Rudy::Error if there is malformed configuration. 
-    def vcs?(routine)
-      vcsnames = SUPPORTED_VCS_NAMES & routine.keys    # Find intersections.
-      return false if vcsnames.empty?                  # Nothing to do. 
-      vcsnames.each do |vcs|                          
-        routine[vcs].values.each do |p|                # Each VCS should have a
-        raise "Bad #{vcs} config" if !p.kind_of?(Hash) # Hash config. Otherwise
+    def scm?(routine)
+      scmnames = SUPPORTED_SCM_NAMES & routine.keys    # Find intersections.
+      return false if scmnames.empty?                  # Nothing to do. 
+      scmnames.each do |scm|                          
+        routine[scm].values.each do |p|                # Each SCM should have a
+        raise "Bad #{scm} config" if !p.kind_of?(Hash) # Hash config. Otherwise
         end                                            # it's misconfigured.
       end
       true
     end
     
-    def create_vcs_objects(routine)
+    def create_scm_objects(routine)
       return nil unless routine
-      vcsnames = SUPPORTED_VCS_NAMES & routine.keys
+      scmnames = SUPPORTED_SCM_NAMES & routine.keys
       vlist = []
-      # Look for vcs config in the routine by checking all known vcs types.
-      # For each one we'll create an instance of the appropriate VCS class.
-      vcsnames.each do |vcs|
-        routine[vcs].each_pair do |user,params|
-          klass = eval "Rudy::VCS::#{vcs.to_s.upcase}"
+      # Look for scm config in the routine by checking all known scm types.
+      # For each one we'll create an instance of the appropriate SCM class.
+      scmnames.each do |scm|
+        routine[scm].each_pair do |user,params|
+          klass = eval "Rudy::SCM::#{scm.to_s.upcase}"
           params[:user] = user
-          vcs = klass.new(params)
-          vcs.raise_early_exceptions    # Raises exceptions for obvious problems.
-          vlist << vcs
+          scm = klass.new(params)
+          scm.raise_early_exceptions    # Raises exceptions for obvious problems.
+          vlist << scm
         end
       end
       vlist

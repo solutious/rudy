@@ -1,7 +1,7 @@
 
 
 module Rudy
-  module VCS
+  module SCM
     
     class NotAWorkingCopy < Rudy::Error
       def message
@@ -65,4 +65,4 @@ module Rudy
   end
 end
 
-Rudy::Utils.require_glob(RUDY_LIB, 'rudy', 'vcs', '*.rb')
+Rudy::Utils.require_glob(RUDY_LIB, 'rudy', 'scm', '*.rb')

@@ -34,30 +34,8 @@ require 'net/ssh/gateway'
 #
 # Rudy is a development and deployment tool for the Amazon Elastic Compute Cloud
 # (EC2). See README.rdoc for more information. 
-#
-# == Status: Alpha
 # 
-# The current release (0.6) is not ready for general production use. Use it for 
-# exploring EC2 and operating your development / ad-hoc instances. We've put in 
-# a lot of effort to make sure Rudy plays safe, but it's possible we missed
-# something. That's why we consider it alpha code. 
-#
-# To get started right away, try:
-#
-#     $ rudy -h
-#     $ rudy show-commands
-#
-# Also:
-#
-#     $ rudy-ec2 -h
-#     $ rudy-ec2 show-commands
-#
-# And if you're feeling particularly saucey, try Rudy's REPL interface:
-#
-#     $ ird
 # 
-#
-#
 module Rudy
   extend self
   
@@ -93,7 +71,7 @@ module Rudy
     
     MAX_INSTANCES = 3.freeze
     
-    SUPPORTED_SCM_NAMES = [:svn, :git].freeze
+    SUPPORTED_VCS_NAMES = [:svn, :git].freeze
   
     ID_MAP = {
       :instance => 'i',
@@ -180,10 +158,9 @@ require 'rudy/huxtable'   # requires
 require 'rudy/aws'        # is
 require 'rudy/metadata'   # important
 
-require 'rudy/machines'
 require 'rudy/disks'
+require 'rudy/machines'
 require 'rudy/routines'
-require 'rudy/scm/svn'
-require 'rudy/scm/git'
+require 'rudy/vcs'
 
 

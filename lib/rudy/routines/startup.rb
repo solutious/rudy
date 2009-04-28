@@ -1,23 +1,24 @@
 
 
 module Rudy; module Routines;
-
   class Startup < Rudy::Routines::Base
     
-    # * +routine+ is a single routine configuration hash. If not
-    # supplied, the value of fetch_routine_config(:startup) is used.
+    def init
+      @routine = fetch_routine_config(:startup)
+    end
+    
     # * +each_mach+ is an optional block which is executed between 
     # disk creation and the after scripts. The will receives two 
     # arguments: instances of Rudy::Machine and Rye::Box.
-    def execute(routine=nil, &each_mach)
-      routine = fetch_routine_config(:startup) unless routine      
-      generic_machine_runner(:create, routine) do |machine,rbox|
+    def execute(&each_mach)
+      generic_machine_runner(:create) do |machine,rbox|
         #puts task_separator("STARTUP")
       end
     end
 
     # Called by generic_machine_runner
     def raise_early_exceptions
+      raise NoRoutine, :startup unless @routine
       rmach = Rudy::Machines.new
       # There's no keypair check here because Rudy::Machines will attempt 
       # to create one.

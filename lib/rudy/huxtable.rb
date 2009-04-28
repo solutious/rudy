@@ -173,6 +173,10 @@ module Rudy
       fetch_machine_param(:positions) || 1
     end
     
+    def current_machine_hostname
+      fetch_machine_param(:hostname) || :rudy
+    end
+    
     def current_machine_image
       fetch_machine_param(:ami)
       #zon, env, rol = @@global.zone, @@global.environment, @@global.role

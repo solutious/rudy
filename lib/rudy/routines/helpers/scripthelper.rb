@@ -1,11 +1,13 @@
 require 'tempfile'
 
-
 module Rudy; module Routines; 
-  
+  #--
+  # TODO: Rename to ShellHelper
+  #++
   module ScriptHelper
+    include Rudy::Routines::HelperBase  # TODO: use execute_rbox_command
     extend self
-    
+
     @@script_types = [:after, :before, :after_local, :before_local]
     @@script_config_file = "rudy-config.yml"
     
@@ -38,8 +40,18 @@ module Rudy; module Routines;
     # Does the routine have the requested script type?
     # * +timing+ is one of: after, before, after_local, before_local
     # * +routine+ a single routine hash (startup, shutdown, etc...)
+    # Prints notice to STDERR if there's an empty conf hash
     def execute_command?(timing, routine)
-      (routine.is_a?(Caesars::Hash) && routine.has_key?(timing))
+      hasconf = (routine.is_a?(Caesars::Hash) && routine.has_key?(timing))
+      return false unless hasconf
+      routine[timing].each_pair do |user,conf|
+        if conf.empty? 
+          STDERR.puts "Empty #{timing} config for #{user}"
+        else
+          return true
+        end
+      end
+      false
     end
     
     # Returns a formatted string for printing command info
@@ -88,6 +100,7 @@ module Rudy; module Routines;
             # b/c the user may change and it would not be accessible.
             # We turn off safe mode so we can write the config file via SSH. 
             # This will need to use SCP eventually; it is unsafe and error prone.
+            # TODO: Replace with rbox.upload. Make it safe again!
             rbox.safe = false
             rbox.umask = "0077" # Ensure script is not readable
             conf_str = sconf.to_hash.to_yaml.tr("'", "''")
@@ -109,16 +122,17 @@ module Rudy; module Routines;
                   puts '  ' << ret.stdout.join("#{$/}  ") if !ret.stdout.empty?
                   STDERR.puts "  STDERR: #{ret.stderr.join("#{$/}  ")}".color(:red) if !ret.stderr.empty?
                 rescue Rye::CommandError => ex
-                  STDERR.puts "  Exit code: #{ex.exit_code}".color(:red)
                   STDERR.puts "  STDERR: #{ex.stderr.join("#{$/}  ")}".color(:red)
                   STDERR.puts "  STDOUT: #{ex.stdout.join("#{$/}  ")}".color(:red)
+                  STDERR.puts "  Exit code: #{ex.exit_code}".color(:red)
                 rescue Rye::CommandNotFound => ex
                   STDERR.puts "  CommandNotFound: #{ex.message}".color(:red)
                   STDERR.puts ex.backtrace
                 end
               end
             end
-            
+          
+          rbox.cd # reset to home dir
           rbox.rm(@@script_config_file)
         end
         

@@ -23,11 +23,20 @@ class Rudy::Config
   
   class Routines < Caesars
     
+    # Disk routines
     forced_hash :create
     forced_hash :destroy
     forced_hash :restore
     forced_hash :mount
+    
+    # Remote scripts
     forced_hash :before
+    forced_hash :after
+    
+    # Version control systems
+    forced_hash :git
+    forced_hash :svn
+    
     
     # Add remote shell commands to the DSL as forced Arrays. 
     # Example:

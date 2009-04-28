@@ -2,6 +2,7 @@
 
 module Rudy; module Routines; 
   module DiskHelper
+    include Rudy::Routines::HelperBase  # TODO: use execute_rbox_command
     extend self
     
     def disks?(routine)
@@ -16,6 +17,10 @@ module Rudy; module Routines;
       
       @machine = machine
       @rbox = rbox
+      
+      # We need to add mkfs since it's not enabled by default. 
+      # We add it only to this instance we're using. 
+      def @rbox.mkfs(*args); cmd('mkfs', args); end
       
       return unless disks?(routine)
       
@@ -56,6 +61,7 @@ module Rudy; module Routines;
         
         begin
           print "Creating ext3 filesystem for #{disk.device}... "
+          
           @rbox.mkfs(:t, "ext3", :F, disk.device)
           @rbox.mkdir(:p, disk.path)
           puts "done"

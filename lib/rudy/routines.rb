@@ -2,6 +2,10 @@
 
 module Rudy
   module Routines
+    class NoRoutine < Rudy::Error
+      def message; "No configuration for #{@obj} routine"; end
+    end
+    
     class Base
       include Rudy::Huxtable
     
@@ -33,82 +37,84 @@ module Rudy
       # * +routine_action+ is an optional block which represents the action
       # for a specific routine. For example, a startup routine will start
       # an EC2 instance. Arguments: instances of Rudy::Machine and Rye::Box.
-      def generic_machine_runner(machine_action, routine, &routine_action)
-        raise_early_exceptions
+      def generic_machine_runner(machine_action, &routine_action)
         rmach = Rudy::Machines.new
-        raise "No routine supplied" unless routine
+        raise "No routine supplied" unless @routine
         raise "No machine action supplied" unless machine_action
         unless rmach.respond_to?(machine_action)
           raise "Unknown machine action #{machine_action}" 
         end
-        #raise MachineGroupAlreadyRunning, current_machine_group if rmach.running?
         
-        rbox_local = Rye::Box.new('localhost')
+        lbox = Rye::Box.new('localhost')
         sconf = fetch_script_config
                 
-        if Rudy::Routines::ScriptHelper.before_local?(routine)
+        if Rudy::Routines::ScriptHelper.before_local?(@routine)  # before_local
           # Runs "before_local" scripts of routines config. 
           # NOTE: Does not run "before" scripts b/c there are no remote machines
           puts task_separator("BEFORE SCRIPTS (local)")
-          Rudy::Routines::ScriptHelper.before_local(routine, sconf, rbox_local)
+          Rudy::Routines::ScriptHelper.before_local(@routine, sconf, lbox)
         end
-
+        
+        # Execute the action (create, list, destroy) & apply the block to each
         rmach.send(machine_action) do |machine|
           puts machine_separator(machine.name, machine.awsid)
-          puts "TODO REMOVE"
-          if false
+          
           print "Waiting for instance..."
-          isup = Rudy::Utils.waiter(3, 120, STDOUT, "it's up!", 2) {
+          Rudy::Utils.waiter(3, 120, STDOUT, "it's up!", 0) {
             inst = machine.get_instance
             inst && inst.running?
           } 
-          machine.update # Add instance info to machine and save it
+          
+          # Add instance info to machine and save it. This is really important
+          # for the initial startup so the metadata is updated right away. But
+          # it's also important to call here because if a routine was executed
+          # and an unexpected exception occurrs before this update is executed
+          # the machine metadata won't contain the DNS information. Calling it
+          # here ensure that the metadata is always up-to-date. 
+          machine.update 
+          
           print "Waiting for SSH daemon..."
-          isup = Rudy::Utils.waiter(2, 60, STDOUT, "it's up!", 3) {
+          Rudy::Utils.waiter(2, 60, STDOUT, "it's up!", 0) {
             Rudy::Utils.service_available?(machine.dns_public, 22)
           }
-          end
-        
+          
           opts = { :keys =>  root_keypairpath, :user => 'root', :info => true }
           rbox = Rye::Box.new(machine.dns_public, opts)
           
-          if routine.authorize
-            puts task_separator("AUTHORIZING (#{routine.authorize})")
-            rbox.useradd(routine.authorize.to_s) rescue nil
-            begin
-              rbox.authorize_keys_remote(routine.authorize)
-            rescue Rye::CommandError => ex
-              STDERR.puts "  Exit code: #{ex.exit_code}".color(:red)
-              STDERR.puts "  STDERR: #{ex.stderr.join("#{$/}  ")}".color(:red) if ex.stderr
-              STDERR.puts "  STDOUT: #{ex.stdout.join("#{$/}  ")}".color(:red) if ex.stdout
-            rescue => ex
-              puts "Cannot authorize (#{ex.class}): #{ex.message}", "Skipping machine"
-              next
-            end
+          # TODO: trap rbox errors. We could get an authentication error. 
+          
+          rbox.hostname(machine.name) if current_machine_hostname == :rudy
+          
+          if Rudy::Routines::UserHelper.adduser?(@routine)       # adduser
+            puts task_separator("ADDING USER (#{@routine.adduser})")
+            Rudy::Routines::UserHelper.adduser(@routine, machine, rbox)
           end
           
-          if Rudy::Routines::ScriptHelper.before?(routine)
-            # Runs "before" scripts of routines config. 
+          if Rudy::Routines::UserHelper.authorize?(@routine)     # authorize
+            puts task_separator("AUTHORIZING (#{@routine.authorize})")
+            Rudy::Routines::UserHelper.authorize(@routine, machine, rbox)
+          end
+          
+          if Rudy::Routines::ScriptHelper.before?(@routine)      # before
             puts task_separator("BEFORE SCRIPTS")
-            Rudy::Routines::ScriptHelper.before(routine, sconf, machine, rbox)
+            Rudy::Routines::ScriptHelper.before(@routine, sconf, machine, rbox)
           end
           
-          if Rudy::Routines::DiskHelper.disks?(routine)
+          if Rudy::Routines::DiskHelper.disks?(@routine)         # disk
             puts task_separator("DISK ROUTINES")
-            # Runs "disk" portion of routines config
-            Rudy::Routines::DiskHelper.execute(routine, machine, rbox)
+            Rudy::Routines::DiskHelper.execute(@routine, machine, rbox)
           end
 
-          # Startup machines, shutdown machines, release application, etc...
+          # Startup, shutdown, release, deploy, etc...
           routine_action.call(machine, rbox) if routine_action
 
-          if Rudy::Routines::ScriptHelper.after?(routine)
+          if Rudy::Routines::ScriptHelper.after?(@routine)       # after
             puts task_separator("AFTER SCRIPTS")
             # Runs "after" scripts of routines config
-            Rudy::Routines::ScriptHelper.after(routine, sconf, machine, rbox)
+            Rudy::Routines::ScriptHelper.after(@routine, sconf, machine, rbox)
           end
 
-          if Rudy::Routines::DiskHelper.disks?(routine)
+          if Rudy::Routines::DiskHelper.disks?(@routine)
             # TODO: Print only the requested disks
             puts task_separator("INFO")
             puts "Filesystem on #{machine.name}:"
@@ -118,10 +124,10 @@ module Rudy
           rbox.disconnect
         end
 
-        if Rudy::Routines::ScriptHelper.after_local?(routine)
+        if Rudy::Routines::ScriptHelper.after_local?(@routine)   # after_local
           puts task_separator("AFTER SCRIPTS (local)")
           # Runs "after_local" scripts of routines config
-          Rudy::Routines::ScriptHelper.after_local(routine, sconf, rbox_local)
+          Rudy::Routines::ScriptHelper.after_local(@routine, sconf, lbox)
         end
 
       end
@@ -137,7 +143,7 @@ module Rudy
         dashes = 0 if dashes < 1
         puts $/, '='*59
         puts 'MACHINE: %-40s (%s)' % [name.bright, awsid]
-        puts '='*59, $/
+        puts '='*59
       end
 
     end
@@ -145,7 +151,7 @@ module Rudy
   end
 end
 
-Rudy::Utils.require_glob(RUDY_LIB, 'rudy', 'routines', 'helpers', '*.rb')
 Rudy::Utils.require_glob(RUDY_LIB, 'rudy', 'routines', '*.rb')
+Rudy::Utils.require_glob(RUDY_LIB, 'rudy', 'routines', 'helpers', '*.rb')
 
 

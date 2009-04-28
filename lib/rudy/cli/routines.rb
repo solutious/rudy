@@ -2,10 +2,15 @@
 
 module Rudy; module CLI;
   class Routines < Rudy::CLI::CommandBase
-  
+    
+    def startup_valid?
+      @rr = Rudy::Routines::Startup.new
+      @rr.raise_early_exceptions
+      true
+    end
     def startup
-      rr = Rudy::Routines::Startup.new
-      rr.execute
+
+      @rr.execute
       
       puts $/, "The following machines are now available:"
       rmach = Rudy::Machines.new
@@ -21,17 +26,23 @@ module Rudy; module CLI;
       
     end
     
+    def release_valid?
+      @rr = Rudy::Routines::Release.new
+      @rr.raise_early_exceptions
+      true
+    end
     def release
-      #rmach = Rudy::Machines.new
-      #startup unless rmach.running?
-      rr = Rudy::Routines::Release.new
-      rr.execute 
+      @rr.execute 
     end
     
+    def shutdown_valid?
+      @rr = Rudy::Routines::Shutdown.new
+      @rr.raise_early_exceptions
+      true
+    end
     def shutdown
-      rr = Rudy::Routines::Shutdown.new
       routine = fetch_routine_config(:shutdown)
-
+      
       puts "All machines in #{current_machine_group} will be shutdown"
       if routine && routine.disks
         if routine.disks.destroy
@@ -42,7 +53,7 @@ module Rudy; module CLI;
       
       execute_check :medium
       
-      rr.execute
+      @rr.execute
       
       puts $/, "The following instances have been destroyed:"
       

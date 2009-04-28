@@ -1,11 +1,12 @@
 
 
 module Rudy
-  module Guidelines
+  module Guidelines #:nodoc:all
     extend self
+    AFE = "Always fail early"   # [ed: the A's are a work in progress]
+    ABA = "Always be accurate"
     CBC = "Consistency before cuteness"
     UNO = "Ugly's not okay"
-    AFE = "Always fail early"   # [ed: this is a work in progress]
     def inspect
       all = Guidelines.constants
       g = all.collect { |c| '%s="%s"' % [c, const_get(c)] }

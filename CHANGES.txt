@@ -5,7 +5,12 @@ RUDY, CHANGES
 * TODO: Test for zone and region support
 * TODO: Support for machine image attributes
 * TODO: Support for product codes
-* TODO: HTTPS
+* TODO: Check HTTPS for all AWS
+
+
+#### 0.7.0 (2009-04-??) ###############################
+
+* ADDED: Auto-set hostname to machine name
 
 
 #### 0.6.8 (2009-04-24) ###############################

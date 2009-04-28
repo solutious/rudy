@@ -2,7 +2,7 @@
 require 'date'
 
 module Rudy
-  module SCM
+  module VCS
     class SVN
       attr_accessor :base_uri
       
@@ -12,7 +12,7 @@ module Rudy
       
       def create_release(username=nil, msg=nil)
         local_uri, local_revision = local_info
-        rtag = generate_rtag(username)
+        rtag = find_next_rtag(username)
         release_uri = "#{@base_uri}/#{rtag}"
         msg ||= 'Another Release by Rudy!'
         msg.tr!("'", "\\'")
@@ -29,7 +29,7 @@ module Rudy
       end
       
       # rel-2009-03-05-user-rev
-      def generate_rtag(username=nil)
+      def find_next_rtag(username=nil)
         now = Time.now
         mon = now.mon.to_s.rjust(2, '0')
         day = now.day.to_s.rjust(2, '0')

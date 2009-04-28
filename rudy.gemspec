@@ -96,7 +96,8 @@
   lib/rudy/routines/release.rb
   lib/rudy/routines/shutdown.rb
   lib/rudy/routines/startup.rb
-  lib/rudy/scm/svn.rb
+  lib/rudy/vcs/svn.rb
+  lib/rudy/vcs/git.rb
   lib/rudy/utils.rb
   lib/storable.rb
   lib/sysinfo.rb

@@ -82,7 +82,7 @@ machines do
   # scripts. The config contained in this block is made available
   # those scripts in the form of a yaml file. The file is called
   # rudy-config.yml. 
-  config do
+  config do                 
     dbmaster 'localhost'
     newparam 573114
   end
@@ -92,29 +92,35 @@ end
 
 # ----------------------------------------------------------- ROUTINES --------
 # The routines block describes the repeatable processes for each machine group.
+# To run a routine, specify its name on the command-line: rudy startup
 routines do
   
-  env :stage do
-    role :app do
-      
-      # This routine will be executed when you run "rudy startup"
-      startup do        
-        disks do
-          # Rudy creates an EBS volume for each instance, attaches
-          # it, gives it a filesystem, and mounts it. 
-          #create "/rudy/disk1"
+  env :stage do                       # We'll define routines for the
+    role :app do                      # stage-app machine group
+
+      startup do                      # $ rudy startup
+        
+        adduser :rudy                 # Create a user called "rudy"
+        authorize :rudy               # Enable passwordless logins as rudy
+        
+        disks do                      # Define EBS volume routines
+          create "/rudy/disk1"        # Create an EBS volume, attach it, give
+        end                           # it a filesystem, and mount it.
+        
+        after :rudy do                # Run remote SSH commands after startup.
+          mkdir :p, "great"           # $ mkdir -p great
+          touch "great/scott"         # $ touch great/scott
+          ls :l, :a                   # $ ls -l -a
         end
-        # You can execute a shell command on each instance after
-        # it's created. This touch command will run as root.
-        after :root => "touch /rudy/disk1/rudy-was-here"
       end
       
-      # This routine will be executed when you run "rudy shutdown"
-      shutdown do
-        before :root => '/a/nonexistent/script'
+      shutdown do                     # $ rudy shutdown
+        
+        before :root do
+        end
+        
         disks do
-          # Rudy unmounts the EBS volume and deletes it. Careful! 
-          #destroy "/rudy/disk1"
+          destroy "/rudy/disk1"       # Unmount and destroy the EBS volume
         end
       end
       
@@ -124,10 +130,10 @@ end
 
 
 # ----------------------------------------------------------- COMMANDS --------
-# The commands block defines shell commands to be allowed or disallowed. These
-# shells commands are the ones available in routine blocks. The default list is
-# defined by Rye::Cmd. 
+# The commands block defines shell commands to be allowed or denied from the 
+# default list defined by Rye::Cmd (Rudy executes all SSH commands via Rye).
+# The shells commands are 
 commands do
   allow :mongrel_rails
-  disallow :ps
+  deny :ps
 end

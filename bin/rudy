@@ -23,71 +23,133 @@ require 'rudy/cli'
 # Command-line interface for /bin/rudy
 class RudyCLI < Rudy::CLI::Base
   
+  debug :on
+  default :machines
+  trawler :passthrough
+  
   # ------------------------------------------  RUDY GLOBALS  --------
   # ------------------------------------------------------------------
   
   global :e, :environment, String, "Connect to the specified environment (ie: #{Rudy::DEFAULT_ENVIRONMENT})"
   global :r, :role, String, "Connect to a machine with the specified role (ie: #{Rudy::DEFAULT_ROLE})"
   global :p, :position, String, "Position in the machine in its group (ie: #{Rudy::DEFAULT_POSITION})"
-  
-  
 
-  # ---------------------------------  RUDY MACHINE COMMANDS  --------
+
+  # ------------------------------------------  RUDY OBJECTS  --------
   # ------------------------------------------------------------------
 
-
-  #about "Machine Status"
-  #usage "rudy [global options] status [-g group-name] [-s state] [--all] [instance-ID]"
-  #option :g, :group, String, "A security group name"
-  #option :s, :state, String, "Machine state. One of: running (default), pending, terminated"
-  #option :l, :all, "Show all machines in this group, regardless of state."
-  #argv :awsid
-  #command :status => Rudy::CLI::Machines
-  #
-  #usage "rudy [global options] connect [-g group-name] [-i instance-ID] [cmd]"
-  #about "Open an SSH connection"
-  #option :print, "Only print the SSH command, don't connect"
-  #option :g, :group, String, "A security group name"
-  #option :i, :awsid, String, "An instance ID"
-  #argv :cmd
-  #command :connect => Rudy::CLI::Machines 
-  #command_alias :connect, :ssh
-  #
-  #usage "rudy [global options] copy [-p] [-r] source target"
-  #about "Copy files to or from machines. NOTE: You must use quotes when using a tilda for your remote dir ('~/')."
-  #option :r, :recursive, "Recursively copy entire directories"
-  #option :p, :preserve, "Preserve atimes and ctimes."
-  #option :d, :download, "Download FROM the remote machine to the local machine"
-  #option :print, "Only print the SSH command, don't connect"
-  #option :g, :group, String, "A security group name"
-  #option :i, :awsid, String, "An instance ID"
-  #command :copy => Rudy::CLI::Machines
-  #command_alias :copy, :scp
-  #command_alias :copy, :upload
-  #command_alias :copy, :download
-
-
-
-
-  # --------------------------------  MISCELLANEOUS COMMANDS  --------
+  #usage "rudy [global options] backups [-C] [disk name]"
+  #about "Manage Backups"
+  #option :s, :snapshot, String, "Create a backup entry from an existing snapshot"
+  #action :Z, :sync, "Check for and delete backup metadata with no snapshot. DOES NOT delete snapshots."
+  ##action :T, :tidy, "Tidy existing backups"
+  #action :D, :destroy, "Destroy a backup and DELETE its snapshots."
+  #action :C, :create, "Create a backup"
+  #argv :disk
+  #command :'backup' => Rudy::CLI::Backups
+  #command_alias :backup, :bu
+  
+  about "Manage Machines"
+  action :W, :wash, "Wash machine metadata."
+  command :machines => Rudy::CLI::Machines
+  command_alias :machines, :m
+  
+  about "Manage Disks"
+  action :W, :wash, "Wash disk metadata."
+  command :disks => Rudy::CLI::Disks
+  command_alias :disks, :d
+  
+  about "Log in to a machine"
+  command :ssh => Rudy::CLI::Machines
+  
+  #about "Open the machine in your default browser (OSX only)"
+  #option :s, :https, "Use HTTPS"
+  #option :p, :port, Integer, "Port"
+  #command :open => Rudy::CLI::Candy
+  
+    
+  # -----------------------------------------  RUDY ROUTINES  --------
   # ------------------------------------------------------------------
   
+  # A "do nothing" routine. Passthrough simply executes a routine
+  # config block. Drydock's trawler uses this for unknown commands.
+  about "A skeleton routine"
+  command :passthrough => Rudy::CLI::Routines
+
+  about "Startup a machine group"
+  usage "rudy startup"
+  command :startup => Rudy::CLI::Routines
+  command_alias :startup, :s
+
+  about "Shutdown a machine group"
+  usage "rudy shutdown"
+  command :shutdown => Rudy::CLI::Routines
+  
+  about "Create a release"
+  usage "rudy release"
+  command :release => Rudy::CLI::Routines
+  command_alias :release, :r
+  
+  #about "Update the release currently running in a machine group"
+  #command :rerelease => Rudy::CLI::Routines
+  #command_alias :rerelease, :rere
+
+  #about "Deploy disk snapshots from one machine to another"
+  #command :deploy => Rudy::CLI::Routines
+  
+
+  # ------------------------------------  RUDY MISCELLANEOUS  --------
+  # ------------------------------------------------------------------
+    
+  usage "rudy [-f config-file] config [param-name]"
+  about "Check Rudy configuration."
+  option :l, :all, "Display all configs for all machines"
+  option :commands, "Display commands configuration"
+  option :defaults, "Display machines configuration"
+  option :accounts, "Display machines configuration"
+  option :routines, "Display routines configuration"
+  option :script, "Output configuration identical to what is provided to scripts called in routines"
+  option :project, "Output a skeleton Rudyfile"
+  #option :d, :defaults, "Display the default value for the supplied parameter"
+  #option :g, :group, String, "Display configuration for a specific group"
+  argv :name
+  command :config => Rudy::CLI::Config
+  
+  
+  about "Initialize Rudy configuration"
+  command :init do |obj|
+  
+    unless File.exists?(Rudy::CONFIG_FILE)
+      Rudy::Config.init_config_dir
+    end
+  
+    begin
+
+      unless Rudy::Huxtable.domain_exists?
+        puts "Creating SimpleDB domain #{Rudy::Huxtable.domain}"
+        Rudy::Huxtable.create_domain
+        puts "Initialized"
+      else
+        puts "Already Initialized"
+      end
+    
+    rescue Rudy::AWS::SDB::NoSecretKey, 
+           Rudy::AWS::SDB::NoAccessKey, 
+           Rudy::NoConfig => ex
+      puts "AWS credentials must be configured to continue."
+      puts "You can modify these in #{Rudy::CONFIG_FILE}"
+      exit 1
+    end
+  
+    obj.global.quiet = true  # don't print elapsed time
+  end
+
   about "Display time (in UTC)"
   option :l, :local, "Display local time"
   command :time do |obj|
     t = obj.option.local ? Time.now : Time.now.utc
     puts '%s' % t.strftime("%Y-%m-%d %T %Z (%z)")
   end
-  
-  usage "rudy [-f config-file] config [param-name]"
-  about "Check Rudy configuration."
-  option :l, :all, "Display configs for all machines"
-  option :s, :script, "Output configuration identical to what is provided to scripts called in routines"
-  option :p, :project, "Output a skeleton Rudyfile"
-  #option :d, :defaults, "Display the default value for the supplied parameter"
-  #option :g, :group, String, "Display configuration for a specific group"
-  argv :name
-  command :config => Rudy::CLI::Config
 
   usage "rudy myaddress [-i] [-e]"
   about "Displays you current internal and external IP addresses"
@@ -139,124 +201,6 @@ class RudyCLI < Rudy::CLI::Base
       puts "#{Rudy::CONFIG_FILE} already exists"
     end
   end
-
-
-  about "Initialize Rudy configuration"
-  command :init do |obj|
-  
-    unless File.exists?(Rudy::CONFIG_FILE)
-      Rudy::Config.init_config_dir
-    end
-  
-    begin
-
-      unless Rudy::Huxtable.domain_exists?
-        puts "Creating SimpleDB domain #{Rudy::Huxtable.domain}"
-        Rudy::Huxtable.create_domain
-        puts "Initialized"
-      else
-        puts "Already Initialized"
-      end
-    
-    rescue Rudy::AWS::SDB::NoSecretKey, 
-           Rudy::AWS::SDB::NoAccessKey, 
-           Rudy::NoConfig => ex
-      puts "AWS credentials must be configured to continue."
-      puts "You can modify these in #{Rudy::CONFIG_FILE}"
-      exit 1
-    end
-  
-    obj.global.quiet = true  # don't print elapsed time
-  end
-
-
-  # ---------------------------------  RUDY MANAGER COMMANDS  --------
-  # ------------------------------------------------------------------
-
-  #usage "rudy [global options] backups [-C] [disk name]"
-  #about "Manage Backups"
-  #option :s, :snapshot, String, "Create a backup entry from an existing snapshot"
-  #action :Z, :sync, "Check for and delete backup metadata with no snapshot. DOES NOT delete snapshots."
-  ##action :T, :tidy, "Tidy existing backups"
-  #action :D, :destroy, "Destroy a backup and DELETE its snapshots."
-  #action :C, :create, "Create a backup"
-  #argv :disk
-  #command :'backup' => Rudy::CLI::Backups
-  #command_alias :backup, :bu
-  
-  about "Startup a machine group"
-  usage "rudy startup"
-  command :startup => Rudy::CLI::Routines
-  command_alias :startup, :s
-
-  about "Shutdown a machine group"
-  usage "rudy shutdown"
-  command :shutdown => Rudy::CLI::Routines
-  
-  about "Create a release"
-  usage "rudy release"
-  command :release => Rudy::CLI::Routines
-  command_alias :release, :r
-
-  about "Manage Machines"
-  action :W, :wash, "Wash machine metadata."
-  command :machines => Rudy::CLI::Machines
-  command_alias :machines, :m
-  
-  about "Log in to a machine"
-  command :ssh => Rudy::CLI::Machines
-  
-  about "Manage Disks"
-  action :W, :wash, "Wash disk metadata."
-  command :disks => Rudy::CLI::Disks
-  command_alias :disks, :d
-  
-  # --------------------------  RUDY RELEASE/DEPLOY COMMANDS  --------
-  # ------------------------------------------------------------------
-
-  #about "Release to a Machine Group"
-  #option :g, :group, String, "A security group name"
-  #option :s, :switch, "Switch to the release branch/tag"
-  #option :m, :msg, String, "A short release note"
-  #command :release => Rudy::CLI::Release
-
-  #about "Update the release currently running in a machine group"
-  #command :rerelease => Rudy::CLI::Release
-  #command_alias :rerelease, :rere
-
-  #about "Deploy disk snapshots from one machine to another"
-  #command :deploy => Rudy::CLI::Deploy
-
-
-  #about "Shutdown a Machine Group"
-  #usage "rudy [global options] shutdown [-g group-name] [instance-ID]"
-  #option :g, :group, String, "A security group name"
-  #argv :awsid
-  #command :shutdown => Rudy::CLI::Routines
-  #
-  #
-  #about "Start a Machine Group"
-  #usage "rudy [global options] startup [-g group-name] [-i image-ID]"
-  #option :ami, String, "EC2 image ID (AMI)"
-  #option :g, :group, String, "A security group name"
-  #command :startup => Rudy::CLI::Routines
-  #command_alias :startup, :start
-
-  #about "Restart a Machine Group"
-  #option :g, :group, String, "A security group name"
-  #argv :awsid
-  #command :restart => Rudy::CLI::Routines
-  #
-
-  command :passthrough => Rudy::CLI::Routines
-  command :open => Rudy::CLI::Candy
-  
-  # -------------------------------------------  UGLY STUFFS  --------
-  # ------------------------------------------------------------------
-  debug :on
-  default :machines
-  trawler :passthrough
-
   
 end
 
@@ -266,11 +210,14 @@ end
 # will run after Rye shuts down the ssh-agent. 
 begin
   Drydock.run!(ARGV, STDIN) if Drydock.run? && !Drydock.has_run?
-rescue Drydock::ArgError, Drydock::OptError=> ex
+rescue Drydock::ArgError, Drydock::OptError => ex
   STDERR.puts ex.message
   STDERR.puts ex.usage
+rescue Drydock::InvalidArgument => ex
+  STDERR.puts ex.message  
 rescue Rudy::Error => ex
   STDERR.puts ex.message
+  STDERR.puts ex.backtrace if Drydock.debug?
 rescue => ex
   STDERR.puts "ERROR (#{ex.class.to_s}): #{ex.message}"
   STDERR.puts ex.backtrace if Drydock.debug?

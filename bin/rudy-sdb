@@ -51,11 +51,14 @@ end
 # will run after Rye shuts down the ssh-agent. 
 begin
   Drydock.run!(ARGV, STDIN) if Drydock.run? && !Drydock.has_run?
-rescue Drydock::ArgError, Drydock::OptError=> ex
+rescue Drydock::ArgError, Drydock::OptError => ex
   STDERR.puts ex.message
   STDERR.puts ex.usage
+rescue Drydock::InvalidArgument => ex
+  STDERR.puts ex.message  
 rescue Rudy::Error => ex
   STDERR.puts ex.message
+  STDERR.puts ex.backtrace if Drydock.debug?
 rescue => ex
   STDERR.puts "ERROR (#{ex.class.to_s}): #{ex.message}"
   STDERR.puts ex.backtrace if Drydock.debug?
@@ -65,6 +68,4 @@ rescue Interrupt
 rescue SystemExit
   # Don't balk
 end
-
-
 

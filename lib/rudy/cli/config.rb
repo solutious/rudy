@@ -31,54 +31,34 @@ module Rudy
       #     $ rudy config --all
       #
       def config
-        return if @@config.nil? 
+        # if Rudy.in_situ? # TODO: do something intelligent when running on EC2
         
+        if @@config.nil? || @@config.empty?
+          return if @@global.quiet
+          raise Rudy::NoConfig
+        end
+
+        outform = @@global.format == :json ? :to_json : :to_yaml
         
-        @option.group ||= [@@global.environment, @@global.role].join(Rudy::DELIM)
-        
-        return if @@config.empty?
-        
-        # We need to check whether we're running on a human's computer
-        # or within EC2 (we call that running "in-situ"). The userdata
-        # available when running in-situ is in a different format.
-        if Rudy.in_situ?
-          puts "TODO: do something intelligent with config when running on EC2"
-        else
-          if @option.all
-            puts "# ACCOUNTS: not displayed"
-            if @@config.machines?
-              puts "# MACHINES: "
-              y @@config.machines.to_hash 
-            end
-            if @@config.routines?
-              puts "# ROUTINES: "
-              y @@config.routines.to_hash 
-            end
-          elsif @option.defaults?
-            y @@config.defaults.to_hash
-          elsif @option.script
-            y fetch_script_config.to_hash
-          elsif @option.project
-            rf = File.join(RUDY_HOME, 'Rudyfile')
-            raise "Cannot find: #{rf}" unless File.exists?(rf)
-            puts File.read(rf)
-          else
-            zon, env, rol = @@global.zone, @@global.environment, @@global.role
-            usr, att = @@global.user, @argv.name
-            val = @@config.machines.find_deferred(zon, env, rol, usr, att) || ''
-            puts (val.is_a?(String)) ? val : val.to_hash.to_yaml
-          end
+        types = @option.marshal_dump.keys & @@config.keys # Intersections only
+        types = @@config.keys if @option.all
+        types = [:machines] if types.empty?
           
-          #name = @argv.first
-          #if name && @@config.userdata.has_key?(which) 
-          #  value = @@config.userdata[which][name.to_s]
-          #  puts value if value
-          #elsif @option.all
-          #  puts @@config.to_yaml
-          #else
-          #  value = @@config.userdata[which] 
-          #  puts value.to_yaml if value
-          #end
+        if @option.project
+          rf = File.join(RUDY_HOME, 'Rudyfile')
+          raise "Cannot find: #{rf}" unless File.exists?(rf)
+          puts File.read(rf)
+          
+        elsif @option.script
+          conf = fetch_script_config
+          puts conf.to_hash.send(outform) if conf
+        else
+          puts "# ACCOUNTS: [not displayed]" if types.delete(:accounts)
+          types.each do |conftype|
+            puts "# #{conftype.to_s.upcase}"
+            next unless @@config[conftype]  # Nothing to output
+            puts @@config[conftype].to_hash.send(outform)
+          end
         end
         
       end

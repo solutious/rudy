@@ -5,14 +5,14 @@ module Rudy
   class Config < Caesars::Config
     require 'rudy/config/objects'
     
-    dsl Rudy::Config::Accounts::DSL
-    dsl Rudy::Config::Defaults::DSL
-    dsl Rudy::Config::Routines::DSL
-    dsl Rudy::Config::Machines::DSL
-    dsl Rudy::Config::Networks::DSL
-    dsl Rudy::Config::Controls::DSL
-    dsl Rudy::Config::Commands::DSL
-    dsl Rudy::Config::Services::DSL
+    dsl Rudy::Config::Accounts::DSL    
+    dsl Rudy::Config::Defaults::DSL    
+    dsl Rudy::Config::Routines::DSL    # Organized processes
+    dsl Rudy::Config::Machines::DSL    # Organized instances
+    dsl Rudy::Config::Commands::DSL    # Custom SSH commands
+    #dsl Rudy::Config::Networks::DSL    # Network design
+    #dsl Rudy::Config::Controls::DSL    # Network access
+    #dsl Rudy::Config::Services::DSL    # Stuff running on ports
     
     # TODO: auto-generate in caesars
     def accounts?; self.respond_to?(:accounts) && !self[:accounts].nil?; end
@@ -37,7 +37,18 @@ module Rudy
       #  self.accounts.aws.privatekey &&= File.expand_path(self.accounts.aws.privatekey)
       #end
       
-      @commands.postprocess if @commands  # this will only run once
+      # The commands config modifies the way the routines configs
+      # should be parsed. This happens in the postprocess method
+      # we call here. We can't guarantee this will run before the
+      # routines config is loaded so this postprocess method will
+      # tell us if we need to reload all configs just to be sure.
+      # Commands.postprocess will run only once after which it'll
+      # always return false. 
+      if @commands 
+        if @commands.postprocess 
+          #refresh if NOT_PROCESSED_CONFIG_YET
+        end
+      end
       
     end
     

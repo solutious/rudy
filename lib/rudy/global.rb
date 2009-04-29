@@ -44,7 +44,7 @@ module Rudy
       @verbose ||= 0
       @nocolor ||= false
       @quiet ||= false
-      @format ||= 'string' # as in, to_s
+      @format ||= :string # as in, to_s
       @print_header = true if @print_header == nil
       @yes = false if @yes.nil?
     end
@@ -92,6 +92,7 @@ module Rudy
       @cert &&= File.expand_path(@cert)
       @privatekey &&= File.expand_path(@privatekey)
       @position &&= @position.to_s.rjust(2, '0')  
+      @format &&= @format.to_sym rescue nil
       
       String.disable_color if @nocolor
       Rudy.enable_quiet if @quiet

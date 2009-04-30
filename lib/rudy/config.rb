@@ -40,18 +40,10 @@ module Rudy
       # should be parsed. This happens in the postprocess method
       # we call here. We can't guarantee this will run before the
       # routines config is loaded so this postprocess method will
-      # run a refresh...
-      # WARNING: the refresh does not work b/c all configuration
-      # is reloaded, included the commands config so the routines
-      # config would again be loaded before the commands. For now
-      # we have to ask users to put commands config first. 
-      # 
-      # if @commands 
-      #   @commands.postprocess 
-      #   refresh unless @commands_processed
-      #   @commands_processed = true
-      # end
-      @commands.postprocess if @commands   # This will only run once
+      # raise a Caesars::Config::ForceRefresh exception if that's
+      # the case. Rudy::Config::Commands knows to only raise the
+      # exception one time (using a boolean flag in a class var).
+      @commands.postprocess if @commands
     end
     
     def look_and_load(adhoc_path=nil)

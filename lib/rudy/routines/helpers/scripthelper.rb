@@ -53,8 +53,6 @@ module Rudy; module Routines;
     def execute_command?(timing, routine)
       hasconf = (routine.is_a?(Caesars::Hash) && routine.has_key?(timing))
       return false unless hasconf
-      p "#{timing}: #{routine[timing].deepest_point}"
-      p routine[timing]
       routine[timing].each_pair do |user,conf|
         if conf.empty? 
           STDERR.puts "Empty #{timing} config for #{user}"

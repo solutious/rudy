@@ -94,10 +94,10 @@ end
 # ----------------------------------------------------------- COMMANDS --------
 # The commands block defines shell commands to be allowed or denied from the 
 # default list defined by Rye::Cmd (Rudy executes all SSH commands via Rye).
-# The shells commands are 
+# Commands can have any name except for keywords already used by Rudy. 
 commands do
-  allow :mongrel_rails
-  deny :ps
+  allow :mysqld_initd, "/etc/init.d/mysqld"
+  deny :kill
 end
 
 # ----------------------------------------------------------- ROUTINES --------
@@ -116,7 +116,7 @@ routines do
           create "/rudy/disk1"        # Create an EBS volume, attach it, give
         end                           # it a filesystem, and mount it.
         
-        after :rudy do                # Run remote SSH commands after startup.
+        after :rudy do                # Run remote SSH commands after startup
           mkdir :p, "great"           # $ mkdir -p great
           touch "great/scott"         # $ touch great/scott
           ls :l, :a                   # $ ls -l -a
@@ -124,11 +124,18 @@ routines do
       end
       
       shutdown do                     # $ rudy shutdown
-        before :root do
+        before :root do               # Run remote SSH commands before shutdown
+          mysqld_initd
         end
         
         disks do
           destroy "/rudy/disk1"       # Unmount and destroy the EBS volume
+        end
+      end
+      
+      anything do                     # $ rudy anything
+        before :root do               # Run remote SSH commands before shutdown
+          mysqld_initd '-h'
         end
       end
       

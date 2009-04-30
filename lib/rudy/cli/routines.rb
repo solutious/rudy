@@ -54,7 +54,15 @@ module Rudy; module CLI;
     # raise an exception.
     #
     def passthrough
-      @rr.execute
+      machines = @rr.execute
+      
+      unless machines.empty?
+        puts $/, "The following machines were processed:"
+        machines.each do |machine|
+          puts machine.to_s
+        end
+      end
+      
     end
     
     def shutdown_valid?

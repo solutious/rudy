@@ -14,14 +14,13 @@ class Rudy::Config
   # important that new keywords do not conflict with existing
   # Rudy keywords. Strange things may happen!
   class Commands < Caesars
-    attr_accessor :processed
+    @@processed = false
     forced_array :allow
     forced_array :deny
     def init
       # We can't process the Rye::Cmd commands here because the
       # DSL hasn't been parsed yet so Rudy::Config.postprocess
       # called the following postprocess method after parsing.
-      @processed = false
     end
     # Process the directives specified in the commands config.
     # NOTE: This affects the processing of the routines config
@@ -33,8 +32,8 @@ class Rudy::Config
     # That's obviously not good enough but for now commands
     # configuration MUST be put before routines. 
     def postprocess
-      return false if @processed
-      @processed = true  # Make sure this runs only once
+      return false if @@processed
+      @@processed = true  # Make sure this runs only once
       
       # Parses:
       # commands do
@@ -59,7 +58,7 @@ class Rudy::Config
         # may need elsewhere in Rudy. Forced ignore ensures
         # the config is not stored anyhow.
       end
-      true
+      raise Caesars::Config::ForceRefresh.new(:routines)
     end
   end
   
@@ -88,6 +87,9 @@ class Rudy::Config
     forced_hash :git
     forced_hash :svn
     
+    def init
+      
+    end
     
     # Add remote shell commands to the DSL as forced Arrays. 
     # Example:

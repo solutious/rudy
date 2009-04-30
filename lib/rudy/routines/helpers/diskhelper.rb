@@ -54,13 +54,13 @@ module Rudy; module Routines;
         
         print "Creating volume... "
         disk.create
-        Rudy::Utils.waiter(2, 60, STDOUT, disk.awsid) { 
+        Rudy::Utils.waiter(2, 60, STDOUT, "#{disk.awsid}\n") { 
           disk.available?
         }
         
         print "Attaching #{disk.awsid} to #{@machine.awsid}... "
         disk.attach(@machine.awsid)
-        Rudy::Utils.waiter(2, 60, STDOUT) { 
+        Rudy::Utils.waiter(2, 60, STDOUT, "\n") { 
           disk.attached?
         }
         

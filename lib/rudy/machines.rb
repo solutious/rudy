@@ -201,7 +201,9 @@ module Rudy
       machines = []
       current_machine_count.times do  |i|
         machine = Rudy::Machine.new
-        puts "Starting %s" % machine.name
+        
+        #puts "Starting %s" % machine.name
+        
         machine.start
         machines << machine
       end
@@ -215,7 +217,7 @@ module Rudy
       raise MachineGroupNotRunning, current_machine_group unless running?
       list.each { |m| each_mach.call(m); } if each_mach
       list do |mach|
-        puts "Destroying #{mach.name}"
+        #puts "Destroying #{mach.name}"
         mach.destroy
       end
     end

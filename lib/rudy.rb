@@ -27,6 +27,7 @@ require 'net/scp'
 require 'net/ssh/multi'
 require 'net/ssh/gateway'
 
+require 'rudy/mixins/hash'
 
 
 # = Rudy

@@ -12,11 +12,12 @@ module Rudy; module Routines;
     @@script_config_file = "rudy-config.yml"
     
     def before_local(routine, sconf, rbox)
+      
       # before_local generally doesn't take a user name like the remote
       # before block so we add it here (unless the user did specify it)
       routine[:before_local] = { 
         rbox.user.to_sym => routine.delete(:before_local) 
-      } unless routine.has_key?(rbox.user.to_sym)
+      } unless routine.has_key?(rbox.user.to_sym) # use routine[timing].deepest_point ?
       execute_command(:before_local, routine, sconf, 'localhost', rbox)
     end
     def before_local?(routine); execute_command?(:before_local, routine); end
@@ -52,6 +53,8 @@ module Rudy; module Routines;
     def execute_command?(timing, routine)
       hasconf = (routine.is_a?(Caesars::Hash) && routine.has_key?(timing))
       return false unless hasconf
+      p "#{timing}: #{routine[timing].deepest_point}"
+      p routine[timing]
       routine[timing].each_pair do |user,conf|
         if conf.empty? 
           STDERR.puts "Empty #{timing} config for #{user}"

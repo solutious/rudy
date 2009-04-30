@@ -19,7 +19,7 @@ module Rudy; module Routines;
         machines << machine
       end
       
-      puts "The following machines were processed:"
+      puts $/, "The following machines were processed:"
       machines.each do |machine|
         puts machine.to_s
       end

@@ -90,6 +90,16 @@ machines do
   
 end
 
+
+# ----------------------------------------------------------- COMMANDS --------
+# The commands block defines shell commands to be allowed or denied from the 
+# default list defined by Rye::Cmd (Rudy executes all SSH commands via Rye).
+# The shells commands are 
+commands do
+  allow :mongrel_rails
+  deny :ps
+end
+
 # ----------------------------------------------------------- ROUTINES --------
 # The routines block describes the repeatable processes for each machine group.
 # To run a routine, specify its name on the command-line: rudy startup
@@ -99,7 +109,6 @@ routines do
     role :app do                      # stage-app machine group
 
       startup do                      # $ rudy startup
-        
         adduser :rudy                 # Create a user called "rudy"
         authorize :rudy               # Enable passwordless logins as rudy
         
@@ -115,7 +124,6 @@ routines do
       end
       
       shutdown do                     # $ rudy shutdown
-        
         before :root do
         end
         
@@ -128,12 +136,3 @@ routines do
   end
 end
 
-
-# ----------------------------------------------------------- COMMANDS --------
-# The commands block defines shell commands to be allowed or denied from the 
-# default list defined by Rye::Cmd (Rudy executes all SSH commands via Rye).
-# The shells commands are 
-commands do
-  allow :mongrel_rails
-  deny :ps
-end

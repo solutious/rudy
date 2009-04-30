@@ -16,6 +16,7 @@ class Rudy::Config
   class Commands < Caesars
     attr_accessor :processed
     forced_array :allow
+    forced_array :deny
     def init
       # We can't process the Rye::Cmd commands here because the
       # DSL hasn't been parsed yet so Rudy::Config.postprocess
@@ -29,8 +30,8 @@ class Rudy::Config
     # files via a glob (globs are alphabetized and "commands"
     # comes before "routines"). 
     #
-    # That's obviously not good enough so we return a true or
-    # false value whether all configuration should be refreshed.
+    # That's obviously not good enough but for now commands
+    # configuration MUST be put before routines. 
     def postprocess
       return false if @processed
       @processed = true  # Make sure this runs only once
@@ -51,9 +52,9 @@ class Rudy::Config
           def #{cmd}(*args); cmd(:'#{path}', *args); end
         }
       end
-      self.deny = [self.deny].flatten.compact
+      # We deny commands by telling routines to not parse the given keywords
       self.deny.each do |cmd|
-        Rudy::Config::Routines.forced_ignore cmd
+        Rudy::Config::Routines.forced_ignore cmd.first # cmd is a forced array
         # We don't remove the method from Rye:Cmd because we 
         # may need elsewhere in Rudy. Forced ignore ensures
         # the config is not stored anyhow.
@@ -96,7 +97,7 @@ class Rudy::Config
     # specifically shell commands that have the same name as a keyword
     # we want to use in the DSL. This includes commands that were added
     # to Rye::Cmd before Rudy is 'require'd. 
-    Rye::Cmd.instance_methods.each do |cmd|
+    Rye::Cmd.instance_methods.sort.each do |cmd|
       forced_array cmd
     end
     

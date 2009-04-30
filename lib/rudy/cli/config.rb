@@ -52,6 +52,7 @@ module Rudy
         elsif @option.script
           conf = fetch_script_config
           puts conf.to_hash.send(outform) if conf
+          
         else
           puts "# ACCOUNTS: [not displayed]" if types.delete(:accounts)
           types.each do |conftype|

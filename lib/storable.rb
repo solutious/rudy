@@ -16,7 +16,7 @@ class Storable
   unless defined?(SUPPORTED_FORMATS) # We can assume all are defined
     VERSION = 5
     NICE_TIME_FORMAT  = "%Y-%m-%d@%H:%M:%S".freeze 
-    SUPPORTED_FORMATS = %w{tsv csv yaml json s string}.freeze 
+    SUPPORTED_FORMATS = [:tsv, :csv, :yaml, :json, :s, :string].freeze 
   end
   
   # This value will be used as a default unless provided on-the-fly.
@@ -84,6 +84,7 @@ class Storable
 
   # Dump the object data to the given format. 
   def dump(format=nil, with_titles=false)
+    format &&= format.to_sym
     format ||= 's' # as in, to_s
     raise "Format not defined (#{format})" unless SUPPORTED_FORMATS.member?(format)
     send("to_#{format}", with_titles) 
@@ -106,6 +107,7 @@ class Storable
   def to_file(file_path=nil, with_titles=true)
     raise "Cannot store to nil path" if file_path.nil?
     format = File.extname(file_path).tr('.', '')
+    format &&= format.to_sym
     format ||= @format
     Storable.write_file(file_path, dump(format, with_titles))
   end

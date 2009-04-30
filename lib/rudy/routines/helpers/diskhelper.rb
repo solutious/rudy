@@ -54,13 +54,13 @@ module Rudy; module Routines;
         
         print "Creating volume... "
         disk.create
-        Rudy::Utils.waiter(2, 60, STDOUT, disk.awsid, nil) { 
+        Rudy::Utils.waiter(2, 60, STDOUT, disk.awsid) { 
           disk.available?
         }
         
         print "Attaching #{disk.awsid} to #{@machine.awsid}... "
         disk.attach(@machine.awsid)
-        Rudy::Utils.waiter(2, 60, STDOUT, "done", nil) { 
+        Rudy::Utils.waiter(2, 60, STDOUT) { 
           disk.attached?
         }
         
@@ -119,7 +119,7 @@ module Rudy; module Routines;
         if disk.attached?
           puts "Detaching #{disk.awsid}... "
           disk.detach 
-          Rudy::Utils.waiter(2, 60, STDOUT, 'done', nil) { 
+          Rudy::Utils.waiter(2, 60, STDOUT) { 
             disk.available? 
           }
           sleep 0.5

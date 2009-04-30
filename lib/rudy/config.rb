@@ -14,15 +14,14 @@ module Rudy
     #dsl Rudy::Config::Controls::DSL    # Network access
     #dsl Rudy::Config::Services::DSL    # Stuff running on ports
     
-    # TODO: auto-generate in caesars
-    def accounts?; self.respond_to?(:accounts) && !self[:accounts].nil?; end
-    def defaults?; self.respond_to?(:defaults) && !self[:defaults].nil?; end
-    def machines?; self.respond_to?(:machines) && !self[:machines].nil?; end
-    def routines?; self.respond_to?(:routines) && !self[:routines].nil?; end
-    def networks?; self.respond_to?(:networks) && !self[:networks].nil?; end
-    def controls?; self.respond_to?(:controls) && !self[:controls].nil?; end
-    def commands?; self.respond_to?(:commands) && !self[:commands].nil?; end
-    def services?; self.respond_to?(:services) && !self[:services].nil?; end
+    def accounts?; self.respond_to?(:accounts) && !self[:accounts].nil?; end #a
+    def defaults?; self.respond_to?(:defaults) && !self[:defaults].nil?; end #u
+    def machines?; self.respond_to?(:machines) && !self[:machines].nil?; end #t
+    def routines?; self.respond_to?(:routines) && !self[:routines].nil?; end #o
+    def networks?; self.respond_to?(:networks) && !self[:networks].nil?; end #g
+    def controls?; self.respond_to?(:controls) && !self[:controls].nil?; end #e
+    def commands?; self.respond_to?(:commands) && !self[:commands].nil?; end #n
+    def services?; self.respond_to?(:services) && !self[:services].nil?; end #!
     
     # This method is called by Caesars::Config.refresh for every DSL 
     # file that is loaded and parsed. If we want to run processing
@@ -41,15 +40,18 @@ module Rudy
       # should be parsed. This happens in the postprocess method
       # we call here. We can't guarantee this will run before the
       # routines config is loaded so this postprocess method will
-      # tell us if we need to reload all configs just to be sure.
-      # Commands.postprocess will run only once after which it'll
-      # always return false. 
-      if @commands 
-        if @commands.postprocess 
-          #refresh if NOT_PROCESSED_CONFIG_YET
-        end
-      end
-      
+      # run a refresh...
+      # WARNING: the refresh does not work b/c all configuration
+      # is reloaded, included the commands config so the routines
+      # config would again be loaded before the commands. For now
+      # we have to ask users to put commands config first. 
+      # 
+      # if @commands 
+      #   @commands.postprocess 
+      #   refresh unless @commands_processed
+      #   @commands_processed = true
+      # end
+      @commands.postprocess if @commands   # This will only run once
     end
     
     def look_and_load(adhoc_path=nil)
@@ -101,8 +103,7 @@ module Rudy
             end
           end
           
-          # Global Defaults 
-          # Define the values to use unless otherwise specified on the command-line. 
+          # Global Defaults
           defaults do
             region :"us-east-1" 
             zone :"us-east-1b"

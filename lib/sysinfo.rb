@@ -265,6 +265,16 @@ class SystemInfo < Storable
     end
   end
   
+  def shell
+    if @os == :unix
+      (ENV['SHELL'] || 'bash').to_sym
+    elsif @os == :win32
+      :dos
+    else
+      raise "paths not implemented for: #{@os}"
+    end
+  end
+  
   # Print friendly system information. 
   def to_s
     sprintf("Hostname: %s#{$/}IP Address: %s#{$/}System: %s#{$/}Uptime: %.2f (hours)#{$/}Ruby: #{ruby.join('.')}", 

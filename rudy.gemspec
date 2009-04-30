@@ -2,7 +2,7 @@
 	s.name = "rudy"
   s.rubyforge_project = 'rudy'
 	s.version = "0.6.8"
-	s.summary = "Rudy: Not your grandparent's deployment tool."
+	s.summary = "Rudy: Not your grandparents' EC2 deployment tool."
 	s.description = s.summary
 	s.author = "Delano Mandelbaum"
 	s.email = "delano@solutious.com"
@@ -16,7 +16,7 @@
   
   s.add_dependency 'drydock', '>= 0.6.0'  
   s.add_dependency 'caesars', '>= 0.5.6'  
-  s.add_dependency 'rye', '>= 0.6.0'
+  s.add_dependency 'rye', '>= 0.6.2'
   
   s.add_dependency 'grit'
   s.add_dependency 'echoe'

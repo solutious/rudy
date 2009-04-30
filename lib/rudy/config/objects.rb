@@ -46,9 +46,17 @@ class Rudy::Config
       self.allow.each do |cmd|
         cmd, path, *args = *cmd
         path ||= cmd # If no path, we can assume cmd is in the remote path
+        args.collect! do |arg| 
+          if ([Symbol, String] & [arg.class]).empty?
+            raise ArgumentError, 
+                  "Found #{arg.class} for #{cmd} (Symbols, Strings only)"
+          end
+          arg.is_a?(Symbol) ? ":#{arg}" : "'#{arg}'"
+        end
+        hard_args = args.empty? ? "*args" : "#{args.join(', ')}, *args"
         Rudy::Config::Routines.forced_array cmd
         Rye::Cmd.module_eval %Q{
-          def #{cmd}(*args); cmd(:'#{path}', *args); end
+          def #{cmd}(*args); cmd(:'#{path}', #{hard_args}); end
         }
       end
       # We deny commands by telling routines to not parse the given keywords

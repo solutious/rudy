@@ -31,7 +31,7 @@ module Rudy
         raise "Must override raise_early_exceptions"
       end
       
-      # * +machine_action+ a method on Rudy::Machines, likely one of: create, destroy, list
+      # * +machine_action+ a method on Rudy::Machines, one of: create, destroy, list
       # * +routine+ is a single routine configuration hash. REQUIRED.
       # * +routine_action+ is an optional block which represents the action
       # for a specific routine. For example, a startup routine will start
@@ -46,7 +46,8 @@ module Rudy
         
         lbox = Rye::Box.new('localhost')
         sconf = fetch_script_config
-                
+        
+        
         if Rudy::Routines::ScriptHelper.before_local?(@routine)  # before_local
           # Runs "before_local" scripts of routines config. 
           # NOTE: Does not run "before" scripts b/c there are no remote machines
@@ -87,7 +88,7 @@ module Rudy
           # :default -> leave the hostname as it is
           # Anything else other than nil -> change to that value
           hn = current_machine_hostname
-          if hn && hn != :asis
+          if hn && hn != :default
             hn = machine.name if hn == :rudy
             rbox.hostname(hn) 
           end
@@ -140,16 +141,16 @@ module Rudy
       end
       
       def task_separator(title)
-        dashes = 52 - title.size # 
+        dashes = 59 - title.size # 
         dashes = 0 if dashes < 1
         ("%s---  %s  %s" % [$/, title, '-'*dashes])
       end
       
       def machine_separator(name, awsid)
-        dashes = 59 - name.size # 
+        dashes = 80 - name.size # 
         dashes = 0 if dashes < 1
-        puts $/, '='*59
-        puts '%-53s (%s)' % [name.bright, awsid]
+        puts $/, '='*80
+        puts '%-73s (%s)' % [name.bright, awsid]
         puts
       end
       

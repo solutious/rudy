@@ -23,7 +23,7 @@ require 'rudy/cli'
 # Command-line interface for /bin/rudy
 class RudyCLI < Rudy::CLI::Base
   
-  debug :on
+  debug :off
   default :machines
   trawler :passthrough
   
@@ -211,6 +211,7 @@ end
 # will run after Rye shuts down the ssh-agent. 
 begin
   Drydock.run!(ARGV, STDIN) if Drydock.run? && !Drydock.has_run?
+
 rescue Drydock::ArgError, Drydock::OptError => ex
   STDERR.puts ex.message
   STDERR.puts ex.usage

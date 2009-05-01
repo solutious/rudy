@@ -1,6 +1,12 @@
 
 
 class Rudy::Config
+  class Error < Rudy::Error
+    def initialize(ctype, obj)
+      @ctype, @obj = ctype, obj
+    end
+    def message; "Error in #{@ctype}: #{@obj}"; end
+  end
   class Machines < Caesars; end
   class Defaults < Caesars; end
   class Networks < Caesars; end
@@ -14,6 +20,16 @@ class Rudy::Config
   # important that new keywords do not conflict with existing
   # Rudy keywords. Strange things may happen!
   class Commands < Caesars
+    class PathNotString < Rudy::Config::Error
+      def message; super << " (path must be a String)"; end
+    end
+    class ReservedKeyword < Rudy::Config::Error
+      def message; super << " (r)"; end
+    end
+    class BadArg < Rudy::Config::Error
+      def message; "Arguments for #{cmd} must be: Symbols, Strings only"; end
+    end
+      
     @@processed = false
     forced_array :allow
     forced_array :deny
@@ -34,26 +50,49 @@ class Rudy::Config
     def postprocess
       return false if @@processed
       @@processed = true  # Make sure this runs only once
-      
       # Parses:
       # commands do
       #   allow :kill 
       #   allow :custom_script, '/full/path/2/custom_script'
+      #   allow :git_clone, "/usr/bin/git", "clone"
       # end
       # 
       # * Tells Routines to force_array on the command name.
       # This is important b/c of the way we parse commands 
       self.allow.each do |cmd|
         cmd, path, *args = *cmd
-        path ||= cmd # If no path, we can assume cmd is in the remote path
+        
+        # If no path was specified, we can assume cmd is in the remote path so
+        # when we add the method to Rye::Cmd, we'll it the path is "cmd".
+        path ||= cmd.to_s
+        
+        # We cannot allow new commands to be defined that conflict use known
+        # routines keywords. This is based on keywords in the current config.
+        # NOTE: We can't check for this right now b/c the routines config
+        # won't necessarily have been parsed yet. TODO: Figure it out!
+        #if Caesars.known_symbol_by_glass?(:routines, cmd)
+        #  raise ReservedKeyword.new(:commands, cmd)
+        #end
+        
+        # The second argument must be a filesystem path
+        raise PathNotString.new(:commands, cmd) if path && !path.is_a?(String)
+        
+        # We can allow existing commands to be overridden but we
+        # print a message to STDERR so the user knows what's up.
+        STDERR.puts "Redefined #{cmd}" if Rye::Cmd.can?(cmd)
+        
+        # Insert hardcoded arguments if any were supplied. These will
+        # be sent automatically with every call to the new command.
+        # This loop prepares the hardcoded args to be passed to eval.
         args.collect! do |arg| 
-          if ([Symbol, String] & [arg.class]).empty?
-            raise ArgumentError, 
-                  "Found #{arg.class} for #{cmd} (Symbols, Strings only)"
-          end
+          klass = [Symbol, String] & [arg.class]
+          raise BadArg.new(:commands, cmd) if klass.empty?
+          # Symbols sent as Symbols, Strings as Strings
           arg.is_a?(Symbol) ? ":#{arg}" : "'#{arg}'"
         end
         hard_args = args.empty? ? "*args" : "#{args.join(', ')}, *args"
+        
+        # Command keywords must be parsed with forced_array. See ScriptHelper.
         Rudy::Config::Routines.forced_array cmd
         Rye::Cmd.module_eval %Q{
           def #{cmd}(*args); cmd(:'#{path}', #{hard_args}); end

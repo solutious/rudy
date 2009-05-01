@@ -25,7 +25,10 @@ module Rudy
       
     protected
       def init
-
+        
+        
+        Rudy::Huxtable.update_config
+        
         # The CLI wants output!
         Rudy::Huxtable.update_logger STDOUT
         

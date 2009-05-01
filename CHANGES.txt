@@ -10,9 +10,15 @@ RUDY, CHANGES
 
 #### 0.7.0 (2009-04-??) ###############################
 
-* CHANGE: Upgrade to Drydock 0.6
+* CHANGE: Upgrade to Drydock 0.6, Caesars 0.6, and Rye 0.6
+* CHANGE: Updated Routines configuration syntax for specifying shell commands 
+* ADDED: Releases via local git repository
+* ADDED: authorize and adduser directives to routines config.
+* ADDED: Improved CLI output for routines. 
+* ADDED: Commands configuration for custom SSH commands
 * ADDED: Auto-set hostname to machine name
 * ADDED: Support for arbitrary routines via passthrough
+
 
 
 #### 0.6.8 (2009-04-24) ###############################

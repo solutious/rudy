@@ -22,6 +22,7 @@ module Rudy
     # TODO: investigate @@debug bug. When this is true, Caesars.debug? returns true
     # too. It's possible this is intentional but probably not. 
     @@debug = false
+    @@abort = false
     
     @@config = Rudy::Config.new
     @@global = Rudy::Global.new
@@ -41,8 +42,6 @@ module Rudy
       @@config.look_and_load(path || nil)
       @@global.apply_config(@@config)
     end
-    
-    update_config
     
     def self.update_global(ghash={})
       @@global.update(ghash)
@@ -72,8 +71,8 @@ module Rudy
     def self.change_environment(v); @@global.environment = v; end  
     def self.change_position(v); @@global.position = v; end
     
-    def debug?; @@debug == true; end
-    
+    def debug?; Rudy::Huxtable.debug?; end
+    def Huxtable.debug?; @@debug == true; end
     def check_keys
       raise "No EC2 .pem keys provided" unless has_pem_keys?
       raise "No SSH key provided for #{current_user}!" unless has_keypair?
@@ -280,7 +279,12 @@ module Rudy
       
       disk_defs = fetch_machine_param(:disks)
       
-      routine = @@config.routines.find(@@global.environment, @@global.role, action)
+      # We want to find only one routines config with the name +action+. 
+      # This is unlike the routines config where it's okay to merge via
+      # precedence. 
+      routine = @@config.routines.find_deferred(@@global.environment, @@global.role, action)
+      routine ||= @@config.routines.find_deferred([@@global.environment, @@global.role], action)
+      routine ||= @@config.routines.find_deferred(@@global.role, action)
       return nil unless routine
       return routine unless routine.has_key?(:disks)
       
@@ -350,3 +354,4 @@ module Rudy
     
   end
 end
+

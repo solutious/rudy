@@ -121,6 +121,11 @@ module Rudy
       lines.join($/)
     end
   end
+  
+  #--
+  # TODO: Update exception Syntax based on:
+  # http://blog.rubybestpractices.com/posts/gregory/anonymous_class_hacks.html
+  #++
   class NoConfig < Rudy::Error
     def message; "No configuration found!"; end
   end

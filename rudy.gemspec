@@ -1,7 +1,7 @@
 @spec = Gem::Specification.new do |s|
 	s.name = "rudy"
   s.rubyforge_project = 'rudy'
-	s.version = "0.6.8"
+	s.version = "0.7.0"
 	s.summary = "Rudy: Not your grandparents' EC2 deployment tool."
 	s.description = s.summary
 	s.author = "Delano Mandelbaum"
@@ -14,12 +14,13 @@
   s.require_paths = %w[lib]
   s.rubygems_version = '1.1.1'
   
-  s.add_dependency 'drydock', '>= 0.6.0'  
-  s.add_dependency 'caesars', '>= 0.5.6'  
+  s.add_dependency 'drydock', '>= 0.6.0'
+  s.add_dependency 'caesars', '>= 0.6.0'
   s.add_dependency 'rye', '>= 0.6.2'
   
   s.add_dependency 'grit'
   s.add_dependency 'echoe'
+  s.add_dependency 'json'
   s.add_dependency 'amazon-ec2', '>= 0.3.8'  # Region fix
   s.add_dependency 'aws-s3', '>= 0.6.1'      # Ruby 1.9.1 compatability
   s.add_dependency 'net-ssh', '>= 2.0.9'

@@ -113,11 +113,17 @@ module Rudy; module Routines;
             # If a command is only referred to once and it has no arguments
             # defined, we force it through by making an array with one element.
             calls = [[]] if calls.empty?
+            
+            # Force a CommandNotFound exception early
+            unless rbox.can?(command)
+              execute_rbox_command { rbox.send(command) }
+              next
+            end
+            
+            # Execute the command for every set of arguments
             calls.each do |args|
               puts command_separator(rbox.preview_command(command, args), user)
-              execute_rbox_command { 
-                ret = rbox.send(command, args) 
-              }
+              execute_rbox_command { ret = rbox.send(command, args) }
             end
           end
           

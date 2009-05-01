@@ -11,6 +11,9 @@ module Rudy
          print_response(ret)
        rescue Rye::CommandError => ex
          print_response(ex)
+         unless Annoy.proceed?(:low, :string)
+           exit 12
+         end
        rescue Rye::CommandNotFound => ex
          STDERR.puts "  CommandNotFound: #{ex.message}".color(:red)
          STDERR.puts ex.backtrace if Rudy.debug?
@@ -22,10 +25,9 @@ module Rudy
      # Returns a formatted string for printing command info
      def command_separator(cmd, user)
        cmd ||= ""
-       cmd &&= cmd.to_s
-       spaces = 58 - cmd.size 
-       spaces = 0 if spaces < 1
-       ("%s%s%#{spaces}s" % [$/, cmd.bright, "(#{user})"])
+       cmd, user = cmd.to_s, user.to_s
+       prompt = user == "root" ? "#" : "$"
+       ("%s%s%s %s" % [$/, user, prompt, cmd.bright])
      end
      
   private 

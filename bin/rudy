@@ -23,7 +23,7 @@ require 'rudy/cli'
 # Command-line interface for /bin/rudy
 class RudyCLI < Rudy::CLI::Base
   
-  debug :off
+  debug :on
   default :machines
   trawler :passthrough
   
@@ -50,6 +50,7 @@ class RudyCLI < Rudy::CLI::Base
   #command_alias :backup, :bu
   
   about "Manage Machines"
+  option :l, :all, "Display all machines"
   action :W, :wash, "Wash machine metadata."
   command :machines => Rudy::CLI::Machines
   command_alias :machines, :m

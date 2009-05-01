@@ -6,11 +6,19 @@ module Rudy
       
       
       def machines
+        # Rudy::Machines.list takes two optional args for adding or 
+        # removing metadata attributes to modify the select query. 
+        # When all is specified we want to find machines in every
+        # environment and role to we remove these attributes from
+        # the select. 
+        more, less = nil, nil
+        less = [:environment, :role] if @option.all
+        
         rmach = Rudy::Machines.new
-        mlist = rmach.list || []
+        mlist = rmach.list(more, less) || []
         if mlist.empty?
           puts "No machines running in #{current_machine_group}" 
-          puts "Try: #{$0} startup"
+          puts "Try: #{$0} machines --all"
         end
         mlist.each do |m|
           puts @@global.verbose > 0 ? m.inspect : m.dump(@@global.format)
@@ -66,7 +74,12 @@ module Rudy
 
         checked = false
         rudy = Rudy::Machines.new
-        lt = rudy.list do |machine|
+        lt = rudy.list 
+        unless lt
+          puts "No machines running in #{rudy.current_machine_group}"
+          exit
+        end
+        lt.each do |machine|
           # Print header
           if @@global.quiet
             print "You are #{ssh_opts[:user].to_s.bright}. " if !checked # only the 1st

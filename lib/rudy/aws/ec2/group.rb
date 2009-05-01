@@ -91,7 +91,7 @@ module Rudy::AWS
       # Create a new EC2 security group
       # Returns list of created groups
       def create(name, desc=nil, addresses=[], ports=[], protocols=[], &each_group)
-        about ||= "Security Group #{name}"
+        desc ||= "Security Group #{name}"
         ret = @ec2.create_security_group(:group_name => name, :group_description => desc)
         return false unless (ret && ret['return'] == 'true')
         authorize(name, addresses, ports, protocols)

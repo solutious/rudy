@@ -78,19 +78,22 @@ module Rudy
             Rudy::Utils.service_available?(machine.dns_public, 22)
           }
           
+          # TODO: trap rbox errors. We could get an authentication error. 
           opts = { :keys =>  root_keypairpath, :user => 'root', :info => false }
           rbox = Rye::Box.new(machine.dns_public, opts)
-          
-          # TODO: trap rbox errors. We could get an authentication error. 
           
           # Set the hostname if specified in the machines config. 
           # :rudy -> change to Rudy's machine name
           # :default -> leave the hostname as it is
           # Anything else other than nil -> change to that value
+          # NOTE: This will set hostname every time a routine is
+          # run so we may want to make this an explicit action. 
           hn = current_machine_hostname
           if hn && hn != :default
             hn = machine.name if hn == :rudy
+            print "Setting hostame to #{hn}... "
             rbox.hostname(hn) 
+            puts "done!"
           end
           
           if Rudy::Routines::UserHelper.adduser?(@routine)       # adduser

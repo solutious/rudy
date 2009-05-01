@@ -133,7 +133,7 @@ module Rudy; module Routines;
           sleep 0.1
           
           rbox.cd # reset to home dir
-          rbox.rm(@@script_config_file)
+          #rbox.rm(@@script_config_file)
         end
         
         # Return the borrowed rbox instance to the user it was provided with

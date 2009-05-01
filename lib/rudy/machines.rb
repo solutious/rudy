@@ -223,7 +223,7 @@ module Rudy
     end
     
     def list(more=[], less=[], &each_mach)
-      machines = list_as_hash(&each_mach)
+      machines = list_as_hash(more, less, &each_mach)
       machines &&= machines.values
       machines
     end

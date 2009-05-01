@@ -15,7 +15,7 @@ module Rudy; module Routines;
       routine_separator(@routine_name)
       machines = []
       generic_machine_runner(:list) do |machine|
-        puts $/, "[just passing through]"
+        puts $/ #, "[routine: #{@routine_name}]"
         machines << machine
       end
       machines

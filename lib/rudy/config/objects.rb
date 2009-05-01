@@ -24,7 +24,7 @@ class Rudy::Config
       def message; super << " (path must be a String)"; end
     end
     class ReservedKeyword < Rudy::Config::Error
-      def message; super << " (r)"; end
+      def message;  "%s (reserved keyword)" % [super]; end
     end
     class BadArg < Rudy::Config::Error
       def message; "Arguments for #{cmd} must be: Symbols, Strings only"; end
@@ -74,12 +74,12 @@ class Rudy::Config
         #  raise ReservedKeyword.new(:commands, cmd)
         #end
         
-        # The second argument must be a filesystem path
-        raise PathNotString.new(:commands, cmd) if path && !path.is_a?(String)
-        
         # We can allow existing commands to be overridden but we
         # print a message to STDERR so the user knows what's up.
         STDERR.puts "Redefined #{cmd}" if Rye::Cmd.can?(cmd)
+        
+        # The second argument if supplied must be a filesystem path
+        raise PathNotString.new(:commands, cmd) if path && !path.is_a?(String)        
         
         # Insert hardcoded arguments if any were supplied. These will
         # be sent automatically with every call to the new command.

@@ -155,10 +155,6 @@ module Rudy
     def current_user_keypairpath
       user_keypairpath(current_user)
     end
-    def current_machine_hostname(group=nil)
-      group ||= machine_group
-      find_machine(group)[:dns_name]
-    end
     
     def current_machine_group
       [@@global.environment, @@global.role].join(Rudy::DELIM)
@@ -173,19 +169,20 @@ module Rudy
     end
     
     def current_machine_hostname
-      fetch_machine_param(:hostname) || :rudy
+      # NOTE: There is an issue with Caesars that a keyword that has been
+      # defined as forced_array (or forced_hash, etc...) is like that for
+      # all subclasses of Caesars. There is a conflict between "hostname" 
+      # in the machines config and routines config. The routines config 
+      # parses hostname with forced_array because it's a shell command
+      # in Rye::Cmd. Machines config expects just a symbol. The issue
+      # is with Caesars so this is a workaround to return a symbol.
+      hn = fetch_machine_param(:hostname) || :rudy
+      hn = hn.flatten.compact.first if hn.is_a?(Array)
+      hn
     end
     
     def current_machine_image
       fetch_machine_param(:ami)
-      #zon, env, rol = @@global.zone, @@global.environment, @@global.role
-      #ami = @@config.machines.find_deferred([zon, env, rol]) || {}
-      #ami.merge!(@@config.machines.find_deferred(env, rol, :ami))
-      #ami.merge!(@@config.machines.find_deferred(rol, :ami))
-      ## I commented this out while cleaning (start of 0.6 branch) . It
-      ## seems like a bad idea. I don't want Huxtables throwing exceptions. 
-      ##raise Rudy::NoMachineImage, current_machine_group unless ami
-      #ami
     end
     
     def current_machine_size

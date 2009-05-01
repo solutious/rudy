@@ -9,6 +9,10 @@ module Rudy; module Routines;
     
     def execute
       routine_separator(:shutdown)
+      unless @routine
+        STDERR.puts "[this is a generic shutdown routine]"
+        @routine = {}
+      end
       generic_machine_runner(:destroy) do |machine,rbox|
         #puts task_separator("SHUTDOWN")
       end
@@ -16,10 +20,8 @@ module Rudy; module Routines;
 
     # Called by generic_machine_runner
     def raise_early_exceptions
-      raise NoRoutine, :shutdown unless @routine
       rmach = Rudy::Machines.new
       raise Rudy::PrivateKeyNotFound, root_keypairpath unless has_keypair?(:root)
-      raise MachineGroupNotDefined, current_machine_group unless known_machine_group?
       raise MachineGroupNotRunning, current_machine_group unless rmach.running?
     end
     

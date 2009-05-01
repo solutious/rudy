@@ -12,13 +12,16 @@ module Rudy; module Routines;
     # arguments: instances of Rudy::Machine and Rye::Box.
     def execute(&each_mach)
       routine_separator(:startup)
+      unless @routine
+        STDERR.puts "[this is a generic startup routine]"
+        @routine = {}
+      end
       generic_machine_runner(:create) do |machine,rbox|
       end
     end
 
     # Called by generic_machine_runner
     def raise_early_exceptions
-      raise NoRoutine, :startup unless @routine
       rmach = Rudy::Machines.new
       # There's no keypair check here because Rudy::Machines will attempt 
       # to create one.

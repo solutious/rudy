@@ -46,7 +46,8 @@ class Disk < Storable
   
   def to_s(with_titles=true)
     update
-    mtd = @mounted ? "mounted" : @status
+    puts "FUCK" if @mounted
+    mtd = @mounted == true ? "mounted" : @status
     "%s; %3sGB; %s; %s" % [liner_note, @size, @device, mtd]
   end
   
@@ -103,13 +104,16 @@ class Disk < Storable
   end
   
   def update
-    return false unless @awsid
-    @volume = @rvol.get(@awsid) 
+    @awsid = nil if @awsid && @awsid.empty?
+    @volume = @rvol.get(@awsid) if @awsid
     if @volume.is_a?(Rudy::AWS::EC2::Volume)
       @status = @volume.status
       @instid = @volume.instid
-      save
+    else
+      @awsid, @status, @instid = nil, nil, nil
+      @mounted = false # I don't like having to set this
     end
+    save
   end
   
   def to_query(more=[], less=[])

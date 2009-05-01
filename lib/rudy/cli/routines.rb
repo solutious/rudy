@@ -32,7 +32,14 @@ module Rudy; module CLI;
       true
     end
     def release
-      @rr.execute 
+      machines = @rr.execute 
+      
+      unless machines.empty?
+        puts $/, "The following machines were processed:"
+        machines.each do |machine|
+          puts machine.to_s
+        end
+      end
     end
     
     def passthrough_valid?
@@ -73,10 +80,10 @@ module Rudy; module CLI;
     def shutdown
       routine = fetch_routine_config(:shutdown)
       
-      puts "All machines in #{current_machine_group} will be shutdown"
+      puts "All machines in #{current_machine_group} will be shutdown".bright
       if routine && routine.disks
         if routine.disks.destroy
-          puts "The following filesystems will be destroyed:".color(:red)
+          puts "The following filesystems will be destroyed:".bright
           puts routine.disks.destroy.keys.join($/).bright
         end
       end

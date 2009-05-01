@@ -101,7 +101,7 @@ module Rudy::AWS
         opts = {
           :volume_id => vol_id, 
           :instance_id => inst_id, 
-          :device => device
+          :device => device.to_s    # Solaris devices are numbers
         }
         ret = execute_request(false) { @ec2.attach_volume(opts) }
         (ret['status'] == 'attaching')
@@ -154,7 +154,7 @@ module Rudy::AWS
     
       def get(vol_id)
         vol_id = Volumes.get_vol_id(vol_id)
-        list(:any, vol_id).first || nil
+        list(:any, vol_id).first rescue nil
       end
     
       # deleting?, available?, etc...

@@ -11,9 +11,8 @@ module Rudy
          print_response(ret)
        rescue Rye::CommandError => ex
          print_response(ex)
-         unless Annoy.proceed?(:low, :string)
-           exit 12
-         end
+         ret = Annoy.pose_question(" Keep going?\a ", /yes|y|ya|sure|you bet!/i, STDERR)
+         exit 12 unless ret
        rescue Rye::CommandNotFound => ex
          STDERR.puts "  CommandNotFound: #{ex.message}".color(:red)
          STDERR.puts ex.backtrace if Rudy.debug?

@@ -67,7 +67,7 @@ module Rudy
         rtag ||= @rtag
         ret = Rye.shell(:git, 'tag', :d, rtag)  
         raise ret.stderr.join($/) if ret.exit_code > 0 # TODO: retest
-        # "git push origin :tag-name" deletes a remote tag
+        # Equivalent to: "git push origin :tag-name" which deletes a remote tag
         ret = Rye.shell(:git, "push #{@remote} :#{rtag}") if @remote
         raise ret.stderr.join($/) if ret.exit_code > 0
         true
@@ -95,16 +95,19 @@ module Rudy
               rbox.upload(@pkey, ".ssh/#{key}") # The trailing slash is important
             end
             
-            
+            # NOTE: The following are two attempts at telling git which 
+            # private key to use. Both fail. The only thing I could get
+            # to work is modifying the ~/.ssh/config file. 
+            #
             # This runs fine, but "git clone" doesn't care. 
             # git config --global --replace-all http.sslKey /home/delano/.ssh/id_rsa
-            #rbox.git('config', '--global', '--replace-all', 'http.sslKey', "#{homedir}/.ssh/#{key}")
+            # rbox.git('config', '--global', '--replace-all', 'http.sslKey', "#{homedir}/.ssh/#{key}")
             
             # "git clone" doesn't care about this either. Note that both these
             # config attempts come directly from the git-config man page:
             # http://www.kernel.org/pub/software/scm/git/docs/git-config.html
             # export GIT_SSL_KEY=/home/delano/.ssh/id_rsa
-            #rbox.setenv("GIT_SSL_KEY", "#{homedir}/.ssh/#{key}")
+            # rbox.setenv("GIT_SSL_KEY", "#{homedir}/.ssh/#{key}")
             
             if rbox.file_exists?('.ssh/config')
               rbox.cp('.ssh/config', ".ssh/config-previous")

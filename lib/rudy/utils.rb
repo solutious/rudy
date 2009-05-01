@@ -99,7 +99,7 @@ module Rudy
       end
       
       if msg && logger
-        logger.puts " done!"
+        logger.puts " done"
         logger.flush
       end
       

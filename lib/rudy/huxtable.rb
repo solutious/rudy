@@ -274,7 +274,7 @@ module Rudy
       
       zon, env, rol = @@global.zone, @@global.environment, @@global.role
       
-      disk_defs = fetch_machine_param(:disks)
+      disk_defs = fetch_machine_param(:disks) || {}
       
       # We want to find only one routines config with the name +action+. 
       # This is unlike the routines config where it's okay to merge via
@@ -289,7 +289,7 @@ module Rudy
 
         disks.each_pair do |path, props|
           unless disk_defs.has_key?(path)
-            @@logger.puts "#{path} is not defined. Check your #{action} routines config.".color(:red)
+            @@logger.puts "#{path} is not defined. Check your #{action} machines config.".color(:red)
             routine.disks[raction].delete(path) 
             next
           end
@@ -337,6 +337,7 @@ module Rudy
     # :region, :zone, :environment, :role, :position
     def fetch_script_config
       sconf = fetch_machine_param :config
+      sconf ||= {}
       extras = {
         :region => @@global.region,
         :zone => @@global.zone,

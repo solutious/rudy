@@ -8,7 +8,11 @@ module Rudy; module Routines;
       (!routine.adduser.nil? && !routine.adduser.empty?)
     end
     def adduser(routine, machine, rbox)
-      args = [:m, :s, '/bin/bash', routine.adduser.to_s]
+      
+      # On Solaris, the user's home directory needs to be specified
+      # explicitly so we do it for linux too for fun. 
+      homedir = rbox.guess_user_home(routine.adduser.to_s)
+      args = [:m, :d, homedir, :s, '/bin/bash', routine.adduser.to_s]
       puts command_separator(rbox.preview_command(:useradd, args), routine.adduser.to_s)
       
       # NOTE: We'll may to use platform specific code here. 

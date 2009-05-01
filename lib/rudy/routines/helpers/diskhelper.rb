@@ -52,15 +52,15 @@ module Rudy; module Routines;
         
         puts "Creating #{disk.name} "
         
-        print "Creating volume... "
+        msg = "Creating volume... "
         disk.create
-        Rudy::Utils.waiter(2, 60, STDOUT, "#{disk.awsid}") { 
+        Rudy::Utils.waiter(2, 60, STDOUT, msg) { 
           disk.available?
         }
         
-        print "Attaching #{disk.awsid} to #{@machine.awsid}... "
+        msg = "Attaching #{disk.awsid} to #{@machine.awsid}... "
         disk.attach(@machine.awsid)
-        Rudy::Utils.waiter(2, 60, STDOUT, nil) { 
+        Rudy::Utils.waiter(2, 10, STDOUT, msg) { 
           disk.attached?
         }
         
@@ -73,6 +73,7 @@ module Rudy; module Routines;
         begin
           print "Creating ext3 filesystem for #{disk.device}... "
           execute_rbox_command { 
+            
             @rbox.mkfs(:t, "ext3", :F, disk.device)
             @rbox.mkdir(:p, disk.path)
             puts "done"
@@ -111,15 +112,16 @@ module Rudy; module Routines;
         puts "Destroying #{disk.name}"
 
         if disk.mounted?
-          puts "Unmounting #{disk.path}... "
+          print "Unmounting #{disk.path}... "
           execute_rbox_command { @rbox.umount(disk.path) }
+          puts "done"
           sleep 0.5
         end
         
         if disk.attached?
-          puts "Detaching #{disk.awsid}... "
+          msg = "Detaching #{disk.awsid}... "
           disk.detach 
-          Rudy::Utils.waiter(2, 60, STDOUT) { 
+          Rudy::Utils.waiter(2, 60, STDOUT, msg) { 
             disk.available? 
           }
           sleep 0.5

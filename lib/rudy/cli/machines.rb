@@ -17,8 +17,12 @@ module Rudy
         rmach = Rudy::Machines.new
         mlist = rmach.list(more, less) || []
         if mlist.empty?
-          puts "No machines running in #{current_machine_group}" 
-          puts "Try: #{$0} machines --all"
+          if @option.all
+            puts "No machines running"
+          else
+            puts "No machines running in #{current_machine_group}" 
+            puts "Try: rudy machines --all"
+          end
         end
         mlist.each do |m|
           puts @@global.verbose > 0 ? m.inspect : m.dump(@@global.format)

@@ -88,12 +88,12 @@ module Rudy
           # Anything else other than nil -> change to that value
           # NOTE: This will set hostname every time a routine is
           # run so we may want to make this an explicit action. 
-          hn = current_machine_hostname
-          if hn && hn != :default
+          hn = current_machine_hostname || :rudy
+          if hn != :default
             hn = machine.name if hn == :rudy
             print "Setting hostame to #{hn}... "
             rbox.hostname(hn) 
-            puts "done!"
+            puts "done"
           end
           
           if Rudy::Routines::UserHelper.adduser?(@routine)       # adduser
@@ -113,7 +113,11 @@ module Rudy
           
           if Rudy::Routines::DiskHelper.disks?(@routine)         # disk
             puts task_separator("DISKS")
-            Rudy::Routines::DiskHelper.execute(@routine, machine, rbox)
+            if rbox.ostype == "sunos"
+              puts "Sorry, Solaris is not supported yet!"
+            else
+              Rudy::Routines::DiskHelper.execute(@routine, machine, rbox)
+            end    
           end
 
           # Startup, shutdown, release, deploy, etc...
@@ -152,9 +156,8 @@ module Rudy
       def machine_separator(name, awsid)
         dashes = 80 - name.size # 
         dashes = 0 if dashes < 1
-        puts $/, '='*80
-        puts '%-73s (%s)' % [name.bright, awsid]
-        puts
+        name = " #{name} "
+        puts ('%s%-73s (%s)' % [$/, name, awsid]).att(:reverse)
       end
       
       def routine_separator(name)

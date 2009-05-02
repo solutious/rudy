@@ -34,7 +34,7 @@
   #s.add_development_dependency('jgre-monkeyspecdoc', '>= 0.1.0')
   #s.add_development_dependency('thoughtbot-shoulda', '>= 0.1.0')
   
-  s.executables = %w[ird rudy rudy-ec2 rudy-sdb rudy-s3]
+  s.executables = %w[rudy rudy-ec2 rudy-sdb rudy-s3]
   
   # = MANIFEST =
   # git ls-files
@@ -44,7 +44,6 @@
   README.rdoc
   Rakefile
   Rudyfile
-  bin/ird
   bin/rudy
   bin/rudy-ec2
   bin/rudy-s3
@@ -89,17 +88,24 @@
   lib/rudy/config/objects.rb
   lib/rudy/disks.rb
   lib/rudy/global.rb
+  lib/rudy/guidelines.rb
   lib/rudy/huxtable.rb
   lib/rudy/machines.rb
   lib/rudy/metadata.rb
+  lib/rudy/mixins/hash.rb
   lib/rudy/routines.rb
+  lib/rudy/routines/helper.rb
   lib/rudy/routines/helpers/diskhelper.rb
+  lib/rudy/routines/helpers/scmhelper.rb
   lib/rudy/routines/helpers/scripthelper.rb
+  lib/rudy/routines/helpers/userhelper.rb
+  lib/rudy/routines/passthrough.rb
   lib/rudy/routines/release.rb
   lib/rudy/routines/shutdown.rb
   lib/rudy/routines/startup.rb
-  lib/rudy/scm/svn.rb
+  lib/rudy/scm.rb
   lib/rudy/scm/git.rb
+  lib/rudy/scm/svn.rb
   lib/rudy/utils.rb
   lib/storable.rb
   lib/sysinfo.rb
@@ -109,8 +115,11 @@
   support/randomize-root-password
   support/rudy-ec2-startup
   support/update-ec2-ami-tools
-  test/05_config/00_setup_test.rb
-  test/05_config/30_machines_test.rb
+  test/01_mixins/10_hash_test.rb
+  test/10_config/00_setup_test.rb
+  test/10_config/30_machines_test.rb
+  test/15_scm/00_setup_test.rb
+  test/15_scm/20_git_test.rb
   test/20_sdb/00_setup_test.rb
   test/20_sdb/10_domains_test.rb
   test/25_ec2/00_setup_test.rb

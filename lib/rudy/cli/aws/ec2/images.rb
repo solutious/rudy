@@ -93,7 +93,7 @@ module AWS; module EC2;
       opts[:group] = :any if @option.all
       opts[:id] = @option.instid if @option.instid
       
-      puts "You may want to run rudy-ec2 #{@alias} --prepare before this.".color(:blue)
+      puts "You may want to run rudy-ec2 #{@alias} --prepare before this.".bright
       puts "This feature is experimental. Make sure you enter the bucket"
       puts "and image names correctly because if they're wrong the image"
       puts "won't get created and you'll be annoyed that you waited."

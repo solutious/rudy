@@ -23,7 +23,7 @@ module AWS; module EC2;
       raise "Could not fetch #{address.ipaddress}" unless address
       
       puts "Destroying address: #{@argv.ipaddress}"
-      puts "NOTE: this IP address will become available to other EC2 customers.".color(:blue)
+      puts "NOTE: this IP address will become available to other EC2 customers.".bright
       execute_check(:medium)
       execute_action { @radd.destroy(@argv.ipaddress) }
       self.addresses

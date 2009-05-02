@@ -48,8 +48,8 @@ module AWS; module EC2;
       puts "Creating #{opts[:size]} instance in #{@@global.zone}"
       
       unless opts[:keypair]
-        puts "You did not specify a keypair. Unless you've prepared a user account".color(:blue)
-        puts "on this image (#{opts[:ami]}) you will not be able to log in to it.".color(:blue)
+        puts "You did not specify a keypair. Unless you've prepared a user account".bright
+        puts "on this image (#{opts[:ami]}) you will not be able to log in to it.".bright
         exit unless Annoy.proceed?(:low)
       end
       

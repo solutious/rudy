@@ -90,8 +90,9 @@ module Rudy
           if @@global.quiet
             print "You are #{ssh_opts[:user].to_s.bright}. " if !checked # only the 1st
           else
-            print "Connecting #{ssh_opts[:user].to_s.bright}@#{machine.dns_public} "
-            puts "#{machine.name} (#{machine.awsid})"
+            puts machine_separator(machine.name, machine.awsid)
+            puts "Connecting #{ssh_opts[:user].to_s.bright}@#{machine.dns_public} "
+            puts
           end
 
           # Make sure we want to run this command on all instances

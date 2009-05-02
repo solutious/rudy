@@ -4,7 +4,7 @@ module Rudy; module Routines;
   class Release < Rudy::Routines::Base
     
     def init(*args)
-      @routine_name = args.first # :release or :rerelease
+      @routine_name = args.first || :release # :release or :rerelease
       @routine = fetch_routine_config(@routine_name)
     end
     

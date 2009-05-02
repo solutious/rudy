@@ -36,11 +36,13 @@ module Rudy
      
   private 
     def print_response(rap)
+      colour = rap.exit_code != 0 ? :red : :normal
       [:stderr].each do |sumpin|
         next if rap.send(sumpin).empty?
-        STDERR.puts "  #{sumpin}: #{rap.send(sumpin).join("#{$/}  ")}".color(:red)
+        STDERR.puts ("  #{sumpin.upcase.to_s}  " << '-'*38).color(colour).bright
+        STDERR.puts "  " << rap.send(sumpin).join("#{$/}  ").color(colour)
       end
-      STDERR.puts "  Exit code: #{rap.exit_code}".color(:red) if rap.exit_code != 0
+      STDERR.puts "  Exit code: #{rap.exit_code}".color(colour) if rap.exit_code != 0
     end
     
     end

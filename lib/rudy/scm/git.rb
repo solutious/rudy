@@ -36,7 +36,7 @@ module Rudy
       def engine; :git; end
       
       def liner_note
-        "%-40s  (git:%s)" % [@rtag, @branch]
+        "%-40s  (git:%s:%s)" % [@rtag, @remote, @branch]
       end
       
       def create_release(username=nil, msg=nil)
@@ -92,7 +92,7 @@ module Rudy
             homedir = rbox.getenv['HOME']
             rbox.mkdir(:p, :m, '700', '.ssh') rescue nil # :p says keep quiet if it exists              
             if rbox.file_exists?(".ssh/#{key}")
-              puts "Remote private key #{key} already exists".colour(:red)
+              puts "  Remote private key #{key} already exists".colour(:red)
             else
               rbox.upload(@pkey, ".ssh/#{key}")
             end
@@ -118,7 +118,7 @@ module Rudy
             
             ssh_config ||= StringIO.new
             ssh_config.puts $/, "IdentityFile #{homedir}/.ssh/#{key}"
-            puts "Adding IdentityFile #{key} to #{homedir}/.ssh/config"
+            puts "  Adding IdentityFile #{key} to #{homedir}/.ssh/config"
             
             rbox.upload(ssh_config, '.ssh/config')
             rbox.chmod('0600', '.ssh/config')
@@ -137,7 +137,7 @@ module Rudy
           host = URI.parse(remote).host rescue nil
           host ||= remote.scan(/\A.+?@(.+?)\:/).flatten.first
           known_hosts.puts $/, Rye.remote_host_keys(host)
-          puts "Adding host key for #{host} to .ssh/known_hosts"
+          puts "  Adding host key for #{host} to .ssh/known_hosts"
 
           rbox.upload(known_hosts, '.ssh/known_hosts')
           rbox.chmod('0600', '.ssh/known_hosts')
@@ -161,7 +161,7 @@ module Rudy
       
       
       def get_remote_uri
-        ret = execute_rbox_command { Rye.shell(:git, "config", "remote.#{@remote}.url") }
+        ret = Rye.shell(:git, "config", "remote.#{@remote}.url")
         ret.stdout.first
       end
       

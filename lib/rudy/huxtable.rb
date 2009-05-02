@@ -268,6 +268,7 @@ module Rudy
     #            :size: 1
     #      
     def fetch_routine_config(action)
+      raise "No action specified" unless action
       raise NoConfig unless @@config
       raise NoRoutinesConfig unless @@config.routines
       raise NoGlobal unless @@global
@@ -304,6 +305,7 @@ module Rudy
     
     
     def fetch_machine_param(parameter)
+      raise "No parameter specified" unless parameter
       raise NoConfig unless @@config
       raise NoMachinesConfig unless @@config.machines
       raise NoGlobal unless @@global

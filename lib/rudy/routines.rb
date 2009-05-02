@@ -32,11 +32,11 @@ module Rudy
       end
       
       # * +machine_action+ a method on Rudy::Machines, one of: create, destroy, list
-      # * +routine+ is a single routine configuration hash. REQUIRED.
+      # * +skipcheck+ Skip checking if machine is up and SSH is available (default: false)
       # * +routine_action+ is an optional block which represents the action
       # for a specific routine. For example, a startup routine will start
       # an EC2 instance. Arguments: instances of Rudy::Machine and Rye::Box.
-      def generic_machine_runner(machine_action, &routine_action)
+      def generic_machine_runner(machine_action, skipcheck=false, &routine_action)
         rmach = Rudy::Machines.new
         raise "No routine supplied" unless @routine
         raise "No machine action supplied" unless machine_action
@@ -59,35 +59,38 @@ module Rudy
         rmach.send(machine_action) do |machine|
           puts machine_separator(machine.name, machine.awsid)
           
-          msg = preliminary_separator("Checking if instance is running...")
-          Rudy::Utils.waiter(3, 120, STDOUT, msg, 0) {
-            inst = machine.get_instance
-            inst && inst.running?
-          } 
+          unless skipcheck
+            msg = preliminary_separator("Checking if instance is running...")
+            Rudy::Utils.waiter(3, 120, STDOUT, msg, 0) {
+              inst = machine.get_instance
+              inst && inst.running?
+            } 
           
-          # Add instance info to machine and save it. This is really important
-          # for the initial startup so the metadata is updated right away. But
-          # it's also important to call here because if a routine was executed
-          # and an unexpected exception occurrs before this update is executed
-          # the machine metadata won't contain the DNS information. Calling it
-          # here ensure that the metadata is always up-to-date. 
-          machine.update 
+            # Add instance info to machine and save it. This is really important
+            # for the initial startup so the metadata is updated right away. But
+            # it's also important to call here because if a routine was executed
+            # and an unexpected exception occurrs before this update is executed
+            # the machine metadata won't contain the DNS information. Calling it
+            # here ensure that the metadata is always up-to-date. 
+            machine.update 
           
-          msg = preliminary_separator("Waiting for SSH daemon...")
-          Rudy::Utils.waiter(2, 60, STDOUT, msg, 0) {
-            Rudy::Utils.service_available?(machine.dns_public, 22)
-          }
+            msg = preliminary_separator("Waiting for SSH daemon...")
+            Rudy::Utils.waiter(2, 60, STDOUT, msg, 0) {
+              Rudy::Utils.service_available?(machine.dns_public, 22)
+            }
+          end
+          
           
           # TODO: trap rbox errors. We could get an authentication error. 
-          opts = { :keys =>  root_keypairpath, :user => 'root', :info => false }
+          opts = { :keys =>  root_keypairpath, :user => 'root', :info => @@global.verbose > 0 }
           begin
             rbox = Rye::Box.new(machine.dns_public, opts)
             rbox.connect
           rescue Rye::NoHost => ex
-            
-            exit 66
-          end
           
+            exit 65
+          end
+        
           # Set the hostname if specified in the machines config. 
           # :rudy -> change to Rudy's machine name
           # :default -> leave the hostname as it is
@@ -165,7 +168,7 @@ module Rudy
       def task_separator(title)
         dashes = 59 - title.size 
         dashes = 0 if dashes < 1
-        ("%s---  %s  %s" % [$/, title.bright, '-'*dashes])
+        ("%s---  %s  %s" % [$/, title, '-'*dashes])
       end
       
       def machine_separator(name, awsid)

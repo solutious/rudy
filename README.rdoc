@@ -1,4 +1,4 @@
-= Rudy - v0.6 ALPHA
+= Rudy - v0.7 BETA
 
 <b>Not your grandparents' EC2 deployment tool.</b>
 
@@ -16,7 +16,7 @@ All configuration is organized into the zones, environments, and roles that you 
 
 <b>See Getting-Started[http://wiki.github.com/solutious/rudy/getting-started] for more info.</b>
 
-<em>NOTE: This is an ALPHA release. That means Rudy's not ready for production use! See Project-Status[http://wiki.github.com/solutious/rudy/project-status].</em>
+<em>NOTE: This is a BETA release. That means Rudy's not ready for production use! See Project-Status[http://wiki.github.com/solutious/rudy/project-status].</em>
 
 == Features
 
@@ -86,6 +86,7 @@ NOTE: <em>If you are not installing via RubyGems, you need to make sure the depe
 * Everyone at Utrecht.rb[http://groups.google.com/group/utrecht-rb]
 * Jamis Buck for Net::SSH and friends
 * Glenn Rempe for amazon-ec2
+* Marcel Molina Jr. for aws-s3
 * Keshia Knight Pulliam
 
 

@@ -22,31 +22,9 @@ require 'drydock'
 require 'rudy/cli'
 
 
-module RudyCLI_Interactive # :nodoc:all
-  extend self
-  extend Drydock
-  include Readline
-  
-  global :A, :accesskey, String, "AWS Access Key"
-  global :S, :secretkey, String, "AWS Secret Access Key"
-  #global :R, :region, String, "Connect to a specific EC2 region (ie: #{Rudy::DEFAULT_REGION})"
-  #global :n, :nocolor, "Disable output colors"
-  global :f, :config, String, "Specify another configuration file to read (ie: #{Rudy::CONFIG_FILE})"
-  global :z, :zone, String, "Connect to a specific EC2 zone (ie: #{Rudy::DEFAULT_ZONE})"
-  global :e, :environment, String, "Connect to the specified environment (ie: #{Rudy::DEFAULT_ENVIRONMENT})"
-  global :r, :role, String, "Connect to a machine with the specified role (ie: #{Rudy::DEFAULT_ROLE})"
-  global :p, :position, String, "Position in the machine in its group (ie: #{Rudy::DEFAULT_POSITION})"
-  global :u, :user, String, "Provide a username (ie: #{Rudy::DEFAULT_USER})"
-  #global :q, :quiet, "Run with less output"
-  #global :v, :verbose, "Increase verbosity of output (i.e. -v or -vv or -vvv)" do
-  #  @verbose ||= 0
-  #  @verbose += 1
-  #end
-  global :V, :version, "Display version number" do
-    puts "Rudy version: #{Rudy::VERSION}"
-    exit 0
-  end
+class RudyCLI_Interactive < Rudy::CLI::Base # :nodoc:all
 
+  include Readline
 
   default :interactive
   debug :off
@@ -166,7 +144,7 @@ module RudyCLI_Interactive # :nodoc:all
   
 end
 
-include CLI  # So we don't have to say CLI.example in the REPL. 
+#include RudyCLI_Interactive  # So we don't have to say CLI.example in the REPL. 
 
 
 __END__

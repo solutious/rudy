@@ -1,9 +1,7 @@
-# = Rudy
+# = Rudy -- Example configuration
 # 
-# This is an example Rudy configuration.
-#
-# Rudy automatically looks for configuration files in the 
-# following locations (in this order):
+# Rudy automatically looks for configuration files in the following 
+# locations (in this order):
 #
 #     ./.rudy/config
 #     ~/.rudy/config
@@ -13,9 +11,9 @@
 #     ./.rudy/*.rb
 #     /etc/rudy/*.rb
 #
-# When multuple files are found, the configuration is 
-# NOT OVERRIDDEN. It's ADDED / APPENDED. This means you can 
-# split configuration across many files as you please. 
+# When multuple files are found, the configuration is NOT OVERRIDDEN,
+# it's ADDED or APPENDED depending on context. This means you can split 
+# configuration across many files as you please. 
 #
 # There are four sections: accounts, defaults, machines, commands and routines.
 # 
@@ -36,7 +34,7 @@ machines do
     ami 'ami-e40f2790'               # Amazon Getting Started AMI (EU)
   end
   
-  hostname :rudy                     # One of: :default, :rudy, "a value"
+  hostname :rudy                     # One of: :default, :rudy, "your-name"
   
   # We've defined an environment called "stage" with one role: "app". 
   # The configuration inside the env block is available to all its 
@@ -63,8 +61,8 @@ machines do
     role :balancer do                # a couple examples.
     end
     
-    users do                         # Specify existing private keys 
-      #root do                       # (optional)                        
+    users do                         # Specify existing private keys per user
+      #root do                       
       #  keypair "/path/2/private-key"
       #end
     end
@@ -133,14 +131,15 @@ routines do
   # to every environment and role.
   sysupdate do                       # $ rudy sysupdate
     before :root do                  
-      apt_get "update"               
+      apt_get "update"               # Update debian / ubuntu 
       apt_get "install", "apache2-prefork-dev", "libapr1-dev"
       apt_get "install", "build-essential", "sqlite3", "libsqlite3-dev"
       gem_install 'rudy'
     end
   end
   
-  nothing do
+  # Define your own routines
+  anything do                        # $ rudy anything
   end
 end
 

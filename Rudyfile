@@ -29,12 +29,6 @@
 # of your environments. 
 machines do
   
-  users do
-    # If you already have private keys for logging in to your EC2 instances
-    # EC2 instances you can specify them here and Rudy will use these instead.
-    #root :keypair => "/path/2/root-private-key"
-  end
-  
   zone :"us-east-1b" do
     ami 'ami-235fba4a'               # Amazon Getting Started AMI (US)
   end
@@ -49,7 +43,7 @@ machines do
   # roles. The configuration inside the role blocks is available only
   # to machines in that specific role. 
   env :stage do
-    ami "ami-5394733a"               # ec2onrails-v0_9_9_1-i386
+    ami "ami-e348af8a"               # Debian 5.0, 32-bit (Alestic)
     size 'm1.small'                  # EC2 machine type for all machines
                                      # in the "stage" environment
     role :app do
@@ -68,6 +62,13 @@ machines do
     end                              # as you like. These are just 
     role :balancer do                # a couple examples.
     end
+    
+    users do                         # Specify existing private keys 
+      #root do                       # (optional)                        
+      #  keypair "/path/2/private-key"
+      #end
+    end
+    
   end  
 
   # The routines section below contains calls to local and remote

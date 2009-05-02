@@ -40,8 +40,8 @@ Via Rubygems, one of:
     $ sudo gem install solutious-rudy --source http://gems.github.com/
 
 or via download:
-* rudy-latest.tar.gz[http://github.com/solutious/rudy/tarball/rudy-latest]
-* rudy-latest.zip[http://github.com/solutious/rudy/zipball/rudy-latest]
+* rudy-latest.tar.gz[http://github.com/solutious/rudy/tarball/latest]
+* rudy-latest.zip[http://github.com/solutious/rudy/zipball/latest]
 
 NOTE: <em>If you are not installing via RubyGems, you need to make sure the dependencies are in your LOAD_PATH (<tt>$:</tt>). Ryan Tomayko wrote a gist[http://gist.github.com/54177] about it.</em>
 

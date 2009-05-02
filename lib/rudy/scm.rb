@@ -43,15 +43,22 @@ module Rudy
           print_response(ret)
         rescue Rye::CommandError => ex
           print_response(ex)
+          exit 12 unless keep_going?
         rescue Rye::CommandNotFound => ex
           STDERR.puts "  CommandNotFound: #{ex.message}".color(:red)
           STDERR.puts ex.backtrace
+          exit 12 unless keep_going?
         end
 
         ret
       end
       
+      
       private 
+        def keep_going?
+          Annoy.pose_question("  Keep going?\a ", /yes|y|ya|sure|you bet!/i, STDERR)
+        end
+      
         def print_response(rap)
           [:stderr].each do |sumpin|
             next if rap.send(sumpin).empty?

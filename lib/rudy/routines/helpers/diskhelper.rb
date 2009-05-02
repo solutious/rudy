@@ -112,14 +112,14 @@ module Rudy; module Routines;
         puts "Destroying #{disk.name}"
 
         if disk.mounted?
-          print "Unmounting #{disk.path}... "
+          print "Unmounting #{disk.path}..."
           execute_rbox_command { @rbox.umount(disk.path) }
-          puts "done"
+          puts " done"
           sleep 0.5
         end
         
         if disk.attached?
-          msg = "Detaching #{disk.awsid}... "
+          msg = "Detaching #{disk.awsid}..."
           disk.detach 
           Rudy::Utils.waiter(2, 60, STDOUT, msg) { 
             disk.available? 

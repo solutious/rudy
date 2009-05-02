@@ -133,6 +133,7 @@ routines do
   sysupdate do                       # $ rudy sysupdate
     before :root do                  
       apt_get "update"               
+      apt_get "install", "apache2-prefork-dev", "libapr1-dev"
       apt_get "install", "build-essential", "sqlite3", "libsqlite3-dev"
       gem_install 'rudy'
     end

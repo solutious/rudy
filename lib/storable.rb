@@ -25,6 +25,7 @@ class Storable
   
   # See SUPPORTED_FORMATS for available values
   def format=(v)
+    v &&= v.to_sym
     raise "Unsupported format: #{v}" unless SUPPORTED_FORMATS.member?(v)
     @format = v
   end

@@ -109,11 +109,12 @@ class Disk < Storable
     if @volume.is_a?(Rudy::AWS::EC2::Volume)
       @status = @volume.status
       @instid = @volume.instid
+      save
     else
       @awsid, @status, @instid = nil, nil, nil
       @mounted = false # I don't like having to set this
+      # Don't save it  b/c it's possible the EC2 server is just down
     end
-    save
   end
   
   def to_query(more=[], less=[])

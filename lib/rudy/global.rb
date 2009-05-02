@@ -42,7 +42,7 @@ module Rudy
       postprocess
       # These attributes MUST have values. 
       @verbose ||= 0
-      @nocolor ||= false
+      @nocolor = true unless @nocolor == "false" || @nocolor.is_a?(FalseClass)
       @quiet ||= false
       @format ||= :string # as in, to_s
       @print_header = true if @print_header == nil
@@ -52,16 +52,18 @@ module Rudy
     def apply_config(config)
       return unless config.is_a?(Rudy::Config)
       if config.defaults?
+        # Apply the "color" default before "nocolor" so nocolor has presedence
+        @nocolor = !config.defaults.color unless config.defaults.color.nil?
         %w[region zone environment role position user nocolor quiet].each do |name|
           val = config.defaults.send(name)
-          self.send("#{name}=", val) if val
+          self.send("#{name}=", val) unless val.nil?
         end
       end
       
       if config.accounts? && config.accounts.aws
         %w[accesskey secretkey accountnum cert privatekey].each do |name|
           val = config.accounts.aws.send(name)
-          self.send("#{name}=", val) if val
+          self.send("#{name}=", val) unless val.nil?
         end
       end
       
@@ -88,7 +90,8 @@ module Rudy
     def postprocess
       apply_environment_variables
       apply_system_defaults
-
+      
+      @nocolor = !@color unless @color.nil?
       @cert &&= File.expand_path(@cert)
       @privatekey &&= File.expand_path(@privatekey)
       @position &&= @position.to_s.rjust(2, '0')  

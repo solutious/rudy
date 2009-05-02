@@ -90,6 +90,7 @@ class RudyCLI < Rudy::CLI::Base
   usage "rudy release"
   command :release => Rudy::CLI::Routines
   command_alias :release, :r
+  command_alias :release, :rerelease
   
   #about "Update the release currently running in a machine group"
   #command :rerelease => Rudy::CLI::Routines

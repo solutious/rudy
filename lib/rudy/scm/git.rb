@@ -45,6 +45,8 @@ module Rudy
         msg.tr!("'", "''")
         ret = Rye.shell(:git, "tag", @rtag)  # Use annotated? -a -m '#{msg}' 
         raise ret.stderr.join($/) if ret.exit_code > 0
+        ret = Rye.shell(:git, "push") if @remote
+        raise ret.stderr.join($/) if ret.exit_code > 0
         ret = Rye.shell(:git, "push #{@remote} #{rtag}") if @remote
         raise ret.stderr.join($/) if ret.exit_code > 0
         @rtag
@@ -65,10 +67,10 @@ module Rudy
       
       def delete_rtag(rtag=nil)
         rtag ||= @rtag
-        ret = Rye.shell(:git, 'tag', :d, rtag)  
+        ret = execute_rbox_command { Rye.shell(:git, 'tag', :d, rtag) }
         raise ret.stderr.join($/) if ret.exit_code > 0 # TODO: retest
         # Equivalent to: "git push origin :tag-name" which deletes a remote tag
-        ret = Rye.shell(:git, "push #{@remote} :#{rtag}") if @remote
+        ret = execute_rbox_command { Rye.shell(:git, "push #{@remote} :#{rtag}") } if @remote
         raise ret.stderr.join($/) if ret.exit_code > 0
         true
       end
@@ -77,8 +79,8 @@ module Rudy
         
         # Make sure the directory above the clone path exists 
         # and that it's owned by the request user. 
-        rbox.mkdir(:p, File.dirname(@path))
-        rbox.chown(@user, File.dirname(@path))
+        rbox.mkdir(:p, File.dirname(@path)) 
+        rbox.chown(@user, File.dirname(@path)) 
         
         begin
           original_user = rbox.user
@@ -88,11 +90,11 @@ module Rudy
             # Try when debugging: ssh -vi path/2/pkey git@github.com
             key = File.basename(@pkey)
             homedir = rbox.getenv['HOME']
-            rbox.mkdir(:p, :m, '700', '.ssh') # :p says keep quiet if it exists
+            rbox.mkdir(:p, :m, '700', '.ssh') rescue nil # :p says keep quiet if it exists              
             if rbox.file_exists?(".ssh/#{key}")
               puts "Remote private key #{key} already exists".colour(:red)
             else
-              rbox.upload(@pkey, ".ssh/#{key}") # The trailing slash is important
+              rbox.upload(@pkey, ".ssh/#{key}")
             end
             
             # NOTE: The following are two attempts at telling git which 
@@ -113,11 +115,14 @@ module Rudy
               rbox.cp('.ssh/config', ".ssh/config-previous")
               ssh_config = rbox.download('.ssh/config')
             end
+            
             ssh_config ||= StringIO.new
             ssh_config.puts $/, "IdentityFile #{homedir}/.ssh/#{key}"
             puts "Adding IdentityFile #{key} to #{homedir}/.ssh/config"
+            
             rbox.upload(ssh_config, '.ssh/config')
             rbox.chmod('0600', '.ssh/config')
+            
           end
           
           # We need to add the host keys to the user's known_hosts file
@@ -133,9 +138,10 @@ module Rudy
           host ||= remote.scan(/\A.+?@(.+?)\:/).flatten.first
           known_hosts.puts $/, Rye.remote_host_keys(host)
           puts "Adding host key for #{host} to .ssh/known_hosts"
+
           rbox.upload(known_hosts, '.ssh/known_hosts')
           rbox.chmod('0600', '.ssh/known_hosts')
-          
+
           execute_rbox_command {
             rbox.git('clone', get_remote_uri, @path)
           }
@@ -155,7 +161,7 @@ module Rudy
       
       
       def get_remote_uri
-        ret = Rye.shell(:git, "config", "remote.#{@remote}.url")
+        ret = execute_rbox_command { Rye.shell(:git, "config", "remote.#{@remote}.url") }
         ret.stdout.first
       end
       

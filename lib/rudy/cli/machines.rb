@@ -37,8 +37,8 @@ module Rudy
           return
         end
         
-        puts "The following machine metadata will be deleted:"
-        puts dirt.collect {|m| m.name }
+        puts "The following machine metadata will be deleted:".bright
+        puts dirt.collect {|m| m.name.bright }
         execute_check(:medium)
         
         dirt.each do |m|
@@ -84,6 +84,8 @@ module Rudy
           exit
         end
         lt.each do |machine|
+          machine.update  # make sure we have the latest DNS info
+          
           # Print header
           if @@global.quiet
             print "You are #{ssh_opts[:user].to_s.bright}. " if !checked # only the 1st

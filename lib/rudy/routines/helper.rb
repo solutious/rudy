@@ -3,6 +3,7 @@
 module Rudy
   module Routines
     module HelperBase
+     include Rudy::Huxtable
      
      def execute_rbox_command(ret=nil, &command)
        begin
@@ -11,14 +12,18 @@ module Rudy
          print_response(ret)
        rescue Rye::CommandError => ex
          print_response(ex)
-         ret = Annoy.pose_question(" Keep going?\a ", /yes|y|ya|sure|you bet!/i, STDERR)
-         exit 12 unless ret
+         exit 12 unless keep_going?
        rescue Rye::CommandNotFound => ex
          STDERR.puts "  CommandNotFound: #{ex.message}".color(:red)
          STDERR.puts ex.backtrace if Rudy.debug?
+         exit 12 unless keep_going?
        end
        
        ret
+     end
+     
+     def keep_going?
+       Annoy.pose_question("  Keep going?\a ", /yes|y|ya|sure|you bet!/i, STDERR)
      end
      
      # Returns a formatted string for printing command info

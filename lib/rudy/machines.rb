@@ -91,8 +91,9 @@ module Rudy
         @state = @instance.state
         save
       elsif @instance.nil?
-        @dns_public = @dns_private = nil
-        @state = 'unknown'
+        @awsid = @dns_public = @dns_private = nil
+        @state = 'rogue'
+        # Don't save it b/c it's possible the EC2 server is just down. 
       end
     end
     

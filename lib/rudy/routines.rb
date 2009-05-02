@@ -57,9 +57,9 @@ module Rudy
         
         # Execute the action (create, list, destroy) & apply the block to each
         rmach.send(machine_action) do |machine|
-          machine_separator(machine.name, machine.awsid)
+          puts machine_separator(machine.name, machine.awsid)
           
-          msg = "Checking if instance is running..."
+          msg = preliminary_separator("Checking if instance is running...")
           Rudy::Utils.waiter(3, 120, STDOUT, msg, 0) {
             inst = machine.get_instance
             inst && inst.running?
@@ -73,14 +73,20 @@ module Rudy
           # here ensure that the metadata is always up-to-date. 
           machine.update 
           
-          msg = "Waiting for SSH daemon..."
+          msg = preliminary_separator("Waiting for SSH daemon...")
           Rudy::Utils.waiter(2, 60, STDOUT, msg, 0) {
             Rudy::Utils.service_available?(machine.dns_public, 22)
           }
           
           # TODO: trap rbox errors. We could get an authentication error. 
           opts = { :keys =>  root_keypairpath, :user => 'root', :info => false }
-          rbox = Rye::Box.new(machine.dns_public, opts)
+          begin
+            rbox = Rye::Box.new(machine.dns_public, opts)
+            rbox.connect
+          rescue Rye::NoHost => ex
+            
+            exit 66
+          end
           
           # Set the hostname if specified in the machines config. 
           # :rudy -> change to Rudy's machine name
@@ -91,7 +97,7 @@ module Rudy
           hn = current_machine_hostname || :rudy
           if hn != :default
             hn = machine.name if hn == :rudy
-            print "Setting hostame to #{hn}... "
+            print preliminary_separator("Setting hostame to #{hn}... ")
             rbox.hostname(hn) 
             puts "done"
           end
@@ -147,20 +153,29 @@ module Rudy
 
       end
       
+      def preliminary_separator(msg)
+        # TODO: Count number messages printed 1/3. ie:
+        # m-us-east-1b-stage-app-01                   
+        #   (1/3) Checking if instance is running... done
+        #   (2/3) Waiting for SSH daemon... done
+        #   (3/3) Setting hostame to m-us-east-1b-stage-app-01... done
+        ("  -> #{msg}")
+      end
+      
       def task_separator(title)
-        dashes = 59 - title.size # 
+        dashes = 59 - title.size 
         dashes = 0 if dashes < 1
-        ("%s---  %s  %s" % [$/, title, '-'*dashes])
+        ("%s---  %s  %s" % [$/, title.bright, '-'*dashes])
       end
       
       def machine_separator(name, awsid)
         dashes = 80 - name.size # 
         dashes = 0 if dashes < 1
-        name = " #{name} "
-        puts ('%s%-73s (%s)' % [$/, name, awsid]).att(:reverse)
+        ('%s %-63s awsid: %s ' % [$/, name, awsid]).att(:reverse)
       end
       
       def routine_separator(name)
+        # Not used (for now)
         name = name.to_s
         dashes = 59 - name.size # 
         dashes = 0 if dashes < 1

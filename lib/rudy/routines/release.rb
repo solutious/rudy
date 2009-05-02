@@ -4,14 +4,15 @@ module Rudy; module Routines;
   class Release < Rudy::Routines::Base
     
     def init(*args)
-      @routine = fetch_routine_config(:release)
+      @routine_name = args.first # :release or :rerelease
+      @routine = fetch_routine_config(@routine_name)
     end
     
-    def execute
-      routine_separator(:release)
-      
-      vlist = []
+    def execute()
+      routine_separator(@routine_name)
 
+      vlist = []
+      
       # Some early version control system failing
       if Rudy::Routines::SCMHelper.scm?(@routine)
         vlist = Rudy::Routines::SCMHelper.create_scm_objects(@routine)

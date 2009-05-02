@@ -32,7 +32,7 @@ module Rudy; module CLI;
       true
     end
     def release
-      machines = @rr.execute 
+      machines = @rr.execute
       
       unless machines.empty?
         puts $/, "The following machines were processed:"
@@ -66,7 +66,7 @@ module Rudy; module CLI;
       unless machines.empty?
         puts $/, "The following machines were processed:"
         machines.each do |machine|
-          puts machine.to_s
+          puts @@global.verbose > 0 ? machine.inspect : machine.dump(@@global.format)
         end
       end
       
@@ -90,22 +90,12 @@ module Rudy; module CLI;
       
       execute_check :medium
       
-      @rr.execute
-      
+      machines = @rr.execute
       puts $/, "The following instances have been destroyed:"
-      
-      # We select instances here b/c the Machine metadata should be destroyed. 
-      # This "low-level" view will reveal any machine which may have not 
-      # been shut down (which would be erroneous).
-      rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey, @@global.region)
-      lt = rinst.list_group(current_group_name, :any)
-      if !lt || lt.empty?
-        puts "No instances running"
-      else
-        lt.each do |inst|
-          puts @@global.verbose > 0 ? inst.inspect : inst.dump(@@global.format)
-        end
+      machines.each do |machine|
+        puts '%s %s ' % [machine.name.bright, machine.awsid]
       end
+      
       
     end
     

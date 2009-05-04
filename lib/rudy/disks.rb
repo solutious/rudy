@@ -46,7 +46,6 @@ class Disk < Storable
   
   def to_s(with_titles=true)
     update
-    puts "FUCK" if @mounted
     mtd = @mounted == true ? "mounted" : @status
     "%s; %3sGB; %s; %s" % [liner_note, @size, @device, mtd]
   end

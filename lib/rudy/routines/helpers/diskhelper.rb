@@ -7,7 +7,7 @@ module Rudy; module Routines;
     
     def disks?(routine)
       (routine.is_a?(Caesars::Hash) && routine.disks && 
-      routine.disks.is_a?(Caesars::Hash) && !routine.disks.empty?)
+      routine.disks.is_a?(Caesars::Hash) && !routine.disks.empty?) ? true : false
     end
     
     def paths(routine)

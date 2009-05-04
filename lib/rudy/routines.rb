@@ -50,10 +50,18 @@ module Rudy
         
         if Rudy::Routines::ScriptHelper.before_local?(@routine)  # before_local
           # Runs "before_local" scripts of routines config. 
-          # NOTE: Does not run "before" scripts b/c there are no remote machines
           puts task_separator("LOCAL SHELL")
           Rudy::Routines::ScriptHelper.before_local(@routine, sconf, lbox)
         end
+        
+        if Rudy::Routines::ScriptHelper.script_local?(@routine)  # before_local
+          # Runs "script_local" scripts of routines config. 
+          # NOTE: This is synonymous with before_local
+          puts task_separator("LOCAL SHELL")
+          Rudy::Routines::ScriptHelper.script_local(@routine, sconf, lbox)
+        end
+        
+        return unless has_remote_task?(@routine)
         
         # Execute the action (create, list, destroy) & apply the block to each
         rmach.send(machine_action) do |machine|
@@ -168,6 +176,18 @@ module Rudy
           Rudy::Routines::ScriptHelper.after_local(@routine, sconf, lbox)
         end
 
+      end
+      
+      # Does the given +routine+ define any remote tasks?
+      def has_remote_task?(routine)
+        any = [Rudy::Routines::DiskHelper.disks?(routine),
+               Rudy::Routines::ScriptHelper.before?(routine),
+               Rudy::Routines::ScriptHelper.after?(routine),
+               Rudy::Routines::UserHelper.authorize?(routine),
+               Rudy::Routines::UserHelper.adduser?(routine)]
+        # Throw away all false answers (and nil answers)
+        any = any.compact.select { |success| success }
+        !any.empty?   # Returns true if any element contains true
       end
       
       def preliminary_separator(msg)

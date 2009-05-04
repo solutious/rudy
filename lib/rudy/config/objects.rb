@@ -122,6 +122,7 @@ class Rudy::Config
     # Script blocks
     forced_hash :before        
     forced_hash :after         
+    forced_hash :script_local
     forced_hash :before_local  
     forced_hash :after_local     # We force hash the script keywords 
     forced_hash :script          # b/c we want them to store the usernames
@@ -130,6 +131,7 @@ class Rudy::Config
     chill :before_local          # the command blocks with an instance_eval
     chill :after_local           # inside a Rye::Box object.
     chill :script
+    chill :script_local
     
     # Version control systems
     forced_hash :git

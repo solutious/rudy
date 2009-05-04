@@ -8,8 +8,10 @@ module Rudy; module Routines;
     include Rudy::Routines::HelperBase  # TODO: use execute_rbox_command
     extend self
 
-    @@script_types = [:after, :before, :after_local, :before_local, :script]
+    @@script_types = [:after, :before, :after_local, :before_local, :script, :script_local]
     @@script_config_file = "rudy-config.yml"
+    
+    # TODO: refactor using this_method
     
     def before_local(routine, sconf, rbox)
       execute_command(:before_local, routine, sconf, 'localhost', rbox)
@@ -20,10 +22,20 @@ module Rudy; module Routines;
       routine[:before_local] = { 
         Rudy.sysinfo.user.to_sym => routine.delete(:before_local) 
       } if routine[:before_local].is_a?(Proc)
-      
       execute_command?(:before_local, routine)
     end
-      
+    def script_local(routine, sconf, rbox)
+      execute_command(:script_local, routine, sconf, 'localhost', rbox)
+    end
+    def script_local?(routine)
+      # before_local generally doesn't take a user name like the remote
+      # before block so we add it here (unless the user did specify it)
+      routine[:script_local] = { 
+        Rudy.sysinfo.user.to_sym => routine.delete(:script_local) 
+      } if routine[:script_local].is_a?(Proc)
+      execute_command?(:script_local, routine)
+    end
+    
     def after_local(routine, sconf, rbox)
       execute_command(:after_local, routine, sconf, 'localhost', rbox)
     end

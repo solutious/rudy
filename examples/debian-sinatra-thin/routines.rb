@@ -3,7 +3,7 @@
 # Notes:
 # * Change :rudy to the name of your user remote deployment user
 # 
-
+# THIS EXAMPLE IS INCOMPLETE -- 2009-05-03
 routines do
   
   test1 do

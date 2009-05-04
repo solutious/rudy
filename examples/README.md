@@ -1,5 +1,6 @@
 # Rudy Configuration Examples
 
+*NOTE: The examples are a work in progress*
 
 ## Contributions
 

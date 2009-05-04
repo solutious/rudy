@@ -1,3 +1,5 @@
+# THIS EXAMPLE IS INCOMPLETE -- 2009-05-03
+
 # ---------------------------------------------------------  MACHINES  --------
 # The machines block describes the "physical" characteristics
 # of your environments. 

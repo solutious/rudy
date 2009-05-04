@@ -65,7 +65,7 @@ module Rudy
           puts "[no remote tasks]"
           return
         end
-        
+        exit
         # Execute the action (create, list, destroy, restart) & apply the block to each
         rmach.send(machine_action) do |machine|
           puts machine_separator(machine.name, machine.awsid)
@@ -125,12 +125,12 @@ module Rudy
             puts task_separator("AUTHORIZE USER")
             Rudy::Routines::UserHelper.authorize(@routine, machine, rbox)
           end
-          
+          #puts 1
           if Rudy::Routines::ScriptHelper.before?(@routine)      # before
             puts task_separator("REMOTE SHELL")
             Rudy::Routines::ScriptHelper.before(@routine, sconf, machine, rbox)
           end
-          
+          #puts 2
           if Rudy::Routines::DiskHelper.disks?(@routine)         # disk
             puts task_separator("DISKS")
             if rbox.ostype == "sunos"
@@ -139,7 +139,9 @@ module Rudy
               Rudy::Routines::DiskHelper.execute(@routine, machine, rbox)
             end    
           end
-
+          
+          #puts "TODO: WHY IS CHECKOUT HAPPENING BEFORE THE BEFORE BLOCK???"
+          
           # Startup, shutdown, release, deploy, etc...
           routine_action.call(machine, rbox) if routine_action
           
@@ -191,6 +193,7 @@ module Rudy
                Rudy::Routines::UserHelper.adduser?(routine)]
         # Throw away all false answers (and nil answers)
         any = any.compact.select { |success| success }
+        #p any
         !any.empty?   # Returns true if any element contains true
       end
       

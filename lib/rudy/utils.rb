@@ -21,7 +21,7 @@ module Rudy
           ip = /([0-9]{1,3}\.){3}[0-9]{1,3}/.match(ipstr).to_s
           break if ip && !ip.empty?
         end
-      rescue SocketError, Errno::ETIMEDOUT
+      rescue SocketError, Errno::ETIMEDOUT => ex
         STDERR.puts "Connection Error. Check your internets!"
       end
       ip += "/32" if ip

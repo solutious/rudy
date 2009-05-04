@@ -154,6 +154,7 @@ module Rudy
       global :C, :config, String, "Specify another configuration file to read (ie: #{Rudy::CONFIG_FILE})"
       global :Y, :yes, "Assume a correct answer to confirmation questions"
       global :q, :quiet, "Run with less output"
+      global :O, :offline, "Be cool about the internet being down"
       global :v, :verbose, "Increase verbosity of output (i.e. -v or -vv or -vvv)" do
         @verbose ||= 0
         @verbose += 1

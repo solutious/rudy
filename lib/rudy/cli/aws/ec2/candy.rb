@@ -6,7 +6,7 @@ module AWS; module EC2;
     
     def status_valid?
       avail = Rudy::Utils.service_available?('status.aws.amazon.com', 80, 5)
-      raise ServiceUnavailable, 'status.aws.amazon.com' unless avail
+      raise ServiceUnavailable, 'status.aws.amazon.com' unless @@global.offline || avail
       true
     end
     def status

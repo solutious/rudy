@@ -23,6 +23,7 @@ module Rudy
     end
     
     module ObjectBase
+      include Rudy::Huxtable
       
     protected
 
@@ -52,9 +53,9 @@ module Rudy
         rescue Timeout::Error => ex
           STDERR.puts "Timeout (#{timeout}): #{ex.message}!"
         rescue SocketError => ex
-          raise SocketError, "Check your Internets!"
           #STDERR.puts ex.message
           #STDERR.puts ex.backtrace
+          raise SocketError, "Check your Internets!" unless @@global.offline
         ensure
           response ||= default
         end

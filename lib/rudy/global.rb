@@ -34,6 +34,8 @@ module Rudy
     field :local_user
     field :local_hostname
     
+    field :offline
+    
     field :config => String
     
     attr_accessor :print_header

@@ -81,9 +81,16 @@ end
 
 
 # ----------------------------------------------------------- COMMANDS --------
-# The commands block defines shell commands to be added to the default list 
-# defined by Rye::Cmd (Rudy executes all SSH commands via Rye). Commands can 
-# have any name except for keywords already used by Rudy. 
+# The commands block defines shell commands that can be used in routines. The
+# ones defined here are added to the default list defined by Rye::Cmd (Rudy 
+# executes all SSH commands via Rye). 
+#
+# Usage: 
+#
+# allow COMMAND-NAME
+# allow COMMAND-NAME, '/path/2/COMMAND'
+# allow COMMAND-NAME, '/path/2/COMMAND', 'default argument', 'another arg'
+#
 commands do
   allow :make
   allow :gem_install, "/usr/bin/gem", "install", :V, "--no-rdoc", "--no-ri"

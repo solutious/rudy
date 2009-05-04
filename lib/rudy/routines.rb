@@ -61,9 +61,12 @@ module Rudy
           Rudy::Routines::ScriptHelper.script_local(@routine, sconf, lbox)
         end
         
-        return unless has_remote_task?(@routine)
+        unless has_remote_task?(@routine)
+          puts "[no remote tasks]"
+          return
+        end
         
-        # Execute the action (create, list, destroy) & apply the block to each
+        # Execute the action (create, list, destroy, restart) & apply the block to each
         rmach.send(machine_action) do |machine|
           puts machine_separator(machine.name, machine.awsid)
           
@@ -183,6 +186,7 @@ module Rudy
         any = [Rudy::Routines::DiskHelper.disks?(routine),
                Rudy::Routines::ScriptHelper.before?(routine),
                Rudy::Routines::ScriptHelper.after?(routine),
+               Rudy::Routines::ScriptHelper.script?(routine),
                Rudy::Routines::UserHelper.authorize?(routine),
                Rudy::Routines::UserHelper.adduser?(routine)]
         # Throw away all false answers (and nil answers)

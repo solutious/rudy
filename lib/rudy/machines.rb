@@ -144,6 +144,9 @@ module Rudy
       super
     end
     
+    def restart
+      @ec2inst.restart(@awsid) if running?
+    end
     
     def Machine.generate_machine_data
       data = {      # Give the machine an identity
@@ -221,6 +224,19 @@ module Rudy
         #puts "Destroying #{mach.name}"
         mach.destroy
       end
+    end
+    
+    
+    def restart(&each_mach)
+      raise MachineGroupNotDefined, current_machine_group unless known_machine_group?
+      raise MachineGroupNotRunning, current_machine_group unless running?
+      machines = list
+      machines.each do |mach|
+        each_mach.call(mach) if each_mach
+        puts "Restarting #{mach.name}"
+        mach.restart
+      end
+      machines
     end
     
     def list(more=[], less=[], &each_mach)

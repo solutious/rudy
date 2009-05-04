@@ -16,8 +16,12 @@ module Rudy; module Routines;
         STDERR.puts "[this is a generic startup routine]"
         @routine = {}
       end
+      machines = []
       generic_machine_runner(:create) do |machine,rbox|
+        puts $/, "Starting up...", $/
+        machines << machine
       end
+      machines
     end
 
     # Called by generic_machine_runner

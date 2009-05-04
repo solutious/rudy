@@ -11,6 +11,9 @@ module Rudy
          return unless ret.is_a?(Rye::Rap)
          puts '  ' << ret.stdout.join("#{$/}  ") if !ret.stdout.empty?
          print_response(ret)
+       rescue IOError => ex
+         STDERR.puts "  Connection Error (#{ex.message})".color(:red)
+         exit 12 unless keep_going?
        rescue Rye::CommandError => ex
          print_response(ex)
          exit 12 unless keep_going?

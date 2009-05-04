@@ -9,21 +9,25 @@ module Rudy; module CLI;
       true
     end
     def startup
-
-      @rr.execute
-      
+      machines = @rr.execute
       puts $/, "The following machines are now available:"
-      rmach = Rudy::Machines.new
-      rmach.list do |machine|
+      machines.each do |machine|
         puts machine.to_s
       end
-      
-      if @@global.environment == @@config.defaults.environment && 
-         @@global.role == @@config.defaults.role
-         #puts
-         #puts "Login with: rudy -u root ssh"
-      end
-      
+    end
+    
+    def restart_valid?
+      @rr = Rudy::Routines::Restart.new
+      @rr.raise_early_exceptions
+      true
+    end
+    def restart
+      #machines = @rr.execute
+      #puts $/, "The following machines have been restarted:"
+      #machines.each do |machine|
+      #  puts machine.to_s
+      #end
+      #puts "Restart is disabled"
     end
     
     def release_valid?

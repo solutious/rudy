@@ -15,7 +15,7 @@ module Rudy; module Routines;
       end
       machines = []
       generic_machine_runner(:destroy) do |machine,rbox|
-        #puts task_separator("SHUTDOWN")
+        puts $/, "Shutting down...", $/
         machines << machine
       end
       machines

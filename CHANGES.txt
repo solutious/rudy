@@ -15,11 +15,12 @@ RUDY, CHANGES
 * FIXED: Symbol errors in 1.8 
 * FIXED: Command blocks for root user are always run first now in Routines config.
 * ADDED: "script" keyword to routines config. 
-* CHANGE: routines before, after, and script blocks are now processed by Rye::Box.batch
-as Procs. 
+* CHANGE: routines before, after, and script blocks are now processed by Rye::Box.batch as Procs. 
 * CHANGE: deny was removed from commands config (it will come back later). 
 * ADDED: examples/
 * CHANGE: Rudy now checks the current working directory for machines, commands, etc... configs
+* ADDED: script_local
+* ADDED: Routine now checks whether there are any remote tasks. If not, it doesn't loop through machines. 
 
 
 #### 0.7.0 (2009-04-02) ###############################

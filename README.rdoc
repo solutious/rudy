@@ -29,7 +29,7 @@ All configuration is organized into the zones, environments, and roles that you 
 * Powerful command-line tools
   * <tt>$ rudy -u root ssh</tt>
   * <tt>$ rudy -e testing -r database startup</tt>
-* Use _any_ Amazon machine image (AMI)
+* Use _any Linux_ Amazon machine image (AMI) (partial Solaris support)
 * Complete command-line interface for EC2. See <tt>bin/rudy-ec2</tt>.
 
 == Installation

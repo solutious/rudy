@@ -4,6 +4,7 @@ module Rudy
 class Disk < Storable
   include Rudy::MetaData::ObjectBase
   
+  
   field :rtype
   field :awsid
   field :status
@@ -20,6 +21,11 @@ class Disk < Storable
   field :size
   #field :backups => Array
   
+  # Is the associated volume formatted? One of: true, false, [empty]. 
+  # [empty] means we don't know and it's the default. 
+  field :raw
+  
+  field :fstype
   field :mounted
   
   def init(path=nil, size=nil, device=nil, position=nil)
@@ -74,6 +80,7 @@ class Disk < Storable
     raise "#{name} is already running" if exists?
     vol = @rvol.create(@size, @zone, snapshot) 
     @awsid = vol.awsid
+    @raw = true
     self.save
     self
   end

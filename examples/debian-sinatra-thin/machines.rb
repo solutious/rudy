@@ -22,6 +22,7 @@ machines do
         path "/rudy/disk1" do
           size 10
           device "/dev/sdr"
+          fstype 'ext2'
         end
       end
     

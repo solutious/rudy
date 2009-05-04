@@ -40,6 +40,7 @@ module Rudy
       colour = rap.exit_code != 0 ? :red : :normal
       [:stderr].each do |sumpin|
         next if rap.send(sumpin).empty?
+        STDERR.puts
         STDERR.puts(("  #{sumpin.to_s.upcase}  " << '-'*38).color(colour).bright)
         STDERR.puts "  " << rap.send(sumpin).join("#{$/}  ").color(colour)
       end

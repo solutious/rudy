@@ -8,7 +8,7 @@ RUDY, CHANGES
 * TODO: Tests for AWS HTTPS
 
 
-#### 0.7.1 (2009-04-02) ###############################
+#### 0.7.1 (2009-04-04) ###############################
 
 * FIXED: rudy wasn't honouring -C option for specifying a config file
 * FIXED: Was disabling, but not enabling colour
@@ -19,6 +19,7 @@ RUDY, CHANGES
 as Procs. 
 * CHANGE: deny was removed from commands config (it will come back later). 
 * ADDED: examples/
+* CHANGE: Rudy now checks the current working directory for machines, commands, etc... configs
 
 
 #### 0.7.0 (2009-04-02) ###############################

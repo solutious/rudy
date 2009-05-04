@@ -7,16 +7,16 @@
 routines do
   
   test1 do
-    adduser :rudy
-    authorize :rudy
-    before :root do
-      ls
-    end
-    before :rudy do    
-      ls
+    disks do 
+      create "/rudy/disk1"
     end
   end
   
+  test2 do
+    disks do 
+      destroy "/rudy/disk1"
+    end
+  end
   sysupdate do
     before :root do                  
       apt_get "update"               
@@ -65,7 +65,7 @@ routines do
     shutdown do
       disks do
         # Rudy unmounts the EBS volume and deletes it. Careful! 
-        destroy "/rudy/disk1"
+        #destroy "/rudy/disk1"
       end
     end
   end

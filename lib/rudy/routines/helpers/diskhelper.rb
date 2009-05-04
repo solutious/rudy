@@ -25,17 +25,23 @@ module Rudy; module Routines;
       
       # We need to add mkfs since it's not enabled by default. 
       # We add it only to this instance we're using. 
-      def @rbox.mkfs(*args); cmd('mkfs', args); end
+      # We give it a funny name so we can delete it. 
+      def @rbox.rudy_mkfs(*args); cmd('mkfs', args); end
+      
       
       return unless disks?(routine)
-      
+
+      modified = []
       routine.disks.each_pair do |action, disks|
         unless DiskHelper.respond_to?(action)  
           STDERR.puts %Q(DiskHelper: unknown action "#{action}")
           next
         end
         send(action, disks) # create, copy, destroy, ...
+        modified << disks
       end
+      
+      # TODO: remove rudy_mkfs method
       
     end
     
@@ -46,17 +52,26 @@ module Rudy; module Routines;
         disk = Rudy::Disk.new(path, props[:size], props[:device], @machine.position)
         olddisk = rdisk.get(disk.name)
         if olddisk && olddisk.exists?
-          puts "Disk exists: #{olddisk.name}".color(:red)
-          return
+          olddisk.update
+          puts "Disk found: #{olddisk.name}"
+          if olddisk.attached?
+            puts "In use. Skipping...".color(:red)
+            return
+          else
+            disk = olddisk
+          end
+        else
+          puts "Creating #{disk.name} "
+          disk.fstype = props[:fstype] || 'ext3'
         end
         
-        puts "Creating #{disk.name} "
-        
-        msg = "Creating volume... "
-        disk.create
-        Rudy::Utils.waiter(2, 60, STDOUT, msg) { 
-          disk.available?
-        }
+        unless disk.exists? # Checks the EBS volume
+          msg = "Creating volume... "
+          disk.create
+          Rudy::Utils.waiter(2, 60, STDOUT, msg) { 
+            disk.available?
+          }
+        end
         
         msg = "Attaching #{disk.awsid} to #{@machine.awsid}... "
         disk.attach(@machine.awsid)
@@ -71,30 +86,40 @@ module Rudy; module Routines;
         
         # TODO: Cleanup. See ScriptHelper
         begin
-          print "Creating ext3 filesystem for #{disk.device}... "
-          execute_rbox_command { 
-            
-            @rbox.mkfs(:t, "ext3", :F, disk.device)
-            @rbox.mkdir(:p, disk.path)
+          if disk.raw == true
+            print "Creating #{disk.fstype} filesystem for #{disk.device}... "
+            @rbox.rudy_mkfs(:t, disk.fstype, :F, disk.device)
+            disk.raw = false
+            disk.save
             puts "done"
-        
-            print "Mounting at #{disk.path}... "
-        
-            @rbox.mount(:t, 'ext3', disk.device, disk.path)
-          }
+          end
+          
+          @rbox.mkdir(:p, disk.path)
+          
+          print "Mounting at #{disk.path}... "
+      
+          ret = @rbox.mount(:t, disk.fstype, disk.device, disk.path) 
+          print_response ret
+          if ret.exit_code > 0
+            STDERR.puts "Error creating disk".color(:red)
+            return
+          else
+            puts "done"
+          end
           disk.mounted = true
           disk.save
+          
         rescue Net::SSH::AuthenticationFailed, Net::SSH::HostKeyMismatch => ex  
           STDERR.puts "Error creating disk".color(:red)
           STDERR.puts ex.message.color(:red)
          rescue Rye::CommandNotFound => ex
           puts "  CommandNotFound: #{ex.message}".color(:red)
+          
         rescue
           STDERR.puts "Error creating disk" .color(:red)
           Rudy::Utils.bug
         end
-        puts "done"
-        
+ 
       end
     end
       
@@ -127,7 +152,7 @@ module Rudy; module Routines;
           sleep 0.5
         end
         
-        puts "Destroying metadata... "
+        puts "Destroying volume and metadata... "
         disk.destroy
         
       end

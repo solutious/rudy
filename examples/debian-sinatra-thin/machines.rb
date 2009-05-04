@@ -7,20 +7,9 @@ machines do
   # The configuration inside the env block is available to all its 
   # roles. The configuration inside the role blocks is available only
   # to machines in that specific role. 
-  env :stage do
+  env :dev, :stage, :prod do
     ami "ami-e348af8a"   # Debian 5.0 32-bit, Alestic
     size 'm1.small'
-    
-    # see: http://www.cubiclemuses.com/cm/articles/2009/04/09/rails-passenger-open-solaris-ec2/
-    role :solaris do
-      ami "ami-c7cf28ae"
-      disks do
-        path "/rudy/disk1" do
-          size 2
-          device 3
-        end
-      end
-    end
     
     role :app do
       #positions 2
@@ -29,7 +18,7 @@ machines do
       # this configuration when it executes a routine (see below).
       disks do
         path "/rudy/disk1" do
-          size 2
+          size 10
           device "/dev/sdr"
         end
       end

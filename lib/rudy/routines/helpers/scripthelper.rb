@@ -97,8 +97,12 @@ module Rudy; module Routines;
         def rbox.rudy_tmp_rm(*args); cmd('rm', args); end
         
         original_user = rbox.user
-        users = routine[timing] || {}
-        users.each_pair do |user, proc|
+        user_blocks = routine[timing] || {}
+        users = user_blocks.keys
+        # Root stuff is always run first. 
+        users.unshift(users.delete(:root)) if users.member?(:root)
+        users.each do |user|
+          proc = user_blocks[user]
           
           begin
             rbox.switch_user user # does nothing if it's the same user

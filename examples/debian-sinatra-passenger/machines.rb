@@ -1,4 +1,3 @@
-# THIS EXAMPLE IS INCOMPLETE -- 2009-05-03
 
 # ---------------------------------------------------------  MACHINES  --------
 # The machines block describes the "physical" characteristics
@@ -14,15 +13,13 @@ machines do
     size 'm1.small'
     
     role :app do
-      #positions 2
-    
       # You can define disks for the stage-app machines. Rudy uses 
       # this configuration when it executes a routine (see below).
       disks do
         path "/rudy/disk1" do
           size 10
           device "/dev/sdr"
-          fstype 'ext2'
+          fstype 'ext3'
         end
       end
     

@@ -1,4 +1,3 @@
-# THIS EXAMPLE IS INCOMPLETE -- 2009-05-03
 
 routines do
   
@@ -26,12 +25,6 @@ routines do
     end
   end
   
-  test1 do
-    script_local do
-      ls :l
-      uname :a
-    end
-  end
   
   
 end

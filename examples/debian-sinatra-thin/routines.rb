@@ -46,12 +46,6 @@ routines do
       end
     end
     
-    create_skeleton do
-      script_local do
-        git :clone "git://github.com/zapnap/sinatra-template.git"
-      end
-    end
-    
     restart do
       after :rudy do
         thin :c, sinatra_home, "restart"

@@ -98,18 +98,20 @@ module Rudy
           
         doc = call(:get, params)
         results = []
-        REXML::XPath.each(doc, "//Item") do |item|
-          name = REXML::XPath.first(item, './Name/text()').to_s
+        if doc
+          REXML::XPath.each(doc, "//Item") do |item|
+            name = REXML::XPath.first(item, './Name/text()').to_s
 
-          attributes = {'Name' => name}
-          REXML::XPath.each(item, "./Attribute") do |attr|
-            key = REXML::XPath.first(attr, './Name/text()').to_s
-            value = REXML::XPath.first(attr, './Value/text()').to_s
-            ( attributes[key] ||= [] ) << value
+            attributes = {'Name' => name}
+            REXML::XPath.each(item, "./Attribute") do |attr|
+              key = REXML::XPath.first(attr, './Name/text()').to_s
+              value = REXML::XPath.first(attr, './Value/text()').to_s
+              ( attributes[key] ||= [] ) << value
+            end
+            results << attributes
           end
-          results << attributes
+          #return results, REXML::XPath.first(doc, '//NextToken/text()').to_s
         end
-        #return results, REXML::XPath.first(doc, '//NextToken/text()').to_s
         
         hash_results = {}
         results.each do |item|
@@ -134,8 +136,10 @@ module Rudy
 
         doc = call(:get, params)
         results = []
-        REXML::XPath.each(doc, '//ItemName/text()') do |item|
-          results << item.to_s
+        if doc
+          REXML::XPath.each(doc, '//ItemName/text()') do |item|
+            results << item.to_s
+          end
         end
         
         #return results, REXML::XPath.first(doc, '//NextToken/text()').to_s
@@ -159,18 +163,20 @@ module Rudy
 
         doc = call(:get, params)
         results = []
-        REXML::XPath.each(doc, "//Item") do |item|
-          name = REXML::XPath.first(item, './Name/text()').to_s
+        if doc
+          REXML::XPath.each(doc, "//Item") do |item|
+            name = REXML::XPath.first(item, './Name/text()').to_s
 
-          attributes = {'Name' => name}
-          REXML::XPath.each(item, "./Attribute") do |attr|
-            key = REXML::XPath.first(attr, './Name/text()').to_s
-            value = REXML::XPath.first(attr, './Value/text()').to_s
-            ( attributes[key] ||= [] ) << value
+            attributes = {'Name' => name}
+            REXML::XPath.each(item, "./Attribute") do |attr|
+              key = REXML::XPath.first(attr, './Name/text()').to_s
+              value = REXML::XPath.first(attr, './Value/text()').to_s
+              ( attributes[key] ||= [] ) << value
+            end
+            results << attributes
           end
-          results << attributes
+          #return results, REXML::XPath.first(doc, '//NextToken/text()').to_s
         end
-        #return results, REXML::XPath.first(doc, '//NextToken/text()').to_s
         
         hash_results = {}
         results.each do |item|
@@ -216,10 +222,12 @@ module Rudy
           }
         )
         attributes = {}
-        REXML::XPath.each(doc, "//Attribute") do |attr|
-          key = REXML::XPath.first(attr, './Name/text()').to_s
-          value = REXML::XPath.first(attr, './Value/text()').to_s
-          ( attributes[key] ||= [] ) << value
+        if doc
+          REXML::XPath.each(doc, "//Attribute") do |attr|
+            key = REXML::XPath.first(attr, './Name/text()').to_s
+            value = REXML::XPath.first(attr, './Value/text()').to_s
+            ( attributes[key] ||= [] ) << value
+          end
         end
         attributes = nil if attributes.empty?
         attributes

@@ -87,7 +87,6 @@ end
 commands do
   allow :gem_install, "/usr/bin/gem", "install", :V, "--no-rdoc", "--no-ri"
   allow :apt_get, "/usr/bin/apt-get", :y, :q
-  deny :kill
 end
 
 

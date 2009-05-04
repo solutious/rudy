@@ -26,8 +26,7 @@ module Rudy
     protected
       def init
         
-        
-        Rudy::Huxtable.update_config
+        #Caesars.enable_debug
         
         # The CLI wants output!
         Rudy::Huxtable.update_logger STDOUT
@@ -35,6 +34,16 @@ module Rudy
         # Send The Huxtables the global values from the command-line
         Rudy::Huxtable.update_global @global
         
+        # Reload configuration. This must come after update_global 
+        # so it will catch the @@global.config path (if supplied).
+        begin
+          Rudy::Huxtable.update_config
+        rescue Caesars::SyntaxError => ex
+          STDERR.puts ex.message
+          STDERR.puts ex.backtrace if @@global.verbose > 0
+          exit 81
+        end
+      
         unless @@global.accesskey && @@global.secretkey
           STDERR.puts "No AWS credentials. Check your configs!"
           STDERR.puts "Try: rudy init"

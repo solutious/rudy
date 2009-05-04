@@ -38,8 +38,9 @@ module Rudy
     #def logger; @@logger; end
     
     def self.update_config(path=nil)
-      # nil or otherwise bad paths send to look_and_load are ignored
-      @@config.look_and_load(path || nil)
+      @@config.verbose = (@@global.verbose > 0)
+      # nil and bad paths sent to look_and_load are ignored
+      @@config.look_and_load(path || @@global.config)
       @@global.apply_config(@@config)
     end
     

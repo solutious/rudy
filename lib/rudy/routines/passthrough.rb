@@ -14,7 +14,7 @@ module Rudy; module Routines;
     def execute(&each_mach)
       routine_separator(@routine_name)
       machines = []
-      generic_machine_runner(:list) do |machine|
+      generic_machine_runner(:list) do |machine,rbox|
         puts $/ #, "[routine: #{@routine_name}]"
         machines << machine
       end

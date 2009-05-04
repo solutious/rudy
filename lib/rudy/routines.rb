@@ -131,7 +131,21 @@ module Rudy
 
           # Startup, shutdown, release, deploy, etc...
           routine_action.call(machine, rbox) if routine_action
-
+          
+          # The "after" blocks are synonymous with "script" blocks. 
+          # For some routines, like startup, it makes sense to an 
+          # "after" block b/c "script" is ambiguous. In generic
+          # routines, there is no concept of before or after. The
+          # definition is the entire routine so we use "script".
+          # NOTE: If both after and script are supplied they will 
+          # both be executed. 
+          if Rudy::Routines::ScriptHelper.script?(@routine)      # script
+            puts task_separator("REMOTE SHELL")
+            # Runs "after" scripts of routines config
+            Rudy::Routines::ScriptHelper.script(@routine, sconf, machine, rbox)
+          end
+          
+          
           if Rudy::Routines::ScriptHelper.after?(@routine)       # after
             puts task_separator("REMOTE SHELL")
             # Runs "after" scripts of routines config

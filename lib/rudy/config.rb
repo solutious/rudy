@@ -61,10 +61,13 @@ module Rudy
         break
       end
       
+      typelist = self.keys.collect { |g| "#{g}.rb" }.join(',')
+      
       # Rudy then looks for the rest of the config in these locations
       @paths += Dir.glob(File.join(cwd, 'Rudyfile')) || []
       @paths += Dir.glob(File.join(cwd, 'config', 'rudy', '*.rb')) || []
       @paths += Dir.glob(File.join(cwd, '.rudy', '*.rb')) || []
+      @paths += Dir.glob(File.join(cwd, "{#{typelist}}")) || []
       @paths += Dir.glob(File.join('/etc', 'rudy', '*.rb')) || []
       @paths &&= @paths.uniq
       

@@ -42,7 +42,7 @@ module Rudy
       postprocess
       # These attributes MUST have values. 
       @verbose ||= 0
-      @nocolor = true unless @nocolor == "false" || @nocolor.is_a?(FalseClass)
+      @nocolor = true unless @nocolor == "false" || @nocolor == false
       @quiet ||= false
       @format ||= :string # as in, to_s
       @print_header = true if @print_header == nil
@@ -97,9 +97,9 @@ module Rudy
       @position &&= @position.to_s.rjust(2, '0')  
       @format &&= @format.to_sym rescue nil
       
-      String.disable_color if @nocolor
-      Rudy.enable_quiet if @quiet
-      Annoy.enable_skip if @yes
+      @nocolor ? String.disable_color : String.enable_color
+      @quiet ? Rudy.enable_quiet : Rudy.disable_quiet
+      @yes ? Annoy.enable_skip : Annoy.disable_skip
     end
     
     def apply_environment_variables

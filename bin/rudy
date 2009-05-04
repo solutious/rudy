@@ -10,8 +10,8 @@
 
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib') # Put our local lib in first place
 $:.unshift File.join(File.dirname(__FILE__), '..', 'vendor', 'highline-1.5.1', 'lib')
-#%w{net-ssh amazon-ec2 caesars drydock rye}.each { |dir| $:.unshift File.join(File.dirname(__FILE__), '..', '..', dir, 'lib') }
-#require 'rubygems'
+%w{net-ssh amazon-ec2 caesars drydock rye}.each { |dir| $:.unshift File.join(File.dirname(__FILE__), '..', '..', dir, 'lib') }
+require 'rubygems'
 
 #$SAFE = 1   # require is unsafe in Ruby 1.9??
 

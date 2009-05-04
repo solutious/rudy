@@ -91,21 +91,16 @@ class Rudy::Config
           arg.is_a?(Symbol) ? ":#{arg}" : "'#{arg}'"
         end
         hard_args = args.empty? ? "*args" : "#{args.join(', ')}, *args"
-        
-        # Command keywords must be parsed with forced_array. See ScriptHelper.
-        Rudy::Config::Routines.forced_array cmd
+
+        # TODO: Use define_method 
         Rye::Cmd.module_eval %Q{
           def #{cmd}(*args); cmd(:'#{path}', #{hard_args}); end
         }
+        
       end
-      # We deny commands by telling routines to not parse the given keywords
-      self.deny.each do |cmd|
-        Rudy::Config::Routines.forced_ignore cmd.first # cmd is a forced array
-        # We don't remove the method from Rye:Cmd because we 
-        # may need elsewhere in Rudy. Forced ignore ensures
-        # the config is not stored anyhow.
-      end
-      raise Caesars::Config::ForceRefresh.new(:routines)
+      ## NOTE: We now process command blocks as Procs rather than individual commands.
+      # There's currently no need to ForceRefresh here
+      ##raise Caesars::Config::ForceRefresh.new(:routines)
     end
   end
   
@@ -124,31 +119,24 @@ class Rudy::Config
     forced_hash :restore
     forced_hash :mount
     
-    # Remote scripts
-    forced_hash :before
-    forced_hash :before_local
-    forced_hash :after
-    forced_hash :after_local
+    # Script blocks
+    forced_hash :before        
+    forced_hash :after         
+    forced_hash :before_local  
+    forced_hash :after_local     # We force hash the script keywords 
+    forced_hash :script          # b/c we want them to store the usernames
+    chill :before                # as hash keys. 
+    chill :after                 # We also chill them b/c we want to execute
+    chill :before_local          # the command blocks with an instance_eval
+    chill :after_local           # inside a Rye::Box object.
+    chill :script
     
     # Version control systems
     forced_hash :git
     forced_hash :svn
     
-    def init
-      
+    def init      
     end
-    
-    # Add remote shell commands to the DSL as forced Arrays. 
-    # Example:
-    #     ls :a, :l, "/tmp"  # => :ls => [[:a, :l, "/tmp"]]
-    #     ls :o              # => :ls => [[:a, :l, "/tmp"], [:o]]
-    # NOTE: Beware of namespace conflicts in other areas of the DSL,
-    # specifically shell commands that have the same name as a keyword
-    # we want to use in the DSL. This includes commands that were added
-    # to Rye::Cmd before Rudy is 'require'd. 
-    Rye::Cmd.instance_methods.sort.each do |cmd|
-      forced_array cmd
-    end
-    
+
   end
 end

@@ -31,7 +31,7 @@ module Rudy; module CLI;
     end
     
     def release_valid?
-      @rr = Rudy::Routines::Release.new
+      @rr = Rudy::Routines::Release.new(@alias) # Important: could be rerelease
       @rr.raise_early_exceptions
       true
     end

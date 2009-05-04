@@ -65,7 +65,7 @@ module Rudy
           puts "[no remote tasks]"
           return
         end
-        exit
+        
         # Execute the action (create, list, destroy, restart) & apply the block to each
         rmach.send(machine_action) do |machine|
           puts machine_separator(machine.name, machine.awsid)
@@ -90,7 +90,6 @@ module Rudy
               Rudy::Utils.service_available?(machine.dns_public, 22)
             }
           end
-          
           
           # TODO: trap rbox errors. We could get an authentication error. 
           opts = { :keys =>  root_keypairpath, :user => 'root', :info => @@global.verbose > 0 }
@@ -139,8 +138,6 @@ module Rudy
               Rudy::Routines::DiskHelper.execute(@routine, machine, rbox)
             end    
           end
-          
-          #puts "TODO: WHY IS CHECKOUT HAPPENING BEFORE THE BEFORE BLOCK???"
           
           # Startup, shutdown, release, deploy, etc...
           routine_action.call(machine, rbox) if routine_action
@@ -193,7 +190,6 @@ module Rudy
                Rudy::Routines::UserHelper.adduser?(routine)]
         # Throw away all false answers (and nil answers)
         any = any.compact.select { |success| success }
-        #p any
         !any.empty?   # Returns true if any element contains true
       end
       

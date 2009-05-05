@@ -23,6 +23,8 @@ require 'drydock'
 module RudyCLI_EC2
   extend Drydock
   
+  debug :on
+  default :instances
   
   # -----------------------------------  AMAZON EC2 COMMANDS  --------
   # ------------------------------------------------------------------
@@ -47,6 +49,8 @@ module RudyCLI_EC2
   
   about "Amazon EC2 instance console output"
   usage "rudy-ec2 console [-g group] [instance ID]"
+  usage "rudy-ec2 [-k path/2/privatekey] console [instance ID]"
+  usage "NOTE: Private key is required only for Windows instances"
   option :g, :group, String, "A security group name"
   argv :awsid
   command :consoles => Rudy::CLI::AWS::EC2::Instances
@@ -54,8 +58,8 @@ module RudyCLI_EC2
   command_alias :consoles, :c
   
   about "Copy files to or from machines."
-  usage "rudy-ec2 copy [-p] [-r] [-u user] [-k path/2/privatekey] source target"
-  usage "rudy-ec2 upload -k path/2/privatekey -u username local-source target"
+  usage "rudy-ec2 copy [-p] [-r] source target"
+  usage "rudy-ec2 [-u user] [-k path/2/privatekey] upload local-source target"
   usage "rudy-ec2 download remote-source target"
   usage "NOTE: Use quotes when using a tilda or asterisk in remote paths ('~/')."
   usage "rudy-ec2 download '~/*' /tmp/"
@@ -207,12 +211,7 @@ module RudyCLI_EC2
   command_alias :zones, :zone
   command_alias :zones, :z
   
-  
-  # --------------------------------  RUDY-EC2 MISCELLANEOUS  --------
-  # ------------------------------------------------------------------
-  
-  default :instances
-  debug :off
+
   
 end
 

@@ -209,8 +209,6 @@ module Rudy
       end
       
       def machine_separator(name, awsid)
-        dashes = 80 - name.size # 
-        dashes = 0 if dashes < 1
         ('%s %-63s awsid: %s ' % [$/, name, awsid]).att(:reverse)
       end
       

@@ -12,7 +12,7 @@ module AWS; module EC2;
     def create_keypairs
       rkey = Rudy::AWS::EC2::KeyPairs.new(@@global.accesskey, @@global.secretkey, @@global.region)
       kp = execute_action { rkey.create(@argv.name) }
-      if %w[s string].member?(@@global.format)
+      if [:s, :string].member?(@@global.format)
         puts "Name: #{kp.name}"
         puts "Fingerprint: #{kp.fingerprint}", $/
         puts "Copy the following private key data into a file."

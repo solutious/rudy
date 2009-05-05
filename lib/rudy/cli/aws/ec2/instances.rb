@@ -113,6 +113,10 @@ module AWS; module EC2;
     
     def consoles_valid?
       @rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey, @@global.region)
+      if @@global.pkey
+        raise "Cannot find file #{@@global.pkey}" unless File.exists?(@@global.pkey)
+        raise "Insecure permissions for #{@@global.pkey}" unless (File.stat(@@global.pkey).mode & 600) == 0
+      end
       raise "No instances" unless @rinst.any?
       true
     end
@@ -123,11 +127,35 @@ module AWS; module EC2;
       opts[:id] &&= [opts[:id]].flatten
       
       lt = @rinst.list_group(opts[:group], :any, opts[:id]) do |inst|
-        puts '-'*50
-        puts "Console for: #{inst.liner_note}", $/
+        puts instance_separator(inst.dns_public, inst.awsid)
         console = @rinst.console(inst.awsid)
         output = console ? Base64.decode64(console) : "Unavailable"
-        puts output.noansi # Remove color and clear, etc...
+        
+        # The linux console can include ANSI escape codes for color, 
+        # clear screen etc... We strip them out to get rid of the 
+        # clear specifically. Otherwise the display is messed!
+        output &&= output.noansi 
+        
+        puts output 
+        
+        if output.match(/<Password>(.+)<\/Password>/m)  # /m, match multiple lines
+          puts
+          if @@global.pkey
+            encrtypted_text = ($1 || '').strip
+            k = Rye::Key.from_file(@@global.pkey)
+            pword = k.decrypt(encrtypted_text)
+            ret = Annoy.pose_question("Display password?\a ", /yes|y|ya|sure|you bet!/i, STDERR)
+            if ret
+              answer = "%s: %s" % ['password', pword] 
+              Annoy.timed_display(answer, STDERR, 10)
+            end
+            puts
+          else
+            puts "Please supply a private key path to decode the administrator password"
+            puts "rudy-ec2 -k path/2/privatekey console [-g group] [instance ID]"
+          end
+        end
+        
       end
       
     end
@@ -184,6 +212,9 @@ module AWS; module EC2;
       status
     end
     
+    def instance_separator(name, awsid)
+      ('%s %-63s awsid: %s ' % [$/, name, awsid]).att(:reverse)
+    end
     
   end
 

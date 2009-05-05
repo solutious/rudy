@@ -14,12 +14,9 @@ module AWS; module EC2;
     end
     def create_groups
       opts = check_options
-      puts "Creating #{@argv.name}"
-      
       execute_action { 
         @rgroups.create(@argv.name, @option.description, opts[:addresses], opts[:ports], opts[:protocols])
       }
-      
       @rgroups.list(@argv.name) do |group|
         puts @@global.verbose > 0 ? group.inspect : group.dump(@@global.format)
       end

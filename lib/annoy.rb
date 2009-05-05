@@ -186,9 +186,12 @@ class Annoy
     begin
       success = Timeout::timeout(period || @@period) do
         regexp &&= Regexp.new regexp
-        writer.print msg 
-        writer.flush if writer.respond_to?(:flush)
-        response = Annoy.get_response
+        highline = HighLine.new 
+        response = highline.ask(msg) { |q| 
+          q.echo = '*'             # Don't display response
+          q.overwrite = true       # Erase the question afterwards
+          q.whitespace = :strip    # Remove whitespace from the response
+        }
         regexp.match(response)
       end
     rescue Timeout::Error => ex
@@ -197,6 +200,27 @@ class Annoy
     end
   end
  
+ 
+  def Annoy.timed_display(msg, writer, period=nil)
+    return true unless STDIN.tty? # Only ask a question if there's a human
+    if Annoy.skip?
+      #writer.puts msg 
+      return true
+    end
+    begin
+      period ||= @@period
+      success = Timeout::timeout(period) do
+        writer.puts "Message will display for #{period} seconds"
+        writer.print msg
+        writer.flush if writer.respond_to?(:flush)
+        sleep period+1
+      end
+    rescue Timeout::Error => ex
+      writer.print "\r" << ' '*msg.size
+    end
+    
+    true
+  end
   
  private 
   def Annoy.get_response(writer=STDOUT)

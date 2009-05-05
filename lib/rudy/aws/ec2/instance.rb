@@ -30,7 +30,14 @@ module Rudy::AWS
 
     def to_s(with_title=false)
       lines = []
-      lines << "%s  (%s)" % [liner_note, (@groups || []).join(', ')]
+      if @groups
+        gpstr = [@groups].flatten.compact.join(', ')
+        gpstr &&= "(#{gpstr})"
+      else
+        gpstr = ''
+      end
+      
+      lines << "%s  %s" % [liner_note, gpstr]
       #if self.running?
       #  k, g = @keyname || 'no-keypair', self.groups.join(', ')
       #  lines << @@sformat % %w{zone size ami keyname groups} if with_title

@@ -127,7 +127,7 @@ module AWS; module EC2;
       opts[:id] &&= [opts[:id]].flatten
       
       lt = @rinst.list_group(opts[:group], :any, opts[:id]) do |inst|
-        puts instance_separator(inst.dns_public, inst.awsid)
+        puts instance_separator(inst.dns_public || inst.state, inst.awsid)
         console = @rinst.console(inst.awsid)
         output = console ? Base64.decode64(console) : "Unavailable"
         

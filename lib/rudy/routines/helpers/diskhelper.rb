@@ -28,8 +28,10 @@ module Rudy; module Routines;
       # We give it a funny name so we can delete it. 
       def @rbox.rudy_mkfs(*args); cmd('mkfs', args); end
       
-      
-      return unless disks?(routine)
+      unless disks?(routine)
+        STDERR.puts "[nothing to do]"
+        return
+      end
 
       modified = []
       routine.disks.each_pair do |action, disks|

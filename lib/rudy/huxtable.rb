@@ -105,15 +105,15 @@ module Rudy
     # If there's a private key path in the config this will return
     # the basename (it's assumed the Amazon KeyPair has the same
     # name as the file). Otherwise this returns the Rudy style
-    # name: <tt>key-ENV-ROLE-USER</tt>. Or if this the user is 
-    # root: <tt>key-ENV-ROLE</tt>
+    # name: <tt>key-ZONE-ENV-ROLE-USER</tt>. Or if this the user is 
+    # root: <tt>key-ZONE-ENV-ROLE</tt>
     def user_keypairname(user)
       kp = user_keypairpath(user)
       if kp
         kp = Huxtable.keypair_path_to_name(kp)
       else
         n = (user.to_s == 'root') ? '' : "-#{user}"
-        "key-%s%s" % [current_machine_group, n]
+        "key-%s-%s%s" % [@@global.zone, current_machine_group, n]
       end    
     end
     def root_keypairname
@@ -136,7 +136,7 @@ module Rudy
       # These are used as the root SSH keys. If we can find a user defined key, we'll 
       # check the config path for a generated one. 
       if !path && name.to_s == 'root'
-        path = File.join(self.config_dirname, "key-#{current_machine_group}")
+        path = File.join(self.config_dirname, "key-#{@@global.zone}-#{current_machine_group}")
       end
       path = File.expand_path(path) if path && File.exists?(path)
       path

@@ -20,7 +20,6 @@
   
   s.add_dependency 'grit'
   s.add_dependency 'echoe'
-  s.add_dependency 'json'
   s.add_dependency 'amazon-ec2', '>= 0.3.8'  # Region fix
   s.add_dependency 'aws-s3', '>= 0.6.1'      # Ruby 1.9.1 compatability
   s.add_dependency 'net-ssh', '>= 2.0.9'

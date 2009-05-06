@@ -28,10 +28,10 @@
 machines do
   
   zone :"us-east-1b" do
-    ami 'ami-235fba4a'               # Amazon Getting Started AMI (US)
+    ami 'ami-e348af8a'               # Alestic Debian 5.0, 32-bit (US)
   end
   zone :"eu-west-1b" do
-    ami 'ami-e40f2790'               # Amazon Getting Started AMI (EU)
+    ami 'ami-6ecde51a'               # Alestic Debian 5.0, 32-bit (EU)
   end
   
   hostname :rudy                     # One of: :default, :rudy, "your-name"
@@ -41,7 +41,6 @@ machines do
   # roles. The configuration inside the role blocks is available only
   # to machines in that specific role. 
   env :stage do
-    ami "ami-e348af8a"               # Debian 5.0, 32-bit (Alestic)
     size 'm1.small'                  # EC2 machine type for all machines
                                      # in the "stage" environment
     role :app do

@@ -4,6 +4,9 @@ unless defined?(RUDY_HOME)
   RUDY_LIB = File.join(File.dirname(__FILE__), '..', 'lib')
 end
 
+$:.unshift File.join(RUDY_HOME, 'vendor', 'highline-1.5.1', 'lib')
+local_libs = %w{net-scp amazon-ec2 caesars drydock rye storable sysinfo annoy}
+local_libs.each { |dir| $:.unshift File.join(RUDY_HOME, '..', dir, 'lib') }
 
 require 'digest/md5'
 require 'stringio'

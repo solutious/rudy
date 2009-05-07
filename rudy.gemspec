@@ -43,10 +43,18 @@
   README.rdoc
   Rakefile
   Rudyfile
+  bin/ird
   bin/rudy
   bin/rudy-ec2
   bin/rudy-s3
   bin/rudy-sdb
+  examples/README.md
+  examples/debian-sinatra-passenger/commands.rb
+  examples/debian-sinatra-passenger/machines.rb
+  examples/debian-sinatra-passenger/routines.rb
+  examples/debian-sinatra-thin/commands.rb
+  examples/debian-sinatra-thin/machines.rb
+  examples/debian-sinatra-thin/routines.rb
   lib/annoy.rb
   lib/console.rb
   lib/escape.rb
@@ -64,7 +72,6 @@
   lib/rudy/aws/s3.rb
   lib/rudy/aws/sdb.rb
   lib/rudy/aws/sdb/error.rb
-  lib/rudy/backup.rb
   lib/rudy/cli.rb
   lib/rudy/cli/aws/ec2/addresses.rb
   lib/rudy/cli/aws/ec2/candy.rb
@@ -85,12 +92,16 @@
   lib/rudy/cli/routines.rb
   lib/rudy/config.rb
   lib/rudy/config/objects.rb
-  lib/rudy/disks.rb
   lib/rudy/global.rb
   lib/rudy/guidelines.rb
   lib/rudy/huxtable.rb
   lib/rudy/machines.rb
   lib/rudy/metadata.rb
+  lib/rudy/metadata/backup.rb
+  lib/rudy/metadata/backups.rb
+  lib/rudy/metadata/disk.rb
+  lib/rudy/metadata/disks.rb
+  lib/rudy/metadata/objectbase.rb
   lib/rudy/mixins/hash.rb
   lib/rudy/routines.rb
   lib/rudy/routines/helper.rb
@@ -100,14 +111,13 @@
   lib/rudy/routines/helpers/userhelper.rb
   lib/rudy/routines/passthrough.rb
   lib/rudy/routines/release.rb
+  lib/rudy/routines/restart.rb
   lib/rudy/routines/shutdown.rb
   lib/rudy/routines/startup.rb
   lib/rudy/scm.rb
   lib/rudy/scm/git.rb
   lib/rudy/scm/svn.rb
   lib/rudy/utils.rb
-  lib/storable.rb
-  lib/sysinfo.rb
   lib/tryouts.rb
   rudy.gemspec
   support/mailtest

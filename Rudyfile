@@ -122,7 +122,7 @@ routines do
                                      
       shutdown do                    # $ rudy shutdown
         before :root do              # Run remote SSH commands before shutdown
-          #mysqld_initd               
+          uptime               
         end                          
                                      
         disks do                     

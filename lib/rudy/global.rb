@@ -85,7 +85,10 @@ module Rudy
       postprocess
     end
     
-    
+    def to_s(*args)
+      super()
+    end
+      
   private 
     
     

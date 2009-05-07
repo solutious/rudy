@@ -96,7 +96,7 @@ module Rudy
     
     @@quiet = false
     @@debug = false
-    @@sysinfo = SystemInfo.new.freeze
+    @@sysinfo = SysInfo.new.freeze
     
   end
   

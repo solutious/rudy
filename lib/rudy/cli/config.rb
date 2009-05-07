@@ -63,6 +63,19 @@ module Rudy
         end
         
       end
+      
+      def print_global
+        # NOTE: This method cannot be called just "global" b/c that conflicts 
+        # with the global accessor for Drydock::Command classes. 
+        if @@global.nil?
+          raise Rudy::NoGlobal
+        end
+        gtmp = @@global.clone
+        gtmp.format = "yaml" if gtmp.format == :s || gtmp.format == :string
+        gtmp.accesskey = gtmp.secretkey = "[not displayed]"
+        puts gtmp.dump(gtmp.format)
+      end
+      
     end
   end
 end

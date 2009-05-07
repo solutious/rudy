@@ -10,7 +10,8 @@
 
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib') # Put our local lib in first place
 $:.unshift File.join(File.dirname(__FILE__), '..', 'vendor', 'highline-1.5.1', 'lib')
-#%w{net-ssh amazon-ec2 caesars drydock rye}.each { |dir| $:.unshift File.join(File.dirname(__FILE__), '..', '..', dir, 'lib') }
+local_libs = %w{net-scp amazon-ec2 caesars drydock rye storable sysinfo}
+local_libs.each { |dir| $:.unshift File.join(File.dirname(__FILE__), '..', '..', dir, 'lib') }
 #require 'rubygems'
 
 #$SAFE = 1   # require is unsafe in Ruby 1.9??
@@ -23,7 +24,7 @@ require 'rudy/cli'
 # Command-line interface for /bin/rudy
 class RudyCLI < Rudy::CLI::Base
   
-  debug :off
+  debug :on
   default :machines
   trawler :passthrough
   
@@ -122,6 +123,8 @@ class RudyCLI < Rudy::CLI::Base
   argv :name
   command :config => Rudy::CLI::Config
   
+  command :print_global => Rudy::CLI::Config
+  command_alias :print_global, :global
   
   about "Initialize Rudy configuration"
   command :init do |obj|
@@ -209,6 +212,10 @@ class RudyCLI < Rudy::CLI::Base
     end
   end
   
+  
+  command :sysinfo do
+    puts Rudy.sysinfo.to_yaml
+  end
 end
 
 # We call Drydock specifically otherwise it will run at_exit. Rye also

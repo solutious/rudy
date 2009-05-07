@@ -229,7 +229,7 @@ class Annoy
     # TODO: Count the number of keystrokes to prevent copy/paste.
     # We can probably use Highline. 
     # We likely need to be more specific but this will do for now.
-    #if ::SystemInfo.new.os == :unix 
+    #if ::SysInfo.new.os == :unix 
     #  begin
     #    response = []
     #    char = nil

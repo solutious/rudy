@@ -40,7 +40,7 @@ machines do
   # The configuration inside the env block is available to all its 
   # roles. The configuration inside the role blocks is available only
   # to machines in that specific role. 
-  env :stage do
+  env :stage, :prod do
     size 'm1.small'                  # EC2 machine type for all machines
                                      # in the "stage" environment
     role :app do
@@ -102,7 +102,7 @@ end
 # To run a routine, specify its name on the command-line: rudy startup
 routines do
   
-  env :stage do                      # We'll define routines for the
+  env :stage, :prod do                      # We'll define routines for the
     role :app do                     # stage-app machine group
                                      
       startup do                     # $ rudy startup
@@ -130,7 +130,7 @@ routines do
       end                            
       
       reboot do
-        before do
+        before :root do
           uptime
         end
         after :root do
@@ -144,16 +144,25 @@ routines do
         end
       end
       
+      refresh do
+        disks do
+          snapshot "/rudy/disk1"
+          destroy "/rudy/disk1"
+          restore "/rudy/disk1" 
+        end
+      end
+      
     end                              
   end                                
   
-  # Define global routines available
-  # to every environment and role.
+  # Define global routines available to all machine groups
+  # This routine will update a basic Debian machine and
+  # install essential libraries.
   sysupdate do                       # $ rudy sysupdate
     before :root do                  
       apt_get "update"               # Update debian / ubuntu 
-      apt_get "install", "apache2-prefork-dev", "libapr1-dev"
       apt_get "install", "build-essential", "sqlite3", "libsqlite3-dev"
+      apt_get "install", "apache2-prefork-dev", "libapr1-dev"
       gem_install 'rudy'
     end
   end

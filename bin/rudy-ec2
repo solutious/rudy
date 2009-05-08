@@ -165,7 +165,7 @@ module RudyCLI_EC2
   argv :snapid
   command :snapshots => Rudy::CLI::AWS::EC2::Snapshots
   command_alias :snapshots, :snapshot
-  command_alias :snapshots, :t
+  command_alias :snapshots, :s
   
   about "Open an SSH connection"
   usage "rudy-ec2 ssh"

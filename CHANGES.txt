@@ -18,7 +18,7 @@ sysinfo, annoy, console -> Drydock, escape -> Rye, tryouts -> tryouts/).
 * ADDED: Routine dependencies
 * ADDED: Disk mount and umount
 * CHANGE: Renamed Rudy::Disk to Rudy::MetaData::Disk
-
+* CHANGE: Short alias for rudy-ec2 snapshot is now 's' (instead of 't')
 
 #### 0.7.3 (2009-05-05) ###############################
 

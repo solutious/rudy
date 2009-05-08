@@ -23,14 +23,14 @@ class Backups
     end
   end
 
-  def list(more=[], less=[], &each_backup)
-    backups = list_as_hash(&each_backup)
+  def list(more=[], less=[], local={}, &each_backup)
+    backups = list_as_hash(more, less, local, &each_backup)
     backups &&= backups.values
     backups
   end
 
-  def list_as_hash(more=[], less=[], &each_backup)
-    query = to_select([:rtype, 'back'], less)
+  def list_as_hash(more=[], less=[], local={}, &each_backup)
+    query = to_select([:rtype, 'back'], less, local)
     list = @sdb.select(query) || {}
     backups = {}
     list.each_pair do |n,d|

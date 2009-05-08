@@ -9,8 +9,8 @@ module Rudy; module CLI;
       true
     end
     def startup
-      machines = @rr.execute
-      puts $/, "The following machines are now available:"
+      machines = @rr.execute || []
+      puts $/, "The following machines are now available:" unless machines.empty?
       machines.each do |machine|
         puts machine.to_s
       end

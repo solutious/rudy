@@ -59,9 +59,77 @@ module Rudy; module Routines;
           return
         end
         back = disk.backup
-        puts "Backup: #{back.name}"
+        puts "Created backup: #{back.name}"
       end
     end
+    
+    def restore(disks)
+      rdisk = Rudy::Disks.new
+      rback = Rudy::Backups.new
+      
+      disks.each_pair do |path, props|
+        disk = Rudy::MetaData::Disk.new(path, props[:size], props[:device], @machine.position)
+        
+        olddisk = rdisk.get(disk.name)
+        back = nil
+        if olddisk && olddisk.exists?
+          olddisk.update
+          puts "Disk found: #{olddisk.name}. Skipping...".color(:red)
+        else
+          disk.fstype = props[:fstype] || 'ext3'
+          back = (rback.list(nil, nil, props) || []).first
+          raise "No backup found" unless back
+          puts "Found backup #{back.name} "
+        end
+        
+        
+        
+        unless disk.exists? # Checks the EBS volume
+          msg = "Creating volume from snapshot (#{back.awsid})... "
+          disk.create(back.size, @@global.zone, back.awsid)
+          Rudy::Utils.waiter(2, 60, STDOUT, msg) { 
+            disk.available?
+          }
+        end
+        
+        msg = "Attaching #{disk.awsid} to #{@machine.awsid}... "
+        disk.attach(@machine.awsid)
+        Rudy::Utils.waiter(2, 10, STDOUT, msg) { 
+          disk.attached?
+        }
+        
+        sleep 2
+        
+        begin
+          @rbox.mkdir(:p, disk.path)
+          
+          print "Mounting at #{disk.path}... "
+      
+          ret = @rbox.mount(:t, disk.fstype, disk.device, disk.path) 
+          print_response ret
+          if ret.exit_code > 0
+            STDERR.puts "Error creating disk".color(:red)
+            return
+          else
+            puts "done"
+          end
+          disk.mounted = true
+          disk.save
+          
+        rescue Net::SSH::AuthenticationFailed, Net::SSH::HostKeyMismatch => ex  
+          STDERR.puts "Error creating disk".color(:red)
+          STDERR.puts ex.message.color(:red)
+         rescue Rye::CommandNotFound => ex
+          puts "  CommandNotFound: #{ex.message}".color(:red)
+          
+        rescue
+          STDERR.puts "Error creating disk" .color(:red)
+          Rudy::Utils.bug
+        end
+        
+      end
+    end
+    
     
     def create(disks)
       rdisk = Rudy::Disks.new

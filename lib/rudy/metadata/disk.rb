@@ -50,15 +50,14 @@ class Disk < Storable
     @mounted = true if @mounted == "true"
   end
   
-  def liner_note
-    info = @awsid && !@awsid.empty? ? @awsid : 'no volume'
-    "%s  %s" % [self.name.bright, info]
-  end
-  
   def to_s(with_titles=true)
     update
     mtd = @mounted == true ? "mounted" : @status
-    "%s; %3sGB; %s; %s" % [liner_note, @size, @device, mtd]
+    if @size && @device
+      "%s; %3sGB; %s; %s" % [liner_note, @size, @device, mtd]
+    else
+      liner_note
+    end
   end
   
   def inspect
@@ -79,9 +78,9 @@ class Disk < Storable
     super("disk", @zone, @environment, @role, @position, *dirs)
   end
   
-  def create(snapshot=nil)
+  def create(size=nil, zone=nil, snapshot=nil)
     raise "#{name} already exists" if exists?
-    vol = @rvol.create(@size, @zone, snapshot) 
+    vol = @rvol.create(size || @size, zone || @zone, snapshot) 
     @awsid = vol.awsid
     @raw = true
     self.save
@@ -91,6 +90,8 @@ class Disk < Storable
   def backup
     raise "No volume to backup" unless @awsid
     bup = Rudy::MetaData::Backup.new(@awsid, @path, @position)
+    bup.size = @size || 1
+    bup.fstype = @fstype || 'ext3'
     bup.create
   end
   

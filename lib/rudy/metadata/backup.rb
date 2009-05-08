@@ -19,6 +19,7 @@ module Rudy::MetaData
     field :created => Integer
     
     field :size
+    field :fstype
     field :volume
     
     require 'date'
@@ -72,8 +73,11 @@ module Rudy::MetaData
       str
      end
     
-    def diskname
-      Rudy::MetaData::Disk.new(@path, nil, nil, @position).name
+    def disk
+      rdisk = Rudy::Disks.new
+      disk = Rudy::MetaData::Disk.new(@path, nil, nil, @position)
+      diskobj = rdisk.get(disk.name)
+      diskobj || disk 
     end
     
     def create(volume=nil)

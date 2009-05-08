@@ -25,23 +25,23 @@ module Rudy
   
     # Returns a generic zipped Array of metadata
     # (There is region, zone, environment, role, but no rtype)
-    def build_criteria(more=[], less=[])
+    def build_criteria(more=[], less=[], local={})
       # TODO: This build_criteria treats "more" differently than the
       # ObjectBase one. Sort it out! (This way is better)
       names = [:region, :zone, :environment, :role].compact
       names -= [*less].flatten.uniq.compact
       values = names.collect do |n|
-        @@global.send(n.to_sym)
+        local[n.to_sym] || @@global.send(n.to_sym)
       end
       names.zip(values) + more
     end
     
-    def to_query(more=[], less=[])
-      Rudy::AWS::SDB.generate_query build_criteria(more, less)
+    def to_query(more=[], less=[], local={})
+      Rudy::AWS::SDB.generate_query build_criteria(more, less, local)
     end
   
-    def to_select(more=[], less=[])
-      Rudy::AWS::SDB.generate_select ['*'], Rudy::DOMAIN, build_criteria(more, less)
+    def to_select(more=[], less=[], local={})
+      Rudy::AWS::SDB.generate_select ['*'], Rudy::DOMAIN, build_criteria(more, less, local)
     end
     
   end

@@ -8,12 +8,23 @@ module Rudy
       def disks
         rdisk = Rudy::Disks.new
         rback = Rudy::Backups.new
-        rdisk.list do |d|
+        disk_list = rdisk.list || []
+        if @option.backups
+          backups = rback.list || []
+          backups.each_with_index do |b, index|
+            disk_list << b.disk
+          end
+        end
+        seen = []
+        disk_list.each do |d|
+          next if seen.member?(d.name)
+          seen << d.name
           puts @@global.verbose > 0 ? d.inspect : d.dump(@@global.format)
           if @option.backups
-            backups = rback.list || []
-            backups[0,3].each do |b|
+            backups = rback.list(nil, nil, {}) || []
+            backups.each_with_index do |b, index|
               puts '  %s' % b.name
+              break if @option.all.nil? && index >= 2
             end
           end
         end

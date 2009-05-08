@@ -180,9 +180,9 @@ module Rudy
         :normal => %Q(============  %s  ============)
       }
       size = :normal unless banners.has_key?(size)
-      colour = :black unless Drydock::Console.valid_colour?(colour)
+      #colour = :black unless Drydock::Console.valid_colour?(colour)
       size, colour = size.to_sym, colour.to_sym
-      sprintf(banners[size], msg).colour(colour).bgcolour(:white).bright
+      sprintf(banners[size], msg).bright.att(:reverse)
     end
 
     

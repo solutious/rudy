@@ -1,4 +1,4 @@
-module Rudy
+module Rudy::MetaData
 class Disk < Storable
   include Rudy::MetaData::ObjectBase
   
@@ -26,6 +26,8 @@ class Disk < Storable
   field :fstype
   field :mounted
   
+  field :created
+  
   def init(path=nil, size=nil, device=nil, position=nil)
     @path, @size, @device = path, size, device
     @rtype = 'disk'
@@ -35,6 +37,11 @@ class Disk < Storable
     @role = @@global.role
     @position = position || @@global.position
     @mounted = false
+    
+    now = Time.now.utc
+    datetime = Backup.format_timestamp(now).split(Rudy::DELIM)
+    @created = now.to_i
+    
     postprocess
   end
   
@@ -72,15 +79,19 @@ class Disk < Storable
     super("disk", @zone, @environment, @role, @position, *dirs)
   end
   
-
-  
   def create(snapshot=nil)
-    raise "#{name} is already running" if exists?
+    raise "#{name} already exists" if exists?
     vol = @rvol.create(@size, @zone, snapshot) 
     @awsid = vol.awsid
     @raw = true
     self.save
     self
+  end
+  
+  def backup
+    raise "No volume to backup" unless @awsid
+    bup = Rudy::MetaData::Backup.new(@awsid, @path, @position)
+    bup.create
   end
   
   def attach(instid)

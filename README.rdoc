@@ -102,7 +102,6 @@ I'm very open to contributions!
 
 * Delano Mandelbaum (delano@solutious.com)
 * Rudy::AWS::SDB adapted from aws_sdb by Tim Dysinger (http://dysinger.net)
-* Escape, Copyright (C) 2006,2007 Tanaka Akira  <akr@fsij.org>
 
 
 == License

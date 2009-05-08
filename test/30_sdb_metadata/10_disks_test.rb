@@ -22,7 +22,7 @@ module Rudy::Test
       
       
       should "(10) create a disk object" do
-        disk = Rudy::Disk.new('/rudy/disk', 1, '/dev/sdh')
+        disk = Rudy::MetaData::Disk.new('/rudy/disk', 1, '/dev/sdh')
         
         disk_name_elements = []
         [:zone, :environment, :role, :position].each do |n|
@@ -38,8 +38,8 @@ module Rudy::Test
       end
       
       should "(11) save a disk object" do
-        disk = Rudy::Disk.new('/rudy/disk', 1, '/dev/sdh')
-        assert disk.is_a?(Rudy::Disk), "Not a Rudy::Disk (#{disk})"
+        disk = Rudy::MetaData::Disk.new('/rudy/disk', 1, '/dev/sdh')
+        assert disk.is_a?(Rudy::MetaData::Disk), "Not a Rudy::MetaData::Disk (#{disk})"
         assert disk.save, "Did not save #{disk.name}"
       end
       
@@ -71,10 +71,10 @@ module Rudy::Test
       end
       
       should "(30) get disk from Rudy::Disks, modify, and save" do
-        disk_tmp = Rudy::Disk.new('/rudy/disk', 1, '/dev/sdh')
+        disk_tmp = Rudy::MetaData::Disk.new('/rudy/disk', 1, '/dev/sdh')
         rdisk = Rudy::Disks.new
         disk_orig = rdisk.get(disk_tmp.name)
-        assert_equal Rudy::Disk, disk_orig.class, "Not a Rudy::Disk #{disk_orig}"
+        assert_equal Rudy::MetaData::Disk, disk_orig.class, "Not a Rudy::MetaData::Disk #{disk_orig}"
         assert_equal @@global.zone.to_s, disk_orig.zone.to_s, "Unexpected zone #{disk_orig.zone}"
         sleep 1
         disk_orig.size = 2

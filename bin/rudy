@@ -35,26 +35,16 @@ class RudyCLI < Rudy::CLI::Base
 
   # ------------------------------------------  RUDY OBJECTS  --------
   # ------------------------------------------------------------------
-
-  #usage "rudy [global options] backups [-C] [disk name]"
-  #about "Manage Backups"
-  #option :s, :snapshot, String, "Create a backup entry from an existing snapshot"
-  #action :Z, :sync, "Check for and delete backup metadata with no snapshot. DOES NOT delete snapshots."
-  ##action :T, :tidy, "Tidy existing backups"
-  #action :D, :destroy, "Destroy a backup and DELETE its snapshots."
-  #action :C, :create, "Create a backup"
-  #argv :disk
-  #command :'backup' => Rudy::CLI::Backups
-  #command_alias :backup, :bu
   
-  about "Manage Machines"
+  about "View Machines"
   option :l, :all, "Display all machines"
   action :W, :wash, "Wash machine metadata."
   command :machines => Rudy::CLI::Machines
   command_alias :machines, :m
   
-  about "Manage Disks"
+  about "View Disks"
   action :W, :wash, "Wash disk metadata."
+  option :b, :backups, "Display backups"
   command :disks => Rudy::CLI::Disks
   command_alias :disks, :d
   

@@ -4,10 +4,14 @@ module Rudy
 class Disks
   include Rudy::MetaData
   
-    
-  def create(&each_mach)
-    
+  
+  def init
+    @rback = Rudy::Backups.new
   end
+  
+  #def create(&each_mach)
+    
+  #end
 
 
   def destroy(&each_mach)
@@ -18,19 +22,23 @@ class Disks
       disk.destroy
     end
   end
-
+  
+  def backups
+    @rback.list()
+  end
+  
   def list(more=[], less=[], &each_disk)
     disks = list_as_hash(&each_disk)
     disks &&= disks.values
     disks
   end
-
+  
   def list_as_hash(more=[], less=[], &each_disk)
     query = to_select([:rtype, 'disk'], less)
     list = @sdb.select(query) || {}
     disks = {}
     list.each_pair do |n,d|
-      disks[n] = Rudy::Disk.from_hash(d)
+      disks[n] = Rudy::MetaData::Disk.from_hash(d)
     end
     disks.each_pair { |n,disk| each_disk.call(disk) } if each_disk
     disks = nil if disks.empty?
@@ -40,7 +48,7 @@ class Disks
   def get(rname=nil)
     dhash = @sdb.get(Rudy::DOMAIN, rname)
     return nil if dhash.nil? || dhash.empty?
-    d = Rudy::Disk.from_hash(dhash)
+    d = Rudy::MetaData::Disk.from_hash(dhash)
     d.update if d
     d
   end

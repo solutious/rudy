@@ -67,18 +67,22 @@ module Rudy
         lbox = Rye::Box.new('localhost')
         sconf = fetch_script_config
         
-        if Rudy::Routines::ScriptHelper.before_local?(routine)  # before_local
-          # Runs "before_local" scripts of routines config. 
-          puts task_separator("LOCAL SHELL")
-          Rudy::Routines::ScriptHelper.before_local(routine, sconf, lbox)
-        end
+        give_peace_a_chance {
+          if Rudy::Routines::ScriptHelper.before_local?(routine)  # before_local
+            # Runs "before_local" scripts of routines config. 
+            puts task_separator("LOCAL SHELL")
+            Rudy::Routines::ScriptHelper.before_local(routine, sconf, lbox)
+          end
+        }
         
-        if Rudy::Routines::ScriptHelper.script_local?(routine)  # script_local
-          # Runs "script_local" scripts of routines config. 
-          # NOTE: This is synonymous with before_local
-          puts task_separator("LOCAL SHELL")
-          Rudy::Routines::ScriptHelper.script_local(routine, sconf, lbox)
-        end
+        give_peace_a_chance {
+          if Rudy::Routines::ScriptHelper.script_local?(routine)  # script_local
+            # Runs "script_local" scripts of routines config. 
+            # NOTE: This is synonymous with before_local
+            puts task_separator("LOCAL SHELL")
+            Rudy::Routines::ScriptHelper.script_local(routine, sconf, lbox)
+          end
+        }
         
         unless has_remote_task?(routine)
           puts "[no remote tasks]"
@@ -127,41 +131,54 @@ module Rudy
             # Anything else other than nil -> change to that value
             # NOTE: This will set hostname every time a routine is
             # run so we may want to make this an explicit action. 
-            hn = current_machine_hostname || :rudy
-            if hn != :default
-              hn = machine.name if hn == :rudy
-              print preliminary_separator("Setting hostame to #{hn}... ")
-              rbox.hostname(hn) 
-              puts "done"
+            give_peace_a_chance {
+              hn = current_machine_hostname || :rudy
+              if hn != :default
+                hn = machine.name if hn == :rudy
+                print preliminary_separator("Setting hostame to #{hn}... ")
+                rbox.hostname(hn) 
+                puts "done"
+              end
+            }
+          end
+          
+          
+          give_peace_a_chance {
+            if Rudy::Routines::UserHelper.adduser?(routine)       # adduser
+              puts task_separator("ADD USER")
+              Rudy::Routines::UserHelper.adduser(routine, machine, rbox)
             end
-          end
+          }
           
-          if Rudy::Routines::UserHelper.adduser?(routine)       # adduser
-            puts task_separator("ADD USER")
-            Rudy::Routines::UserHelper.adduser(routine, machine, rbox)
-          end
+          give_peace_a_chance {
+            if Rudy::Routines::UserHelper.authorize?(routine)     # authorize
+              puts task_separator("AUTHORIZE USER")
+              Rudy::Routines::UserHelper.authorize(routine, machine, rbox)
+            end
+          }
           
-          if Rudy::Routines::UserHelper.authorize?(routine)     # authorize
-            puts task_separator("AUTHORIZE USER")
-            Rudy::Routines::UserHelper.authorize(routine, machine, rbox)
-          end
-          #puts 1
-          if Rudy::Routines::ScriptHelper.before?(routine)      # before
-            puts task_separator("REMOTE SHELL")
-            Rudy::Routines::ScriptHelper.before(routine, sconf, machine, rbox)
-          end
-          #puts 2
-          if Rudy::Routines::DiskHelper.disks?(routine)         # disk
-            puts task_separator("DISKS")
-            if rbox.ostype == "sunos"
-              puts "Sorry, Solaris is not supported yet!"
-            else
-              Rudy::Routines::DiskHelper.execute(routine, machine, rbox)
-            end    
-          end
+          give_peace_a_chance {
+            if Rudy::Routines::ScriptHelper.before?(routine)      # before
+              puts task_separator("REMOTE SHELL")
+              Rudy::Routines::ScriptHelper.before(routine, sconf, machine, rbox)
+            end
+          }
           
-          # Startup, shutdown, release, deploy, etc...
-          routine_action.call(machine, rbox) if routine_action
+          give_peace_a_chance {
+            if Rudy::Routines::DiskHelper.disks?(routine)         # disk
+              puts task_separator("DISKS")
+              if rbox.ostype == "sunos"
+                puts "Sorry, Solaris is not supported yet!"
+              else
+                Rudy::Routines::DiskHelper.execute(routine, machine, rbox)
+              end    
+            end
+          }
+          
+          give_peace_a_chance {
+            # Startup, shutdown, release, deploy, etc...
+            routine_action.call(machine, rbox) if routine_action
+          }
           
           # The "after" blocks are synonymous with "script" blocks. 
           # For some routines, like startup, it makes sense to an 
@@ -170,35 +187,33 @@ module Rudy
           # definition is the entire routine so we use "script".
           # NOTE: If both after and script are supplied they will 
           # both be executed. 
-          if Rudy::Routines::ScriptHelper.script?(routine)      # script
-            puts task_separator("REMOTE SHELL")
-            # Runs "after" scripts of routines config
-            Rudy::Routines::ScriptHelper.script(routine, sconf, machine, rbox)
-          end
+          give_peace_a_chance {
+            if Rudy::Routines::ScriptHelper.script?(routine)      # script
+              puts task_separator("REMOTE SHELL")
+              # Runs "after" scripts of routines config
+              Rudy::Routines::ScriptHelper.script(routine, sconf, machine, rbox)
+            end
+          }
           
-          
-          if Rudy::Routines::ScriptHelper.after?(routine)       # after
-            puts task_separator("REMOTE SHELL")
-            # Runs "after" scripts of routines config
-            Rudy::Routines::ScriptHelper.after(routine, sconf, machine, rbox)
-          end
-
-          if Rudy::Routines::DiskHelper.disks?(routine)
-            # TODO: Print only the requested disks
-            puts task_separator("INFO")
-            puts "Filesystem on #{machine.name}:"
-            puts "  " << rbox.df(:h).join("#{$/}  ")
-          end
+          give_peace_a_chance {
+            if Rudy::Routines::ScriptHelper.after?(routine)       # after
+              puts task_separator("REMOTE SHELL")
+              # Runs "after" scripts of routines config
+              Rudy::Routines::ScriptHelper.after(routine, sconf, machine, rbox)
+            end
+          }
           
           rbox.disconnect
         end
-
-        if Rudy::Routines::ScriptHelper.after_local?(routine)   # after_local
-          puts task_separator("LOCAL SHELL")
-          # Runs "after_local" scripts of routines config
-          Rudy::Routines::ScriptHelper.after_local(routine, sconf, lbox)
-        end
-
+        
+        give_peace_a_chance {
+          if Rudy::Routines::ScriptHelper.after_local?(routine)   # after_local
+            puts task_separator("LOCAL SHELL")
+            # Runs "after_local" scripts of routines config
+            Rudy::Routines::ScriptHelper.after_local(routine, sconf, lbox)
+          end
+        }
+        
       end
       
       # Does the given +routine+ define any remote tasks?
@@ -241,9 +256,21 @@ module Rudy
         #puts '%-40s' % [name.bright]
       end
       
+      def give_peace_a_chance(&bloc_party)
+        begin
+          bloc_party.call
+        rescue => ex
+          STDERR.puts "  Error: #{ex.message}".color(:red)
+          STDERR.puts ex.backtrace if Rudy.debug?
+          exit 12 unless keep_going?
+        end
+      end
+      
+       def keep_going?
+         Annoy.pose_question("  Keep going?\a ", /yes|y|ya|sure|you bet!/i, STDERR)
+       end
       
     end
-    
   end
 end
 

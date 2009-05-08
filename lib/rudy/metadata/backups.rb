@@ -4,10 +4,16 @@ module Rudy
 class Backups
   include Rudy::MetaData
   
-    
-  def create(&each_mach)
-    
+  def init
+    now = Time.now.utc
+    datetime = Rudy::MetaData::Backup.format_timestamp(now).split(Rudy::DELIM)
+    @created = now.to_i
+    @date, @time, @second = datetime
   end
+  
+  #def create(&each_mach)
+    
+  #end
 
 
   def destroy(&each_mach)
@@ -24,11 +30,11 @@ class Backups
   end
 
   def list_as_hash(more=[], less=[], &each_backup)
-    query = to_select([:rtype, 'backup'], less)
+    query = to_select([:rtype, 'back'], less)
     list = @sdb.select(query) || {}
     backups = {}
     list.each_pair do |n,d|
-      backups[n] = Rudy::Backup.from_hash(d)
+      backups[n] = Rudy::MetaData::Backup.from_hash(d)
     end
     backups.each_pair { |n,backup| each_backup.call(backup) } if each_backup
     backups = nil if backups.empty?
@@ -38,7 +44,7 @@ class Backups
   def get(rname=nil)
     dhash = @sdb.get(Rudy::DOMAIN, rname)
     return nil if dhash.nil? || dhash.empty?
-    d = Rudy::Backup.from_hash(dhash)
+    d = Rudy::MetaData::Backup.from_hash(dhash)
     d.update if d
     d
   end
@@ -49,8 +55,10 @@ class Backups
     # TODO: add logic that checks whether the instances are running.
   end
 
-
-    
+  def to_select(*args)
+    query = super(*args)
+    query << " and created != '0' order by created desc"
+  end
   
 end
 end

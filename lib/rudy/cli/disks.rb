@@ -7,8 +7,15 @@ module Rudy
       
       def disks
         rdisk = Rudy::Disks.new
+        rback = Rudy::Backups.new
         rdisk.list do |d|
           puts @@global.verbose > 0 ? d.inspect : d.dump(@@global.format)
+          if @option.backups
+            backups = rback.list || []
+            backups[0,3].each do |b|
+              puts '  %s' % b.name
+            end
+          end
         end
       end
       

@@ -130,11 +130,17 @@ routines do
       end                            
       
       reboot do
-        before :root do
+        before do
           uptime
         end
         after :root do
           uptime
+        end
+      end
+      
+      backup do
+        disks do
+          snapshot "/rudy/disk1"
         end
       end
       
@@ -155,5 +161,6 @@ routines do
   # Define your own routines
   anything do                        # $ rudy anything
   end
+  
 end
 

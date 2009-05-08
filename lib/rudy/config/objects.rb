@@ -120,6 +120,8 @@ class Rudy::Config
     forced_hash :umount
     forced_hash :unmount
     forced_hash :mount
+    forced_hash :snapshot
+    forced_hash :restore
     
     # Script blocks
     forced_hash :before        

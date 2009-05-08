@@ -11,6 +11,7 @@ module Rudy
         @ec2inst = Rudy::AWS::EC2::Instances.new(a, s, r)
         @rvol = Rudy::AWS::EC2::Volumes.new(a, s, r)
         @radd = Rudy::AWS::EC2::Addresses.new(a, s, r)
+        @rsnap = Rudy::AWS::EC2::Snapshots.new(a, s, r)
         init(*args)
       end
       
@@ -55,6 +56,7 @@ module Rudy
         self.name == other.name
       end
       
+      # A generic default
       def to_s
         str = ""
         field_names.each do |key|
@@ -62,7 +64,22 @@ module Rudy
         end
         str
       end
-
+      
+      def liner_note
+        info = @awsid && !@awsid.empty? ? @awsid : "[no aws object]"
+        "%s  %s" % [self.name.bright, info]
+      end
+      
+      def inspect
+        lines = []
+        lines << liner_note
+        field_names.each do |key|
+          next unless self.respond_to?(key)
+          val = self.send(key)
+          lines << sprintf(" %22s: %s", key, (val.is_a?(Array) ? val.join(', ') : val))
+        end
+        lines.join($/)
+      end
       
     protected
     

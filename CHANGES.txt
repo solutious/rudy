@@ -17,7 +17,8 @@ sysinfo, annoy, console -> Drydock, escape -> Rye, tryouts -> tryouts/).
 * FIXED: Bug in Huxtable when loading global. Wasn't reloaded after config was updated. 
 * ADDED: Routine dependencies
 * ADDED: Disk mount and umount
-* 
+* CHANGE: Renamed Rudy::Disk to Rudy::MetaData::Disk
+
 
 #### 0.7.3 (2009-05-05) ###############################
 

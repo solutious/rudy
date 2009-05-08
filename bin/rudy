@@ -9,6 +9,7 @@
 # 
 
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib') # Put our local lib in first place
+$:.unshift File.join(File.dirname(__FILE__), '..', '..', 'drydock', 'lib') 
 #require 'rubygems'
 
 #$SAFE = 1   # require is unsafe in Ruby 1.9??
@@ -16,7 +17,6 @@ $:.unshift File.join(File.dirname(__FILE__), '..', 'lib') # Put our local lib in
 require 'drydock'
 require 'rudy'
 require 'rudy/cli'
-
 
 # Command-line interface for /bin/rudy
 class RudyCLI < Rudy::CLI::Base

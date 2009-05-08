@@ -1,6 +1,7 @@
 
 require 'drydock'
 
+
 module Rudy
     
   # = CLI
@@ -33,6 +34,9 @@ module Rudy
         
         # Send The Huxtables the global values from the command-line
         Rudy::Huxtable.update_global @global
+        
+        @@global.nocolor ? String.disable_color : String.enable_color
+        @@global.yes ? Annoy.enable_skip : Annoy.disable_skip
         
         # Reload configuration. This must come after update_global 
         # so it will catch the @@global.config path (if supplied).

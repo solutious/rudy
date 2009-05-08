@@ -19,7 +19,6 @@ require 'timeout'
 require 'tempfile'
 
 require 'storable'
-require 'console'
 require 'sysinfo'
 require 'annoy'
 

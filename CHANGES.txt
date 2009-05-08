@@ -11,6 +11,8 @@ RUDY, CHANGES
 
 * CHANGE: Keypairs now include zone. This was necessary to allow US and EU keypairs to
 be stored in the same directory. 
+* CHANGE: Moved non-rudy specific modules to separate projects (storable,
+sysinfo, annoy, console -> Drydock, escape -> Rye, tryouts -> tryouts/).
 
 
 #### 0.7.3 (2009-05-05) ###############################

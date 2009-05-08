@@ -102,9 +102,7 @@ module Rudy
       @position &&= @position.to_s.rjust(2, '0')  
       @format &&= @format.to_sym rescue nil
       
-      @nocolor ? String.disable_color : String.enable_color
       @quiet ? Rudy.enable_quiet : Rudy.disable_quiet
-      @yes ? Annoy.enable_skip : Annoy.disable_skip
     end
     
     def apply_environment_variables

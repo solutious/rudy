@@ -14,11 +14,11 @@
   s.require_paths = %w[lib]
   s.rubygems_version = '1.1.1'
   
-  s.add_dependency 'drydock', '>= 0.6.1'
+  s.add_dependency 'drydock', '>= 0.6.2'
   s.add_dependency 'caesars', '>= 0.6.3'
   s.add_dependency 'rye', '>= 0.6.4'
-  s.add_dependency 'sysinfo', '>= 0.5.0'
-  s.add_dependency 'storable', '>= 0.5.0'
+  s.add_dependency 'sysinfo', '>= 0.5.1'
+  s.add_dependency 'storable', '>= 0.5.1'
   s.add_dependency 'annoy', '>= 0.5.0'
   
   s.add_dependency 'grit'

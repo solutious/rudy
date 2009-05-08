@@ -74,6 +74,11 @@ module Rudy; module Routines;
     def execute_command?(timing, routine)
       hasconf = (routine.is_a?(Caesars::Hash) && routine.has_key?(timing))
       return false unless hasconf
+      unless routine[timing].kind_of?(Hash)
+        STDERR.puts "No user supplied for #{timing} block".color(:red)
+        exit 12 unless keep_going?
+        return false
+      end
       routine[timing].each_pair do |user,proc|
         #p [timing, user, proc].join(', ')
         if proc.nil? || !proc.is_a?(Proc)
@@ -99,7 +104,8 @@ module Rudy; module Routines;
         Rudy::Utils.write_to_file(tf.path, sconf.to_hash.to_yaml, 'w')
       end
       
-      if execute_command?(timing, routine) # i.e. before_local?
+      # Do we need to run this again? It's called in generic_routine_runner
+      ##if execute_command?(timing, routine) # i.e. before_local?
 
         # We need to explicitly add the rm command for rbox so we
         # can delete the script config file when we're done. This
@@ -179,9 +185,10 @@ module Rudy; module Routines;
         
         # Return the borrowed rbox instance to the user it was provided with
         rbox.switch_user original_user
-      else
-        puts "Nothing to do"
-      end
+      
+      ##else
+      ##  puts "Nothing to do"
+      ##end
       
       tf.delete # delete local copy of script config
       

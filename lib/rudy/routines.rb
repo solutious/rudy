@@ -73,7 +73,7 @@ module Rudy
           Rudy::Routines::ScriptHelper.before_local(routine, sconf, lbox)
         end
         
-        if Rudy::Routines::ScriptHelper.script_local?(routine)  # before_local
+        if Rudy::Routines::ScriptHelper.script_local?(routine)  # script_local
           # Runs "script_local" scripts of routines config. 
           # NOTE: This is synonymous with before_local
           puts task_separator("LOCAL SHELL")
@@ -99,7 +99,7 @@ module Rudy
             # Add instance info to machine and save it. This is really important
             # for the initial startup so the metadata is updated right away. But
             # it's also important to call here because if a routine was executed
-            # and an unexpected exception occurrs before this update is executed
+            # and an unexpected exception occurs before this update is executed
             # the machine metadata won't contain the DNS information. Calling it
             # here ensure that the metadata is always up-to-date. 
             machine.update 
@@ -116,7 +116,7 @@ module Rudy
             rbox = Rye::Box.new(machine.dns_public, opts)
             rbox.connect
           rescue Rye::NoHost => ex
-          
+            STDERR.puts "No host: #{ex.message}"
             exit 65
           end
           

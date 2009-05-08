@@ -135,17 +135,14 @@ routines do
           uptime
         end
         disks do                     
-          destroy "/rudy/disk1"      # Unmount and destroy the EBS volume
+          destroy "/rudy/disk1"
         end
       end
       
       chained do
-        depends :uptime
-        script :rudy do
-          ls :l, '/'
-        end
         disks do                     
-          create "/rudy/disk1"      # Unmount and destroy the EBS volume
+          umount "/rudy/disk2" 
+          mount "/rudy/disk3"
         end
       end
     end                              

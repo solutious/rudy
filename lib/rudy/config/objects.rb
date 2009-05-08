@@ -117,6 +117,8 @@ class Rudy::Config
     forced_hash :create
     forced_hash :destroy
     forced_hash :restore
+    forced_hash :umount
+    forced_hash :unmount
     forced_hash :mount
     
     # Script blocks

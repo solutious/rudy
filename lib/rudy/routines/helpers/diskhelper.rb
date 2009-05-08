@@ -124,7 +124,89 @@ module Rudy; module Routines;
  
       end
     end
+    
+    def mount(disks)
+      rdisk = Rudy::Disks.new
+      disks.each_pair do |path, props|
+        adisk = Rudy::Disk.new(path, props[:size], props[:device], @machine.position)
+        disk = rdisk.get(adisk.name)
+        if disk == nil
+          puts "Not found: #{adisk.name}".color(:red)
+          return
+        end
+        
+        msg = "Attaching #{disk.awsid} to #{@machine.awsid}... "
+        disk.attach(@machine.awsid)
+        Rudy::Utils.waiter(2, 10, STDOUT, msg) { 
+          disk.attached?
+        }
+        
+        sleep 2
+        
+        begin
+          @rbox.mkdir(:p, disk.path)
+          
+          print "Mounting at #{disk.path}... "
       
+          ret = @rbox.mount(:t, disk.fstype, disk.device, disk.path) 
+          print_response ret
+          if ret.exit_code > 0
+            STDERR.puts "Error creating disk".color(:red)
+            return
+          else
+            puts "done"
+          end
+          disk.mounted = true
+          disk.save
+          
+        rescue Net::SSH::AuthenticationFailed, Net::SSH::HostKeyMismatch => ex  
+          STDERR.puts "Error creating disk".color(:red)
+          STDERR.puts ex.message.color(:red)
+         rescue Rye::CommandNotFound => ex
+          puts "  CommandNotFound: #{ex.message}".color(:red)
+          
+        rescue
+          STDERR.puts "Error creating disk" .color(:red)
+          Rudy::Utils.bug
+        end
+        
+      end
+    end
+    
+    
+    def umount(disks)
+      rdisk = Rudy::Disks.new
+      disks.each_pair do |path, props|
+        adisk = Rudy::Disk.new(path, props[:size], props[:device], @machine.position)
+        disk = rdisk.get(adisk.name)
+        if disk == nil
+          puts "Not found: #{adisk.name}".color(:red)
+          return
+        end
+        
+        if disk.mounted?
+          print "Unmounting #{disk.path}..."
+          execute_rbox_command { @rbox.umount(disk.path) }
+          puts " done"
+          sleep 0.5
+        end
+        
+        sleep 2
+        
+        if disk.attached?
+          msg = "Detaching #{disk.awsid}..."
+          disk.detach 
+          Rudy::Utils.waiter(2, 60, STDOUT, msg) { 
+            disk.available? 
+          }
+          sleep 0.5
+        end
+        
+        
+      end
+    end
+    alias_method :unmount, :umount
+    
     def destroy(disks)
       rdisk = Rudy::Disks.new
       
@@ -159,6 +241,6 @@ module Rudy; module Routines;
         
       end
     end
-      
+    
   end
 end;end

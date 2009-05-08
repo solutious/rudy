@@ -84,9 +84,9 @@ class RudyCLI < Rudy::CLI::Base
   usage "rudy shutdown"
   command :shutdown => Rudy::CLI::Routines
   
-  #about "Restart a machine group"
-  #usage "rudy restart"
-  #command :restart => Rudy::CLI::Routines
+  about "Reboot a machine group"
+  usage "rudy reboot"
+  command :reboot => Rudy::CLI::Routines
   
   about "Create a release"
   usage "rudy release"

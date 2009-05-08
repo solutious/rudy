@@ -16,18 +16,17 @@ module Rudy; module CLI;
       end
     end
     
-    def restart_valid?
-      @rr = Rudy::Routines::Restart.new
+    def reboot_valid?
+      @rr = Rudy::Routines::Reboot.new
       @rr.raise_early_exceptions
       true
     end
-    def restart
-      #machines = @rr.execute
-      #puts $/, "The following machines have been restarted:"
-      #machines.each do |machine|
-      #  puts machine.to_s
-      #end
-      #puts "Restart is disabled"
+    def reboot
+      machines = @rr.execute
+      puts $/, "The following machines have been restarted:"
+      machines.each do |machine|
+        puts machine.to_s
+      end
     end
     
     def release_valid?

@@ -123,28 +123,21 @@ routines do
       shutdown do                    # $ rudy shutdown
         before :root do              # Run remote SSH commands before shutdown
           uptime               
-        end                          
-                                     
+        end                               
         disks do                     
           destroy "/rudy/disk1"      # Unmount and destroy the EBS volume
         end                          
       end                            
       
-      uptime do
-        script :rudy do
+      reboot do
+        before :root do
           uptime
         end
-        disks do                     
-          destroy "/rudy/disk1"
+        after :root do
+          uptime
         end
       end
       
-      chained do
-        disks do                     
-          umount "/rudy/disk2" 
-          mount "/rudy/disk3"
-        end
-      end
     end                              
   end                                
   

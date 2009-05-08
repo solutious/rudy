@@ -129,7 +129,25 @@ routines do
           destroy "/rudy/disk1"      # Unmount and destroy the EBS volume
         end                          
       end                            
-                                     
+      
+      uptime do
+        script :rudy do
+          uptime
+        end
+        disks do                     
+          destroy "/rudy/disk1"      # Unmount and destroy the EBS volume
+        end
+      end
+      
+      chained do
+        depends :uptime
+        script :rudy do
+          ls :l, '/'
+        end
+        disks do                     
+          create "/rudy/disk1"      # Unmount and destroy the EBS volume
+        end
+      end
     end                              
   end                                
   

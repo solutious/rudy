@@ -35,9 +35,6 @@ module Rudy
         # Send The Huxtables the global values from the command-line
         Rudy::Huxtable.update_global @global
         
-        @@global.nocolor ? String.disable_color : String.enable_color
-        @@global.yes ? Annoy.enable_skip : Annoy.disable_skip
-        
         # Reload configuration. This must come after update_global 
         # so it will catch the @@global.config path (if supplied).
         begin
@@ -47,6 +44,12 @@ module Rudy
           STDERR.puts ex.backtrace if @@global.verbose > 0
           exit 81
         end
+        
+        # And then update global again b/c some values come from @@config
+        Rudy::Huxtable.update_global
+        
+        @@global.nocolor ? String.disable_color : String.enable_color
+        @@global.yes ? Annoy.enable_skip : Annoy.disable_skip
       
         unless @@global.accesskey && @@global.secretkey
           STDERR.puts "No AWS credentials. Check your configs!"

@@ -18,7 +18,6 @@ module Rudy; module Routines;
       end
       machines = []
       generic_machine_runner(:create) do |machine,rbox|
-        puts $/, "Starting up...", $/
         machines << machine
       end
       machines
@@ -27,8 +26,7 @@ module Rudy; module Routines;
     # Called by generic_machine_runner
     def raise_early_exceptions
       rmach = Rudy::Machines.new
-      # There's no keypair check here because Rudy::Machines will attempt 
-      # to create one.
+      # There's no keypair check here because Rudy::Machines will create one 
       raise MachineGroupNotDefined, current_machine_group unless known_machine_group?
       raise MachineGroupAlreadyRunning, current_machine_group if rmach.running?
     end

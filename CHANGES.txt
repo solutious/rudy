@@ -13,6 +13,8 @@ RUDY, CHANGES
 be stored in the same directory. 
 * CHANGE: Moved non-rudy specific modules to separate projects (storable,
 sysinfo, annoy, console -> Drydock, escape -> Rye, tryouts -> tryouts/).
+* FIXED: Bug in Huxtable when loading global. Wasn't reloaded after config was updated. 
+* ADDED: Routine dependencies
 
 
 #### 0.7.3 (2009-05-05) ###############################

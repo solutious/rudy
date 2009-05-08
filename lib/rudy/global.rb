@@ -95,13 +95,11 @@ module Rudy
     def postprocess
       apply_environment_variables
       apply_system_defaults
-      
       @nocolor = !@color unless @color.nil?
       @cert &&= File.expand_path(@cert)
       @privatekey &&= File.expand_path(@privatekey)
       @position &&= @position.to_s.rjust(2, '0')  
       @format &&= @format.to_sym rescue nil
-      
       @quiet ? Rudy.enable_quiet : Rudy.disable_quiet
     end
     

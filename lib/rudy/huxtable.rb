@@ -12,7 +12,9 @@ module Rudy
   #       include Rudy::Huxtable
   #
   #       def print_config
-  #         p self.config.defaults
+  #         p @@config.defaults  # {:nocolor => true, ...}
+  #         p @@global.verbose   # => 1
+  #         p @@logger.class     # => StringIO
   #       end
   #
   #     end

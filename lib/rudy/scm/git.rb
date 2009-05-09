@@ -99,19 +99,19 @@ module Rudy
               rbox.upload(@pkey, ".ssh/#{key}")
             end
             
-            # NOTE: The following are two attempts at telling git which 
-            # private key to use. Both fail. The only thing I could get
-            # to work is modifying the ~/.ssh/config file. 
-            #
-            # This runs fine, but "git clone" doesn't care. 
-            # git config --global --replace-all http.sslKey /home/delano/.ssh/id_rsa
-            # rbox.git('config', '--global', '--replace-all', 'http.sslKey', "#{homedir}/.ssh/#{key}")
-            
-            # "git clone" doesn't care about this either. Note that both these
-            # config attempts come directly from the git-config man page:
-            # http://www.kernel.org/pub/software/scm/git/docs/git-config.html
-            # export GIT_SSL_KEY=/home/delano/.ssh/id_rsa
-            # rbox.setenv("GIT_SSL_KEY", "#{homedir}/.ssh/#{key}")
+            ## NOTE: The following are two attempts at telling git which 
+            ## private key to use. Both fail. The only thing I could get
+            ## to work is modifying the ~/.ssh/config file. 
+            ##
+            ## This runs fine, but "git clone" doesn't care. 
+            ## git config --global --replace-all http.sslKey /home/delano/.ssh/id_rsa
+            ## rbox.git('config', '--global', '--replace-all', 'http.sslKey', "#{homedir}/.ssh/#{key}")
+            ##
+            ## "git clone" doesn't care about this either. Note that both these
+            ## config attempts come directly from the git-config man page:
+            ## http://www.kernel.org/pub/software/scm/git/docs/git-config.html
+            ## export GIT_SSL_KEY=/home/delano/.ssh/id_rsa
+            ## rbox.setenv("GIT_SSL_KEY", "#{homedir}/.ssh/#{key}")
             
             if rbox.file_exists?('.ssh/config')
               rbox.cp('.ssh/config', ".ssh/config-previous")

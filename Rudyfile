@@ -1,4 +1,4 @@
-# = Rudy -- Example configuration
+# = Rudy -- Skeleton configuration
 # 
 # Rudy automatically looks for configuration files in the following 
 # locations (in this order):
@@ -7,6 +7,7 @@
 #     ~/.rudy/config
 #
 #     ./Rudyfile
+#     ./machines.rb, ./routines.rb, ./commands.rb
 #     ./config/rudy/*.rb
 #     ./.rudy/*.rb
 #     /etc/rudy/*.rb
@@ -23,8 +24,7 @@
 #
 
 # ---------------------------------------------------------  MACHINES  --------
-# The machines block describes the "physical" characteristics
-# of your environments. 
+# The machines block describes the "physical" characteristics of your machines. 
 machines do
   
   zone :"us-east-1b" do
@@ -102,17 +102,17 @@ end
 # To run a routine, specify its name on the command-line: rudy startup
 routines do
   
-  env :stage, :prod do                      # We'll define routines for the
-    role :app do                     # stage-app machine group
+  env :stage, :prod do               # We'll define routines for the stage-app
+    role :app do                     # and prod-app machine groups
                                      
       startup do                     # $ rudy startup
         adduser :rudy                # Create a user called "rudy"
         authorize :rudy              # Enable passwordless logins as rudy
-                                     
+                                     #
         disks do                     # Define EBS volume routines
           create "/rudy/disk1"       # Create an EBS volume, attach it, give
         end                          # it a filesystem, and mount it.
-                                     
+                                     #
         after :rudy do               # Run remote SSH commands after startup
           mkdir :p, "great"          # $ mkdir -p great
           touch "great/scott"        # $ touch great/scott
@@ -129,35 +129,35 @@ routines do
         end                          
       end                            
       
-      reboot do
-        before :root do
-          uptime
-        end
-        after :root do
-          uptime
-        end
-      end
-      
-      backup do
-        disks do
-          snapshot "/rudy/disk1"
+      reboot do                      # $ rudy reboot
+        before :root do              # Run any pre-reboot tasks like stopping
+          uptime                     # web servers and databases. 
+        end                          #
+        after :root do               # Run any startup tasks like starting
+          uptime                     # processes or initializing the filesystem
         end
       end
       
-      refresh do
-        disks do
-          snapshot "/rudy/disk1"
-          destroy "/rudy/disk1"
-          restore "/rudy/disk1" 
+      backup do                      # $ rudy backup
+        disks do                     # A simple routine that creates an EBS
+          snapshot "/rudy/disk1"     # snapshot of the specified volume.
         end
       end
+      
+      restore_example do             # $ rudy restore_example
+        disks do                     # A contrived example of restoring a 
+          destory "/rudy/disk1"      # disk from a backup. NOTE: You'll need
+          restore "/rudy/disk1"      # to run "rudy backup" at least once 
+        end                          # before otherise there are no backups
+      end                            # to restore from. 
       
     end                              
   end                                
   
   # Define global routines available to all machine groups
   # This routine will update a basic Debian machine and
-  # install essential libraries.
+  # install essential libraries. 
+  # See examples/ for more.
   sysupdate do                       # $ rudy sysupdate
     before :root do                  
       apt_get "update"               # Update debian / ubuntu 

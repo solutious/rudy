@@ -34,10 +34,9 @@ require 'rudy/mixins/hash'
 
 # = Rudy
 #
-# == About
 #
 # Rudy is a development and deployment tool for the Amazon Elastic Compute Cloud
-# (EC2). See README.rdoc for more information. 
+# (EC2). <a href="wiki.github.com/solutious/rudy/getting-started">Getting Started</a> today!
 # 
 # 
 module Rudy
@@ -46,8 +45,8 @@ module Rudy
   module VERSION #:nodoc:
     unless defined?(MAJOR)
       MAJOR = 0.freeze
-      MINOR = 7.freeze
-      TINY  = 3.freeze
+      MINOR = 8.freeze
+      TINY  = 0.freeze
     end
     def self.to_s; [MAJOR, MINOR, TINY].join('.'); end
     def self.to_f; self.to_s.to_f; end

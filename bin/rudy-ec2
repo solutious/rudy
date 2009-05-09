@@ -61,13 +61,10 @@ module RudyCLI_EC2
   usage "rudy-ec2 download remote-source target"
   usage "NOTE: Use quotes when using a tilda or asterisk in remote paths ('~/')."
   usage "rudy-ec2 download '~/*' /tmp/"
-  option :r, :recursive, "Recursively copy entire directories"
-  option :p, :preserve, "Preserve atimes and ctimes."
-  option :d, :download, "Download FROM the remote machine to the local machine"
-  option :print, "Only print the SSH command, don't connect"
+  #option :r, :recursive, "Recursively copy entire directories"
+  #option :p, :preserve, "Preserve atimes and ctimes."
   option :g, :group, String, "A security group name"
   option :i, :awsid, String, "An instance ID"
-  option :u, :user, String, "Username"
   command :copy => Rudy::CLI::AWS::EC2::Candy 
   command_alias :copy, :ul
   command_alias :copy, :dl

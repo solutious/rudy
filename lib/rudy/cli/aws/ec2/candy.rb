@@ -64,7 +64,7 @@ module AWS; module EC2;
       opts[:group] = :any if @option.all
       opts[:id] = @option.instid if @option.instid
       
-      # Options to be sent to Net::SSH
+      # Options to be sent to Rye::Box
       ssh_opts = { :user => @global.user || Rudy.sysinfo.user, :debug => nil  }
       if @@global.pkey 
         raise "Cannot find file #{@@global.pkey}" unless File.exists?(@@global.pkey)
@@ -124,12 +124,13 @@ module AWS; module EC2;
       opts[:id] = @argv.shift if Rudy::Utils.is_id?(:instance, @argv.first)
       opts[:id] &&= [opts[:id]].flatten
       
-      # * +:recursive: recursively transfer directories (default: false)
-      # * +:preserve: preserve atimes and ctimes (default: false)
-      # * +:task+ one of: :upload (default), :download.
-      # * +:paths+ an array of paths to copy. The last element is the "to" path.
-      opts[:recursive] = @option.recursive ? true : false
-      opts[:preserve] = @option.preserve ? true : false
+      # Options to be sent to Net::SSH
+      ssh_opts = { :user => @global.user || Rudy.sysinfo.user, :debug => nil  }
+      if @@global.pkey 
+        raise "Cannot find file #{@@global.pkey}" unless File.exists?(@@global.pkey)
+        raise InsecureKeyPermissions, @@global.pkey unless File.stat(@@global.pkey).mode == 33152
+        ssh_opts[:keys] = @@global.pkey 
+      end
       
       opts[:paths] = @argv
       opts[:dest] = opts[:paths].pop
@@ -139,14 +140,16 @@ module AWS; module EC2;
       opts[:task] ||= :upload
       opts[:user] = @global.user || Rudy.sysinfo.user
     
-      # Options to be sent to Net::SSH
-      ssh_opts = { :user => opts[:user], :debug => nil  }
-      ssh_opts[:keys] = @@global.pkey if @@global.pkey
-
-      if @@global.pkey
+    
+      # Options to be sent to Rye::Box
+      info = @@global.quiet ? nil : STDERR
+      ssh_opts = { :user => @global.user || Rudy.sysinfo.user, :info => info }
+      if @@global.pkey 
         raise "Cannot find file #{@@global.pkey}" unless File.exists?(@@global.pkey)
-        raise "Insecure permissions for #{@@global.pkey}" unless (File.stat(@@global.pkey).mode & 600) == 0
+        raise InsecureKeyPermissions, @@global.pkey unless File.stat(@@global.pkey).mode == 33152
+        ssh_opts[:keys] = @@global.pkey 
       end
+      
 
       checked = false
       rudy = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey, @@global.region)
@@ -171,45 +174,13 @@ module AWS; module EC2;
           checked = true
         end
         
-        scp_opts = {
-          :recursive => opts[:recursive],
-          :preserve => opts[:preserve],
-          :chunk_size => 16384
-        }
-
-        Candy.scp(opts[:task], inst.dns_public, opts[:user], @@global.pkey, opts[:paths], opts[:dest], scp_opts)
-        puts 
-        puts unless @@global.quiet
+        # Open the connection and run the command
+        rbox = Rye::Box.new(inst.dns_public, ssh_opts)
+        rbox.send(opts[:task], opts[:paths], opts[:dest])
       end
 
     end
     
-    
-  private
-    
-    def Candy.scp(task, host, user, keypairpath, paths, dest, opts)
-      
-      connect_opts = {}
-      connect_opts[:keys] = [keypairpath] if keypairpath
-      
-      Net::SCP.start(host, user, connect_opts) do |scp|
-        
-        paths.each do |path| 
-          prev_path = nil
-          scp.send("#{task}", path, dest, opts) do |ch, name, sent, total|
-            #print "#{name}: #{sent}/#{total}\r"
-            msg = ((prev_path == name) ? "\r" : "\n") # new line for new file
-            msg << "#{name}: #{sent}/#{total}"  # otherwise, update the same line
-            print msg
-            STDOUT.flush        # update the screen every cycle
-            prev_path = name
-            break if sent == total
-          end
-          puts unless prev_path == path
-        end
-        
-      end
-    end
     
     
     

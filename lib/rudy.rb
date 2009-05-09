@@ -17,19 +17,12 @@ require 'logger'
 require 'socket'
 require 'timeout'
 require 'tempfile'
-
+require 'mixins/hash'
 require 'storable'
 require 'sysinfo'
 require 'annoy'
-
 require 'rye'
 
-require 'net/ssh'
-require 'net/scp'
-require 'net/ssh/multi'
-require 'net/ssh/gateway'
-
-require 'mixins/hash'
 
 
 # = Rudy

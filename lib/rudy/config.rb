@@ -85,27 +85,24 @@ module Rudy
       unless File.exists?(Rudy::CONFIG_FILE)
         puts "Creating #{Rudy::CONFIG_FILE}"
         rudy_config = Rudy::Utils.without_indent %Q{
-          # Amazon Web Services 
-          # Account access indentifiers.
-          accounts do
-            aws do
+          accounts do                           # Account Access Indentifiers
+            aws do                              # amazon web services 
               name "Rudy Default"
               accountnum ""
               accesskey ""
               secretkey ""
-              privatekey "~/path/2/pk-xxxx.pem"
+              privatekey "~/path/2/pk-xxxx.pem" 
               cert "~/path/2/cert-xxxx.pem"
             end
           end
           
-          # Global Defaults
-          defaults do
+          defaults do                          # Global Defaults
             region :"us-east-1" 
             zone :"us-east-1b"
             environment :stage
             role :app
-            position "01"
-            user ENV['USER'].to_sym
+            user Rudy.sysinfo.user.to_sym
+            color false                        # set to true for terminal colors
           end
         }
         Rudy::Utils.write_to_file(Rudy::CONFIG_FILE, rudy_config, 'w', 0600)

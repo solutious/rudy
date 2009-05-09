@@ -11,16 +11,16 @@ RUDY, CHANGES
 
 * CHANGE: Keypairs now include zone. This was necessary to allow US and EU keypairs to
 be stored in the same directory. 
-* CHANGE: Moved non-rudy specific modules to separate projects (storable,
-sysinfo, annoy, console -> Drydock, escape -> Rye, tryouts -> tryouts/).
+* CHANGE: Moved non-rudy specific modules to separate projects (storable, sysinfo, annoy, console -> Drydock, escape -> Rye, tryouts -> tryouts/).
 * CHANGE: Renamed restart routine to reboot to make it clear it's about the machine
 * CHANGE: Renamed Rudy::Disk to Rudy::MetaData::Disk
 * CHANGE: Short alias for rudy-ec2 snapshot is now 's' (instead of 't')
+* CHANGE: Removed highline-1.5.1 from vendor (it's now available as a gem)
 * FIXED: Bug in Huxtable when loading global. Wasn't reloaded after config was updated. 
 * ADDED: Routines now support dependencies
 * ADDED: Disk routines now support mount, umount, snapshot, and restore
 * ADDED: rudy disk command now displays backups with -b switch
-
+* ADDED: RE-added basic support for creating Linux images (with security warning)
 
 #### 0.7.3 (2009-05-05) ###############################
 
@@ -41,11 +41,11 @@ sysinfo, annoy, console -> Drydock, escape -> Rye, tryouts -> tryouts/).
 * FIXED: Was disabling, but not enabling colour
 * FIXED: Symbol errors in 1.8 
 * FIXED: Command blocks for root user are always run first now in Routines config.
-* ADDED: "script" keyword to routines config. 
 * CHANGE: routines before, after, and script blocks are now processed by Rye::Box.batch as Procs. 
 * CHANGE: deny was removed from commands config (it will come back later). 
-* ADDED: examples/
 * CHANGE: Rudy now checks the current working directory for machines, commands, etc... configs
+* ADDED: examples/
+* ADDED: "script" keyword to routines config. 
 * ADDED: script_local
 * ADDED: Routine now checks whether there are any remote tasks. If not, it doesn't loop through machines. 
 

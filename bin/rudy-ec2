@@ -21,7 +21,7 @@ require 'drydock'
 module RudyCLI_EC2
   extend Drydock
   
-  debug :off
+  debug :on
   default :instances
   
   # -----------------------------------  AMAZON EC2 COMMANDS  --------
@@ -112,8 +112,8 @@ module RudyCLI_EC2
   option :n, :name, String, "The name of the image file (to create)"
   option :u, :user, String, "Username to connect as (used for creating an image)"
   action :C, :create, "Create an image"
-  action :P, :prepare, "Prepare a running instance to be used as an image"
-  #action :D, :destroy, "Deregister an image (does not remove image files from S3)"
+  #action :P, :prepare, "Prepare a running instance to be used as an image"
+  action :D, :destroy, "Deregister an image (does not remove image files from S3)"
   argv :ami
   command :images => Rudy::CLI::AWS::EC2::Images
   command_alias :images, :image

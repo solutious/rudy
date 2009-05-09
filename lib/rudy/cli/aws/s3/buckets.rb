@@ -26,9 +26,8 @@ module AWS; module S3;
       true
     end
     def create_buckets
-      execute_check(:low)
       s3 = Rudy::AWS::S3.new(@@global.accesskey, @@global.secretkey, @@global.region)
-      s3.create_bucket(@argv.name)
+      s3.create_bucket(@argv.name, @option.location)
       buckets
     end
     

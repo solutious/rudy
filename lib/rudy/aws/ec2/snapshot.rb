@@ -21,6 +21,17 @@ module Rudy::AWS
         @@sformat % [liner_note,  @volid, @status]
       end
       
+      def inspect
+        lines = []
+        lines << liner_note
+        field_names.each do |key|
+          next unless self.respond_to?(key)
+          val = self.send(key)
+          lines << sprintf(" %22s: %s", key, (val.is_a?(Array) ? val.join(', ') : val))
+        end
+        lines.join($/)
+      end
+      
       def completed?
         self.status && self.status == 'completed'
       end

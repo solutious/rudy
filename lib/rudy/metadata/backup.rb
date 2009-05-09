@@ -50,7 +50,8 @@ module Rudy::MetaData
       sep=File::SEPARATOR
       dirs = @path.split sep if @path && !@path.empty?
       dirs.shift while dirs && (dirs[0].nil? || dirs[0].empty?)
-      super("back", @zone, @environment, @role, @position, *dirs, @date, @time, @second)
+      args = [dirs, @date, @time, @second].flatten
+      super("back", @zone, @environment, @role, @position, *args)
     end
     
     def nice_time

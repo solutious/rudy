@@ -5,7 +5,7 @@ unless defined?(RUDY_HOME)
 end
 
 $:.unshift File.join(RUDY_HOME, 'vendor', 'highline-1.5.1', 'lib')
-local_libs = %w{net-scp amazon-ec2 caesars drydock rye storable sysinfo annoy}
+local_libs = %w{net-scp amazon-ec2 aws-s3 caesars drydock rye storable sysinfo annoy}
 local_libs.each { |dir| $:.unshift File.join(RUDY_HOME, '..', dir, 'lib') }
 
 require 'digest/md5'
@@ -29,7 +29,7 @@ require 'net/scp'
 require 'net/ssh/multi'
 require 'net/ssh/gateway'
 
-require 'rudy/mixins/hash'
+require 'mixins/hash'
 
 
 # = Rudy
@@ -72,13 +72,13 @@ module Rudy
     DEFAULT_EC2_HOST = "ec2.amazonaws.com"
     DEFAULT_EC2_PORT = 443
     
-    MAX_INSTANCES = 3.freeze
+    MAX_INSTANCES = 5.freeze
     
     SUPPORTED_SCM_NAMES = [:svn, :git].freeze
   
     ID_MAP = {
-      :instance => 'i',
       :disk => 'disk',
+      :instance => 'i',
       :backup => 'back',
       :machine => 'm',
       :volume => 'vol',

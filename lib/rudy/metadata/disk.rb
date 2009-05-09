@@ -95,6 +95,18 @@ class Disk < Storable
     bup.create
   end
   
+  def list_backups
+    rback = Rudy::Backups.new
+    props = {
+      :environment => @environment, 
+      :role => @role,
+      :zone => @zone,
+      :region => @region,
+      :position => @position
+    }
+    rback.list([], [], props)
+  end
+  
   def attach(instid)
     raise "No volume id" unless exists?
     vol = @rvol.attach(@awsid, instid, @device)

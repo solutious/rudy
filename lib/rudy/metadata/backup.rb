@@ -45,11 +45,6 @@ module Rudy::MetaData
       postprocess
     end
     
-    def to_s(with_titles=true)
-      update
-      mtd = @mounted == true ? "mounted" : @status
-      "%s; %3sGB; %s; %s" % [liner_note, @size, @device, mtd]
-    end
 
     def name
       sep=File::SEPARATOR
@@ -65,7 +60,7 @@ module Rudy::MetaData
       t
     end
     
-    def to_s
+    def to_s(*args)
       str = ""
       field_names.each do |key|
         str << sprintf(" %22s: %s#{$/}", key, self.send(key.to_sym))
@@ -76,6 +71,8 @@ module Rudy::MetaData
     def disk
       rdisk = Rudy::Disks.new
       disk = Rudy::MetaData::Disk.new(@path, nil, nil, @position)
+      disk.region, disk.zone = @region, @zone
+      disk.environment, disk.role, disk.position = @environment, @role, @position
       diskobj = rdisk.get(disk.name)
       diskobj || disk 
     end

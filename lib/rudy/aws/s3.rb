@@ -28,8 +28,10 @@ module Rudy::AWS
       ::AWS::S3::Service.buckets
     end
     
-    def create_bucket(name)
-      ::AWS::S3::Bucket.create(name)
+    def create_bucket(name, location=nil)
+      opts = {}
+      opts[:location] = location.to_s.upcase if location
+      ::AWS::S3::Bucket.create(name, opts)
     end
     
     def destroy_bucket(name)
@@ -37,7 +39,8 @@ module Rudy::AWS
     end
     
     def find_bucket(name)
-      ::AWS::S3::Bucket.delete(name)
+      blist = ::AWS::S3::Service.buckets
+      blist.select { |bobj| bobj.name == name }.first
     end
     
     def list_bucket_objects(name)

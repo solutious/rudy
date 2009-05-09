@@ -25,7 +25,7 @@ module RudyCLI_S3
   
   about "Amazon S3 Buckets"
   usage "rudy-s3 buckets"
-  option :l, :list, "List bucket objects"
+  option :l, :location, String, "Specify a bucket location. One of: us, eu"
   action :C, :create, "Create a bucket"
   action :D, :destroy, "Destroy a bucket"
   argv :name
@@ -45,7 +45,7 @@ module RudyCLI_S3
   # ------------------------------------------------------------------
   
   default :buckets
-  debug :off
+  debug :on
   
   
 end

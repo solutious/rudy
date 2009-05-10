@@ -1,7 +1,6 @@
 
 
-require 'EC2'       # A
-require 'aws_sdb'   # motley
+require 'EC2'       # Motley
 require 'aws/s3'    # crew
 
 module Rudy

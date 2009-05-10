@@ -116,7 +116,9 @@ class RudyCLI < Rudy::CLI::Base
   
   about "Initialize Rudy configuration"
   command :init do |obj|
-  
+    
+    Rudy::Huxtable.update_config
+    
     unless File.exists?(Rudy::CONFIG_FILE)
       Rudy::Config.init_config_dir
     end

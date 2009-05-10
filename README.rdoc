@@ -87,6 +87,7 @@ NOTE: <em>If you are not installing via RubyGems, you need to make sure the depe
 * Jamis Buck for Net::SSH and friends
 * Glenn Rempe for amazon-ec2
 * Marcel Molina Jr. for aws-s3
+* sabat[http://github.com/sabat] 
 * Keshia Knight Pulliam
 
 

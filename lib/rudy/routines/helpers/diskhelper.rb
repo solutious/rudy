@@ -75,6 +75,7 @@ module Rudy; module Routines;
         if olddisk && olddisk.exists?
           olddisk.update
           puts "Disk found: #{olddisk.name}. Skipping...".color(:red)
+          return
         else
           disk.fstype = props[:fstype] || 'ext3'
           back = (rback.list(nil, nil, props) || []).first

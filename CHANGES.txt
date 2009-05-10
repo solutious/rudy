@@ -7,7 +7,7 @@ RUDY, CHANGES
 * TODO: Support for product codes
 * TODO: Tests for AWS HTTPS
 
-#### 0.7.4 (2009-05-09) ###############################
+#### 0.7.4 (2009-05-10) ###############################
 
 * CHANGE: Keypairs now include zone. This was necessary to allow US and EU keypairs to
 be stored in the same directory. 
@@ -17,6 +17,7 @@ be stored in the same directory.
 * CHANGE: Short alias for rudy-ec2 snapshot is now 's' (instead of 't')
 * CHANGE: Removed highline-1.5.1 from vendor (it's now available as a gem)
 * FIXED: Bug in Huxtable when loading global. Wasn't reloaded after config was updated. 
+* FIXED: Closed gh-12 (thanks sabat)
 * ADDED: Routines now support dependencies
 * ADDED: Disk routines now support mount, umount, snapshot, and restore
 * ADDED: rudy disk command now displays backups with -b switch

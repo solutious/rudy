@@ -146,7 +146,7 @@ routines do
       
       restore_example do             # $ rudy restore_example
         disks do                     # A contrived example of restoring a 
-          destory "/rudy/disk1"      # disk from a backup. NOTE: You'll need
+          destroy "/rudy/disk1"      # disk from a backup. NOTE: You'll need
           restore "/rudy/disk1"      # to run "rudy backup" at least once 
         end                          # before otherise there are no backups
       end                            # to restore from. 

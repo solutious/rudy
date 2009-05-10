@@ -21,7 +21,7 @@ require 'drydock'
 module RudyCLI_EC2
   extend Drydock
   
-  debug :on
+  debug :off
   default :instances
   
   # -----------------------------------  AMAZON EC2 COMMANDS  --------

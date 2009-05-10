@@ -290,7 +290,10 @@ module Rudy
       return routine unless routine.has_key?(:disks)
       
       routine.disks.each_pair do |raction,disks|
-
+        unless disks.kind_of?(Hash)
+          @@logger.puts "#{raction} is not defined. Check your #{action} routines config.".color(:red)
+          next
+        end
         disks.each_pair do |path, props|
           unless disk_defs.has_key?(path)
             @@logger.puts "#{path} is not defined. Check your #{action} machines config.".color(:red)

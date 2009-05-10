@@ -4,9 +4,8 @@ unless defined?(RUDY_HOME)
   RUDY_LIB = File.join(File.dirname(__FILE__), '..', 'lib')
 end
 
-$:.unshift File.join(RUDY_HOME, 'vendor', 'highline-1.5.1', 'lib')
-local_libs = %w{net-scp amazon-ec2 aws-s3 caesars drydock rye storable sysinfo annoy}
-local_libs.each { |dir| $:.unshift File.join(RUDY_HOME, '..', dir, 'lib') }
+#local_libs = %w{net-scp amazon-ec2 aws-s3 caesars drydock rye storable sysinfo annoy}
+#local_libs.each { |dir| $:.unshift File.join(RUDY_HOME, '..', dir, 'lib') }
 
 require 'digest/md5'
 require 'stringio'
@@ -38,8 +37,8 @@ module Rudy
   module VERSION #:nodoc:
     unless defined?(MAJOR)
       MAJOR = 0.freeze
-      MINOR = 8.freeze
-      TINY  = 0.freeze
+      MINOR = 7.freeze
+      TINY  = 4.freeze
     end
     def self.to_s; [MAJOR, MINOR, TINY].join('.'); end
     def self.to_f; self.to_s.to_f; end

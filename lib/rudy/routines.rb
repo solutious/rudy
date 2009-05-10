@@ -55,16 +55,22 @@ module Rudy
           raise "Unknown machine action #{machine_action}" 
         end
         
-        # This gets and removes the dependencies from the routines hash. 
+        # Declare a couple vars so they're available outide the block
+        before_dependencies = after_dependencies = nil  
         enjoy_every_sandwich {
-          @before_dependencies = get_dependencies(:before, routine)
-        
-          # We grab the after ones now too, so we don't fool the ScriptHelper 
-          # (the after keyword is used for both script and routine reference).  
-          @after_dependencies = get_dependencies(:after, routine)
+          # This gets and removes the dependencies from the routines hash. 
+          if Rudy::Routines::DependsHelper.has_depends?(:before, routine)
+            before_dependencies = Rudy::Routines::DependsHelper.get(:before, routine)
+          end
           
-          # This calls generic_machine_runner for every dependent before routine
-          run_dependencies(@before_dependencies, skip_check, skip_header)
+          # We grab the after ones now too, so we don't fool the ScriptHelper 
+          # later on in this routine (after keyword is used for scripts too)
+          if Rudy::Routines::DependsHelper.has_depends?(:after, routine)
+            after_dependencies = Rudy::Routines::DependsHelper.get(:after, routine)
+          end
+          
+          # This calls generic_machine_runner for every dependent before routine. 
+          execute_dependency(before_dependencies, skip_check, skip_header)
         }
         
         
@@ -220,33 +226,12 @@ module Rudy
         
         # This calls generic_machine_runner for every dependent after routine 
         enjoy_every_sandwich {
-          run_dependencies(@after_dependencies, skip_check, skip_header)
+          execute_dependency(after_dependencies, skip_check, skip_header)
         }
         
       end
       
-      
-      # Returns an Array of the dependent routines for the given +timing+ (before/after)
-      def get_dependencies(timing, routine)
-        return if !(routine.is_a?(Caesars::Hash) && routine[timing].is_a?(Caesars::Hash))
-        
-        # This will produce an Array containing the routines to run. The 
-        # elements are the valid routine names. 
-        # NOTE: The "timing" elements are removed from the routines hash. 
-        dependencies = []
-        routine[timing].each_pair do |n,v| 
-          next unless v.nil?  # this skips all "script" blocks
-          raise "#{timing}: #{n} is not a known routine" unless valid_routine?(n)
-          routine[timing].delete(n)
-          dependencies << n
-        end
-
-        # We need to return only the keys b/c the values are nil
-        dependencies = nil if dependencies.empty?
-        dependencies
-      end
-      
-      def run_dependencies(depends, skip_check, skip_header)
+      def execute_dependency(depends, skip_check, skip_header)
         return unless depends
         unless depends.empty?
           depends.each_with_index do |d, index|
@@ -264,6 +249,7 @@ module Rudy
           end
         end
       end
+      
       
       # Does the given +routine+ define any remote tasks?
       def has_remote_task?(routine)

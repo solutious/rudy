@@ -22,6 +22,8 @@ be stored in the same directory.
 * ADDED: Disk routines now support mount, umount, snapshot, and restore
 * ADDED: rudy disk command now displays backups with -b switch
 * ADDED: RE-added basic support for creating Linux images (with security warning)
+* ADDED: Routines with underscores can now be called with dashes (a_routine vs a-routine)
+
 
 #### 0.7.3 (2009-05-05) ###############################
 

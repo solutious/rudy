@@ -1,4 +1,5 @@
 
+#require 'drydock/mixins'
 require 'socket'
 require 'open-uri'
 require 'date'

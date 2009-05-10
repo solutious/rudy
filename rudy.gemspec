@@ -56,8 +56,6 @@
   examples/debian-sinatra-thin/commands.rb
   examples/debian-sinatra-thin/machines.rb
   examples/debian-sinatra-thin/routines.rb
-  lib/console.rb
-  lib/escape.rb
   lib/rudy.rb
   lib/rudy/aws.rb
   lib/rudy/aws/ec2.rb
@@ -102,23 +100,24 @@
   lib/rudy/metadata/disk.rb
   lib/rudy/metadata/disks.rb
   lib/rudy/metadata/objectbase.rb
+  lib/rudy/mixins.rb
   lib/rudy/mixins/hash.rb
   lib/rudy/routines.rb
   lib/rudy/routines/helper.rb
+  lib/rudy/routines/helpers/dependshelper.rb
   lib/rudy/routines/helpers/diskhelper.rb
   lib/rudy/routines/helpers/scmhelper.rb
   lib/rudy/routines/helpers/scripthelper.rb
   lib/rudy/routines/helpers/userhelper.rb
   lib/rudy/routines/passthrough.rb
+  lib/rudy/routines/reboot.rb
   lib/rudy/routines/release.rb
-  lib/rudy/routines/restart.rb
   lib/rudy/routines/shutdown.rb
   lib/rudy/routines/startup.rb
   lib/rudy/scm.rb
   lib/rudy/scm/git.rb
   lib/rudy/scm/svn.rb
   lib/rudy/utils.rb
-  lib/tryouts.rb
   rudy.gemspec
   support/mailtest
   support/randomize-root-password
@@ -145,36 +144,6 @@
   test/30_sdb_metadata/20_backups_test.rb
   test/coverage.txt
   test/helper.rb
-  vendor/highline-1.5.1/CHANGELOG
-  vendor/highline-1.5.1/INSTALL
-  vendor/highline-1.5.1/LICENSE
-  vendor/highline-1.5.1/README
-  vendor/highline-1.5.1/Rakefile
-  vendor/highline-1.5.1/TODO
-  vendor/highline-1.5.1/examples/ansi_colors.rb
-  vendor/highline-1.5.1/examples/asking_for_arrays.rb
-  vendor/highline-1.5.1/examples/basic_usage.rb
-  vendor/highline-1.5.1/examples/color_scheme.rb
-  vendor/highline-1.5.1/examples/limit.rb
-  vendor/highline-1.5.1/examples/menus.rb
-  vendor/highline-1.5.1/examples/overwrite.rb
-  vendor/highline-1.5.1/examples/page_and_wrap.rb
-  vendor/highline-1.5.1/examples/password.rb
-  vendor/highline-1.5.1/examples/trapping_eof.rb
-  vendor/highline-1.5.1/examples/using_readline.rb
-  vendor/highline-1.5.1/lib/highline.rb
-  vendor/highline-1.5.1/lib/highline/color_scheme.rb
-  vendor/highline-1.5.1/lib/highline/compatibility.rb
-  vendor/highline-1.5.1/lib/highline/import.rb
-  vendor/highline-1.5.1/lib/highline/menu.rb
-  vendor/highline-1.5.1/lib/highline/question.rb
-  vendor/highline-1.5.1/lib/highline/system_extensions.rb
-  vendor/highline-1.5.1/setup.rb
-  vendor/highline-1.5.1/test/tc_color_scheme.rb
-  vendor/highline-1.5.1/test/tc_highline.rb
-  vendor/highline-1.5.1/test/tc_import.rb
-  vendor/highline-1.5.1/test/tc_menu.rb
-  vendor/highline-1.5.1/test/ts_all.rb
   )
 
   

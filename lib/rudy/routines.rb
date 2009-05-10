@@ -47,27 +47,23 @@ module Rudy
           raise "Unknown machine action #{machine_action}" 
         end
         
-        depends = [routine.delete(:depends)].flatten.compact
-        unless depends.empty?
-          depends.each_with_index do |d, index|
-            puts task_separator("DEPENDENCY: #{d}")  
-            routine_dependency = fetch_routine_config(d)
-            unless routine_dependency
-              STDERR.puts "  Unknown routine: #{d}".color(:red)
-              next
-            end
-            # NOTE: running routines here means they don't have their own
-            # payload and the must use the list action. I think this is ok
-            # though b/c there should only be a few routines with payloads
-            # (startup, shutdown, restart)
-            generic_machine_runner(:list, routine_dependency, skip_check, skip_header)
-          end
-        end
+        # This gets and removes the dependencies from the routines hash. 
+        enjoy_every_sandwich {
+          @before_dependencies = get_dependencies(:before, routine)
+        
+          # We grab the after ones now too, so we don't fool the ScriptHelper 
+          # (the after keyword is used for both script and routine reference).  
+          @after_dependencies = get_dependencies(:after, routine)
+          
+          # This calls generic_machine_runner for every dependent before routine
+          run_dependencies(@before_dependencies, skip_check, skip_header)
+        }
+        
         
         lbox = Rye::Box.new('localhost')
         sconf = fetch_script_config
         
-        give_peace_a_chance {
+        enjoy_every_sandwich {
           if Rudy::Routines::ScriptHelper.before_local?(routine)  # before_local
             # Runs "before_local" scripts of routines config. 
             puts task_separator("LOCAL SHELL")
@@ -75,7 +71,7 @@ module Rudy
           end
         }
         
-        give_peace_a_chance {
+        enjoy_every_sandwich {
           if Rudy::Routines::ScriptHelper.script_local?(routine)  # script_local
             # Runs "script_local" scripts of routines config. 
             # NOTE: This is synonymous with before_local
@@ -131,7 +127,7 @@ module Rudy
             # Anything else other than nil -> change to that value
             # NOTE: This will set hostname every time a routine is
             # run so we may want to make this an explicit action. 
-            give_peace_a_chance {
+            enjoy_every_sandwich {
               hn = current_machine_hostname || :rudy
               if hn != :default
                 hn = machine.name if hn == :rudy
@@ -143,28 +139,28 @@ module Rudy
           end
           
           
-          give_peace_a_chance {
+          enjoy_every_sandwich {
             if Rudy::Routines::UserHelper.adduser?(routine)       # adduser
               puts task_separator("ADD USER")
               Rudy::Routines::UserHelper.adduser(routine, machine, rbox)
             end
           }
           
-          give_peace_a_chance {
+          enjoy_every_sandwich {
             if Rudy::Routines::UserHelper.authorize?(routine)     # authorize
               puts task_separator("AUTHORIZE USER")
               Rudy::Routines::UserHelper.authorize(routine, machine, rbox)
             end
           }
           
-          give_peace_a_chance {
+          enjoy_every_sandwich {
             if Rudy::Routines::ScriptHelper.before?(routine)      # before
               puts task_separator("REMOTE SHELL")
               Rudy::Routines::ScriptHelper.before(routine, sconf, machine, rbox)
             end
           }
           
-          give_peace_a_chance {
+          enjoy_every_sandwich {
             if Rudy::Routines::DiskHelper.disks?(routine)         # disk
               puts task_separator("DISKS")
               if rbox.ostype == "sunos"
@@ -175,7 +171,7 @@ module Rudy
             end
           }
           
-          give_peace_a_chance {
+          enjoy_every_sandwich {
             # Startup, shutdown, release, deploy, etc...
             routine_action.call(machine, rbox) if routine_action
           }
@@ -187,7 +183,7 @@ module Rudy
           # definition is the entire routine so we use "script".
           # NOTE: If both after and script are supplied they will 
           # both be executed. 
-          give_peace_a_chance {
+          enjoy_every_sandwich {
             if Rudy::Routines::ScriptHelper.script?(routine)      # script
               puts task_separator("REMOTE SHELL")
               # Runs "after" scripts of routines config
@@ -195,7 +191,7 @@ module Rudy
             end
           }
           
-          give_peace_a_chance {
+          enjoy_every_sandwich {
             if Rudy::Routines::ScriptHelper.after?(routine)       # after
               puts task_separator("REMOTE SHELL")
               # Runs "after" scripts of routines config
@@ -206,7 +202,7 @@ module Rudy
           rbox.disconnect
         end
         
-        give_peace_a_chance {
+        enjoy_every_sandwich {
           if Rudy::Routines::ScriptHelper.after_local?(routine)   # after_local
             puts task_separator("LOCAL SHELL")
             # Runs "after_local" scripts of routines config
@@ -214,6 +210,51 @@ module Rudy
           end
         }
         
+        # This calls generic_machine_runner for every dependent after routine 
+        enjoy_every_sandwich {
+          run_dependencies(@after_dependencies, skip_check, skip_header)
+        }
+        
+      end
+      
+      
+      # Returns an Array of the dependent routines for the given +timing+ (before/after)
+      def get_dependencies(timing, routine)
+        return if !(routine.is_a?(Caesars::Hash) && routine.has_key?(timing))
+        
+        # This will produce a hash containing the routines to run. The keys
+        # are the valid routine name and the values are nil. 
+        # NOTE: The "timing" elements are removed from the routines hash. 
+        dependencies = []
+        routine[timing].each_pair do |n,v| 
+          next unless v.nil?  # this skips all "script" blocks
+          raise "#{timing}: #{n} is not a known routine" unless valid_routine?(n)
+          routine[timing].delete(n)
+          dependencies << n
+        end
+
+        # We need to return only the keys b/c the values are nil
+        dependencies = nil if dependencies.empty?
+        dependencies
+      end
+      
+      def run_dependencies(depends, skip_check, skip_header)
+        return unless depends
+        unless depends.empty?
+          depends.each_with_index do |d, index|
+            puts task_separator("DEPENDENCY: #{d}")  
+            routine_dependency = fetch_routine_config(d)
+            unless routine_dependency
+              STDERR.puts "  Unknown routine: #{d}".color(:red)
+              next
+            end
+            # NOTE: running routines here means they do not have their own
+            # payload and they must use the list action. I think this is ok
+            # though b/c there should only be a few routines with payloads
+            # (startup, shutdown, restart)
+            generic_machine_runner(:list, routine_dependency, skip_check, skip_header)
+          end
+        end
       end
       
       # Does the given +routine+ define any remote tasks?
@@ -223,7 +264,9 @@ module Rudy
                Rudy::Routines::ScriptHelper.after?(routine),
                Rudy::Routines::ScriptHelper.script?(routine),
                Rudy::Routines::UserHelper.authorize?(routine),
-               Rudy::Routines::UserHelper.adduser?(routine)]
+               Rudy::Routines::UserHelper.adduser?(routine), 
+               !@after_dependencies.nil?,
+               !@before_dependencies.nil?]
         # Throw away all false answers (and nil answers)
         any = any.compact.select { |success| success }
         !any.empty?   # Returns true if any element contains true
@@ -256,7 +299,7 @@ module Rudy
         #puts '%-40s' % [name.bright]
       end
       
-      def give_peace_a_chance(&bloc_party)
+      def enjoy_every_sandwich(&bloc_party)
         begin
           bloc_party.call
         rescue => ex

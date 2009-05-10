@@ -306,6 +306,10 @@ module Rudy
       routine
     end
     
+    # Is +action+ a valid routine for the current machine group?
+    def valid_routine?(action)
+      !fetch_routine_config(action).nil?
+    end
     
     def fetch_machine_param(parameter)
       raise "No parameter specified" unless parameter

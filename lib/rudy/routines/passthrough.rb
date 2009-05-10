@@ -28,7 +28,9 @@ module Rudy; module Routines;
       rmach = Rudy::Machines.new
       raise Rudy::PrivateKeyNotFound, root_keypairpath unless has_keypair?(:root)
       raise MachineGroupNotDefined, current_machine_group unless known_machine_group?
-      raise MachineGroupNotRunning, current_machine_group unless rmach.running?
+      if !@@global.offline && !rmach.running?
+        raise MachineGroupNotRunning, current_machine_group
+      end
     end
     
   end

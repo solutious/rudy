@@ -169,6 +169,9 @@ routines do
   
   # Define your own routines
   anything do                        # $ rudy anything
+    before  do
+      ls :l
+    end
   end
   
 end

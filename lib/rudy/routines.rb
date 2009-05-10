@@ -39,7 +39,15 @@ module Rudy
       #   machine between the disk routine and after blocks. The block receives
       #   two argument: an instance of Rudy::Machine and one of Rye::Box.
       def generic_machine_runner(machine_action, routine=nil, skip_check=false, skip_header=false, &routine_action)
-        rmach = Rudy::Machines.new
+        if @@global.offline
+          rmach = Rudy::Machines::Offline.new
+          skip_check = true
+          remote_user = Rudy.sysinfo.user
+        else
+          rmach = Rudy::Machines.new
+          remote_user = 'root'
+        end
+        
         routine ||= @routine
         raise "No routine supplied" unless routine
         raise "No machine action supplied" unless machine_action
@@ -111,7 +119,7 @@ module Rudy
           end
           
           # TODO: trap rbox errors. We could get an authentication error. 
-          opts = { :keys =>  root_keypairpath, :user => 'root', :info => @@global.verbose > 0 }
+          opts = { :keys =>  root_keypairpath, :user => remote_user, :info => @@global.verbose > 0 }
           begin
             rbox = Rye::Box.new(machine.dns_public, opts)
             rbox.connect

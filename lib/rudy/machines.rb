@@ -168,8 +168,7 @@ module Rudy
     end
       
   end
-  
-  
+
   
   class Machines
     include Rudy::MetaData
@@ -267,8 +266,16 @@ module Rudy
       # TODO: add logic that checks whether the instances are running.
     end
     
-
-    
+  end
+  
+  
+  class Machines::Offline
+    def list(more=[], less=[], &each_mach)
+      m = Rudy::Machine.new
+      m.dns_public = 'localhost'
+      each_mach.call(m) if each_mach
+      [m]
+    end
   end
   
 end

@@ -27,7 +27,10 @@ module Rudy
     protected
       def init
         
-        #Caesars.enable_debug
+        if Drydock.debug?
+          #Caesars.enable_debug
+          Rudy.enable_debug
+        end
         
         # The CLI wants output!
         Rudy::Huxtable.update_logger STDOUT

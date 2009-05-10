@@ -6,8 +6,24 @@ module Rudy
     class SVN
       attr_accessor :base_uri
       
-      def initialize(args={:base => ''})
-        @base_uri = args[:base]
+      attr_reader :changes
+      
+      def initialize(args={})
+        args = {
+          :privatekey => nil,
+          :base_uri => nil,
+          :user => :root,
+          :changes => :enforce,
+          :path => nil
+        }.merge(args)
+        @base_uri, @path = args[:base_uri], args[:path]
+        @user, @pkey, @changes = args[:user], args[:privatekey], args[:changes]
+      end
+      
+      def engine; :svn; end
+      
+      def liner_note
+        "%-40s  (svn:%s:%s)" % [@rtag, @base_uri, @branch]
       end
       
       def create_release(username=nil, msg=nil)
@@ -43,7 +59,7 @@ module Rudy
       end
       
       def local_info
-        ret = `svn info 2>&1`
+        ret = Rye.shell(:svn, "info").join
         # URL: http://some/uri/path
         # Repository Root: http://some/uri
         # Repository UUID: c5abe49d-53e4-4ea3-9314-89e1e25aa7e1
@@ -61,9 +77,34 @@ module Rudy
       end
       
       # Are all local changes committed?
-      def clean_working_copy?
-        `svn diff . 2>&1` == '' # svn diff should return nothing
+      def self.clean_working_copy?(path=Dir.pwd)
+        Rye.shell(:svn, 'diff', '.').stdout == []
       end
+      def clean_working_copy?; SVN.clean_working_copy?; end
+      
+      def self.working_copy?(path=Dir.pwd)
+        (File.exists?(File.join(path, '.svn')))
+      end
+      def working_copy?; SVN.working_copy?; end
+      
+      
+      def raise_early_exceptions
+        raise NotAWorkingCopy, :svn unless working_copy?
+        raise DirtyWorkingCopy, :svn unless @changes.to_s == 'ignore' || clean_working_copy?
+        #raise NoRemoteURI, "remote.#{@remote}.url not set" if get_remote_uri.nil?
+        raise NoRemotePath, :svn if @path.nil?
+        raise PrivateKeyNotFound, @pkey if @pkey && !File.exists?(@pkey)
+        find_next_rtag # will raise exception is there's a problem
+        
+        # We can't check stuff that requires access to the machine b/c the 
+        # machine may not be running yet. These include:
+        # * Remote checkout path already exists
+        # * No git available
+        # ...
+        # If create_remote_checkout should fail, it should print a message
+        # about the release that was created and how to install it manually
+      end
+      
     end
   end
 end

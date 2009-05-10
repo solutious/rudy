@@ -17,7 +17,7 @@ module Rudy
       attr_reader :rtag
       attr_reader :user
       attr_reader :pkey
-      attr_reader :commit
+      attr_reader :changes
       
       # * +args+ a hash of params from the git block in the routines config
       # 
@@ -27,11 +27,11 @@ module Rudy
           :remote => :origin,
           :branch => :master,
           :user => :root,
-          :commit => :enforce,
+          :changes => :enforce,
           :path => nil
         }.merge(args)
         @remote, @branch, @path = args[:remote], args[:branch], args[:path]
-        @user, @pkey, @commit = args[:user], args[:privatekey], args[:commit]
+        @user, @pkey, @changes = args[:user], args[:privatekey], args[:changes]
         @repo = Repo.new(Dir.pwd) if GIT.working_copy?
       end
       
@@ -198,7 +198,7 @@ module Rudy
       
       def raise_early_exceptions
         raise NotAWorkingCopy, :git unless working_copy?
-        raise DirtyWorkingCopy, :git unless @commit.to_s == 'ignore' || clean_working_copy?
+        raise DirtyWorkingCopy, :git unless @changes.to_s == 'ignore' || clean_working_copy?
         raise NoRemoteURI, "remote.#{@remote}.url not set" if get_remote_uri.nil?
         raise NoRemotePath, :git if @path.nil?
         raise PrivateKeyNotFound, @pkey if @pkey && !File.exists?(@pkey)

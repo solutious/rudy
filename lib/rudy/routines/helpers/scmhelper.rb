@@ -10,8 +10,8 @@ module Rudy; module Routines;
       scmnames = SUPPORTED_SCM_NAMES & routine.keys    # Find intersections.
       return false if scmnames.empty?                  # Nothing to do. 
       scmnames.each do |scm|                          
-        routine[scm].values.each do |p|                # Each SCM should have a
-        raise "Bad #{scm} config" if !p.kind_of?(Hash) # Hash config. Otherwise
+        routine[scm].values.each do |t|                # Each SCM should have a
+        raise "Bad #{scm} config" if !t.kind_of?(Hash) # Hash config. Otherwise
         end                                            # it's misconfigured.
       end
       true

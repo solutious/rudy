@@ -259,8 +259,8 @@ module Rudy
     # Return a hash:
     #
     #      :after: 
-    #      - :root: pwd
-    #      - :rudy: pwd
+    #      - :root: !ruby/object:Proc {}
+    #      - :rudy: !ruby/object:Proc {}
     #      :disks: 
     #        :create: 
     #          /rudy/example1: 
@@ -270,11 +270,17 @@ module Rudy
     #            :device: /dev/sdm
     #            :size: 1
     #      
+    # NOTE: dashes in +action+ are converted to underscores. We do this
+    # because routine names are defined by method names and valid
+    # method names don't use dashes. This way, we can use a dash on the
+    # command-line which looks nicer (underscore still works of course). 
     def fetch_routine_config(action)
       raise "No action specified" unless action
       raise NoConfig unless @@config
       raise NoRoutinesConfig unless @@config.routines
       raise NoGlobal unless @@global
+      
+      action = action.to_s.tr('-', '_')
       
       zon, env, rol = @@global.zone, @@global.environment, @@global.role
       

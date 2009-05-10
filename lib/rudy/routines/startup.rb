@@ -28,6 +28,8 @@ module Rudy; module Routines;
       rmach = Rudy::Machines.new
       # There's no keypair check here because Rudy::Machines will create one 
       raise MachineGroupNotDefined, current_machine_group unless known_machine_group?
+      # We don't check @@global.offline b/c we can't create EC2 instances
+      # without an internet connection. Use passthrough for routine tests.
       raise MachineGroupAlreadyRunning, current_machine_group if rmach.running?
     end
     

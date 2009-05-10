@@ -167,10 +167,16 @@ routines do
     end
   end
   
-  # Define your own routines
   anything do                        # $ rudy anything
-    before  do
-      ls :l
+    before :display_uptime           # Specify a dependency
+    script Rudy.sysinfo.user do      # This is Ruby, so any valid syntax
+      ls :l, Rudy.sysinfo.home       # can be used in the definitions
+    end
+  end
+  
+  display_uptime do                  # $ rudy display_uptime
+    script Rudy.sysinfo.user do
+      uptime
     end
   end
   

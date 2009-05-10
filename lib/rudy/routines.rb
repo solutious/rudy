@@ -228,10 +228,10 @@ module Rudy
       
       # Returns an Array of the dependent routines for the given +timing+ (before/after)
       def get_dependencies(timing, routine)
-        return if !(routine.is_a?(Caesars::Hash) && routine.has_key?(timing))
+        return if !(routine.is_a?(Caesars::Hash) && routine[timing].is_a?(Caesars::Hash))
         
-        # This will produce a hash containing the routines to run. The keys
-        # are the valid routine name and the values are nil. 
+        # This will produce an Array containing the routines to run. The 
+        # elements are the valid routine names. 
         # NOTE: The "timing" elements are removed from the routines hash. 
         dependencies = []
         routine[timing].each_pair do |n,v| 
@@ -259,7 +259,7 @@ module Rudy
             # NOTE: running routines here means they do not have their own
             # payload and they must use the list action. I think this is ok
             # though b/c there should only be a few routines with payloads
-            # (startup, shutdown, restart)
+            # (startup, shutdown, reboot)
             generic_machine_runner(:list, routine_dependency, skip_check, skip_header)
           end
         end

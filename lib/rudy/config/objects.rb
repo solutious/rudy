@@ -73,7 +73,7 @@ class Rudy::Config
         #if Caesars.known_symbol_by_glass?(:routines, cmd)
         #  raise ReservedKeyword.new(:commands, cmd)
         #end
-        
+        p Rye::VERSION
         # We can allow existing commands to be overridden but we
         # print a message to STDERR so the user knows what's up.
         STDERR.puts "Redefined #{cmd}" if Rye::Cmd.can?(cmd)

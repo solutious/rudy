@@ -169,13 +169,13 @@ routines do
   
   anything do                        # $ rudy anything
     before :display_uptime           # Specify a dependency
-    script Rudy.sysinfo.user do      # This is Ruby, so any valid syntax
-      ls :l, Rudy.sysinfo.home       # can be used in the definitions. 
+    script :rudy do                  # This is Ruby, so any valid syntax
+      ls :l                          # can be used in the definitions. 
     end                              # See: SysInfo gem for more info.
   end
   
   display_uptime do                  # $ rudy display-uptime
-    script Rudy.sysinfo.user do      # NOTE: You can use 'dashes' on the
+    script :rudy do                  # NOTE: You can use 'dashes' on the
       uptime                         # command-line instead of underscores
     end
   end

@@ -4,8 +4,8 @@ unless defined?(RUDY_HOME)
   RUDY_LIB = File.join(File.dirname(__FILE__), '..', 'lib')
 end
 
-#local_libs = %w{net-scp amazon-ec2 aws-s3 caesars drydock rye storable sysinfo annoy}
-#local_libs.each { |dir| $:.unshift File.join(RUDY_HOME, '..', dir, 'lib') }
+local_libs = %w{net-scp amazon-ec2 aws-s3 caesars drydock rye storable sysinfo annoy}
+local_libs.each { |dir| $:.unshift File.join(RUDY_HOME, '..', dir, 'lib') }
 
 require 'digest/md5'
 require 'stringio'

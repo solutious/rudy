@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>: Rudy::Config::Commands [Rudy: Not your grandparents' EC2 deployment tool.]</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>Class</span>
+          Rudy::Config::Commands
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a href="../../../files/lib/rudy/config/objects_rb.html">lib/rudy/config/objects.rb</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Parent:
+          <strong>Caesars</strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            <p>
+            Modify the SSH command available in routines. The default set of commands
+            is defined by Rye::Cmd (<a href="../../Rudy.html">Rudy</a> executes all SSH
+            commands via Rye).
+            </p>
+            <p>
+            NOTE: We allow people to define their own keywords. It is important that
+            new keywords do not conflict with existing <a
+            href="../../Rudy.html">Rudy</a> keywords. Strange things may happen!
+            </p>
+          </div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>public instance</h3>
+            <ol>
+              <li><a href="#M000486">init</a></li>
+              <li><a href="#M000487">postprocess</a></li>
+            </ol>
+          </div>
+          <div id='section'>
+            <div id='class-list'>
+              <h2>Classes and Modules</h2>
+              Class <a href="Commands/BadArg.html" class="link">Rudy::Config::Commands::BadArg</a><br />
+              Class <a href="Commands/PathNotString.html" class="link">Rudy::Config::Commands::PathNotString</a><br />
+              Class <a href="Commands/ReservedKeyword.html" class="link">Rudy::Config::Commands::ReservedKeyword</a><br />
+            </div>
+            <div id='methods'>
+              <h2>Public instance methods</h2>
+              <div class='public-instance method' id='method-M000486'>
+                <a name='M000486'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>init</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000486-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000486-source'>    <span class="ruby-comment cmt"># File lib/rudy/config/objects.rb, line 36</span>&#x000A;36:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">init</span>&#x000A;37:       <span class="ruby-comment cmt"># We can't process the Rye::Cmd commands here because the</span>&#x000A;38:       <span class="ruby-comment cmt"># DSL hasn't been parsed yet so Rudy::Config.postprocess</span>&#x000A;39:       <span class="ruby-comment cmt"># called the following postprocess method after parsing.</span>&#x000A;40:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000487'>
+                <a name='M000487'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>postprocess</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Process the directives specified in the commands config. NOTE: This affects
+                  the processing of the routines config which only works if commands is
+                  parsed first. This works naturally if each config has its own file b/c <a
+                  href="../../Rudy.html">Rudy</a> loads files via a glob (globs are
+                  alphabetized and &#8220;commands&#8221; comes before
+                  &#8220;routines&#8221;).
+                  </p>
+                  <p>
+                  That&#8217;s obviously not good enough but for now commands configuration
+                  MUST be put before routines.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000487-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000487-source'>     <span class="ruby-comment cmt"># File lib/rudy/config/objects.rb, line 50</span>&#x000A; 50:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">postprocess</span>&#x000A; 51:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@@processed</span>&#x000A; 52:       <span class="ruby-ivar">@@processed</span> = <span class="ruby-keyword kw">true</span>  <span class="ruby-comment cmt"># Make sure this runs only once</span>&#x000A; 53:       <span class="ruby-comment cmt"># Parses:</span>&#x000A; 54:       <span class="ruby-comment cmt"># commands do</span>&#x000A; 55:       <span class="ruby-comment cmt">#   allow :kill </span>&#x000A; 56:       <span class="ruby-comment cmt">#   allow :custom_script, '/full/path/2/custom_script'</span>&#x000A; 57:       <span class="ruby-comment cmt">#   allow :git_clone, &quot;/usr/bin/git&quot;, &quot;clone&quot;</span>&#x000A; 58:       <span class="ruby-comment cmt"># end</span>&#x000A; 59:       <span class="ruby-comment cmt"># </span>&#x000A; 60:       <span class="ruby-comment cmt"># * Tells Routines to force_array on the command name.</span>&#x000A; 61:       <span class="ruby-comment cmt"># This is important b/c of the way we parse commands </span>&#x000A; 62:       <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">allow</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">cmd</span><span class="ruby-operator">|</span>&#x000A; 63:         <span class="ruby-identifier">cmd</span>, <span class="ruby-identifier">path</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span> = <span class="ruby-operator">*</span><span class="ruby-identifier">cmd</span>&#x000A; 64:         &#x000A; 65:         <span class="ruby-comment cmt"># If no path was specified, we can assume cmd is in the remote path so</span>&#x000A; 66:         <span class="ruby-comment cmt"># when we add the method to Rye::Cmd, we'll it the path is &quot;cmd&quot;.</span>&#x000A; 67:         <span class="ruby-identifier">path</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">cmd</span>.<span class="ruby-identifier">to_s</span>&#x000A; 68:         &#x000A; 69:         <span class="ruby-comment cmt"># We cannot allow new commands to be defined that conflict use known</span>&#x000A; 70:         <span class="ruby-comment cmt"># routines keywords. This is based on keywords in the current config.</span>&#x000A; 71:         <span class="ruby-comment cmt"># NOTE: We can't check for this right now b/c the routines config</span>&#x000A; 72:         <span class="ruby-comment cmt"># won't necessarily have been parsed yet. TODO: Figure it out!</span>&#x000A; 73:         <span class="ruby-comment cmt">#if Caesars.known_symbol_by_glass?(:routines, cmd)</span>&#x000A; 74:         <span class="ruby-comment cmt">#  raise ReservedKeyword.new(:commands, cmd)</span>&#x000A; 75:         <span class="ruby-comment cmt">#end</span>&#x000A; 76:         &#x000A; 77:         <span class="ruby-comment cmt"># We can allow existing commands to be overridden but we</span>&#x000A; 78:         <span class="ruby-comment cmt"># print a message to STDERR so the user knows what's up.</span>&#x000A; 79:         <span class="ruby-constant">STDERR</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Redefined #{cmd}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-constant">Rye</span><span class="ruby-operator">::</span><span class="ruby-constant">Cmd</span>.<span class="ruby-identifier">can?</span>(<span class="ruby-identifier">cmd</span>)&#x000A; 80:         &#x000A; 81:         <span class="ruby-comment cmt"># The second argument if supplied must be a filesystem path</span>&#x000A; 82:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">PathNotString</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">:commands</span>, <span class="ruby-identifier">cmd</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">path</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">path</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">String</span>)        &#x000A; 83:         &#x000A; 84:         <span class="ruby-comment cmt"># Insert hardcoded arguments if any were supplied. These will</span>&#x000A; 85:         <span class="ruby-comment cmt"># be sent automatically with every call to the new command.</span>&#x000A; 86:         <span class="ruby-comment cmt"># This loop prepares the hardcoded args to be passed to eval.</span>&#x000A; 87:         <span class="ruby-identifier">args</span>.<span class="ruby-identifier">collect!</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">arg</span><span class="ruby-operator">|</span> &#x000A; 88:           <span class="ruby-identifier">klass</span> = [<span class="ruby-constant">Symbol</span>, <span class="ruby-constant">String</span>] <span class="ruby-operator">&amp;</span> [<span class="ruby-identifier">arg</span>.<span class="ruby-identifier">class</span>]&#x000A; 89:           <span class="ruby-identifier">raise</span> <span class="ruby-constant">BadArg</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">:commands</span>, <span class="ruby-identifier">cmd</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">empty?</span>&#x000A; 90:           <span class="ruby-comment cmt"># Symbols sent as Symbols, Strings as Strings</span>&#x000A; 91:           <span class="ruby-identifier">arg</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Symbol</span>) <span class="ruby-operator">?</span> <span class="ruby-node">&quot;:#{arg}&quot;</span> <span class="ruby-operator">:</span> <span class="ruby-node">&quot;'#{arg}'&quot;</span>&#x000A; 92:         <span class="ruby-keyword kw">end</span>&#x000A; 93:         <span class="ruby-identifier">hard_args</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-value">? </span><span class="ruby-value str">&quot;*args&quot;</span> <span class="ruby-operator">:</span> <span class="ruby-node">&quot;#{args.join(', ')}, *args&quot;</span>&#x000A; 94: &#x000A; 95:         <span class="ruby-comment cmt"># TODO: Use define_method </span>&#x000A; 96:         <span class="ruby-constant">Rye</span><span class="ruby-operator">::</span><span class="ruby-constant">Cmd</span>.<span class="ruby-identifier">module_eval</span> <span class="ruby-node">%Q{&#x000A; 97:           def #{cmd}(*args); cmd(:'#{path}', #{hard_args}); end&#x000A; 98:         }</span>&#x000A; 99:         &#x000A;100:       <span class="ruby-keyword kw">end</span>&#x000A;101:       <span class="ruby-comment cmt">## NOTE: We now process command blocks as Procs rather than individual commands.</span>&#x000A;102:       <span class="ruby-comment cmt"># There's currently no need to ForceRefresh here</span>&#x000A;103:       <span class="ruby-comment cmt">##raise Caesars::Config::ForceRefresh.new(:routines)</span>&#x000A;104:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

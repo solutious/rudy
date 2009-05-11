@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>: Rudy::AWS::EC2::Images [Rudy: Not your grandparents' EC2 deployment tool.]</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>Class</span>
+          Rudy::AWS::EC2::Images
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a href="../../../../files/lib/rudy/aws/ec2/image_rb.html">lib/rudy/aws/ec2/image.rb</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Parent:
+          <strong>Object</strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>public class</h3>
+            <ol>
+              <li><a href="#M000252">from_hash</a></li>
+            </ol>
+            <h3>public instance</h3>
+            <ol>
+              <li><a href="#M000250">deregister</a></li>
+              <li><a href="#M000248">list</a></li>
+              <li><a href="#M000249">list_as_hash</a></li>
+              <li><a href="#M000251">register</a></li>
+            </ol>
+          </div>
+          <div id='context'>
+            <div id='includes'>
+              <h2>Included modules</h2>
+              <ol>
+                <li><a href="../ObjectBase.html">Rudy::AWS::ObjectBase</a></li>
+                <li><a href="Base.html">Rudy::AWS::EC2::Base</a></li>
+              </ol>
+            </div>
+          </div>
+          <div id='section'>
+            <div id='methods'>
+              <h2>Public class methods</h2>
+              <div class='public-class method' id='method-M000252'>
+                <a name='M000252'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>from_hash</span>
+                  <span class='arguments'>(h)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  imageOwnerId: &#8220;203338247012&#8221; kernelId: aki-a71cf9ce ramdiskId:
+                  ari-a51cf9cc imageState: available imageId: ami-dd34d3b4 architecture: i386
+                  isPublic: &#8220;false&#8221; imageLocation:
+                  solutious-rudy-us/debian-squeeze-m1.small-v5.manifest.xml imageType:
+                  machine
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000252-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000252-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/image.rb, line 133</span>&#x000A;133:       <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Images</span>.<span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">h</span>)&#x000A;134:         <span class="ruby-identifier">img</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Image</span>.<span class="ruby-identifier">new</span>&#x000A;135:         <span class="ruby-identifier">img</span>.<span class="ruby-identifier">owner</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'imageOwnerId'</span>]&#x000A;136:         <span class="ruby-identifier">img</span>.<span class="ruby-identifier">aki</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'kernelId'</span>]&#x000A;137:         <span class="ruby-identifier">img</span>.<span class="ruby-identifier">ari</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'ramdiskId'</span>]&#x000A;138:         <span class="ruby-identifier">img</span>.<span class="ruby-identifier">state</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'imageState'</span>]&#x000A;139:         <span class="ruby-identifier">img</span>.<span class="ruby-identifier">awsid</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'imageId'</span>]&#x000A;140:         <span class="ruby-identifier">img</span>.<span class="ruby-identifier">arch</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'architecture'</span>]&#x000A;141:         <span class="ruby-identifier">img</span>.<span class="ruby-identifier">visibility</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'isPublic'</span>] <span class="ruby-operator">==</span> <span class="ruby-value str">'true'</span> <span class="ruby-operator">?</span> <span class="ruby-value str">'public'</span> <span class="ruby-operator">:</span> <span class="ruby-value str">'private'</span>&#x000A;142:         <span class="ruby-identifier">img</span>.<span class="ruby-identifier">location</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'imageLocation'</span>]&#x000A;143:         <span class="ruby-identifier">img</span>.<span class="ruby-identifier">kind</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'imageType'</span>]&#x000A;144:         <span class="ruby-identifier">img</span>&#x000A;145:       <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <h2>Public instance methods</h2>
+              <div class='public-instance method' id='method-M000250'>
+                <a name='M000250'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>deregister</span>
+                  <span class='arguments'>(id)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  <tt>id</tt> AMI ID to deregister (ami-XXXXXXX) Returns true when
+                  successful. Otherwise throws an exception.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000250-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000250-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/image.rb, line 104</span>&#x000A;104:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">deregister</span>(<span class="ruby-identifier">id</span>)&#x000A;105:         <span class="ruby-identifier">opts</span> = {&#x000A;106:           <span class="ruby-identifier">:image_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">id</span>&#x000A;107:         }&#x000A;108:         <span class="ruby-identifier">ret</span> = <span class="ruby-ivar">@ec2</span>.<span class="ruby-identifier">deregister_image</span>(<span class="ruby-identifier">opts</span>)&#x000A;109:         <span class="ruby-identifier">puts</span> <span class="ruby-identifier">ret</span>.<span class="ruby-identifier">to_yaml</span>&#x000A;110:         <span class="ruby-keyword kw">true</span>&#x000A;111:       <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000248'>
+                <a name='M000248'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>list</span>
+                  <span class='arguments'>(owner=[], image_ids=[], executable_by=[], &amp;each_image)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000248-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000248-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/image.rb, line 61</span>&#x000A;61:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">list</span>(<span class="ruby-identifier">owner</span>=[], <span class="ruby-identifier">image_ids</span>=[], <span class="ruby-identifier">executable_by</span>=[], <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_image</span>)&#x000A;62:         <span class="ruby-identifier">images</span> = <span class="ruby-identifier">list_as_hash</span>(<span class="ruby-identifier">owner</span>, <span class="ruby-identifier">image_ids</span>, <span class="ruby-identifier">executable_by</span>)&#x000A;63:         <span class="ruby-identifier">images</span> <span class="ruby-operator">&amp;&amp;=</span> <span class="ruby-identifier">images</span>.<span class="ruby-identifier">values</span>&#x000A;64:         <span class="ruby-identifier">images</span>&#x000A;65:       <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000249'>
+                <a name='M000249'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>list_as_hash</span>
+                  <span class='arguments'>(owner=[], image_ids=[], executable_by=[], &amp;each_image)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000249-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000249-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/image.rb, line 67</span>&#x000A; 67:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">list_as_hash</span>(<span class="ruby-identifier">owner</span>=[], <span class="ruby-identifier">image_ids</span>=[], <span class="ruby-identifier">executable_by</span>=[], <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_image</span>)&#x000A; 68:         <span class="ruby-identifier">owner</span> <span class="ruby-operator">&amp;&amp;=</span> [<span class="ruby-identifier">owner</span>].<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">compact</span>&#x000A; 69:         <span class="ruby-identifier">image_ids</span> <span class="ruby-operator">&amp;&amp;=</span> [<span class="ruby-identifier">image_ids</span>].<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">compact</span>&#x000A; 70:         <span class="ruby-identifier">executable_by</span> <span class="ruby-operator">&amp;&amp;=</span> [<span class="ruby-identifier">executable_by</span>].<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">compact</span>&#x000A; 71:         &#x000A; 72:         <span class="ruby-comment cmt"># Remove dashes from aws account numbers</span>&#x000A; 73:         <span class="ruby-identifier">owner</span> <span class="ruby-operator">&amp;&amp;=</span> <span class="ruby-identifier">owner</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">o</span><span class="ruby-operator">|</span> <span class="ruby-identifier">o</span>.<span class="ruby-identifier">tr</span>(<span class="ruby-value str">'-'</span>, <span class="ruby-value str">''</span>) }&#x000A; 74:         <span class="ruby-comment cmt"># If we got Image objects, we want just the IDs.</span>&#x000A; 75:         <span class="ruby-comment cmt"># This method always returns an Array.</span>&#x000A; 76:         <span class="ruby-identifier">image_ids</span> = <span class="ruby-identifier">objects_to_image_ids</span>(<span class="ruby-identifier">image_ids</span>)&#x000A; 77:         &#x000A; 78:         <span class="ruby-identifier">opts</span> = {&#x000A; 79:           <span class="ruby-identifier">:owner_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">owner</span> <span class="ruby-operator">||</span> [],&#x000A; 80:           <span class="ruby-identifier">:image_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">image_ids</span> <span class="ruby-operator">||</span> [],&#x000A; 81:           <span class="ruby-identifier">:executable_by</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">executable_by</span> <span class="ruby-operator">||</span> []&#x000A; 82:         }&#x000A; 83:         &#x000A; 84:         <span class="ruby-identifier">response</span> = <span class="ruby-identifier">execute_request</span>({}) { <span class="ruby-ivar">@ec2</span>.<span class="ruby-identifier">describe_images</span>(<span class="ruby-identifier">opts</span>) }&#x000A; 85:         &#x000A; 86:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">response</span>[<span class="ruby-value str">'imagesSet'</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>)  <span class="ruby-comment cmt"># No instances </span>&#x000A; 87:       &#x000A; 88:         <span class="ruby-identifier">resids</span> = []&#x000A; 89:         <span class="ruby-identifier">images</span> = {}&#x000A; 90:         <span class="ruby-identifier">response</span>[<span class="ruby-value str">'imagesSet'</span>][<span class="ruby-value str">'item'</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">res</span><span class="ruby-operator">|</span>      &#x000A; 91:           <span class="ruby-identifier">resids</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">res</span>[<span class="ruby-value str">'reservationId'</span>]&#x000A; 92:           <span class="ruby-identifier">img</span> = <span class="ruby-constant">Images</span>.<span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">res</span>)&#x000A; 93:           <span class="ruby-identifier">images</span>[<span class="ruby-identifier">img</span>.<span class="ruby-identifier">awsid</span>] = <span class="ruby-identifier">img</span>&#x000A; 94:         <span class="ruby-keyword kw">end</span>&#x000A; 95:         &#x000A; 96:         <span class="ruby-identifier">images</span>.<span class="ruby-identifier">each_value</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">image</span><span class="ruby-operator">|</span> <span class="ruby-identifier">each_image</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">image</span>) } <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">each_image</span>&#x000A; 97:         &#x000A; 98:         <span class="ruby-identifier">images</span> = <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">images</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-comment cmt"># Don't return an empty hash</span>&#x000A; 99:         <span class="ruby-identifier">images</span>&#x000A;100:       <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000251'>
+                <a name='M000251'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>register</span>
+                  <span class='arguments'>(path)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  <tt>path</tt> the <a href="../S3.html">S3</a> path to the manifest
+                  (bucket/file.manifest.xml) Returns the AMI ID when successful, otherwise
+                  throws an exception.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000251-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000251-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/image.rb, line 115</span>&#x000A;115:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">register</span>(<span class="ruby-identifier">path</span>)&#x000A;116:         <span class="ruby-identifier">opts</span> = {&#x000A;117:           <span class="ruby-identifier">:image_location</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">path</span>&#x000A;118:         }&#x000A;119:         <span class="ruby-identifier">ret</span> = <span class="ruby-ivar">@ec2</span>.<span class="ruby-identifier">register_image</span>(<span class="ruby-identifier">opts</span>)&#x000A;120:         <span class="ruby-identifier">puts</span> <span class="ruby-identifier">ret</span>.<span class="ruby-identifier">to_yaml</span>&#x000A;121:         <span class="ruby-keyword kw">true</span>&#x000A;122:       <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

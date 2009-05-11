@@ -1,0 +1,468 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>: Rudy [Rudy: Not your grandparents' EC2 deployment tool.]</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <div class='name'>
+          <span class='type'>Module</span>
+          Rudy
+        </div>
+        <ol class='paths'>
+          <li>
+            <a href="../files/lib/rudy/aws/ec2_rb.html">lib/rudy/aws/ec2.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/aws/sdb/error_rb.html">lib/rudy/aws/sdb/error.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/aws/sdb_rb.html">lib/rudy/aws/sdb.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/aws_rb.html">lib/rudy/aws.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/cli/aws/ec2/addresses_rb.html">lib/rudy/cli/aws/ec2/addresses.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/cli/aws/ec2/candy_rb.html">lib/rudy/cli/aws/ec2/candy.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/cli/aws/ec2/groups_rb.html">lib/rudy/cli/aws/ec2/groups.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/cli/aws/ec2/images_rb.html">lib/rudy/cli/aws/ec2/images.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/cli/aws/ec2/instances_rb.html">lib/rudy/cli/aws/ec2/instances.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/cli/aws/ec2/keypairs_rb.html">lib/rudy/cli/aws/ec2/keypairs.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/cli/aws/ec2/snapshots_rb.html">lib/rudy/cli/aws/ec2/snapshots.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/cli/aws/ec2/volumes_rb.html">lib/rudy/cli/aws/ec2/volumes.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/cli/aws/ec2/zones_rb.html">lib/rudy/cli/aws/ec2/zones.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/cli/aws/s3/buckets_rb.html">lib/rudy/cli/aws/s3/buckets.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/cli/aws/s3/store_rb.html">lib/rudy/cli/aws/s3/store.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/cli/aws/sdb/domains_rb.html">lib/rudy/cli/aws/sdb/domains.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/cli/candy_rb.html">lib/rudy/cli/candy.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/cli/config_rb.html">lib/rudy/cli/config.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/cli/disks_rb.html">lib/rudy/cli/disks.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/cli/machines_rb.html">lib/rudy/cli/machines.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/cli/routines_rb.html">lib/rudy/cli/routines.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/cli_rb.html">lib/rudy/cli.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/config_rb.html">lib/rudy/config.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/global_rb.html">lib/rudy/global.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/guidelines_rb.html">lib/rudy/guidelines.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/machines_rb.html">lib/rudy/machines.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/huxtable_rb.html">lib/rudy/huxtable.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/metadata/backups_rb.html">lib/rudy/metadata/backups.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/metadata/disks_rb.html">lib/rudy/metadata/disks.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/metadata/objectbase_rb.html">lib/rudy/metadata/objectbase.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/metadata_rb.html">lib/rudy/metadata.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/routines/helper_rb.html">lib/rudy/routines/helper.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/routines/helpers/dependshelper_rb.html">lib/rudy/routines/helpers/dependshelper.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/routines/helpers/scmhelper_rb.html">lib/rudy/routines/helpers/scmhelper.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/routines/helpers/diskhelper_rb.html">lib/rudy/routines/helpers/diskhelper.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/routines/helpers/scripthelper_rb.html">lib/rudy/routines/helpers/scripthelper.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/routines/helpers/userhelper_rb.html">lib/rudy/routines/helpers/userhelper.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/routines/passthrough_rb.html">lib/rudy/routines/passthrough.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/routines/reboot_rb.html">lib/rudy/routines/reboot.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/routines/release_rb.html">lib/rudy/routines/release.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/routines/shutdown_rb.html">lib/rudy/routines/shutdown.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/routines/startup_rb.html">lib/rudy/routines/startup.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/routines_rb.html">lib/rudy/routines.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/scm/git_rb.html">lib/rudy/scm/git.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/scm/svn_rb.html">lib/rudy/scm/svn.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/scm_rb.html">lib/rudy/scm.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/utils_rb.html">lib/rudy/utils.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy_rb.html">lib/rudy.rb</a>
+          </li>
+          <li>
+            <a class='show' href='#' onclick='this.parentNode.parentNode.className += " expanded"; this.parentNode.removeChild(this); return false'>show all</a>
+          </li>
+        </ol>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            <h1><a href="Rudy.html">Rudy</a></h1>
+            <p>
+            <a href="Rudy.html">Rudy</a> is a development and deployment tool for the
+            Amazon Elastic Compute Cloud (EC2). <a
+            href=&#8220;wiki.github.com/solutious/rudy/getting-started&#8221;>Getting
+            Started</a> today!
+            </p>
+          </div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>public class</h3>
+            <ol>
+              <li><a href="#M000003">debug?</a></li>
+              <li><a href="#M000007">disable_debug</a></li>
+              <li><a href="#M000008">disable_quiet</a></li>
+              <li><a href="#M000005">enable_debug</a></li>
+              <li><a href="#M000006">enable_quiet</a></li>
+              <li><a href="#M000002">in_situ?</a></li>
+              <li><a href="#M000004">quiet?</a></li>
+              <li><a href="#M000009">sysinfo</a></li>
+            </ol>
+            <h3>public instance</h3>
+            <ol>
+              <li><a href="#M000010">sysinfo</a></li>
+            </ol>
+          </div>
+          <div id='section'>
+            <div id='class-list'>
+              <h2>Classes and Modules</h2>
+              Module <a href="Rudy/AWS.html" class="link">Rudy::AWS</a><br />
+              Module <a href="Rudy/CLI.html" class="link">Rudy::CLI</a><br />
+              Module <a href="Rudy/Huxtable.html" class="link">Rudy::Huxtable</a><br />
+              Module <a href="Rudy/MetaData.html" class="link">Rudy::MetaData</a><br />
+              Module <a href="Rudy/Routines.html" class="link">Rudy::Routines</a><br />
+              Module <a href="Rudy/SCM.html" class="link">Rudy::SCM</a><br />
+              Module <a href="Rudy/Utils.html" class="link">Rudy::Utils</a><br />
+              Class <a href="Rudy/Backups.html" class="link">Rudy::Backups</a><br />
+              Class <a href="Rudy/Config.html" class="link">Rudy::Config</a><br />
+              Class <a href="Rudy/Disks.html" class="link">Rudy::Disks</a><br />
+              Class <a href="Rudy/Error.html" class="link">Rudy::Error</a><br />
+              Class <a href="Rudy/Global.html" class="link">Rudy::Global</a><br />
+              Class <a href="Rudy/InsecureKeyPermissions.html" class="link">Rudy::InsecureKeyPermissions</a><br />
+              Class <a href="Rudy/Machine.html" class="link">Rudy::Machine</a><br />
+              Class <a href="Rudy/MachineGroupAlreadyRunning.html" class="link">Rudy::MachineGroupAlreadyRunning</a><br />
+              Class <a href="Rudy/MachineGroupNotDefined.html" class="link">Rudy::MachineGroupNotDefined</a><br />
+              Class <a href="Rudy/MachineGroupNotRunning.html" class="link">Rudy::MachineGroupNotRunning</a><br />
+              Class <a href="Rudy/Machines.html" class="link">Rudy::Machines</a><br />
+              Class <a href="Rudy/NoConfig.html" class="link">Rudy::NoConfig</a><br />
+              Class <a href="Rudy/NoGlobal.html" class="link">Rudy::NoGlobal</a><br />
+              Class <a href="Rudy/NoMachinesConfig.html" class="link">Rudy::NoMachinesConfig</a><br />
+              Class <a href="Rudy/NoRoutinesConfig.html" class="link">Rudy::NoRoutinesConfig</a><br />
+              Class <a href="Rudy/PrivateKeyFileExists.html" class="link">Rudy::PrivateKeyFileExists</a><br />
+              Class <a href="Rudy/PrivateKeyNotFound.html" class="link">Rudy::PrivateKeyNotFound</a><br />
+              Class <a href="Rudy/ServiceUnavailable.html" class="link">Rudy::ServiceUnavailable</a><br />
+            </div>
+            <div id='constants-list'>
+              <h2>Constants</h2>
+              <div class='name-list'>
+                <table summary='Constants'>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>DOMAIN</td>
+                    <td>=</td>
+                    <td class='context-item-value'>&quot;rudy_state&quot;.freeze</td>
+                    <td>&nbsp;</td>
+                    <td class='context-item-desc'>
+                      
+                      SimpleDB accepts dashes in the domain name on creation and with the query
+                      syntax. However, with select syntax it says: &#8220;The specified query
+                      expression syntax is not valid&#8220;
+                    </td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>DELIM</td>
+                    <td>=</td>
+                    <td class='context-item-value'>'-'.freeze</td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>CONFIG_DIR</td>
+                    <td>=</td>
+                    <td class='context-item-value'>File.join(ENV['HOME'] || ENV['USERPROFILE'], '.rudy').freeze</td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>CONFIG_FILE</td>
+                    <td>=</td>
+                    <td class='context-item-value'>File.join(Rudy::CONFIG_DIR, 'config').freeze</td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>DEFAULT_REGION</td>
+                    <td>=</td>
+                    <td class='context-item-value'>'us-east-1'.freeze</td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>DEFAULT_ZONE</td>
+                    <td>=</td>
+                    <td class='context-item-value'>'us-east-1b'.freeze</td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>DEFAULT_ENVIRONMENT</td>
+                    <td>=</td>
+                    <td class='context-item-value'>'stage'.freeze</td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>DEFAULT_ROLE</td>
+                    <td>=</td>
+                    <td class='context-item-value'>'app'.freeze</td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>DEFAULT_POSITION</td>
+                    <td>=</td>
+                    <td class='context-item-value'>'01'.freeze</td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>DEFAULT_USER</td>
+                    <td>=</td>
+                    <td class='context-item-value'>'rudy'.freeze</td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>DEFAULT_EC2_HOST</td>
+                    <td>=</td>
+                    <td class='context-item-value'>&quot;ec2.amazonaws.com&quot;</td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>DEFAULT_EC2_PORT</td>
+                    <td>=</td>
+                    <td class='context-item-value'>443</td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>MAX_INSTANCES</td>
+                    <td>=</td>
+                    <td class='context-item-value'>5.freeze</td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>SUPPORTED_SCM_NAMES</td>
+                    <td>=</td>
+                    <td class='context-item-value'>[:svn, :git].freeze</td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>ID_MAP</td>
+                    <td>=</td>
+                    <td class='context-item-value'>{       :disk =&gt; 'disk',       :instance =&gt; 'i',       :backup =&gt; 'back',       :machine =&gt; 'm',       :volume =&gt; 'vol',       :snapshot =&gt; 'snap',       :kernel =&gt; 'aki',       :image =&gt; 'ami',       :ram =&gt; 'ari',       :log =&gt; 'log',       :key =&gt; 'key',       :awspk =&gt; 'pk',       :awscert =&gt; 'cert',       :reservation =&gt; 'r',       :dns_public =&gt; 'ec2',       :dns_private =&gt; 'domU',     }.freeze</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div id='methods'>
+              <h2>Public class methods</h2>
+              <div class='public-class method' id='method-M000003'>
+                <a name='M000003'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>debug?</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000003-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000003-source'>    <span class="ruby-comment cmt"># File lib/rudy.rb, line 96</span>&#x000A;96:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">debug?</span>; <span class="ruby-ivar">@@debug</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">true</span>; <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-class method' id='method-M000007'>
+                <a name='M000007'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>disable_debug</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000007-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000007-source'>     <span class="ruby-comment cmt"># File lib/rudy.rb, line 100</span>&#x000A;100:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">disable_debug</span>; <span class="ruby-ivar">@@debug</span> = <span class="ruby-keyword kw">false</span>; <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-class method' id='method-M000008'>
+                <a name='M000008'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>disable_quiet</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000008-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000008-source'>     <span class="ruby-comment cmt"># File lib/rudy.rb, line 101</span>&#x000A;101:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">disable_quiet</span>; <span class="ruby-ivar">@@quiet</span> = <span class="ruby-keyword kw">false</span>; <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-class method' id='method-M000005'>
+                <a name='M000005'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>enable_debug</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000005-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000005-source'>    <span class="ruby-comment cmt"># File lib/rudy.rb, line 98</span>&#x000A;98:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">enable_debug</span>; <span class="ruby-ivar">@@debug</span> = <span class="ruby-keyword kw">true</span>; <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-class method' id='method-M000006'>
+                <a name='M000006'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>enable_quiet</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000006-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000006-source'>    <span class="ruby-comment cmt"># File lib/rudy.rb, line 99</span>&#x000A;99:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">enable_quiet</span>; <span class="ruby-ivar">@@quiet</span> = <span class="ruby-keyword kw">true</span>; <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-class method' id='method-M000002'>
+                <a name='M000002'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>in_situ?</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Determine if we&#8217;re running directly on EC2 or &#8220;some other
+                  machine&#8221;. We do this by checking if the file /etc/ec2/instance-id
+                  exists. This file is written by /etc/init.d/rudy-ec2-startup. NOTE: Is
+                  there a way to know definitively that this is EC2? We could make a request
+                  to the metadata IP addresses.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000002-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000002-source'>    <span class="ruby-comment cmt"># File lib/rudy/utils.rb, line 65</span>&#x000A;65:     <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">in_situ?</span>&#x000A;66:       <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-value str">'/etc/ec2/instance-id'</span>)&#x000A;67:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-class method' id='method-M000004'>
+                <a name='M000004'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>quiet?</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000004-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000004-source'>    <span class="ruby-comment cmt"># File lib/rudy.rb, line 97</span>&#x000A;97:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">quiet?</span>; <span class="ruby-ivar">@@quiet</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">true</span>; <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-class method' id='method-M000009'>
+                <a name='M000009'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>sysinfo</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000009-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000009-source'>     <span class="ruby-comment cmt"># File lib/rudy.rb, line 103</span>&#x000A;103:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">sysinfo</span>; <span class="ruby-ivar">@@sysinfo</span>; <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <h2>Public instance methods</h2>
+              <div class='public-instance method' id='method-M000010'>
+                <a name='M000010'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>sysinfo</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000010-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000010-source'>     <span class="ruby-comment cmt"># File lib/rudy.rb, line 104</span>&#x000A;104:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">sysinfo</span>; <span class="ruby-ivar">@@sysinfo</span>;  <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

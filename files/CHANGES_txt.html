@@ -1,0 +1,511 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>File: CHANGES.txt [Rudy: Not your grandparents' EC2 deployment tool.]</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='file' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>CHANGES.txt</h1>
+        <div class='paths'>
+          CHANGES.txt
+        </div>
+        <div class='last-update'>
+          Last Update:
+          <span class='datetime'>Mon May 11 08:35:43 -0400 2009</span>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            <p>
+            RUDY, CHANGES
+            </p>
+            <ul>
+            <li>TODO: Remove string messages for non-string output formats
+            
+            </li>
+            <li>TODO: Support for reserved instances
+            
+            </li>
+            <li>TODO: Tests for zone and region support
+            
+            </li>
+            <li>TODO: Support for machine image attributes
+            
+            </li>
+            <li>TODO: Support for product codes
+            
+            </li>
+            <li>TODO: Tests for AWS HTTPS
+            
+            </li>
+            </ul>
+            <p>
+            #### 0.7.4 (2009-05-10) ###############################
+            </p>
+            <ul>
+            <li>CHANGE: Keypairs now include zone. This was necessary to allow US and EU
+            keypairs to
+            
+            </li>
+            </ul>
+            <p>
+            be stored in the same directory.
+            </p>
+            <ul>
+            <li>CHANGE: Moved non-rudy specific modules to separate projects (storable,
+            sysinfo, annoy, console -> Drydock, escape -> Rye, tryouts -> tryouts/).
+            
+            </li>
+            <li>CHANGE: Renamed restart routine to reboot to make it clear it&#8217;s about
+            the machine
+            
+            </li>
+            <li>CHANGE: Renamed Rudy::Disk to <a
+            href="../classes/Rudy/MetaData/Disk.html">Rudy::MetaData::Disk</a>
+            
+            </li>
+            <li>CHANGE: Short alias for rudy-ec2 snapshot is now &#8217;s&#8217; (instead
+            of &#8216;t&#8217;)
+            
+            </li>
+            <li>CHANGE: Removed highline-1.5.1 from vendor (it&#8217;s now available as a
+            gem)
+            
+            </li>
+            <li>FIXED: Bug in Huxtable when loading global. Wasn&#8217;t reloaded after
+            config was updated.
+            
+            </li>
+            <li>FIXED: Closed gh-12 (thanks sabat)
+            
+            </li>
+            <li>ADDED: Routines now support dependencies
+            
+            </li>
+            <li>ADDED: Disk routines now support mount, umount, snapshot, and restore
+            
+            </li>
+            <li>ADDED: rudy disk command now displays backups with -b switch
+            
+            </li>
+            <li>ADDED: RE-added basic support for creating Linux images (with security
+            warning)
+            
+            </li>
+            <li>ADDED: Routines with underscores can now be called with dashes (a_routine
+            vs a-routine)
+            
+            </li>
+            </ul>
+            <p>
+            #### 0.7.3 (2009-05-05) ###############################
+            </p>
+            <ul>
+            <li>FIXED: Corrected a few minor interface errors in rudy-ec2
+            
+            </li>
+            <li>ADDED: rudy-ec2 console can now display the decoded admin password for
+            Windows instances.
+            
+            </li>
+            </ul>
+            <p>
+            #### 0.7.2 (2009-05-04) ###############################
+            </p>
+            <ul>
+            <li>FIXED: cli/routine.rb release method wasn&#8217;t sending command alias
+            (which broke rerelease)
+            
+            </li>
+            <li>ADDED: global.offline for being cool when Internet is down
+            
+            </li>
+            <li>ADDED: Better handling in aws/sdb when call returns nil (Internet is down)
+            
+            </li>
+            </ul>
+            <p>
+            #### 0.7.1 (2009-05-04) ###############################
+            </p>
+            <ul>
+            <li>FIXED: rudy wasn&#8217;t honouring -C option for specifying a config file
+            
+            </li>
+            <li>FIXED: Was disabling, but not enabling colour
+            
+            </li>
+            <li>FIXED: Symbol errors in 1.8
+            
+            </li>
+            <li>FIXED: Command blocks for root user are always run first now in Routines
+            config.
+            
+            </li>
+            <li>CHANGE: routines before, after, and script blocks are now processed by
+            Rye::Box.batch as Procs.
+            
+            </li>
+            <li>CHANGE: deny was removed from commands config (it will come back later).
+            
+            </li>
+            <li>CHANGE: <a href="../classes/Rudy.html">Rudy</a> now checks the current
+            working directory for machines, commands, etc... configs
+            
+            </li>
+            <li>ADDED: examples/
+            
+            </li>
+            <li>ADDED: &#8220;script&#8221; keyword to routines config.
+            
+            </li>
+            <li>ADDED: script_local
+            
+            </li>
+            <li>ADDED: Routine now checks whether there are any remote tasks. If not, it
+            doesn&#8217;t loop through machines.
+            
+            </li>
+            </ul>
+            <p>
+            #### 0.7.0 (2009-05-02) ###############################
+            </p>
+            <ul>
+            <li>CHANGE: Upgrade to Drydock 0.6, Caesars 0.6, and Rye 0.6
+            
+            </li>
+            <li>CHANGE: Updated Routines configuration syntax for specifying shell commands
+            
+            </li>
+            <li>ADDED: Releases via local git repository
+            
+            </li>
+            <li>ADDED: authorize and adduser directives to routines config.
+            
+            </li>
+            <li>ADDED: Improved CLI output for routines.
+            
+            </li>
+            <li>ADDED: Commands configuration for custom SSH commands
+            
+            </li>
+            <li>ADDED: Auto-set hostname to machine name
+            
+            </li>
+            <li>ADDED: Support for arbitrary routines via passthrough
+            
+            </li>
+            </ul>
+            <p>
+            #### 0.6.8 (2009-04-24) ###############################
+            </p>
+            <ul>
+            <li>CHANGE: Renamed rudy config &#8212;rudy option to &#8212;project. This was
+            important
+            
+            </li>
+            </ul>
+            <p>
+            to maintain consistency in documentation.
+            </p>
+            <ul>
+            <li>CHANGE: Cleaned README. See: <a
+            href="http://wiki.github.com/solutious/rudy">wiki.github.com/solutious/rudy</a>
+            
+            </li>
+            </ul>
+            <p>
+            #### 0.6.7 (2009-04-22) ###############################
+            </p>
+            <ul>
+            <li>ADDED: rudy-ec2 status can now display EU status
+            
+            </li>
+            <li>FIXED: Fixed bug on instance create. Instance.groups was nil, now it
+            returns
+            
+            </li>
+            </ul>
+            <p>
+            empty Array.
+            </p>
+            <p>
+            #### 0.6.6 (2009-04-22) ###############################
+            </p>
+            <ul>
+            <li>ADDED: Better error handling for <a
+            href="../classes/Rudy/AWS/SDB.html">Rudy::AWS::SDB</a>
+            
+            </li>
+            <li>FIXED: Ruby 1.9.1 compatability (including requiring aws-s3 >=0.6.1)
+            
+            </li>
+            </ul>
+            <p>
+            #### 0.6.5 (2009-04-20) ###############################
+            </p>
+            <ul>
+            <li>FIXED: Startup and Shutdown routines now check machine group status first
+            
+            </li>
+            <li>FIXED: Misc release process issues between 0.6.0 and 0.6.4
+            
+            </li>
+            <li>ADDED: Better error handling during startup and shutdown.
+            
+            </li>
+            <li>ADDED: Support for assigning addresses on startup
+            
+            </li>
+            </ul>
+            <p>
+            #### 0.6.0 (2009-04-19) ###############################
+            </p>
+            <p>
+            NOTE: This is a significant re-write from 0.5
+            </p>
+            <ul>
+            <li>CHANGE: Rebuilt Rudy::AWS::*
+            
+            </li>
+            <li>CHANGE: Removed lib/rudy/commands/* and lib/rudy/metadata/*
+            
+            </li>
+            <li>ADDED: rudy-ec2 executable
+            
+            </li>
+            <li>CHANGE: have local copies of Caesars and Drydock to reduce external
+            dependencies.
+            
+            </li>
+            <li>ADDED: new output formats: yaml, json, csv, tsv
+            
+            </li>
+            </ul>
+            <p>
+            #### 0.5.1 (2009-04-10) ###############################
+            </p>
+            <ul>
+            <li>CHANGE: Removed require &#8216;rubygems&#8217;
+            
+            </li>
+            <li>FIXED: Resolved Drydock namespace issue for rudy and ird
+            
+            </li>
+            </ul>
+            <p>
+            #### 0.5.0 (2009-04-09) ###############################
+            </p>
+            <p>
+            NOTE: This is a significant re-write from 0.4
+            </p>
+            <ul>
+            <li>CHANGE: Recommend keypair config to be in ~/.rudy/config
+            
+            </li>
+            <li>FIX: <a href="../classes/Rudy.html">Rudy</a> now checks for user keys
+            specified by env-role, env, and global
+            
+            </li>
+            <li>FIX: gemspec dependency net-ssh-multi
+            
+            </li>
+            <li>ADDED: &#8212;nocolor option
+            
+            </li>
+            <li>ADDED: Ruby API
+            
+            </li>
+            <li>ADDED: Tests with 55% coverage
+            
+            </li>
+            <li>ADDED: Ruby API (<a
+            href="../classes/Rudy/Machines.html">Rudy::Machines</a>, etc...)
+            
+            </li>
+            <li>ADDED: ird, a REPL (experimental)
+            
+            </li>
+            <li>ADDED: Now uses Rye 0.4.1
+            
+            </li>
+            </ul>
+            <p>
+            #### 0.4 (2009-03-12) ###############################
+            </p>
+            <p>
+            NOTE: This is a significant re-write from 0.3
+            </p>
+            <ul>
+            <li>CHANGE: Mostly re-written bin/ruby, moving validation to CLI classes
+            
+            </li>
+            <li>CHANGE: upgrade to Drydock 0.5
+            
+            </li>
+            <li>CHANGE: Moved generic EC2 commands to <a
+            href="bin/rudy.html">bin/rudy</a>-ec2
+            
+            </li>
+            <li>CHANGE: Removed ambiguity of pluralized command names.
+            
+            <ul>
+            <li>OLD: backups, disks, configs
+            
+            </li>
+            <li>ADDED: backup, disk, config
+            
+            </li>
+            </ul>
+            </li>
+            <li>ADDED: ssh and scp commands for connecting to and copying files to/from
+            machines
+            
+            </li>
+            <li>ADDED: New dependencies (trying out net-ssh)
+            
+            </li>
+            <li>ADDED: Domain specific language for configuration
+            
+            </li>
+            <li>ADDED: &#8220;Routines&#8221; for handling common actions. Starting,
+            stopping, releasing, deploying.
+            
+            </li>
+            <li>ADDED: &#8220;rudy release&#8221; will create a release from the current
+            working copy, start an instance,
+            
+            </li>
+            </ul>
+            <p>
+            checkout the release, run routines. It needs some work still, but this
+            already functions as a single command release process.
+            </p>
+            <ul>
+            <li>ADDED: &#8220;rudy start|destroy|restart|update|status&#8221;. Routines
+            allow us to have generic commands
+            
+            </li>
+            </ul>
+            <p>
+            that can be used for any machine group. These commands relate to starting
+            new instances.
+            </p>
+            <ul>
+            <li>ADDED: Extra caution when running destructive commands
+            
+            </li>
+            <li>ADDED: Default ~/.rudy/config created if it doesn&#8217;t exist.
+            
+            </li>
+            </ul>
+            <p>
+            #### 0.3 (2009-02-26) ###############################
+            </p>
+            <p>
+            NOTE: This is a significant re-write from 0.2
+            </p>
+            <ul>
+            <li>CHANGE: Re-written support/rudy-ec2-startup
+            
+            </li>
+            <li>CHANGE: upgrade to Drydock 0.4
+            
+            </li>
+            <li>ADDED: More functionality for disks and backups
+            
+            </li>
+            <li>ADDED: config commands
+            
+            </li>
+            <li>ADDED: Per machine configuration (via ~/.rudy)
+            
+            </li>
+            </ul>
+            <p>
+            #### 0.2 (2009-02-23) ###############################
+            </p>
+            <p>
+            NOTE: This is a complete re-write from 0.1
+            </p>
+            <ul>
+            <li>CHANGE: Added Environment variables
+            
+            </li>
+            <li>CHANGE: upgrade to drydock 0.3.3
+            
+            </li>
+            <li>ADDED: All time references are converted to UTC
+            
+            </li>
+            <li>ADDED: Safer &#8220;Are you sure?&#8221;. Number of characters to enter is
+            
+            <pre>commiserate with amount of danger.</pre>
+            </li>
+            <li>ADDED: CLIs: myaddress, addresses, images, instances,
+            
+            <pre>disks, connect, copy, stage, backups, volumes</pre>
+            </li>
+            <li>ADDED: Metadata storage to SimpleDB for disks, backups
+            
+            </li>
+            <li>ADDED: Creates EBS volumes based on startup from metadata
+            
+            </li>
+            <li>ADDED: Automated release process
+            
+            </li>
+            <li>ADDED: Automated creation of machine images
+            
+            </li>
+            <li>ADDED: Partial support for regions and zones
+            
+            </li>
+            <li>ADDED: Manage system based on security groups.
+            
+            </li>
+            <li>ADDED: &#8220;rudy groups&#8221; overhaul. Display, creates, destroys
+            groups.
+            
+            </li>
+            </ul>
+            <p>
+            #### 0.1 (2009-02-06) ###############################
+            </p>
+            <ul>
+            <li>Initial public release
+            
+            </li>
+            </ul>
+          </div>
+          <div id='section'>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

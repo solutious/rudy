@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>: Rudy::Utils::RSSReader [Rudy: Not your grandparents' EC2 deployment tool.]</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <div class='name'>
+          <span class='type'>Module</span>
+          Rudy::Utils::RSSReader
+        </div>
+        <ol class='paths'>
+          <li>
+            <a href="../../../files/lib/rudy/utils_rb.html">lib/rudy/utils.rb</a>
+          </li>
+        </ol>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            <h1><a href="RSSReader.html">RSSReader</a></h1>
+            <p>
+            A rudimentary way to read an RSS feed as a hash. Adapted from: <a
+            href="http://snippets.dzone.com/posts/show/68">snippets.dzone.com/posts/show/68</a>
+            </p>
+          </div>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>public instance</h3>
+            <ol>
+              <li><a href="#M000466">run</a></li>
+            </ol>
+          </div>
+          <div id='section'>
+            <div id='methods'>
+              <h2>Public instance methods</h2>
+              <div class='public-instance method' id='method-M000466'>
+                <a name='M000466'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>run</span>
+                  <span class='arguments'>(uri)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Returns a feed as a hash.
+                  </p>
+                  <ul>
+                  <li><tt>uri</tt> to RSS feed
+                  
+                  </li>
+                  </ul>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000466-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000466-source'>     <span class="ruby-comment cmt"># File lib/rudy/utils.rb, line 329</span>&#x000A;329:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">run</span>(<span class="ruby-identifier">uri</span>)&#x000A;330:     <span class="ruby-keyword kw">begin</span>&#x000A;331:       <span class="ruby-identifier">xmlstr</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">HTTP</span>.<span class="ruby-identifier">get</span>(<span class="ruby-constant">URI</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">uri</span>))&#x000A;332:     <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">SocketError</span>, <span class="ruby-constant">Errno</span><span class="ruby-operator">::</span><span class="ruby-constant">ETIMEDOUT</span>&#x000A;333:       <span class="ruby-constant">STDERR</span>.<span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;Connection Error. Check your internets!&quot;</span>&#x000A;334:     <span class="ruby-keyword kw">end</span>&#x000A;335:     &#x000A;336:     <span class="ruby-identifier">xml</span> = <span class="ruby-constant">REXML</span><span class="ruby-operator">::</span><span class="ruby-constant">Document</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">xmlstr</span>&#x000A;337:     &#x000A;338:     <span class="ruby-identifier">data</span> = { <span class="ruby-identifier">:items</span> =<span class="ruby-operator">&gt;</span> [] }&#x000A;339:     <span class="ruby-identifier">xml</span>.<span class="ruby-identifier">elements</span>.<span class="ruby-identifier">each</span> <span class="ruby-value str">'//channel'</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">item</span><span class="ruby-operator">|</span>&#x000A;340:       <span class="ruby-identifier">item</span>.<span class="ruby-identifier">elements</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span> &#x000A;341:         <span class="ruby-identifier">n</span> = <span class="ruby-identifier">e</span>.<span class="ruby-identifier">name</span>.<span class="ruby-identifier">downcase</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/^dc:(\w)/</span>,<span class="ruby-value str">&quot;\1&quot;</span>).<span class="ruby-identifier">to_sym</span>&#x000A;342:         <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">n</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">:item</span>&#x000A;343:         <span class="ruby-identifier">data</span>[<span class="ruby-identifier">n</span>] = <span class="ruby-identifier">e</span>.<span class="ruby-identifier">text</span>&#x000A;344:       <span class="ruby-keyword kw">end</span>&#x000A;345:     <span class="ruby-keyword kw">end</span>&#x000A;346:     &#x000A;347:     <span class="ruby-comment cmt">#data = {</span>&#x000A;348:     <span class="ruby-comment cmt">#  :title    =&gt; xml.root.elements['channel/title'].text,</span>&#x000A;349:     <span class="ruby-comment cmt">#  :link =&gt; xml.root.elements['channel/link'].text,</span>&#x000A;350:     <span class="ruby-comment cmt">#  :updated =&gt; xml.root.elements['channel/lastBuildDate'].text,</span>&#x000A;351:     <span class="ruby-comment cmt">#  :uri  =&gt; uri,</span>&#x000A;352:     <span class="ruby-comment cmt">#  :items    =&gt; []</span>&#x000A;353:     <span class="ruby-comment cmt">#}</span>&#x000A;354:     <span class="ruby-comment cmt">#data[:updated] &amp;&amp;= DateTime.parse(data[:updated])</span>&#x000A;355:     &#x000A;356:     <span class="ruby-identifier">xml</span>.<span class="ruby-identifier">elements</span>.<span class="ruby-identifier">each</span> <span class="ruby-value str">'//item'</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">item</span><span class="ruby-operator">|</span>&#x000A;357:       <span class="ruby-identifier">new_items</span> = {} <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">item</span>.<span class="ruby-identifier">elements</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span> &#x000A;358:         <span class="ruby-identifier">n</span> = <span class="ruby-identifier">e</span>.<span class="ruby-identifier">name</span>.<span class="ruby-identifier">downcase</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/^dc:(\w)/</span>,<span class="ruby-value str">&quot;\1&quot;</span>).<span class="ruby-identifier">to_sym</span>&#x000A;359:         <span class="ruby-identifier">new_items</span>[<span class="ruby-identifier">n</span>] = <span class="ruby-identifier">e</span>.<span class="ruby-identifier">text</span>&#x000A;360:       <span class="ruby-keyword kw">end</span>&#x000A;361:       <span class="ruby-identifier">data</span>[<span class="ruby-identifier">:items</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">new_items</span>&#x000A;362:     <span class="ruby-keyword kw">end</span>&#x000A;363:     <span class="ruby-identifier">data</span>&#x000A;364:   <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>: Rudy::AWS::EC2 [Rudy: Not your grandparents' EC2 deployment tool.]</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>Module</span>
+          Rudy::AWS::EC2
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a href="../../../files/lib/rudy/aws/ec2/address_rb.html">lib/rudy/aws/ec2/address.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../../../files/lib/rudy/aws/ec2/group_rb.html">lib/rudy/aws/ec2/group.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../../../files/lib/rudy/aws/ec2/image_rb.html">lib/rudy/aws/ec2/image.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../../../files/lib/rudy/aws/ec2/keypair_rb.html">lib/rudy/aws/ec2/keypair.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../../../files/lib/rudy/aws/ec2/instance_rb.html">lib/rudy/aws/ec2/instance.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../../../files/lib/rudy/aws/ec2/snapshot_rb.html">lib/rudy/aws/ec2/snapshot.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../../../files/lib/rudy/aws/ec2/volume_rb.html">lib/rudy/aws/ec2/volume.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../../../files/lib/rudy/aws/ec2/zone_rb.html">lib/rudy/aws/ec2/zone.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../../../files/lib/rudy/aws/ec2_rb.html">lib/rudy/aws/ec2.rb</a>
+          </li>
+          <li>
+            <a class='show' href='#' onclick='this.parentNode.parentNode.className += " expanded"; this.parentNode.removeChild(this); return false'>show all</a>
+          </li>
+        </ol>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='section'>
+            <div id='class-list'>
+              <h2>Classes and Modules</h2>
+              Module <a href="EC2/Base.html" class="link">Rudy::AWS::EC2::Base</a><br />
+              Class <a href="EC2/Address.html" class="link">Rudy::AWS::EC2::Address</a><br />
+              Class <a href="EC2/AddressAssociated.html" class="link">Rudy::AWS::EC2::AddressAssociated</a><br />
+              Class <a href="EC2/AddressNotAssociated.html" class="link">Rudy::AWS::EC2::AddressNotAssociated</a><br />
+              Class <a href="EC2/Addresses.html" class="link">Rudy::AWS::EC2::Addresses</a><br />
+              Class <a href="EC2/ErrorCreatingAddress.html" class="link">Rudy::AWS::EC2::ErrorCreatingAddress</a><br />
+              Class <a href="EC2/ErrorCreatingKeyPair.html" class="link">Rudy::AWS::EC2::ErrorCreatingKeyPair</a><br />
+              Class <a href="EC2/Group.html" class="link">Rudy::AWS::EC2::Group</a><br />
+              Class <a href="EC2/Groups.html" class="link">Rudy::AWS::EC2::Groups</a><br />
+              Class <a href="EC2/Image.html" class="link">Rudy::AWS::EC2::Image</a><br />
+              Class <a href="EC2/Images.html" class="link">Rudy::AWS::EC2::Images</a><br />
+              Class <a href="EC2/InsecureKeyPairPermissions.html" class="link">Rudy::AWS::EC2::InsecureKeyPairPermissions</a><br />
+              Class <a href="EC2/Instance.html" class="link">Rudy::AWS::EC2::Instance</a><br />
+              Class <a href="EC2/Instances.html" class="link">Rudy::AWS::EC2::Instances</a><br />
+              Class <a href="EC2/InvalidRegion.html" class="link">Rudy::AWS::EC2::InvalidRegion</a><br />
+              Class <a href="EC2/KeyPair.html" class="link">Rudy::AWS::EC2::KeyPair</a><br />
+              Class <a href="EC2/KeyPairAlreadyDefined.html" class="link">Rudy::AWS::EC2::KeyPairAlreadyDefined</a><br />
+              Class <a href="EC2/KeyPairExists.html" class="link">Rudy::AWS::EC2::KeyPairExists</a><br />
+              Class <a href="EC2/KeyPairs.html" class="link">Rudy::AWS::EC2::KeyPairs</a><br />
+              Class <a href="EC2/MalformedResponse.html" class="link">Rudy::AWS::EC2::MalformedResponse</a><br />
+              Class <a href="EC2/NoAMI.html" class="link">Rudy::AWS::EC2::NoAMI</a><br />
+              Class <a href="EC2/NoAddress.html" class="link">Rudy::AWS::EC2::NoAddress</a><br />
+              Class <a href="EC2/NoDevice.html" class="link">Rudy::AWS::EC2::NoDevice</a><br />
+              Class <a href="EC2/NoGroup.html" class="link">Rudy::AWS::EC2::NoGroup</a><br />
+              Class <a href="EC2/NoInstanceID.html" class="link">Rudy::AWS::EC2::NoInstanceID</a><br />
+              Class <a href="EC2/NoKeyPair.html" class="link">Rudy::AWS::EC2::NoKeyPair</a><br />
+              Class <a href="EC2/NoPrivateKeyFile.html" class="link">Rudy::AWS::EC2::NoPrivateKeyFile</a><br />
+              Class <a href="EC2/NoRunningInstances.html" class="link">Rudy::AWS::EC2::NoRunningInstances</a><br />
+              Class <a href="EC2/NoVolumeID.html" class="link">Rudy::AWS::EC2::NoVolumeID</a><br />
+              Class <a href="EC2/Snapshot.html" class="link">Rudy::AWS::EC2::Snapshot</a><br />
+              Class <a href="EC2/Snapshots.html" class="link">Rudy::AWS::EC2::Snapshots</a><br />
+              Class <a href="EC2/UnknownAddress.html" class="link">Rudy::AWS::EC2::UnknownAddress</a><br />
+              Class <a href="EC2/UnknownState.html" class="link">Rudy::AWS::EC2::UnknownState</a><br />
+              Class <a href="EC2/Volume.html" class="link">Rudy::AWS::EC2::Volume</a><br />
+              Class <a href="EC2/VolumeAlreadyAttached.html" class="link">Rudy::AWS::EC2::VolumeAlreadyAttached</a><br />
+              Class <a href="EC2/VolumeNotAttached.html" class="link">Rudy::AWS::EC2::VolumeNotAttached</a><br />
+              Class <a href="EC2/VolumeNotAvailable.html" class="link">Rudy::AWS::EC2::VolumeNotAvailable</a><br />
+              Class <a href="EC2/Volumes.html" class="link">Rudy::AWS::EC2::Volumes</a><br />
+              Class <a href="EC2/Zone.html" class="link">Rudy::AWS::EC2::Zone</a><br />
+              Class <a href="EC2/Zones.html" class="link">Rudy::AWS::EC2::Zones</a><br />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

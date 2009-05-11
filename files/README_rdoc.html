@@ -1,0 +1,295 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>File: README.rdoc [Rudy: Not your grandparents' EC2 deployment tool.]</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='file' id='wrapper'>
+      <div class='header'>
+        <div class='name'>README.rdoc</div>
+        <div class='paths'>
+          README.rdoc
+        </div>
+        <div class='last-update'>
+          Last Update:
+          <span class='datetime'>Mon May 11 08:35:43 -0400 2009</span>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            <h1><a href="../classes/Rudy.html">Rudy</a> - v0.7 BETA</h1>
+            <p>
+            <b>Not your grandparents&#8217; EC2 deployment tool.</b>
+            </p>
+            <p>
+            <a href="../classes/Rudy.html">Rudy</a> is a command-line development and
+            deployment tool for Amazon Web Services. It helps you build and manage
+            machines in EC2 by organizing them into groups of <em>environments</em> and
+            <em>roles</em>. These are called <em>machine</em> <em>groups</em>.
+            <tt>stage</tt> is the default environment and <tt>app</tt> is the default
+            role. You can run multiple machines with the same role. These are called
+            <em>positions</em>. <a href="../classes/Rudy.html">Rudy</a> also supports
+            running machine groups across availability <em>zones</em>.
+            </p>
+            <p>
+            When you put all this together, you have a unique name for every machine.
+            The default machine is:
+            </p>
+            <pre>        zone     env  role&#x000A;         v        v    v&#x000A;   m-us-east-1b-stage-app-01&#x000A;   ^                       ^&#x000A;&quot;machine&quot;                position</pre>
+            <p>
+            All configuration is organized into the zones, environments, and roles that
+            you specify (<a href="../classes/Rudy.html">Rudy</a> assumes positions are
+            identical which is important for backups and scaling). And as you&#8217;d
+            expect, the defaults can be changed too (in <tt>~/.rudy/config</tt>).
+            </p>
+            <p>
+            <b>See <a
+            href="http://wiki.github.com/solutious/rudy/getting-started">Getting-Started</a>
+            for more info.</b>
+            </p>
+            <p>
+            <em>NOTE: This is a BETA release. That means Rudy&#8217;s not ready for
+            production use! See <a
+            href="http://wiki.github.com/solutious/rudy/project-status">Project-Status</a>.</em>
+            </p>
+            <h2>Features</h2>
+            <ul>
+            <li>Create complex environments with a single command
+            
+            <ul>
+            <li>Launch multiple instances
+            
+            </li>
+            <li>Assign elastic IP addresses
+            
+            </li>
+            <li>Create EBS volumes, attach to instances, format, and mount
+            
+            </li>
+            <li>Run scripts locally and remotely automatically
+            
+            </li>
+            </ul>
+            </li>
+            <li>Organize instances into environments and roles
+            
+            </li>
+            <li>Powerful command-line tools
+            
+            <ul>
+            <li><tt>$ rudy -u root ssh</tt>
+            
+            </li>
+            <li><tt>$ rudy -e testing -r database startup</tt>
+            
+            </li>
+            </ul>
+            </li>
+            <li>Use _any Linux_ Amazon machine image (AMI) (partial Solaris support)
+            
+            </li>
+            <li>Complete command-line interface for EC2. See <tt><a
+            href="bin/rudy.html">bin/rudy</a>-ec2</tt>.
+            
+            </li>
+            </ul>
+            <h2>Installation</h2>
+            <p>
+            Via Rubygems, one of:
+            </p>
+            <pre>$ sudo gem install rudy&#x000A;$ sudo gem install solutious-rudy --source http://gems.github.com/</pre>
+            <p>
+            or via download:
+            </p>
+            <ul>
+            <li><a
+            href="http://github.com/solutious/rudy/tarball/latest">rudy-latest.tar.gz</a>
+            
+            </li>
+            <li><a
+            href="http://github.com/solutious/rudy/zipball/latest">rudy-latest.zip</a>
+            
+            </li>
+            </ul>
+            <p>
+            NOTE: <em>If you are not installing via RubyGems, you need to make sure the
+            dependencies are in your LOAD_PATH (<tt>$:</tt>). Ryan Tomayko wrote a <a
+            href="http://gist.github.com/54177">gist</a> about it.</em>
+            </p>
+            <p>
+            <b>See <a
+            href="http://wiki.github.com/solutious/rudy/getting-started">Getting-Started</a>
+            for more info.</b>
+            </p>
+            <h2>Pre-Requisites</h2>
+            <ul>
+            <li>Amazon <a href="http://aws.amazon.com/">AWS</a> Account
+            
+            <ul>
+            <li><a href="http://aws.amazon.com/ec2/">EC2</a>
+            
+            </li>
+            <li><a href="http://aws.amazon.com/simpledb/">SimpleDB</a>
+            
+            </li>
+            <li><a href="http://aws.amazon.com/s3/">S3</a>
+            
+            </li>
+            </ul>
+            </li>
+            <li><a href="http://www.openssh.com/">OpenSSH</a>
+            
+            </li>
+            <li><a href="http://ruby-lang.org">Ruby</a> 1.8.x, 1.9.x, or <a
+            href="http://jruby.codehaus.org">JRuby</a> 1.2
+            
+            <ul>
+            <li><a href="http://net-ssh.rubyforge.org/">Net::SSH</a>
+            
+            </li>
+            <li><a href="http://net-ssh.rubyforge.org/">Net::SCP</a>
+            
+            </li>
+            <li><a href="http://github.com/grempe/amazon-ec2">amazon-ec2</a>
+            
+            </li>
+            <li><a href="http://github.com/marcel/aws-s3">aws-s3</a>
+            
+            </li>
+            <li><a href="http://github.com/delano/rye">Rye</a>
+            
+            </li>
+            <li><a href="http://github.com/delano/drydock">Drydock</a>
+            
+            </li>
+            <li><a href="http://github.com/delano/caesars">Caesars</a>
+            
+            </li>
+            </ul>
+            </li>
+            </ul>
+            <h2>More Info</h2>
+            <ul>
+            <li>Fork at <a href="http://github.com/solutious/rudy">GitHub</a>
+            
+            </li>
+            <li>Read the <a href="http://wiki.github.com/solutious/rudy">Documentation</a>
+            
+            </li>
+            <li>Submit issues to the <a
+            href="http://github.com/solutious/rudy/issues">IssueTracker</a>
+            
+            </li>
+            <li>Start a discussion on the <a
+            href="http://groups.google.com/group/rudy-deployment">GoogleGroup</a>
+            
+            </li>
+            <li>Find some <a
+            href="http://www.youtube.com/watch?v=CgaiIW5Rzes">Inspiration</a>
+            
+            </li>
+            <li>For all other inquires, email me directly: delano@solutious.com
+            
+            </li>
+            </ul>
+            <h2>Thanks</h2>
+            <ul>
+            <li>The <a href="http://rilli.com">Rilli.com</a> team
+            
+            <ul>
+            <li>Adam Bognar
+            
+            </li>
+            <li>Andrew Simpson
+            
+            </li>
+            <li>Caleb Buxton
+            
+            </li>
+            <li>Colin Brumelle
+            
+            </li>
+            </ul>
+            </li>
+            <li>Sam Aaron
+            
+            </li>
+            <li>Everyone at <a
+            href="http://groups.google.com/group/utrecht-rb">Utrecht.rb</a>
+            
+            </li>
+            <li>Jamis Buck for Net::SSH and friends
+            
+            </li>
+            <li>Glenn Rempe for amazon-ec2
+            
+            </li>
+            <li>Marcel Molina Jr. for aws-s3
+            
+            </li>
+            <li><a href="http://github.com/sabat">sabat</a>
+            
+            </li>
+            <li>Keshia Knight Pulliam
+            
+            </li>
+            </ul>
+            <h2>Contributions</h2>
+            <p>
+            I&#8217;m very open to contributions!
+            </p>
+            <ul>
+            <li>For bigger features please fork the git repo and send me a pull request.
+            
+            </li>
+            <li>For small or single file changes, send me an email with the details:
+            <tt>delano@solutious.com</tt>
+            
+            </li>
+            </ul>
+            <h2>Credits</h2>
+            <ul>
+            <li>Delano Mandelbaum (delano@solutious.com)
+            
+            </li>
+            <li><a href="../classes/Rudy/AWS/SDB.html">Rudy::AWS::SDB</a> adapted from
+            aws_sdb by Tim Dysinger (<a href="http://dysinger.net">dysinger.net</a>)
+            
+            </li>
+            </ul>
+            <h2>License</h2>
+            <p>
+            See: <a href="LICENSE_txt.html">LICENSE.txt</a>
+            </p>
+          </div>
+          <div id='section'>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>: Rudy::Machines [Rudy: Not your grandparents' EC2 deployment tool.]</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>Class</span>
+          Rudy::Machines
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a href="../../files/lib/rudy/machines_rb.html">lib/rudy/machines.rb</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Parent:
+          <strong>Object</strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>public instance</h3>
+            <ol>
+              <li><a href="#M000505">create</a></li>
+              <li><a href="#M000506">destroy</a></li>
+              <li><a href="#M000510">get</a></li>
+              <li><a href="#M000508">list</a></li>
+              <li><a href="#M000509">list_as_hash</a></li>
+              <li><a href="#M000507">restart</a></li>
+              <li><a href="#M000511">running?</a></li>
+            </ol>
+          </div>
+          <div id='context'>
+            <div id='includes'>
+              <h2>Included modules</h2>
+              <ol>
+                <li><a href="MetaData.html">Rudy::MetaData</a></li>
+              </ol>
+            </div>
+          </div>
+          <div id='section'>
+            <div id='class-list'>
+              <h2>Classes and Modules</h2>
+              Class <a href="Machines/Offline.html" class="link">Rudy::Machines::Offline</a><br />
+            </div>
+            <div id='methods'>
+              <h2>Public instance methods</h2>
+              <div class='public-instance method' id='method-M000505'>
+                <a name='M000505'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>create</span>
+                  <span class='arguments'>(&amp;each_mach)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000505-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000505-source'>     <span class="ruby-comment cmt"># File lib/rudy/machines.rb, line 176</span>&#x000A;176:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_mach</span>)&#x000A;177:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">MachineGroupAlreadyRunning</span>, <span class="ruby-identifier">current_machine_group</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">running?</span>&#x000A;178:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">MachineGroupNotDefined</span>, <span class="ruby-identifier">current_machine_group</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">known_machine_group?</span>&#x000A;179:       &#x000A;180:       <span class="ruby-keyword kw">unless</span> (<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-constant">MAX_INSTANCES</span>).<span class="ruby-identifier">member?</span>(<span class="ruby-identifier">current_machine_count</span>)&#x000A;181:         <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;Instance count must be more than 0, less than #{MAX_INSTANCES}&quot;</span>&#x000A;182:       <span class="ruby-keyword kw">end</span>&#x000A;183:       &#x000A;184:       <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@rgrp</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">current_group_name</span>)&#x000A;185:         <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Creating group: #{current_group_name}&quot;</span>&#x000A;186:         <span class="ruby-ivar">@rgrp</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">current_group_name</span>)&#x000A;187:       <span class="ruby-keyword kw">end</span>&#x000A;188:       &#x000A;189:       <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@rkey</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">root_keypairname</span>)&#x000A;190:         <span class="ruby-identifier">kp_file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">CONFIG_DIR</span>, <span class="ruby-identifier">root_keypairname</span>)&#x000A;191:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">PrivateKeyFileExists</span>, <span class="ruby-identifier">kp_file</span> <span class="ruby-keyword kw">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">kp_file</span>)&#x000A;192:         <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Creating keypair: #{root_keypairname}&quot;</span>&#x000A;193:         <span class="ruby-identifier">kp</span> = <span class="ruby-ivar">@rkey</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">root_keypairname</span>)&#x000A;194:         <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Saving #{kp_file}&quot;</span>&#x000A;195:         <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Utils</span>.<span class="ruby-identifier">write_to_file</span>(<span class="ruby-identifier">kp_file</span>, <span class="ruby-identifier">kp</span>.<span class="ruby-identifier">private_key</span>, <span class="ruby-value str">'w'</span>, <span class="ruby-value">0600</span>)&#x000A;196:       <span class="ruby-keyword kw">else</span>&#x000A;197:         <span class="ruby-identifier">kp_file</span> = <span class="ruby-identifier">root_keypairpath</span>&#x000A;198:         <span class="ruby-comment cmt"># This means no keypair file can be found</span>&#x000A;199:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">PrivateKeyNotFound</span>, <span class="ruby-identifier">root_keypairname</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">kp_file</span>.<span class="ruby-identifier">nil?</span>&#x000A;200:         <span class="ruby-comment cmt"># This means we found a keypair in the config but we cannot find the private key file. </span>&#x000A;201:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">PrivateKeyNotFound</span>, <span class="ruby-identifier">kp_file</span> <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">kp_file</span>)&#x000A;202:       <span class="ruby-keyword kw">end</span>&#x000A;203:       &#x000A;204:       <span class="ruby-identifier">machines</span> = []&#x000A;205:       <span class="ruby-identifier">current_machine_count</span>.<span class="ruby-identifier">times</span> <span class="ruby-keyword kw">do</span>  <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span>&#x000A;206:         <span class="ruby-identifier">machine</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machine</span>.<span class="ruby-identifier">new</span>&#x000A;207:         &#x000A;208:         <span class="ruby-comment cmt">#puts &quot;Starting %s&quot; % machine.name</span>&#x000A;209:         &#x000A;210:         <span class="ruby-identifier">machine</span>.<span class="ruby-identifier">start</span>&#x000A;211:         <span class="ruby-identifier">machines</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">machine</span>&#x000A;212:       <span class="ruby-keyword kw">end</span>&#x000A;213:       <span class="ruby-identifier">machines</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span> <span class="ruby-identifier">each_mach</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">m</span>) } <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">each_mach</span>&#x000A;214:       <span class="ruby-identifier">machines</span>&#x000A;215:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000506'>
+                <a name='M000506'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>destroy</span>
+                  <span class='arguments'>(&amp;each_mach)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000506-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000506-source'>     <span class="ruby-comment cmt"># File lib/rudy/machines.rb, line 218</span>&#x000A;218:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">destroy</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_mach</span>)&#x000A;219:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">MachineGroupNotDefined</span>, <span class="ruby-identifier">current_machine_group</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">known_machine_group?</span>&#x000A;220:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">MachineGroupNotRunning</span>, <span class="ruby-identifier">current_machine_group</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">running?</span>&#x000A;221:       <span class="ruby-identifier">list</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span> <span class="ruby-identifier">each_mach</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">m</span>); } <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">each_mach</span>&#x000A;222:       <span class="ruby-identifier">list</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">mach</span><span class="ruby-operator">|</span>&#x000A;223:         <span class="ruby-comment cmt">#puts &quot;Destroying #{mach.name}&quot;</span>&#x000A;224:         <span class="ruby-identifier">mach</span>.<span class="ruby-identifier">destroy</span>&#x000A;225:       <span class="ruby-keyword kw">end</span>&#x000A;226:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000510'>
+                <a name='M000510'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>get</span>
+                  <span class='arguments'>(rname=nil)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000510-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000510-source'>     <span class="ruby-comment cmt"># File lib/rudy/machines.rb, line 259</span>&#x000A;259:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get</span>(<span class="ruby-identifier">rname</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;260:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machine</span>.<span class="ruby-identifier">from_hash</span>(<span class="ruby-ivar">@sdb</span>.<span class="ruby-identifier">get</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">DOMAIN</span>, <span class="ruby-identifier">rname</span>)) <span class="ruby-comment cmt"># Returns nil if empty</span>&#x000A;261:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000508'>
+                <a name='M000508'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>list</span>
+                  <span class='arguments'>(more=[], less=[], &amp;each_mach)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000508-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000508-source'>     <span class="ruby-comment cmt"># File lib/rudy/machines.rb, line 241</span>&#x000A;241:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">list</span>(<span class="ruby-identifier">more</span>=[], <span class="ruby-identifier">less</span>=[], <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_mach</span>)&#x000A;242:       <span class="ruby-identifier">machines</span> = <span class="ruby-identifier">list_as_hash</span>(<span class="ruby-identifier">more</span>, <span class="ruby-identifier">less</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_mach</span>)&#x000A;243:       <span class="ruby-identifier">machines</span> <span class="ruby-operator">&amp;&amp;=</span> <span class="ruby-identifier">machines</span>.<span class="ruby-identifier">values</span>&#x000A;244:       <span class="ruby-identifier">machines</span>&#x000A;245:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000509'>
+                <a name='M000509'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>list_as_hash</span>
+                  <span class='arguments'>(more=[], less=[], &amp;each_mach)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000509-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000509-source'>     <span class="ruby-comment cmt"># File lib/rudy/machines.rb, line 247</span>&#x000A;247:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">list_as_hash</span>(<span class="ruby-identifier">more</span>=[], <span class="ruby-identifier">less</span>=[], <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_mach</span>)&#x000A;248:       <span class="ruby-identifier">query</span> = <span class="ruby-identifier">to_select</span>([<span class="ruby-identifier">:rtype</span>, <span class="ruby-value str">'m'</span>], <span class="ruby-identifier">less</span>)&#x000A;249:       <span class="ruby-identifier">list</span> = <span class="ruby-ivar">@sdb</span>.<span class="ruby-identifier">select</span>(<span class="ruby-identifier">query</span>) <span class="ruby-operator">||</span> {}&#x000A;250:       <span class="ruby-identifier">machines</span> = {}&#x000A;251:       <span class="ruby-identifier">list</span>.<span class="ruby-identifier">each_pair</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">n</span>,<span class="ruby-identifier">m</span><span class="ruby-operator">|</span>&#x000A;252:         <span class="ruby-identifier">machines</span>[<span class="ruby-identifier">n</span>] = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machine</span>.<span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">m</span>)&#x000A;253:       <span class="ruby-keyword kw">end</span>&#x000A;254:       <span class="ruby-identifier">machines</span>.<span class="ruby-identifier">each_pair</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">n</span>,<span class="ruby-identifier">mach</span><span class="ruby-operator">|</span> <span class="ruby-identifier">each_mach</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">mach</span>) } <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">each_mach</span>&#x000A;255:       <span class="ruby-identifier">machines</span> = <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">machines</span>.<span class="ruby-identifier">empty?</span>&#x000A;256:       <span class="ruby-identifier">machines</span>&#x000A;257:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000507'>
+                <a name='M000507'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>restart</span>
+                  <span class='arguments'>(&amp;each_mach)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000507-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000507-source'>     <span class="ruby-comment cmt"># File lib/rudy/machines.rb, line 229</span>&#x000A;229:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">restart</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_mach</span>)&#x000A;230:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">MachineGroupNotDefined</span>, <span class="ruby-identifier">current_machine_group</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">known_machine_group?</span>&#x000A;231:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">MachineGroupNotRunning</span>, <span class="ruby-identifier">current_machine_group</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">running?</span>&#x000A;232:       <span class="ruby-identifier">machines</span> = <span class="ruby-identifier">list</span>&#x000A;233:       <span class="ruby-identifier">machines</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">mach</span><span class="ruby-operator">|</span>&#x000A;234:         <span class="ruby-identifier">each_mach</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">mach</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">each_mach</span>&#x000A;235:         <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Restarting #{mach.name}&quot;</span>&#x000A;236:         <span class="ruby-identifier">mach</span>.<span class="ruby-identifier">restart</span>&#x000A;237:       <span class="ruby-keyword kw">end</span>&#x000A;238:       <span class="ruby-identifier">machines</span>&#x000A;239:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000511'>
+                <a name='M000511'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>running?</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000511-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000511-source'>     <span class="ruby-comment cmt"># File lib/rudy/machines.rb, line 264</span>&#x000A;264:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">running?</span>&#x000A;265:       <span class="ruby-operator">!</span><span class="ruby-identifier">list</span>.<span class="ruby-identifier">nil?</span>&#x000A;266:       <span class="ruby-comment cmt"># TODO: add logic that checks whether the instances are running.</span>&#x000A;267:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

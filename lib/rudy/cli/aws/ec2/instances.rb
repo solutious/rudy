@@ -144,11 +144,8 @@ module AWS; module EC2;
             encrtypted_text = ($1 || '').strip
             k = Rye::Key.from_file(@@global.pkey)
             pword = k.decrypt(encrtypted_text)
-            ret = Annoy.pose_question("Display password?\a ", /yes|y|ya|sure|you bet!/i, STDERR)
-            if ret
-              answer = "%s: %s" % ['password', pword] 
-              Annoy.timed_display(answer, STDERR, 10)
-            end
+            answer = "%s: %s" % ['password', pword] 
+            Annoy.timed_display(answer, STDERR, 10)
             puts
           else
             puts "Please supply a private key path to decode the administrator password"

@@ -155,24 +155,24 @@ module AWS; module EC2;
       
     end
     
-    def deregister_valid?
+    def destroy_images_valid?
       unless @argv.ami && Rudy::Utils.is_id?(:image, @argv.ami)  
-        raise "You must supply an AMI ID (ami-XXXXXXX)" 
+        raise "Must supply an AMI ID (ami-XXXXXXX)" 
       end
+      @rimages = Rudy::AWS::EC2::Images.new(@@global.accesskey, @@global.secretkey, @@global.region)
     end
-    def deregister
-      puts "Deregistering #{@argv.ami}"
-      
-      execute_check(:medium)
-      
-      rimages = Rudy::AWS::EC2::Images.new(@@global.accesskey, @@global.secretkey, @@global.region)
-      
-      if rimages.deregister(ami)
-        puts "Done!"
-      else
-        puts "There was an unknown problem!"
+    def destroy_images
+     puts @rimages.deregister(@argv.ami) ? "Done" : "Unknown error"
+    end 
+    
+    def register_images_valid?
+      unless @argv.first
+        raise "Must supply a valid manifest path (bucket/ami-name.manifest.xml)"
       end
-      
+      @rimages = Rudy::AWS::EC2::Images.new(@@global.accesskey, @@global.secretkey, @@global.region)
+    end
+    def register_images
+      puts @rimages.register(@argv.first)
     end
 
 

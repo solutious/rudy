@@ -102,6 +102,7 @@ module RudyCLI_EC2
   usage "rudy-ec2 images -o 123456789012"
   usage "rudy-ec2 images -o amazon"
   usage "rudy-ec2 images -o self"
+  usage "rudy-ec2 images -R bucket/ami-name.manifest.xml"
   option :o, :owner, String, "Amazon Account Number or one of: amazon, self"
   option :l, :all, "Display all registered machine images (warning: slow)"
   #option :p, :private, "Private images only"
@@ -110,6 +111,7 @@ module RudyCLI_EC2
   option :u, :user, String, "Username to connect as (used for creating an image)"
   action :C, :create, "Create an image"
   #action :P, :prepare, "Prepare a running instance to be used as an image"
+  action :R, :register, "Register an image"
   action :D, :destroy, "Deregister an image (does not remove image files from S3)"
   argv :ami
   command :images => Rudy::CLI::AWS::EC2::Images

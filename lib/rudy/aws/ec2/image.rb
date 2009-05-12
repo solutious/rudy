@@ -106,7 +106,7 @@ module Rudy::AWS
           :image_id => id
         }
         ret = @ec2.deregister_image(opts)
-        puts ret.to_yaml
+        return false unless ret && ret.is_a?(Hash)
         true
       end
       
@@ -117,8 +117,8 @@ module Rudy::AWS
           :image_location => path
         }
         ret = @ec2.register_image(opts)
-        puts ret.to_yaml
-        true
+        return nil unless ret && ret.is_a?(Hash)
+        ret['imageId']
       end
       
       #     imageOwnerId: "203338247012"

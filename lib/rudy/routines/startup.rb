@@ -10,16 +10,14 @@ module Rudy; module Routines;
     # * +each_mach+ is an optional block which is executed between 
     # disk creation and the after scripts. The will receives two 
     # arguments: instances of Rudy::Machine and Rye::Box.
+    # Returns an Array of Rudy::Machine objects
     def execute(&each_mach)
       routine_separator(:startup)
       unless @routine
         STDERR.puts "[this is a generic startup routine]"
         @routine = {}
       end
-      machines = []
-      generic_machine_runner(:create) do |machine,rbox|
-        machines << machine
-      end
+      machines = generic_machine_runner(:create) 
       machines
     end
 

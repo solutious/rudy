@@ -5,7 +5,12 @@ RUDY, CHANGES
 * TODO: Tests for zone and region support
 * TODO: Support for machine image attributes
 * TODO: Support for product codes
-* TODO: Tests for AWS HTTPS
+
+#### 0.7.5 (2009-05-??) ###############################
+
+* CHANGE: rudy-ec2 console now displays windows password automatically if keypair is supplied.
+* ADDED: register and destroy commands to rudy-ec2 images
+
 
 #### 0.7.4 (2009-05-10) ###############################
 

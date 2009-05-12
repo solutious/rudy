@@ -105,6 +105,14 @@ I'm very open to contributions!
 * Rudy::AWS::SDB adapted from aws_sdb by Tim Dysinger (http://dysinger.net)
 
 
+== Related Projects
+
+* Pool Party -- http://www.poolpartyrb.com/
+* Rubber -- http://github.com/wr0ngway/rubber/wikis
+* Moonshine -- http://github.com/railsmachine/moonshine/tree
+* Boto -- http://code.google.com/p/boto/
+
+
 == License
 
 See: LICENSE.txt

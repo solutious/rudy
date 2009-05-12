@@ -94,13 +94,11 @@ module Rudy
           end
         }
         
-        unless has_remote_task?(routine)
-          puts "[no remote tasks]"
-          return
-        end
-        
         # Execute the action (create, list, destroy, restart) & apply the block to each
+        machines = []
         rmach.send(machine_action) do |machine|
+          machines << machine
+          
           puts machine_separator(machine.name, machine.awsid) unless skip_header
           
           unless skip_check
@@ -152,6 +150,10 @@ module Rudy
             }
           end
           
+          unless has_remote_task?(routine)
+            puts "[no remote tasks]"
+            next
+          end
           
           enjoy_every_sandwich {
             if Rudy::Routines::UserHelper.adduser?(routine)       # adduser

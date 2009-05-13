@@ -11,7 +11,7 @@ machines do
   
   env :stage do
     role :debian do
-      
+      #addresses '11.22.33.44'
     end
   end
   

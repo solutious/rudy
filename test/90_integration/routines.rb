@@ -5,11 +5,11 @@ routines do
   sysupdate do
     script :root do                  
       apt_get "update"               
-      apt_get "install", "build-essential", "git-core"
-      apt_get "install", "sqlite3", "libsqlite3-dev"
+      #apt_get "install", "build-essential", "git-core"
+      #apt_get "install", "sqlite3", "libsqlite3-dev"
       apt_get "install", "ruby1.8-dev", "rubygems"
-      apt_get "install", "apache2-prefork-dev", "libapr1-dev"
-      apt_get "install", "libfcgi-dev", "libfcgi-ruby1.8"
+      #apt_get "install", "apache2-prefork-dev", "libapr1-dev"
+      #apt_get "install", "libfcgi-dev", "libfcgi-ruby1.8"
       gem_sources :a, "http://gems.github.com"
     end
   end
@@ -26,6 +26,12 @@ routines do
   end
   
   startup do
+  end
+  
+  install do
+    script :root do
+      gem_install "rudy"
+    end
   end
   
   env :stage do

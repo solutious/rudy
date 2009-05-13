@@ -10,7 +10,8 @@ RUDY, CHANGES
 
 * ADDED: Better windows instance support during routines
 * ADDED: "os" keyword to routines DSL
-
+* ADDED: Config defaults for "yes" global (thanks sabat)
+* FIXED: Handle exception when assigning inappropriate IP Address. 
 
 #### 0.7.5 (2009-05-12) ###############################
 

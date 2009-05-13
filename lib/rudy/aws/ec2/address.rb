@@ -54,8 +54,8 @@ module Rudy::AWS
         
         address = address.ipaddress if address.is_a?(Rudy::AWS::EC2::Address)
         instance = instance.awsid if instance.is_a?(Rudy::AWS::EC2::Instance)
-        raise UnknownAddress unless exists?(address)
-        raise AddressAssociated if associated?(address)
+        raise UnknownAddress, address unless exists?(address)
+        raise AddressAssociated, address if associated?(address)
         
         opts ={
           :instance_id => instance,
@@ -134,7 +134,7 @@ module Rudy::AWS
       # Returns true if the given address is assigned to the current account
       def exists?(address)
         address = address.ipaddress if address.is_a?(Rudy::AWS::EC2::Address)
-        list.each do |a|
+        list do |a|
           return true if a.ipaddress == address
         end
         false

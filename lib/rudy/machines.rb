@@ -126,16 +126,23 @@ module Rudy
         @awsid = inst.awsid
         @created = @starts = Time.now
         @state = inst.state
-        # Assign IP address only if we have one for that position
-        if current_machine_address(@position)
+        # We need to be safe when creating machines because if an exception is
+        # raised, instances will have been creating but the calling class won't know. 
+        begin
           address = current_machine_address(@position)
-          puts "Associating #{address} to #{inst.awsid}"
-          begin
-            @radd.associate(address, inst.awsid)
-          rescue => ex 
-            STDERR.puts "Error while associating address (#{ex.class.to_s})"
-            Rudy::Utils.bug()
+          # Assign IP address only if we have one for that position
+          if address
+            # Make sure the address is associated to the current account
+            if @radd.exists?(address)
+              puts "Associating #{address} to #{inst.awsid}"
+              @radd.associate(address, inst.awsid)
+            else
+              STDERR.puts "Unknown address: #{address}"
+            end
           end
+        rescue => ex
+          STDERR.puts "Error: #{ex.message}"
+          STDERR.puts ex.backtrace if Rudy.debug?
         end
       end
       

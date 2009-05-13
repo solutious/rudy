@@ -14,15 +14,19 @@ module Rudy; module Routines;
         @routine = {}
       end
 
-      machines = generic_machine_runner(:destroy)
+      machines = generic_machine_runner(:list) do |machine|
+        machine.destroy
+      end
       machines
     end
 
     # Called by generic_machine_runner
     def raise_early_exceptions
       rmach = Rudy::Machines.new
-      raise Rudy::PrivateKeyNotFound, root_keypairpath unless has_keypair?(:root)
       raise MachineGroupNotRunning, current_machine_group unless rmach.running?
+      # Check private key after machine group, otherwise we could get an error
+      # about there being no key which doesn't make sense if the group isn't running.
+      raise Rudy::PrivateKeyNotFound, root_keypairpath unless has_keypair?(:root)
     end
     
   end

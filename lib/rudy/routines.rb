@@ -94,13 +94,12 @@ module Rudy
           end
         }
         
-        # Execute the action (create, list, destroy, restart) & apply the block to each
-        machines = []
-        rmach.send(machine_action) do |machine|
-          machines << machine
-          
+        
+        # Execute the action (create, list, destroy, restart)
+        machines = enjoy_every_sandwich([]) { rmach.send(machine_action) }
+        
+        machines.each do |machine|
           puts machine_separator(machine.name, machine.awsid) unless skip_header
-          
           
           unless skip_check
             msg = preliminary_separator("Checking if instance is running...")
@@ -155,10 +154,12 @@ module Rudy
             }
           end
           
-          unless has_remote_task?(routine)
-            puts "[no remote tasks]"
-            next
-          end
+          ## NOTE: This prevents shutdown from doing its thing and prob
+          ## isn't necessary. 
+          ##unless has_remote_task?(routine) 
+          ##  puts "[no remote tasks]"
+          ##  next
+          ##end
 
           enjoy_every_sandwich {
             if Rudy::Routines::UserHelper.adduser?(routine)       # adduser
@@ -301,14 +302,15 @@ module Rudy
         #puts '%-40s' % [name.bright]
       end
       
-      def enjoy_every_sandwich(&bloc_party)
+      def enjoy_every_sandwich(ret=nil, &bloc_party)
         begin
-          bloc_party.call
+          ret = bloc_party.call
         rescue => ex
           STDERR.puts "  Error: #{ex.message}".color(:red)
           STDERR.puts ex.backtrace if Rudy.debug?
           exit 12 unless keep_going?
         end
+        ret
       end
       
        def keep_going?

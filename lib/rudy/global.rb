@@ -56,7 +56,7 @@ module Rudy
       if config.defaults?
         # Apply the "color" default before "nocolor" so nocolor has presedence
         @nocolor = !config.defaults.color unless config.defaults.color.nil?
-        %w[region zone environment role position user nocolor quiet].each do |name|
+        %w[region zone environment role position user nocolor quiet yes].each do |name|
           val = config.defaults.send(name)
           self.send("#{name}=", val) unless val.nil?
         end
@@ -101,6 +101,7 @@ module Rudy
       @position &&= @position.to_s.rjust(2, '0')  
       @format &&= @format.to_sym rescue nil
       @quiet ? Rudy.enable_quiet : Rudy.disable_quiet
+      @yes ? Rudy.enable_yes : Rudy.disable_yes
     end
     
     def apply_environment_variables

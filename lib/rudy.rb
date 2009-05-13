@@ -38,7 +38,7 @@ module Rudy
     unless defined?(MAJOR)
       MAJOR = 0.freeze
       MINOR = 7.freeze
-      TINY  = 4.freeze
+      TINY  = 5.freeze
     end
     def self.to_s; [MAJOR, MINOR, TINY].join('.'); end
     def self.to_f; self.to_s.to_f; end
@@ -88,6 +88,7 @@ module Rudy
     }.freeze
     
     @@quiet = false
+    @@yes = false
     @@debug = false
     @@sysinfo = SysInfo.new.freeze
     
@@ -95,10 +96,13 @@ module Rudy
   
   def Rudy.debug?; @@debug == true; end
   def Rudy.quiet?; @@quiet == true; end
+  def Rudy.yes?; @@yes == true; end
   def Rudy.enable_debug; @@debug = true; end
   def Rudy.enable_quiet; @@quiet = true; end
+  def Rudy.enable_yes; @@yes = true; end
   def Rudy.disable_debug; @@debug = false; end
   def Rudy.disable_quiet; @@quiet = false; end
+  def Rudy.disable_yes; @@yes = false; end
   
   def Rudy.sysinfo; @@sysinfo; end
   def sysinfo; @@sysinfo;  end

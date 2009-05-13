@@ -102,7 +102,8 @@ module Rudy
             environment :stage
             role :app
             user Rudy.sysinfo.user.to_sym
-            color false                        # set to true for terminal colors
+            color false                        # Terminal colors? true/false
+            yes false                          # Auto-confirm? true/false
           end
         }
         Rudy::Utils.write_to_file(Rudy::CONFIG_FILE, rudy_config, 'w', 0600)

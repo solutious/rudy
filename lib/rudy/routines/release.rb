@@ -23,13 +23,11 @@ module Rudy; module Routines;
         end
       end
       
-      machines = []
-      generic_machine_runner(:list) do |machine,rbox|
+      machines = generic_machine_runner(:list) do |machine,rbox|
         vlist.each do |scm|
           puts task_separator("CREATING REMOTE #{scm.engine.to_s.upcase} CHECKOUT")
           scm.create_remote_checkout(rbox)
         end
-        machines << machine
       end
       
       machines

@@ -13,11 +13,8 @@ module Rudy; module Routines;
         STDERR.puts "[this is a generic shutdown routine]"
         @routine = {}
       end
-      machines = []
-      generic_machine_runner(:destroy) do |machine,rbox|
-        puts $/, "Shutting down...", $/
-        machines << machine
-      end
+
+      machines = generic_machine_runner(:destroy)
       machines
     end
 

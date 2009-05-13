@@ -188,6 +188,10 @@ module Rudy
       fetch_machine_param(:ami)
     end
     
+    def current_machine_os
+      fetch_machine_param(:os) || 'linux'
+    end
+    
     def current_machine_size
       fetch_machine_param(:size) || 'm1.small'
     end

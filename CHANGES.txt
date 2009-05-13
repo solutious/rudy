@@ -6,7 +6,13 @@ RUDY, CHANGES
 * TODO: Support for machine image attributes
 * TODO: Support for product codes
 
-#### 0.7.5 (2009-05-??) ###############################
+#### 0.8.0 (2009-05-00) ###############################
+
+* ADDED: Better windows instance support during routines
+* ADDED: "os" keyword to routines DSL
+
+
+#### 0.7.5 (2009-05-12) ###############################
 
 * CHANGE: rudy-ec2 console now displays windows password automatically if keypair is supplied.
 * ADDED: register and destroy commands to rudy-ec2 images

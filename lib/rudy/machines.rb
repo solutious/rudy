@@ -21,6 +21,8 @@ module Rudy
     field :dns_private
     field :state
     
+    field :os
+    
     attr_reader :instance
     
     def init
@@ -32,6 +34,7 @@ module Rudy
       @role = @@global.role
       @position = find_next_position || '01'
       @state = 'no-instance'
+      @os = 'unknown'
     end
     
     def liner_note
@@ -116,6 +119,8 @@ module Rudy
         :zone => @@global.zone.to_s,
         :machine_data => Machine.generate_machine_data.to_yaml
       }.merge(opts)
+      
+      @os = current_machine_os
       
       @ec2inst.create(opts) do |inst|
         @awsid = inst.awsid

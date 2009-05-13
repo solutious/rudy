@@ -101,21 +101,26 @@ module Rudy
           
           puts machine_separator(machine.name, machine.awsid) unless skip_header
           
+          
           unless skip_check
             msg = preliminary_separator("Checking if instance is running...")
             Rudy::Utils.waiter(3, 120, STDOUT, msg, 0) {
               inst = machine.get_instance
               inst && inst.running?
             } 
+          end
           
-            # Add instance info to machine and save it. This is really important
-            # for the initial startup so the metadata is updated right away. But
-            # it's also important to call here because if a routine was executed
-            # and an unexpected exception occurs before this update is executed
-            # the machine metadata won't contain the DNS information. Calling it
-            # here ensure that the metadata is always up-to-date. 
-            machine.update 
+          # Add instance info to machine and save it. This is really important
+          # for the initial startup so the metadata is updated right away. But
+          # it's also important to call here because if a routine was executed
+          # and an unexpected exception occurs before this update is executed
+          # the machine metadata won't contain the DNS information. Calling it
+          # here ensure that the metadata is always up-to-date. 
+          machine.update 
           
+          next if (machine.os || '').to_s == 'win32'
+            
+          unless skip_check
             msg = preliminary_separator("Waiting for SSH daemon...")
             Rudy::Utils.waiter(2, 60, STDOUT, msg, 0) {
               Rudy::Utils.service_available?(machine.dns_public, 22)
@@ -154,7 +159,7 @@ module Rudy
             puts "[no remote tasks]"
             next
           end
-          
+
           enjoy_every_sandwich {
             if Rudy::Routines::UserHelper.adduser?(routine)       # adduser
               puts task_separator("ADD USER")
@@ -231,6 +236,7 @@ module Rudy
           execute_dependency(after_dependencies, skip_check, skip_header)
         }
         
+        machines
       end
       
       def execute_dependency(depends, skip_check, skip_header)

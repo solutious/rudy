@@ -19,7 +19,7 @@ machines do
   env :stage do
     role :windows do
       os :win32
-      ami 'ami-91dcf4e5'  # rudy-ami-eu/win2003-32-2009-05-12.manifest.xml
+      ami 'ami-f9def68d'  # rudy-ami-eu/win2003-32-2009-05-12.manifest.xml
     end
   end
 end

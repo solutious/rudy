@@ -1,12 +1,13 @@
 RUDY, CHANGES
 
 
-#### 0.7.6 (2009-05-18) ###############################
+#### 0.8.0 (2009-05-18) ###############################
 
 * ADDED: Better windows instance support during routines
 * ADDED: "os" keyword to routines DSL
 * ADDED: Config defaults for "yes" global (thanks sabat)
 * FIXED: Handle exception when assigning inappropriate IP Address. 
+* CHANGE: Some refactoring to Rudy::Machines and Rudy::Routines
 
 
 #### 0.7.5 (2009-05-12) ###############################

@@ -49,183 +49,184 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000215">change_environment</a></li>
-              <li><a href="#M000216">change_position</a></li>
-              <li><a href="#M000214">change_region</a></li>
-              <li><a href="#M000213">change_role</a></li>
-              <li><a href="#M000212">change_zone</a></li>
-              <li><a href="#M000209">create_domain</a></li>
-              <li><a href="#M000218">debug?</a></li>
-              <li><a href="#M000211">domain</a></li>
-              <li><a href="#M000210">domain_exists?</a></li>
-              <li><a href="#M000241">keypair_path_to_name</a></li>
-              <li><a href="#M000206">update_config</a></li>
-              <li><a href="#M000207">update_global</a></li>
-              <li><a href="#M000208">update_logger</a></li>
+              <li><a href="#M000220">change_environment</a></li>
+              <li><a href="#M000221">change_position</a></li>
+              <li><a href="#M000219">change_region</a></li>
+              <li><a href="#M000218">change_role</a></li>
+              <li><a href="#M000217">change_zone</a></li>
+              <li><a href="#M000214">create_domain</a></li>
+              <li><a href="#M000223">debug?</a></li>
+              <li><a href="#M000216">domain</a></li>
+              <li><a href="#M000215">domain_exists?</a></li>
+              <li><a href="#M000247">keypair_path_to_name</a></li>
+              <li><a href="#M000211">update_config</a></li>
+              <li><a href="#M000212">update_global</a></li>
+              <li><a href="#M000213">update_logger</a></li>
             </ol>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000219">check_keys</a></li>
-              <li><a href="#M000222">config_dirname</a></li>
-              <li><a href="#M000232">current_group_name</a></li>
-              <li><a href="#M000237">current_machine_address</a></li>
-              <li><a href="#M000233">current_machine_count</a></li>
-              <li><a href="#M000231">current_machine_group</a></li>
-              <li><a href="#M000234">current_machine_hostname</a></li>
-              <li><a href="#M000235">current_machine_image</a></li>
-              <li><a href="#M000238">current_machine_name</a></li>
-              <li><a href="#M000236">current_machine_size</a></li>
-              <li><a href="#M000229">current_user</a></li>
-              <li><a href="#M000230">current_user_keypairpath</a></li>
-              <li><a href="#M000217">debug?</a></li>
-              <li><a href="#M000240">group_metadata</a></li>
-              <li><a href="#M000223">has_keypair?</a></li>
-              <li><a href="#M000221">has_keys?</a></li>
-              <li><a href="#M000220">has_pem_keys?</a></li>
-              <li><a href="#M000228">has_root_keypair?</a></li>
-              <li><a href="#M000242">known_machine_group?</a></li>
-              <li><a href="#M000225">root_keypairname</a></li>
-              <li><a href="#M000227">root_keypairpath</a></li>
-              <li><a href="#M000239">switch_user</a></li>
-              <li><a href="#M000224">user_keypairname</a></li>
-              <li><a href="#M000226">user_keypairpath</a></li>
+              <li><a href="#M000224">check_keys</a></li>
+              <li><a href="#M000227">config_dirname</a></li>
+              <li><a href="#M000237">current_group_name</a></li>
+              <li><a href="#M000243">current_machine_address</a></li>
+              <li><a href="#M000238">current_machine_count</a></li>
+              <li><a href="#M000236">current_machine_group</a></li>
+              <li><a href="#M000239">current_machine_hostname</a></li>
+              <li><a href="#M000240">current_machine_image</a></li>
+              <li><a href="#M000244">current_machine_name</a></li>
+              <li><a href="#M000241">current_machine_os</a></li>
+              <li><a href="#M000242">current_machine_size</a></li>
+              <li><a href="#M000234">current_user</a></li>
+              <li><a href="#M000235">current_user_keypairpath</a></li>
+              <li><a href="#M000222">debug?</a></li>
+              <li><a href="#M000246">group_metadata</a></li>
+              <li><a href="#M000228">has_keypair?</a></li>
+              <li><a href="#M000226">has_keys?</a></li>
+              <li><a href="#M000225">has_pem_keys?</a></li>
+              <li><a href="#M000233">has_root_keypair?</a></li>
+              <li><a href="#M000248">known_machine_group?</a></li>
+              <li><a href="#M000230">root_keypairname</a></li>
+              <li><a href="#M000232">root_keypairpath</a></li>
+              <li><a href="#M000245">switch_user</a></li>
+              <li><a href="#M000229">user_keypairname</a></li>
+              <li><a href="#M000231">user_keypairpath</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='public-class method' id='method-M000215'>
-                <a name='M000215'>      </a>
+              <div class='public-class method' id='method-M000220'>
+                <a name='M000220'>      </a>
                 <div class='synopsis'>
                   <span class='name'>change_environment</span>
                   <span class='arguments'>(v)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000215-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000220-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000215-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 74</span>&#x000A;74:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">change_environment</span>(<span class="ruby-identifier">v</span>); <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">environment</span> = <span class="ruby-identifier">v</span>; <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000220-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 74</span>&#x000A;74:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">change_environment</span>(<span class="ruby-identifier">v</span>); <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">environment</span> = <span class="ruby-identifier">v</span>; <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-class method' id='method-M000216'>
-                <a name='M000216'>      </a>
+              <div class='public-class method' id='method-M000221'>
+                <a name='M000221'>      </a>
                 <div class='synopsis'>
                   <span class='name'>change_position</span>
                   <span class='arguments'>(v)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000216-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000221-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000216-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 75</span>&#x000A;75:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">change_position</span>(<span class="ruby-identifier">v</span>); <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">position</span> = <span class="ruby-identifier">v</span>; <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000221-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 75</span>&#x000A;75:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">change_position</span>(<span class="ruby-identifier">v</span>); <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">position</span> = <span class="ruby-identifier">v</span>; <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-class method' id='method-M000214'>
-                <a name='M000214'>      </a>
+              <div class='public-class method' id='method-M000219'>
+                <a name='M000219'>      </a>
                 <div class='synopsis'>
                   <span class='name'>change_region</span>
                   <span class='arguments'>(v)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000214-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000219-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000214-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 73</span>&#x000A;73:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">change_region</span>(<span class="ruby-identifier">v</span>); <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">region</span> = <span class="ruby-identifier">v</span>; <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='public-class method' id='method-M000213'>
-                <a name='M000213'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>change_role</span>
-                  <span class='arguments'>(v)</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000213-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000213-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 72</span>&#x000A;72:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">change_role</span>(<span class="ruby-identifier">v</span>); <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">role</span> = <span class="ruby-identifier">v</span>; <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='public-class method' id='method-M000212'>
-                <a name='M000212'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>change_zone</span>
-                  <span class='arguments'>(v)</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000212-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000212-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 71</span>&#x000A;71:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">change_zone</span>(<span class="ruby-identifier">v</span>); <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">zone</span> = <span class="ruby-identifier">v</span>; <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='public-class method' id='method-M000209'>
-                <a name='M000209'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>create_domain</span>
-                  <span class='arguments'>()</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000209-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000209-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 57</span>&#x000A;57:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">create_domain</span>&#x000A;58:       <span class="ruby-ivar">@sdb</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">SDB</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">accesskey</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">secretkey</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">region</span>)&#x000A;59:       <span class="ruby-ivar">@sdb</span>.<span class="ruby-identifier">create_domain</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">DOMAIN</span>&#x000A;60:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000219-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 73</span>&#x000A;73:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">change_region</span>(<span class="ruby-identifier">v</span>); <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">region</span> = <span class="ruby-identifier">v</span>; <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='public-class method' id='method-M000218'>
                 <a name='M000218'>      </a>
                 <div class='synopsis'>
-                  <span class='name'>debug?</span>
-                  <span class='arguments'>()</span>
+                  <span class='name'>change_role</span>
+                  <span class='arguments'>(v)</span>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000218-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000218-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 78</span>&#x000A;78:     <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Huxtable</span>.<span class="ruby-identifier">debug?</span>; <span class="ruby-ivar">@@debug</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">true</span>; <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000218-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 72</span>&#x000A;72:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">change_role</span>(<span class="ruby-identifier">v</span>); <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">role</span> = <span class="ruby-identifier">v</span>; <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-class method' id='method-M000211'>
-                <a name='M000211'>      </a>
+              <div class='public-class method' id='method-M000217'>
+                <a name='M000217'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>change_zone</span>
+                  <span class='arguments'>(v)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000217-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000217-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 71</span>&#x000A;71:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">change_zone</span>(<span class="ruby-identifier">v</span>); <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">zone</span> = <span class="ruby-identifier">v</span>; <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-class method' id='method-M000214'>
+                <a name='M000214'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>create_domain</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000214-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000214-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 57</span>&#x000A;57:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">create_domain</span>&#x000A;58:       <span class="ruby-ivar">@sdb</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">SDB</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">accesskey</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">secretkey</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">region</span>)&#x000A;59:       <span class="ruby-ivar">@sdb</span>.<span class="ruby-identifier">create_domain</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">DOMAIN</span>&#x000A;60:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-class method' id='method-M000223'>
+                <a name='M000223'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>debug?</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000223-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000223-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 78</span>&#x000A;78:     <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Huxtable</span>.<span class="ruby-identifier">debug?</span>; <span class="ruby-ivar">@@debug</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">true</span>; <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-class method' id='method-M000216'>
+                <a name='M000216'>      </a>
                 <div class='synopsis'>
                   <span class='name'>domain</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000211-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000216-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000211-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 67</span>&#x000A;67:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">domain</span>&#x000A;68:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">DOMAIN</span>&#x000A;69:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000216-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 67</span>&#x000A;67:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">domain</span>&#x000A;68:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">DOMAIN</span>&#x000A;69:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-class method' id='method-M000210'>
-                <a name='M000210'>      </a>
+              <div class='public-class method' id='method-M000215'>
+                <a name='M000215'>      </a>
                 <div class='synopsis'>
                   <span class='name'>domain_exists?</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000210-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000215-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000210-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 62</span>&#x000A;62:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">domain_exists?</span>&#x000A;63:       <span class="ruby-ivar">@sdb</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">SDB</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">accesskey</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">secretkey</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">region</span>)&#x000A;64:       (<span class="ruby-ivar">@sdb</span>.<span class="ruby-identifier">list_domains</span> <span class="ruby-operator">||</span> []).<span class="ruby-identifier">member?</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">DOMAIN</span>&#x000A;65:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000215-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 62</span>&#x000A;62:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">domain_exists?</span>&#x000A;63:       <span class="ruby-ivar">@sdb</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">SDB</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">accesskey</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">secretkey</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">region</span>)&#x000A;64:       (<span class="ruby-ivar">@sdb</span>.<span class="ruby-identifier">list_domains</span> <span class="ruby-operator">||</span> []).<span class="ruby-identifier">member?</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">DOMAIN</span>&#x000A;65:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-class method' id='method-M000241'>
-                <a name='M000241'>      </a>
+              <div class='public-class method' id='method-M000247'>
+                <a name='M000247'>      </a>
                 <div class='synopsis'>
                   <span class='name'>keypair_path_to_name</span>
                   <span class='arguments'>(kp)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000241-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000247-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000241-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 228</span>&#x000A;228:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">keypair_path_to_name</span>(<span class="ruby-identifier">kp</span>)&#x000A;229:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">kp</span>&#x000A;230:       <span class="ruby-identifier">name</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">basename</span> <span class="ruby-identifier">kp</span>&#x000A;231:       <span class="ruby-comment cmt">#name.gsub(/key-/, '')   # We keep the key- now</span>&#x000A;232:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000247-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 232</span>&#x000A;232:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">keypair_path_to_name</span>(<span class="ruby-identifier">kp</span>)&#x000A;233:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">kp</span>&#x000A;234:       <span class="ruby-identifier">name</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">basename</span> <span class="ruby-identifier">kp</span>&#x000A;235:       <span class="ruby-comment cmt">#name.gsub(/key-/, '')   # We keep the key- now</span>&#x000A;236:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-class method' id='method-M000206'>
-                <a name='M000206'>      </a>
+              <div class='public-class method' id='method-M000211'>
+                <a name='M000211'>      </a>
                 <div class='synopsis'>
                   <span class='name'>update_config</span>
                   <span class='arguments'>(path=nil)</span>
@@ -238,145 +239,145 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000206-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000211-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000206-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 42</span>&#x000A;42:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">update_config</span>(<span class="ruby-identifier">path</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;43:       <span class="ruby-ivar">@@config</span>.<span class="ruby-identifier">verbose</span> = (<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">verbose</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>)&#x000A;44:       <span class="ruby-comment cmt"># nil and bad paths sent to look_and_load are ignored</span>&#x000A;45:       <span class="ruby-ivar">@@config</span>.<span class="ruby-identifier">look_and_load</span>(<span class="ruby-identifier">path</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">config</span>)&#x000A;46:       <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">apply_config</span>(<span class="ruby-ivar">@@config</span>)&#x000A;47:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000211-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 42</span>&#x000A;42:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">update_config</span>(<span class="ruby-identifier">path</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;43:       <span class="ruby-ivar">@@config</span>.<span class="ruby-identifier">verbose</span> = (<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">verbose</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>)&#x000A;44:       <span class="ruby-comment cmt"># nil and bad paths sent to look_and_load are ignored</span>&#x000A;45:       <span class="ruby-ivar">@@config</span>.<span class="ruby-identifier">look_and_load</span>(<span class="ruby-identifier">path</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">config</span>)&#x000A;46:       <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">apply_config</span>(<span class="ruby-ivar">@@config</span>)&#x000A;47:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-class method' id='method-M000207'>
-                <a name='M000207'>      </a>
+              <div class='public-class method' id='method-M000212'>
+                <a name='M000212'>      </a>
                 <div class='synopsis'>
                   <span class='name'>update_global</span>
                   <span class='arguments'>(ghash={})</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000207-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000212-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000207-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 49</span>&#x000A;49:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">update_global</span>(<span class="ruby-identifier">ghash</span>={})&#x000A;50:       <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">update</span>(<span class="ruby-identifier">ghash</span>)&#x000A;51:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000212-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 49</span>&#x000A;49:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">update_global</span>(<span class="ruby-identifier">ghash</span>={})&#x000A;50:       <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">update</span>(<span class="ruby-identifier">ghash</span>)&#x000A;51:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-class method' id='method-M000208'>
-                <a name='M000208'>      </a>
+              <div class='public-class method' id='method-M000213'>
+                <a name='M000213'>      </a>
                 <div class='synopsis'>
                   <span class='name'>update_logger</span>
                   <span class='arguments'>(logger)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000208-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000213-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000208-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 53</span>&#x000A;53:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">update_logger</span>(<span class="ruby-identifier">logger</span>)&#x000A;54:       <span class="ruby-ivar">@@logger</span> = <span class="ruby-identifier">logger</span>&#x000A;55:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000213-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 53</span>&#x000A;53:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">update_logger</span>(<span class="ruby-identifier">logger</span>)&#x000A;54:       <span class="ruby-ivar">@@logger</span> = <span class="ruby-identifier">logger</span>&#x000A;55:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000219'>
-                <a name='M000219'>      </a>
+              <div class='public-instance method' id='method-M000224'>
+                <a name='M000224'>      </a>
                 <div class='synopsis'>
                   <span class='name'>check_keys</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000219-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000224-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000219-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 79</span>&#x000A;79:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">check_keys</span>&#x000A;80:       <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;No EC2 .pem keys provided&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">has_pem_keys?</span>&#x000A;81:       <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;No SSH key provided for #{current_user}!&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">has_keypair?</span>&#x000A;82:       <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;No SSH key provided for root!&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">has_keypair?</span>(<span class="ruby-identifier">:root</span>)&#x000A;83:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000224-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 79</span>&#x000A;79:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">check_keys</span>&#x000A;80:       <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;No EC2 .pem keys provided&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">has_pem_keys?</span>&#x000A;81:       <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;No SSH key provided for #{current_user}!&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">has_keypair?</span>&#x000A;82:       <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;No SSH key provided for root!&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">has_keypair?</span>(<span class="ruby-identifier">:root</span>)&#x000A;83:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000222'>
-                <a name='M000222'>      </a>
+              <div class='public-instance method' id='method-M000227'>
+                <a name='M000227'>      </a>
                 <div class='synopsis'>
                   <span class='name'>config_dirname</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000222-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000227-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000222-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 94</span>&#x000A;94:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">config_dirname</span>&#x000A;95:       <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;No config paths defined&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@@config</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Config</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@@config</span>.<span class="ruby-identifier">paths</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>)&#x000A;96:       <span class="ruby-identifier">base_dir</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">dirname</span> <span class="ruby-ivar">@@config</span>.<span class="ruby-identifier">paths</span>.<span class="ruby-identifier">first</span>&#x000A;97:       <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;Config directory doesn't exist #{base_dir}&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">base_dir</span>)&#x000A;98:       <span class="ruby-identifier">base_dir</span>&#x000A;99:     <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='public-instance method' id='method-M000232'>
-                <a name='M000232'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>current_group_name</span>
-                  <span class='arguments'>()</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000232-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000232-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 166</span>&#x000A;166:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">current_group_name</span>&#x000A;167:       <span class="ruby-node">&quot;g-#{current_machine_group}&quot;</span>&#x000A;168:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000227-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 94</span>&#x000A;94:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">config_dirname</span>&#x000A;95:       <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;No config paths defined&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@@config</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Config</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@@config</span>.<span class="ruby-identifier">paths</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>)&#x000A;96:       <span class="ruby-identifier">base_dir</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">dirname</span> <span class="ruby-ivar">@@config</span>.<span class="ruby-identifier">paths</span>.<span class="ruby-identifier">first</span>&#x000A;97:       <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;Config directory doesn't exist #{base_dir}&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">base_dir</span>)&#x000A;98:       <span class="ruby-identifier">base_dir</span>&#x000A;99:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='public-instance method' id='method-M000237'>
                 <a name='M000237'>      </a>
                 <div class='synopsis'>
-                  <span class='name'>current_machine_address</span>
-                  <span class='arguments'>(position='01')</span>
+                  <span class='name'>current_group_name</span>
+                  <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000237-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000237-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 195</span>&#x000A;195:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">current_machine_address</span>(<span class="ruby-identifier">position</span>=<span class="ruby-value str">'01'</span>)&#x000A;196:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">NoConfig</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@@config</span>&#x000A;197:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">NoMachinesConfig</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@@config</span>.<span class="ruby-identifier">machines</span>&#x000A;198:       <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;Position cannot be nil&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">position</span>.<span class="ruby-identifier">nil?</span>&#x000A;199:       <span class="ruby-identifier">addresses</span> = [<span class="ruby-identifier">fetch_machine_param</span>(<span class="ruby-identifier">:addresses</span>)].<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">compact</span>&#x000A;200:       <span class="ruby-identifier">addresses</span>[<span class="ruby-identifier">position</span>.<span class="ruby-identifier">to_i</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>]&#x000A;201:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000237-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 166</span>&#x000A;166:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">current_group_name</span>&#x000A;167:       <span class="ruby-node">&quot;g-#{current_machine_group}&quot;</span>&#x000A;168:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000233'>
-                <a name='M000233'>      </a>
+              <div class='public-instance method' id='method-M000243'>
+                <a name='M000243'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>current_machine_address</span>
+                  <span class='arguments'>(position='01')</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000243-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000243-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 199</span>&#x000A;199:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">current_machine_address</span>(<span class="ruby-identifier">position</span>=<span class="ruby-value str">'01'</span>)&#x000A;200:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">NoConfig</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@@config</span>&#x000A;201:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">NoMachinesConfig</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@@config</span>.<span class="ruby-identifier">machines</span>&#x000A;202:       <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;Position cannot be nil&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">position</span>.<span class="ruby-identifier">nil?</span>&#x000A;203:       <span class="ruby-identifier">addresses</span> = [<span class="ruby-identifier">fetch_machine_param</span>(<span class="ruby-identifier">:addresses</span>)].<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">compact</span>&#x000A;204:       <span class="ruby-identifier">addresses</span>[<span class="ruby-identifier">position</span>.<span class="ruby-identifier">to_i</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>]&#x000A;205:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000238'>
+                <a name='M000238'>      </a>
                 <div class='synopsis'>
                   <span class='name'>current_machine_count</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000233-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000238-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000233-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 170</span>&#x000A;170:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">current_machine_count</span>&#x000A;171:       <span class="ruby-identifier">fetch_machine_param</span>(<span class="ruby-identifier">:positions</span>) <span class="ruby-operator">||</span> <span class="ruby-value">1</span>&#x000A;172:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000238-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 170</span>&#x000A;170:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">current_machine_count</span>&#x000A;171:       <span class="ruby-identifier">fetch_machine_param</span>(<span class="ruby-identifier">:positions</span>) <span class="ruby-operator">||</span> <span class="ruby-value">1</span>&#x000A;172:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000231'>
-                <a name='M000231'>      </a>
+              <div class='public-instance method' id='method-M000236'>
+                <a name='M000236'>      </a>
                 <div class='synopsis'>
                   <span class='name'>current_machine_group</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000231-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000236-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000231-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 162</span>&#x000A;162:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">current_machine_group</span>&#x000A;163:       [<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">environment</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">role</span>].<span class="ruby-identifier">join</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">DELIM</span>)&#x000A;164:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000236-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 162</span>&#x000A;162:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">current_machine_group</span>&#x000A;163:       [<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">environment</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">role</span>].<span class="ruby-identifier">join</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">DELIM</span>)&#x000A;164:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000234'>
-                <a name='M000234'>      </a>
+              <div class='public-instance method' id='method-M000239'>
+                <a name='M000239'>      </a>
                 <div class='synopsis'>
                   <span class='name'>current_machine_hostname</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000234-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000239-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000234-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 174</span>&#x000A;174:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">current_machine_hostname</span>&#x000A;175:       <span class="ruby-comment cmt"># NOTE: There is an issue with Caesars that a keyword that has been</span>&#x000A;176:       <span class="ruby-comment cmt"># defined as forced_array (or forced_hash, etc...) is like that for</span>&#x000A;177:       <span class="ruby-comment cmt"># all subclasses of Caesars. There is a conflict between &quot;hostname&quot; </span>&#x000A;178:       <span class="ruby-comment cmt"># in the machines config and routines config. The routines config </span>&#x000A;179:       <span class="ruby-comment cmt"># parses hostname with forced_array because it's a shell command</span>&#x000A;180:       <span class="ruby-comment cmt"># in Rye::Cmd. Machines config expects just a symbol. The issue</span>&#x000A;181:       <span class="ruby-comment cmt"># is with Caesars so this is a workaround to return a symbol.</span>&#x000A;182:       <span class="ruby-identifier">hn</span> = <span class="ruby-identifier">fetch_machine_param</span>(<span class="ruby-identifier">:hostname</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">:rudy</span>&#x000A;183:       <span class="ruby-identifier">hn</span> = <span class="ruby-identifier">hn</span>.<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">compact</span>.<span class="ruby-identifier">first</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">hn</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>)&#x000A;184:       <span class="ruby-identifier">hn</span>&#x000A;185:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000239-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 174</span>&#x000A;174:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">current_machine_hostname</span>&#x000A;175:       <span class="ruby-comment cmt"># NOTE: There is an issue with Caesars that a keyword that has been</span>&#x000A;176:       <span class="ruby-comment cmt"># defined as forced_array (or forced_hash, etc...) is like that for</span>&#x000A;177:       <span class="ruby-comment cmt"># all subclasses of Caesars. There is a conflict between &quot;hostname&quot; </span>&#x000A;178:       <span class="ruby-comment cmt"># in the machines config and routines config. The routines config </span>&#x000A;179:       <span class="ruby-comment cmt"># parses hostname with forced_array because it's a shell command</span>&#x000A;180:       <span class="ruby-comment cmt"># in Rye::Cmd. Machines config expects just a symbol. The issue</span>&#x000A;181:       <span class="ruby-comment cmt"># is with Caesars so this is a workaround to return a symbol.</span>&#x000A;182:       <span class="ruby-identifier">hn</span> = <span class="ruby-identifier">fetch_machine_param</span>(<span class="ruby-identifier">:hostname</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">:rudy</span>&#x000A;183:       <span class="ruby-identifier">hn</span> = <span class="ruby-identifier">hn</span>.<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">compact</span>.<span class="ruby-identifier">first</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">hn</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>)&#x000A;184:       <span class="ruby-identifier">hn</span>&#x000A;185:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000235'>
-                <a name='M000235'>      </a>
+              <div class='public-instance method' id='method-M000240'>
+                <a name='M000240'>      </a>
                 <div class='synopsis'>
                   <span class='name'>current_machine_image</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000235-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000240-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000235-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 187</span>&#x000A;187:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">current_machine_image</span>&#x000A;188:       <span class="ruby-identifier">fetch_machine_param</span>(<span class="ruby-identifier">:ami</span>)&#x000A;189:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000240-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 187</span>&#x000A;187:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">current_machine_image</span>&#x000A;188:       <span class="ruby-identifier">fetch_machine_param</span>(<span class="ruby-identifier">:ami</span>)&#x000A;189:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000238'>
-                <a name='M000238'>      </a>
+              <div class='public-instance method' id='method-M000244'>
+                <a name='M000244'>      </a>
                 <div class='synopsis'>
                   <span class='name'>current_machine_name</span>
                   <span class='arguments'>()</span>
@@ -387,131 +388,144 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000238-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000244-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000238-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 204</span>&#x000A;204:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">current_machine_name</span>&#x000A;205:       [<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">zone</span>, <span class="ruby-identifier">current_machine_group</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">position</span>].<span class="ruby-identifier">join</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">DELIM</span>)&#x000A;206:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000244-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 208</span>&#x000A;208:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">current_machine_name</span>&#x000A;209:       [<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">zone</span>, <span class="ruby-identifier">current_machine_group</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">position</span>].<span class="ruby-identifier">join</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">DELIM</span>)&#x000A;210:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000236'>
-                <a name='M000236'>      </a>
+              <div class='public-instance method' id='method-M000241'>
+                <a name='M000241'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>current_machine_os</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000241-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000241-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 191</span>&#x000A;191:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">current_machine_os</span>&#x000A;192:       <span class="ruby-identifier">fetch_machine_param</span>(<span class="ruby-identifier">:os</span>) <span class="ruby-operator">||</span> <span class="ruby-value str">'linux'</span>&#x000A;193:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000242'>
+                <a name='M000242'>      </a>
                 <div class='synopsis'>
                   <span class='name'>current_machine_size</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000236-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000242-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000236-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 191</span>&#x000A;191:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">current_machine_size</span>&#x000A;192:       <span class="ruby-identifier">fetch_machine_param</span>(<span class="ruby-identifier">:size</span>) <span class="ruby-operator">||</span> <span class="ruby-value str">'m1.small'</span>&#x000A;193:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000242-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 195</span>&#x000A;195:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">current_machine_size</span>&#x000A;196:       <span class="ruby-identifier">fetch_machine_param</span>(<span class="ruby-identifier">:size</span>) <span class="ruby-operator">||</span> <span class="ruby-value str">'m1.small'</span>&#x000A;197:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000229'>
-                <a name='M000229'>      </a>
+              <div class='public-instance method' id='method-M000234'>
+                <a name='M000234'>      </a>
                 <div class='synopsis'>
                   <span class='name'>current_user</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000229-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000234-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000229-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 155</span>&#x000A;155:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">current_user</span>&#x000A;156:       <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">user</span>&#x000A;157:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000234-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 155</span>&#x000A;155:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">current_user</span>&#x000A;156:       <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">user</span>&#x000A;157:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000230'>
-                <a name='M000230'>      </a>
+              <div class='public-instance method' id='method-M000235'>
+                <a name='M000235'>      </a>
                 <div class='synopsis'>
                   <span class='name'>current_user_keypairpath</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000230-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000235-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000230-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 158</span>&#x000A;158:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">current_user_keypairpath</span>&#x000A;159:       <span class="ruby-identifier">user_keypairpath</span>(<span class="ruby-identifier">current_user</span>)&#x000A;160:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000235-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 158</span>&#x000A;158:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">current_user_keypairpath</span>&#x000A;159:       <span class="ruby-identifier">user_keypairpath</span>(<span class="ruby-identifier">current_user</span>)&#x000A;160:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000217'>
-                <a name='M000217'>      </a>
+              <div class='public-instance method' id='method-M000222'>
+                <a name='M000222'>      </a>
                 <div class='synopsis'>
                   <span class='name'>debug?</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000217-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000222-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000217-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 77</span>&#x000A;77:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">debug?</span>; <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Huxtable</span>.<span class="ruby-identifier">debug?</span>; <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000222-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 77</span>&#x000A;77:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">debug?</span>; <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Huxtable</span>.<span class="ruby-identifier">debug?</span>; <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000240'>
-                <a name='M000240'>      </a>
+              <div class='public-instance method' id='method-M000246'>
+                <a name='M000246'>      </a>
                 <div class='synopsis'>
                   <span class='name'>group_metadata</span>
                   <span class='arguments'>(env=@@global.environment, role=@@global.role)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000240-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000246-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000240-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 223</span>&#x000A;223:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">group_metadata</span>(<span class="ruby-identifier">env</span>=<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">environment</span>, <span class="ruby-identifier">role</span>=<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">role</span>)&#x000A;224:       <span class="ruby-identifier">query</span> = <span class="ruby-node">&quot;['environment' = '#{env}'] intersection ['role' = '#{role}']&quot;</span>&#x000A;225:       <span class="ruby-ivar">@sdb</span>.<span class="ruby-identifier">query_with_attributes</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">DOMAIN</span>, <span class="ruby-identifier">query</span>)&#x000A;226:     <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='public-instance method' id='method-M000223'>
-                <a name='M000223'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>has_keypair?</span>
-                  <span class='arguments'>(name=nil)</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000223-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000223-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 101</span>&#x000A;101:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">has_keypair?</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;102:       <span class="ruby-identifier">kp</span> = <span class="ruby-identifier">user_keypairpath</span>(<span class="ruby-identifier">name</span>)&#x000A;103:       (<span class="ruby-operator">!</span><span class="ruby-identifier">kp</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">kp</span>))&#x000A;104:     <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='public-instance method' id='method-M000221'>
-                <a name='M000221'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>has_keys?</span>
-                  <span class='arguments'>()</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000221-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000221-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 90</span>&#x000A;90:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">has_keys?</span>&#x000A;91:       (<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">accesskey</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">accesskey</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">secretkey</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">secretkey</span>.<span class="ruby-identifier">empty?</span>)&#x000A;92:     <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='public-instance method' id='method-M000220'>
-                <a name='M000220'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>has_pem_keys?</span>
-                  <span class='arguments'>()</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000220-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000220-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 85</span>&#x000A;85:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">has_pem_keys?</span>&#x000A;86:       (<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">cert</span>       <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">cert</span>) <span class="ruby-operator">&amp;&amp;</span> &#x000A;87:        <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">privatekey</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">privatekey</span>))&#x000A;88:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000246-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 227</span>&#x000A;227:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">group_metadata</span>(<span class="ruby-identifier">env</span>=<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">environment</span>, <span class="ruby-identifier">role</span>=<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">role</span>)&#x000A;228:       <span class="ruby-identifier">query</span> = <span class="ruby-node">&quot;['environment' = '#{env}'] intersection ['role' = '#{role}']&quot;</span>&#x000A;229:       <span class="ruby-ivar">@sdb</span>.<span class="ruby-identifier">query_with_attributes</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">DOMAIN</span>, <span class="ruby-identifier">query</span>)&#x000A;230:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='public-instance method' id='method-M000228'>
                 <a name='M000228'>      </a>
                 <div class='synopsis'>
-                  <span class='name'>has_root_keypair?</span>
-                  <span class='arguments'>()</span>
+                  <span class='name'>has_keypair?</span>
+                  <span class='arguments'>(name=nil)</span>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000228-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000228-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 150</span>&#x000A;150:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">has_root_keypair?</span>&#x000A;151:       <span class="ruby-identifier">path</span> = <span class="ruby-identifier">user_keypairpath</span>(<span class="ruby-identifier">:root</span>)&#x000A;152:       (<span class="ruby-operator">!</span><span class="ruby-identifier">path</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">path</span>.<span class="ruby-identifier">empty?</span>)&#x000A;153:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000228-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 101</span>&#x000A;101:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">has_keypair?</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;102:       <span class="ruby-identifier">kp</span> = <span class="ruby-identifier">user_keypairpath</span>(<span class="ruby-identifier">name</span>)&#x000A;103:       (<span class="ruby-operator">!</span><span class="ruby-identifier">kp</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">kp</span>))&#x000A;104:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000242'>
-                <a name='M000242'>      </a>
+              <div class='public-instance method' id='method-M000226'>
+                <a name='M000226'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>has_keys?</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000226-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000226-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 90</span>&#x000A;90:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">has_keys?</span>&#x000A;91:       (<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">accesskey</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">accesskey</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">secretkey</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">secretkey</span>.<span class="ruby-identifier">empty?</span>)&#x000A;92:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000225'>
+                <a name='M000225'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>has_pem_keys?</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000225-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000225-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 85</span>&#x000A;85:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">has_pem_keys?</span>&#x000A;86:       (<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">cert</span>       <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">cert</span>) <span class="ruby-operator">&amp;&amp;</span> &#x000A;87:        <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">privatekey</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">privatekey</span>))&#x000A;88:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000233'>
+                <a name='M000233'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>has_root_keypair?</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000233-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000233-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 150</span>&#x000A;150:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">has_root_keypair?</span>&#x000A;151:       <span class="ruby-identifier">path</span> = <span class="ruby-identifier">user_keypairpath</span>(<span class="ruby-identifier">:root</span>)&#x000A;152:       (<span class="ruby-operator">!</span><span class="ruby-identifier">path</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">path</span>.<span class="ruby-identifier">empty?</span>)&#x000A;153:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000248'>
+                <a name='M000248'>      </a>
                 <div class='synopsis'>
                   <span class='name'>known_machine_group?</span>
                   <span class='arguments'>()</span>
@@ -524,40 +538,40 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000242-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000248-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000242-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 238</span>&#x000A;238:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">known_machine_group?</span>&#x000A;239:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">NoConfig</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@@config</span>&#x000A;240:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">NoMachinesConfig</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@@config</span>.<span class="ruby-identifier">machines</span>&#x000A;241:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@@config</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@@global</span>&#x000A;242:       <span class="ruby-identifier">zon</span>, <span class="ruby-identifier">env</span>, <span class="ruby-identifier">rol</span> = <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">zone</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">environment</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">role</span>&#x000A;243:       <span class="ruby-identifier">conf</span> = <span class="ruby-ivar">@@config</span>.<span class="ruby-identifier">machines</span>.<span class="ruby-identifier">find_deferred</span>(<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">region</span>, <span class="ruby-identifier">zon</span>, [<span class="ruby-identifier">env</span>, <span class="ruby-identifier">rol</span>])&#x000A;244:       <span class="ruby-identifier">conf</span> <span class="ruby-operator">||=</span> <span class="ruby-ivar">@@config</span>.<span class="ruby-identifier">machines</span>.<span class="ruby-identifier">find_deferred</span>(<span class="ruby-identifier">zon</span>, [<span class="ruby-identifier">env</span>, <span class="ruby-identifier">rol</span>])&#x000A;245:       <span class="ruby-operator">!</span><span class="ruby-identifier">conf</span>.<span class="ruby-identifier">nil?</span>&#x000A;246:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000248-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 242</span>&#x000A;242:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">known_machine_group?</span>&#x000A;243:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">NoConfig</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@@config</span>&#x000A;244:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">NoMachinesConfig</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@@config</span>.<span class="ruby-identifier">machines</span>&#x000A;245:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@@config</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@@global</span>&#x000A;246:       <span class="ruby-identifier">zon</span>, <span class="ruby-identifier">env</span>, <span class="ruby-identifier">rol</span> = <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">zone</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">environment</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">role</span>&#x000A;247:       <span class="ruby-identifier">conf</span> = <span class="ruby-ivar">@@config</span>.<span class="ruby-identifier">machines</span>.<span class="ruby-identifier">find_deferred</span>(<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">region</span>, <span class="ruby-identifier">zon</span>, [<span class="ruby-identifier">env</span>, <span class="ruby-identifier">rol</span>])&#x000A;248:       <span class="ruby-identifier">conf</span> <span class="ruby-operator">||=</span> <span class="ruby-ivar">@@config</span>.<span class="ruby-identifier">machines</span>.<span class="ruby-identifier">find_deferred</span>(<span class="ruby-identifier">zon</span>, [<span class="ruby-identifier">env</span>, <span class="ruby-identifier">rol</span>])&#x000A;249:       <span class="ruby-operator">!</span><span class="ruby-identifier">conf</span>.<span class="ruby-identifier">nil?</span>&#x000A;250:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000225'>
-                <a name='M000225'>      </a>
+              <div class='public-instance method' id='method-M000230'>
+                <a name='M000230'>      </a>
                 <div class='synopsis'>
                   <span class='name'>root_keypairname</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000225-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000230-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000225-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 121</span>&#x000A;121:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">root_keypairname</span>&#x000A;122:       <span class="ruby-identifier">user_keypairname</span> <span class="ruby-identifier">:root</span>&#x000A;123:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000230-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 121</span>&#x000A;121:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">root_keypairname</span>&#x000A;122:       <span class="ruby-identifier">user_keypairname</span> <span class="ruby-identifier">:root</span>&#x000A;123:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000227'>
-                <a name='M000227'>      </a>
+              <div class='public-instance method' id='method-M000232'>
+                <a name='M000232'>      </a>
                 <div class='synopsis'>
                   <span class='name'>root_keypairpath</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000227-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000232-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000227-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 146</span>&#x000A;146:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">root_keypairpath</span>&#x000A;147:       <span class="ruby-identifier">user_keypairpath</span> <span class="ruby-identifier">:root</span>&#x000A;148:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000232-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 146</span>&#x000A;146:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">root_keypairpath</span>&#x000A;147:       <span class="ruby-identifier">user_keypairpath</span> <span class="ruby-identifier">:root</span>&#x000A;148:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000239'>
-                <a name='M000239'>      </a>
+              <div class='public-instance method' id='method-M000245'>
+                <a name='M000245'>      </a>
                 <div class='synopsis'>
                   <span class='name'>switch_user</span>
                   <span class='arguments'>(name=nil)</span>
@@ -570,14 +584,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000239-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000245-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000239-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 212</span>&#x000A;212:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">switch_user</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;213:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@switch_user_previous</span>&#x000A;214:         <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">user</span> = <span class="ruby-ivar">@switch_user_previous</span>&#x000A;215:       <span class="ruby-keyword kw">elsif</span> <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">user</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">name</span>&#x000A;216:         <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;No root keypair defined for #{name}!&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">has_keypair?</span>(<span class="ruby-identifier">name</span>)&#x000A;217:         <span class="ruby-ivar">@@logger</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Remote commands will be run as #{name} user&quot;</span>&#x000A;218:         <span class="ruby-ivar">@switch_user_previous</span> = <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">user</span>&#x000A;219:         <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">user</span> = <span class="ruby-identifier">name</span>&#x000A;220:       <span class="ruby-keyword kw">end</span>&#x000A;221:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000245-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 216</span>&#x000A;216:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">switch_user</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;217:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@switch_user_previous</span>&#x000A;218:         <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">user</span> = <span class="ruby-ivar">@switch_user_previous</span>&#x000A;219:       <span class="ruby-keyword kw">elsif</span> <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">user</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">name</span>&#x000A;220:         <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;No root keypair defined for #{name}!&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">has_keypair?</span>(<span class="ruby-identifier">name</span>)&#x000A;221:         <span class="ruby-ivar">@@logger</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Remote commands will be run as #{name} user&quot;</span>&#x000A;222:         <span class="ruby-ivar">@switch_user_previous</span> = <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">user</span>&#x000A;223:         <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">user</span> = <span class="ruby-identifier">name</span>&#x000A;224:       <span class="ruby-keyword kw">end</span>&#x000A;225:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000224'>
-                <a name='M000224'>      </a>
+              <div class='public-instance method' id='method-M000229'>
+                <a name='M000229'>      </a>
                 <div class='synopsis'>
                   <span class='name'>user_keypairname</span>
                   <span class='arguments'>(user)</span>
@@ -593,23 +607,23 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000224-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000229-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000224-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 112</span>&#x000A;112:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">user_keypairname</span>(<span class="ruby-identifier">user</span>)&#x000A;113:       <span class="ruby-identifier">kp</span> = <span class="ruby-identifier">user_keypairpath</span>(<span class="ruby-identifier">user</span>)&#x000A;114:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">kp</span>&#x000A;115:         <span class="ruby-identifier">kp</span> = <span class="ruby-constant">Huxtable</span>.<span class="ruby-identifier">keypair_path_to_name</span>(<span class="ruby-identifier">kp</span>)&#x000A;116:       <span class="ruby-keyword kw">else</span>&#x000A;117:         <span class="ruby-identifier">n</span> = (<span class="ruby-identifier">user</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">==</span> <span class="ruby-value str">'root'</span>) <span class="ruby-operator">?</span> <span class="ruby-value str">''</span> <span class="ruby-operator">:</span> <span class="ruby-node">&quot;-#{user}&quot;</span>&#x000A;118:         <span class="ruby-value str">&quot;key-%s-%s%s&quot;</span> <span class="ruby-operator">%</span> [<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">zone</span>, <span class="ruby-identifier">current_machine_group</span>, <span class="ruby-identifier">n</span>]&#x000A;119:       <span class="ruby-keyword kw">end</span>    &#x000A;120:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000229-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 112</span>&#x000A;112:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">user_keypairname</span>(<span class="ruby-identifier">user</span>)&#x000A;113:       <span class="ruby-identifier">kp</span> = <span class="ruby-identifier">user_keypairpath</span>(<span class="ruby-identifier">user</span>)&#x000A;114:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">kp</span>&#x000A;115:         <span class="ruby-identifier">kp</span> = <span class="ruby-constant">Huxtable</span>.<span class="ruby-identifier">keypair_path_to_name</span>(<span class="ruby-identifier">kp</span>)&#x000A;116:       <span class="ruby-keyword kw">else</span>&#x000A;117:         <span class="ruby-identifier">n</span> = (<span class="ruby-identifier">user</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">==</span> <span class="ruby-value str">'root'</span>) <span class="ruby-operator">?</span> <span class="ruby-value str">''</span> <span class="ruby-operator">:</span> <span class="ruby-node">&quot;-#{user}&quot;</span>&#x000A;118:         <span class="ruby-value str">&quot;key-%s-%s%s&quot;</span> <span class="ruby-operator">%</span> [<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">zone</span>, <span class="ruby-identifier">current_machine_group</span>, <span class="ruby-identifier">n</span>]&#x000A;119:       <span class="ruby-keyword kw">end</span>    &#x000A;120:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000226'>
-                <a name='M000226'>      </a>
+              <div class='public-instance method' id='method-M000231'>
+                <a name='M000231'>      </a>
                 <div class='synopsis'>
                   <span class='name'>user_keypairpath</span>
                   <span class='arguments'>(name)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000226-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000231-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000226-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 126</span>&#x000A;126:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">user_keypairpath</span>(<span class="ruby-identifier">name</span>)&#x000A;127:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>, <span class="ruby-value str">&quot;No user provided&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">name</span>&#x000A;128:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">NoConfig</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@@config</span>&#x000A;129:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">NoMachinesConfig</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@@config</span>.<span class="ruby-identifier">machines</span>&#x000A;130:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">NoGlobal</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@@global</span>&#x000A;131:       <span class="ruby-identifier">zon</span>, <span class="ruby-identifier">env</span>, <span class="ruby-identifier">rol</span> = <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">zone</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">environment</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">role</span>&#x000A;132:       <span class="ruby-comment cmt">#Caesars.enable_debug</span>&#x000A;133:       <span class="ruby-identifier">path</span> = <span class="ruby-ivar">@@config</span>.<span class="ruby-identifier">machines</span>.<span class="ruby-identifier">find_deferred</span>(<span class="ruby-identifier">zon</span>, <span class="ruby-identifier">env</span>, <span class="ruby-identifier">rol</span>, [<span class="ruby-identifier">:users</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">:keypair</span>])&#x000A;134:       <span class="ruby-identifier">path</span> <span class="ruby-operator">||=</span> <span class="ruby-ivar">@@config</span>.<span class="ruby-identifier">machines</span>.<span class="ruby-identifier">find_deferred</span>(<span class="ruby-identifier">env</span>, <span class="ruby-identifier">rol</span>, [<span class="ruby-identifier">:users</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">:keypair</span>])&#x000A;135:       <span class="ruby-identifier">path</span> <span class="ruby-operator">||=</span> <span class="ruby-ivar">@@config</span>.<span class="ruby-identifier">machines</span>.<span class="ruby-identifier">find_deferred</span>(<span class="ruby-identifier">rol</span>, [<span class="ruby-identifier">:users</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">:keypair</span>])&#x000A;136:       &#x000A;137:       <span class="ruby-comment cmt"># EC2 Keypairs that were created are intended for starting the machine instances. </span>&#x000A;138:       <span class="ruby-comment cmt"># These are used as the root SSH keys. If we can find a user defined key, we'll </span>&#x000A;139:       <span class="ruby-comment cmt"># check the config path for a generated one. </span>&#x000A;140:       <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">path</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">==</span> <span class="ruby-value str">'root'</span>&#x000A;141:         <span class="ruby-identifier">path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">config_dirname</span>, <span class="ruby-node">&quot;key-#{@@global.zone}-#{current_machine_group}&quot;</span>)&#x000A;142:       <span class="ruby-keyword kw">end</span>&#x000A;143:       <span class="ruby-identifier">path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-identifier">path</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">path</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">path</span>)&#x000A;144:       <span class="ruby-identifier">path</span>&#x000A;145:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000231-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 126</span>&#x000A;126:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">user_keypairpath</span>(<span class="ruby-identifier">name</span>)&#x000A;127:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>, <span class="ruby-value str">&quot;No user provided&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">name</span>&#x000A;128:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">NoConfig</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@@config</span>&#x000A;129:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">NoMachinesConfig</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@@config</span>.<span class="ruby-identifier">machines</span>&#x000A;130:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">NoGlobal</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@@global</span>&#x000A;131:       <span class="ruby-identifier">zon</span>, <span class="ruby-identifier">env</span>, <span class="ruby-identifier">rol</span> = <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">zone</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">environment</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">role</span>&#x000A;132:       <span class="ruby-comment cmt">#Caesars.enable_debug</span>&#x000A;133:       <span class="ruby-identifier">path</span> = <span class="ruby-ivar">@@config</span>.<span class="ruby-identifier">machines</span>.<span class="ruby-identifier">find_deferred</span>(<span class="ruby-identifier">zon</span>, <span class="ruby-identifier">env</span>, <span class="ruby-identifier">rol</span>, [<span class="ruby-identifier">:users</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">:keypair</span>])&#x000A;134:       <span class="ruby-identifier">path</span> <span class="ruby-operator">||=</span> <span class="ruby-ivar">@@config</span>.<span class="ruby-identifier">machines</span>.<span class="ruby-identifier">find_deferred</span>(<span class="ruby-identifier">env</span>, <span class="ruby-identifier">rol</span>, [<span class="ruby-identifier">:users</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">:keypair</span>])&#x000A;135:       <span class="ruby-identifier">path</span> <span class="ruby-operator">||=</span> <span class="ruby-ivar">@@config</span>.<span class="ruby-identifier">machines</span>.<span class="ruby-identifier">find_deferred</span>(<span class="ruby-identifier">rol</span>, [<span class="ruby-identifier">:users</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">:keypair</span>])&#x000A;136:       &#x000A;137:       <span class="ruby-comment cmt"># EC2 Keypairs that were created are intended for starting the machine instances. </span>&#x000A;138:       <span class="ruby-comment cmt"># These are used as the root SSH keys. If we can find a user defined key, we'll </span>&#x000A;139:       <span class="ruby-comment cmt"># check the config path for a generated one. </span>&#x000A;140:       <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">path</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">==</span> <span class="ruby-value str">'root'</span>&#x000A;141:         <span class="ruby-identifier">path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">config_dirname</span>, <span class="ruby-node">&quot;key-#{@@global.zone}-#{current_machine_group}&quot;</span>)&#x000A;142:       <span class="ruby-keyword kw">end</span>&#x000A;143:       <span class="ruby-identifier">path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-identifier">path</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">path</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">path</span>)&#x000A;144:       <span class="ruby-identifier">path</span>&#x000A;145:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

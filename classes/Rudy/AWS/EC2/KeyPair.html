@@ -45,51 +45,51 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000274">liner_note</a></li>
-              <li><a href="#M000276">public_key</a></li>
-              <li><a href="#M000275">to_s</a></li>
+              <li><a href="#M000280">liner_note</a></li>
+              <li><a href="#M000282">public_key</a></li>
+              <li><a href="#M000281">to_s</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000274'>
-                <a name='M000274'>      </a>
+              <div class='public-instance method' id='method-M000280'>
+                <a name='M000280'>      </a>
                 <div class='synopsis'>
                   <span class='name'>liner_note</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000274-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000280-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000274-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/keypair.rb, line 11</span>&#x000A;11:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">liner_note</span>&#x000A;12:         <span class="ruby-value str">&quot;%-20s   %s&quot;</span> <span class="ruby-operator">%</span> [<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">name</span>.<span class="ruby-identifier">bright</span>, <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">fingerprint</span>]&#x000A;13:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000280-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/keypair.rb, line 11</span>&#x000A;11:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">liner_note</span>&#x000A;12:         <span class="ruby-value str">&quot;%-20s   %s&quot;</span> <span class="ruby-operator">%</span> [<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">name</span>.<span class="ruby-identifier">bright</span>, <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">fingerprint</span>]&#x000A;13:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000276'>
-                <a name='M000276'>      </a>
+              <div class='public-instance method' id='method-M000282'>
+                <a name='M000282'>      </a>
                 <div class='synopsis'>
                   <span class='name'>public_key</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000276-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000282-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000276-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/keypair.rb, line 20</span>&#x000A;20:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">public_key</span>&#x000A;21:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@private_key</span>&#x000A;22:         <span class="ruby-identifier">k</span> = <span class="ruby-constant">Rye</span><span class="ruby-operator">::</span><span class="ruby-constant">Key</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@private_key</span>)&#x000A;23:         <span class="ruby-identifier">k</span>.<span class="ruby-identifier">public_key</span>.<span class="ruby-identifier">to_ssh2</span>&#x000A;24:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000282-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/keypair.rb, line 20</span>&#x000A;20:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">public_key</span>&#x000A;21:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@private_key</span>&#x000A;22:         <span class="ruby-identifier">k</span> = <span class="ruby-constant">Rye</span><span class="ruby-operator">::</span><span class="ruby-constant">Key</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@private_key</span>)&#x000A;23:         <span class="ruby-identifier">k</span>.<span class="ruby-identifier">public_key</span>.<span class="ruby-identifier">to_ssh2</span>&#x000A;24:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000275'>
-                <a name='M000275'>      </a>
+              <div class='public-instance method' id='method-M000281'>
+                <a name='M000281'>      </a>
                 <div class='synopsis'>
                   <span class='name'>to_s</span>
                   <span class='arguments'>(titles=false)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000275-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000281-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000275-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/keypair.rb, line 15</span>&#x000A;15:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>(<span class="ruby-identifier">titles</span>=<span class="ruby-keyword kw">false</span>)&#x000A;16:         <span class="ruby-identifier">str</span> = <span class="ruby-identifier">titles</span> <span class="ruby-value">? </span><span class="ruby-node">&quot;%-20s   %s#{$/}&quot;</span> <span class="ruby-operator">%</span> [<span class="ruby-value str">'name'</span>, <span class="ruby-value str">'fingerprint'</span>] <span class="ruby-operator">:</span> <span class="ruby-value str">&quot;&quot;</span>&#x000A;17:         <span class="ruby-identifier">str</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">liner_note</span>&#x000A;18:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000281-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/keypair.rb, line 15</span>&#x000A;15:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>(<span class="ruby-identifier">titles</span>=<span class="ruby-keyword kw">false</span>)&#x000A;16:         <span class="ruby-identifier">str</span> = <span class="ruby-identifier">titles</span> <span class="ruby-value">? </span><span class="ruby-node">&quot;%-20s   %s#{$/}&quot;</span> <span class="ruby-operator">%</span> [<span class="ruby-value str">'name'</span>, <span class="ruby-value str">'fingerprint'</span>] <span class="ruby-operator">:</span> <span class="ruby-value str">&quot;&quot;</span>&#x000A;17:         <span class="ruby-identifier">str</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">liner_note</span>&#x000A;18:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

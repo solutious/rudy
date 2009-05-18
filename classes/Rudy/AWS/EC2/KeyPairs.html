@@ -45,17 +45,17 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000363">from_hash</a></li>
+              <li><a href="#M000369">from_hash</a></li>
             </ol>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000364">any?</a></li>
-              <li><a href="#M000359">create</a></li>
-              <li><a href="#M000360">destroy</a></li>
-              <li><a href="#M000366">exists?</a></li>
-              <li><a href="#M000365">get</a></li>
-              <li><a href="#M000361">list</a></li>
-              <li><a href="#M000362">list_as_hash</a></li>
+              <li><a href="#M000370">any?</a></li>
+              <li><a href="#M000365">create</a></li>
+              <li><a href="#M000366">destroy</a></li>
+              <li><a href="#M000372">exists?</a></li>
+              <li><a href="#M000371">get</a></li>
+              <li><a href="#M000367">list</a></li>
+              <li><a href="#M000368">list_as_hash</a></li>
             </ol>
           </div>
           <div id='context'>
@@ -70,109 +70,109 @@
           <div id='section'>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='public-class method' id='method-M000363'>
-                <a name='M000363'>      </a>
+              <div class='public-class method' id='method-M000369'>
+                <a name='M000369'>      </a>
                 <div class='synopsis'>
                   <span class='name'>from_hash</span>
                   <span class='arguments'>(h)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000363-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000369-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000363-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/keypair.rb, line 63</span>&#x000A;63:       <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">h</span>)&#x000A;64:         <span class="ruby-comment cmt"># keyName: test-c5g4v3pe</span>&#x000A;65:         <span class="ruby-comment cmt"># keyFingerprint: 65:d0:ce:e7:6a:b0:88:4a:9c:c7:2d:b8:33:0c:fd:3b:c8:0f:0a:3c</span>&#x000A;66:         <span class="ruby-comment cmt"># keyMaterial: |-</span>&#x000A;67:         <span class="ruby-comment cmt">#   -----BEGIN RSA PRIVATE KEY-----</span>&#x000A;68:         <span class="ruby-comment cmt"># </span>&#x000A;69:         <span class="ruby-identifier">keypair</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">KeyPair</span>.<span class="ruby-identifier">new</span>&#x000A;70:         <span class="ruby-identifier">keypair</span>.<span class="ruby-identifier">fingerprint</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'keyFingerprint'</span>]&#x000A;71:         <span class="ruby-identifier">keypair</span>.<span class="ruby-identifier">name</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'keyName'</span>]&#x000A;72:         <span class="ruby-identifier">keypair</span>.<span class="ruby-identifier">private_key</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'keyMaterial'</span>]&#x000A;73:         <span class="ruby-identifier">keypair</span>&#x000A;74:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000369-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/keypair.rb, line 63</span>&#x000A;63:       <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">h</span>)&#x000A;64:         <span class="ruby-comment cmt"># keyName: test-c5g4v3pe</span>&#x000A;65:         <span class="ruby-comment cmt"># keyFingerprint: 65:d0:ce:e7:6a:b0:88:4a:9c:c7:2d:b8:33:0c:fd:3b:c8:0f:0a:3c</span>&#x000A;66:         <span class="ruby-comment cmt"># keyMaterial: |-</span>&#x000A;67:         <span class="ruby-comment cmt">#   -----BEGIN RSA PRIVATE KEY-----</span>&#x000A;68:         <span class="ruby-comment cmt"># </span>&#x000A;69:         <span class="ruby-identifier">keypair</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">KeyPair</span>.<span class="ruby-identifier">new</span>&#x000A;70:         <span class="ruby-identifier">keypair</span>.<span class="ruby-identifier">fingerprint</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'keyFingerprint'</span>]&#x000A;71:         <span class="ruby-identifier">keypair</span>.<span class="ruby-identifier">name</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'keyName'</span>]&#x000A;72:         <span class="ruby-identifier">keypair</span>.<span class="ruby-identifier">private_key</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'keyMaterial'</span>]&#x000A;73:         <span class="ruby-identifier">keypair</span>&#x000A;74:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000364'>
-                <a name='M000364'>      </a>
+              <div class='public-instance method' id='method-M000370'>
+                <a name='M000370'>      </a>
                 <div class='synopsis'>
                   <span class='name'>any?</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000364-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000370-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000364-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/keypair.rb, line 76</span>&#x000A;76:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">any?</span>&#x000A;77:         <span class="ruby-identifier">keypairs</span> = <span class="ruby-identifier">list</span> <span class="ruby-operator">||</span> []&#x000A;78:         <span class="ruby-operator">!</span><span class="ruby-identifier">keypairs</span>.<span class="ruby-identifier">empty?</span>&#x000A;79:       <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='public-instance method' id='method-M000359'>
-                <a name='M000359'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>create</span>
-                  <span class='arguments'>(name)</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000359-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000359-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/keypair.rb, line 32</span>&#x000A;32:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create</span>(<span class="ruby-identifier">name</span>)&#x000A;33:         <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;No name provided&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">name</span>&#x000A;34:         <span class="ruby-identifier">ret</span> = <span class="ruby-ivar">@ec2</span>.<span class="ruby-identifier">create_keypair</span>(<span class="ruby-identifier">:key_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">name</span>)&#x000A;35:         <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">ret</span>)&#x000A;36:       <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='public-instance method' id='method-M000360'>
-                <a name='M000360'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>destroy</span>
-                  <span class='arguments'>(name)</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000360-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000360-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/keypair.rb, line 38</span>&#x000A;38:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">destroy</span>(<span class="ruby-identifier">name</span>)&#x000A;39:         <span class="ruby-identifier">name</span> = <span class="ruby-identifier">name</span>.<span class="ruby-identifier">name</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">name</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">KeyPair</span>)&#x000A;40:         <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;No name provided&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">name</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">String</span>)&#x000A;41:         <span class="ruby-identifier">ret</span> = <span class="ruby-ivar">@ec2</span>.<span class="ruby-identifier">delete_keypair</span>(<span class="ruby-identifier">:key_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">name</span>)&#x000A;42:         (<span class="ruby-identifier">ret</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">ret</span>[<span class="ruby-value str">'return'</span>] <span class="ruby-operator">==</span> <span class="ruby-value str">'true'</span>) <span class="ruby-comment cmt"># BUG? Always returns true</span>&#x000A;43:       <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='public-instance method' id='method-M000366'>
-                <a name='M000366'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>exists?</span>
-                  <span class='arguments'>(name)</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000366-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000366-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/keypair.rb, line 87</span>&#x000A;87:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">name</span>)&#x000A;88:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">name</span>&#x000A;89:         <span class="ruby-identifier">kp</span> = <span class="ruby-identifier">get</span>(<span class="ruby-identifier">name</span>) <span class="ruby-keyword kw">rescue</span> <span class="ruby-keyword kw">nil</span>&#x000A;90:         <span class="ruby-operator">!</span><span class="ruby-identifier">kp</span>.<span class="ruby-identifier">nil?</span>&#x000A;91:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000370-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/keypair.rb, line 76</span>&#x000A;76:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">any?</span>&#x000A;77:         <span class="ruby-identifier">keypairs</span> = <span class="ruby-identifier">list</span> <span class="ruby-operator">||</span> []&#x000A;78:         <span class="ruby-operator">!</span><span class="ruby-identifier">keypairs</span>.<span class="ruby-identifier">empty?</span>&#x000A;79:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='public-instance method' id='method-M000365'>
                 <a name='M000365'>      </a>
                 <div class='synopsis'>
-                  <span class='name'>get</span>
+                  <span class='name'>create</span>
                   <span class='arguments'>(name)</span>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000365-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000365-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/keypair.rb, line 81</span>&#x000A;81:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get</span>(<span class="ruby-identifier">name</span>)&#x000A;82:         <span class="ruby-identifier">keypairs</span> = <span class="ruby-identifier">list</span>(<span class="ruby-identifier">name</span>) <span class="ruby-operator">||</span> []&#x000A;83:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">keypairs</span>.<span class="ruby-identifier">empty?</span>&#x000A;84:         <span class="ruby-identifier">keypairs</span>.<span class="ruby-identifier">first</span>&#x000A;85:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000365-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/keypair.rb, line 32</span>&#x000A;32:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create</span>(<span class="ruby-identifier">name</span>)&#x000A;33:         <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;No name provided&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">name</span>&#x000A;34:         <span class="ruby-identifier">ret</span> = <span class="ruby-ivar">@ec2</span>.<span class="ruby-identifier">create_keypair</span>(<span class="ruby-identifier">:key_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">name</span>)&#x000A;35:         <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">ret</span>)&#x000A;36:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000361'>
-                <a name='M000361'>      </a>
+              <div class='public-instance method' id='method-M000366'>
+                <a name='M000366'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>destroy</span>
+                  <span class='arguments'>(name)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000366-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000366-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/keypair.rb, line 38</span>&#x000A;38:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">destroy</span>(<span class="ruby-identifier">name</span>)&#x000A;39:         <span class="ruby-identifier">name</span> = <span class="ruby-identifier">name</span>.<span class="ruby-identifier">name</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">name</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">KeyPair</span>)&#x000A;40:         <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;No name provided&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">name</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">String</span>)&#x000A;41:         <span class="ruby-identifier">ret</span> = <span class="ruby-ivar">@ec2</span>.<span class="ruby-identifier">delete_keypair</span>(<span class="ruby-identifier">:key_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">name</span>)&#x000A;42:         (<span class="ruby-identifier">ret</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">ret</span>[<span class="ruby-value str">'return'</span>] <span class="ruby-operator">==</span> <span class="ruby-value str">'true'</span>) <span class="ruby-comment cmt"># BUG? Always returns true</span>&#x000A;43:       <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000372'>
+                <a name='M000372'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>exists?</span>
+                  <span class='arguments'>(name)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000372-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000372-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/keypair.rb, line 87</span>&#x000A;87:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">name</span>)&#x000A;88:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">name</span>&#x000A;89:         <span class="ruby-identifier">kp</span> = <span class="ruby-identifier">get</span>(<span class="ruby-identifier">name</span>) <span class="ruby-keyword kw">rescue</span> <span class="ruby-keyword kw">nil</span>&#x000A;90:         <span class="ruby-operator">!</span><span class="ruby-identifier">kp</span>.<span class="ruby-identifier">nil?</span>&#x000A;91:       <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000371'>
+                <a name='M000371'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>get</span>
+                  <span class='arguments'>(name)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000371-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000371-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/keypair.rb, line 81</span>&#x000A;81:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get</span>(<span class="ruby-identifier">name</span>)&#x000A;82:         <span class="ruby-identifier">keypairs</span> = <span class="ruby-identifier">list</span>(<span class="ruby-identifier">name</span>) <span class="ruby-operator">||</span> []&#x000A;83:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">keypairs</span>.<span class="ruby-identifier">empty?</span>&#x000A;84:         <span class="ruby-identifier">keypairs</span>.<span class="ruby-identifier">first</span>&#x000A;85:       <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000367'>
+                <a name='M000367'>      </a>
                 <div class='synopsis'>
                   <span class='name'>list</span>
                   <span class='arguments'>(*names)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000361-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000367-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000361-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/keypair.rb, line 45</span>&#x000A;45:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">list</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">names</span>)&#x000A;46:         <span class="ruby-identifier">keypairs</span> = <span class="ruby-identifier">list_as_hash</span>(<span class="ruby-identifier">names</span>)&#x000A;47:         <span class="ruby-identifier">keypairs</span> <span class="ruby-operator">&amp;&amp;=</span> <span class="ruby-identifier">keypairs</span>.<span class="ruby-identifier">values</span>&#x000A;48:         <span class="ruby-identifier">keypairs</span>&#x000A;49:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000367-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/keypair.rb, line 45</span>&#x000A;45:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">list</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">names</span>)&#x000A;46:         <span class="ruby-identifier">keypairs</span> = <span class="ruby-identifier">list_as_hash</span>(<span class="ruby-identifier">names</span>)&#x000A;47:         <span class="ruby-identifier">keypairs</span> <span class="ruby-operator">&amp;&amp;=</span> <span class="ruby-identifier">keypairs</span>.<span class="ruby-identifier">values</span>&#x000A;48:         <span class="ruby-identifier">keypairs</span>&#x000A;49:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000362'>
-                <a name='M000362'>      </a>
+              <div class='public-instance method' id='method-M000368'>
+                <a name='M000368'>      </a>
                 <div class='synopsis'>
                   <span class='name'>list_as_hash</span>
                   <span class='arguments'>(*names)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000362-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000368-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000362-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/keypair.rb, line 51</span>&#x000A;51:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">list_as_hash</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">names</span>)&#x000A;52:         <span class="ruby-identifier">names</span> = <span class="ruby-identifier">names</span>.<span class="ruby-identifier">flatten</span>&#x000A;53:         <span class="ruby-identifier">klist</span> = <span class="ruby-ivar">@ec2</span>.<span class="ruby-identifier">describe_keypairs</span>(<span class="ruby-identifier">:key_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">names</span>)&#x000A;54:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">klist</span>[<span class="ruby-value str">'keySet'</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>)&#x000A;55:         <span class="ruby-identifier">keypairs</span> = {}&#x000A;56:         <span class="ruby-identifier">klist</span>[<span class="ruby-value str">'keySet'</span>][<span class="ruby-value str">'item'</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">oldkp</span><span class="ruby-operator">|</span> &#x000A;57:           <span class="ruby-identifier">kp</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">oldkp</span>)&#x000A;58:           <span class="ruby-identifier">keypairs</span>[<span class="ruby-identifier">kp</span>.<span class="ruby-identifier">name</span>] = <span class="ruby-identifier">kp</span>&#x000A;59:         <span class="ruby-keyword kw">end</span>&#x000A;60:         <span class="ruby-identifier">keypairs</span>&#x000A;61:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000368-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/keypair.rb, line 51</span>&#x000A;51:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">list_as_hash</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">names</span>)&#x000A;52:         <span class="ruby-identifier">names</span> = <span class="ruby-identifier">names</span>.<span class="ruby-identifier">flatten</span>&#x000A;53:         <span class="ruby-identifier">klist</span> = <span class="ruby-ivar">@ec2</span>.<span class="ruby-identifier">describe_keypairs</span>(<span class="ruby-identifier">:key_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">names</span>)&#x000A;54:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">klist</span>[<span class="ruby-value str">'keySet'</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>)&#x000A;55:         <span class="ruby-identifier">keypairs</span> = {}&#x000A;56:         <span class="ruby-identifier">klist</span>[<span class="ruby-value str">'keySet'</span>][<span class="ruby-value str">'item'</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">oldkp</span><span class="ruby-operator">|</span> &#x000A;57:           <span class="ruby-identifier">kp</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">oldkp</span>)&#x000A;58:           <span class="ruby-identifier">keypairs</span>[<span class="ruby-identifier">kp</span>.<span class="ruby-identifier">name</span>] = <span class="ruby-identifier">kp</span>&#x000A;59:         <span class="ruby-keyword kw">end</span>&#x000A;60:         <span class="ruby-identifier">keypairs</span>&#x000A;61:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

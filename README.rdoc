@@ -1,4 +1,4 @@
-= Rudy - v0.7 BETA
+= Rudy - v0.8 BETA
 
 <b>Not your grandparents' EC2 deployment tool.</b>
 

@@ -10,12 +10,11 @@
 # 
 
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib') # Put our local lib in first place
-#require 'rubygems'
 
+require 'drydock'
 require 'rudy'
 require 'rudy/cli'
 
-require 'drydock'
 
 # Command-line interface for bin/rudy-ec2
 module RudyCLI_EC2

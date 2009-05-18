@@ -1,7 +1,7 @@
 @spec = Gem::Specification.new do |s|
 	s.name = "rudy"
   s.rubyforge_project = 'rudy'
-	s.version = "0.8.0"
+	s.version = "0.8.1"
 	s.summary = "Rudy: Not your grandparents' EC2 deployment tool."
 	s.description = s.summary
 	s.author = "Delano Mandelbaum"

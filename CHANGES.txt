@@ -1,6 +1,11 @@
 RUDY, CHANGES
 
 
+#### 0.8.1 (2009-05-18) ###############################
+
+* FIXED: The shutdown routine was not working for Windows instances
+
+
 #### 0.8.0 (2009-05-18) ###############################
 
 * ADDED: Better windows instance support during routines

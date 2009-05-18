@@ -28,7 +28,7 @@ require 'rye'
 #
 #
 # Rudy is a development and deployment tool for the Amazon Elastic Compute Cloud
-# (EC2). <a href="wiki.github.com/solutious/rudy/getting-started">Getting Started</a> today!
+# (EC2). <a href="http://solutious.com/products/rudy/getting-started.html">Getting Started</a> today!
 # 
 # 
 module Rudy

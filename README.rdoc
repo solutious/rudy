@@ -14,7 +14,7 @@ When you put all this together, you have a unique name for every machine. The de
 
 All configuration is organized into the zones, environments, and roles that you specify (Rudy assumes positions are identical which is important for backups and scaling). And as you'd expect, the defaults can be changed too (in <tt>~/.rudy/config</tt>).
 
-<b>See Getting-Started[http://wiki.github.com/solutious/rudy/getting-started] for more info.</b>
+<b>See Getting-Started[http://solutious.com/products/rudy/getting-started.html] for more info.</b>
 
 <em>NOTE: This is a BETA release. That means Rudy's not ready for production use! See Project-Status[http://wiki.github.com/solutious/rudy/project-status].</em>
 
@@ -45,7 +45,7 @@ or via download:
 
 NOTE: <em>If you are not installing via RubyGems, you need to make sure the dependencies are in your LOAD_PATH (<tt>$:</tt>). Ryan Tomayko wrote a gist[http://gist.github.com/54177] about it.</em>
 
-<b>See Getting-Started[http://wiki.github.com/solutious/rudy/getting-started] for more info.</b>
+<b>See Getting-Started[http://solutious.com/products/rudy/getting-started.html] for more info.</b>
 
 
 == Pre-Requisites

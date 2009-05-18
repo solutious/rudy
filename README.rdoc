@@ -85,6 +85,7 @@ NOTE: <em>If you are not installing via RubyGems, you need to make sure the depe
 * Sam Aaron
 * Everyone at Utrecht.rb[http://groups.google.com/group/utrecht-rb]
 * Steve Abatangle
+* Mathias Monnerville	
 * Jamis Buck for Net::SSH and friends
 * Glenn Rempe for amazon-ec2
 * Marcel Molina Jr. for aws-s3

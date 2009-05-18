@@ -94,7 +94,6 @@ module Rudy
           end
         }
         
-        
         # Execute the action (create, list, destroy, restart)
         machines = enjoy_every_sandwich([]) { rmach.send(machine_action) }
         
@@ -117,7 +116,18 @@ module Rudy
           # here ensure that the metadata is always up-to-date. 
           machine.update 
           
-          next if (machine.os || '').to_s == 'win32'
+          # This is a short-circuit for Windows instances. We don't support
+          # disks for windows yet and there's no SSH so routines are out of
+          # the picture too. Here we simply run the per machine block which
+          # is crucial for shutdown and possibly others as well. 
+          if (machine.os || '').to_s == 'win32'
+            enjoy_every_sandwich {
+              # Startup, shutdown, release, deploy, etc...
+              routine_action.call(machine, nil) if routine_action
+            }
+            
+            next  # The short circuit
+          end
             
           unless skip_check
             msg = preliminary_separator("Waiting for SSH daemon...")
@@ -193,10 +203,12 @@ module Rudy
             end
           }
           
+          
           enjoy_every_sandwich {
             # Startup, shutdown, release, deploy, etc...
             routine_action.call(machine, rbox) if routine_action
           }
+          
           
           # The "after" blocks are synonymous with "script" blocks. 
           # For some routines, like startup, it makes sense to an 
@@ -309,6 +321,9 @@ module Rudy
           STDERR.puts "  Error: #{ex.message}".color(:red)
           STDERR.puts ex.backtrace if Rudy.debug?
           exit 12 unless keep_going?
+        rescue Interrupt
+          puts "Aborting..."
+          exit 12
         end
         ret
       end

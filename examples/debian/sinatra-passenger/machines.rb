@@ -3,7 +3,7 @@
 # The machines block describes the "physical" characteristics
 # of your environments. 
 machines do
-  
+
   # We've defined an environment called "stage" with one role: "app". 
   # The configuration inside the env block is available to all its 
   # roles. The configuration inside the role blocks is available only

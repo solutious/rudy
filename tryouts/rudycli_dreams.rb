@@ -9,14 +9,17 @@ dreams 'rudy myaddress' do
       External: #{Rudy::Utils::external_ip_address}
     })
   end
-  dream 'internal only' do
-    output "Internal: #{Rudy::Utils::internal_ip_address}"
-  end
-  dream 'external only' do
-    output "External: #{Rudy::Utils::external_ip_address}"
-  end
-  dream 'quiet' do
-    output [Rudy::Utils::internal_ip_address, Rudy::Utils::external_ip_address]
-  end
+  dream 'internal only', "Internal: #{Rudy::Utils::internal_ip_address}"
+  dream 'external only', "External: #{Rudy::Utils::external_ip_address}"
+  dream 'quiet', [Rudy::Utils::internal_ip_address, Rudy::Utils::external_ip_address]
 end
 
+
+dreams 'rudy machines' do
+  dream 'no machines, no args' do
+    output inline(%Q{
+      No machines running in stage-app
+      Try: rudy machines --all
+    })
+  end
+end

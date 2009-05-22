@@ -39,6 +39,8 @@ module Rudy
       #   machine between the disk routine and after blocks. The block receives
       #   two argument: an instance of Rudy::Machine and one of Rye::Box.
       def generic_machine_runner(machine_action, routine=nil, skip_check=false, skip_header=false, &routine_action)
+        is_available= false
+        
         if @@global.offline
           rmach = Rudy::Machines::Offline.new
           skip_check = true
@@ -129,80 +131,86 @@ module Rudy
             next  # The short circuit
           end
             
-          unless skip_check
-            msg = preliminary_separator("Waiting for SSH daemon...")
-            Rudy::Utils.waiter(2, 60, STDOUT, msg, 0) {
-              Rudy::Utils.service_available?(machine.dns_public, 22)
+          if !skip_check && has_remote_task?(routine)
+            enjoy_every_sandwich {
+              msg = preliminary_separator("Waiting for SSH daemon...")
+              ret = Rudy::Utils.waiter(2, 1, STDOUT, msg, 0) {
+                Rudy::Utils.service_available?(machine.dns_public, 22)
+              }
+              is_available = ret
             }
           end
           
-          # TODO: trap rbox errors. We could get an authentication error. 
-          opts = { :keys =>  root_keypairpath, :user => remote_user, :info => @@global.verbose > 0 }
-          begin
-            rbox = Rye::Box.new(machine.dns_public, opts)
-            rbox.connect
-          rescue Rye::NoHost => ex
-            STDERR.puts "No host: #{ex.message}"
-            exit 65
-          end
+          if is_available
+            # TODO: trap rbox errors. We could get an authentication error. 
+            opts = { :keys =>  root_keypairpath, :user => remote_user, :info => @@global.verbose > 0 }
+            begin
+              rbox = Rye::Box.new(machine.dns_public, opts)
+              Rudy::Utils.waiter(2, 10, STDOUT, nil, 0) { rbox.connect }
+            rescue Rye::NoHost => ex
+              STDERR.puts "No host: #{ex.message}"
+              exit 65
+            end
           
-          unless skip_check
-            # Set the hostname if specified in the machines config. 
-            # :rudy -> change to Rudy's machine name
-            # :default -> leave the hostname as it is
-            # Anything else other than nil -> change to that value
-            # NOTE: This will set hostname every time a routine is
-            # run so we may want to make this an explicit action. 
+            unless skip_check
+              # Set the hostname if specified in the machines config. 
+              # :rudy -> change to Rudy's machine name
+              # :default -> leave the hostname as it is
+              # Anything else other than nil -> change to that value
+              # NOTE: This will set hostname every time a routine is
+              # run so we may want to make this an explicit action. 
+              enjoy_every_sandwich {
+                hn = current_machine_hostname || :rudy
+                if hn != :default
+                  hn = machine.name if hn == :rudy
+                  print preliminary_separator("Setting hostame to #{hn}... ")
+                  rbox.hostname(hn) 
+                  puts "done"
+                end
+              }
+            end
+          
+          
+            ## NOTE: This prevents shutdown from doing its thing and prob
+            ## isn't necessary. 
+            ##unless has_remote_task?(routine) 
+            ##  puts "[no remote tasks]"
+            ##  next
+            ##end
+
             enjoy_every_sandwich {
-              hn = current_machine_hostname || :rudy
-              if hn != :default
-                hn = machine.name if hn == :rudy
-                print preliminary_separator("Setting hostame to #{hn}... ")
-                rbox.hostname(hn) 
-                puts "done"
+              if Rudy::Routines::UserHelper.adduser?(routine)       # adduser
+                puts task_separator("ADD USER")
+                Rudy::Routines::UserHelper.adduser(routine, machine, rbox)
               end
             }
+          
+            enjoy_every_sandwich {
+              if Rudy::Routines::UserHelper.authorize?(routine)     # authorize
+                puts task_separator("AUTHORIZE USER")
+                Rudy::Routines::UserHelper.authorize(routine, machine, rbox)
+              end
+            }
+          
+            enjoy_every_sandwich {
+              if Rudy::Routines::ScriptHelper.before?(routine)      # before
+                puts task_separator("REMOTE SHELL")
+                Rudy::Routines::ScriptHelper.before(routine, sconf, machine, rbox)
+              end
+            }
+          
+            enjoy_every_sandwich {
+              if Rudy::Routines::DiskHelper.disks?(routine)         # disk
+                puts task_separator("DISKS")
+                if rbox.ostype == "sunos"
+                  puts "Sorry, Solaris disks are not supported yet!"
+                else
+                  Rudy::Routines::DiskHelper.execute(routine, machine, rbox)
+                end    
+              end
+            }
+          
           end
-          
-          ## NOTE: This prevents shutdown from doing its thing and prob
-          ## isn't necessary. 
-          ##unless has_remote_task?(routine) 
-          ##  puts "[no remote tasks]"
-          ##  next
-          ##end
-
-          enjoy_every_sandwich {
-            if Rudy::Routines::UserHelper.adduser?(routine)       # adduser
-              puts task_separator("ADD USER")
-              Rudy::Routines::UserHelper.adduser(routine, machine, rbox)
-            end
-          }
-          
-          enjoy_every_sandwich {
-            if Rudy::Routines::UserHelper.authorize?(routine)     # authorize
-              puts task_separator("AUTHORIZE USER")
-              Rudy::Routines::UserHelper.authorize(routine, machine, rbox)
-            end
-          }
-          
-          enjoy_every_sandwich {
-            if Rudy::Routines::ScriptHelper.before?(routine)      # before
-              puts task_separator("REMOTE SHELL")
-              Rudy::Routines::ScriptHelper.before(routine, sconf, machine, rbox)
-            end
-          }
-          
-          enjoy_every_sandwich {
-            if Rudy::Routines::DiskHelper.disks?(routine)         # disk
-              puts task_separator("DISKS")
-              if rbox.ostype == "sunos"
-                puts "Sorry, Solaris disks are not supported yet!"
-              else
-                Rudy::Routines::DiskHelper.execute(routine, machine, rbox)
-              end    
-            end
-          }
-          
           
           enjoy_every_sandwich {
             # Startup, shutdown, release, deploy, etc...
@@ -210,32 +218,34 @@ module Rudy
           }
           
           
-          # The "after" blocks are synonymous with "script" blocks. 
-          # For some routines, like startup, it makes sense to an 
-          # "after" block b/c "script" is ambiguous. In generic
-          # routines, there is no concept of before or after. The
-          # definition is the entire routine so we use "script".
-          # NOTE: If both after and script are supplied they will 
-          # both be executed. 
-          enjoy_every_sandwich {
-            if Rudy::Routines::ScriptHelper.script?(routine)      # script
-              puts task_separator("REMOTE SHELL")
-              # Runs "after" scripts of routines config
-              Rudy::Routines::ScriptHelper.script(routine, sconf, machine, rbox)
-            end
-          }
+          if is_available
+            # The "after" blocks are synonymous with "script" blocks. 
+            # For some routines, like startup, it makes sense to an 
+            # "after" block b/c "script" is ambiguous. In generic
+            # routines, there is no concept of before or after. The
+            # definition is the entire routine so we use "script".
+            # NOTE: If both after and script are supplied they will 
+            # both be executed. 
+            enjoy_every_sandwich {
+              if Rudy::Routines::ScriptHelper.script?(routine)      # script
+                puts task_separator("REMOTE SHELL")
+                # Runs "after" scripts of routines config
+                Rudy::Routines::ScriptHelper.script(routine, sconf, machine, rbox)
+              end
+            }
           
-          enjoy_every_sandwich {
-            if Rudy::Routines::ScriptHelper.after?(routine)       # after
-              puts task_separator("REMOTE SHELL")
-              # Runs "after" scripts of routines config
-              Rudy::Routines::ScriptHelper.after(routine, sconf, machine, rbox)
-            end
-          }
+            enjoy_every_sandwich {
+              if Rudy::Routines::ScriptHelper.after?(routine)       # after
+                puts task_separator("REMOTE SHELL")
+                # Runs "after" scripts of routines config
+                Rudy::Routines::ScriptHelper.after(routine, sconf, machine, rbox)
+              end
+            }
           
-          rbox.disconnect
+            rbox.disconnect
+          end
         end
-        
+
         enjoy_every_sandwich {
           if Rudy::Routines::ScriptHelper.after_local?(routine)   # after_local
             puts task_separator("LOCAL SHELL")
@@ -329,7 +339,7 @@ module Rudy
       end
       
        def keep_going?
-         Annoy.pose_question("  Keep going?\a ", /yes|y|ya|sure|you bet!/i, STDERR)
+         Annoy.pose_question("  Keep going?\a ", /yes|y|ya|sure|you bet!/i, STDOUT)
        end
       
     end

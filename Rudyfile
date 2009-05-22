@@ -121,7 +121,7 @@ routines do
       end                            
                                      
       shutdown do                    # $ rudy shutdown
-        before :root do              # Run remote SSH commands before shutdown
+        script :root do              # Run remote SSH commands before shutdown
           uptime               
         end                               
         disks do                     

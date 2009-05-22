@@ -112,7 +112,7 @@ I'm very open to contributions!
 * Rubber -- http://github.com/wr0ngway/rubber/wikis
 * Moonshine -- http://github.com/railsmachine/moonshine/tree
 * Boto -- http://code.google.com/p/boto/
-
+* Fabric -- http://www.nongnu.org/fab/
 
 == License
 

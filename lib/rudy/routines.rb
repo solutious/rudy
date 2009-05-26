@@ -163,7 +163,7 @@ module Rudy
                 hn = current_machine_hostname || :rudy
                 if hn != :default
                   hn = machine.name if hn == :rudy
-                  print preliminary_separator("Setting hostame to #{hn}... ")
+                  print preliminary_separator("Setting hostname to #{hn}... ")
                   rbox.hostname(hn) 
                   puts "done"
                 end

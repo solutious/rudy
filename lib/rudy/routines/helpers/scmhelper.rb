@@ -4,6 +4,10 @@ module Rudy; module Routines;
     include Rudy::Routines::HelperBase
     extend self
     
+    def generate_release_tag_name
+      
+    end
+    
     # Does the routine config contain SCM routines?
     # Raises Rudy::Error if there is malformed configuration. 
     def scm?(routine)

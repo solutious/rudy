@@ -18,6 +18,48 @@ All configuration is organized into the zones, environments, and roles that you 
 
 <em>NOTE: This is a BETA release. That means Rudy's not ready for production use! See Project-Status[http://wiki.github.com/solutious/rudy/project-status].</em>
 
+== Configuration
+
+=== Machines
+
+The machines configuration describes the "physical" characteristics of your infrastructure. 
+
+    env :stage do         # Define an environment
+      ami 'ami-e348af8a'         
+                             
+      role :app do        # Define a role
+        addresses '11.22.33.44'  # Use elastic IPs
+                             
+        disks do          # Create EBS volumes
+          path "/rudy/disk1" do  
+            size 100             
+            device "/dev/sdr"     
+          end                       
+        end
+      end
+    end
+
+=== Routines
+
+The routines configuration describes repeatable processes that you can execute on your machines. 
+
+    startup do            # $ rudy startup
+      adduser :rudy       
+      authorize :rudy     # Enable passwordless login
+                             
+      disks do                   # Create a disk 
+        restore "/rudy/disk1"    # from a backup
+      end                       
+                            
+      after :rudy do      # Run remote SSH commands
+        mkdir :p, "great"       # $ mkdir -p great
+        touch "great/scott"     # $ touch great/scott
+        ls :l, :a               # $ ls -l -a
+      end                          
+    end
+
+
+
 == Features
 
 * Create complex environments with a single command

@@ -61,7 +61,7 @@ routines do
         thin :c, sinatra_home, "stop"
       end
     end
-
+    
     
   end
   

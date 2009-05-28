@@ -36,7 +36,7 @@ module Rudy
       def raise_early_exceptions; raise "override raise_early_exceptions"; end
       
       # copied from routines/helper.rb
-      def execute_rbox_command(ret=nil, &command)
+      def trap_rbox_errors(ret=nil, &command)
         begin
           ret = command.call
           puts '  ' << ret.stdout.join("#{$/}  ") if !ret.stdout.empty?

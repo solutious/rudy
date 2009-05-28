@@ -75,6 +75,7 @@ module Rudy
         
         
         lbox = Rye::Box.new('localhost')
+        lbox.cd(Dir.pwd)
         sconf = fetch_script_config
         
         enjoy_every_sandwich {
@@ -95,7 +96,7 @@ module Rudy
         }
         
         # Execute the action (create, list, destroy, restart)
-        machines = enjoy_every_sandwich([]) { rmach.send(machine_action) }
+        machines = enjoy_every_sandwich([]) { rmach.send(machine_action) } || []
         
         machines.each do |machine|
           puts machine_separator(machine.name, machine.awsid) unless skip_header

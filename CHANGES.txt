@@ -1,6 +1,14 @@
 RUDY, CHANGES
 
 
+
+#### 0.8.2 (2009-05-28) ###############################
+
+* CHANGE: Removed release routine code (it's now a passthrough) and scmhelper. All release stuff should
+  be implemented using the routine blocks. 
+* CHANGE: Passthrough routines no longer check if machine group is running. 
+* CHANGE: Local routines blocks now run from current working directory
+
 #### 0.8.1 (2009-05-18) ###############################
 
 * FIXED: The shutdown routine was not working for Windows instances

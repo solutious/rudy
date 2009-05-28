@@ -69,10 +69,10 @@ module Rudy
       
       def delete_rtag(rtag=nil)
         rtag ||= @rtag
-        ret = execute_rbox_command { Rye.shell(:git, 'tag', :d, rtag) }
+        ret = trap_rbox_errors { Rye.shell(:git, 'tag', :d, rtag) }
         raise ret.stderr.join($/) if ret.exit_code > 0 # TODO: retest
         # Equivalent to: "git push origin :tag-name" which deletes a remote tag
-        ret = execute_rbox_command { Rye.shell(:git, "push #{@remote} :#{rtag}") } if @remote
+        ret = trap_rbox_errors { Rye.shell(:git, "push #{@remote} :#{rtag}") } if @remote
         raise ret.stderr.join($/) if ret.exit_code > 0
         true
       end
@@ -144,11 +144,11 @@ module Rudy
           rbox.upload(known_hosts, '.ssh/known_hosts')
           rbox.chmod('0600', '.ssh/known_hosts')
 
-          execute_rbox_command {
+          trap_rbox_errors {
             rbox.git('clone', get_remote_uri, @path)
           }
           rbox.cd(@path)
-          execute_rbox_command {
+          trap_rbox_errors {
             rbox.git('checkout', :b, @rtag)
           }
         rescue Rye::CommandError => ex

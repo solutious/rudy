@@ -2,7 +2,7 @@
 
 module Rudy; module Routines; 
   module DiskHelper
-    include Rudy::Routines::HelperBase  # TODO: use execute_rbox_command
+    include Rudy::Routines::HelperBase  # TODO: use trap_rbox_errors
     extend self
     
     def disks?(routine)
@@ -271,7 +271,7 @@ module Rudy; module Routines;
         
         if disk.mounted?
           print "Unmounting #{disk.path}..."
-          execute_rbox_command { @rbox.umount(disk.path) }
+          trap_rbox_errors { @rbox.umount(disk.path) }
           puts " done"
           sleep 0.5
         end
@@ -307,7 +307,7 @@ module Rudy; module Routines;
 
         if disk.mounted?
           print "Unmounting #{disk.path}..."
-          execute_rbox_command { @rbox.umount(disk.path) }
+          trap_rbox_errors { @rbox.umount(disk.path) }
           puts " done"
           sleep 0.5
         end

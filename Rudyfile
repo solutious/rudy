@@ -188,7 +188,7 @@ routines do
       # anywhere. 
       @sha = git 'rev-parse', '--short', 'HEAD'
       @tagname = Time.now.strftime("%Y-%m-%d-#{Rudy.sysinfo.user}-#{@sha}")
-      #git 'tag', :a, $tagname, :m, "Another release by Rudy"
+      git 'tag', :a, @tagname, :m, "Another release by Rudy"
     end
     script_local do
       echo @tagname

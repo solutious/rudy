@@ -177,7 +177,7 @@ routines do
   
   display_uptime do                  # $ rudy display-uptime
     script :rudy do                  # NOTE: You can use 'dashes' on the
-      uptime                         # command-line instead of underscores8
+      uptime                         # command-line instead of underscores
     end
   end
   
@@ -186,12 +186,12 @@ routines do
       # Store variables using global variables. But be
       # aware that the dollar sign variables can be set 
       # anywhere. 
-      $sha = git 'rev-parse', '--short', 'HEAD'
-      $tagname = Time.now.strftime("%Y-%m-%d-#{Rudy.sysinfo.user}-#{$sha}")
-      git 'tag', :a, $tagname, :m, "Another release by Rudy"
+      @sha = git 'rev-parse', '--short', 'HEAD'
+      @tagname = Time.now.strftime("%Y-%m-%d-#{Rudy.sysinfo.user}-#{@sha}")
+      #git 'tag', :a, $tagname, :m, "Another release by Rudy"
     end
-    after_local do
-      echo $tagname
+    script_local do
+      echo @tagname
     end
   end
   

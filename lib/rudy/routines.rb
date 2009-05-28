@@ -75,13 +75,13 @@ module Rudy
         
         
         lbox = Rye::Box.new('localhost')
-        lbox.cd(Dir.pwd)
         sconf = fetch_script_config
         
         enjoy_every_sandwich {
           if Rudy::Routines::ScriptHelper.before_local?(routine)  # before_local
             # Runs "before_local" scripts of routines config. 
             puts task_separator("LOCAL SHELL")
+            lbox.cd Dir.pwd # Run local command block from current working directory
             Rudy::Routines::ScriptHelper.before_local(routine, sconf, lbox)
           end
         }
@@ -91,6 +91,7 @@ module Rudy
             # Runs "script_local" scripts of routines config. 
             # NOTE: This is synonymous with before_local
             puts task_separator("LOCAL SHELL")
+            lbox.cd Dir.pwd # Run local command block from current working directory
             Rudy::Routines::ScriptHelper.script_local(routine, sconf, lbox)
           end
         }
@@ -240,6 +241,7 @@ module Rudy
         enjoy_every_sandwich {
           if Rudy::Routines::ScriptHelper.after_local?(routine)   # after_local
             puts task_separator("LOCAL SHELL")
+            lbox.cd Dir.pwd # Run local command block from current working directory
             # Runs "after_local" scripts of routines config
             Rudy::Routines::ScriptHelper.after_local(routine, sconf, lbox)
           end

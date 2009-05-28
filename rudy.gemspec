@@ -1,7 +1,7 @@
 @spec = Gem::Specification.new do |s|
 	s.name = "rudy"
   s.rubyforge_project = 'rudy'
-	s.version = "0.8.1"
+	s.version = "0.8.2"
 	s.summary = "Rudy: Not your grandparents' EC2 deployment tool."
 	s.description = s.summary
 	s.author = "Delano Mandelbaum"
@@ -106,12 +106,10 @@
   lib/rudy/routines/helper.rb
   lib/rudy/routines/helpers/dependshelper.rb
   lib/rudy/routines/helpers/diskhelper.rb
-  lib/rudy/routines/helpers/scmhelper.rb
   lib/rudy/routines/helpers/scripthelper.rb
   lib/rudy/routines/helpers/userhelper.rb
   lib/rudy/routines/passthrough.rb
   lib/rudy/routines/reboot.rb
-  lib/rudy/routines/release.rb
   lib/rudy/routines/shutdown.rb
   lib/rudy/routines/startup.rb
   lib/rudy/scm.rb
@@ -123,27 +121,6 @@
   support/randomize-root-password
   support/rudy-ec2-startup
   support/update-ec2-ami-tools
-  test/01_mixins/10_hash_test.rb
-  test/10_config/00_setup_test.rb
-  test/10_config/30_machines_test.rb
-  test/15_scm/00_setup_test.rb
-  test/15_scm/20_git_test.rb
-  test/20_sdb/00_setup_test.rb
-  test/20_sdb/10_domains_test.rb
-  test/25_ec2/00_setup_test.rb
-  test/25_ec2/10_keypairs_test.rb
-  test/25_ec2/20_groups_test.rb
-  test/25_ec2/30_addresses_test.rb
-  test/25_ec2/40_volumes_test.rb
-  test/25_ec2/50_snapshots_test.rb
-  test/26_ec2_instances/00_setup_test.rb
-  test/26_ec2_instances/10_instances_test.rb
-  test/26_ec2_instances/50_images_test.rb
-  test/30_sdb_metadata/00_setup_test.rb
-  test/30_sdb_metadata/10_disks_test.rb
-  test/30_sdb_metadata/20_backups_test.rb
-  test/coverage.txt
-  test/helper.rb
   )
 
   

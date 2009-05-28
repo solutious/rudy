@@ -1,7 +1,7 @@
 
 module Rudy; module Routines; 
   module UserHelper
-    include Rudy::Routines::HelperBase  # TODO: use execute_rbox_command
+    include Rudy::Routines::HelperBase  # TODO: use trap_rbox_errors
     extend self 
     
     def adduser?(routine)
@@ -20,7 +20,7 @@ module Rudy; module Routines;
       # adduser can prompt for info which we don't want. 
       # useradd does not prompt (on Debian/Ubuntu at least). 
       # We need to specify bash b/c the default is /bin/sh
-      execute_rbox_command { rbox.useradd(args) }
+      trap_rbox_errors { rbox.useradd(args) }
     end
     
     def authorize?(routine)
@@ -28,7 +28,7 @@ module Rudy; module Routines;
     end
     def authorize(routine, machine, rbox)
       puts command_separator(:authorize_keys_remote, rbox.user)
-      execute_rbox_command { rbox.authorize_keys_remote(routine.authorize) }
+      trap_rbox_errors { rbox.authorize_keys_remote(routine.authorize) }
     end
     
     

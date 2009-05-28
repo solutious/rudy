@@ -1,7 +1,7 @@
 
 module Rudy; module Routines; 
   module DependsHelper
-    include Rudy::Routines::HelperBase  # TODO: use execute_rbox_command
+    include Rudy::Routines::HelperBase  # TODO: use trap_rbox_errors
     extend self 
     
     def has_depends?(timing, routine)

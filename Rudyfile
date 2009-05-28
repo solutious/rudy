@@ -167,6 +167,7 @@ routines do
     end
   end
   
+  
   anything do                        # $ rudy anything
     before :display_uptime           # Specify a dependency
     script :rudy do                  # This is Ruby, so any valid syntax
@@ -177,6 +178,20 @@ routines do
   display_uptime do                  # $ rudy display-uptime
     script :rudy do                  # NOTE: You can use 'dashes' on the
       uptime                         # command-line instead of underscores
+    end
+  end
+  
+  git_example do
+    before_local do
+      # Store variables using global variables. But be
+      # aware that the dollar sign variables can be set 
+      # anywhere. 
+      @sha = git 'rev-parse', '--short', 'HEAD'
+      @tagname = Time.now.strftime("%Y-%m-%d-#{Rudy.sysinfo.user}-#{@sha}")
+      git 'tag', :a, @tagname, :m, "Another release by Rudy"
+    end
+    script_local do
+      echo @tagname
     end
   end
   

@@ -5,7 +5,7 @@ module Rudy
     module HelperBase
      include Rudy::Huxtable
      
-     def execute_rbox_command(ret=nil, &command)
+     def trap_rbox_errors(ret=nil, &command)
        begin
          ret = command.call if command
          return unless ret.is_a?(Rye::Rap)

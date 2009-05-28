@@ -1,10 +1,18 @@
 RUDY, CHANGES
 
 
+
+#### 0.8.2 (2009-05-28) ###############################
+
+* CHANGE: Removed release routine code (it's now a passthrough) and scmhelper. All release stuff should
+  be implemented using the routine blocks. 
+* CHANGE: Passthrough routines no longer check if machine group is running. 
+* CHANGE: Local routines blocks now run from current working directory
+
+
 #### 0.8.1 (2009-05-18) ###############################
 
 * FIXED: The shutdown routine was not working for Windows instances
-
 
 #### 0.8.0 (2009-05-18) ###############################
 
@@ -19,7 +27,6 @@ RUDY, CHANGES
 
 * CHANGE: rudy-ec2 console now displays windows password automatically if keypair is supplied.
 * ADDED: register and destroy commands to rudy-ec2 images
-
 
 #### 0.7.4 (2009-05-10) ###############################
 
@@ -43,7 +50,6 @@ be stored in the same directory.
 
 * FIXED: Corrected a few minor interface errors in rudy-ec2
 * ADDED: rudy-ec2 console can now display the decoded admin password for Windows instances. 
-
 
 #### 0.7.2 (2009-05-04) ###############################
 

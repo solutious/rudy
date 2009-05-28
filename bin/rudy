@@ -77,18 +77,6 @@ class RudyCLI < Rudy::CLI::Base
   usage "rudy reboot"
   command :reboot => Rudy::CLI::Routines
   
-  about "Create a release"
-  usage "rudy release"
-  command :release => Rudy::CLI::Routines
-  command_alias :release, :rerelease
-  
-  #about "Update the release currently running in a machine group"
-  #command :rerelease => Rudy::CLI::Routines
-  #command_alias :rerelease, :rere
-
-  #about "Deploy disk snapshots from one machine to another"
-  #command :deploy => Rudy::CLI::Routines
-  
 
   # ------------------------------------  RUDY MISCELLANEOUS  --------
   # ------------------------------------------------------------------

@@ -83,6 +83,7 @@ module Rudy
           if Rudy::Routines::ScriptHelper.before_local?(routine)  # before_local
             # Runs "before_local" scripts of routines config. 
             puts task_separator("LOCAL SHELL")
+            lbox.cd Dir.pwd # Run local command block from current working directory
             Rudy::Routines::ScriptHelper.before_local(routine, sconf, lbox)
           end
         }
@@ -92,12 +93,13 @@ module Rudy
             # Runs "script_local" scripts of routines config. 
             # NOTE: This is synonymous with before_local
             puts task_separator("LOCAL SHELL")
+            lbox.cd Dir.pwd # Run local command block from current working directory
             Rudy::Routines::ScriptHelper.script_local(routine, sconf, lbox)
           end
         }
         
         # Execute the action (create, list, destroy, restart)
-        machines = enjoy_every_sandwich([]) { rmach.send(machine_action) }
+        machines = enjoy_every_sandwich([]) { rmach.send(machine_action) } || []
         
         machines.each do |machine|
           puts machine_separator(machine.name, machine.awsid) unless skip_header
@@ -249,6 +251,7 @@ module Rudy
         enjoy_every_sandwich {
           if Rudy::Routines::ScriptHelper.after_local?(routine)   # after_local
             puts task_separator("LOCAL SHELL")
+            lbox.cd Dir.pwd # Run local command block from current working directory
             # Runs "after_local" scripts of routines config
             Rudy::Routines::ScriptHelper.after_local(routine, sconf, lbox)
           end

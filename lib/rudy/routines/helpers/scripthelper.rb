@@ -5,11 +5,11 @@ module Rudy; module Routines;
   # TODO: Rename to ShellHelper
   #++
   module ScriptHelper
-    include Rudy::Routines::HelperBase  # TODO: use execute_rbox_command
+    include Rudy::Routines::HelperBase  # TODO: use trap_rbox_errors
     extend self
 
     @@script_types = [:after, :before, :after_local, :before_local, :script, :script_local]
-    @@script_config_file = "rudy-config.yml"
+    @@script_config_file_name = "rudy-config.yml"
     
     # TODO: refactor using this_method
     
@@ -99,8 +99,12 @@ module Rudy; module Routines;
       raise "ScriptHelper: Not a Rye::Box" unless rbox.is_a?(Rye::Box)
       raise "ScriptHelper: #{timing}?" unless @@script_types.member?(timing)
       
+      # The config file that gets created on each remote machine
+      # will be created in the user's home directory. 
+      script_config_remote_path = File.join(rbox.getenv['HOME'], @@script_config_file_name)
+      
       if sconf && !sconf.empty?
-        tf = Tempfile.new(@@script_config_file)
+        tf = Tempfile.new(@@script_config_file_name)
         Rudy::Utils.write_to_file(tf.path, sconf.to_hash.to_yaml, 'w')
       end
       
@@ -131,7 +135,7 @@ module Rudy; module Routines;
             next
           end
           
-          execute_rbox_command {
+          trap_rbox_errors {
             # We need to create the config file for every script, 
             # b/c the user may change and it would not be accessible.
             # We turn off safe mode so we can write the config file via SSH. 
@@ -139,8 +143,8 @@ module Rudy; module Routines;
             # TODO: Replace with rbox.upload. Make it safe again!
             conf_str = StringIO.new
             conf_str.puts sconf.to_hash.to_yaml
-            rbox.upload(conf_str, @@script_config_file)
-            rbox.chmod(600, @@script_config_file)
+            rbox.upload(conf_str, script_config_remote_path)
+            rbox.chmod(600, script_config_remote_path)
           }
           
           begin
@@ -172,15 +176,8 @@ module Rudy; module Routines;
             exit 12 unless keep_going?
           end
           
-          # I was gettings errors about script_config_file not existing. There
-          # might be a race condition when the rm command is called too quickly. 
-          # It's also quite possible I'm off my rocker!
-          ## NOTE: I believe this was an issue with Rye. I fixed it when I was
-          ## noticing the same error in another place. It hasn't repeated. 
-          ## sleep 0.1
-          
           rbox.cd # reset to home dir
-          rbox.rudy_tmp_rm(@@script_config_file)
+          rbox.rudy_tmp_rm(:f, script_config_remote_path)  # -f to ignore errors
         end
         
         # Return the borrowed rbox instance to the user it was provided with

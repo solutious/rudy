@@ -62,19 +62,24 @@ class RudyCLI < Rudy::CLI::Base
   
   # A "do nothing" routine. Passthrough simply executes a routine
   # config block. Drydock's trawler uses this for unknown commands.
-  about "A skeleton routine"
+  about "A passthrough for custom routines"
+  usage "rudy [custom-routine]"
+  option :m, :message, String, "A message"
   command :passthrough => Rudy::CLI::Routines
 
   about "Startup a machine group"
   usage "rudy startup"
+  option :m, :message, String, "A message"
   command :startup => Rudy::CLI::Routines
 
   about "Shutdown a machine group"
   usage "rudy shutdown"
+  option :m, :message, String, "A message"
   command :shutdown => Rudy::CLI::Routines
   
   about "Reboot a machine group"
   usage "rudy reboot"
+  option :m, :message, String, "A message"
   command :reboot => Rudy::CLI::Routines
   
 

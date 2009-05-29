@@ -48,9 +48,9 @@ machines do
       #addresses '11.22.33.44'       # Define an elastic IP to reuse
       
       disks do                       # Define EBS volumes 
-        path "/rudy/disk1" do        # The paths can be anything but
+        path '/rudy/disk1' do        # The paths can be anything but
           size 2                     # they must be unique. 
-          device "/dev/sdr"          # Devices must be unique too.
+          device '/dev/sdr'          # Devices must be unique too.
         end
       end
     end
@@ -92,8 +92,8 @@ end
 #
 commands do
   allow :make
-  allow :gem_install, "/usr/bin/gem", "install", :V, "--no-rdoc", "--no-ri"
-  allow :apt_get, "/usr/bin/apt-get", :y, :q
+  allow :gem_install, '/usr/bin/gem', 'install', :V, '--no-rdoc', '--no-ri'
+  allow :apt_get, '/usr/bin/apt-get', :y, :q
 end
 
 
@@ -104,18 +104,18 @@ routines do
   
   env :stage, :prod do               # We'll define routines for the stage-app
     role :app do                     # and prod-app machine groups
-                                     
+      
       startup do                     # $ rudy startup
-        adduser :rudy                # Create a user called "rudy"
+        adduser :rudy                # Create a user called 'rudy'
         authorize :rudy              # Enable passwordless logins as rudy
                                      #
         disks do                     # Define EBS volume routines
-          create "/rudy/disk1"       # Create an EBS volume, attach it, give
+          create '/rudy/disk1'       # Create an EBS volume, attach it, give
         end                          # it a filesystem, and mount it.
                                      #
         after :rudy do               # Run remote SSH commands after startup
-          mkdir :p, "great"          # $ mkdir -p great
-          touch "great/scott"        # $ touch great/scott
+          mkdir :p, 'great'          # $ mkdir -p great
+          touch 'great/scott'        # $ touch great/scott
           ls :l, :a                  # $ ls -l -a
         end                          
       end                            
@@ -125,7 +125,7 @@ routines do
           uptime               
         end                               
         disks do                     
-          destroy "/rudy/disk1"      # Unmount and destroy the EBS volume
+          destroy '/rudy/disk1'      # Unmount and destroy the EBS volume
         end                          
       end                            
       
@@ -140,14 +140,14 @@ routines do
       
       backup do                      # $ rudy backup
         disks do                     # A simple routine that creates an EBS
-          snapshot "/rudy/disk1"     # snapshot of the specified volume.
+          snapshot '/rudy/disk1'     # snapshot of the specified volume.
         end
       end
       
       restore_example do             # $ rudy restore_example
         disks do                     # A contrived example of restoring a 
-          destroy "/rudy/disk1"      # disk from a backup. NOTE: You'll need
-          restore "/rudy/disk1"      # to run "rudy backup" at least once 
+          destroy '/rudy/disk1'      # disk from a backup. NOTE: You'll need
+          restore '/rudy/disk1'      # to run 'rudy backup' at least once 
         end                          # before otherise there are no backups
       end                            # to restore from. 
       
@@ -160,9 +160,9 @@ routines do
   # See examples/ for more.
   sysupdate do                       # $ rudy sysupdate
     before :root do                  
-      apt_get "update"               # Update debian / ubuntu 
-      apt_get "install", "build-essential", "sqlite3", "libsqlite3-dev"
-      apt_get "install", "apache2-prefork-dev", "libapr1-dev"
+      apt_get 'update'               # Update debian / ubuntu 
+      apt_get 'install', 'build-essential', 'sqlite3', 'libsqlite3-dev'
+      apt_get 'install', 'apache2-prefork-dev', 'libapr1-dev'
       gem_install 'rudy'
     end
   end
@@ -175,23 +175,24 @@ routines do
     end                              # See: SysInfo gem for more info.
   end
   
-  display_uptime do                  # $ rudy display-uptime
-    script :rudy do                  # NOTE: You can use 'dashes' on the
-      uptime                         # command-line instead of underscores
+  uptime do                          # $ rudy uptime
+    script :rudy do                  
+      uptime                         
     end
   end
   
-  git_example do
-    before_local do
-      # Store variables using global variables. But be
-      # aware that the dollar sign variables can be set 
-      # anywhere. 
-      @sha = git 'rev-parse', '--short', 'HEAD'
-      @tagname = Time.now.strftime("%Y-%m-%d-#{Rudy.sysinfo.user}-#{@sha}")
-      git 'tag', :a, @tagname, :m, "Another release by Rudy"
+  tag do
+    before_local do |option, argv|
+      msg, suffix = option.message, argv.shift
+      msg ||= 'Another release by Rudy'
+      suffix ||= git 'rev-parse', '--short', 'HEAD'
+      @tagname = Time.now.strftime("%Y-%m-%d-#{user}-#{suffix}")
+      git 'tag', :a, @tagname, :m, msg
     end
-    script_local do
-      echo @tagname
+    after_local do
+      # The instance variable set in the previous local block is 
+      # available here, but not in remote blocks (and vice versa)
+      echo "Created tag: #{@tagname}"
     end
   end
   

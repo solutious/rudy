@@ -4,7 +4,7 @@ module Rudy; module Routines;
   class Startup < Rudy::Routines::Base
     
     def init(*args)
-      @routine = fetch_routine_config(:startup)
+      @routine = fetch_routine_config(:startup)   # NOTE: could use @cmdname here
     end
     
     # * +each_mach+ is an optional block which is executed between 

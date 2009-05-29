@@ -8,8 +8,11 @@ module Rudy
     
     class Base
       include Rudy::Huxtable
-    
-      def initialize(*args)
+      
+      # * +cmdname+ The name of the command specified on the command line
+      # * +option+ An OpenStruct of named command line options
+      # * +argv+ An Array of command line argument
+      def initialize(cmdname, option, argv, *args)
         a, s, r = @@global.accesskey, @@global.secretkey, @@global.region
         @sdb = Rudy::AWS::SDB.new(a, s, r)
         @rinst = Rudy::AWS::EC2::Instances.new(a, s, r)
@@ -17,11 +20,12 @@ module Rudy
         @rkey = Rudy::AWS::EC2::KeyPairs.new(a, s, r)
         @rvol = Rudy::AWS::EC2::Volumes.new(a, s, r)
         @rsnap = Rudy::AWS::EC2::Snapshots.new(a, s, r)
+        @cmdname, @option, @argv = cmdname, option, argv
+        @option ||= OpenStruct.new
         init(*args)
       end
       
-      def init
-      end
+      def init; raise "Must override init"; end 
       
       def execute
         raise "Override execute method"
@@ -84,7 +88,7 @@ module Rudy
             # Runs "before_local" scripts of routines config. 
             puts task_separator("LOCAL SHELL")
             lbox.cd Dir.pwd # Run local command block from current working directory
-            Rudy::Routines::ScriptHelper.before_local(routine, sconf, lbox)
+            Rudy::Routines::ScriptHelper.before_local(routine, sconf, lbox, @option, @argv)
           end
         }
         
@@ -94,7 +98,7 @@ module Rudy
             # NOTE: This is synonymous with before_local
             puts task_separator("LOCAL SHELL")
             lbox.cd Dir.pwd # Run local command block from current working directory
-            Rudy::Routines::ScriptHelper.script_local(routine, sconf, lbox)
+            Rudy::Routines::ScriptHelper.script_local(routine, sconf, lbox, @option, @argv)
           end
         }
         
@@ -197,7 +201,7 @@ module Rudy
             enjoy_every_sandwich {
               if Rudy::Routines::ScriptHelper.before?(routine)      # before
                 puts task_separator("REMOTE SHELL")
-                Rudy::Routines::ScriptHelper.before(routine, sconf, machine, rbox)
+                Rudy::Routines::ScriptHelper.before(routine, sconf, machine, rbox, @option, @argv)
               end
             }
           
@@ -232,7 +236,7 @@ module Rudy
               if Rudy::Routines::ScriptHelper.script?(routine)      # script
                 puts task_separator("REMOTE SHELL")
                 # Runs "after" scripts of routines config
-                Rudy::Routines::ScriptHelper.script(routine, sconf, machine, rbox)
+                Rudy::Routines::ScriptHelper.script(routine, sconf, machine, rbox, @option, @argv)
               end
             }
           
@@ -240,7 +244,7 @@ module Rudy
               if Rudy::Routines::ScriptHelper.after?(routine)       # after
                 puts task_separator("REMOTE SHELL")
                 # Runs "after" scripts of routines config
-                Rudy::Routines::ScriptHelper.after(routine, sconf, machine, rbox)
+                Rudy::Routines::ScriptHelper.after(routine, sconf, machine, rbox, @option, @argv)
               end
             }
           
@@ -253,7 +257,7 @@ module Rudy
             puts task_separator("LOCAL SHELL")
             lbox.cd Dir.pwd # Run local command block from current working directory
             # Runs "after_local" scripts of routines config
-            Rudy::Routines::ScriptHelper.after_local(routine, sconf, lbox)
+            Rudy::Routines::ScriptHelper.after_local(routine, sconf, lbox, @option, @argv)
           end
         }
         

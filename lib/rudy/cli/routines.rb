@@ -4,7 +4,7 @@ module Rudy; module CLI;
   class Routines < Rudy::CLI::CommandBase
     
     def startup_valid?
-      @rr = Rudy::Routines::Startup.new
+      @rr = Rudy::Routines::Startup.new(@alias, @option, @argv)
       @rr.raise_early_exceptions
       true
     end
@@ -17,7 +17,7 @@ module Rudy; module CLI;
     end
     
     def reboot_valid?
-      @rr = Rudy::Routines::Reboot.new
+      @rr = Rudy::Routines::Reboot.new(@alias, @option, @argv)
       @rr.raise_early_exceptions
       true
     end
@@ -29,24 +29,8 @@ module Rudy; module CLI;
       end
     end
     
-    def release_valid?
-      @rr = Rudy::Routines::Release.new(@alias) # Important: could be rerelease
-      @rr.raise_early_exceptions
-      true
-    end
-    def release
-      machines = @rr.execute
-      
-      unless machines.empty?
-        puts $/, "The following machines were processed:"
-        machines.each do |machine|
-          puts machine.to_s
-        end
-      end
-    end
-    
     def passthrough_valid?
-      @rr = Rudy::Routines::Passthrough.new(@alias)
+      @rr = Rudy::Routines::Passthrough.new(@alias, @option, @argv)
       @rr.raise_early_exceptions
       true
     end
@@ -76,7 +60,7 @@ module Rudy; module CLI;
     end
     
     def shutdown_valid?
-      @rr = Rudy::Routines::Shutdown.new
+      @rr = Rudy::Routines::Shutdown.new(@alias, @option, @argv)
       @rr.raise_early_exceptions
       true
     end

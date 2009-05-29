@@ -13,8 +13,8 @@ module Rudy; module Routines;
     
     # TODO: refactor using this_method
     
-    def before_local(routine, sconf, rbox)
-      execute_command(:before_local, routine, sconf, 'localhost', rbox)
+    def before_local(routine, sconf, rbox, option=nil, argv=nil)
+      execute_command(:before_local, routine, sconf, 'localhost', rbox, option, argv)
     end
     def before_local?(routine)
       # before_local generally doesn't take a user name like the remote
@@ -24,8 +24,8 @@ module Rudy; module Routines;
       } if routine[:before_local].is_a?(Proc)
       execute_command?(:before_local, routine)
     end
-    def script_local(routine, sconf, rbox)
-      execute_command(:script_local, routine, sconf, 'localhost', rbox)
+    def script_local(routine, sconf, rbox, option=nil, argv=nil)
+      execute_command(:script_local, routine, sconf, 'localhost', rbox, option, argv)
     end
     def script_local?(routine)
       # before_local generally doesn't take a user name like the remote
@@ -36,8 +36,8 @@ module Rudy; module Routines;
       execute_command?(:script_local, routine)
     end
     
-    def after_local(routine, sconf, rbox)
-      execute_command(:after_local, routine, sconf, 'localhost', rbox)
+    def after_local(routine, sconf, rbox, option=nil, argv=nil)
+      execute_command(:after_local, routine, sconf, 'localhost', rbox, option, argv)
     end
     def after_local?(routine)
       routine[:after_local] = {                 # See before_local note
@@ -46,21 +46,21 @@ module Rudy; module Routines;
       execute_command?(:after_local, routine)
     end
     
-    def before(routine, sconf, machine, rbox)
+    def before(routine, sconf, machine, rbox, option=nil, argv=nil)
       raise "ScriptHelper: Not a Rudy::Machine" unless machine.is_a?(Rudy::Machine)
-      execute_command(:before, routine, sconf, machine.name, rbox)
+      execute_command(:before, routine, sconf, machine.name, rbox, option, argv)
     end
     def before?(routine); execute_command?(:before, routine); end
     
-    def after(routine, sconf, machine, rbox)
+    def after(routine, sconf, machine, rbox, option=nil, argv=nil)
       raise "ScriptHelper: Not a Rudy::Machine" unless machine.is_a?(Rudy::Machine)
-      execute_command(:after, routine, sconf, machine.name, rbox)
+      execute_command(:after, routine, sconf, machine.name, rbox, option, argv)
     end
     def after?(routine); execute_command?(:after, routine); end
     
-    def script(routine, sconf, machine, rbox)
+    def script(routine, sconf, machine, rbox, option=nil, argv=nil)
       raise "ScriptHelper: Not a Rudy::Machine" unless machine.is_a?(Rudy::Machine)
-      execute_command(:script, routine, sconf, machine.name, rbox)
+      execute_command(:script, routine, sconf, machine.name, rbox, option, argv)
     end
     def script?(routine); execute_command?(:script, routine); end
 
@@ -95,7 +95,7 @@ module Rudy; module Routines;
     # * +sconf+ is a config hash from machines config (ignored if nil)
     # * +hostname+ machine hostname that we're working on
     # * +rbox+ a Rye::Box instance for the machine we're working on
-    def execute_command(timing, routine, sconf, hostname, rbox)
+    def execute_command(timing, routine, sconf, hostname, rbox, option=nil, argv=nil)
       raise "ScriptHelper: Not a Rye::Box" unless rbox.is_a?(Rye::Box)
       raise "ScriptHelper: #{timing}?" unless @@script_types.member?(timing)
       
@@ -163,7 +163,7 @@ module Rudy; module Routines;
             end
             
             ### EXECUTE THE COMMANDS BLOCK
-            rbox.batch(&proc)
+            rbox.batch(option, argv, &proc)
             
             rbox.pre_command_hook = nil
             rbox.post_command_hook = nil

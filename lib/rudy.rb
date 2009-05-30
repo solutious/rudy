@@ -163,6 +163,5 @@ require 'rudy/aws'        # is
 require 'rudy/metadata'   # important
 require 'rudy/machines'
 require 'rudy/routines'
-require 'rudy/scm'
 
 

@@ -167,7 +167,6 @@ routines do
     end
   end
   
-  
   anything do                        # $ rudy anything
     before :display_uptime           # Specify a dependency
     script :rudy do                  # This is Ruby, so any valid syntax
@@ -177,22 +176,7 @@ routines do
   
   uptime do                          # $ rudy uptime
     script :rudy do                  
-      uptime                         
-    end
-  end
-  
-  tag do
-    before_local do |option, argv|
-      msg, suffix = option.message, argv.shift
-      msg ||= 'Another release by Rudy'
-      suffix ||= git 'rev-parse', '--short', 'HEAD'
-      @tagname = Time.now.strftime("%Y-%m-%d-#{user}-#{suffix}")
-      git 'tag', :a, @tagname, :m, msg
-    end
-    after_local do
-      # The instance variable set in the previous local block is 
-      # available here, but not in remote blocks (and vice versa)
-      echo "Created tag: #{@tagname}"
+      uptime                        
     end
   end
   

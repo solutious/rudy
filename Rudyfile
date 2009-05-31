@@ -168,15 +168,29 @@ routines do
   end
   
   anything do                        # $ rudy anything
-    before :display_uptime           # Specify a dependency
-    script :rudy do                  # This is Ruby, so any valid syntax
+    before :uptime                   # Specify a dependency
+    script_local do                  # This is Ruby, so any valid syntax
       ls :l                          # can be used in the definitions. 
     end                              # See: SysInfo gem for more info.
   end
   
   uptime do                          # $ rudy uptime
-    script :rudy do                  
-      uptime                        
+    script_local do
+      uptime
+    end
+  end
+end
+
+
+machines do
+
+  env :testing do
+    role :debian32 do
+      ami 'ami-6ecde51a'               # Alestic Debian 5.0, 32-bit (EU)
+      size 'm1.small'
+      disks do
+        
+      end
     end
   end
   

@@ -8,6 +8,7 @@ RUDY, CHANGES
   be implemented using the routine blocks. 
 * CHANGE: Passthrough routines no longer check if machine group is running. 
 * CHANGE: Local routines blocks now run from current working directory
+* CHANGE: Removed SCM classes (moved logic to the Arcade)
 * ADDED: Routine blocks now receive command line options and arguments
 
 

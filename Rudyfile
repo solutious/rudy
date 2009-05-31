@@ -93,7 +93,6 @@ end
 commands do
   allow :make
   allow :gem_install, '/usr/bin/gem', 'install', :V, '--no-rdoc', '--no-ri'
-  allow :apt_get, '/usr/bin/apt-get', :y, :q
 end
 
 
@@ -179,20 +178,5 @@ routines do
       uptime
     end
   end
-end
-
-
-machines do
-
-  env :testing do
-    role :debian32 do
-      ami 'ami-6ecde51a'               # Alestic Debian 5.0, 32-bit (EU)
-      size 'm1.small'
-      disks do
-        
-      end
-    end
-  end
-  
 end
 

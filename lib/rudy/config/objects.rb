@@ -33,11 +33,13 @@ class Rudy::Config
     @@processed = false
     forced_array :allow
     forced_array :deny
+    
     def init
       # We can't process the Rye::Cmd commands here because the
       # DSL hasn't been parsed yet so Rudy::Config.postprocess
       # called the following postprocess method after parsing.
     end
+    
     # Process the directives specified in the commands config.
     # NOTE: This affects the processing of the routines config
     # which only works if commands is parsed first. This works
@@ -66,40 +68,26 @@ class Rudy::Config
         # when we add the method to Rye::Cmd, we'll it the path is "cmd".
         path ||= cmd.to_s
         
-        # We cannot allow new commands to be defined that conflict use known
-        # routines keywords. This is based on keywords in the current config.
-        # NOTE: We can't check for this right now b/c the routines config
-        # won't necessarily have been parsed yet. TODO: Figure it out!
-        #if Caesars.known_symbol_by_glass?(:routines, cmd)
-        #  raise ReservedKeyword.new(:commands, cmd)
-        #end
+        ## We cannot allow new commands to be defined that conflict use known
+        ## routines keywords. This is based on keywords in the current config.
+        ## NOTE: We can't check for this right now b/c the routines config
+        ## won't necessarily have been parsed yet. TODO: Figure it out!
+        ##if Caesars.known_symbol_by_glass?(:routines, cmd)
+        ##  raise ReservedKeyword.new(:commands, cmd)
+        ##end
         
         # We can allow existing commands to be overridden but we
         # print a message to STDERR so the user knows what's up.
         STDERR.puts "Redefined #{cmd}" if Rye::Cmd.can?(cmd)
         
         # The second argument if supplied must be a filesystem path
-        raise PathNotString.new(:commands, cmd) if path && !path.is_a?(String)        
-        
-        # Insert hardcoded arguments if any were supplied. These will
-        # be sent automatically with every call to the new command.
-        # This loop prepares the hardcoded args to be passed to eval.
-        args.collect! do |arg| 
-          klass = [Symbol, String] & [arg.class]
-          raise BadArg.new(:commands, cmd) if klass.empty?
-          # Symbols sent as Symbols, Strings as Strings
-          arg.is_a?(Symbol) ? ":#{arg}" : "'#{arg}'"
-        end
-        hard_args = args.empty? ? "*args" : "#{args.join(', ')}, *args"
+        raise PathNotString.new(:commands, cmd) if path && !path.is_a?(String)
+          
+        Rye::Cmd.add_command(cmd, path, args, &block)
 
-        # TODO: Use define_method 
-        Rye::Cmd.module_eval %Q{
-          def #{cmd}(*args); cmd(:'#{path}', #{hard_args}); end
-        }
-        
       end
       ## NOTE: We now process command blocks as Procs rather than individual commands.
-      # There's currently no need to ForceRefresh here
+      ## There's currently no need to ForceRefresh here
       ##raise Caesars::Config::ForceRefresh.new(:routines)
     end
   end

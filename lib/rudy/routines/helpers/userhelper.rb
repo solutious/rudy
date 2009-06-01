@@ -13,7 +13,7 @@ module Rudy; module Routines;
       # explicitly so we do it for linux too for fun. 
       homedir = rbox.guess_user_home(routine.adduser.to_s)
       args = [:m, :d, homedir, :s, '/bin/bash', routine.adduser.to_s]
-      puts command_separator(rbox.preview_command(:useradd, args), rbox.user)
+      puts command_separator(rbox.preview_command(:useradd, args), rbox.user, rbox.host)
       
       # NOTE: We'll may to use platform specific code here. 
       # Linux has adduser and useradd commands:
@@ -27,7 +27,7 @@ module Rudy; module Routines;
       (!routine.authorize.nil? && !routine.authorize.to_s.empty?)
     end
     def authorize(routine, machine, rbox)
-      puts command_separator(:authorize_keys_remote, rbox.user)
+      puts command_separator(:authorize_keys_remote, rbox.user, rbox.host)
       trap_rbox_errors { rbox.authorize_keys_remote(routine.authorize) }
     end
     

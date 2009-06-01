@@ -148,18 +148,22 @@ module Rudy; module Routines;
           }
           
           begin
-            # We define hooks so we can call the script block as a batch. 
-            # We intentionally set and unset the hooks so the other commands
-            # (config file copy) don't get printed.
-            #
-            # This block gets called for every command method call.
-            rbox.pre_command_hook do |cmd, args, user|
-              puts command_separator(rbox.preview_command(cmd, args), user)
+            # We define hooks so we can still print each command and its output
+            # when running the command blocks. NOTE: We only print this in
+            # verbosity mode. We intentionally set and unset the hooks 
+            # so the other commands (config file copy) don't get printed.
+            if @@global.verbose > 0
+              # This block gets called for every command method call.
+              rbox.pre_command_hook do |cmd, args, user, host|
+                puts command_separator(rbox.preview_command(cmd, args), user, host)
+              end
             end
-            # And this one gets called after each command method call.
-            rbox.post_command_hook do |ret|
-              puts '  ' << ret.stdout.join("#{$/}  ") if !ret.stdout.empty?
-              print_response(ret)
+            if @@global.verbose > 1
+              # And this one gets called after each command method call.
+              rbox.post_command_hook do |ret|
+                puts '  ' << ret.stdout.join("#{$/}  ") if !ret.stdout.empty?
+                print_response(ret)
+              end
             end
             
             ### EXECUTE THE COMMANDS BLOCK
@@ -167,6 +171,7 @@ module Rudy; module Routines;
             
             rbox.pre_command_hook = nil
             rbox.post_command_hook = nil
+            
           rescue Rye::CommandError => ex
             print_response(ex)
             exit 12 unless keep_going?

@@ -24,7 +24,8 @@ module Rudy; module Routines;
     def raise_early_exceptions
       raise Rudy::Error, "No routine name" unless @cmdname
       raise NoRoutine, @cmdname unless @routine
-      raise Rudy::PrivateKeyNotFound, root_keypairpath unless has_keypair?(:root)
+      # TODO: enable this for EC2 groups only
+      #raise Rudy::PrivateKeyNotFound, root_keypairpath unless has_keypair?(:root)
       raise MachineGroupNotDefined, current_machine_group unless known_machine_group?
       ##rmach = Rudy::Machines.new
       ##if !@@global.offline && !rmach.running?

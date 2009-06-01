@@ -80,7 +80,7 @@ module Rudy
         }
         
         
-        lbox = Rye::Box.new('localhost')
+        lbox = Rye::Box.new('localhost', :info => false)
         sconf = fetch_script_config
         
         enjoy_every_sandwich {

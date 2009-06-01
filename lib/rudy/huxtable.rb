@@ -241,6 +241,7 @@ module Rudy
     # That's how Rudy knows the current group is defined. 
     def known_machine_group?
       raise NoConfig unless @@config
+      return true if default_machine_group?
       raise NoMachinesConfig unless @@config.machines
       return false if !@@config && !@@global
       zon, env, rol = @@global.zone, @@global.environment, @@global.role
@@ -327,11 +328,18 @@ module Rudy
     def fetch_machine_param(parameter)
       raise "No parameter specified" unless parameter
       raise NoConfig unless @@config
-      raise NoMachinesConfig unless @@config.machines
+      return if !@@config.machines && default_machine_group?
+      raise NoMachinesConfig if !@@config.machines
       raise NoGlobal unless @@global
       top_level = @@config.machines.find(parameter)
       mc = fetch_machine_config
       mc[parameter] || top_level || nil
+    end
+    
+    # Returns true if this is the default machine environment and role
+    def default_machine_group?
+      @@global.environment == @@config.defaults.environment &&
+      @@global.role == @@config.defaults.role
     end
     
     def fetch_machine_config

@@ -93,8 +93,10 @@ end
 commands do
   allow :make
   allow :gem_install, '/usr/bin/gem', 'install', :V, '--no-rdoc', '--no-ri'
+  allow :apt_get, 'apt-get', :y, :q
+  allow :floo, :time, 1 do
+  end
 end
-
 
 # ----------------------------------------------------------- ROUTINES --------
 # The routines block describes the repeatable processes for each machine group.
@@ -115,7 +117,7 @@ routines do
         after :rudy do               # Run remote SSH commands after startup
           mkdir :p, 'great'          # $ mkdir -p great
           touch 'great/scott'        # $ touch great/scott
-          ls :l, :a                  # $ ls -l -a
+          ls :l, :a, '*'             # $ ls -l -a *
         end                          
       end                            
                                      
@@ -143,7 +145,7 @@ routines do
         end
       end
       
-      restore_example do             # $ rudy restore_example
+      restore do                     # $ rudy restore
         disks do                     # A contrived example of restoring a 
           destroy '/rudy/disk1'      # disk from a backup. NOTE: You'll need
           restore '/rudy/disk1'      # to run 'rudy backup' at least once 
@@ -156,7 +158,7 @@ routines do
   # Define global routines available to all machine groups
   # This routine will update a basic Debian machine and
   # install essential libraries. 
-  # See examples/ for more.
+  # See http://github.com/rudy/arcade
   sysupdate do                       # $ rudy sysupdate
     before :root do                  
       apt_get 'update'               # Update debian / ubuntu 

@@ -33,6 +33,7 @@ class Rudy::Config
     @@processed = false
     forced_array :allow
     forced_array :deny
+    chill :allow
     
     def init
       # We can't process the Rye::Cmd commands here because the
@@ -56,17 +57,32 @@ class Rudy::Config
       # commands do
       #   allow :kill 
       #   allow :custom_script, '/full/path/2/custom_script'
-      #   allow :git_clone, "/usr/bin/git", "clone"
+      #   allow :git_clone, '/usr/bin/git', 'clone'
       # end
       # 
       # * Tells Routines to force_array on the command name.
       # This is important b/c of the way we parse commands 
       self.allow.each do |cmd|
-        cmd, path, *args = *cmd
+        cmd, *args = *cmd
         
-        # If no path was specified, we can assume cmd is in the remote path so
-        # when we add the method to Rye::Cmd, we'll it the path is "cmd".
-        path ||= cmd.to_s
+        # We can allow existing commands to be overridden but we
+        # print a message to STDERR so the user knows what's up.
+        STDERR.puts "Redefining #{cmd}" if Rye::Cmd.can?(cmd)
+        
+        if args.last.is_a?(Proc)
+          block = args.pop
+          Rye::Cmd.add_command(cmd, nil, args, &block)
+        else
+          # If no path was specified, we can assume cmd is in the remote path so
+          # when we add the method to Rye::Cmd, we'll it the path is "cmd".
+          path = args.shift || cmd.to_s
+          
+          raise PathNotString.new(:commands, cmd) if path && !path.is_a?(String)
+          
+          Rye::Cmd.add_command cmd, path, args
+          
+        end
+        
         
         ## We cannot allow new commands to be defined that conflict use known
         ## routines keywords. This is based on keywords in the current config.
@@ -76,16 +92,8 @@ class Rudy::Config
         ##  raise ReservedKeyword.new(:commands, cmd)
         ##end
         
-        # We can allow existing commands to be overridden but we
-        # print a message to STDERR so the user knows what's up.
-        STDERR.puts "Redefined #{cmd}" if Rye::Cmd.can?(cmd)
-        
-        # The second argument if supplied must be a filesystem path
-        raise PathNotString.new(:commands, cmd) if path && !path.is_a?(String)
-          
-        Rye::Cmd.add_command(cmd, path, args, &block)
-
       end
+  
       ## NOTE: We now process command blocks as Procs rather than individual commands.
       ## There's currently no need to ForceRefresh here
       ##raise Caesars::Config::ForceRefresh.new(:routines)

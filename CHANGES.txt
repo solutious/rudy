@@ -2,14 +2,17 @@ RUDY, CHANGES
 
 
 
-#### 0.8.2 (2009-05-30) ###############################
+#### 0.8.2 (2009-06-01) ###############################
 
 * CHANGE: Removed release routine code (it's now a passthrough) and scmhelper. All release stuff should
   be implemented using the routine blocks. 
 * CHANGE: Passthrough routines no longer check if machine group is running. 
 * CHANGE: Local routines blocks now run from current working directory
 * CHANGE: Removed SCM classes (moved logic to the Arcade)
+* CHANGE: Moved examples to the Arcade (experimental)
+* CHANGE: Command output in routines is now displayed only when verbose is 1 or more.
 * ADDED: Routine blocks now receive command line options and arguments
+* ADDED: Commands configuration now supports inline blocks
 
 
 #### 0.8.1 (2009-05-18) ###############################
@@ -33,8 +36,9 @@ RUDY, CHANGES
 #### 0.7.4 (2009-05-10) ###############################
 
 * CHANGE: Keypairs now include zone. This was necessary to allow US and EU keypairs to
-be stored in the same directory. 
-* CHANGE: Moved non-rudy specific modules to separate projects (storable, sysinfo, annoy, console -> Drydock, escape -> Rye, tryouts -> tryouts/).
+          be stored in the same directory.  
+* CHANGE: Moved non-rudy specific modules to separate projects (storable, sysinfo, annoy, 
+          console -> Drydock, escape -> Rye, tryouts -> tryouts/).
 * CHANGE: Renamed restart routine to reboot to make it clear it's about the machine
 * CHANGE: Renamed Rudy::Disk to Rudy::MetaData::Disk
 * CHANGE: Short alias for rudy-ec2 snapshot is now 's' (instead of 't')
@@ -98,7 +102,7 @@ to maintain consistency in documentation.
 
 * ADDED: rudy-ec2 status can now display EU status
 * FIXED: Fixed bug on instance create. Instance.groups was nil, now it returns 
-empty Array.
+         empty Array.
 
 #### 0.6.6 (2009-04-22) ###############################
 
@@ -187,9 +191,9 @@ NOTE: This is a complete re-write from 0.1
 * CHANGE: upgrade to drydock 0.3.3
 * ADDED: All time references are converted to UTC
 * ADDED: Safer "Are you sure?". Number of characters to enter is 
-       commiserate with amount of danger.  
+         commiserate with amount of danger.  
 * ADDED: CLIs: myaddress, addresses, images, instances, 
-       disks, connect, copy, stage, backups, volumes
+         disks, connect, copy, stage, backups, volumes
 * ADDED: Metadata storage to SimpleDB for disks, backups
 * ADDED: Creates EBS volumes based on startup from metadata
 * ADDED: Automated release process

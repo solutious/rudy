@@ -31,7 +31,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>Mon May 18 06:06:09 -0400 2009</span>
+          <span class='datetime'>Mon Jun 01 11:46:50 -0400 2009</span>
         </div>
       </div>
       <div id='content'>
@@ -40,6 +40,50 @@
             <p>
             RUDY, CHANGES
             </p>
+            <p>
+            #### 0.8.2 (2009-06-01) ###############################
+            </p>
+            <ul>
+            <li>CHANGE: Removed release routine code (it&#8217;s now a passthrough) and
+            scmhelper. All release stuff should be implemented using the routine
+            blocks.
+            
+            </li>
+            <li>CHANGE: Passthrough routines no longer check if machine group is running.
+            
+            </li>
+            <li>CHANGE: Local routines blocks now run from current working directory
+            
+            </li>
+            <li>CHANGE: Removed SCM classes (moved logic to the Arcade)
+            
+            </li>
+            <li>CHANGE: Moved examples to the Arcade (experimental)
+            
+            </li>
+            <li>CHANGE: Command output in routines is now displayed only when verbose is 1
+            or more.
+            
+            </li>
+            <li>ADDED: Routine blocks now receive command line options and arguments
+            
+            </li>
+            <li>ADDED: Commands configuration now supports inline blocks
+            
+            </li>
+            <li>ADDED: <a href="../classes/Rudy.html">Rudy</a> now looks for ~/.rudy/*.rb
+            config files.
+            
+            </li>
+            </ul>
+            <p>
+            #### 0.8.1 (2009-05-18) ###############################
+            </p>
+            <ul>
+            <li>FIXED: The shutdown routine was not working for Windows instances
+            
+            </li>
+            </ul>
             <p>
             #### 0.8.0 (2009-05-18) ###############################
             </p>
@@ -81,15 +125,12 @@
             <li>CHANGE: Keypairs now include zone. This was necessary to allow US and EU
             keypairs to
             
+            <pre>be stored in the same directory.</pre>
             </li>
-            </ul>
-            <p>
-            be stored in the same directory.
-            </p>
-            <ul>
             <li>CHANGE: Moved non-rudy specific modules to separate projects (storable,
-            sysinfo, annoy, console -> Drydock, escape -> Rye, tryouts -> tryouts/).
+            sysinfo, annoy,
             
+            <pre>console -&gt; Drydock, escape -&gt; Rye, tryouts -&gt; tryouts/).</pre>
             </li>
             <li>CHANGE: Renamed restart routine to reboot to make it clear it&#8217;s about
             the machine
@@ -258,11 +299,9 @@
             <li>FIXED: Fixed bug on instance create. Instance.groups was nil, now it
             returns
             
+            <pre>empty Array.</pre>
             </li>
             </ul>
-            <p>
-            empty Array.
-            </p>
             <p>
             #### 0.6.6 (2009-04-22) ###############################
             </p>

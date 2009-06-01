@@ -41,10 +41,10 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000130">adduser</a></li>
-              <li><a href="#M000129">adduser?</a></li>
-              <li><a href="#M000132">authorize</a></li>
-              <li><a href="#M000131">authorize?</a></li>
+              <li><a href="#M000126">adduser</a></li>
+              <li><a href="#M000125">adduser?</a></li>
+              <li><a href="#M000128">authorize</a></li>
+              <li><a href="#M000127">authorize?</a></li>
             </ol>
           </div>
           <div id='context'>
@@ -58,56 +58,56 @@
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000130'>
-                <a name='M000130'>      </a>
+              <div class='public-instance method' id='method-M000126'>
+                <a name='M000126'>      </a>
                 <div class='synopsis'>
                   <span class='name'>adduser</span>
                   <span class='arguments'>(routine, machine, rbox)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000130-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000126-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000130-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/userhelper.rb, line 10</span>&#x000A;10:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">adduser</span>(<span class="ruby-identifier">routine</span>, <span class="ruby-identifier">machine</span>, <span class="ruby-identifier">rbox</span>)&#x000A;11:       &#x000A;12:       <span class="ruby-comment cmt"># On Solaris, the user's home directory needs to be specified</span>&#x000A;13:       <span class="ruby-comment cmt"># explicitly so we do it for linux too for fun. </span>&#x000A;14:       <span class="ruby-identifier">homedir</span> = <span class="ruby-identifier">rbox</span>.<span class="ruby-identifier">guess_user_home</span>(<span class="ruby-identifier">routine</span>.<span class="ruby-identifier">adduser</span>.<span class="ruby-identifier">to_s</span>)&#x000A;15:       <span class="ruby-identifier">args</span> = [<span class="ruby-identifier">:m</span>, <span class="ruby-identifier">:d</span>, <span class="ruby-identifier">homedir</span>, <span class="ruby-identifier">:s</span>, <span class="ruby-value str">'/bin/bash'</span>, <span class="ruby-identifier">routine</span>.<span class="ruby-identifier">adduser</span>.<span class="ruby-identifier">to_s</span>]&#x000A;16:       <span class="ruby-identifier">puts</span> <span class="ruby-identifier">command_separator</span>(<span class="ruby-identifier">rbox</span>.<span class="ruby-identifier">preview_command</span>(<span class="ruby-identifier">:useradd</span>, <span class="ruby-identifier">args</span>), <span class="ruby-identifier">rbox</span>.<span class="ruby-identifier">user</span>)&#x000A;17:       &#x000A;18:       <span class="ruby-comment cmt"># NOTE: We'll may to use platform specific code here. </span>&#x000A;19:       <span class="ruby-comment cmt"># Linux has adduser and useradd commands:</span>&#x000A;20:       <span class="ruby-comment cmt"># adduser can prompt for info which we don't want. </span>&#x000A;21:       <span class="ruby-comment cmt"># useradd does not prompt (on Debian/Ubuntu at least). </span>&#x000A;22:       <span class="ruby-comment cmt"># We need to specify bash b/c the default is /bin/sh</span>&#x000A;23:       <span class="ruby-identifier">execute_rbox_command</span> { <span class="ruby-identifier">rbox</span>.<span class="ruby-identifier">useradd</span>(<span class="ruby-identifier">args</span>) }&#x000A;24:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000126-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/userhelper.rb, line 10</span>&#x000A;10:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">adduser</span>(<span class="ruby-identifier">routine</span>, <span class="ruby-identifier">machine</span>, <span class="ruby-identifier">rbox</span>)&#x000A;11:       &#x000A;12:       <span class="ruby-comment cmt"># On Solaris, the user's home directory needs to be specified</span>&#x000A;13:       <span class="ruby-comment cmt"># explicitly so we do it for linux too for fun. </span>&#x000A;14:       <span class="ruby-identifier">homedir</span> = <span class="ruby-identifier">rbox</span>.<span class="ruby-identifier">guess_user_home</span>(<span class="ruby-identifier">routine</span>.<span class="ruby-identifier">adduser</span>.<span class="ruby-identifier">to_s</span>)&#x000A;15:       <span class="ruby-identifier">args</span> = [<span class="ruby-identifier">:m</span>, <span class="ruby-identifier">:d</span>, <span class="ruby-identifier">homedir</span>, <span class="ruby-identifier">:s</span>, <span class="ruby-value str">'/bin/bash'</span>, <span class="ruby-identifier">routine</span>.<span class="ruby-identifier">adduser</span>.<span class="ruby-identifier">to_s</span>]&#x000A;16:       <span class="ruby-identifier">puts</span> <span class="ruby-identifier">command_separator</span>(<span class="ruby-identifier">rbox</span>.<span class="ruby-identifier">preview_command</span>(<span class="ruby-identifier">:useradd</span>, <span class="ruby-identifier">args</span>), <span class="ruby-identifier">rbox</span>.<span class="ruby-identifier">user</span>, <span class="ruby-identifier">rbox</span>.<span class="ruby-identifier">host</span>)&#x000A;17:       &#x000A;18:       <span class="ruby-comment cmt"># NOTE: We'll may to use platform specific code here. </span>&#x000A;19:       <span class="ruby-comment cmt"># Linux has adduser and useradd commands:</span>&#x000A;20:       <span class="ruby-comment cmt"># adduser can prompt for info which we don't want. </span>&#x000A;21:       <span class="ruby-comment cmt"># useradd does not prompt (on Debian/Ubuntu at least). </span>&#x000A;22:       <span class="ruby-comment cmt"># We need to specify bash b/c the default is /bin/sh</span>&#x000A;23:       <span class="ruby-identifier">trap_rbox_errors</span> { <span class="ruby-identifier">rbox</span>.<span class="ruby-identifier">useradd</span>(<span class="ruby-identifier">args</span>) }&#x000A;24:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000129'>
-                <a name='M000129'>      </a>
+              <div class='public-instance method' id='method-M000125'>
+                <a name='M000125'>      </a>
                 <div class='synopsis'>
                   <span class='name'>adduser?</span>
                   <span class='arguments'>(routine)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000129-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000125-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000129-source'>   <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/userhelper.rb, line 7</span>&#x000A;7:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">adduser?</span>(<span class="ruby-identifier">routine</span>)&#x000A;8:       (<span class="ruby-operator">!</span><span class="ruby-identifier">routine</span>.<span class="ruby-identifier">adduser</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">routine</span>.<span class="ruby-identifier">adduser</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">empty?</span>)&#x000A;9:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000125-source'>   <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/userhelper.rb, line 7</span>&#x000A;7:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">adduser?</span>(<span class="ruby-identifier">routine</span>)&#x000A;8:       (<span class="ruby-operator">!</span><span class="ruby-identifier">routine</span>.<span class="ruby-identifier">adduser</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">routine</span>.<span class="ruby-identifier">adduser</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">empty?</span>)&#x000A;9:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000132'>
-                <a name='M000132'>      </a>
+              <div class='public-instance method' id='method-M000128'>
+                <a name='M000128'>      </a>
                 <div class='synopsis'>
                   <span class='name'>authorize</span>
                   <span class='arguments'>(routine, machine, rbox)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000132-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000128-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000132-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/userhelper.rb, line 29</span>&#x000A;29:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">authorize</span>(<span class="ruby-identifier">routine</span>, <span class="ruby-identifier">machine</span>, <span class="ruby-identifier">rbox</span>)&#x000A;30:       <span class="ruby-identifier">puts</span> <span class="ruby-identifier">command_separator</span>(<span class="ruby-identifier">:authorize_keys_remote</span>, <span class="ruby-identifier">rbox</span>.<span class="ruby-identifier">user</span>)&#x000A;31:       <span class="ruby-identifier">execute_rbox_command</span> { <span class="ruby-identifier">rbox</span>.<span class="ruby-identifier">authorize_keys_remote</span>(<span class="ruby-identifier">routine</span>.<span class="ruby-identifier">authorize</span>) }&#x000A;32:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000128-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/userhelper.rb, line 29</span>&#x000A;29:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">authorize</span>(<span class="ruby-identifier">routine</span>, <span class="ruby-identifier">machine</span>, <span class="ruby-identifier">rbox</span>)&#x000A;30:       <span class="ruby-identifier">puts</span> <span class="ruby-identifier">command_separator</span>(<span class="ruby-identifier">:authorize_keys_remote</span>, <span class="ruby-identifier">rbox</span>.<span class="ruby-identifier">user</span>, <span class="ruby-identifier">rbox</span>.<span class="ruby-identifier">host</span>)&#x000A;31:       <span class="ruby-identifier">trap_rbox_errors</span> { <span class="ruby-identifier">rbox</span>.<span class="ruby-identifier">authorize_keys_remote</span>(<span class="ruby-identifier">routine</span>.<span class="ruby-identifier">authorize</span>) }&#x000A;32:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000131'>
-                <a name='M000131'>      </a>
+              <div class='public-instance method' id='method-M000127'>
+                <a name='M000127'>      </a>
                 <div class='synopsis'>
                   <span class='name'>authorize?</span>
                   <span class='arguments'>(routine)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000131-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000127-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000131-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/userhelper.rb, line 26</span>&#x000A;26:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">authorize?</span>(<span class="ruby-identifier">routine</span>)&#x000A;27:       (<span class="ruby-operator">!</span><span class="ruby-identifier">routine</span>.<span class="ruby-identifier">authorize</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">routine</span>.<span class="ruby-identifier">authorize</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">empty?</span>)&#x000A;28:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000127-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/userhelper.rb, line 26</span>&#x000A;26:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">authorize?</span>(<span class="ruby-identifier">routine</span>)&#x000A;27:       (<span class="ruby-operator">!</span><span class="ruby-identifier">routine</span>.<span class="ruby-identifier">authorize</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">routine</span>.<span class="ruby-identifier">authorize</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">empty?</span>)&#x000A;28:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

@@ -45,51 +45,51 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000375">associated?</a></li>
-              <li><a href="#M000373">liner_note</a></li>
-              <li><a href="#M000374">to_s</a></li>
+              <li><a href="#M000333">associated?</a></li>
+              <li><a href="#M000331">liner_note</a></li>
+              <li><a href="#M000332">to_s</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000375'>
-                <a name='M000375'>      </a>
+              <div class='public-instance method' id='method-M000333'>
+                <a name='M000333'>      </a>
                 <div class='synopsis'>
                   <span class='name'>associated?</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000375-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000333-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000375-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/address.rb, line 20</span>&#x000A;20:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">associated?</span>&#x000A;21:         <span class="ruby-operator">!</span><span class="ruby-ivar">@instid</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@instid</span>.<span class="ruby-identifier">empty?</span>&#x000A;22:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000333-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/address.rb, line 20</span>&#x000A;20:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">associated?</span>&#x000A;21:         <span class="ruby-operator">!</span><span class="ruby-ivar">@instid</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@instid</span>.<span class="ruby-identifier">empty?</span>&#x000A;22:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000373'>
-                <a name='M000373'>      </a>
+              <div class='public-instance method' id='method-M000331'>
+                <a name='M000331'>      </a>
                 <div class='synopsis'>
                   <span class='name'>liner_note</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000373-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000331-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000373-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/address.rb, line 11</span>&#x000A;11:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">liner_note</span>&#x000A;12:         <span class="ruby-identifier">info</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">associated?</span> <span class="ruby-value">? </span><span class="ruby-ivar">@instid</span> <span class="ruby-operator">:</span> <span class="ruby-value str">&quot;available&quot;</span>&#x000A;13:         <span class="ruby-value str">&quot;%s (%s)&quot;</span> <span class="ruby-operator">%</span> [<span class="ruby-ivar">@ipaddress</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">bright</span>, <span class="ruby-identifier">info</span>]&#x000A;14:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000331-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/address.rb, line 11</span>&#x000A;11:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">liner_note</span>&#x000A;12:         <span class="ruby-identifier">info</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">associated?</span> <span class="ruby-value">? </span><span class="ruby-ivar">@instid</span> <span class="ruby-operator">:</span> <span class="ruby-value str">&quot;available&quot;</span>&#x000A;13:         <span class="ruby-value str">&quot;%s (%s)&quot;</span> <span class="ruby-operator">%</span> [<span class="ruby-ivar">@ipaddress</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">bright</span>, <span class="ruby-identifier">info</span>]&#x000A;14:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000374'>
-                <a name='M000374'>      </a>
+              <div class='public-instance method' id='method-M000332'>
+                <a name='M000332'>      </a>
                 <div class='synopsis'>
                   <span class='name'>to_s</span>
                   <span class='arguments'>(with_titles=false)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000374-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000332-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000374-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/address.rb, line 16</span>&#x000A;16:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>(<span class="ruby-identifier">with_titles</span>=<span class="ruby-keyword kw">false</span>)&#x000A;17:         <span class="ruby-identifier">liner_note</span>&#x000A;18:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000332-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/address.rb, line 16</span>&#x000A;16:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>(<span class="ruby-identifier">with_titles</span>=<span class="ruby-keyword kw">false</span>)&#x000A;17:         <span class="ruby-identifier">liner_note</span>&#x000A;18:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

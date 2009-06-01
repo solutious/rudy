@@ -31,7 +31,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>Mon May 18 06:27:32 -0400 2009</span>
+          <span class='datetime'>Tue May 26 10:54:22 -0400 2009</span>
         </div>
       </div>
       <div id='content'>
@@ -64,7 +64,7 @@
             </p>
             <p>
             <b>See <a
-            href="http://wiki.github.com/solutious/rudy/getting-started">Getting-Started</a>
+            href="http://solutious.com/products/rudy/getting-started.html">Getting-Started</a>
             for more info.</b>
             </p>
             <p>
@@ -72,6 +72,19 @@
             production use! See <a
             href="http://wiki.github.com/solutious/rudy/project-status">Project-Status</a>.</em>
             </p>
+            <h2>Configuration</h2>
+            <h3>Machines</h3>
+            <p>
+            The machines configuration describes the &#8220;physical&#8221;
+            characteristics of your infrastructure.
+            </p>
+            <pre>env :stage do         # Define an environment&#x000A;  ami 'ami-e348af8a'&#x000A;&#x000A;  role :app do        # Define a role&#x000A;    addresses '11.22.33.44'  # Use elastic IPs&#x000A;&#x000A;    disks do          # Create EBS volumes&#x000A;      path &quot;/rudy/disk1&quot; do&#x000A;        size 100&#x000A;        device &quot;/dev/sdr&quot;&#x000A;      end&#x000A;    end&#x000A;  end&#x000A;end</pre>
+            <h3>Routines</h3>
+            <p>
+            The routines configuration describes repeatable processes that you can
+            execute on your machines.
+            </p>
+            <pre>startup do            # $ rudy startup&#x000A;  adduser :rudy&#x000A;  authorize :rudy     # Enable passwordless login&#x000A;&#x000A;  disks do                   # Create a disk&#x000A;    restore &quot;/rudy/disk1&quot;    # from a backup&#x000A;  end&#x000A;&#x000A;  after :rudy do      # Run remote SSH commands&#x000A;    mkdir :p, &quot;great&quot;       # $ mkdir -p great&#x000A;    touch &quot;great/scott&quot;     # $ touch great/scott&#x000A;    ls :l, :a               # $ ls -l -a&#x000A;  end&#x000A;end</pre>
             <h2>Features</h2>
             <ul>
             <li>Create complex environments with a single command
@@ -138,7 +151,7 @@
             </p>
             <p>
             <b>See <a
-            href="http://wiki.github.com/solutious/rudy/getting-started">Getting-Started</a>
+            href="http://solutious.com/products/rudy/getting-started.html">Getting-Started</a>
             for more info.</b>
             </p>
             <h2>Pre-Requisites</h2>
@@ -296,6 +309,9 @@
             </li>
             <li>Boto &#8212; <a
             href="http://code.google.com/p/boto/">code.google.com/p/boto/</a>
+            
+            </li>
+            <li>Fabric &#8212; <a href="http://www.nongnu.org/fab/">www.nongnu.org/fab/</a>
             
             </li>
             </ul>

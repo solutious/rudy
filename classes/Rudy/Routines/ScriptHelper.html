@@ -41,18 +41,18 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000143">after</a></li>
-              <li><a href="#M000144">after?</a></li>
-              <li><a href="#M000139">after_local</a></li>
-              <li><a href="#M000140">after_local?</a></li>
-              <li><a href="#M000141">before</a></li>
-              <li><a href="#M000142">before?</a></li>
-              <li><a href="#M000135">before_local</a></li>
-              <li><a href="#M000136">before_local?</a></li>
-              <li><a href="#M000145">script</a></li>
-              <li><a href="#M000146">script?</a></li>
-              <li><a href="#M000137">script_local</a></li>
-              <li><a href="#M000138">script_local?</a></li>
+              <li><a href="#M000139">after</a></li>
+              <li><a href="#M000140">after?</a></li>
+              <li><a href="#M000135">after_local</a></li>
+              <li><a href="#M000136">after_local?</a></li>
+              <li><a href="#M000137">before</a></li>
+              <li><a href="#M000138">before?</a></li>
+              <li><a href="#M000131">before_local</a></li>
+              <li><a href="#M000132">before_local?</a></li>
+              <li><a href="#M000141">script</a></li>
+              <li><a href="#M000142">script?</a></li>
+              <li><a href="#M000133">script_local</a></li>
+              <li><a href="#M000134">script_local?</a></li>
             </ol>
           </div>
           <div id='context'>
@@ -66,89 +66,89 @@
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000143'>
-                <a name='M000143'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>after</span>
-                  <span class='arguments'>(routine, sconf, machine, rbox)</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000143-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000143-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/scripthelper.rb, line 55</span>&#x000A;55:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">after</span>(<span class="ruby-identifier">routine</span>, <span class="ruby-identifier">sconf</span>, <span class="ruby-identifier">machine</span>, <span class="ruby-identifier">rbox</span>)&#x000A;56:       <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;ScriptHelper: Not a Rudy::Machine&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">machine</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machine</span>)&#x000A;57:       <span class="ruby-identifier">execute_command</span>(<span class="ruby-identifier">:after</span>, <span class="ruby-identifier">routine</span>, <span class="ruby-identifier">sconf</span>, <span class="ruby-identifier">machine</span>.<span class="ruby-identifier">name</span>, <span class="ruby-identifier">rbox</span>)&#x000A;58:     <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='public-instance method' id='method-M000144'>
-                <a name='M000144'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>after?</span>
-                  <span class='arguments'>(routine)</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000144-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000144-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/scripthelper.rb, line 59</span>&#x000A;59:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">after?</span>(<span class="ruby-identifier">routine</span>); <span class="ruby-identifier">execute_command?</span>(<span class="ruby-identifier">:after</span>, <span class="ruby-identifier">routine</span>); <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
               <div class='public-instance method' id='method-M000139'>
                 <a name='M000139'>      </a>
                 <div class='synopsis'>
-                  <span class='name'>after_local</span>
-                  <span class='arguments'>(routine, sconf, rbox)</span>
+                  <span class='name'>after</span>
+                  <span class='arguments'>(routine, sconf, machine, rbox, option=nil, argv=nil)</span>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000139-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000139-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/scripthelper.rb, line 39</span>&#x000A;39:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">after_local</span>(<span class="ruby-identifier">routine</span>, <span class="ruby-identifier">sconf</span>, <span class="ruby-identifier">rbox</span>)&#x000A;40:       <span class="ruby-identifier">execute_command</span>(<span class="ruby-identifier">:after_local</span>, <span class="ruby-identifier">routine</span>, <span class="ruby-identifier">sconf</span>, <span class="ruby-value str">'localhost'</span>, <span class="ruby-identifier">rbox</span>)&#x000A;41:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000139-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/scripthelper.rb, line 55</span>&#x000A;55:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">after</span>(<span class="ruby-identifier">routine</span>, <span class="ruby-identifier">sconf</span>, <span class="ruby-identifier">machine</span>, <span class="ruby-identifier">rbox</span>, <span class="ruby-identifier">option</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">argv</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;56:       <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;ScriptHelper: Not a Rudy::Machine&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">machine</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machine</span>)&#x000A;57:       <span class="ruby-identifier">execute_command</span>(<span class="ruby-identifier">:after</span>, <span class="ruby-identifier">routine</span>, <span class="ruby-identifier">sconf</span>, <span class="ruby-identifier">machine</span>.<span class="ruby-identifier">name</span>, <span class="ruby-identifier">rbox</span>, <span class="ruby-identifier">option</span>, <span class="ruby-identifier">argv</span>)&#x000A;58:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='public-instance method' id='method-M000140'>
                 <a name='M000140'>      </a>
                 <div class='synopsis'>
-                  <span class='name'>after_local?</span>
+                  <span class='name'>after?</span>
                   <span class='arguments'>(routine)</span>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000140-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000140-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/scripthelper.rb, line 42</span>&#x000A;42:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">after_local?</span>(<span class="ruby-identifier">routine</span>)&#x000A;43:       <span class="ruby-identifier">routine</span>[<span class="ruby-identifier">:after_local</span>] = {                 <span class="ruby-comment cmt"># See before_local note</span>&#x000A;44:         <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">sysinfo</span>.<span class="ruby-identifier">user</span>.<span class="ruby-identifier">to_sym</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">routine</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:after_local</span>) &#x000A;45:       } <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">routine</span>[<span class="ruby-identifier">:after_local</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Proc</span>)&#x000A;46:       <span class="ruby-identifier">execute_command?</span>(<span class="ruby-identifier">:after_local</span>, <span class="ruby-identifier">routine</span>)&#x000A;47:     <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='public-instance method' id='method-M000141'>
-                <a name='M000141'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>before</span>
-                  <span class='arguments'>(routine, sconf, machine, rbox)</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000141-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000141-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/scripthelper.rb, line 49</span>&#x000A;49:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">before</span>(<span class="ruby-identifier">routine</span>, <span class="ruby-identifier">sconf</span>, <span class="ruby-identifier">machine</span>, <span class="ruby-identifier">rbox</span>)&#x000A;50:       <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;ScriptHelper: Not a Rudy::Machine&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">machine</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machine</span>)&#x000A;51:       <span class="ruby-identifier">execute_command</span>(<span class="ruby-identifier">:before</span>, <span class="ruby-identifier">routine</span>, <span class="ruby-identifier">sconf</span>, <span class="ruby-identifier">machine</span>.<span class="ruby-identifier">name</span>, <span class="ruby-identifier">rbox</span>)&#x000A;52:     <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='public-instance method' id='method-M000142'>
-                <a name='M000142'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>before?</span>
-                  <span class='arguments'>(routine)</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000142-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000142-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/scripthelper.rb, line 53</span>&#x000A;53:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">before?</span>(<span class="ruby-identifier">routine</span>); <span class="ruby-identifier">execute_command?</span>(<span class="ruby-identifier">:before</span>, <span class="ruby-identifier">routine</span>); <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000140-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/scripthelper.rb, line 59</span>&#x000A;59:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">after?</span>(<span class="ruby-identifier">routine</span>); <span class="ruby-identifier">execute_command?</span>(<span class="ruby-identifier">:after</span>, <span class="ruby-identifier">routine</span>); <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='public-instance method' id='method-M000135'>
                 <a name='M000135'>      </a>
                 <div class='synopsis'>
+                  <span class='name'>after_local</span>
+                  <span class='arguments'>(routine, sconf, rbox, option=nil, argv=nil)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000135-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000135-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/scripthelper.rb, line 39</span>&#x000A;39:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">after_local</span>(<span class="ruby-identifier">routine</span>, <span class="ruby-identifier">sconf</span>, <span class="ruby-identifier">rbox</span>, <span class="ruby-identifier">option</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">argv</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;40:       <span class="ruby-identifier">execute_command</span>(<span class="ruby-identifier">:after_local</span>, <span class="ruby-identifier">routine</span>, <span class="ruby-identifier">sconf</span>, <span class="ruby-value str">'localhost'</span>, <span class="ruby-identifier">rbox</span>, <span class="ruby-identifier">option</span>, <span class="ruby-identifier">argv</span>)&#x000A;41:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000136'>
+                <a name='M000136'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>after_local?</span>
+                  <span class='arguments'>(routine)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000136-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000136-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/scripthelper.rb, line 42</span>&#x000A;42:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">after_local?</span>(<span class="ruby-identifier">routine</span>)&#x000A;43:       <span class="ruby-identifier">routine</span>[<span class="ruby-identifier">:after_local</span>] = {                 <span class="ruby-comment cmt"># See before_local note</span>&#x000A;44:         <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">sysinfo</span>.<span class="ruby-identifier">user</span>.<span class="ruby-identifier">to_sym</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">routine</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:after_local</span>) &#x000A;45:       } <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">routine</span>[<span class="ruby-identifier">:after_local</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Proc</span>)&#x000A;46:       <span class="ruby-identifier">execute_command?</span>(<span class="ruby-identifier">:after_local</span>, <span class="ruby-identifier">routine</span>)&#x000A;47:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000137'>
+                <a name='M000137'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>before</span>
+                  <span class='arguments'>(routine, sconf, machine, rbox, option=nil, argv=nil)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000137-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000137-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/scripthelper.rb, line 49</span>&#x000A;49:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">before</span>(<span class="ruby-identifier">routine</span>, <span class="ruby-identifier">sconf</span>, <span class="ruby-identifier">machine</span>, <span class="ruby-identifier">rbox</span>, <span class="ruby-identifier">option</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">argv</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;50:       <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;ScriptHelper: Not a Rudy::Machine&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">machine</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machine</span>)&#x000A;51:       <span class="ruby-identifier">execute_command</span>(<span class="ruby-identifier">:before</span>, <span class="ruby-identifier">routine</span>, <span class="ruby-identifier">sconf</span>, <span class="ruby-identifier">machine</span>.<span class="ruby-identifier">name</span>, <span class="ruby-identifier">rbox</span>, <span class="ruby-identifier">option</span>, <span class="ruby-identifier">argv</span>)&#x000A;52:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000138'>
+                <a name='M000138'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>before?</span>
+                  <span class='arguments'>(routine)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000138-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000138-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/scripthelper.rb, line 53</span>&#x000A;53:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">before?</span>(<span class="ruby-identifier">routine</span>); <span class="ruby-identifier">execute_command?</span>(<span class="ruby-identifier">:before</span>, <span class="ruby-identifier">routine</span>); <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000131'>
+                <a name='M000131'>      </a>
+                <div class='synopsis'>
                   <span class='name'>before_local</span>
-                  <span class='arguments'>(routine, sconf, rbox)</span>
+                  <span class='arguments'>(routine, sconf, rbox, option=nil, argv=nil)</span>
                 </div>
                 <div class='description'>
                   <p>
@@ -156,75 +156,75 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000135-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000131-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000135-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/scripthelper.rb, line 16</span>&#x000A;16:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">before_local</span>(<span class="ruby-identifier">routine</span>, <span class="ruby-identifier">sconf</span>, <span class="ruby-identifier">rbox</span>)&#x000A;17:       <span class="ruby-identifier">execute_command</span>(<span class="ruby-identifier">:before_local</span>, <span class="ruby-identifier">routine</span>, <span class="ruby-identifier">sconf</span>, <span class="ruby-value str">'localhost'</span>, <span class="ruby-identifier">rbox</span>)&#x000A;18:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000131-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/scripthelper.rb, line 16</span>&#x000A;16:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">before_local</span>(<span class="ruby-identifier">routine</span>, <span class="ruby-identifier">sconf</span>, <span class="ruby-identifier">rbox</span>, <span class="ruby-identifier">option</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">argv</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;17:       <span class="ruby-identifier">execute_command</span>(<span class="ruby-identifier">:before_local</span>, <span class="ruby-identifier">routine</span>, <span class="ruby-identifier">sconf</span>, <span class="ruby-value str">'localhost'</span>, <span class="ruby-identifier">rbox</span>, <span class="ruby-identifier">option</span>, <span class="ruby-identifier">argv</span>)&#x000A;18:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000136'>
-                <a name='M000136'>      </a>
+              <div class='public-instance method' id='method-M000132'>
+                <a name='M000132'>      </a>
                 <div class='synopsis'>
                   <span class='name'>before_local?</span>
                   <span class='arguments'>(routine)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000136-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000132-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000136-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/scripthelper.rb, line 19</span>&#x000A;19:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">before_local?</span>(<span class="ruby-identifier">routine</span>)&#x000A;20:       <span class="ruby-comment cmt"># before_local generally doesn't take a user name like the remote</span>&#x000A;21:       <span class="ruby-comment cmt"># before block so we add it here (unless the user did specify it)</span>&#x000A;22:       <span class="ruby-identifier">routine</span>[<span class="ruby-identifier">:before_local</span>] = { &#x000A;23:         <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">sysinfo</span>.<span class="ruby-identifier">user</span>.<span class="ruby-identifier">to_sym</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">routine</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:before_local</span>) &#x000A;24:       } <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">routine</span>[<span class="ruby-identifier">:before_local</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Proc</span>)&#x000A;25:       <span class="ruby-identifier">execute_command?</span>(<span class="ruby-identifier">:before_local</span>, <span class="ruby-identifier">routine</span>)&#x000A;26:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000132-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/scripthelper.rb, line 19</span>&#x000A;19:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">before_local?</span>(<span class="ruby-identifier">routine</span>)&#x000A;20:       <span class="ruby-comment cmt"># before_local generally doesn't take a user name like the remote</span>&#x000A;21:       <span class="ruby-comment cmt"># before block so we add it here (unless the user did specify it)</span>&#x000A;22:       <span class="ruby-identifier">routine</span>[<span class="ruby-identifier">:before_local</span>] = { &#x000A;23:         <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">sysinfo</span>.<span class="ruby-identifier">user</span>.<span class="ruby-identifier">to_sym</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">routine</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:before_local</span>) &#x000A;24:       } <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">routine</span>[<span class="ruby-identifier">:before_local</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Proc</span>)&#x000A;25:       <span class="ruby-identifier">execute_command?</span>(<span class="ruby-identifier">:before_local</span>, <span class="ruby-identifier">routine</span>)&#x000A;26:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000145'>
-                <a name='M000145'>      </a>
+              <div class='public-instance method' id='method-M000141'>
+                <a name='M000141'>      </a>
                 <div class='synopsis'>
                   <span class='name'>script</span>
-                  <span class='arguments'>(routine, sconf, machine, rbox)</span>
+                  <span class='arguments'>(routine, sconf, machine, rbox, option=nil, argv=nil)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000145-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000141-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000145-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/scripthelper.rb, line 61</span>&#x000A;61:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">script</span>(<span class="ruby-identifier">routine</span>, <span class="ruby-identifier">sconf</span>, <span class="ruby-identifier">machine</span>, <span class="ruby-identifier">rbox</span>)&#x000A;62:       <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;ScriptHelper: Not a Rudy::Machine&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">machine</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machine</span>)&#x000A;63:       <span class="ruby-identifier">execute_command</span>(<span class="ruby-identifier">:script</span>, <span class="ruby-identifier">routine</span>, <span class="ruby-identifier">sconf</span>, <span class="ruby-identifier">machine</span>.<span class="ruby-identifier">name</span>, <span class="ruby-identifier">rbox</span>)&#x000A;64:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000141-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/scripthelper.rb, line 61</span>&#x000A;61:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">script</span>(<span class="ruby-identifier">routine</span>, <span class="ruby-identifier">sconf</span>, <span class="ruby-identifier">machine</span>, <span class="ruby-identifier">rbox</span>, <span class="ruby-identifier">option</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">argv</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;62:       <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;ScriptHelper: Not a Rudy::Machine&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">machine</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machine</span>)&#x000A;63:       <span class="ruby-identifier">execute_command</span>(<span class="ruby-identifier">:script</span>, <span class="ruby-identifier">routine</span>, <span class="ruby-identifier">sconf</span>, <span class="ruby-identifier">machine</span>.<span class="ruby-identifier">name</span>, <span class="ruby-identifier">rbox</span>, <span class="ruby-identifier">option</span>, <span class="ruby-identifier">argv</span>)&#x000A;64:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000146'>
-                <a name='M000146'>      </a>
+              <div class='public-instance method' id='method-M000142'>
+                <a name='M000142'>      </a>
                 <div class='synopsis'>
                   <span class='name'>script?</span>
                   <span class='arguments'>(routine)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000146-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000142-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000146-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/scripthelper.rb, line 65</span>&#x000A;65:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">script?</span>(<span class="ruby-identifier">routine</span>); <span class="ruby-identifier">execute_command?</span>(<span class="ruby-identifier">:script</span>, <span class="ruby-identifier">routine</span>); <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000142-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/scripthelper.rb, line 65</span>&#x000A;65:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">script?</span>(<span class="ruby-identifier">routine</span>); <span class="ruby-identifier">execute_command?</span>(<span class="ruby-identifier">:script</span>, <span class="ruby-identifier">routine</span>); <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000137'>
-                <a name='M000137'>      </a>
+              <div class='public-instance method' id='method-M000133'>
+                <a name='M000133'>      </a>
                 <div class='synopsis'>
                   <span class='name'>script_local</span>
-                  <span class='arguments'>(routine, sconf, rbox)</span>
+                  <span class='arguments'>(routine, sconf, rbox, option=nil, argv=nil)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000137-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000133-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000137-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/scripthelper.rb, line 27</span>&#x000A;27:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">script_local</span>(<span class="ruby-identifier">routine</span>, <span class="ruby-identifier">sconf</span>, <span class="ruby-identifier">rbox</span>)&#x000A;28:       <span class="ruby-identifier">execute_command</span>(<span class="ruby-identifier">:script_local</span>, <span class="ruby-identifier">routine</span>, <span class="ruby-identifier">sconf</span>, <span class="ruby-value str">'localhost'</span>, <span class="ruby-identifier">rbox</span>)&#x000A;29:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000133-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/scripthelper.rb, line 27</span>&#x000A;27:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">script_local</span>(<span class="ruby-identifier">routine</span>, <span class="ruby-identifier">sconf</span>, <span class="ruby-identifier">rbox</span>, <span class="ruby-identifier">option</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">argv</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;28:       <span class="ruby-identifier">execute_command</span>(<span class="ruby-identifier">:script_local</span>, <span class="ruby-identifier">routine</span>, <span class="ruby-identifier">sconf</span>, <span class="ruby-value str">'localhost'</span>, <span class="ruby-identifier">rbox</span>, <span class="ruby-identifier">option</span>, <span class="ruby-identifier">argv</span>)&#x000A;29:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000138'>
-                <a name='M000138'>      </a>
+              <div class='public-instance method' id='method-M000134'>
+                <a name='M000134'>      </a>
                 <div class='synopsis'>
                   <span class='name'>script_local?</span>
                   <span class='arguments'>(routine)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000138-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000134-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000138-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/scripthelper.rb, line 30</span>&#x000A;30:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">script_local?</span>(<span class="ruby-identifier">routine</span>)&#x000A;31:       <span class="ruby-comment cmt"># before_local generally doesn't take a user name like the remote</span>&#x000A;32:       <span class="ruby-comment cmt"># before block so we add it here (unless the user did specify it)</span>&#x000A;33:       <span class="ruby-identifier">routine</span>[<span class="ruby-identifier">:script_local</span>] = { &#x000A;34:         <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">sysinfo</span>.<span class="ruby-identifier">user</span>.<span class="ruby-identifier">to_sym</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">routine</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:script_local</span>) &#x000A;35:       } <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">routine</span>[<span class="ruby-identifier">:script_local</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Proc</span>)&#x000A;36:       <span class="ruby-identifier">execute_command?</span>(<span class="ruby-identifier">:script_local</span>, <span class="ruby-identifier">routine</span>)&#x000A;37:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000134-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/helpers/scripthelper.rb, line 30</span>&#x000A;30:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">script_local?</span>(<span class="ruby-identifier">routine</span>)&#x000A;31:       <span class="ruby-comment cmt"># before_local generally doesn't take a user name like the remote</span>&#x000A;32:       <span class="ruby-comment cmt"># before block so we add it here (unless the user did specify it)</span>&#x000A;33:       <span class="ruby-identifier">routine</span>[<span class="ruby-identifier">:script_local</span>] = { &#x000A;34:         <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">sysinfo</span>.<span class="ruby-identifier">user</span>.<span class="ruby-identifier">to_sym</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">routine</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:script_local</span>) &#x000A;35:       } <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">routine</span>[<span class="ruby-identifier">:script_local</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Proc</span>)&#x000A;36:       <span class="ruby-identifier">execute_command?</span>(<span class="ruby-identifier">:script_local</span>, <span class="ruby-identifier">routine</span>)&#x000A;37:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

@@ -45,23 +45,23 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000272">from_hash</a></li>
+              <li><a href="#M000230">from_hash</a></li>
             </ol>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000269">any?</a></li>
-              <li><a href="#M000262">authorise</a></li>
-              <li><a href="#M000265">authorise_group</a></li>
-              <li><a href="#M000261">authorize</a></li>
-              <li><a href="#M000264">authorize_group</a></li>
-              <li><a href="#M000259">create</a></li>
-              <li><a href="#M000260">destroy</a></li>
-              <li><a href="#M000271">exists?</a></li>
-              <li><a href="#M000270">get</a></li>
-              <li><a href="#M000267">list</a></li>
-              <li><a href="#M000268">list_as_hash</a></li>
-              <li><a href="#M000263">revoke</a></li>
-              <li><a href="#M000266">revoke_group</a></li>
+              <li><a href="#M000227">any?</a></li>
+              <li><a href="#M000220">authorise</a></li>
+              <li><a href="#M000223">authorise_group</a></li>
+              <li><a href="#M000219">authorize</a></li>
+              <li><a href="#M000222">authorize_group</a></li>
+              <li><a href="#M000217">create</a></li>
+              <li><a href="#M000218">destroy</a></li>
+              <li><a href="#M000229">exists?</a></li>
+              <li><a href="#M000228">get</a></li>
+              <li><a href="#M000225">list</a></li>
+              <li><a href="#M000226">list_as_hash</a></li>
+              <li><a href="#M000221">revoke</a></li>
+              <li><a href="#M000224">revoke_group</a></li>
             </ol>
           </div>
           <div id='context'>
@@ -76,8 +76,8 @@
           <div id='section'>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='public-class method' id='method-M000272'>
-                <a name='M000272'>      </a>
+              <div class='public-class method' id='method-M000230'>
+                <a name='M000230'>      </a>
                 <div class='synopsis'>
                   <span class='name'>from_hash</span>
                   <span class='arguments'>(ghash)</span>
@@ -99,52 +99,52 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000272-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000230-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000272-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 210</span>&#x000A;210:       <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">ghash</span>)&#x000A;211:         <span class="ruby-identifier">newg</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Group</span>.<span class="ruby-identifier">new</span>&#x000A;212:         <span class="ruby-identifier">newg</span>.<span class="ruby-identifier">name</span> = <span class="ruby-identifier">ghash</span>[<span class="ruby-value str">'groupName'</span>]&#x000A;213:         <span class="ruby-identifier">newg</span>.<span class="ruby-identifier">description</span> = <span class="ruby-identifier">ghash</span>[<span class="ruby-value str">'groupDescription'</span>]&#x000A;214:         <span class="ruby-identifier">newg</span>.<span class="ruby-identifier">owner_id</span> = <span class="ruby-identifier">ghash</span>[<span class="ruby-value str">'ownerId'</span>]&#x000A;215:         <span class="ruby-identifier">newg</span>.<span class="ruby-identifier">addresses</span> = {}&#x000A;216:         <span class="ruby-identifier">newg</span>.<span class="ruby-identifier">groups</span> = {}&#x000A;217:         &#x000A;218:         <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">newg</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">ghash</span>[<span class="ruby-value str">'ipPermissions'</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>)&#x000A;219:         &#x000A;220:         <span class="ruby-identifier">ghash</span>[<span class="ruby-value str">'ipPermissions'</span>][<span class="ruby-value str">'item'</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">oldp</span><span class="ruby-operator">|</span>&#x000A;221:           <span class="ruby-identifier">newp</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Group</span><span class="ruby-operator">::</span><span class="ruby-constant">Rule</span>.<span class="ruby-identifier">new</span>&#x000A;222:           <span class="ruby-identifier">newp</span>.<span class="ruby-identifier">ports</span> = <span class="ruby-constant">Range</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">oldp</span>[<span class="ruby-value str">'fromPort'</span>], <span class="ruby-identifier">oldp</span>[<span class="ruby-value str">'toPort'</span>])&#x000A;223:           <span class="ruby-identifier">newp</span>.<span class="ruby-identifier">protocol</span> = <span class="ruby-identifier">oldp</span>[<span class="ruby-value str">'ipProtocol'</span>]&#x000A;224:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">oldp</span>[<span class="ruby-value str">'groups'</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>)&#x000A;225:             <span class="ruby-identifier">oldp</span>[<span class="ruby-value str">'groups'</span>][<span class="ruby-value str">'item'</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">oldpg</span><span class="ruby-operator">|</span>&#x000A;226:               <span class="ruby-identifier">name</span> = [<span class="ruby-identifier">oldpg</span>[<span class="ruby-value str">'userId'</span>], <span class="ruby-identifier">oldpg</span>[<span class="ruby-value str">'groupName'</span>]].<span class="ruby-identifier">join</span>(<span class="ruby-value str">':'</span>)   <span class="ruby-comment cmt"># account_num:name</span>&#x000A;227:               <span class="ruby-identifier">newg</span>.<span class="ruby-identifier">add_group</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">newp</span>)&#x000A;228:             <span class="ruby-keyword kw">end</span>&#x000A;229:           <span class="ruby-keyword kw">end</span>&#x000A;230:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">oldp</span>[<span class="ruby-value str">'ipRanges'</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>)&#x000A;231:             <span class="ruby-identifier">oldp</span>[<span class="ruby-value str">'ipRanges'</span>][<span class="ruby-value str">'item'</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">olda</span><span class="ruby-operator">|</span>&#x000A;232:               <span class="ruby-identifier">name</span> = <span class="ruby-node">&quot;#{olda['cidrIp']}&quot;</span>&#x000A;233:               <span class="ruby-identifier">newg</span>.<span class="ruby-identifier">add_address</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">newp</span>)   <span class="ruby-comment cmt"># ipaddress/mask/protocol</span>&#x000A;234:             <span class="ruby-keyword kw">end</span>&#x000A;235:           <span class="ruby-keyword kw">end</span>&#x000A;236:         <span class="ruby-keyword kw">end</span>&#x000A;237:         <span class="ruby-identifier">newg</span>&#x000A;238:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000230-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 210</span>&#x000A;210:       <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">ghash</span>)&#x000A;211:         <span class="ruby-identifier">newg</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Group</span>.<span class="ruby-identifier">new</span>&#x000A;212:         <span class="ruby-identifier">newg</span>.<span class="ruby-identifier">name</span> = <span class="ruby-identifier">ghash</span>[<span class="ruby-value str">'groupName'</span>]&#x000A;213:         <span class="ruby-identifier">newg</span>.<span class="ruby-identifier">description</span> = <span class="ruby-identifier">ghash</span>[<span class="ruby-value str">'groupDescription'</span>]&#x000A;214:         <span class="ruby-identifier">newg</span>.<span class="ruby-identifier">owner_id</span> = <span class="ruby-identifier">ghash</span>[<span class="ruby-value str">'ownerId'</span>]&#x000A;215:         <span class="ruby-identifier">newg</span>.<span class="ruby-identifier">addresses</span> = {}&#x000A;216:         <span class="ruby-identifier">newg</span>.<span class="ruby-identifier">groups</span> = {}&#x000A;217:         &#x000A;218:         <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">newg</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">ghash</span>[<span class="ruby-value str">'ipPermissions'</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>)&#x000A;219:         &#x000A;220:         <span class="ruby-identifier">ghash</span>[<span class="ruby-value str">'ipPermissions'</span>][<span class="ruby-value str">'item'</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">oldp</span><span class="ruby-operator">|</span>&#x000A;221:           <span class="ruby-identifier">newp</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Group</span><span class="ruby-operator">::</span><span class="ruby-constant">Rule</span>.<span class="ruby-identifier">new</span>&#x000A;222:           <span class="ruby-identifier">newp</span>.<span class="ruby-identifier">ports</span> = <span class="ruby-constant">Range</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">oldp</span>[<span class="ruby-value str">'fromPort'</span>], <span class="ruby-identifier">oldp</span>[<span class="ruby-value str">'toPort'</span>])&#x000A;223:           <span class="ruby-identifier">newp</span>.<span class="ruby-identifier">protocol</span> = <span class="ruby-identifier">oldp</span>[<span class="ruby-value str">'ipProtocol'</span>]&#x000A;224:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">oldp</span>[<span class="ruby-value str">'groups'</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>)&#x000A;225:             <span class="ruby-identifier">oldp</span>[<span class="ruby-value str">'groups'</span>][<span class="ruby-value str">'item'</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">oldpg</span><span class="ruby-operator">|</span>&#x000A;226:               <span class="ruby-identifier">name</span> = [<span class="ruby-identifier">oldpg</span>[<span class="ruby-value str">'userId'</span>], <span class="ruby-identifier">oldpg</span>[<span class="ruby-value str">'groupName'</span>]].<span class="ruby-identifier">join</span>(<span class="ruby-value str">':'</span>)   <span class="ruby-comment cmt"># account_num:name</span>&#x000A;227:               <span class="ruby-identifier">newg</span>.<span class="ruby-identifier">add_group</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">newp</span>)&#x000A;228:             <span class="ruby-keyword kw">end</span>&#x000A;229:           <span class="ruby-keyword kw">end</span>&#x000A;230:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">oldp</span>[<span class="ruby-value str">'ipRanges'</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>)&#x000A;231:             <span class="ruby-identifier">oldp</span>[<span class="ruby-value str">'ipRanges'</span>][<span class="ruby-value str">'item'</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">olda</span><span class="ruby-operator">|</span>&#x000A;232:               <span class="ruby-identifier">name</span> = <span class="ruby-node">&quot;#{olda['cidrIp']}&quot;</span>&#x000A;233:               <span class="ruby-identifier">newg</span>.<span class="ruby-identifier">add_address</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">newp</span>)   <span class="ruby-comment cmt"># ipaddress/mask/protocol</span>&#x000A;234:             <span class="ruby-keyword kw">end</span>&#x000A;235:           <span class="ruby-keyword kw">end</span>&#x000A;236:         <span class="ruby-keyword kw">end</span>&#x000A;237:         <span class="ruby-identifier">newg</span>&#x000A;238:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000269'>
-                <a name='M000269'>      </a>
+              <div class='public-instance method' id='method-M000227'>
+                <a name='M000227'>      </a>
                 <div class='synopsis'>
                   <span class='name'>any?</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000269-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000227-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000269-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 154</span>&#x000A;154:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">any?</span>&#x000A;155:         <span class="ruby-identifier">groups</span> = <span class="ruby-identifier">list</span> <span class="ruby-operator">||</span> []&#x000A;156:         <span class="ruby-operator">!</span><span class="ruby-identifier">groups</span>.<span class="ruby-identifier">empty?</span>&#x000A;157:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000227-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 154</span>&#x000A;154:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">any?</span>&#x000A;155:         <span class="ruby-identifier">groups</span> = <span class="ruby-identifier">list</span> <span class="ruby-operator">||</span> []&#x000A;156:         <span class="ruby-operator">!</span><span class="ruby-identifier">groups</span>.<span class="ruby-identifier">empty?</span>&#x000A;157:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000262'>
-                <a name='M000262'>      </a>
+              <div class='public-instance method' id='method-M000220'>
+                <a name='M000220'>      </a>
                 <div class='synopsis'>
                   <span class='name'>authorise</span>
                   <span class='arguments'>(name, addresses=[], ports=[], protocols=[], &amp;each_group)</span>
                 </div>
                 <div class='description'>
                   <p>
-                  Alias for <a href="Groups.html#M000261">authorize</a>
+                  Alias for <a href="Groups.html#M000219">authorize</a>
                   </p>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000265'>
-                <a name='M000265'>      </a>
+              <div class='public-instance method' id='method-M000223'>
+                <a name='M000223'>      </a>
                 <div class='synopsis'>
                   <span class='name'>authorise_group</span>
                   <span class='arguments'>(name, gname, owner, &amp;each_group)</span>
                 </div>
                 <div class='description'>
                   <p>
-                  Alias for <a href="Groups.html#M000264">authorize_group</a>
+                  Alias for <a href="Groups.html#M000222">authorize_group</a>
                   </p>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000261'>
-                <a name='M000261'>      </a>
+              <div class='public-instance method' id='method-M000219'>
+                <a name='M000219'>      </a>
                 <div class='synopsis'>
                   <span class='name'>authorize</span>
                   <span class='arguments'>(name, addresses=[], ports=[], protocols=[], &amp;each_group)</span>
@@ -155,27 +155,27 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000261-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000219-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000261-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 110</span>&#x000A;110:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">authorize</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">addresses</span>=[], <span class="ruby-identifier">ports</span>=[], <span class="ruby-identifier">protocols</span>=[], <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;111:         <span class="ruby-identifier">modify_rules</span>(<span class="ruby-identifier">:authorize</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">addresses</span>, <span class="ruby-identifier">ports</span>, <span class="ruby-identifier">protocols</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;112:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000219-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 110</span>&#x000A;110:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">authorize</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">addresses</span>=[], <span class="ruby-identifier">ports</span>=[], <span class="ruby-identifier">protocols</span>=[], <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;111:         <span class="ruby-identifier">modify_rules</span>(<span class="ruby-identifier">:authorize</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">addresses</span>, <span class="ruby-identifier">ports</span>, <span class="ruby-identifier">protocols</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;112:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000264'>
-                <a name='M000264'>      </a>
+              <div class='public-instance method' id='method-M000222'>
+                <a name='M000222'>      </a>
                 <div class='synopsis'>
                   <span class='name'>authorize_group</span>
                   <span class='arguments'>(name, gname, owner, &amp;each_group)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000264-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000222-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000264-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 121</span>&#x000A;121:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">authorize_group</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">gname</span>, <span class="ruby-identifier">owner</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;122:         <span class="ruby-identifier">modify_group_rules</span>(<span class="ruby-identifier">:authorize</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">gname</span>, <span class="ruby-identifier">owner</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;123:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000222-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 121</span>&#x000A;121:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">authorize_group</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">gname</span>, <span class="ruby-identifier">owner</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;122:         <span class="ruby-identifier">modify_group_rules</span>(<span class="ruby-identifier">:authorize</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">gname</span>, <span class="ruby-identifier">owner</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;123:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000259'>
-                <a name='M000259'>      </a>
+              <div class='public-instance method' id='method-M000217'>
+                <a name='M000217'>      </a>
                 <div class='synopsis'>
                   <span class='name'>create</span>
                   <span class='arguments'>(name, desc=nil, addresses=[], ports=[], protocols=[], &amp;each_group)</span>
@@ -187,14 +187,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000259-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000217-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000259-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 93</span>&#x000A;93:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">desc</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">addresses</span>=[], <span class="ruby-identifier">ports</span>=[], <span class="ruby-identifier">protocols</span>=[], <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;94:         <span class="ruby-identifier">desc</span> <span class="ruby-operator">||=</span> <span class="ruby-node">&quot;Security Group #{name}&quot;</span>&#x000A;95:         <span class="ruby-identifier">ret</span> = <span class="ruby-ivar">@ec2</span>.<span class="ruby-identifier">create_security_group</span>(<span class="ruby-identifier">:group_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">name</span>, <span class="ruby-identifier">:group_description</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">desc</span>)&#x000A;96:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">unless</span> (<span class="ruby-identifier">ret</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">ret</span>[<span class="ruby-value str">'return'</span>] <span class="ruby-operator">==</span> <span class="ruby-value str">'true'</span>)&#x000A;97:         <span class="ruby-identifier">authorize</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">addresses</span>, <span class="ruby-identifier">ports</span>, <span class="ruby-identifier">protocols</span>)&#x000A;98:         <span class="ruby-identifier">get</span>(<span class="ruby-identifier">name</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;99:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000217-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 93</span>&#x000A;93:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">desc</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">addresses</span>=[], <span class="ruby-identifier">ports</span>=[], <span class="ruby-identifier">protocols</span>=[], <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;94:         <span class="ruby-identifier">desc</span> <span class="ruby-operator">||=</span> <span class="ruby-node">&quot;Security Group #{name}&quot;</span>&#x000A;95:         <span class="ruby-identifier">ret</span> = <span class="ruby-ivar">@ec2</span>.<span class="ruby-identifier">create_security_group</span>(<span class="ruby-identifier">:group_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">name</span>, <span class="ruby-identifier">:group_description</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">desc</span>)&#x000A;96:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">unless</span> (<span class="ruby-identifier">ret</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">ret</span>[<span class="ruby-value str">'return'</span>] <span class="ruby-operator">==</span> <span class="ruby-value str">'true'</span>)&#x000A;97:         <span class="ruby-identifier">authorize</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">addresses</span>, <span class="ruby-identifier">ports</span>, <span class="ruby-identifier">protocols</span>)&#x000A;98:         <span class="ruby-identifier">get</span>(<span class="ruby-identifier">name</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;99:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000260'>
-                <a name='M000260'>      </a>
+              <div class='public-instance method' id='method-M000218'>
+                <a name='M000218'>      </a>
                 <div class='synopsis'>
                   <span class='name'>destroy</span>
                   <span class='arguments'>(name, &amp;each_group)</span>
@@ -206,14 +206,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000260-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000218-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000260-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 103</span>&#x000A;103:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">destroy</span>(<span class="ruby-identifier">name</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;104:         <span class="ruby-identifier">list</span>(<span class="ruby-identifier">name</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">each_group</span>&#x000A;105:         <span class="ruby-identifier">ret</span> = <span class="ruby-ivar">@ec2</span>.<span class="ruby-identifier">delete_security_group</span>(<span class="ruby-identifier">:group_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">name</span>)&#x000A;106:         (<span class="ruby-identifier">ret</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">ret</span>[<span class="ruby-value str">'return'</span>] <span class="ruby-operator">==</span> <span class="ruby-value str">'true'</span>)&#x000A;107:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000218-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 103</span>&#x000A;103:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">destroy</span>(<span class="ruby-identifier">name</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;104:         <span class="ruby-identifier">list</span>(<span class="ruby-identifier">name</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">each_group</span>&#x000A;105:         <span class="ruby-identifier">ret</span> = <span class="ruby-ivar">@ec2</span>.<span class="ruby-identifier">delete_security_group</span>(<span class="ruby-identifier">:group_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">name</span>)&#x000A;106:         (<span class="ruby-identifier">ret</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">ret</span>[<span class="ruby-value str">'return'</span>] <span class="ruby-operator">==</span> <span class="ruby-value str">'true'</span>)&#x000A;107:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000271'>
-                <a name='M000271'>      </a>
+              <div class='public-instance method' id='method-M000229'>
+                <a name='M000229'>      </a>
                 <div class='synopsis'>
                   <span class='name'>exists?</span>
                   <span class='arguments'>(name)</span>
@@ -224,14 +224,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000271-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000229-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000271-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 170</span>&#x000A;170:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">name</span>)&#x000A;171:         <span class="ruby-keyword kw">begin</span>&#x000A;172:           <span class="ruby-identifier">g</span> = <span class="ruby-identifier">list</span>([<span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_s</span>])&#x000A;173:         <span class="ruby-keyword kw">rescue</span> <span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">InvalidGroupNotFound</span>&#x000A;174:           <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> &#x000A;175:         <span class="ruby-keyword kw">end</span>&#x000A;176:       &#x000A;177:         <span class="ruby-operator">!</span><span class="ruby-identifier">g</span>.<span class="ruby-identifier">empty?</span>&#x000A;178:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000229-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 170</span>&#x000A;170:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">name</span>)&#x000A;171:         <span class="ruby-keyword kw">begin</span>&#x000A;172:           <span class="ruby-identifier">g</span> = <span class="ruby-identifier">list</span>([<span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_s</span>])&#x000A;173:         <span class="ruby-keyword kw">rescue</span> <span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">InvalidGroupNotFound</span>&#x000A;174:           <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> &#x000A;175:         <span class="ruby-keyword kw">end</span>&#x000A;176:       &#x000A;177:         <span class="ruby-operator">!</span><span class="ruby-identifier">g</span>.<span class="ruby-identifier">empty?</span>&#x000A;178:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000270'>
-                <a name='M000270'>      </a>
+              <div class='public-instance method' id='method-M000228'>
+                <a name='M000228'>      </a>
                 <div class='synopsis'>
                   <span class='name'>get</span>
                   <span class='arguments'>(name)</span>
@@ -244,27 +244,27 @@
                   </ul>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000270-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000228-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000270-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 160</span>&#x000A;160:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get</span>(<span class="ruby-identifier">name</span>)&#x000A;161:         (<span class="ruby-identifier">list</span>([<span class="ruby-identifier">name</span>]) <span class="ruby-operator">||</span> []).<span class="ruby-identifier">first</span>&#x000A;162:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000228-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 160</span>&#x000A;160:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get</span>(<span class="ruby-identifier">name</span>)&#x000A;161:         (<span class="ruby-identifier">list</span>([<span class="ruby-identifier">name</span>]) <span class="ruby-operator">||</span> []).<span class="ruby-identifier">first</span>&#x000A;162:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000267'>
-                <a name='M000267'>      </a>
+              <div class='public-instance method' id='method-M000225'>
+                <a name='M000225'>      </a>
                 <div class='synopsis'>
                   <span class='name'>list</span>
                   <span class='arguments'>(group_names=[], &amp;each_group)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000267-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000225-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000267-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 130</span>&#x000A;130:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">list</span>(<span class="ruby-identifier">group_names</span>=[], <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;131:         <span class="ruby-identifier">group_names</span> <span class="ruby-operator">||=</span> []&#x000A;132:         <span class="ruby-identifier">groups</span> = <span class="ruby-identifier">list_as_hash</span>(<span class="ruby-identifier">group_names</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;133:         <span class="ruby-identifier">groups</span> <span class="ruby-operator">&amp;&amp;=</span> <span class="ruby-identifier">groups</span>.<span class="ruby-identifier">values</span>&#x000A;134:         <span class="ruby-identifier">groups</span>&#x000A;135:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000225-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 130</span>&#x000A;130:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">list</span>(<span class="ruby-identifier">group_names</span>=[], <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;131:         <span class="ruby-identifier">group_names</span> <span class="ruby-operator">||=</span> []&#x000A;132:         <span class="ruby-identifier">groups</span> = <span class="ruby-identifier">list_as_hash</span>(<span class="ruby-identifier">group_names</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;133:         <span class="ruby-identifier">groups</span> <span class="ruby-operator">&amp;&amp;=</span> <span class="ruby-identifier">groups</span>.<span class="ruby-identifier">values</span>&#x000A;134:         <span class="ruby-identifier">groups</span>&#x000A;135:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000268'>
-                <a name='M000268'>      </a>
+              <div class='public-instance method' id='method-M000226'>
+                <a name='M000226'>      </a>
                 <div class='synopsis'>
                   <span class='name'>list_as_hash</span>
                   <span class='arguments'>(group_names=[], &amp;each_group)</span>
@@ -284,14 +284,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000268-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000226-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000268-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 141</span>&#x000A;141:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">list_as_hash</span>(<span class="ruby-identifier">group_names</span>=[], <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;142:         <span class="ruby-identifier">group_names</span> = [<span class="ruby-identifier">group_names</span>].<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">compact</span>&#x000A;143:         <span class="ruby-identifier">glist</span> = <span class="ruby-ivar">@ec2</span>.<span class="ruby-identifier">describe_security_groups</span>(<span class="ruby-identifier">:group_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">group_names</span>) <span class="ruby-operator">||</span> {}&#x000A;144:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">glist</span>[<span class="ruby-value str">'securityGroupInfo'</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>)&#x000A;145:         <span class="ruby-identifier">groups</span> = {}&#x000A;146:         <span class="ruby-identifier">glist</span>[<span class="ruby-value str">'securityGroupInfo'</span>][<span class="ruby-value str">'item'</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">oldg</span><span class="ruby-operator">|</span> &#x000A;147:           <span class="ruby-identifier">g</span> = <span class="ruby-constant">Groups</span>.<span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">oldg</span>)&#x000A;148:           <span class="ruby-identifier">groups</span>[<span class="ruby-identifier">g</span>.<span class="ruby-identifier">name</span>] = <span class="ruby-identifier">g</span>&#x000A;149:         <span class="ruby-keyword kw">end</span>&#x000A;150:         <span class="ruby-identifier">groups</span>.<span class="ruby-identifier">each_value</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">g</span><span class="ruby-operator">|</span> <span class="ruby-identifier">each_group</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">g</span>) } <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">each_group</span>&#x000A;151:         <span class="ruby-identifier">groups</span>&#x000A;152:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000226-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 141</span>&#x000A;141:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">list_as_hash</span>(<span class="ruby-identifier">group_names</span>=[], <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;142:         <span class="ruby-identifier">group_names</span> = [<span class="ruby-identifier">group_names</span>].<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">compact</span>&#x000A;143:         <span class="ruby-identifier">glist</span> = <span class="ruby-ivar">@ec2</span>.<span class="ruby-identifier">describe_security_groups</span>(<span class="ruby-identifier">:group_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">group_names</span>) <span class="ruby-operator">||</span> {}&#x000A;144:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">glist</span>[<span class="ruby-value str">'securityGroupInfo'</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>)&#x000A;145:         <span class="ruby-identifier">groups</span> = {}&#x000A;146:         <span class="ruby-identifier">glist</span>[<span class="ruby-value str">'securityGroupInfo'</span>][<span class="ruby-value str">'item'</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">oldg</span><span class="ruby-operator">|</span> &#x000A;147:           <span class="ruby-identifier">g</span> = <span class="ruby-constant">Groups</span>.<span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">oldg</span>)&#x000A;148:           <span class="ruby-identifier">groups</span>[<span class="ruby-identifier">g</span>.<span class="ruby-identifier">name</span>] = <span class="ruby-identifier">g</span>&#x000A;149:         <span class="ruby-keyword kw">end</span>&#x000A;150:         <span class="ruby-identifier">groups</span>.<span class="ruby-identifier">each_value</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">g</span><span class="ruby-operator">|</span> <span class="ruby-identifier">each_group</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">g</span>) } <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">each_group</span>&#x000A;151:         <span class="ruby-identifier">groups</span>&#x000A;152:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000263'>
-                <a name='M000263'>      </a>
+              <div class='public-instance method' id='method-M000221'>
+                <a name='M000221'>      </a>
                 <div class='synopsis'>
                   <span class='name'>revoke</span>
                   <span class='arguments'>(name, addresses=[], ports=[], protocols=[], &amp;each_group)</span>
@@ -303,23 +303,23 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000263-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000221-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000263-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 117</span>&#x000A;117:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">revoke</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">addresses</span>=[], <span class="ruby-identifier">ports</span>=[], <span class="ruby-identifier">protocols</span>=[], <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;118:         <span class="ruby-identifier">modify_rules</span>(<span class="ruby-identifier">:revoke</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">addresses</span>, <span class="ruby-identifier">ports</span>, <span class="ruby-identifier">protocols</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;119:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000221-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 117</span>&#x000A;117:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">revoke</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">addresses</span>=[], <span class="ruby-identifier">ports</span>=[], <span class="ruby-identifier">protocols</span>=[], <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;118:         <span class="ruby-identifier">modify_rules</span>(<span class="ruby-identifier">:revoke</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">addresses</span>, <span class="ruby-identifier">ports</span>, <span class="ruby-identifier">protocols</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;119:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000266'>
-                <a name='M000266'>      </a>
+              <div class='public-instance method' id='method-M000224'>
+                <a name='M000224'>      </a>
                 <div class='synopsis'>
                   <span class='name'>revoke_group</span>
                   <span class='arguments'>(name, gname, owner, &amp;each_group)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000266-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000224-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000266-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 126</span>&#x000A;126:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">revoke_group</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">gname</span>, <span class="ruby-identifier">owner</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;127:         <span class="ruby-identifier">modify_group_rules</span>(<span class="ruby-identifier">:revoke</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">gname</span>, <span class="ruby-identifier">owner</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;128:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000224-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 126</span>&#x000A;126:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">revoke_group</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">gname</span>, <span class="ruby-identifier">owner</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;127:         <span class="ruby-identifier">modify_group_rules</span>(<span class="ruby-identifier">:revoke</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">gname</span>, <span class="ruby-identifier">owner</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;128:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

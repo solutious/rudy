@@ -13,6 +13,7 @@ RUDY, CHANGES
 * CHANGE: Command output in routines is now displayed only when verbose is 1 or more.
 * ADDED: Routine blocks now receive command line options and arguments
 * ADDED: Commands configuration now supports inline blocks
+* ADDED: Rudy now looks for ~/.rudy/*.rb config files.
 
 
 #### 0.8.1 (2009-05-18) ###############################

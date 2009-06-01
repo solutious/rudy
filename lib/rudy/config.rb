@@ -64,6 +64,7 @@ module Rudy
       typelist = self.keys.collect { |g| "#{g}.rb" }.join(',')
       
       # Rudy then looks for the rest of the config in these locations
+      @paths += Dir.glob(File.join(Rudy.sysinfo.home, '.rudy', '*.rb')) || []
       @paths += Dir.glob(File.join(cwd, 'Rudyfile')) || []
       @paths += Dir.glob(File.join(cwd, 'config', 'rudy', '*.rb')) || []
       @paths += Dir.glob(File.join(cwd, '.rudy', '*.rb')) || []

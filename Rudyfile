@@ -6,6 +6,7 @@
 #     ./.rudy/config
 #     ~/.rudy/config
 #
+#     ~/.rudy/*.rb
 #     ./Rudyfile
 #     ./machines.rb, ./routines.rb, ./commands.rb
 #     ./config/rudy/*.rb

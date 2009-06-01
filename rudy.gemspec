@@ -49,13 +49,6 @@
   bin/rudy-ec2
   bin/rudy-s3
   bin/rudy-sdb
-  examples/README.md
-  examples/debian-sinatra-passenger/commands.rb
-  examples/debian-sinatra-passenger/machines.rb
-  examples/debian-sinatra-passenger/routines.rb
-  examples/debian-sinatra-thin/commands.rb
-  examples/debian-sinatra-thin/machines.rb
-  examples/debian-sinatra-thin/routines.rb
   lib/rudy.rb
   lib/rudy/aws.rb
   lib/rudy/aws/ec2.rb
@@ -112,9 +105,6 @@
   lib/rudy/routines/reboot.rb
   lib/rudy/routines/shutdown.rb
   lib/rudy/routines/startup.rb
-  lib/rudy/scm.rb
-  lib/rudy/scm/git.rb
-  lib/rudy/scm/svn.rb
   lib/rudy/utils.rb
   rudy.gemspec
   support/mailtest

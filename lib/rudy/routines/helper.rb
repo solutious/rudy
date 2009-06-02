@@ -35,7 +35,7 @@ module Rudy
        cmd ||= ""
        cmd, user = cmd.to_s, user.to_s
        prompt = user == "root" ? "#" : "$"
-       ("%s%s@%s%s %s" % [$/, user, host, prompt, cmd.bright])
+       ("%s@%s%s %s" % [user, host, prompt, cmd.bright])
      end
      
   private 

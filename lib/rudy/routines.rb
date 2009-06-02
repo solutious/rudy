@@ -80,13 +80,13 @@ module Rudy
         }
         
         
-        lbox = Rye::Box.new('localhost', :info => false)
+        lbox = Rye::Box.new('localhost', :info => (@@global.verbose > 3), :debug => true)
         sconf = fetch_script_config
         
         enjoy_every_sandwich {
           if Rudy::Routines::ScriptHelper.before_local?(routine)  # before_local
             # Runs "before_local" scripts of routines config. 
-            puts task_separator("LOCAL SHELL")
+            task_separator("LOCAL SHELL")
             lbox.cd Dir.pwd # Run local command block from current working directory
             Rudy::Routines::ScriptHelper.before_local(routine, sconf, lbox, @option, @argv)
           end
@@ -96,7 +96,7 @@ module Rudy
           if Rudy::Routines::ScriptHelper.script_local?(routine)  # script_local
             # Runs "script_local" scripts of routines config. 
             # NOTE: This is synonymous with before_local
-            puts task_separator("LOCAL SHELL")
+            task_separator("LOCAL SHELL")
             lbox.cd Dir.pwd # Run local command block from current working directory
             Rudy::Routines::ScriptHelper.script_local(routine, sconf, lbox, @option, @argv)
           end
@@ -186,28 +186,28 @@ module Rudy
 
             enjoy_every_sandwich {
               if Rudy::Routines::UserHelper.adduser?(routine)       # adduser
-                puts task_separator("ADD USER")
+                task_separator("ADD USER")
                 Rudy::Routines::UserHelper.adduser(routine, machine, rbox)
               end
             }
           
             enjoy_every_sandwich {
               if Rudy::Routines::UserHelper.authorize?(routine)     # authorize
-                puts task_separator("AUTHORIZE USER")
+                task_separator("AUTHORIZE USER")
                 Rudy::Routines::UserHelper.authorize(routine, machine, rbox)
               end
             }
           
             enjoy_every_sandwich {
               if Rudy::Routines::ScriptHelper.before?(routine)      # before
-                puts task_separator("REMOTE SHELL")
+                task_separator("REMOTE SHELL")
                 Rudy::Routines::ScriptHelper.before(routine, sconf, machine, rbox, @option, @argv)
               end
             }
           
             enjoy_every_sandwich {
               if Rudy::Routines::DiskHelper.disks?(routine)         # disk
-                puts task_separator("DISKS")
+                task_separator("DISKS")
                 if rbox.ostype == "sunos"
                   puts "Sorry, Solaris disks are not supported yet!"
                 else
@@ -234,7 +234,7 @@ module Rudy
             # both be executed. 
             enjoy_every_sandwich {
               if Rudy::Routines::ScriptHelper.script?(routine)      # script
-                puts task_separator("REMOTE SHELL")
+                task_separator("REMOTE SHELL")
                 # Runs "after" scripts of routines config
                 Rudy::Routines::ScriptHelper.script(routine, sconf, machine, rbox, @option, @argv)
               end
@@ -242,7 +242,7 @@ module Rudy
           
             enjoy_every_sandwich {
               if Rudy::Routines::ScriptHelper.after?(routine)       # after
-                puts task_separator("REMOTE SHELL")
+                task_separator("REMOTE SHELL")
                 # Runs "after" scripts of routines config
                 Rudy::Routines::ScriptHelper.after(routine, sconf, machine, rbox, @option, @argv)
               end
@@ -254,7 +254,7 @@ module Rudy
 
         enjoy_every_sandwich {
           if Rudy::Routines::ScriptHelper.after_local?(routine)   # after_local
-            puts task_separator("LOCAL SHELL")
+            task_separator("LOCAL SHELL")
             lbox.cd Dir.pwd # Run local command block from current working directory
             # Runs "after_local" scripts of routines config
             Rudy::Routines::ScriptHelper.after_local(routine, sconf, lbox, @option, @argv)
@@ -273,7 +273,7 @@ module Rudy
         return unless depends
         unless depends.empty?
           depends.each_with_index do |d, index|
-            puts task_separator("DEPENDENCY: #{d}")  
+            task_separator("DEPENDENCY: #{d}")  
             routine_dependency = fetch_routine_config(d)
             unless routine_dependency
               STDERR.puts "  Unknown routine: #{d}".color(:red)
@@ -316,7 +316,7 @@ module Rudy
       def task_separator(title)
         dashes = 59 - title.size 
         dashes = 0 if dashes < 1
-        ("%s---  %s  %s" % [$/, title, '-'*dashes])
+        puts ("%s---  %s  %s" % [$/, title, '-'*dashes]) if @@global.verbose > 2
       end
       
       def machine_separator(name, awsid)

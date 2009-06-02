@@ -16,12 +16,11 @@
   
   s.add_dependency 'drydock', '>= 0.6.3'
   s.add_dependency 'caesars', '>= 0.6.8'
-  s.add_dependency 'rye', '>= 0.7.2'
+  s.add_dependency 'rye', '>= 0.7.3'
   s.add_dependency 'sysinfo', '>= 0.5.1'
   s.add_dependency 'storable', '>= 0.5.2'
   s.add_dependency 'annoy', '>= 0.5.0'
   
-  s.add_dependency 'grit'
   s.add_dependency 'echoe'
   s.add_dependency 'amazon-ec2', '>= 0.3.8'  # Region fix
   s.add_dependency 'aws-s3', '>= 0.6.1'      # Ruby 1.9.1 compatability

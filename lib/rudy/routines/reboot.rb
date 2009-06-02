@@ -48,7 +48,7 @@ module Rudy; module Routines;
         
       
         if Rudy::Routines::DiskHelper.disks?(@routine)         # disk
-          puts task_separator("DISKS")
+          task_separator("DISKS")
           if rbox.ostype == "sunos"
             puts "Sorry, Solaris is not supported yet!"
           else

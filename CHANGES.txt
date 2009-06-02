@@ -1,6 +1,13 @@
 RUDY, CHANGES
 
 
+#### 0.8.3 (2009-06-03) ###############################
+
+* CHANGE: Now requires rye-0.7.3 (disable_safe_mode method)
+* CHANGE: Rye safe-mode is enabled after each routines script block to force disabling it
+  explicitly in every block it's needed. 
+* CHANGE: Removed grit dependency
+
 
 #### 0.8.2 (2009-06-01) ###############################
 

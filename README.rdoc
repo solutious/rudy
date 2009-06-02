@@ -52,9 +52,9 @@ The routines configuration describes repeatable processes that you can execute o
       end                       
                             
       after :rudy do      # Run remote SSH commands
-        mkdir :p, "great"       # $ mkdir -p great
-        touch "great/scott"     # $ touch great/scott
-        ls :l, :a               # $ ls -l -a
+        mkdir :p, "great"        # $ mkdir -p great
+        touch "great/scott"      # $ touch great/scott
+        ls :l, :a                # $ ls -l -a
       end                          
     end
 

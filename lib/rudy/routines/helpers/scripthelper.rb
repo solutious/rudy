@@ -172,6 +172,8 @@ module Rudy; module Routines;
             rbox.pre_command_hook = nil
             rbox.post_command_hook = nil
             
+            rbox.enable_safe_mode  # In case it was disabled
+            
           rescue Rye::CommandError => ex
             print_response(ex)
             exit 12 unless keep_going?

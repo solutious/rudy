@@ -9,7 +9,7 @@ module Rudy; module Routines;
     extend self
 
     @@script_types = [:after, :before, :after_local, :before_local, :script, :script_local]
-    @@script_config_file_name = "rudy-config.yml"
+    
     
     # TODO: refactor using this_method
     
@@ -76,7 +76,7 @@ module Rudy; module Routines;
       return false unless hasconf
       unless routine[timing].kind_of?(Hash)
         STDERR.puts "No user supplied for #{timing} block".color(:red)
-        choice = Annoy.get_user_input('(S)kip (A)bort: ')
+        choice = Annoy.get_user_input('(S)kip (A)bort: ') || ''
          if choice.match(/\AS/i)
            return
          else
@@ -103,15 +103,6 @@ module Rudy; module Routines;
     def execute_command(timing, routine, sconf, hostname, rbox, option=nil, argv=nil)
       raise "ScriptHelper: Not a Rye::Box" unless rbox.is_a?(Rye::Box)
       raise "ScriptHelper: #{timing}?" unless @@script_types.member?(timing)
-      
-      # The config file that gets created on each remote machine
-      # will be created in the user's home directory. 
-      script_config_remote_path = File.join(rbox.getenv['HOME'] || '', @@script_config_file_name)
-      
-      if sconf && !sconf.empty?
-        tf = Tempfile.new(@@script_config_file_name)
-        Rudy::Utils.write_to_file(tf.path, sconf.to_hash.to_yaml, 'w')
-      end
       
       # Do we need to run this again? It's called in generic_routine_runner
       ##if execute_command?(timing, routine) # i.e. before_local?
@@ -140,18 +131,6 @@ module Rudy; module Routines;
             next
           end
           
-          trap_rbox_errors {
-            # We need to create the config file for every script, 
-            # b/c the user may change and it would not be accessible.
-            # We turn off safe mode so we can write the config file via SSH. 
-            # This will need to use SCP eventually; it is unsafe and error prone.
-            # TODO: Replace with rbox.upload. Make it safe again!
-            conf_str = StringIO.new
-            conf_str.puts sconf.to_hash.to_yaml
-            rbox.upload(conf_str, script_config_remote_path)
-            rbox.chmod(600, script_config_remote_path)
-          }
-          
           begin
             # We define hooks so we can still print each command and its output
             # when running the command blocks. NOTE: We only print this in
@@ -176,7 +155,7 @@ module Rudy; module Routines;
             
           rescue Rye::CommandError => ex
             print_response(ex)
-            choice = Annoy.get_user_input('(S)kip  (R)etry  (A)bort: ')
+            choice = Annoy.get_user_input('(S)kip  (R)etry  (A)bort: ') || ''
              if choice.match(/\AS/i)
                return
              elsif choice.match(/\AR/i)
@@ -187,7 +166,7 @@ module Rudy; module Routines;
           rescue Rye::CommandNotFound => ex
             STDERR.puts "  CommandNotFound: #{ex.message}".color(:red)
             STDERR.puts ex.backtrace if Rudy.debug?
-            choice = Annoy.get_user_input('(S)kip  (R)etry  (A)bort: ')
+            choice = Annoy.get_user_input('(S)kip  (R)etry  (A)bort: ') || ''
              if choice.match(/\AS/i)
                return
              elsif choice.match(/\AR/i)
@@ -202,7 +181,6 @@ module Rudy; module Routines;
           end
           
           rbox.cd # reset to home dir
-          rbox.rudy_tmp_rm(:f, script_config_remote_path)  # -f to ignore errors
         end
         
         # Return the borrowed rbox instance to the user it was provided with
@@ -212,7 +190,6 @@ module Rudy; module Routines;
       ##  puts "Nothing to do"
       ##end
       
-      tf.delete # delete local copy of script config
       
     end
   end

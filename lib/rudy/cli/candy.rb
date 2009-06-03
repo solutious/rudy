@@ -6,7 +6,7 @@ module Rudy
       def open
         rmach = Rudy::Machines.new
         machines = rmach.list
-        puts 1
+        
         if machines
           `open http://#{machines.first.dns_public}`
         else

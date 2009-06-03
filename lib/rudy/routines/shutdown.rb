@@ -8,7 +8,7 @@ module Rudy; module Routines;
     end
     
     def execute
-      routine_separator(:shutdown)
+      routine_separator(:list)
       unless @routine
         STDERR.puts "[this is a generic shutdown routine]"
         @routine = {}

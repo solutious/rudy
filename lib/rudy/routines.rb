@@ -140,7 +140,7 @@ module Rudy
           if !skip_check && has_remote_task?(routine)
             enjoy_every_sandwich {
               msg = preliminary_separator("Waiting for SSH daemon...")
-              ret = Rudy::Utils.waiter(2, 1, STDOUT, msg, 0) {
+              ret = Rudy::Utils.waiter(2, 30, STDOUT, msg, 0) {
                 Rudy::Utils.service_available?(machine.dns_public, 22)
               }
               is_available = ret
@@ -149,7 +149,7 @@ module Rudy
           
           if is_available
             # TODO: trap rbox errors. We could get an authentication error. 
-            opts = { :keys =>  root_keypairpath, :user => remote_user, :info => @@global.verbose > 0 }
+            opts = { :keys =>  root_keypairpath, :user => remote_user, :info => @@global.verbose > 3 }
             begin
               rbox = Rye::Box.new(machine.dns_public, opts)
               Rudy::Utils.waiter(2, 10, STDOUT, nil, 0) { rbox.connect }
@@ -337,7 +337,7 @@ module Rudy
         rescue => ex
           STDERR.puts "  Error: #{ex.message}".color(:red)
           STDERR.puts ex.backtrace if Rudy.debug?
-          choice = Annoy.get_user_input('(S)kip  (R)etry  (A)bort: ')
+          choice = Annoy.get_user_input('(S)kip  (R)etry  (A)bort: ') || ''
            if choice.match(/\AS/i)
              return
            elsif choice.match(/\AR/i)

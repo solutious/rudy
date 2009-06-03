@@ -13,7 +13,7 @@ module Rudy
          print_response(ret)
        rescue IOError => ex
          STDERR.puts "  Connection Error (#{ex.message})".color(:red)
-         choice = Annoy.get_user_input('(S)kip  (R)etry  (A)bort: ')
+         choice = Annoy.get_user_input('(S)kip  (R)etry  (A)bort: ') || ''
           if choice.match(/\AS/i)
             return
           elsif choice.match(/\AR/i)
@@ -23,7 +23,7 @@ module Rudy
           end
        rescue Rye::CommandError => ex
          print_response(ex)
-         choice = Annoy.get_user_input('(S)kip  (R)etry  (A)bort: ')
+         choice = Annoy.get_user_input('(S)kip  (R)etry  (A)bort: ') || ''
           if choice.match(/\AS/i)
             return
           elsif choice.match(/\AR/i)
@@ -34,7 +34,7 @@ module Rudy
        rescue Rye::CommandNotFound => ex
          STDERR.puts "  CommandNotFound: #{ex.message}".color(:red)
          STDERR.puts ex.backtrace if Rudy.debug?
-         choice = Annoy.get_user_input('(S)kip  (R)etry  (A)bort: ')
+         choice = Annoy.get_user_input('(S)kip  (R)etry  (A)bort: ') || ''
           if choice.match(/\AS/i)
             return
           elsif choice.match(/\AR/i)

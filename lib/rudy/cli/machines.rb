@@ -86,6 +86,8 @@ module Rudy
         lt.each do |machine|
           machine.update  # make sure we have the latest DNS info
           
+          # mount -t ext3 /dev/sdr /rudy/disk1
+          
           # Print header
           if @@global.quiet
             print "You are #{ssh_opts[:user].to_s.bright}. " if !checked # only the 1st

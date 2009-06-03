@@ -118,12 +118,12 @@ routines do
         after :rudy do               # Run remote SSH commands after startup
           mkdir :p, 'great'          # $ mkdir -p great
           touch 'great/scott'        # $ touch great/scott
-          ls :l, :a, '*'             # $ ls -l -a *
+          ls :l, :a                  # $ ls -l -a *
         end                          
       end                            
                                      
       shutdown do                    # $ rudy shutdown
-        script :root do              # Run remote SSH commands before shutdown
+        before :root do              # Run remote SSH commands before shutdown
           uptime               
         end                               
         disks do                     

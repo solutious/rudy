@@ -20,7 +20,7 @@ require 'rudy/cli'
 # Command-line interface for /bin/rudy
 class RudyCLI < Rudy::CLI::Base
   
-  debug :off
+  debug :on
   default :machines       # when no command is provided
   trawler :passthrough    # unknown command names will forward here.
   

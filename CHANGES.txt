@@ -1,6 +1,11 @@
 RUDY, CHANGES
 
 
+#### 0.8.4 (2009-06-??) ###############################
+
+* CHANGE: Fixed nil exception in fetch_machine_param
+
+
 #### 0.8.3 (2009-06-03) ###############################
 
 * CHANGE: Now requires rye-0.7.3 (disable_safe_mode method)

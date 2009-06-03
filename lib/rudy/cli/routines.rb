@@ -12,7 +12,7 @@ module Rudy; module CLI;
       machines = @rr.execute || []
       puts $/, "The following machines are now available:" unless machines.empty?
       machines.each do |machine|
-        puts machine.to_s
+        puts @@global.verbose > 2 ? machine.inspect : machine.dump(@@global.format)
       end
     end
     
@@ -25,7 +25,7 @@ module Rudy; module CLI;
       machines = @rr.execute
       puts $/, "The following machines have been restarted:"
       machines.each do |machine|
-        puts machine.to_s
+        puts @@global.verbose > 2 ? machine.inspect : machine.dump(@@global.format)
       end
     end
     
@@ -53,7 +53,7 @@ module Rudy; module CLI;
       unless machines.empty?
         puts $/, "The following machines were processed:"
         machines.each do |machine|
-          puts @@global.verbose > 0 ? machine.inspect : machine.dump(@@global.format)
+          puts @@global.verbose > 2 ? machine.inspect : machine.dump(@@global.format)
         end
       end
       

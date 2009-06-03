@@ -76,7 +76,12 @@ module Rudy; module Routines;
       return false unless hasconf
       unless routine[timing].kind_of?(Hash)
         STDERR.puts "No user supplied for #{timing} block".color(:red)
-        exit 12 unless keep_going?
+        choice = Annoy.get_user_input('(S)kip (A)bort: ')
+         if choice.match(/\AS/i)
+           return
+         else
+           exit 12
+         end
         return false
       end
       routine[timing].each_pair do |user,proc|
@@ -171,11 +176,25 @@ module Rudy; module Routines;
             
           rescue Rye::CommandError => ex
             print_response(ex)
-            exit 12 unless keep_going?
+            choice = Annoy.get_user_input('(S)kip  (R)etry  (A)bort: ')
+             if choice.match(/\AS/i)
+               return
+             elsif choice.match(/\AR/i)
+               retry
+             else
+               exit 12
+             end
           rescue Rye::CommandNotFound => ex
             STDERR.puts "  CommandNotFound: #{ex.message}".color(:red)
             STDERR.puts ex.backtrace if Rudy.debug?
-            exit 12 unless keep_going?
+            choice = Annoy.get_user_input('(S)kip  (R)etry  (A)bort: ')
+             if choice.match(/\AS/i)
+               return
+             elsif choice.match(/\AR/i)
+               retry
+             else
+               exit 12
+             end
           ensure
             rbox.pre_command_hook = nil
             rbox.post_command_hook = nil

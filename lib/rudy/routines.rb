@@ -338,23 +338,19 @@ module Rudy
           STDERR.puts "  Error: #{ex.message}".color(:red)
           STDERR.puts ex.backtrace if Rudy.debug?
           choice = Annoy.get_user_input('(S)kip  (R)etry  (A)bort: ')
-          if choice.match(/\AS/i)
-            return
-          elsif choice.match(/\AR/i)
-            retry
-          else
-            exit 12
-          end
+           if choice.match(/\AS/i)
+             return
+           elsif choice.match(/\AR/i)
+             retry
+           else
+             exit 12
+           end
         rescue Interrupt
           puts "Aborting..."
           exit 12
         end
         ret
       end
-      
-       def keep_going?
-         Annoy.pose_question("  Keep going?\a ", /yes|y|ya|sure|you bet!/i, STDOUT)
-       end
       
     end
   end

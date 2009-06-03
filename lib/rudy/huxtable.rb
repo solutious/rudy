@@ -332,7 +332,7 @@ module Rudy
       raise NoMachinesConfig if !@@config.machines
       raise NoGlobal unless @@global
       top_level = @@config.machines.find(parameter)
-      mc = fetch_machine_config
+      mc = fetch_machine_config || {}
       mc[parameter] || top_level || nil
     end
     

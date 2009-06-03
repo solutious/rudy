@@ -337,8 +337,8 @@ module Rudy
         rescue => ex
           STDERR.puts "  Error: #{ex.message}".color(:red)
           STDERR.puts ex.backtrace if Rudy.debug?
-          choice = Annoy.get_user_input('(C)ontinue  (R)etry  (A)bort: ')
-          if choice.match(/\AC/i)
+          choice = Annoy.get_user_input('(S)kip  (R)etry  (A)bort: ')
+          if choice.match(/\AS/i)
             return
           elsif choice.match(/\AR/i)
             retry

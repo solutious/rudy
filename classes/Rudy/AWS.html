@@ -80,9 +80,9 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000208">escape</a></li>
-              <li><a href="#M000209">escape!</a></li>
-              <li><a href="#M000207">valid_region?</a></li>
+              <li><a href="#M000207">escape</a></li>
+              <li><a href="#M000208">escape!</a></li>
+              <li><a href="#M000206">valid_region?</a></li>
             </ol>
           </div>
           <div id='section'>
@@ -108,8 +108,8 @@
             </div>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000208'>
-                <a name='M000208'>      </a>
+              <div class='public-instance method' id='method-M000207'>
+                <a name='M000207'>      </a>
                 <div class='synopsis'>
                   <span class='name'>escape</span>
                   <span class='arguments'>(str)</span>
@@ -121,36 +121,36 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000208-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000207-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000208-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws.rb, line 17</span>&#x000A;17:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">escape</span>(<span class="ruby-identifier">str</span>)&#x000A;18:       <span class="ruby-identifier">str</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">tr</span>(<span class="ruby-value str">&quot;[\0\n\r\032\\\\]&quot;</span>, <span class="ruby-value str">''</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/([\'\&quot;])/</span>, <span class="ruby-value str">'\\1\\1'</span>)&#x000A;19:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000207-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws.rb, line 17</span>&#x000A;17:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">escape</span>(<span class="ruby-identifier">str</span>)&#x000A;18:       <span class="ruby-identifier">str</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">tr</span>(<span class="ruby-value str">&quot;[\0\n\r\032\\\\]&quot;</span>, <span class="ruby-value str">''</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/([\'\&quot;])/</span>, <span class="ruby-value str">'\\1\\1'</span>)&#x000A;19:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000209'>
-                <a name='M000209'>      </a>
+              <div class='public-instance method' id='method-M000208'>
+                <a name='M000208'>      </a>
                 <div class='synopsis'>
                   <span class='name'>escape!</span>
                   <span class='arguments'>(str)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000209-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000208-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000209-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws.rb, line 20</span>&#x000A;20:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">escape!</span>(<span class="ruby-identifier">str</span>)&#x000A;21:       <span class="ruby-identifier">str</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">tr!</span>(<span class="ruby-value str">&quot;[\0\n\r\032\\\\]&quot;</span>, <span class="ruby-value str">''</span>).<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp re">/([\'\&quot;])/</span>, <span class="ruby-value str">'\\1\\1'</span>)&#x000A;22:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000208-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws.rb, line 20</span>&#x000A;20:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">escape!</span>(<span class="ruby-identifier">str</span>)&#x000A;21:       <span class="ruby-identifier">str</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">tr!</span>(<span class="ruby-value str">&quot;[\0\n\r\032\\\\]&quot;</span>, <span class="ruby-value str">''</span>).<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp re">/([\'\&quot;])/</span>, <span class="ruby-value str">'\\1\\1'</span>)&#x000A;22:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000207'>
-                <a name='M000207'>      </a>
+              <div class='public-instance method' id='method-M000206'>
+                <a name='M000206'>      </a>
                 <div class='synopsis'>
                   <span class='name'>valid_region?</span>
                   <span class='arguments'>(r)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000207-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000206-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000207-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws.rb, line 14</span>&#x000A;14:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">valid_region?</span>(<span class="ruby-identifier">r</span>); <span class="ruby-constant">VALID_REGIONS</span>.<span class="ruby-identifier">member?</span>(<span class="ruby-identifier">r</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">||</span> <span class="ruby-value str">''</span>); <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000206-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws.rb, line 14</span>&#x000A;14:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">valid_region?</span>(<span class="ruby-identifier">r</span>); <span class="ruby-constant">VALID_REGIONS</span>.<span class="ruby-identifier">member?</span>(<span class="ruby-identifier">r</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">||</span> <span class="ruby-value str">''</span>); <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

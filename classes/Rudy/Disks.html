@@ -45,13 +45,13 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000433">backups</a></li>
-              <li><a href="#M000432">destroy</a></li>
-              <li><a href="#M000436">get</a></li>
-              <li><a href="#M000431">init</a></li>
-              <li><a href="#M000434">list</a></li>
-              <li><a href="#M000435">list_as_hash</a></li>
-              <li><a href="#M000437">running?</a></li>
+              <li><a href="#M000432">backups</a></li>
+              <li><a href="#M000431">destroy</a></li>
+              <li><a href="#M000435">get</a></li>
+              <li><a href="#M000430">init</a></li>
+              <li><a href="#M000433">list</a></li>
+              <li><a href="#M000434">list_as_hash</a></li>
+              <li><a href="#M000436">running?</a></li>
             </ol>
           </div>
           <div id='context'>
@@ -65,21 +65,21 @@
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000433'>
-                <a name='M000433'>      </a>
+              <div class='public-instance method' id='method-M000432'>
+                <a name='M000432'>      </a>
                 <div class='synopsis'>
                   <span class='name'>backups</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000433-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000432-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000433-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata/disks.rb, line 26</span>&#x000A;26:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">backups</span>&#x000A;27:     <span class="ruby-ivar">@rback</span>.<span class="ruby-identifier">list</span>()&#x000A;28:   <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000432-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata/disks.rb, line 26</span>&#x000A;26:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">backups</span>&#x000A;27:     <span class="ruby-ivar">@rback</span>.<span class="ruby-identifier">list</span>()&#x000A;28:   <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000432'>
-                <a name='M000432'>      </a>
+              <div class='public-instance method' id='method-M000431'>
+                <a name='M000431'>      </a>
                 <div class='synopsis'>
                   <span class='name'>destroy</span>
                   <span class='arguments'>(&amp;each_mach)</span>
@@ -90,75 +90,75 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000432-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000431-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000432-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata/disks.rb, line 17</span>&#x000A;17:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">destroy</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_mach</span>)&#x000A;18:     <span class="ruby-comment cmt">#raise MachineGroupNotRunning, current_machine_group unless running?</span>&#x000A;19:     <span class="ruby-comment cmt">#raise MachineGroupNotDefined, current_machine_group unless known_machine_group?</span>&#x000A;20:     <span class="ruby-identifier">list</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">disk</span><span class="ruby-operator">|</span>&#x000A;21:       <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Destroying #{disk.name}&quot;</span>&#x000A;22:       <span class="ruby-identifier">disk</span>.<span class="ruby-identifier">destroy</span>&#x000A;23:     <span class="ruby-keyword kw">end</span>&#x000A;24:   <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000431-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata/disks.rb, line 17</span>&#x000A;17:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">destroy</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_mach</span>)&#x000A;18:     <span class="ruby-comment cmt">#raise MachineGroupNotRunning, current_machine_group unless running?</span>&#x000A;19:     <span class="ruby-comment cmt">#raise MachineGroupNotDefined, current_machine_group unless known_machine_group?</span>&#x000A;20:     <span class="ruby-identifier">list</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">disk</span><span class="ruby-operator">|</span>&#x000A;21:       <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Destroying #{disk.name}&quot;</span>&#x000A;22:       <span class="ruby-identifier">disk</span>.<span class="ruby-identifier">destroy</span>&#x000A;23:     <span class="ruby-keyword kw">end</span>&#x000A;24:   <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000436'>
-                <a name='M000436'>      </a>
+              <div class='public-instance method' id='method-M000435'>
+                <a name='M000435'>      </a>
                 <div class='synopsis'>
                   <span class='name'>get</span>
                   <span class='arguments'>(rname=nil)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000436-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000435-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000436-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata/disks.rb, line 48</span>&#x000A;48:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get</span>(<span class="ruby-identifier">rname</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;49:     <span class="ruby-identifier">dhash</span> = <span class="ruby-ivar">@sdb</span>.<span class="ruby-identifier">get</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">DOMAIN</span>, <span class="ruby-identifier">rname</span>)&#x000A;50:     <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">dhash</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">dhash</span>.<span class="ruby-identifier">empty?</span>&#x000A;51:     <span class="ruby-identifier">d</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">MetaData</span><span class="ruby-operator">::</span><span class="ruby-constant">Disk</span>.<span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">dhash</span>)&#x000A;52:     <span class="ruby-identifier">d</span>.<span class="ruby-identifier">update</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">d</span>&#x000A;53:     <span class="ruby-identifier">d</span>&#x000A;54:   <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000435-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata/disks.rb, line 48</span>&#x000A;48:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get</span>(<span class="ruby-identifier">rname</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;49:     <span class="ruby-identifier">dhash</span> = <span class="ruby-ivar">@sdb</span>.<span class="ruby-identifier">get</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">DOMAIN</span>, <span class="ruby-identifier">rname</span>)&#x000A;50:     <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">dhash</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">dhash</span>.<span class="ruby-identifier">empty?</span>&#x000A;51:     <span class="ruby-identifier">d</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">MetaData</span><span class="ruby-operator">::</span><span class="ruby-constant">Disk</span>.<span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">dhash</span>)&#x000A;52:     <span class="ruby-identifier">d</span>.<span class="ruby-identifier">update</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">d</span>&#x000A;53:     <span class="ruby-identifier">d</span>&#x000A;54:   <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000431'>
-                <a name='M000431'>      </a>
+              <div class='public-instance method' id='method-M000430'>
+                <a name='M000430'>      </a>
                 <div class='synopsis'>
                   <span class='name'>init</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000431-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000430-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000431-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata/disks.rb, line 8</span>&#x000A; 8:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">init</span>&#x000A; 9:     <span class="ruby-ivar">@rback</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Backups</span>.<span class="ruby-identifier">new</span>&#x000A;10:   <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000430-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata/disks.rb, line 8</span>&#x000A; 8:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">init</span>&#x000A; 9:     <span class="ruby-ivar">@rback</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Backups</span>.<span class="ruby-identifier">new</span>&#x000A;10:   <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000433'>
+                <a name='M000433'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>list</span>
+                  <span class='arguments'>(more=[], less=[], &amp;each_disk)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000433-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000433-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata/disks.rb, line 30</span>&#x000A;30:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">list</span>(<span class="ruby-identifier">more</span>=[], <span class="ruby-identifier">less</span>=[], <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_disk</span>)&#x000A;31:     <span class="ruby-identifier">disks</span> = <span class="ruby-identifier">list_as_hash</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_disk</span>)&#x000A;32:     <span class="ruby-identifier">disks</span> <span class="ruby-operator">&amp;&amp;=</span> <span class="ruby-identifier">disks</span>.<span class="ruby-identifier">values</span>&#x000A;33:     <span class="ruby-identifier">disks</span>&#x000A;34:   <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='public-instance method' id='method-M000434'>
                 <a name='M000434'>      </a>
                 <div class='synopsis'>
-                  <span class='name'>list</span>
+                  <span class='name'>list_as_hash</span>
                   <span class='arguments'>(more=[], less=[], &amp;each_disk)</span>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000434-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000434-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata/disks.rb, line 30</span>&#x000A;30:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">list</span>(<span class="ruby-identifier">more</span>=[], <span class="ruby-identifier">less</span>=[], <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_disk</span>)&#x000A;31:     <span class="ruby-identifier">disks</span> = <span class="ruby-identifier">list_as_hash</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_disk</span>)&#x000A;32:     <span class="ruby-identifier">disks</span> <span class="ruby-operator">&amp;&amp;=</span> <span class="ruby-identifier">disks</span>.<span class="ruby-identifier">values</span>&#x000A;33:     <span class="ruby-identifier">disks</span>&#x000A;34:   <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000434-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata/disks.rb, line 36</span>&#x000A;36:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">list_as_hash</span>(<span class="ruby-identifier">more</span>=[], <span class="ruby-identifier">less</span>=[], <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_disk</span>)&#x000A;37:     <span class="ruby-identifier">query</span> = <span class="ruby-identifier">to_select</span>([<span class="ruby-identifier">:rtype</span>, <span class="ruby-value str">'disk'</span>], <span class="ruby-identifier">less</span>)&#x000A;38:     <span class="ruby-identifier">list</span> = <span class="ruby-ivar">@sdb</span>.<span class="ruby-identifier">select</span>(<span class="ruby-identifier">query</span>) <span class="ruby-operator">||</span> {}&#x000A;39:     <span class="ruby-identifier">disks</span> = {}&#x000A;40:     <span class="ruby-identifier">list</span>.<span class="ruby-identifier">each_pair</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">n</span>,<span class="ruby-identifier">d</span><span class="ruby-operator">|</span>&#x000A;41:       <span class="ruby-identifier">disks</span>[<span class="ruby-identifier">n</span>] = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">MetaData</span><span class="ruby-operator">::</span><span class="ruby-constant">Disk</span>.<span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">d</span>)&#x000A;42:     <span class="ruby-keyword kw">end</span>&#x000A;43:     <span class="ruby-identifier">disks</span>.<span class="ruby-identifier">each_pair</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">n</span>,<span class="ruby-identifier">disk</span><span class="ruby-operator">|</span> <span class="ruby-identifier">each_disk</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">disk</span>) } <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">each_disk</span>&#x000A;44:     <span class="ruby-identifier">disks</span> = <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">disks</span>.<span class="ruby-identifier">empty?</span>&#x000A;45:     <span class="ruby-identifier">disks</span>&#x000A;46:   <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000435'>
-                <a name='M000435'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>list_as_hash</span>
-                  <span class='arguments'>(more=[], less=[], &amp;each_disk)</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000435-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000435-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata/disks.rb, line 36</span>&#x000A;36:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">list_as_hash</span>(<span class="ruby-identifier">more</span>=[], <span class="ruby-identifier">less</span>=[], <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_disk</span>)&#x000A;37:     <span class="ruby-identifier">query</span> = <span class="ruby-identifier">to_select</span>([<span class="ruby-identifier">:rtype</span>, <span class="ruby-value str">'disk'</span>], <span class="ruby-identifier">less</span>)&#x000A;38:     <span class="ruby-identifier">list</span> = <span class="ruby-ivar">@sdb</span>.<span class="ruby-identifier">select</span>(<span class="ruby-identifier">query</span>) <span class="ruby-operator">||</span> {}&#x000A;39:     <span class="ruby-identifier">disks</span> = {}&#x000A;40:     <span class="ruby-identifier">list</span>.<span class="ruby-identifier">each_pair</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">n</span>,<span class="ruby-identifier">d</span><span class="ruby-operator">|</span>&#x000A;41:       <span class="ruby-identifier">disks</span>[<span class="ruby-identifier">n</span>] = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">MetaData</span><span class="ruby-operator">::</span><span class="ruby-constant">Disk</span>.<span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">d</span>)&#x000A;42:     <span class="ruby-keyword kw">end</span>&#x000A;43:     <span class="ruby-identifier">disks</span>.<span class="ruby-identifier">each_pair</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">n</span>,<span class="ruby-identifier">disk</span><span class="ruby-operator">|</span> <span class="ruby-identifier">each_disk</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">disk</span>) } <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">each_disk</span>&#x000A;44:     <span class="ruby-identifier">disks</span> = <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">disks</span>.<span class="ruby-identifier">empty?</span>&#x000A;45:     <span class="ruby-identifier">disks</span>&#x000A;46:   <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='public-instance method' id='method-M000437'>
-                <a name='M000437'>      </a>
+              <div class='public-instance method' id='method-M000436'>
+                <a name='M000436'>      </a>
                 <div class='synopsis'>
                   <span class='name'>running?</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000437-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000436-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000437-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata/disks.rb, line 57</span>&#x000A;57:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">running?</span>&#x000A;58:     <span class="ruby-operator">!</span><span class="ruby-identifier">list</span>.<span class="ruby-identifier">nil?</span>&#x000A;59:     <span class="ruby-comment cmt"># TODO: add logic that checks whether the instances are running.</span>&#x000A;60:   <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000436-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata/disks.rb, line 57</span>&#x000A;57:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">running?</span>&#x000A;58:     <span class="ruby-operator">!</span><span class="ruby-identifier">list</span>.<span class="ruby-identifier">nil?</span>&#x000A;59:     <span class="ruby-comment cmt"># TODO: add logic that checks whether the instances are running.</span>&#x000A;60:   <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

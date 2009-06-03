@@ -31,7 +31,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>Tue May 26 10:54:22 -0400 2009</span>
+          <span class='datetime'>Tue Jun 02 09:02:26 -0400 2009</span>
         </div>
       </div>
       <div id='content'>
@@ -84,7 +84,7 @@
             The routines configuration describes repeatable processes that you can
             execute on your machines.
             </p>
-            <pre>startup do            # $ rudy startup&#x000A;  adduser :rudy&#x000A;  authorize :rudy     # Enable passwordless login&#x000A;&#x000A;  disks do                   # Create a disk&#x000A;    restore &quot;/rudy/disk1&quot;    # from a backup&#x000A;  end&#x000A;&#x000A;  after :rudy do      # Run remote SSH commands&#x000A;    mkdir :p, &quot;great&quot;       # $ mkdir -p great&#x000A;    touch &quot;great/scott&quot;     # $ touch great/scott&#x000A;    ls :l, :a               # $ ls -l -a&#x000A;  end&#x000A;end</pre>
+            <pre>startup do            # $ rudy startup&#x000A;  adduser :rudy&#x000A;  authorize :rudy     # Enable passwordless login&#x000A;&#x000A;  disks do                   # Create a disk&#x000A;    restore &quot;/rudy/disk1&quot;    # from a backup&#x000A;  end&#x000A;&#x000A;  after :rudy do      # Run remote SSH commands&#x000A;    mkdir :p, &quot;great&quot;        # $ mkdir -p great&#x000A;    touch &quot;great/scott&quot;      # $ touch great/scott&#x000A;    ls :l, :a                # $ ls -l -a&#x000A;  end&#x000A;end</pre>
             <h2>Features</h2>
             <ul>
             <li>Create complex environments with a single command

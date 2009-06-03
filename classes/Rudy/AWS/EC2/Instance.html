@@ -45,135 +45,135 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000341">degraded?</a></li>
-              <li><a href="#M000334">init</a></li>
-              <li><a href="#M000337">inspect</a></li>
-              <li><a href="#M000335">liner_note</a></li>
-              <li><a href="#M000339">pending?</a></li>
-              <li><a href="#M000338">running?</a></li>
-              <li><a href="#M000342">shutting_down?</a></li>
-              <li><a href="#M000340">terminated?</a></li>
-              <li><a href="#M000336">to_s</a></li>
+              <li><a href="#M000340">degraded?</a></li>
+              <li><a href="#M000333">init</a></li>
+              <li><a href="#M000336">inspect</a></li>
+              <li><a href="#M000334">liner_note</a></li>
+              <li><a href="#M000338">pending?</a></li>
+              <li><a href="#M000337">running?</a></li>
+              <li><a href="#M000341">shutting_down?</a></li>
+              <li><a href="#M000339">terminated?</a></li>
+              <li><a href="#M000335">to_s</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000341'>
-                <a name='M000341'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>degraded?</span>
-                  <span class='arguments'>()</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000341-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000341-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/instance.rb, line 63</span>&#x000A;63:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">degraded?</span>; <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">state</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">state</span> <span class="ruby-operator">==</span> <span class="ruby-value str">'degraded'</span>; <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='public-instance method' id='method-M000334'>
-                <a name='M000334'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>init</span>
-                  <span class='arguments'>()</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000334-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000334-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/instance.rb, line 22</span>&#x000A;22:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">init</span>&#x000A;23:       <span class="ruby-ivar">@groups</span> <span class="ruby-operator">||=</span> []&#x000A;24:     <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='public-instance method' id='method-M000337'>
-                <a name='M000337'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>inspect</span>
-                  <span class='arguments'>()</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000337-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000337-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/instance.rb, line 49</span>&#x000A;49:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">inspect</span>&#x000A;50:       <span class="ruby-identifier">lines</span> = []&#x000A;51:       <span class="ruby-identifier">lines</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">liner_note</span>&#x000A;52:       <span class="ruby-identifier">field_names</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span><span class="ruby-operator">|</span>&#x000A;53:         <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">key</span>)&#x000A;54:         <span class="ruby-identifier">val</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">key</span>)&#x000A;55:         <span class="ruby-identifier">lines</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">sprintf</span>(<span class="ruby-value str">&quot; %22s: %s&quot;</span>, <span class="ruby-identifier">key</span>, (<span class="ruby-identifier">val</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">val</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">', '</span>) <span class="ruby-operator">:</span> <span class="ruby-identifier">val</span>))&#x000A;56:       <span class="ruby-keyword kw">end</span>&#x000A;57:       <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">$/</span>)&#x000A;58:     <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='public-instance method' id='method-M000335'>
-                <a name='M000335'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>liner_note</span>
-                  <span class='arguments'>()</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000335-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000335-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/instance.rb, line 26</span>&#x000A;26:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">liner_note</span>&#x000A;27:       <span class="ruby-identifier">info</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">running?</span> <span class="ruby-value">? </span><span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">dns_public</span> <span class="ruby-operator">:</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">state</span>&#x000A;28:       <span class="ruby-value str">&quot;%s  %-30s&quot;</span> <span class="ruby-operator">%</span> [<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">awsid</span>.<span class="ruby-identifier">bright</span>, <span class="ruby-identifier">info</span>]&#x000A;29:     <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='public-instance method' id='method-M000339'>
-                <a name='M000339'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>pending?</span>
-                  <span class='arguments'>()</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000339-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000339-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/instance.rb, line 61</span>&#x000A;61:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">pending?</span>; <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">state</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">state</span> <span class="ruby-operator">==</span> <span class="ruby-value str">'pending'</span>; <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='public-instance method' id='method-M000338'>
-                <a name='M000338'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>running?</span>
-                  <span class='arguments'>()</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000338-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000338-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/instance.rb, line 60</span>&#x000A;60:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">running?</span>; <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">state</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">state</span> <span class="ruby-operator">==</span> <span class="ruby-value str">'running'</span>; <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='public-instance method' id='method-M000342'>
-                <a name='M000342'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>shutting_down?</span>
-                  <span class='arguments'>()</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000342-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000342-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/instance.rb, line 64</span>&#x000A;64:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">shutting_down?</span>; <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">state</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">state</span> <span class="ruby-operator">==</span> <span class="ruby-value str">'shutting-down'</span>; <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
               <div class='public-instance method' id='method-M000340'>
                 <a name='M000340'>      </a>
                 <div class='synopsis'>
-                  <span class='name'>terminated?</span>
+                  <span class='name'>degraded?</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000340-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000340-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/instance.rb, line 62</span>&#x000A;62:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">terminated?</span>; <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">state</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">state</span> <span class="ruby-operator">==</span> <span class="ruby-value str">'terminated'</span>; <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000340-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/instance.rb, line 63</span>&#x000A;63:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">degraded?</span>; <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">state</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">state</span> <span class="ruby-operator">==</span> <span class="ruby-value str">'degraded'</span>; <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000333'>
+                <a name='M000333'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>init</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000333-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000333-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/instance.rb, line 22</span>&#x000A;22:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">init</span>&#x000A;23:       <span class="ruby-ivar">@groups</span> <span class="ruby-operator">||=</span> []&#x000A;24:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='public-instance method' id='method-M000336'>
                 <a name='M000336'>      </a>
                 <div class='synopsis'>
-                  <span class='name'>to_s</span>
-                  <span class='arguments'>(with_title=false)</span>
+                  <span class='name'>inspect</span>
+                  <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000336-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000336-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/instance.rb, line 31</span>&#x000A;31:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>(<span class="ruby-identifier">with_title</span>=<span class="ruby-keyword kw">false</span>)&#x000A;32:       <span class="ruby-identifier">lines</span> = []&#x000A;33:       <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@groups</span>&#x000A;34:         <span class="ruby-identifier">gpstr</span> = [<span class="ruby-ivar">@groups</span>].<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">compact</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">', '</span>)&#x000A;35:         <span class="ruby-identifier">gpstr</span> <span class="ruby-operator">&amp;&amp;=</span> <span class="ruby-node">&quot;(#{gpstr})&quot;</span>&#x000A;36:       <span class="ruby-keyword kw">else</span>&#x000A;37:         <span class="ruby-identifier">gpstr</span> = <span class="ruby-value str">''</span>&#x000A;38:       <span class="ruby-keyword kw">end</span>&#x000A;39:       &#x000A;40:       <span class="ruby-identifier">lines</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-value str">&quot;%s  %s&quot;</span> <span class="ruby-operator">%</span> [<span class="ruby-identifier">liner_note</span>, <span class="ruby-identifier">gpstr</span>]&#x000A;41:       <span class="ruby-comment cmt">#if self.running?</span>&#x000A;42:       <span class="ruby-comment cmt">#  k, g = @keyname || 'no-keypair', self.groups.join(', ')</span>&#x000A;43:       <span class="ruby-comment cmt">#  lines &lt;&lt; @@sformat % %w{zone size ami keyname groups} if with_title</span>&#x000A;44:       <span class="ruby-comment cmt">#  lines &lt;&lt; @@sformat % [@zone, @size, @ami, k, g]</span>&#x000A;45:       <span class="ruby-comment cmt">#end</span>&#x000A;46:       <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">$/</span>)&#x000A;47:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000336-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/instance.rb, line 49</span>&#x000A;49:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">inspect</span>&#x000A;50:       <span class="ruby-identifier">lines</span> = []&#x000A;51:       <span class="ruby-identifier">lines</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">liner_note</span>&#x000A;52:       <span class="ruby-identifier">field_names</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span><span class="ruby-operator">|</span>&#x000A;53:         <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">key</span>)&#x000A;54:         <span class="ruby-identifier">val</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">key</span>)&#x000A;55:         <span class="ruby-identifier">lines</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">sprintf</span>(<span class="ruby-value str">&quot; %22s: %s&quot;</span>, <span class="ruby-identifier">key</span>, (<span class="ruby-identifier">val</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">val</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">', '</span>) <span class="ruby-operator">:</span> <span class="ruby-identifier">val</span>))&#x000A;56:       <span class="ruby-keyword kw">end</span>&#x000A;57:       <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">$/</span>)&#x000A;58:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000334'>
+                <a name='M000334'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>liner_note</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000334-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000334-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/instance.rb, line 26</span>&#x000A;26:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">liner_note</span>&#x000A;27:       <span class="ruby-identifier">info</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">running?</span> <span class="ruby-value">? </span><span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">dns_public</span> <span class="ruby-operator">:</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">state</span>&#x000A;28:       <span class="ruby-value str">&quot;%s  %-30s&quot;</span> <span class="ruby-operator">%</span> [<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">awsid</span>.<span class="ruby-identifier">bright</span>, <span class="ruby-identifier">info</span>]&#x000A;29:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000338'>
+                <a name='M000338'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>pending?</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000338-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000338-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/instance.rb, line 61</span>&#x000A;61:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">pending?</span>; <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">state</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">state</span> <span class="ruby-operator">==</span> <span class="ruby-value str">'pending'</span>; <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000337'>
+                <a name='M000337'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>running?</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000337-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000337-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/instance.rb, line 60</span>&#x000A;60:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">running?</span>; <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">state</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">state</span> <span class="ruby-operator">==</span> <span class="ruby-value str">'running'</span>; <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000341'>
+                <a name='M000341'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>shutting_down?</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000341-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000341-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/instance.rb, line 64</span>&#x000A;64:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">shutting_down?</span>; <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">state</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">state</span> <span class="ruby-operator">==</span> <span class="ruby-value str">'shutting-down'</span>; <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000339'>
+                <a name='M000339'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>terminated?</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000339-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000339-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/instance.rb, line 62</span>&#x000A;62:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">terminated?</span>; <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">state</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">state</span> <span class="ruby-operator">==</span> <span class="ruby-value str">'terminated'</span>; <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000335'>
+                <a name='M000335'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>to_s</span>
+                  <span class='arguments'>(with_title=false)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000335-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000335-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/instance.rb, line 31</span>&#x000A;31:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>(<span class="ruby-identifier">with_title</span>=<span class="ruby-keyword kw">false</span>)&#x000A;32:       <span class="ruby-identifier">lines</span> = []&#x000A;33:       <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@groups</span>&#x000A;34:         <span class="ruby-identifier">gpstr</span> = [<span class="ruby-ivar">@groups</span>].<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">compact</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">', '</span>)&#x000A;35:         <span class="ruby-identifier">gpstr</span> <span class="ruby-operator">&amp;&amp;=</span> <span class="ruby-node">&quot;(#{gpstr})&quot;</span>&#x000A;36:       <span class="ruby-keyword kw">else</span>&#x000A;37:         <span class="ruby-identifier">gpstr</span> = <span class="ruby-value str">''</span>&#x000A;38:       <span class="ruby-keyword kw">end</span>&#x000A;39:       &#x000A;40:       <span class="ruby-identifier">lines</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-value str">&quot;%s  %s&quot;</span> <span class="ruby-operator">%</span> [<span class="ruby-identifier">liner_note</span>, <span class="ruby-identifier">gpstr</span>]&#x000A;41:       <span class="ruby-comment cmt">#if self.running?</span>&#x000A;42:       <span class="ruby-comment cmt">#  k, g = @keyname || 'no-keypair', self.groups.join(', ')</span>&#x000A;43:       <span class="ruby-comment cmt">#  lines &lt;&lt; @@sformat % %w{zone size ami keyname groups} if with_title</span>&#x000A;44:       <span class="ruby-comment cmt">#  lines &lt;&lt; @@sformat % [@zone, @size, @ami, k, g]</span>&#x000A;45:       <span class="ruby-comment cmt">#end</span>&#x000A;46:       <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">$/</span>)&#x000A;47:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

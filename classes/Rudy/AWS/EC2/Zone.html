@@ -45,37 +45,37 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000245">liner_note</a></li>
-              <li><a href="#M000246">to_s</a></li>
+              <li><a href="#M000244">liner_note</a></li>
+              <li><a href="#M000245">to_s</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000245'>
-                <a name='M000245'>      </a>
+              <div class='public-instance method' id='method-M000244'>
+                <a name='M000244'>      </a>
                 <div class='synopsis'>
                   <span class='name'>liner_note</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000245-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000244-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000245-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/zone.rb, line 11</span>&#x000A;11:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">liner_note</span>&#x000A;12:         <span class="ruby-value str">&quot;%-10s  %9s  %s&quot;</span> <span class="ruby-operator">%</span> [<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">name</span>, <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">region</span>, <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">state</span>]&#x000A;13:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000244-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/zone.rb, line 11</span>&#x000A;11:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">liner_note</span>&#x000A;12:         <span class="ruby-value str">&quot;%-10s  %9s  %s&quot;</span> <span class="ruby-operator">%</span> [<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">name</span>, <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">region</span>, <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">state</span>]&#x000A;13:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000246'>
-                <a name='M000246'>      </a>
+              <div class='public-instance method' id='method-M000245'>
+                <a name='M000245'>      </a>
                 <div class='synopsis'>
                   <span class='name'>to_s</span>
                   <span class='arguments'>(titles=false)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000246-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000245-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000246-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/zone.rb, line 15</span>&#x000A;15:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>(<span class="ruby-identifier">titles</span>=<span class="ruby-keyword kw">false</span>)&#x000A;16:         <span class="ruby-identifier">str</span> = <span class="ruby-identifier">titles</span> <span class="ruby-value">? </span><span class="ruby-node">&quot;%-20s   %s#{$/}&quot;</span> <span class="ruby-operator">%</span> [<span class="ruby-value str">'name'</span>, <span class="ruby-value str">'region'</span>, <span class="ruby-value str">'state'</span>] <span class="ruby-operator">:</span> <span class="ruby-value str">&quot;&quot;</span>&#x000A;17:         <span class="ruby-identifier">str</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">liner_note</span>&#x000A;18:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000245-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/zone.rb, line 15</span>&#x000A;15:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>(<span class="ruby-identifier">titles</span>=<span class="ruby-keyword kw">false</span>)&#x000A;16:         <span class="ruby-identifier">str</span> = <span class="ruby-identifier">titles</span> <span class="ruby-value">? </span><span class="ruby-node">&quot;%-20s   %s#{$/}&quot;</span> <span class="ruby-operator">%</span> [<span class="ruby-value str">'name'</span>, <span class="ruby-value str">'region'</span>, <span class="ruby-value str">'state'</span>] <span class="ruby-operator">:</span> <span class="ruby-value str">&quot;&quot;</span>&#x000A;17:         <span class="ruby-identifier">str</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">liner_note</span>&#x000A;18:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

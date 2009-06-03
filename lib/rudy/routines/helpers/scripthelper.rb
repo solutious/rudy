@@ -101,7 +101,7 @@ module Rudy; module Routines;
       
       # The config file that gets created on each remote machine
       # will be created in the user's home directory. 
-      script_config_remote_path = File.join(rbox.getenv['HOME'], @@script_config_file_name)
+      script_config_remote_path = File.join(rbox.getenv['HOME'] || '', @@script_config_file_name)
       
       if sconf && !sconf.empty?
         tf = Tempfile.new(@@script_config_file_name)

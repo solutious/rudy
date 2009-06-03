@@ -80,7 +80,7 @@ module Rudy
         }
         
         
-        lbox = Rye::Box.new('localhost', :info => (@@global.verbose > 3), :debug => true)
+        lbox = Rye::Box.new('localhost', :info => (@@global.verbose > 3), :debug => false)
         sconf = fetch_script_config
         
         enjoy_every_sandwich {
@@ -337,7 +337,14 @@ module Rudy
         rescue => ex
           STDERR.puts "  Error: #{ex.message}".color(:red)
           STDERR.puts ex.backtrace if Rudy.debug?
-          exit 12 unless keep_going?
+          choice = Annoy.get_user_input('(C)ontinue  (R)etry  (A)bort: ')
+          if choice.match(/\AC/i)
+            return
+          elsif choice.match(/\AR/i)
+            retry
+          else
+            exit 12
+          end
         rescue Interrupt
           puts "Aborting..."
           exit 12

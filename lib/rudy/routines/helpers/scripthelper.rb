@@ -169,11 +169,6 @@ module Rudy; module Routines;
             ### EXECUTE THE COMMANDS BLOCK
             rbox.batch(option, argv, &proc)
             
-            rbox.pre_command_hook = nil
-            rbox.post_command_hook = nil
-            
-            rbox.enable_safe_mode  # In case it was disabled
-            
           rescue Rye::CommandError => ex
             print_response(ex)
             exit 12 unless keep_going?
@@ -181,6 +176,10 @@ module Rudy; module Routines;
             STDERR.puts "  CommandNotFound: #{ex.message}".color(:red)
             STDERR.puts ex.backtrace if Rudy.debug?
             exit 12 unless keep_going?
+          ensure
+            rbox.pre_command_hook = nil
+            rbox.post_command_hook = nil
+            rbox.enable_safe_mode  # In case it was disabled
           end
           
           rbox.cd # reset to home dir

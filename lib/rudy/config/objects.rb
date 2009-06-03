@@ -33,8 +33,10 @@ class Rudy::Config
       def message; "Arguments for #{cmd} must be: Symbols, Strings only"; end
     end
       
-    @@processed = false  ## Not used currently. May be revived. 
-    @@allowed = []       ## Allowed commands which have been processed
+    @@processed = false  
+    
+    ## Not used currently. May be revived. 
+    ##@@allowed = []        ## Commands which have been processed
     
     forced_array :allow
     forced_array :deny
@@ -56,8 +58,9 @@ class Rudy::Config
     # That's obviously not good enough but for now commands
     # configuration MUST be put before routines. 
     def postprocess
-      #return false if @@processed
-      #@@processed = true  # Make sure this runs only once
+      return false if @@processed
+      @@processed = true  # Make sure this runs only once
+      
       # Parses:
       # commands do
       #   allow :kill 
@@ -70,8 +73,9 @@ class Rudy::Config
       self.allow.each do |cmd|
         cmd, *args = *cmd
         
-        raise AlreadyDefined.new(:commands, cmd) if @@allowed.member?(cmd)
-        @@allowed << cmd
+        ## Currently disabled
+        ##raise AlreadyDefined.new(:commands, cmd) if @@allowed.member?(cmd)
+        ##@@allowed << cmd
         
         # We can allow existing commands to be overridden but we
         # print a message to STDERR so the user knows what's up.

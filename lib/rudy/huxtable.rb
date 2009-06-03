@@ -40,7 +40,7 @@ module Rudy
     #def logger; @@logger; end
     
     def self.update_config(path=nil)
-      @@config.verbose = (@@global.verbose > 0)
+      @@config.verbose = (@@global.verbose > 1)
       # nil and bad paths sent to look_and_load are ignored
       @@config.look_and_load(path || @@global.config)
       @@global.apply_config(@@config)

@@ -60,7 +60,7 @@ class Rudy::Config
     def postprocess
       return false if @@processed
       @@processed = true  # Make sure this runs only once
-      
+
       # Parses:
       # commands do
       #   allow :kill 

@@ -1,6 +1,11 @@
 RUDY, CHANGES
 
 
+#### 0.8.5 (2009-06-??) ###############################
+
+* FIXED: Bug in DiskHelper. mount method tried to attach when already attached. 
+
+
 #### 0.8.4 (2009-06-04) ###############################
 
 * FIXED: Fixed nil exception in fetch_machine_param

@@ -220,13 +220,15 @@ module Rudy; module Routines;
           return
         end
         
-        msg = "Attaching #{disk.awsid} to #{@machine.awsid}... "
-        disk.attach(@machine.awsid)
-        Rudy::Utils.waiter(2, 10, STDOUT, msg) { 
-          disk.attached?
-        }
+        unless disk.attached?
+          msg = "Attaching #{disk.awsid} to #{@machine.awsid}... "
+          disk.attach(@machine.awsid)
+          Rudy::Utils.waiter(2, 10, STDOUT, msg) { 
+            disk.attached?
+          }
         
-        sleep 2
+          sleep 2
+        end
         
         begin
           @rbox.mkdir(:p, disk.path)

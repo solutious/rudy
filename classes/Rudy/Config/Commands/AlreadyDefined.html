@@ -1,9 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
   <head>
-    <title>: Rudy::MachineGroupNotDefined [Rudy: Not your grandparents' EC2 deployment tool.]</title>
+    <title>: Rudy::Config::Commands::AlreadyDefined [Rudy: Not your grandparents' EC2 deployment tool.]</title>
     <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
-    <link href='../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <link href='../../../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
       //<![CDATA[
         function popupCode(url) {
@@ -27,16 +27,16 @@
       <div class='header'>
         <h1 class='name'>
           <span class='type'>Class</span>
-          Rudy::MachineGroupNotDefined
+          Rudy::Config::Commands::AlreadyDefined
         </h1>
         <ol class='paths'>
           <li>
-            <a href="../../files/lib/rudy_rb.html">lib/rudy.rb</a>
+            <a href="../../../../files/lib/rudy/config/objects_rb.html">lib/rudy/config/objects.rb</a>
           </li>
         </ol>
         <div class='parent'>
           Parent:
-          <strong><a href="Error.html">Rudy::Error</a></strong>
+          <strong><a href="../Error.html">Rudy::Config::Error</a></strong>
         </div>
       </div>
       <div id='content'>
@@ -45,23 +45,23 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000459">message</a></li>
+              <li><a href="#M000452">message</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000459'>
-                <a name='M000459'>      </a>
+              <div class='public-instance method' id='method-M000452'>
+                <a name='M000452'>      </a>
                 <div class='synopsis'>
                   <span class='name'>message</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000459-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000452-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000459-source'>     <span class="ruby-comment cmt"># File lib/rudy.rb, line 148</span>&#x000A;148:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">message</span>; <span class="ruby-node">&quot;#{@obj} is not defined in machines config.&quot;</span>; <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000452-source'>    <span class="ruby-comment cmt"># File lib/rudy/config/objects.rb, line 24</span>&#x000A;24:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">message</span>; <span class="ruby-node">&quot;The command '#{@obj}' has already been defined for this project&quot;</span>; <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

@@ -34,6 +34,7 @@ module Rudy
       values = names.collect do |n|
         local[n.to_sym] || @@global.send(n.to_sym)
       end
+      more ||= []
       names.zip(values) + more
     end
     
@@ -46,6 +47,7 @@ module Rudy
     end
     
   end
+  
 end
 
 Rudy::Utils.require_glob(RUDY_LIB, 'rudy', 'metadata', 'objectbase.rb')

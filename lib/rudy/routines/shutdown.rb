@@ -24,9 +24,11 @@ module Rudy; module Routines;
     def raise_early_exceptions
       rmach = Rudy::Machines.new
       raise MachineGroupNotRunning, current_machine_group unless rmach.running?
+      ## NOTE: This check is disabled for now. If the private key doesn't exist
+      ## it prevents shutting down.
       # Check private key after machine group, otherwise we could get an error
       # about there being no key which doesn't make sense if the group isn't running.
-      raise Rudy::PrivateKeyNotFound, root_keypairpath unless has_keypair?(:root)
+      ##raise Rudy::PrivateKeyNotFound, root_keypairpath unless has_keypair?(:root)
     end
     
   end

@@ -1,9 +1,14 @@
 RUDY, CHANGES
 
 
-#### 0.8.4 (2009-06-??) ###############################
+#### 0.8.4 (2009-06-04) ###############################
 
-* CHANGE: Fixed nil exception in fetch_machine_param
+* FIXED: Fixed nil exception in fetch_machine_param
+* CHANGE: Disabled check for private key for shutdown routine. 
+  If the private key doesn't exist it prevents shutting down.
+* CHANGE: Re-enabled the check to make sure command config is parsed only one time
+* CHANGE: Some UI tweaks, some minor integration stuff with Rye
+* CHANGE: Caesars::Config verbose mode is now enabled at Rudy verbose level 2
 
 
 #### 0.8.3 (2009-06-03) ###############################

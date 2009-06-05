@@ -65,14 +65,15 @@ module Rudy
       
       # Takes a zipped Array or Hash of criteria.
       # Returns a string suitable for a SimpleDB Select
-      def self.generate_select(*args)
-        fields, domain, args = *args
-        q = args.is_a?(Hash) ? args : Hash[*args.flatten]
+      def self.generate_select(fields, domain, *args)
+        q = args.first.is_a?(Hash)? args.first : Hash[*args.flatten]
         query = []
-        q.each do |n,v| 
+        q.each_pair do |n,v| 
           query << "#{Rudy::AWS.escape n}='#{Rudy::AWS.escape v}'"
         end
-        "select * from #{domain} where " << query.join(' and ')
+        str = "select * from #{domain} " 
+        str << " where "<< query.join(' and ') unless query.empty?
+        str
       end
 
       

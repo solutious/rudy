@@ -79,7 +79,9 @@ class Rudy::Config
         
         # We can allow existing commands to be overridden but we
         # print a message to STDERR so the user knows what's up.
-        STDERR.puts "Redefining #{cmd}" if Rye::Cmd.can?(cmd)
+        if Rye::Cmd.can?(cmd)
+          STDERR.puts "Redefining #{cmd}" if @@global.verbose > 0
+        end
         
         if args.last.is_a?(Proc)
           block = args.pop

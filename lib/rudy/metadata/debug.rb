@@ -24,16 +24,11 @@ class Debug
     objects = nil if objects.empty?
     objects
   end
-
-  def get(rname=nil)
-    dhash = @sdb.get(Rudy::DOMAIN, rname)
-    return nil if dhash.nil? || dhash.empty?
-    dhash
-  end
   
-  def to_select(*args)
-    query = super(*args)
-    query << " and created != '0' order by created desc"
+  
+  def to_select(more, less, local)
+    query = super(more, less, local)
+#    query << " order by created desc"
     puts query if @@global.verbose > 0
     query
   end

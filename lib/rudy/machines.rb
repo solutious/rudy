@@ -82,6 +82,7 @@ module Rudy
     end
     
     def get_instance
+      puts self.to_yaml
       @ec2inst.get(@awsid)
     end
     

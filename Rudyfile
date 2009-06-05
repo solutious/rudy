@@ -92,7 +92,6 @@ end
 # allow COMMAND-NAME, '/path/2/COMMAND', 'default argument', 'another arg'
 #
 commands do
-  allow :make
   allow :gem_install, '/usr/bin/gem', 'install', :V, '--no-rdoc', '--no-ri'
   allow :apt_get, 'apt-get', :y, :q
   allow :floo, :time, 1 do

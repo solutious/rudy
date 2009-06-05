@@ -19,7 +19,7 @@ module Rudy; module Routines;
       machines = []
       generic_machine_runner(:list) do |machine,rbox|
         puts $/, "Rebooting...", $/
-        rbox.disconnect
+        rbox.disconnect unless rbox.nil?
         machine.restart
         sleep 4
         msg = preliminary_separator("Checking if instance is running...")

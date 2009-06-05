@@ -54,10 +54,11 @@ module Rudy
           puts conf.to_hash.send(outform) if conf
           
         else
-          puts "# ACCOUNTS: [not displayed]" if types.delete(:accounts)
+          #puts "# ACCOUNTS: [not displayed]" if types.delete(:accounts)
           types.each do |conftype|
             puts "# #{conftype.to_s.upcase}"
             next unless @@config[conftype]  # Nothing to output
+            @@config[conftype][:aws][:secretkey] = '[hidden]' if conftype == :accounts
             puts @@config[conftype].to_hash.send(outform)
           end
         end

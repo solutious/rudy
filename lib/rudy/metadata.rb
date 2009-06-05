@@ -22,10 +22,17 @@ module Rudy
       [dat.year, mon, day, Rudy::DELIM, hour, min, Rudy::DELIM, sec].join
     end
     
+    def destroy
+      @sdb.destroy(Rudy::DOMAIN, name)
+      true
+    end
+    
   private
   
     # Returns a generic zipped Array of metadata
     # (There is region, zone, environment, role, but no rtype)
+    # NOTE: I've encoded some mega bullshit in here. more is actually an Array
+    # of name values [n1, v1, n2, v2] (wtf!) which makes local unnecessary.
     def build_criteria(more=[], less=[], local={})
       # TODO: This build_criteria treats "more" differently than the
       # ObjectBase one. Sort it out! (This way is better)
@@ -34,7 +41,6 @@ module Rudy
       values = names.collect do |n|
         local[n.to_sym] || @@global.send(n.to_sym)
       end
-      more ||= []
       names.zip(values) + more
     end
     
@@ -47,7 +53,6 @@ module Rudy
     end
     
   end
-  
 end
 
 Rudy::Utils.require_glob(RUDY_LIB, 'rudy', 'metadata', 'objectbase.rb')

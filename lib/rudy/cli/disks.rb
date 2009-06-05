@@ -29,7 +29,7 @@ module Rudy
           if @option.backups
             d.list_backups.each_with_index do |b, index|
               puts '  %s' % b.name
-              break if @option.all.nil? && index >= 2 # display only 3, unless all
+              ##break if @option.all.nil? && index >= 2 # display only 3, unless all
             end
           end
         end

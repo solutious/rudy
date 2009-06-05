@@ -29,7 +29,7 @@ module Rudy
           msg << "not the EC2 object (volume, instance, etc...)"
           puts msg
         end
-        p rdebug.get @argv.oid
+        p rdebug.get( @argv.oid)
       end
     
     end

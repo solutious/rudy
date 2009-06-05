@@ -6,6 +6,7 @@ end
 
 local_libs = %w{net-scp amazon-ec2 aws-s3 caesars drydock rye storable sysinfo annoy}
 local_libs.each { |dir| $:.unshift File.join(RUDY_HOME, '..', dir, 'lib') }
+require 'rubygems'
 
 require 'digest/md5'
 require 'stringio'
@@ -163,6 +164,3 @@ require 'rudy/aws'        # is
 require 'rudy/metadata'   # important
 require 'rudy/machines'
 require 'rudy/routines'
-
-
-

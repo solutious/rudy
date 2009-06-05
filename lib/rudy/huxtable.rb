@@ -32,18 +32,17 @@ module Rudy
     
     @@sacred_params = [:accesskey, :secretkey, :cert, :privatekey]
     
-    # NOTE: These methods conflict with Drydock::Command classes. It's
-    # probably a good idea to not expose these anyway since it can be
-    # done via Rudy::Huxtable.update_global etc...
-    #def config; @@config; end
-    #def global; @@global; end
-    #def logger; @@logger; end
+    def self.config; @@config; end
+    def self.global; @@global; end
+    def self.logger; @@logger; end
     
     def self.update_config(path=nil)
       @@config.verbose = (@@global.verbose > 1)
       # nil and bad paths sent to look_and_load are ignored
       @@config.look_and_load(path || @@global.config)
       @@global.apply_config(@@config)
+      # And then update global again b/c some values come from @@config
+      update_global
     end
     
     def self.update_global(ghash={})

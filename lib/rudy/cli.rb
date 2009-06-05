@@ -48,9 +48,6 @@ module Rudy
           exit 81
         end
         
-        # And then update global again b/c some values come from @@config
-        Rudy::Huxtable.update_global
-        
         @@global.nocolor ? String.disable_color : String.enable_color
         @@global.yes ? Annoy.enable_skip : Annoy.disable_skip
       

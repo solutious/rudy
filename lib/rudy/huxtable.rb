@@ -21,16 +21,9 @@ module Rudy
   #
   module Huxtable
     
-    # TODO: investigate @@debug bug. When this is true, Caesars.debug? returns true
-    # too. It's possible this is intentional but probably not. 
-    @@debug = false
-    @@abort = false
-    
     @@config = Rudy::Config.new
     @@global = Rudy::Global.new
     @@logger = StringIO.new    # BUG: memory-leak for long-running apps
-    
-    @@sacred_params = [:accesskey, :secretkey, :cert, :privatekey]
     
     def self.config; @@config; end
     def self.global; @@global; end
@@ -44,14 +37,9 @@ module Rudy
       # And then update global again b/c some values come from @@config
       update_global
     end
-    
-    def self.update_global(ghash={})
-      @@global.update(ghash)
-    end
-    
-    def self.update_logger(logger)
-      @@logger = logger
-    end
+
+    def self.update_global(ghash={}); @@global.update(ghash); end
+    def self.update_logger(logger);   @@logger = logger; end
     
     def self.create_domain
       @sdb = Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey, @@global.region)
@@ -65,29 +53,6 @@ module Rudy
     
     def self.domain
       Rudy::DOMAIN
-    end
-    
-    def self.change_zone(v); @@global.zone = v; end
-    def self.change_role(v); @@global.role = v; end
-    def self.change_region(v); @@global.region = v; end
-    def self.change_environment(v); @@global.environment = v; end  
-    def self.change_position(v); @@global.position = v; end
-    
-    def debug?; Rudy::Huxtable.debug?; end
-    def Huxtable.debug?; @@debug == true; end
-    def check_keys
-      raise "No EC2 .pem keys provided" unless has_pem_keys?
-      raise "No SSH key provided for #{current_user}!" unless has_keypair?
-      raise "No SSH key provided for root!" unless has_keypair?(:root)
-    end
-      
-    def has_pem_keys?
-      (@@global.cert       && File.exists?(@@global.cert) && 
-       @@global.privatekey && File.exists?(@@global.privatekey))
-    end
-     
-    def has_keys?
-      (@@global.accesskey && !@@global.accesskey.empty? && @@global.secretkey && !@@global.secretkey.empty?)
     end
     
     def config_dirname

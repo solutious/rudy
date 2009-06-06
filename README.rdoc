@@ -16,7 +16,13 @@ All configuration is organized into the zones, environments, and roles that you 
 
 <b>See Getting-Started[http://solutious.com/products/rudy/getting-started.html] for more info.</b>
 
-<em>NOTE: This is a BETA release. That means Rudy's not ready for production use! See Project-Status[http://wiki.github.com/solutious/rudy/project-status].</em>
+
+== Project Status
+
+<em>This is a BETA release. That means Rudy's not ready for production use! See Project-Status[http://wiki.github.com/solutious/rudy/project-status].</em>
+
+I'm currently rebuilding[http://github.com/solutious/rudy/tree/metadata-refactor] the metadata implementation. This is the part of Rudy that stores you machine, disk, and backup infoz in SimpleDB so it's pretty important! The implementation in the 0.8.4 release (and this master branch) are functional but frail so I want to re-emphasize not to use Rudy for production right now.
+
 
 == Configuration
 

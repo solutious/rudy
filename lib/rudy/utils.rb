@@ -17,7 +17,7 @@ module Rudy
     def external_ip_address
       ip = nil
       begin
-        %w{solutious.com/ip/ myip.dk/ whatismyip.com }.each do |sponge| # w/ backup
+        %w{solutious.heroku.com/ip}.each do |sponge|
           ipstr = Net::HTTP.get(URI.parse("http://#{sponge}")) || ''
           ip = /([0-9]{1,3}\.){3}[0-9]{1,3}/.match(ipstr).to_s
           break if ip && !ip.empty?

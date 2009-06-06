@@ -1,8 +1,8 @@
 
-LIB_DIR = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'lib'))
+rudy_lib_path = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'lib'))
 
 group "Require-time"
-library :rudy, LIB_DIR
+library :rudy, rudy_lib_path
 
 tryout "Rudy Initialization" do
   setup do
@@ -24,11 +24,10 @@ tryout "Rudy Initialization" do
     Rudy.debug?
   end
   
-  
 end
 
-
 dreams "Rudy Initialization" do
+  
   dream "version matches gemspec" do
     require 'rubygems' unless defined?(Gem)
     eval( File.read(File.join(RUDY_HOME, 'rudy.gemspec')))
@@ -42,6 +41,7 @@ dreams "Rudy Initialization" do
   
   dream  "debug can be enabled", true
   dream "debug can be disabled", true
+  
 end
 
 

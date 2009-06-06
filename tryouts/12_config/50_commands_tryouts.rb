@@ -1,8 +1,8 @@
 
-LIB_DIR = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'lib'))
+rudy_lib_path = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'lib'))
 
 group "Config"
-library :rudy, LIB_DIR
+library :rudy, rudy_lib_path
 
 tryout "Commands" do
   setup do
@@ -16,5 +16,5 @@ tryout "Commands" do
   
 end
 dreams "Commands" do
-  dream "is a well-formed hash", [:allow], :poop
+  dream "is a well-formed hash", [:allow]
 end

@@ -1,8 +1,8 @@
 
-LIB_DIR = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'lib'))
+rudy_lib_path = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'lib'))
 
 group "Config"
-library :rudy, LIB_DIR
+library :rudy, rudy_lib_path
 
 tryout "Routines" do
   setup do

@@ -1,10 +1,10 @@
 
 LIB_DIR = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'lib'))
 
-group "Rudy Require-Time"
+group "Require-time"
 library :rudy, LIB_DIR
 
-tryout "Initialization" do
+tryout "Rudy Initialization" do
   setup do
   end
 
@@ -28,7 +28,7 @@ tryout "Initialization" do
 end
 
 
-dreams "Initialization" do
+dreams "Rudy Initialization" do
   dream "version matches gemspec" do
     require 'rubygems' unless defined?(Gem)
     eval( File.read(File.join(RUDY_HOME, 'rudy.gemspec')))

@@ -44,6 +44,7 @@ module Rudy
       # the case. Rudy::Config::Commands knows to only raise the
       # exception one time (using a boolean flag in a class var).
       @commands.postprocess if @commands
+      @defaults = Rudy::Config::Defaults.new if @defaults.nil?
     end
     
     def look_and_load(adhoc_path=nil)

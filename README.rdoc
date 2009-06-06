@@ -156,12 +156,13 @@ I'm very open to contributions!
 
 == Related Projects
 
+* Sprinkle -- http://github.com/crafterm/sprinkle/
+* Wakame -- http://wakame.rubyforge.org/
 * Pool Party -- http://www.poolpartyrb.com/
 * Rubber -- http://github.com/wr0ngway/rubber/wikis
 * Moonshine -- http://github.com/railsmachine/moonshine/tree
 * Boto -- http://code.google.com/p/boto/
 * Fabric -- http://www.nongnu.org/fab/
-* Wakame -- http://wakame.rubyforge.org/
 
 
 

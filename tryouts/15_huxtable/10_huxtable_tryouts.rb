@@ -1,5 +1,5 @@
 
-rudy_lib_path = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'lib'))
+rudy_lib_path = File.expand_path(File.join(GYMNASIUM_HOME, '..', 'lib'))
 
 group "Rudy::Huxtable"
 library :rudy, rudy_lib_path
@@ -24,19 +24,23 @@ dreams "Is well kept" do
   dream "has global", Rudy::Global, :class
   dream "has logger", StringIO, :class
   dream "specify logger", IO, :class
-  dream "knows where config lives", true
 end
 
 tryout "Loads configuration" do
   
 end
 
+
 tryout "Knows the defaults" do
   setup do
     class ::Olivia                 # :: to define the class in the root context
       include Rudy::Huxtable
     end
+  end
+  
+  drill "create olivia" do
     @@olivia = Olivia.new
+    @@olivia.class.to_s
   end
   
   drill "machine group" do
@@ -44,6 +48,7 @@ tryout "Knows the defaults" do
   end
   
 end
-dreams "Can be included into classes" do
+dreams "Knows the defaults" do
+  dream "create olivia", 'Olivia'
   dream "machine group", 'stage-app'
 end

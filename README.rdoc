@@ -155,6 +155,9 @@ I'm very open to contributions!
 * Moonshine -- http://github.com/railsmachine/moonshine/tree
 * Boto -- http://code.google.com/p/boto/
 * Fabric -- http://www.nongnu.org/fab/
+* Wakame -- http://wakame.rubyforge.org/
+
+
 
 == License
 

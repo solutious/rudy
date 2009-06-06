@@ -1,5 +1,5 @@
 
-rudy_lib_path = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'lib'))
+rudy_lib_path = File.expand_path(File.join(GYMNASIUM_HOME, '..', 'lib'))
 
 group "Require-time"
 library :rudy, rudy_lib_path
@@ -40,7 +40,7 @@ dreams "Rudy Initialization" do
   dream  "auto-yes is disabled", false
   
   dream  "debug can be enabled", true
-  dream "debug can be disabled", true
+  dream "debug can be disabled", false
   
 end
 

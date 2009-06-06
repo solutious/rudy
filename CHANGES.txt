@@ -1,5 +1,12 @@
 RUDY, CHANGES
 
+#### 0.9.0 (TBD) ###############################
+
+NOTE: The following changes are planned for the 0.9.0 release. 
+
+* group identifier will be changed to 'grp' from 'g'
+* machine identifier will be changes to 'mach' from 'm'
+
 
 #### 0.8.5 (2009-06-??) ###############################
 

@@ -62,9 +62,9 @@ machines do
     end
     
     users do                         # Specify existing private keys per user
-      #root do                       
-      #  keypair "/path/2/private-key"
-      #end
+      rudy do                       
+        keypair "/path/2/private-key"
+      end
     end
     
   end  

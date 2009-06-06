@@ -17,10 +17,10 @@ module Rudy
     def accounts?; self.respond_to?(:accounts) && !self[:accounts].nil?; end #a
     def defaults?; self.respond_to?(:defaults) && !self[:defaults].nil?; end #u
     def machines?; self.respond_to?(:machines) && !self[:machines].nil?; end #t
-    def routines?; self.respond_to?(:routines) && !self[:routines].nil?; end #o
-    def networks?; self.respond_to?(:networks) && !self[:networks].nil?; end #g
-    def controls?; self.respond_to?(:controls) && !self[:controls].nil?; end #e
-    def commands?; self.respond_to?(:commands) && !self[:commands].nil?; end #n
+    def commands?; self.respond_to?(:commands) && !self[:commands].nil?; end #o
+    def routines?; self.respond_to?(:routines) && !self[:routines].nil?; end #g
+    def networks?; self.respond_to?(:networks) && !self[:networks].nil?; end #e
+    def controls?; self.respond_to?(:controls) && !self[:controls].nil?; end #n
     def services?; self.respond_to?(:services) && !self[:services].nil?; end #!
     
     # This method is called by Caesars::Config.refresh for every DSL 

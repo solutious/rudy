@@ -35,7 +35,7 @@ module Rudy
       @@config.look_and_load(path || @@global.config)
       @@global.apply_config(@@config)
       # And then update global again b/c some values come from @@config
-      update_global
+      update_global  ## TODO: Check if this can be removed
     end
 
     def self.update_global(ghash={}); @@global.update(ghash); end

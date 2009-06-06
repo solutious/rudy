@@ -45,13 +45,19 @@ module Rudy
     def self.to_f; self.to_s.to_f; end
   end
   
-  unless defined?(Rudy::DOMAIN) # We can assume all constants are defined
+  unless defined? Rudy::DOMAIN # We can assume all constants are defined
+    
+    @@quiet = false
+    @@yes = false
+    @@debug = false
+    @@sysinfo = SysInfo.new.freeze
+    
     # SimpleDB accepts dashes in the domain name on creation and with the query syntax. 
     # However, with select syntax it says: "The specified query expression syntax is not valid"
     DOMAIN = "rudy_state".freeze
     DELIM  = '-'.freeze
   
-    CONFIG_DIR = File.join(ENV['HOME'] || ENV['USERPROFILE'], '.rudy').freeze
+    CONFIG_DIR = File.join(@@sysinfo.home, '.rudy').freeze
     CONFIG_FILE = File.join(Rudy::CONFIG_DIR, 'config').freeze
     
     DEFAULT_REGION = 'us-east-1'.freeze 
@@ -87,12 +93,7 @@ module Rudy
       :dns_public => 'ec2',
       :dns_private => 'domU',
     }.freeze
-    
-    @@quiet = false
-    @@yes = false
-    @@debug = false
-    @@sysinfo = SysInfo.new.freeze
-    
+
   end
   
   def Rudy.debug?; @@debug == true; end

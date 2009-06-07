@@ -10,7 +10,7 @@ module Rudy
     def inspect
       all = Guidelines.constants
       g = all.collect { |c| '%s="%s"' % [c, const_get(c)] }
-      %q{#<Rudy::Guidelines:%s %s>} % [self.object_id, g.join(' ')]
+      %q{#<Rudy::Guidelines:0x%s %s>} % [self.object_id, g.join(' ')]
     end
   end
 end

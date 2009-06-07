@@ -49,6 +49,6 @@ tryout "Knows the defaults" do
   
 end
 dreams "Knows the defaults" do
-  dream "create olivia", 'Olivia'
+  dream "create olivia", 'Oliviaw'
   dream "machine group", 'stage-app'
 end

@@ -1,4 +1,4 @@
-
+  
 
 
 module Rudy
@@ -302,8 +302,9 @@ module Rudy
     
     # Returns true if this is the default machine environment and role
     def default_machine_group?
-      @@global.environment == @@config.defaults.environment &&
-      @@global.role == @@config.defaults.role
+      default_env = @@config.defaults.environment || Rudy::DEFAULT_ENVIRONMENT
+      default_rol = @@config.defaults.role || Rudy::DEFAULT_ROLE
+      @@global.environment == default_env && @@global.role == default_rol
     end
     
     def fetch_machine_config

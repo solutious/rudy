@@ -182,3 +182,18 @@ routines do
   end
 end
 
+
+# ----------------------------------------------------------- DEFAULTS --------
+# These values are used as defaults for their respective global settings. All
+# non-boolean values are expected to be Symbols. 
+#
+defaults do
+  region :"us-east-1" 
+  zone :"us-east-1b"
+  environment :stage
+  role :app
+  user Rudy.sysinfo.user.to_sym      # This will be the user running Rudy
+  color false                        # Terminal colors? true/false
+  yes false                          # Auto-confirm? true/false
+end
+

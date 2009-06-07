@@ -44,6 +44,8 @@ module Rudy
       # the case. Rudy::Config::Commands knows to only raise the
       # exception one time (using a boolean flag in a class var).
       @commands.postprocess if @commands
+      
+      # default will be nil if non was specified. We at least want the object.
       @defaults = Rudy::Config::Defaults.new if @defaults.nil?
     end
     
@@ -96,16 +98,6 @@ module Rudy
               privatekey "~/path/2/pk-xxxx.pem" 
               cert "~/path/2/cert-xxxx.pem"
             end
-          end
-          
-          defaults do                          # Global Defaults
-            region :"us-east-1" 
-            zone :"us-east-1b"
-            environment :stage
-            role :app
-            user Rudy.sysinfo.user.to_sym
-            color false                        # Terminal colors? true/false
-            yes false                          # Auto-confirm? true/false
           end
         }
         Rudy::Utils.write_to_file(Rudy::CONFIG_FILE, rudy_config, 'w', 0600)

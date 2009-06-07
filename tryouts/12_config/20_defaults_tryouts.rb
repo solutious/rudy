@@ -18,8 +18,7 @@ tryout "Defaults" do
 end
 dreams "Defaults" do
   dream "has all defaults" do 
-    ##output ["color", "environment", "region", "role", "user", "yes", "zone"].sort
-    output []
+    output ["color", "environment", "region", "role", "user", "yes", "zone"].sort
   end
   
 end

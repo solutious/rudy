@@ -50,7 +50,7 @@ module Rudy
       @print_header = true if @print_header == nil
       @yes = false if @yes.nil?
     end
-      
+    
     def apply_config(config)
       return unless config.is_a?(Rudy::Config)
       if config.defaults?

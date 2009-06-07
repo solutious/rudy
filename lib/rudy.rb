@@ -60,13 +60,13 @@ module Rudy
     CONFIG_DIR = File.join(@@sysinfo.home, '.rudy').freeze
     CONFIG_FILE = File.join(Rudy::CONFIG_DIR, 'config').freeze
     
-    DEFAULT_REGION = 'us-east-1'.freeze 
-    DEFAULT_ZONE = 'us-east-1b'.freeze 
-    DEFAULT_ENVIRONMENT = 'stage'.freeze
-    DEFAULT_ROLE = 'app'.freeze
+    DEFAULT_REGION = :'us-east-1'.freeze 
+    DEFAULT_ZONE = :'us-east-1b'.freeze 
+    DEFAULT_ENVIRONMENT = :'stage'.freeze
+    DEFAULT_ROLE = :'app'.freeze
     DEFAULT_POSITION = '01'.freeze
     
-    DEFAULT_USER = 'rudy'.freeze
+    DEFAULT_USER = :'rudy'.freeze
     
     DEFAULT_EC2_HOST = "ec2.amazonaws.com"
     DEFAULT_EC2_PORT = 443

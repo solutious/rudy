@@ -17,11 +17,11 @@
 # it's ADDED or APPENDED depending on context. This means you can split 
 # configuration across many files as you please. 
 #
-# There are four sections: accounts, defaults, machines, commands and routines.
+# There are five sections: accounts, defaults, machines, commands and routines.
 # 
-# By convention, accounts and defaults go in ~/.rudy/config or ./.rudy/config 
-# machines, commands and routines configuration go in ./Rudyfile or into 
-# separate files in ./.rudy or ./config/rudy (machines.rb, commands.rb, ...)
+# By convention, accounts go in ./.rudy/config or ~/.rudy/config 
+# machines, commands, routines, and defaults configuration go in ./Rudyfile or  
+# into separate files in ./.rudy or ./config/rudy (machines.rb, commands.rb, ...)
 #
 
 # ---------------------------------------------------------  MACHINES  --------

@@ -41,6 +41,9 @@ module Rudy
     def self.update_global(ghash={}); @@global.update(ghash); end
     def self.update_logger(logger);   @@logger = logger; end
     
+    def self.reset_config; @@config = Rudy::Config.new; end
+    def self.reset_global; @@global = Rudy::Global.new; end
+    
     def self.create_domain
       @sdb = Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey, @@global.region)
       @sdb.create_domain Rudy::DOMAIN

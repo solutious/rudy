@@ -7,11 +7,33 @@ class Rudy::Config
     end
     def message; "Error in #{@ctype}: #{@obj}"; end
   end
+  
+  class Accounts < Caesars
+    def valid?
+      (!aws.nil? && !aws.accesskey.nil? && !aws.secretkey.nil?) &&
+      (!aws.account.empty? && !aws.accesskey.empty? && !aws.secretkey.empty?)
+    end
+  end
+  
+  # Default configuration. All of the defaults can be overridden 
+  # on the command line with global options.
+  class Defaults < Caesars
+    class DoubleDefined < Rudy::Config::Error
+      def message; "Check your defaults config. '#{@obj}' has been defined twice"; end
+    end
+    # 
+    # All values should scalars
+    # 
+    def postprocess
+      self.keys.each do |k| 
+        next unless self[k].is_a?(Array)
+        raise Defaults::DoubleDefined.new(:defaults, k)
+      end
+    end
+  end
+  
   class Machines < Caesars; end
-  class Defaults < Caesars; end
-  class Networks < Caesars; end
-  class Controls < Caesars; end
-  class Services < Caesars; end
+  
   # Modify the SSH command available in routines. The default
   # set of commands is defined by Rye::Cmd (Rudy executes all
   # SSH commands via Rye). 
@@ -114,13 +136,6 @@ class Rudy::Config
     end
   end
   
-  class Accounts < Caesars
-    def valid?
-      (!aws.nil? && !aws.accesskey.nil? && !aws.secretkey.nil?) &&
-      (!aws.account.empty? && !aws.accesskey.empty? && !aws.secretkey.empty?)
-    end
-  end
-  
   class Routines < Caesars
     
     # Disk routines
@@ -138,8 +153,8 @@ class Rudy::Config
     forced_hash :after         
     forced_hash :script_local
     forced_hash :before_local  
-    forced_hash :after_local     # We force hash the script keywords 
-    forced_hash :script          # b/c we want them to store the usernames
+    forced_hash :after_local     # We force hash the script keywords b/c
+    forced_hash :script          # we want them to store the usernames 
     chill :before                # as hash keys. 
     chill :after                 # We also chill them b/c we want to execute
     chill :before_local          # the command blocks with an instance_eval
@@ -154,5 +169,13 @@ class Rudy::Config
     def init      
     end
 
+  end
+  
+  
+  class Networks < Caesars #:nodoc:all
+  end
+  class Controls < Caesars #:nodoc:all
+  end
+  class Services < Caesars #:nodoc:all
   end
 end

@@ -19,9 +19,9 @@ module Rudy
     def machines?; self.respond_to?(:machines) && !self[:machines].nil?; end #t
     def commands?; self.respond_to?(:commands) && !self[:commands].nil?; end #o
     def routines?; self.respond_to?(:routines) && !self[:routines].nil?; end #g
-    def networks?; self.respond_to?(:networks) && !self[:networks].nil?; end #e
-    def controls?; self.respond_to?(:controls) && !self[:controls].nil?; end #n
-    def services?; self.respond_to?(:services) && !self[:services].nil?; end #!
+    #def networks?; self.respond_to?(:networks) && !self[:networks].nil?; end #e
+    #def controls?; self.respond_to?(:controls) && !self[:controls].nil?; end #n
+    #def services?; self.respond_to?(:services) && !self[:services].nil?; end #!
     
     # This method is called by Caesars::Config.refresh for every DSL 
     # file that is loaded and parsed. If we want to run processing
@@ -44,6 +44,7 @@ module Rudy
       # the case. Rudy::Config::Commands knows to only raise the
       # exception one time (using a boolean flag in a class var).
       @commands.postprocess if @commands
+      @defaults.postprocess if @defaults
       
       # default will be nil if non was specified. We at least want the object.
       @defaults = Rudy::Config::Defaults.new if @defaults.nil?

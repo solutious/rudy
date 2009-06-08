@@ -5,6 +5,8 @@ module Rudy
     module ObjectBase
       include Rudy::Huxtable
       
+      attr_accessor :sdb_domain
+      
       def initialize(*args)
         a, s, r = @@global.accesskey, @@global.secretkey, @@global.region
         @sdb = Rudy::AWS::SDB.new(a, s, r)
@@ -12,6 +14,7 @@ module Rudy
         @rvol = Rudy::AWS::EC2::Volumes.new(a, s, r)
         @radd = Rudy::AWS::EC2::Addresses.new(a, s, r)
         @rsnap = Rudy::AWS::EC2::Snapshots.new(a, s, r)
+        @sdb_domain = Rudy::DOMAIN
         init(*args)
       end
       
@@ -24,7 +27,7 @@ module Rudy
       end
     
       def to_select(more=[], less=[])
-        Rudy::AWS::SDB.generate_select ['*'], Rudy::DOMAIN, build_criteria(more, less)
+        Rudy::AWS::SDB.generate_select ['*'], @sdb_domain, build_criteria(more, less)
       end
       
       def name(identifier, zon, env, rol, pos, *other)
@@ -35,19 +38,19 @@ module Rudy
       def save(replace=true)
         replace = true if replace.nil?
         @sdb ||= Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey, @@global.region)
-        @sdb.put(Rudy::DOMAIN, name, self.to_hash, replace) # Always returns nil
+        @sdb.put(@sdb_domain, name, self.to_hash, replace) # Always returns nil
         true
       end
     
       def destroy
         @sdb ||= Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey, @@global.region)
-        @sdb.destroy(Rudy::DOMAIN, name)
+        @sdb.destroy(@sdb_domain, name)
         true
       end
     
       def refresh
         @sdb ||= Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey, @@global.region)
-        h = @sdb.get(Rudy::DOMAIN, name) || {}
+        h = @sdb.get(@sdb_domain, name) || {}
         from_hash(h)
       end
       

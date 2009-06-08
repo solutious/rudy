@@ -3,7 +3,7 @@ library :rudy, rudy_lib_path
 
 group "SimpleDB"
 
-name_of_domain = 'test_' << Rudy::Utils.strand
+test_domain = 'test_' << Rudy::Utils.strand
 produce = {
   'orange' => (rand(100) * 10).to_s,
   'celery' => (rand(100) * 100).to_s,
@@ -19,44 +19,44 @@ tryouts "Objects" do
     @@sdb = Rudy::AWS::SDB.new(akey, skey, region)
   end
   
-  drill "create test domain (#{name_of_domain})" do
-    @@sdb.create_domain name_of_domain
+  drill "create test domain (#{test_domain})" do
+    @@sdb.create_domain test_domain
   end
   
   drill "put object" do
     stash :product1, produce
-    @@sdb.put(name_of_domain, 'produce1', produce, :replace)
+    @@sdb.put(test_domain, 'produce1', produce, :replace)
   end
   
   drill "get object by name" do
-    from_sdb = @@sdb.get(name_of_domain, 'produce1')
+    from_sdb = @@sdb.get(test_domain, 'produce1')
     stash :product1, from_sdb
     [from_sdb.keys.sort, from_sdb.values.collect { |v| v.first }.sort ]
   end
   
   drill "select object" do
-    stash[:query] = "select * from #{name_of_domain}"
+    stash[:query] = "select * from #{test_domain}"
     stash[:items] = @@sdb.select stash[:query]
     stash[:items].is_a?(Hash) && stash[:items].keys.size > 0
   end
   
   drill "destroy objects by name" do
-    items = @@sdb.select "select * from #{name_of_domain}"
-    items.keys.each { |name| @@sdb.destroy name_of_domain, name }
-    @@sdb.select("select * from #{name_of_domain}").nil?
+    items = @@sdb.select "select * from #{test_domain}"
+    items.keys.each { |name| @@sdb.destroy test_domain, name }
+    @@sdb.select("select * from #{test_domain}").nil?
   end
   
-  drill "destroy test domain (#{name_of_domain})" do
-    @@sdb.destroy_domain name_of_domain
+  drill "destroy test domain (#{test_domain})" do
+    @@sdb.destroy_domain test_domain
   end
   
 end
 dreams "Objects" do
   dream "create simpledb connection", Rudy::AWS::SDB, :class
-  dream "create test domain (#{name_of_domain})", true
+  dream "create test domain (#{test_domain})", true
   dream "put object", true
   dream "get object by name", [produce.keys.sort, produce.values.sort]
   dream "select object", true
   dream "destroy objects by name", true
-  dream "destroy test domain (#{name_of_domain})", true
+  dream "destroy test domain (#{test_domain})", true
 end

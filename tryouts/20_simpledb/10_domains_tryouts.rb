@@ -3,7 +3,7 @@ library :rudy, rudy_lib_path
 
 group "SimpleDB"
 
-name_of_domain = Rudy::Utils.strand
+test_domain = 'test_' << Rudy::Utils.strand
 
 tryouts "Domains" do
   setup do
@@ -17,24 +17,24 @@ tryouts "Domains" do
     @@sdb
   end
   
-  drill "create a domain (#{name_of_domain})" do
-    @@sdb.create_domain name_of_domain
+  drill "create a domain (#{test_domain})" do
+    @@sdb.create_domain test_domain
   end
   
   drill "list domains" do
     stash :domains, @@sdb.list_domains
   end
   
-  drill "destroy a domain (#{name_of_domain})" do
-    @@sdb.destroy_domain name_of_domain
+  drill "destroy a domain (#{test_domain})" do
+    @@sdb.destroy_domain test_domain
   end
   
 end
 dreams "Domains" do
   dream "create simpledb connection", Rudy::AWS::SDB, :class
-  dream "create a domain (#{name_of_domain})", true
+  dream "create a domain (#{test_domain})", true
   dream "list domains", Array, :class
-  dream "destroy a domain (#{name_of_domain})", true
+  dream "destroy a domain (#{test_domain})", true
 end
 
 

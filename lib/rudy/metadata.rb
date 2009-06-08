@@ -3,6 +3,8 @@ module Rudy
   module MetaData
     include Rudy::Huxtable
     
+    attr_reader :sdb_domain
+    
     def initialize(*args)
       a, s, r = @@global.accesskey, @@global.secretkey, @@global.region
       @sdb = Rudy::AWS::SDB.new(a, s, r)
@@ -10,6 +12,7 @@ module Rudy
       @rinst = Rudy::AWS::EC2::Instances.new(a, s, r)
       @rgrp = Rudy::AWS::EC2::Groups.new(a, s, r)
       @rkey = Rudy::AWS::EC2::KeyPairs.new(a, s, r)
+      @sdb_domain = Rudy::DOMAIN
       init(*args)
     end
     
@@ -23,7 +26,7 @@ module Rudy
     end
     
     def destroy
-      @sdb.destroy(Rudy::DOMAIN, name)
+      @sdb.destroy(@sdb_domain, name)
       true
     end
     
@@ -49,7 +52,7 @@ module Rudy
     end
   
     def to_select(more=[], less=[], local={})
-      Rudy::AWS::SDB.generate_select ['*'], Rudy::DOMAIN, build_criteria(more, less, local)
+      Rudy::AWS::SDB.generate_select ['*'], @sdb_domain, build_criteria(more, less, local)
     end
     
   end

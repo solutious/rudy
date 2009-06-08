@@ -191,11 +191,6 @@ module Rudy
       end
     end
     
-    def group_metadata(env=@@global.environment, role=@@global.role)
-      query = "['environment' = '#{env}'] intersection ['role' = '#{role}']"
-      @sdb.query_with_attributes(Rudy::DOMAIN, query)
-    end
-    
     def self.keypair_path_to_name(kp)
       return nil unless kp
       name = File.basename kp

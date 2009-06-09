@@ -28,7 +28,7 @@ class Disk < Storable
   
   field :created
   
-  def init(path, size=1, device='/dev/sdh', position=nil)
+  def init(path=nil, size=1, device='/dev/sdh', position=nil)
     @path, @size, @device = path, size, device
     @rtype = 'disk'
     @region = @@global.region

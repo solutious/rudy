@@ -210,6 +210,76 @@ module Rudy; module Routines;
       end
     end
     
+    
+    
+    
+    def attach(disks)
+      rdisk = Rudy::Disks.new
+      
+      disks.each_pair do |path, props|
+        disk = Rudy::MetaData::Disk.new(path, props[:size], props[:device], @machine.position)
+        olddisk = rdisk.get(disk.name)
+        if olddisk && olddisk.exists?
+          disk.update
+          puts "Disk found: #{olddisk.name}"
+          if disk.attached?
+            puts "In use. Skipping...".color(:red)
+            return
+          else
+            disk = olddisk
+          end
+        else
+          puts "Creating #{disk.name} "
+        end
+        p disk
+        p [disk.exists?, disk.available?, olddisk.exists?, olddisk.available?]
+        disk.save
+        
+        unless disk.exists? # Checks the EBS volume
+          msg = "Creating volume... "
+          disk.create
+          Rudy::Utils.waiter(2, 60, STDOUT, msg) { 
+            disk.available?
+          }
+        end
+        
+        unless disk.attached?
+          msg = "Attaching #{disk.awsid} to #{@machine.awsid}... "
+          disk.attach(@machine.awsid)
+          Rudy::Utils.waiter(2, 10, STDOUT, msg) { 
+            disk.attached?
+          }
+        end
+      end
+    end
+    
+    def detach(disks, destroy=false)
+      rdisk = Rudy::Disks.new
+      disks.each_pair do |path, props|
+        adisk = Rudy::MetaData::Disk.new(path, props[:size], props[:device], @machine.position)
+        disk = rdisk.get adisk.name
+        
+        if disk == nil
+          puts "Not found: #{adisk.name}".color(:red)
+          return
+        end
+        
+        if disk.attached?
+          msg = "Detaching #{disk.awsid}..."
+          disk.detach 
+          Rudy::Utils.waiter(2, 60, STDOUT, msg) { 
+            disk.available? 
+          }
+        end
+        
+        if destroy 
+          puts "Destroying volume and metadata... "
+          disk.destroy
+        end
+        
+      end
+    end
+    
     def mount(disks)
       rdisk = Rudy::Disks.new
       disks.each_pair do |path, props|

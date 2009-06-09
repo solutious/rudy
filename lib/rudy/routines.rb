@@ -149,7 +149,8 @@ module Rudy
           
           if is_available
             # TODO: trap rbox errors. We could get an authentication error. 
-            opts = { :keys =>  root_keypairpath, :user => remote_user, :info => @@global.verbose > 3 }
+            opts = { :keys =>  root_keypairpath, :user => remote_user, 
+                     :info => @@global.verbose > 3, :debug => false }
             begin
               rbox = Rye::Box.new(machine.dns_public, opts)
               Rudy::Utils.waiter(2, 10, STDOUT, nil, 0) { rbox.connect }
@@ -208,11 +209,11 @@ module Rudy
             enjoy_every_sandwich {
               if Rudy::Routines::DiskHelper.disks?(routine)         # disk
                 task_separator("DISKS")
-                if rbox.ostype == "sunos"
-                  puts "Sorry, Solaris disks are not supported yet!"
-                else
+                ##if rbox.ostype == "sunos"
+                ##  puts "Sorry, Solaris disks are not supported yet!"
+                ##else
                   Rudy::Routines::DiskHelper.execute(routine, machine, rbox)
-                end    
+                ##end    
               end
             }
           
@@ -320,7 +321,7 @@ module Rudy
       end
       
       def machine_separator(name, awsid)
-        ('%s %-63s awsid: %s ' % [$/, name, awsid]).att(:reverse)
+        ('%s %-50s awsid: %s ' % [$/, name, awsid]).att(:reverse)
       end
       
       def routine_separator(name)

@@ -184,7 +184,7 @@ module RudyCLI_EC2
   about "Amazon EC2 Volumes"
   usage "rudy-ec2 volumes"
   usage "rudy-ec2 volumes -C -s size [-d device-path]"
-  usage "rudy-ec2 volumes -A volume-id instance-id"
+  usage "rudy-ec2 volumes -A -i instance-id volume-id"
   usage "rudy-ec2 volumes -N volume-id"
   usage "rudy-ec2 volumes -D volume-id"
   option :i, :instance, String, "Instance ID"

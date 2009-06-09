@@ -102,7 +102,7 @@ class Rudy::Config
         # We can allow existing commands to be overridden but we
         # print a message to STDERR so the user knows what's up.
         if Rye::Cmd.can?(cmd)
-          STDERR.puts "Redefining #{cmd}" if @@global.verbose > 0
+          STDERR.puts "Redefining #{cmd}" #if @@global.verbose > 0
         end
         
         if args.last.is_a?(Proc)
@@ -145,6 +145,8 @@ class Rudy::Config
     forced_hash :umount
     forced_hash :unmount
     forced_hash :mount
+    forced_hash :attach
+    forced_hash :detach
     forced_hash :snapshot
     forced_hash :restore
     

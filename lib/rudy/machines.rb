@@ -82,7 +82,7 @@ module Rudy
     end
     
     def get_instance
-      @ec2inst.get(@awsid)
+      @ec2inst.get(@awsid) rescue nil
     end
     
     def update
@@ -176,7 +176,7 @@ module Rudy
     
     def running?
       return false if @awsid.nil? || @awsid.empty?
-      @ec2inst.running?(@awsid)
+      @ec2inst.running?(@awsid) rescue nil
     end
       
   end

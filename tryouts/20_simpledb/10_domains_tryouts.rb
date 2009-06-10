@@ -6,11 +6,12 @@ group "SimpleDB"
 test_domain = 'test_' << Rudy::Utils.strand
 
 tryouts "Domains" do
-  setup do
+  drill "create stuff" do
     Rudy::Huxtable.update_config
     global = Rudy::Huxtable.global
     akey, skey, region = global.accesskey, global.secretkey, global.region
     @@sdb = Rudy::AWS::SDB.new(akey, skey, region)
+    true
   end
   
   drill "create simpledb connection" do

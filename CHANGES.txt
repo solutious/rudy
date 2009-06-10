@@ -18,6 +18,7 @@ NOTE: The following changes are planned for the 0.9.0 release.
 * CHANGE: rudy config now displays account info (but keeps secret key hidden)
 * CHANGE: defaults configuration has been removed from the default ~/.rudy/config. 
   It is now recommended to put it in the same place as machines, routines config.
+* FIXED: Bug in addresses which prevented assigning elastic IP addresses. 
 
 
 #### 0.8.4 (2009-06-04) ###############################

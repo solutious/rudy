@@ -78,12 +78,12 @@ module Rudy; module Routines;
           return
         else
           disk.fstype = props[:fstype] || 'ext3'
-          back = (rback.list(nil, nil, props) || []).first
+          more = [:environment, props[:environment]] if props[:environment]
+          more += [:role, props[:role]] if props[:role]
+          back = (rback.list(more, nil) || []).first
           raise "No backup found" unless back
           puts "Found backup #{back.name} "
         end
-        
-        
         
         unless disk.exists? # Checks the EBS volume
           msg = "Creating volume from snapshot (#{back.awsid})... "

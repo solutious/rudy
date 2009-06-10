@@ -134,7 +134,7 @@ module Rudy::AWS
       # Returns true if the given address is assigned to the current account
       def exists?(address)
         address = address.ipaddress if address.is_a?(Rudy::AWS::EC2::Address)
-        list do |a|
+        list.each do |a|
           return true if a.ipaddress == address
         end
         false

@@ -6,11 +6,12 @@ group "SimpleDB"
 test_domain = 'test_' << Rudy::Utils.strand
 
 tryouts "Domains" do
-  setup do
+  drill "Has stuff" do
     Rudy::Huxtable.update_config
     global = Rudy::Huxtable.global
     akey, skey, region = global.accesskey, global.secretkey, global.region
     @@ec2 = Rudy::AWS::SDB.new(akey, skey, region)
+    true
   end
   
   drill "has ec2 instance" do

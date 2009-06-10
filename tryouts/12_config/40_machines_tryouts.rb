@@ -5,11 +5,13 @@ group "Config"
 library :rudy, rudy_lib_path
 
 tryout "Machines" do
-  setup do
+  drill "Setup vars" do
+    dream true
     @@config = Rudy::Config.new
     @@config.look_and_load   # looks for and loads config files
     @@reg, @@zon = @@config.defaults.region, @@config.defaults.zone 
     @@env, @@rol = @@config.defaults.environment, @@config.defaults.role
+    true
   end
   
   drill "example stage is defined" do

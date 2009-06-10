@@ -27,7 +27,8 @@ module Rudy
       end
     
       def to_select(more=[], less=[])
-        Rudy::AWS::SDB.generate_select ['*'], @sdb_domain, build_criteria(more, less)
+        s = Rudy::AWS::SDB.generate_select ['*'], @sdb_domain, build_criteria(more, less)
+        s
       end
       
       def name(identifier, zon, env, rol, pos, *other)

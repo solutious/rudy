@@ -1,7 +1,7 @@
 @spec = Gem::Specification.new do |s|
 	s.name = "rudy"
   s.rubyforge_project = 'rudy'
-	s.version = "0.8.4"
+	s.version = "0.8.5"
 	s.summary = "Rudy: Not your grandparents' EC2 deployment tool."
 	s.description = s.summary
 	s.author = "Delano Mandelbaum"
@@ -88,6 +88,7 @@
   lib/rudy/cli/config.rb
   lib/rudy/cli/disks.rb
   lib/rudy/cli/machines.rb
+  lib/rudy/cli/metadata.rb
   lib/rudy/cli/routines.rb
   lib/rudy/config.rb
   lib/rudy/config/objects.rb
@@ -98,6 +99,7 @@
   lib/rudy/metadata.rb
   lib/rudy/metadata/backup.rb
   lib/rudy/metadata/backups.rb
+  lib/rudy/metadata/debug.rb
   lib/rudy/metadata/disk.rb
   lib/rudy/metadata/disks.rb
   lib/rudy/metadata/objectbase.rb

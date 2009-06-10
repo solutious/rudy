@@ -5,8 +5,8 @@ unless defined?(RUDY_HOME)
 end
 
 local_libs = %w{net-ssh net-scp amazon-ec2 aws-s3 caesars drydock rye storable sysinfo annoy}
-local_libs.each { |dir| $:.unshift File.join(RUDY_HOME, '..', dir, 'lib') }
-require 'rubygems'
+#local_libs.each { |dir| $:.unshift File.join(RUDY_HOME, '..', dir, 'lib') }
+#require 'rubygems'
 
 require 'digest/md5'
 require 'stringio'
@@ -39,7 +39,7 @@ module Rudy
     unless defined?(MAJOR)
       MAJOR = 0.freeze
       MINOR = 8.freeze
-      TINY  = 4.freeze
+      TINY  = 5.freeze
     end
     def self.to_s; [MAJOR, MINOR, TINY].join('.'); end
     def self.to_f; self.to_s.to_f; end

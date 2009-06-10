@@ -45,23 +45,23 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000235">to_s</a></li>
+              <li><a href="#M000234">to_s</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000235'>
-                <a name='M000235'>      </a>
+              <div class='public-instance method' id='method-M000234'>
+                <a name='M000234'>      </a>
                 <div class='synopsis'>
                   <span class='name'>to_s</span>
                   <span class='arguments'>(with_title=false)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000235-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000234-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000235-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 9</span>&#x000A; 9:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>(<span class="ruby-identifier">with_title</span>=<span class="ruby-keyword kw">false</span>)&#x000A;10:         <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">ports</span>.<span class="ruby-identifier">first</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">ports</span>.<span class="ruby-identifier">last</span>&#x000A;11:           <span class="ruby-value str">&quot;%s(%s)&quot;</span> <span class="ruby-operator">%</span> [<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">protocol</span>, <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">ports</span>.<span class="ruby-identifier">last</span>]&#x000A;12:         <span class="ruby-keyword kw">else</span>&#x000A;13:           <span class="ruby-value str">&quot;%s(%s..%s)&quot;</span> <span class="ruby-operator">%</span> [<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">protocol</span>, <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">ports</span>.<span class="ruby-identifier">first</span>, <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">ports</span>.<span class="ruby-identifier">last</span>]&#x000A;14:         <span class="ruby-keyword kw">end</span>&#x000A;15:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000234-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 9</span>&#x000A; 9:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>(<span class="ruby-identifier">with_title</span>=<span class="ruby-keyword kw">false</span>)&#x000A;10:         <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">ports</span>.<span class="ruby-identifier">first</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">ports</span>.<span class="ruby-identifier">last</span>&#x000A;11:           <span class="ruby-value str">&quot;%s(%s)&quot;</span> <span class="ruby-operator">%</span> [<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">protocol</span>, <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">ports</span>.<span class="ruby-identifier">last</span>]&#x000A;12:         <span class="ruby-keyword kw">else</span>&#x000A;13:           <span class="ruby-value str">&quot;%s(%s..%s)&quot;</span> <span class="ruby-operator">%</span> [<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">protocol</span>, <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">ports</span>.<span class="ruby-identifier">first</span>, <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">ports</span>.<span class="ruby-identifier">last</span>]&#x000A;14:         <span class="ruby-keyword kw">end</span>&#x000A;15:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

@@ -45,17 +45,17 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000294">from_hash</a></li>
+              <li><a href="#M000293">from_hash</a></li>
             </ol>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000295">any?</a></li>
-              <li><a href="#M000292">create</a></li>
-              <li><a href="#M000293">destroy</a></li>
-              <li><a href="#M000297">exists?</a></li>
-              <li><a href="#M000296">get</a></li>
-              <li><a href="#M000290">list</a></li>
-              <li><a href="#M000291">list_as_hash</a></li>
+              <li><a href="#M000294">any?</a></li>
+              <li><a href="#M000291">create</a></li>
+              <li><a href="#M000292">destroy</a></li>
+              <li><a href="#M000296">exists?</a></li>
+              <li><a href="#M000295">get</a></li>
+              <li><a href="#M000289">list</a></li>
+              <li><a href="#M000290">list_as_hash</a></li>
             </ol>
           </div>
           <div id='context'>
@@ -70,109 +70,109 @@
           <div id='section'>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='public-class method' id='method-M000294'>
-                <a name='M000294'>      </a>
+              <div class='public-class method' id='method-M000293'>
+                <a name='M000293'>      </a>
                 <div class='synopsis'>
                   <span class='name'>from_hash</span>
                   <span class='arguments'>(h)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000294-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000293-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000294-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/snapshot.rb, line 77</span>&#x000A;77:       <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Snapshots</span>.<span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">h</span>)&#x000A;78:         <span class="ruby-comment cmt">#snapshotSet: </span>&#x000A;79:         <span class="ruby-comment cmt">#  item: </span>&#x000A;80:         <span class="ruby-comment cmt">#  - snapshotId: snap-5493653d</span>&#x000A;81:         <span class="ruby-comment cmt">#    volumeId: vol-0836d761</span>&#x000A;82:         <span class="ruby-comment cmt">#    status: completed</span>&#x000A;83:         <span class="ruby-comment cmt">#    startTime: &quot;2009-03-29T20:15:10.000Z&quot;</span>&#x000A;84:         <span class="ruby-comment cmt">#    progress: 100%</span>&#x000A;85:         <span class="ruby-identifier">vol</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Snapshot</span>.<span class="ruby-identifier">new</span>&#x000A;86:         <span class="ruby-identifier">vol</span>.<span class="ruby-identifier">awsid</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'snapshotId'</span>]&#x000A;87:         <span class="ruby-identifier">vol</span>.<span class="ruby-identifier">volid</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'volumeId'</span>]&#x000A;88:         <span class="ruby-identifier">vol</span>.<span class="ruby-identifier">created</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'startTime'</span>]&#x000A;89:         <span class="ruby-identifier">vol</span>.<span class="ruby-identifier">progress</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'progress'</span>]&#x000A;90:         <span class="ruby-identifier">vol</span>.<span class="ruby-identifier">status</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'status'</span>]&#x000A;91:         <span class="ruby-identifier">vol</span> &#x000A;92:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000293-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/snapshot.rb, line 77</span>&#x000A;77:       <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Snapshots</span>.<span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">h</span>)&#x000A;78:         <span class="ruby-comment cmt">#snapshotSet: </span>&#x000A;79:         <span class="ruby-comment cmt">#  item: </span>&#x000A;80:         <span class="ruby-comment cmt">#  - snapshotId: snap-5493653d</span>&#x000A;81:         <span class="ruby-comment cmt">#    volumeId: vol-0836d761</span>&#x000A;82:         <span class="ruby-comment cmt">#    status: completed</span>&#x000A;83:         <span class="ruby-comment cmt">#    startTime: &quot;2009-03-29T20:15:10.000Z&quot;</span>&#x000A;84:         <span class="ruby-comment cmt">#    progress: 100%</span>&#x000A;85:         <span class="ruby-identifier">vol</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Snapshot</span>.<span class="ruby-identifier">new</span>&#x000A;86:         <span class="ruby-identifier">vol</span>.<span class="ruby-identifier">awsid</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'snapshotId'</span>]&#x000A;87:         <span class="ruby-identifier">vol</span>.<span class="ruby-identifier">volid</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'volumeId'</span>]&#x000A;88:         <span class="ruby-identifier">vol</span>.<span class="ruby-identifier">created</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'startTime'</span>]&#x000A;89:         <span class="ruby-identifier">vol</span>.<span class="ruby-identifier">progress</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'progress'</span>]&#x000A;90:         <span class="ruby-identifier">vol</span>.<span class="ruby-identifier">status</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'status'</span>]&#x000A;91:         <span class="ruby-identifier">vol</span> &#x000A;92:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000295'>
-                <a name='M000295'>      </a>
+              <div class='public-instance method' id='method-M000294'>
+                <a name='M000294'>      </a>
                 <div class='synopsis'>
                   <span class='name'>any?</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000295-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000294-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000295-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/snapshot.rb, line 94</span>&#x000A;94:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">any?</span>&#x000A;95:         <span class="ruby-operator">!</span>(<span class="ruby-identifier">list_as_hash</span> <span class="ruby-operator">||</span> {}).<span class="ruby-identifier">empty?</span>&#x000A;96:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000294-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/snapshot.rb, line 94</span>&#x000A;94:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">any?</span>&#x000A;95:         <span class="ruby-operator">!</span>(<span class="ruby-identifier">list_as_hash</span> <span class="ruby-operator">||</span> {}).<span class="ruby-identifier">empty?</span>&#x000A;96:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000292'>
-                <a name='M000292'>      </a>
+              <div class='public-instance method' id='method-M000291'>
+                <a name='M000291'>      </a>
                 <div class='synopsis'>
                   <span class='name'>create</span>
                   <span class='arguments'>(vol_id)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000292-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000291-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000292-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/snapshot.rb, line 64</span>&#x000A;64:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create</span>(<span class="ruby-identifier">vol_id</span>)&#x000A;65:         <span class="ruby-identifier">vol_id</span> = (<span class="ruby-identifier">vol_id</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Volume</span>)) <span class="ruby-operator">?</span> <span class="ruby-identifier">vol_id</span>.<span class="ruby-identifier">awsid</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">vol_id</span>&#x000A;66:         <span class="ruby-identifier">shash</span> = <span class="ruby-ivar">@ec2</span>.<span class="ruby-identifier">create_snapshot</span>(<span class="ruby-identifier">:volume_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">vol_id</span>)&#x000A;67:         <span class="ruby-identifier">snap</span> = <span class="ruby-constant">Snapshots</span>.<span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">shash</span>)&#x000A;68:         <span class="ruby-identifier">snap</span>&#x000A;69:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000291-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/snapshot.rb, line 64</span>&#x000A;64:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create</span>(<span class="ruby-identifier">vol_id</span>)&#x000A;65:         <span class="ruby-identifier">vol_id</span> = (<span class="ruby-identifier">vol_id</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Volume</span>)) <span class="ruby-operator">?</span> <span class="ruby-identifier">vol_id</span>.<span class="ruby-identifier">awsid</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">vol_id</span>&#x000A;66:         <span class="ruby-identifier">shash</span> = <span class="ruby-ivar">@ec2</span>.<span class="ruby-identifier">create_snapshot</span>(<span class="ruby-identifier">:volume_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">vol_id</span>)&#x000A;67:         <span class="ruby-identifier">snap</span> = <span class="ruby-constant">Snapshots</span>.<span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">shash</span>)&#x000A;68:         <span class="ruby-identifier">snap</span>&#x000A;69:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000293'>
-                <a name='M000293'>      </a>
+              <div class='public-instance method' id='method-M000292'>
+                <a name='M000292'>      </a>
                 <div class='synopsis'>
                   <span class='name'>destroy</span>
                   <span class='arguments'>(snap_id)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000293-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000292-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000293-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/snapshot.rb, line 71</span>&#x000A;71:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">destroy</span>(<span class="ruby-identifier">snap_id</span>)&#x000A;72:         <span class="ruby-identifier">ret</span> = <span class="ruby-ivar">@ec2</span>.<span class="ruby-identifier">delete_snapshot</span>(<span class="ruby-identifier">:snapshot_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">snap_id</span>)&#x000A;73:         (<span class="ruby-identifier">ret</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">ret</span>[<span class="ruby-value str">'return'</span>] <span class="ruby-operator">==</span> <span class="ruby-value str">'true'</span>) &#x000A;74:       <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='public-instance method' id='method-M000297'>
-                <a name='M000297'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>exists?</span>
-                  <span class='arguments'>(id)</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000297-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000297-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/snapshot.rb, line 102</span>&#x000A;102:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">id</span>)&#x000A;103:         <span class="ruby-operator">!</span><span class="ruby-identifier">get</span>(<span class="ruby-identifier">snap_id</span>).<span class="ruby-identifier">nil?</span>&#x000A;104:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000292-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/snapshot.rb, line 71</span>&#x000A;71:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">destroy</span>(<span class="ruby-identifier">snap_id</span>)&#x000A;72:         <span class="ruby-identifier">ret</span> = <span class="ruby-ivar">@ec2</span>.<span class="ruby-identifier">delete_snapshot</span>(<span class="ruby-identifier">:snapshot_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">snap_id</span>)&#x000A;73:         (<span class="ruby-identifier">ret</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">ret</span>[<span class="ruby-value str">'return'</span>] <span class="ruby-operator">==</span> <span class="ruby-value str">'true'</span>) &#x000A;74:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='public-instance method' id='method-M000296'>
                 <a name='M000296'>      </a>
                 <div class='synopsis'>
-                  <span class='name'>get</span>
-                  <span class='arguments'>(snap_id)</span>
+                  <span class='name'>exists?</span>
+                  <span class='arguments'>(id)</span>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000296-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000296-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/snapshot.rb, line 98</span>&#x000A; 98:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get</span>(<span class="ruby-identifier">snap_id</span>)&#x000A; 99:         <span class="ruby-identifier">list</span>(<span class="ruby-identifier">snap_id</span>).<span class="ruby-identifier">first</span> <span class="ruby-operator">||</span> <span class="ruby-keyword kw">nil</span>&#x000A;100:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000296-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/snapshot.rb, line 102</span>&#x000A;102:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">id</span>)&#x000A;103:         <span class="ruby-operator">!</span><span class="ruby-identifier">get</span>(<span class="ruby-identifier">snap_id</span>).<span class="ruby-identifier">nil?</span>&#x000A;104:       <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000295'>
+                <a name='M000295'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>get</span>
+                  <span class='arguments'>(snap_id)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000295-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000295-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/snapshot.rb, line 98</span>&#x000A; 98:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get</span>(<span class="ruby-identifier">snap_id</span>)&#x000A; 99:         <span class="ruby-identifier">list</span>(<span class="ruby-identifier">snap_id</span>).<span class="ruby-identifier">first</span> <span class="ruby-operator">||</span> <span class="ruby-keyword kw">nil</span>&#x000A;100:       <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000289'>
+                <a name='M000289'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>list</span>
+                  <span class='arguments'>(snap_id=[])</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000289-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000289-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/snapshot.rb, line 45</span>&#x000A;45:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">list</span>(<span class="ruby-identifier">snap_id</span>=[])&#x000A;46:         <span class="ruby-identifier">snapshots</span> = <span class="ruby-identifier">list_as_hash</span>(<span class="ruby-identifier">snap_id</span>)&#x000A;47:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">snapshots</span>&#x000A;48:           <span class="ruby-identifier">snapshots</span> = <span class="ruby-identifier">snapshots</span>.<span class="ruby-identifier">values</span>.<span class="ruby-identifier">sort</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span>,<span class="ruby-identifier">b</span><span class="ruby-operator">|</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">created</span> <span class="ruby-operator">&lt;=&gt;</span> <span class="ruby-identifier">b</span>.<span class="ruby-identifier">created</span> }&#x000A;49:         <span class="ruby-keyword kw">end</span>&#x000A;50:         <span class="ruby-identifier">snapshots</span>&#x000A;51:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='public-instance method' id='method-M000290'>
                 <a name='M000290'>      </a>
                 <div class='synopsis'>
-                  <span class='name'>list</span>
+                  <span class='name'>list_as_hash</span>
                   <span class='arguments'>(snap_id=[])</span>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000290-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000290-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/snapshot.rb, line 45</span>&#x000A;45:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">list</span>(<span class="ruby-identifier">snap_id</span>=[])&#x000A;46:         <span class="ruby-identifier">snapshots</span> = <span class="ruby-identifier">list_as_hash</span>(<span class="ruby-identifier">snap_id</span>)&#x000A;47:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">snapshots</span>&#x000A;48:           <span class="ruby-identifier">snapshots</span> = <span class="ruby-identifier">snapshots</span>.<span class="ruby-identifier">values</span>.<span class="ruby-identifier">sort</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span>,<span class="ruby-identifier">b</span><span class="ruby-operator">|</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">created</span> <span class="ruby-operator">&lt;=&gt;</span> <span class="ruby-identifier">b</span>.<span class="ruby-identifier">created</span> }&#x000A;49:         <span class="ruby-keyword kw">end</span>&#x000A;50:         <span class="ruby-identifier">snapshots</span>&#x000A;51:       <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='public-instance method' id='method-M000291'>
-                <a name='M000291'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>list_as_hash</span>
-                  <span class='arguments'>(snap_id=[])</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000291-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000291-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/snapshot.rb, line 52</span>&#x000A;52:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">list_as_hash</span>(<span class="ruby-identifier">snap_id</span>=[])&#x000A;53:         <span class="ruby-identifier">snap_id</span> = [<span class="ruby-identifier">snap_id</span>].<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">compact</span>&#x000A;54:         <span class="ruby-identifier">slist</span> = <span class="ruby-ivar">@ec2</span>.<span class="ruby-identifier">describe_snapshots</span>(<span class="ruby-identifier">:snapshot_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">snap_id</span>)&#x000A;55:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">slist</span>[<span class="ruby-value str">'snapshotSet'</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>)&#x000A;56:         <span class="ruby-identifier">snapshots</span> = {}&#x000A;57:         <span class="ruby-identifier">slist</span>[<span class="ruby-value str">'snapshotSet'</span>][<span class="ruby-value str">'item'</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">snap</span><span class="ruby-operator">|</span> &#x000A;58:           <span class="ruby-identifier">kp</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">snap</span>)&#x000A;59:           <span class="ruby-identifier">snapshots</span>[<span class="ruby-identifier">kp</span>.<span class="ruby-identifier">awsid</span>] = <span class="ruby-identifier">kp</span>&#x000A;60:         <span class="ruby-keyword kw">end</span>&#x000A;61:         <span class="ruby-identifier">snapshots</span>&#x000A;62:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000290-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/snapshot.rb, line 52</span>&#x000A;52:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">list_as_hash</span>(<span class="ruby-identifier">snap_id</span>=[])&#x000A;53:         <span class="ruby-identifier">snap_id</span> = [<span class="ruby-identifier">snap_id</span>].<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">compact</span>&#x000A;54:         <span class="ruby-identifier">slist</span> = <span class="ruby-ivar">@ec2</span>.<span class="ruby-identifier">describe_snapshots</span>(<span class="ruby-identifier">:snapshot_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">snap_id</span>)&#x000A;55:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">slist</span>[<span class="ruby-value str">'snapshotSet'</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>)&#x000A;56:         <span class="ruby-identifier">snapshots</span> = {}&#x000A;57:         <span class="ruby-identifier">slist</span>[<span class="ruby-value str">'snapshotSet'</span>][<span class="ruby-value str">'item'</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">snap</span><span class="ruby-operator">|</span> &#x000A;58:           <span class="ruby-identifier">kp</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">snap</span>)&#x000A;59:           <span class="ruby-identifier">snapshots</span>[<span class="ruby-identifier">kp</span>.<span class="ruby-identifier">awsid</span>] = <span class="ruby-identifier">kp</span>&#x000A;60:         <span class="ruby-keyword kw">end</span>&#x000A;61:         <span class="ruby-identifier">snapshots</span>&#x000A;62:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

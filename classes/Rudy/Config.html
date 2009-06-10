@@ -51,20 +51,17 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000448">init_config_dir</a></li>
+              <li><a href="#M000449">init_config_dir</a></li>
             </ol>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000438">accounts?</a></li>
-              <li><a href="#M000444">commands?</a></li>
-              <li><a href="#M000443">controls?</a></li>
-              <li><a href="#M000439">defaults?</a></li>
-              <li><a href="#M000447">look_and_load</a></li>
-              <li><a href="#M000440">machines?</a></li>
-              <li><a href="#M000442">networks?</a></li>
-              <li><a href="#M000446">postprocess</a></li>
-              <li><a href="#M000441">routines?</a></li>
-              <li><a href="#M000445">services?</a></li>
+              <li><a href="#M000442">accounts?</a></li>
+              <li><a href="#M000445">commands?</a></li>
+              <li><a href="#M000443">defaults?</a></li>
+              <li><a href="#M000448">look_and_load</a></li>
+              <li><a href="#M000444">machines?</a></li>
+              <li><a href="#M000447">postprocess</a></li>
+              <li><a href="#M000446">routines?</a></li>
             </ol>
           </div>
           <div id='section'>
@@ -72,32 +69,29 @@
               <h2>Classes and Modules</h2>
               Class <a href="Config/Accounts.html" class="link">Rudy::Config::Accounts</a><br />
               Class <a href="Config/Commands.html" class="link">Rudy::Config::Commands</a><br />
-              Class <a href="Config/Controls.html" class="link">Rudy::Config::Controls</a><br />
               Class <a href="Config/Defaults.html" class="link">Rudy::Config::Defaults</a><br />
               Class <a href="Config/Error.html" class="link">Rudy::Config::Error</a><br />
               Class <a href="Config/Machines.html" class="link">Rudy::Config::Machines</a><br />
-              Class <a href="Config/Networks.html" class="link">Rudy::Config::Networks</a><br />
               Class <a href="Config/Routines.html" class="link">Rudy::Config::Routines</a><br />
-              Class <a href="Config/Services.html" class="link">Rudy::Config::Services</a><br />
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='public-class method' id='method-M000448'>
-                <a name='M000448'>      </a>
+              <div class='public-class method' id='method-M000449'>
+                <a name='M000449'>      </a>
                 <div class='synopsis'>
                   <span class='name'>init_config_dir</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000448-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000449-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000448-source'>     <span class="ruby-comment cmt"># File lib/rudy/config.rb, line 79</span>&#x000A; 79:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">init_config_dir</span>&#x000A; 80:       &#x000A; 81:       <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">CONFIG_DIR</span>)&#x000A; 82:         <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Creating #{Rudy::CONFIG_DIR}&quot;</span>&#x000A; 83:         <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">mkdir</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">CONFIG_DIR</span>, <span class="ruby-value">0700</span>)&#x000A; 84:       <span class="ruby-keyword kw">end</span>&#x000A; 85: &#x000A; 86:       <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">CONFIG_FILE</span>)&#x000A; 87:         <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Creating #{Rudy::CONFIG_FILE}&quot;</span>&#x000A; 88:         <span class="ruby-identifier">rudy_config</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Utils</span>.<span class="ruby-identifier">without_indent</span> <span class="ruby-value str">%Q{&#x000A; 89:           accounts do                           # Account Access Indentifiers&#x000A; 90:             aws do                              # amazon web services &#x000A; 91:               name &quot;Rudy Default&quot;&#x000A; 92:               accountnum &quot;&quot;&#x000A; 93:               accesskey &quot;&quot;&#x000A; 94:               secretkey &quot;&quot;&#x000A; 95:               privatekey &quot;~/path/2/pk-xxxx.pem&quot; &#x000A; 96:               cert &quot;~/path/2/cert-xxxx.pem&quot;&#x000A; 97:             end&#x000A; 98:           end&#x000A; 99:           &#x000A;100:           defaults do                          # Global Defaults&#x000A;101:             region :&quot;us-east-1&quot; &#x000A;102:             zone :&quot;us-east-1b&quot;&#x000A;103:             environment :stage&#x000A;104:             role :app&#x000A;105:             user Rudy.sysinfo.user.to_sym&#x000A;106:             color false                        # Terminal colors? true/false&#x000A;107:             yes false                          # Auto-confirm? true/false&#x000A;108:           end&#x000A;109:         }</span>&#x000A;110:         <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Utils</span>.<span class="ruby-identifier">write_to_file</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">CONFIG_FILE</span>, <span class="ruby-identifier">rudy_config</span>, <span class="ruby-value str">'w'</span>, <span class="ruby-value">0600</span>)&#x000A;111:       <span class="ruby-keyword kw">end</span>&#x000A;112:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000449-source'>     <span class="ruby-comment cmt"># File lib/rudy/config.rb, line 83</span>&#x000A; 83:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">init_config_dir</span>&#x000A; 84:       &#x000A; 85:       <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">CONFIG_DIR</span>)&#x000A; 86:         <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Creating #{Rudy::CONFIG_DIR}&quot;</span>&#x000A; 87:         <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">mkdir</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">CONFIG_DIR</span>, <span class="ruby-value">0700</span>)&#x000A; 88:       <span class="ruby-keyword kw">end</span>&#x000A; 89: &#x000A; 90:       <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">CONFIG_FILE</span>)&#x000A; 91:         <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Creating #{Rudy::CONFIG_FILE}&quot;</span>&#x000A; 92:         <span class="ruby-identifier">rudy_config</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Utils</span>.<span class="ruby-identifier">without_indent</span> <span class="ruby-value str">%Q{&#x000A; 93:           accounts do                           # Account Access Indentifiers&#x000A; 94:             aws do                              # amazon web services &#x000A; 95:               name &quot;Rudy Default&quot;&#x000A; 96:               accountnum &quot;&quot;&#x000A; 97:               accesskey &quot;&quot;&#x000A; 98:               secretkey &quot;&quot;&#x000A; 99:               privatekey &quot;~/path/2/pk-xxxx.pem&quot; &#x000A;100:               cert &quot;~/path/2/cert-xxxx.pem&quot;&#x000A;101:             end&#x000A;102:           end&#x000A;103:         }</span>&#x000A;104:         <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Utils</span>.<span class="ruby-identifier">write_to_file</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">CONFIG_FILE</span>, <span class="ruby-identifier">rudy_config</span>, <span class="ruby-value str">'w'</span>, <span class="ruby-value">0600</span>)&#x000A;105:       <span class="ruby-keyword kw">end</span>&#x000A;106:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000438'>
-                <a name='M000438'>      </a>
+              <div class='public-instance method' id='method-M000442'>
+                <a name='M000442'>      </a>
                 <div class='synopsis'>
                   <span class='name'>accounts?</span>
                   <span class='arguments'>()</span>
@@ -110,92 +104,66 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000438-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000442-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000438-source'>    <span class="ruby-comment cmt"># File lib/rudy/config.rb, line 17</span>&#x000A;17:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">accounts?</span>; <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">:accounts</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">:accounts</span>].<span class="ruby-identifier">nil?</span>; <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000442-source'>    <span class="ruby-comment cmt"># File lib/rudy/config.rb, line 17</span>&#x000A;17:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">accounts?</span>; <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">:accounts</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">:accounts</span>].<span class="ruby-identifier">nil?</span>; <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000444'>
-                <a name='M000444'>      </a>
+              <div class='public-instance method' id='method-M000445'>
+                <a name='M000445'>      </a>
                 <div class='synopsis'>
                   <span class='name'>commands?</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000444-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000445-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000444-source'>    <span class="ruby-comment cmt"># File lib/rudy/config.rb, line 23</span>&#x000A;23:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">commands?</span>; <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">:commands</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">:commands</span>].<span class="ruby-identifier">nil?</span>; <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000445-source'>    <span class="ruby-comment cmt"># File lib/rudy/config.rb, line 20</span>&#x000A;20:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">commands?</span>; <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">:commands</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">:commands</span>].<span class="ruby-identifier">nil?</span>; <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='public-instance method' id='method-M000443'>
                 <a name='M000443'>      </a>
                 <div class='synopsis'>
-                  <span class='name'>controls?</span>
+                  <span class='name'>defaults?</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000443-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000443-source'>    <span class="ruby-comment cmt"># File lib/rudy/config.rb, line 22</span>&#x000A;22:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">controls?</span>; <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">:controls</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">:controls</span>].<span class="ruby-identifier">nil?</span>; <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000443-source'>    <span class="ruby-comment cmt"># File lib/rudy/config.rb, line 18</span>&#x000A;18:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">defaults?</span>; <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">:defaults</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">:defaults</span>].<span class="ruby-identifier">nil?</span>; <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000439'>
-                <a name='M000439'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>defaults?</span>
-                  <span class='arguments'>()</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000439-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000439-source'>    <span class="ruby-comment cmt"># File lib/rudy/config.rb, line 18</span>&#x000A;18:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">defaults?</span>; <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">:defaults</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">:defaults</span>].<span class="ruby-identifier">nil?</span>; <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='public-instance method' id='method-M000447'>
-                <a name='M000447'>      </a>
+              <div class='public-instance method' id='method-M000448'>
+                <a name='M000448'>      </a>
                 <div class='synopsis'>
                   <span class='name'>look_and_load</span>
                   <span class='arguments'>(adhoc_path=nil)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000447-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000448-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000447-source'>    <span class="ruby-comment cmt"># File lib/rudy/config.rb, line 49</span>&#x000A;49:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">look_and_load</span>(<span class="ruby-identifier">adhoc_path</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;50:       <span class="ruby-identifier">cwd</span> = <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">pwd</span>&#x000A;51:       <span class="ruby-identifier">cwd_path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">cwd</span>, <span class="ruby-value str">'.rudy'</span>, <span class="ruby-value str">'config'</span>)&#x000A;52:       &#x000A;53:       <span class="ruby-comment cmt"># Attempt to load the core configuration file first.</span>&#x000A;54:       <span class="ruby-comment cmt"># The &quot;core&quot; config file can have any or all configuration</span>&#x000A;55:       <span class="ruby-comment cmt"># but it should generally only contain the access identifiers</span>&#x000A;56:       <span class="ruby-comment cmt"># and defaults. That's why we only load one of them. </span>&#x000A;57:       <span class="ruby-identifier">core_config_paths</span> = [<span class="ruby-identifier">adhoc_path</span>, <span class="ruby-identifier">cwd_path</span>, <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">CONFIG_FILE</span>]&#x000A;58:       <span class="ruby-identifier">core_config_paths</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">path</span><span class="ruby-operator">|</span>&#x000A;59:         <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">path</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">path</span>)&#x000A;60:         <span class="ruby-ivar">@paths</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">path</span>&#x000A;61:         <span class="ruby-keyword kw">break</span>&#x000A;62:       <span class="ruby-keyword kw">end</span>&#x000A;63:       &#x000A;64:       <span class="ruby-identifier">typelist</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">g</span><span class="ruby-operator">|</span> <span class="ruby-node">&quot;#{g}.rb&quot;</span> }.<span class="ruby-identifier">join</span>(<span class="ruby-value str">','</span>)&#x000A;65:       &#x000A;66:       <span class="ruby-comment cmt"># Rudy then looks for the rest of the config in these locations</span>&#x000A;67:       <span class="ruby-ivar">@paths</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">glob</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">sysinfo</span>.<span class="ruby-identifier">home</span>, <span class="ruby-value str">'.rudy'</span>, <span class="ruby-value str">'*.rb'</span>)) <span class="ruby-operator">||</span> []&#x000A;68:       <span class="ruby-ivar">@paths</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">glob</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">cwd</span>, <span class="ruby-value str">'Rudyfile'</span>)) <span class="ruby-operator">||</span> []&#x000A;69:       <span class="ruby-ivar">@paths</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">glob</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">cwd</span>, <span class="ruby-value str">'config'</span>, <span class="ruby-value str">'rudy'</span>, <span class="ruby-value str">'*.rb'</span>)) <span class="ruby-operator">||</span> []&#x000A;70:       <span class="ruby-ivar">@paths</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">glob</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">cwd</span>, <span class="ruby-value str">'.rudy'</span>, <span class="ruby-value str">'*.rb'</span>)) <span class="ruby-operator">||</span> []&#x000A;71:       <span class="ruby-ivar">@paths</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">glob</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">cwd</span>, <span class="ruby-node">&quot;{#{typelist}}&quot;</span>)) <span class="ruby-operator">||</span> []&#x000A;72:       <span class="ruby-ivar">@paths</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">glob</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">'/etc'</span>, <span class="ruby-value str">'rudy'</span>, <span class="ruby-value str">'*.rb'</span>)) <span class="ruby-operator">||</span> []&#x000A;73:       <span class="ruby-ivar">@paths</span> <span class="ruby-operator">&amp;&amp;=</span> <span class="ruby-ivar">@paths</span>.<span class="ruby-identifier">uniq</span>&#x000A;74:       &#x000A;75:       <span class="ruby-identifier">refresh</span>&#x000A;76:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000448-source'>    <span class="ruby-comment cmt"># File lib/rudy/config.rb, line 53</span>&#x000A;53:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">look_and_load</span>(<span class="ruby-identifier">adhoc_path</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;54:       <span class="ruby-identifier">cwd</span> = <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">pwd</span>&#x000A;55:       <span class="ruby-identifier">cwd_path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">cwd</span>, <span class="ruby-value str">'.rudy'</span>, <span class="ruby-value str">'config'</span>)&#x000A;56:       &#x000A;57:       <span class="ruby-comment cmt"># Attempt to load the core configuration file first.</span>&#x000A;58:       <span class="ruby-comment cmt"># The &quot;core&quot; config file can have any or all configuration</span>&#x000A;59:       <span class="ruby-comment cmt"># but it should generally only contain the access identifiers</span>&#x000A;60:       <span class="ruby-comment cmt"># and defaults. That's why we only load one of them. </span>&#x000A;61:       <span class="ruby-identifier">core_config_paths</span> = [<span class="ruby-identifier">adhoc_path</span>, <span class="ruby-identifier">cwd_path</span>, <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">CONFIG_FILE</span>]&#x000A;62:       <span class="ruby-identifier">core_config_paths</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">path</span><span class="ruby-operator">|</span>&#x000A;63:         <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">path</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">path</span>)&#x000A;64:         <span class="ruby-ivar">@paths</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">path</span>&#x000A;65:         <span class="ruby-keyword kw">break</span>&#x000A;66:       <span class="ruby-keyword kw">end</span>&#x000A;67:       &#x000A;68:       <span class="ruby-identifier">typelist</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">g</span><span class="ruby-operator">|</span> <span class="ruby-node">&quot;#{g}.rb&quot;</span> }.<span class="ruby-identifier">join</span>(<span class="ruby-value str">','</span>)&#x000A;69:       &#x000A;70:       <span class="ruby-comment cmt"># Rudy then looks for the rest of the config in these locations</span>&#x000A;71:       <span class="ruby-ivar">@paths</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">glob</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">sysinfo</span>.<span class="ruby-identifier">home</span>, <span class="ruby-value str">'.rudy'</span>, <span class="ruby-value str">'*.rb'</span>)) <span class="ruby-operator">||</span> []&#x000A;72:       <span class="ruby-ivar">@paths</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">glob</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">cwd</span>, <span class="ruby-value str">'Rudyfile'</span>)) <span class="ruby-operator">||</span> []&#x000A;73:       <span class="ruby-ivar">@paths</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">glob</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">cwd</span>, <span class="ruby-value str">'config'</span>, <span class="ruby-value str">'rudy'</span>, <span class="ruby-value str">'*.rb'</span>)) <span class="ruby-operator">||</span> []&#x000A;74:       <span class="ruby-ivar">@paths</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">glob</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">cwd</span>, <span class="ruby-value str">'.rudy'</span>, <span class="ruby-value str">'*.rb'</span>)) <span class="ruby-operator">||</span> []&#x000A;75:       <span class="ruby-ivar">@paths</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">glob</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">cwd</span>, <span class="ruby-node">&quot;{#{typelist}}&quot;</span>)) <span class="ruby-operator">||</span> []&#x000A;76:       <span class="ruby-ivar">@paths</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">glob</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">'/etc'</span>, <span class="ruby-value str">'rudy'</span>, <span class="ruby-value str">'*.rb'</span>)) <span class="ruby-operator">||</span> []&#x000A;77:       <span class="ruby-ivar">@paths</span> <span class="ruby-operator">&amp;&amp;=</span> <span class="ruby-ivar">@paths</span>.<span class="ruby-identifier">uniq</span>&#x000A;78:       &#x000A;79:       <span class="ruby-identifier">refresh</span>&#x000A;80:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000440'>
-                <a name='M000440'>      </a>
+              <div class='public-instance method' id='method-M000444'>
+                <a name='M000444'>      </a>
                 <div class='synopsis'>
                   <span class='name'>machines?</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000440-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000444-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000440-source'>    <span class="ruby-comment cmt"># File lib/rudy/config.rb, line 19</span>&#x000A;19:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">machines?</span>; <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">:machines</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">:machines</span>].<span class="ruby-identifier">nil?</span>; <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000444-source'>    <span class="ruby-comment cmt"># File lib/rudy/config.rb, line 19</span>&#x000A;19:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">machines?</span>; <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">:machines</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">:machines</span>].<span class="ruby-identifier">nil?</span>; <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000442'>
-                <a name='M000442'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>networks?</span>
-                  <span class='arguments'>()</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000442-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000442-source'>    <span class="ruby-comment cmt"># File lib/rudy/config.rb, line 21</span>&#x000A;21:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">networks?</span>; <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">:networks</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">:networks</span>].<span class="ruby-identifier">nil?</span>; <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='public-instance method' id='method-M000446'>
-                <a name='M000446'>      </a>
+              <div class='public-instance method' id='method-M000447'>
+                <a name='M000447'>      </a>
                 <div class='synopsis'>
                   <span class='name'>postprocess</span>
                   <span class='arguments'>()</span>
@@ -209,36 +177,23 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000446-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000447-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000446-source'>    <span class="ruby-comment cmt"># File lib/rudy/config.rb, line 30</span>&#x000A;30:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">postprocess</span>&#x000A;31:       <span class="ruby-comment cmt">#raise &quot;There is no AWS info configured&quot; if self.accounts.nil?</span>&#x000A;32:       &#x000A;33:       <span class="ruby-comment cmt"># These don't work anymore. Caesars bug?</span>&#x000A;34:       <span class="ruby-comment cmt">#if accounts? &amp;&amp; !self.accounts.aws.nil?</span>&#x000A;35:       <span class="ruby-comment cmt">#  self.accounts.aws.cert &amp;&amp;= File.expand_path(self.accounts.aws.cert) </span>&#x000A;36:       <span class="ruby-comment cmt">#  self.accounts.aws.privatekey &amp;&amp;= File.expand_path(self.accounts.aws.privatekey)</span>&#x000A;37:       <span class="ruby-comment cmt">#end</span>&#x000A;38:       &#x000A;39:       <span class="ruby-comment cmt"># The commands config modifies the way the routines configs</span>&#x000A;40:       <span class="ruby-comment cmt"># should be parsed. This happens in the postprocess method</span>&#x000A;41:       <span class="ruby-comment cmt"># we call here. We can't guarantee this will run before the</span>&#x000A;42:       <span class="ruby-comment cmt"># routines config is loaded so this postprocess method will</span>&#x000A;43:       <span class="ruby-comment cmt"># raise a Caesars::Config::ForceRefresh exception if that's</span>&#x000A;44:       <span class="ruby-comment cmt"># the case. Rudy::Config::Commands knows to only raise the</span>&#x000A;45:       <span class="ruby-comment cmt"># exception one time (using a boolean flag in a class var).</span>&#x000A;46:       <span class="ruby-ivar">@commands</span>.<span class="ruby-identifier">postprocess</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@commands</span>&#x000A;47:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000447-source'>    <span class="ruby-comment cmt"># File lib/rudy/config.rb, line 30</span>&#x000A;30:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">postprocess</span>&#x000A;31:       <span class="ruby-comment cmt">#raise &quot;There is no AWS info configured&quot; if self.accounts.nil?</span>&#x000A;32:       &#x000A;33:       <span class="ruby-comment cmt"># These don't work anymore. Caesars bug?</span>&#x000A;34:       <span class="ruby-comment cmt">#if accounts? &amp;&amp; !self.accounts.aws.nil?</span>&#x000A;35:       <span class="ruby-comment cmt">#  self.accounts.aws.cert &amp;&amp;= File.expand_path(self.accounts.aws.cert) </span>&#x000A;36:       <span class="ruby-comment cmt">#  self.accounts.aws.privatekey &amp;&amp;= File.expand_path(self.accounts.aws.privatekey)</span>&#x000A;37:       <span class="ruby-comment cmt">#end</span>&#x000A;38:       &#x000A;39:       <span class="ruby-comment cmt"># The commands config modifies the way the routines configs</span>&#x000A;40:       <span class="ruby-comment cmt"># should be parsed. This happens in the postprocess method</span>&#x000A;41:       <span class="ruby-comment cmt"># we call here. We can't guarantee this will run before the</span>&#x000A;42:       <span class="ruby-comment cmt"># routines config is loaded so this postprocess method will</span>&#x000A;43:       <span class="ruby-comment cmt"># raise a Caesars::Config::ForceRefresh exception if that's</span>&#x000A;44:       <span class="ruby-comment cmt"># the case. Rudy::Config::Commands knows to only raise the</span>&#x000A;45:       <span class="ruby-comment cmt"># exception one time (using a boolean flag in a class var).</span>&#x000A;46:       <span class="ruby-ivar">@commands</span>.<span class="ruby-identifier">postprocess</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@commands</span>&#x000A;47:       <span class="ruby-ivar">@defaults</span>.<span class="ruby-identifier">postprocess</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@defaults</span>&#x000A;48:       &#x000A;49:       <span class="ruby-comment cmt"># default will be nil if non was specified. We at least want the object.</span>&#x000A;50:       <span class="ruby-ivar">@defaults</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Config</span><span class="ruby-operator">::</span><span class="ruby-constant">Defaults</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@defaults</span>.<span class="ruby-identifier">nil?</span>&#x000A;51:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000441'>
-                <a name='M000441'>      </a>
+              <div class='public-instance method' id='method-M000446'>
+                <a name='M000446'>      </a>
                 <div class='synopsis'>
                   <span class='name'>routines?</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000441-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000446-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000441-source'>    <span class="ruby-comment cmt"># File lib/rudy/config.rb, line 20</span>&#x000A;20:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">routines?</span>; <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">:routines</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">:routines</span>].<span class="ruby-identifier">nil?</span>; <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='public-instance method' id='method-M000445'>
-                <a name='M000445'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>services?</span>
-                  <span class='arguments'>()</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000445-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000445-source'>    <span class="ruby-comment cmt"># File lib/rudy/config.rb, line 24</span>&#x000A;24:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">services?</span>; <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">:services</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">:services</span>].<span class="ruby-identifier">nil?</span>; <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000446-source'>    <span class="ruby-comment cmt"># File lib/rudy/config.rb, line 21</span>&#x000A;21:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">routines?</span>; <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">:routines</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">:routines</span>].<span class="ruby-identifier">nil?</span>; <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

@@ -31,7 +31,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>Thu Jun 04 00:10:11 -0400 2009</span>
+          <span class='datetime'>Tue Jun 09 21:54:24 -0400 2009</span>
         </div>
       </div>
       <div id='content'>
@@ -40,6 +40,56 @@
             <p>
             RUDY, CHANGES
             </p>
+            <p>
+            #### 0.9.0 (TBD) ###############################
+            </p>
+            <p>
+            NOTE: The following changes are planned for the 0.9.0 release.
+            </p>
+            <ul>
+            <li>group identifier will be changed to &#8216;grp&#8217; from &#8216;g&#8217;
+            
+            </li>
+            <li>machine identifier will be changes to &#8216;mach&#8217; from
+            &#8216;m&#8217;
+            
+            </li>
+            <li>private keys are stored in ~/.ssh/
+            
+            </li>
+            <li>zone is now a single letter: a, b, c, etc... The long form (us-east-1b)
+            will set the region too.
+            
+            </li>
+            <li>Disk syntax in the routines DSL will change. The DSL no longer accepts
+            arguments, just the action (create, destroy, &#8230;).
+            
+            </li>
+            <li>Disk backups will be removed (temporarily &#8212; probably until on of the
+            early 1.x releases).
+            
+            </li>
+            </ul>
+            <p>
+            #### 0.8.5 (2009-06-??) ###############################
+            </p>
+            <ul>
+            <li>FIXED: Bug in DiskHelper. mount method tried to attach when already
+            attached.
+            
+            </li>
+            <li>CHANGE: rudy config now displays account info (but keeps secret key hidden)
+            
+            </li>
+            <li>CHANGE: defaults configuration has been removed from the default
+            ~/.rudy/config. It is now recommended to put it in the same place as
+            machines, routines config.
+            
+            </li>
+            <li>FIXED: Bug in addresses which prevented assigning elastic IP addresses.
+            
+            </li>
+            </ul>
             <p>
             #### 0.8.4 (2009-06-04) ###############################
             </p>

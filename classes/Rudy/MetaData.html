@@ -34,6 +34,9 @@
             <a href="../../files/lib/rudy/metadata/backup_rb.html">lib/rudy/metadata/backup.rb</a>
           </li>
           <li class='other'>
+            <a href="../../files/lib/rudy/metadata/debug_rb.html">lib/rudy/metadata/debug.rb</a>
+          </li>
+          <li class='other'>
             <a href="../../files/lib/rudy/metadata/disk_rb.html">lib/rudy/metadata/disk.rb</a>
           </li>
           <li class='other'>
@@ -53,12 +56,13 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000367">new</a></li>
+              <li><a href="#M000366">new</a></li>
             </ol>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000369">format_timestamp</a></li>
-              <li><a href="#M000368">init</a></li>
+              <li><a href="#M000369">destroy</a></li>
+              <li><a href="#M000368">format_timestamp</a></li>
+              <li><a href="#M000367">init</a></li>
             </ol>
           </div>
           <div id='context'>
@@ -74,26 +78,52 @@
               <h2>Classes and Modules</h2>
               Module <a href="MetaData/ObjectBase.html" class="link">Rudy::MetaData::ObjectBase</a><br />
               Class <a href="MetaData/Backup.html" class="link">Rudy::MetaData::Backup</a><br />
+              Class <a href="MetaData/Debug.html" class="link">Rudy::MetaData::Debug</a><br />
               Class <a href="MetaData/Disk.html" class="link">Rudy::MetaData::Disk</a><br />
+            </div>
+            <div id='attribute-list'>
+              <h2 class='section-bar'>Attributes</h2>
+              <div class='name-list'>
+                <table>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>sdb_domain</td>
+                    <td class='context-item-value'>[R]</td>
+                    <td class='context-item-desc'></td>
+                  </tr>
+                </table>
+              </div>
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='public-class method' id='method-M000367'>
-                <a name='M000367'>      </a>
+              <div class='public-class method' id='method-M000366'>
+                <a name='M000366'>      </a>
                 <div class='synopsis'>
                   <span class='name'>new</span>
                   <span class='arguments'>(*args)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000367-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000366-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000367-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata.rb, line 6</span>&#x000A; 6:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A; 7:       <span class="ruby-identifier">a</span>, <span class="ruby-identifier">s</span>, <span class="ruby-identifier">r</span> = <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">accesskey</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">secretkey</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">region</span>&#x000A; 8:       <span class="ruby-ivar">@sdb</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">SDB</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">s</span>, <span class="ruby-identifier">r</span>)&#x000A; 9:       <span class="ruby-ivar">@radd</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Addresses</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">s</span>, <span class="ruby-identifier">r</span>)&#x000A;10:       <span class="ruby-ivar">@rinst</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Instances</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">s</span>, <span class="ruby-identifier">r</span>)&#x000A;11:       <span class="ruby-ivar">@rgrp</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Groups</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">s</span>, <span class="ruby-identifier">r</span>)&#x000A;12:       <span class="ruby-ivar">@rkey</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">KeyPairs</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">s</span>, <span class="ruby-identifier">r</span>)&#x000A;13:       <span class="ruby-identifier">init</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;14:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000366-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata.rb, line 8</span>&#x000A; 8:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A; 9:       <span class="ruby-identifier">a</span>, <span class="ruby-identifier">s</span>, <span class="ruby-identifier">r</span> = <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">accesskey</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">secretkey</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">region</span>&#x000A;10:       <span class="ruby-ivar">@sdb</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">SDB</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">s</span>, <span class="ruby-identifier">r</span>)&#x000A;11:       <span class="ruby-ivar">@radd</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Addresses</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">s</span>, <span class="ruby-identifier">r</span>)&#x000A;12:       <span class="ruby-ivar">@rinst</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Instances</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">s</span>, <span class="ruby-identifier">r</span>)&#x000A;13:       <span class="ruby-ivar">@rgrp</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Groups</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">s</span>, <span class="ruby-identifier">r</span>)&#x000A;14:       <span class="ruby-ivar">@rkey</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">KeyPairs</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">s</span>, <span class="ruby-identifier">r</span>)&#x000A;15:       <span class="ruby-ivar">@sdb_domain</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">DOMAIN</span>&#x000A;16:       <span class="ruby-identifier">init</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;17:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <h2>Public instance methods</h2>
               <div class='public-instance method' id='method-M000369'>
                 <a name='M000369'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>destroy</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000369-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000369-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata.rb, line 28</span>&#x000A;28:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">destroy</span>&#x000A;29:       <span class="ruby-ivar">@sdb</span>.<span class="ruby-identifier">destroy</span>(<span class="ruby-ivar">@sdb_domain</span>, <span class="ruby-identifier">name</span>)&#x000A;30:       <span class="ruby-keyword kw">true</span>&#x000A;31:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000368'>
+                <a name='M000368'>      </a>
                 <div class='synopsis'>
                   <span class='name'>format_timestamp</span>
                   <span class='arguments'>(dat)</span>
@@ -104,23 +134,23 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000369-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000368-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000369-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata.rb, line 20</span>&#x000A;20:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">format_timestamp</span>(<span class="ruby-identifier">dat</span>)&#x000A;21:       <span class="ruby-identifier">mon</span>, <span class="ruby-identifier">day</span>, <span class="ruby-identifier">hour</span>, <span class="ruby-identifier">min</span>, <span class="ruby-identifier">sec</span> = [<span class="ruby-identifier">dat</span>.<span class="ruby-identifier">mon</span>, <span class="ruby-identifier">dat</span>.<span class="ruby-identifier">day</span>, <span class="ruby-identifier">dat</span>.<span class="ruby-identifier">hour</span>, <span class="ruby-identifier">dat</span>.<span class="ruby-identifier">min</span>, <span class="ruby-identifier">dat</span>.<span class="ruby-identifier">sec</span>].<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">v</span><span class="ruby-operator">|</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">rjust</span>(<span class="ruby-value">2</span>, <span class="ruby-value str">&quot;0&quot;</span>) }&#x000A;22:       [<span class="ruby-identifier">dat</span>.<span class="ruby-identifier">year</span>, <span class="ruby-identifier">mon</span>, <span class="ruby-identifier">day</span>, <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">DELIM</span>, <span class="ruby-identifier">hour</span>, <span class="ruby-identifier">min</span>, <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">DELIM</span>, <span class="ruby-identifier">sec</span>].<span class="ruby-identifier">join</span>&#x000A;23:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000368-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata.rb, line 23</span>&#x000A;23:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">format_timestamp</span>(<span class="ruby-identifier">dat</span>)&#x000A;24:       <span class="ruby-identifier">mon</span>, <span class="ruby-identifier">day</span>, <span class="ruby-identifier">hour</span>, <span class="ruby-identifier">min</span>, <span class="ruby-identifier">sec</span> = [<span class="ruby-identifier">dat</span>.<span class="ruby-identifier">mon</span>, <span class="ruby-identifier">dat</span>.<span class="ruby-identifier">day</span>, <span class="ruby-identifier">dat</span>.<span class="ruby-identifier">hour</span>, <span class="ruby-identifier">dat</span>.<span class="ruby-identifier">min</span>, <span class="ruby-identifier">dat</span>.<span class="ruby-identifier">sec</span>].<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">v</span><span class="ruby-operator">|</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">rjust</span>(<span class="ruby-value">2</span>, <span class="ruby-value str">&quot;0&quot;</span>) }&#x000A;25:       [<span class="ruby-identifier">dat</span>.<span class="ruby-identifier">year</span>, <span class="ruby-identifier">mon</span>, <span class="ruby-identifier">day</span>, <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">DELIM</span>, <span class="ruby-identifier">hour</span>, <span class="ruby-identifier">min</span>, <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">DELIM</span>, <span class="ruby-identifier">sec</span>].<span class="ruby-identifier">join</span>&#x000A;26:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000368'>
-                <a name='M000368'>      </a>
+              <div class='public-instance method' id='method-M000367'>
+                <a name='M000367'>      </a>
                 <div class='synopsis'>
                   <span class='name'>init</span>
                   <span class='arguments'>(*args)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000368-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000367-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000368-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata.rb, line 16</span>&#x000A;16:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">init</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;17:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000367-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata.rb, line 19</span>&#x000A;19:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">init</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;20:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

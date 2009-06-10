@@ -5,7 +5,7 @@ unless defined?(RUDY_HOME)
 end
 
 local_libs = %w{net-ssh net-scp amazon-ec2 aws-s3 caesars drydock rye storable sysinfo annoy}
-#local_libs.each { |dir| $:.unshift File.join(RUDY_HOME, '..', dir, 'lib') }
+local_libs.each { |dir| $:.unshift File.join(RUDY_HOME, '..', dir, 'lib') }
 #require 'rubygems'
 
 require 'digest/md5'

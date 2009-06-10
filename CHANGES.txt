@@ -12,7 +12,7 @@ NOTE: The following changes are planned for the 0.9.0 release.
 * Disk backups will be removed (temporarily -- probably until on of the early 1.x releases). 
 
 
-#### 0.8.5 (2009-06-??) ###############################
+#### 0.8.5 (2009-06-08) ###############################
 
 * FIXED: Bug in DiskHelper. mount method tried to attach when already attached. 
 * CHANGE: rudy config now displays account info (but keeps secret key hidden)

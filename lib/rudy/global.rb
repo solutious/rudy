@@ -31,8 +31,10 @@ module Rudy
     field :cert
     field :privatekey
     
-    field :local_user
-    field :local_hostname
+    field :testrun
+    
+    field :localuser
+    field :localhost
     
     field :offline
     
@@ -110,8 +112,7 @@ module Rudy
       @accountnum ||= ENV['AWS_ACCOUNT_NUMBER']
       @cert ||= ENV['EC2_CERT']
       @privatekey ||= ENV['EC2_PRIVATE_KEY']
-      @local_user = ENV['USER'] || :rudy
-      @local_hostname = Socket.gethostname || :localhost  
+      @localuser = ENV['USER'] 
     end
     
     def apply_system_defaults
@@ -120,7 +121,8 @@ module Rudy
       @environment ||= Rudy::DEFAULT_ENVIRONMENT
       @role ||= Rudy::DEFAULT_ROLE
       @position ||= Rudy::DEFAULT_POSITION
-      @user ||= Rudy::DEFAULT_USER
+      @localuser = Rudy.sysinfo.user || 'rudy'
+      @localhost = Rudy.sysinfo.hostname || 'localhost'
     end
     
   end

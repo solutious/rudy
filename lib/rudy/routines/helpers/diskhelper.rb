@@ -5,6 +5,8 @@ module Rudy; module Routines;
     include Rudy::Routines::HelperBase  # TODO: use trap_rbox_errors
     extend self
     
+    Rudy::Routines.add_helper :disks, self
+    
     def disks?(routine)
       (routine.is_a?(Caesars::Hash) && routine.disks && 
       routine.disks.is_a?(Caesars::Hash) && !routine.disks.empty?) ? true : false

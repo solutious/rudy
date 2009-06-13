@@ -3,8 +3,10 @@
 module Rudy; module Routines;
   class Startup < Rudy::Routines::Base
     
+    Rudy::Routines.add_handler :startup, self
+    
     def init(*args)
-      @routine = fetch_routine_config(:startup)   # NOTE: could use @cmdname here
+      @routine = fetch_routine_config(:startup)   # NOTE: could use @name here
     end
     
     # * +each_mach+ is an optional block which is executed between 

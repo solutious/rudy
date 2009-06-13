@@ -42,6 +42,7 @@ machines do
   # roles. The configuration inside the role blocks is available only
   # to machines in that specific role. 
   env :stage, :prod do
+    user :root                       # User to connect as
     size 'm1.small'                  # EC2 machine type for all machines
                                      # in the "stage" environment
     role :app do
@@ -170,16 +171,33 @@ routines do
   
   anything do                        # $ rudy anything
     before :uptime                   # Specify a dependency
-    script_local do                  # This is Ruby, so any valid syntax
+    local do                         # This is Ruby, so any valid syntax
       ls :l                          # can be used in the definitions. 
     end                              # See: SysInfo gem for more info.
   end
   
-  uptime do                          # $ rudy uptime
-    script_local do
-      uptime
+  three do
+    local do
     end
   end
+  
+  two do
+    remote do
+    end
+  end
+  
+  uptime do                          # $ rudy uptime
+    #before :two
+    #before :three
+    disks do
+    end
+    local do
+      uptime
+    end
+    remote do
+    end
+  end
+  
 end
 
 

@@ -10,6 +10,13 @@ NOTE: The following changes are planned for the 0.9.0 release.
 * zone is now a single letter: a, b, c, etc... The long form (us-east-1b) will set the region too.
 * Disk syntax in the routines DSL will change. The DSL no longer accepts arguments, just the action (create, destroy, ...). 
 * Disk backups will be removed (temporarily -- probably until on of the early 1.x releases). 
+* script_local, before_local, after_local will be removed from routines syntax. This will cause runtime errors in 0.8.x and earlier
+
+
+#### 0.8.6 (2009-06-08) ###############################
+
+* TODO: Authorize user@localhost in "rudy init"
+
 
 
 #### 0.8.5 (2009-06-08) ###############################

@@ -57,13 +57,12 @@ module Rudy
     def inspect
       update #if !dns_public? && @awsid
       lines = []
-      lines << liner_note
       field_names.each do |key|
         next unless self.respond_to?(key)
         val = self.send(key)
-        lines << sprintf(" %22s: %s", key, (val.is_a?(Array) ? val.join(', ') : val))
+        lines << sprintf("%s=%s", key, (val.is_a?(Array) ? val.join(', ') : val))
       end
-      lines.join($/)
+      "<Rudy::Machine#%s %s>" % [name, lines.join(' ')]
     end
       
     def find_next_position
@@ -278,16 +277,6 @@ module Rudy
       # TODO: add logic that checks whether the instances are running.
     end
     
-  end
-  
-  
-  class Machines::Offline
-    def list(more=[], less=[], &each_mach)
-      m = Rudy::Machine.new
-      m.dns_public = 'localhost'
-      each_mach.call(m) if each_mach
-      [m]
-    end
   end
   
 end

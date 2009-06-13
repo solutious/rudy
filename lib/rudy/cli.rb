@@ -150,17 +150,18 @@ module Rudy
       # These globals are used by all bin/ executables
       global :A, :accesskey, String, "AWS Access Key"
       global :S, :secretkey, String, "AWS Secret Access Key"
-      global :R, :region, String, "Amazon service region (ie: #{Rudy::DEFAULT_REGION})"
-      global :z, :zone, String, "Amazon Availability zone (ie: #{Rudy::DEFAULT_ZONE})"
-      global :u, :user, String, "Provide a username (ie: #{Rudy::DEFAULT_USER})"
+      global :R, :region, String, "Amazon service region (e.g. #{Rudy::DEFAULT_REGION})"
+      global :z, :zone, String, "Amazon Availability zone (e.g. #{Rudy::DEFAULT_ZONE})"
+      global :u, :user, String, "Provide a username (ie: #{Rudy.sysinfo.user})"
+      global :l, :localhost, String, "Provide a localhost (e.g. #{Rudy.sysinfo.hostname})"
       global :k, :pkey, String, "Path to the private SSH key"
       global :f, :format, String, "Output format"
       global :n, :nocolor, "Disable output colors"
-      global :C, :config, String, "Specify another configuration file to read (ie: #{Rudy::CONFIG_FILE})"
+      global :C, :config, String, "Specify another configuration file to read (e.g. #{Rudy::CONFIG_FILE})"
       global :Y, :yes, "Assume a correct answer to confirmation questions"
       global :q, :quiet, "Run with less output"
       global :O, :offline, "Be cool about the internet being down"
-      global :v, :verbose, "Increase verbosity of output (i.e. -v or -vv or -vvv)" do
+      global :v, :verbose, "Increase verbosity of output (e.g. -v or -vv or -vvv)" do
         @verbose ||= 0
         @verbose += 1
       end

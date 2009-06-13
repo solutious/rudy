@@ -12,7 +12,7 @@ require 'digest/md5'
 require 'stringio'
 require 'ostruct'
 require 'yaml'
-require 'json'
+begin; require 'json'; rescue LoadError; end # Silence!
 require 'logger'
 require 'socket'
 require 'timeout'
@@ -65,8 +65,6 @@ module Rudy
     DEFAULT_ENVIRONMENT = :'stage'.freeze
     DEFAULT_ROLE = :'app'.freeze
     DEFAULT_POSITION = '01'.freeze
-    
-    DEFAULT_USER = :'rudy'.freeze
     
     DEFAULT_EC2_HOST = "ec2.amazonaws.com"
     DEFAULT_EC2_PORT = 443

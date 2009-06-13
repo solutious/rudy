@@ -4,6 +4,9 @@ module Rudy; module Routines;
     include Rudy::Routines::HelperBase  # TODO: use trap_rbox_errors
     extend self 
     
+    Rudy::Routines.add_helper :adduser, self
+    Rudy::Routines.add_helper :authorize, self
+    
     def adduser?(routine)
       (!routine.adduser.nil? && !routine.adduser.to_s.empty?)
     end

@@ -58,6 +58,18 @@ module Rudy
       Rudy::DOMAIN
     end
     
+    # Print +msg+ to +@@logger+
+    def self.li(msg);  @@logger.puts msg;                end
+    # Print +msg+ to +@@logger+ if +Rudy.debug?+ returns true
+    def self.ld(msg); @@logger.puts msg if Rudy.debug?; end
+    # Print +msg+ to +@@logger+ with "ERROR: " prepended
+    def self.le(msg); @@logger.puts "ERROR: #{msg}" end
+    
+    def li(msg);  Rudy::Huxtable.li msg;  end
+    def ld(msg); Rudy::Huxtable.ld msg; end
+    
+    
+    
     def config_dirname
       raise "No config paths defined" unless @@config.is_a?(Rudy::Config) && @@config.paths.is_a?(Array)
       base_dir = File.dirname @@config.paths.first

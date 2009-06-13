@@ -3,6 +3,8 @@
 module Rudy; module Routines;
   class Reboot < Rudy::Routines::Base
     
+    Rudy::Routines.add_handler :reboot, self
+    
     def init(*args)
       @routine = fetch_routine_config(:reboot)
     end
@@ -73,3 +75,5 @@ module Rudy; module Routines;
   end
 
 end; end
+
+

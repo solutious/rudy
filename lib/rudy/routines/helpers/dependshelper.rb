@@ -4,31 +4,47 @@ module Rudy; module Routines;
     include Rudy::Routines::HelperBase  # TODO: use trap_rbox_errors
     extend self 
     
-    def has_depends?(timing, routine)
-      (!routine.is_a?(Caesars::Hash) || routine[timing].is_a?(Caesars::Hash))
-    end
+    ## NOTE: Dependencies don't use Rudy::Routines.add_helper 
     
-    # Returns an Array of the dependent routines for the given +timing+ (before/after)
+    # Returns an Array of the dependent routines for the given +timing+ 
+    # which can be anything but is most often one of: :before, :after.
     def get(timing, routine)
-      return if !(routine.is_a?(Caesars::Hash) || routine[timing].is_a?(Caesars::Hash))
+      return unless routine.has_key? timing
+      # Backwards compatability for 0.8 and earlier which 
+      # forced before and after blocks to be Hash objects.
+      a = routine[timing].is_a?(Hash) ? routine[timing].keys : routine[timing]
       
-      # This will produce an Array containing the routines to run. The 
-      # elements are the valid routine names. 
-      # NOTE: The "timing" elements are removed from the routines hash. 
-      dependencies = []
-      routine[timing].each_pair do |n,v| 
-        next unless v.nil?  # this skips all "script" blocks
-        raise "#{timing}: #{n} is not a known routine" unless valid_routine?(n)
-        routine[timing].delete(n)
-        dependencies << n
+      routine.delete timing    # Remove dependency elements from routine
+      
+      ld "Found #{timing} dependencies: #{a.join(', ')}"
+      a.each do |routine_name|
+        next if valid_routine? routine_name
+        raise Rudy::Routines::NoRoutine, routine_name
       end
-
-      # We need to return only the keys b/c the values are nil
-      dependencies = nil if dependencies.empty?
-      dependencies
+      
+      a   # Return Array of dependency names  
     end
     
-
+    # A simple wrapper for executing a routine. 
+    # * +routine_name+ should be a Symbol representing a routine 
+    #   available to the current machine group. 
+    # This method finds the handler for the given routine, 
+    # creates an instance, calls raise_early_exceptions, 
+    # and finally executes the routine. 
+    def execute(routine_name)
+      handler = Rudy::Routines.get_handler routine_name
+      routine = handler.new routine_name
+      routine.raise_early_exceptions
+      routine.execute
+    end
+    
+    # Calls execute for each routine name in +routines+ (an Array).
+    # Does nothing if given an empty Array or nil.
+    def execute_all(routines)
+      return if routines.nil? || routines.empty?
+      routines.each { |routine| execute routine }
+    end
+    
   end
   
 end; end

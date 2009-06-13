@@ -7,6 +7,7 @@ module Rudy
     ABA = "Always be accurate"
     CBC = "Consistency before cuteness"
     UNO = "Ugly's not okay"
+    WOC = "Write offensive code"
     def inspect
       all = Guidelines.constants
       g = all.collect { |c| '%s="%s"' % [c, const_get(c)] }

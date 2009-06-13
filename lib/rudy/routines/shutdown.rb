@@ -3,6 +3,8 @@
 module Rudy; module Routines;
   class Shutdown < Rudy::Routines::Base
     
+    Rudy::Routines.add_handler :shutdown, self
+    
     def init(*args)
       @routine = fetch_routine_config(:shutdown)
     end
@@ -34,3 +36,4 @@ module Rudy; module Routines;
   end
 
 end; end
+

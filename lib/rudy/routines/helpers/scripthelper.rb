@@ -7,65 +7,36 @@ module Rudy; module Routines;
   module ScriptHelper
     include Rudy::Routines::HelperBase  # TODO: use trap_rbox_errors
     extend self
-
-    @@script_types = [:after, :before, :after_local, :before_local, :script, :script_local]
     
-    
-    # TODO: refactor using this_method
-    
-    def before_local(routine, sconf, rbox, option=nil, argv=nil)
-      execute_command(:before_local, routine, sconf, 'localhost', rbox, option, argv)
-    end
-    def before_local?(routine)
-      # before_local generally doesn't take a user name like the remote
-      # before block so we add it here (unless the user did specify it)
-      routine[:before_local] = { 
-        Rudy.sysinfo.user.to_sym => routine.delete(:before_local) 
-      } if routine[:before_local].is_a?(Proc)
-      execute_command?(:before_local, routine)
-    end
-    def script_local(routine, sconf, rbox, option=nil, argv=nil)
-      execute_command(:script_local, routine, sconf, 'localhost', rbox, option, argv)
-    end
-    def script_local?(routine)
-      # before_local generally doesn't take a user name like the remote
-      # before block so we add it here (unless the user did specify it)
-      routine[:script_local] = { 
-        Rudy.sysinfo.user.to_sym => routine.delete(:script_local) 
-      } if routine[:script_local].is_a?(Proc)
-      execute_command?(:script_local, routine)
+    Rudy::Routines.add_helper :local, self
+    Rudy::Routines.add_helper :remote, self
+        
+    def execute(type, definition)
+      self.send type, definition
     end
     
-    def after_local(routine, sconf, rbox, option=nil, argv=nil)
-      execute_command(:after_local, routine, sconf, 'localhost', rbox, option, argv)
+    def local(routine, sconf, rbox, option=nil, argv=nil)
+      execute_command(:local, routine, sconf, 'localhost', rbox, option, argv)
     end
-    def after_local?(routine)
-      routine[:after_local] = {                 # See before_local note
-        Rudy.sysinfo.user.to_sym => routine.delete(:after_local) 
-      } if routine[:after_local].is_a?(Proc)
-      execute_command?(:after_local, routine)
+    def local?(routine)
+      # local generally doesn't take a user name like the remote
+      # block so we add it here (unless the user did specify it)
+      routine[:local] = { 
+        Rudy.sysinfo.user.to_sym => routine.delete(:local) 
+      } if routine[:local].is_a?(Proc)
+      execute_command?(:local, routine)
     end
     
-    def before(routine, sconf, machine, rbox, option=nil, argv=nil)
+    
+    def remote(routine, sconf, machine, rbox, option=nil, argv=nil)
       raise "ScriptHelper: Not a Rudy::Machine" unless machine.is_a?(Rudy::Machine)
-      execute_command(:before, routine, sconf, machine.name, rbox, option, argv)
+      execute_command(:remote, routine, sconf, machine.name, rbox, option, argv)
     end
-    def before?(routine); execute_command?(:before, routine); end
-    
-    def after(routine, sconf, machine, rbox, option=nil, argv=nil)
-      raise "ScriptHelper: Not a Rudy::Machine" unless machine.is_a?(Rudy::Machine)
-      execute_command(:after, routine, sconf, machine.name, rbox, option, argv)
-    end
-    def after?(routine); execute_command?(:after, routine); end
-    
-    def script(routine, sconf, machine, rbox, option=nil, argv=nil)
-      raise "ScriptHelper: Not a Rudy::Machine" unless machine.is_a?(Rudy::Machine)
-      execute_command(:script, routine, sconf, machine.name, rbox, option, argv)
-    end
-    def script?(routine); execute_command?(:script, routine); end
+    def remote?(routine); execute_command?(:remote, routine); end
 
   
   private  
+    
     
     # Does the routine have the requested script type?
     # * +timing+ is one of: after, before, after_local, before_local

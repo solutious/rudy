@@ -15,7 +15,7 @@
   s.rubygems_version = '1.1.1'
   
   s.add_dependency 'drydock', '>= 0.6.5'
-  s.add_dependency 'caesars', '>= 0.7.1'
+  s.add_dependency 'caesars', '>= 0.7.2'
   s.add_dependency 'rye', '>= 0.7.4'
   s.add_dependency 'sysinfo', '>= 0.5.1'
   s.add_dependency 'storable', '>= 0.5.3'

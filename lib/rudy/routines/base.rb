@@ -94,6 +94,25 @@ module Rudy; module Routines;
         end
       end
       
+      unless @@global.parallel
+        exhandler = Proc.new do |ex|
+          STDERR.puts "  Error: #{ex.message}".color(:red)
+          STDERR.puts ex.backtrace if Rudy.debug?
+          choice = Annoy.get_user_input('(S)kip  (R)etry  (A)bort: ') || ''
+          if choice.match(/\AS/i)
+            # do nothing
+          elsif choice.match(/\AR/i)
+            :retry   # Tells Rye::Box#run_command to retry
+          else
+            exit 12
+          end
+        end
+         
+        box.exception_hook(Rye::CommandNotFound, &exhandler)
+        box.exception_hook(Rye::CommandError, &exhandler)
+        box.exception_hook(Exception, &exhandler)
+      end
+      
       box
     end
     
@@ -121,6 +140,7 @@ module Rudy; module Routines;
             next
           end
           rbox = create_rye_box(m.dns_public, opts) 
+          rbox.stash = m   # Store the machine instance in the stash
           rbox.nickname = m.name
         else
           # Otherwise we assume it's a hostname

@@ -7,7 +7,7 @@ module Rudy; module Routines;
     Rudy::Routines.add_helper :adduser, self
     Rudy::Routines.add_helper :authorize, self
     
-    def execute(type, user, machines, rset, lbox, option=nil, argv=nil)
+    def execute(type, user, rset, lbox, option=nil, argv=nil)
       send(type, user, rset)
     end
     

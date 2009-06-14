@@ -20,7 +20,7 @@ module Rudy; module Routines;
     Rudy::Routines.add_helper :after_local,  self
     Rudy::Routines.add_helper :script_local, self
         
-    def execute(type, batch, machines, rset, lbox, option=nil, argv=nil)
+    def execute(type, batch, rset, lbox, option=nil, argv=nil)
 
       if type.to_s =~ /local/   
         batch = { lbox.user => batch } if batch.is_a?(Proc)

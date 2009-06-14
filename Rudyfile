@@ -189,16 +189,13 @@ routines do
   end
   
   uptime do                          # $ rudy uptime
-    before :two
-    before_local :delano do
-      date
-    end
     disks do
-      create "poop"
+      create "/rudy/disk1"
     end
     local do
       uptime
-      pwd
+      ls 'fire'
+      date
     end
     #remote :root do
     #  uname

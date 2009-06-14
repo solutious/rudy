@@ -20,7 +20,7 @@ module Rudy; module Routines;
         next if ![:disks, :adduser, :authorize, :before_local, :before].member?(action)
         helper = Rudy::Routines.get_helper action
         enjoy_every_sandwich {
-          helper.execute(action, definition, @machines, @rset, @lbox, @option, @argv)
+          helper.execute(action, definition, @rset, @lbox, @option, @argv)
         }
       end
       
@@ -31,7 +31,7 @@ module Rudy; module Routines;
       if @routine.has_key? :after_local
         helper = Rudy::Routines.get_helper :local
         enjoy_every_sandwich {
-          helper.execute(:local, definition, nil, nil, @lbox, @option, @argv)
+          helper.execute(:local, definition, nil, @lbox, @option, @argv)
         }
       end
       

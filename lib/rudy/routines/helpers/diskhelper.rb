@@ -17,46 +17,29 @@ module Rudy; module Routines;
       routine.disks.values.collect { |d| d.keys }.flatten
     end
     
-    def execute(type, batch, machines, rset, lbox, option=nil, argv=nil)
-      p machines
-      p batch
-      p type
-    end
-    
-    def execute2(routine, machine, rbox)
-      return unless routine
-      raise "Not a Rudy::Machine" unless machine.is_a?(Rudy::Machine)
-      raise "Not a Rye::Box" unless rbox.is_a?(Rye::Box)
-      
-      @machine = machine
-      @rbox = rbox
+    def execute(type, routine, rset, lbox, option=nil, argv=nil)
       
       # We need to add mkfs since it's not enabled by default. 
-      # We add it only to this instance we're using. 
       # We give it a funny name so we can delete it. 
-      def @rbox.rudy_mkfs(*args); cmd('mkfs', args); end
-      
-      unless disks?(routine)
-        STDERR.puts "[nothing to do]"
-        return
+      Rye::Cmd.add_command(:rudy_mkfs) do |*args|
+        cmd('mkfs', args)
       end
-
+      
       modified = []
-      routine.disks.each_pair do |action, disks|
-        unless DiskHelper.respond_to?(action)  
-          STDERR.puts %Q(DiskHelper: unknown action "#{action}")
+      routine.each_pair do |action, disks|
+        unless respond_to?(action.to_sym)  
+          Rudy::Huxtable.le %Q(DiskHelper: unknown action "#{action}")
           next
         end
-        send(action, disks) # create, copy, destroy, ...
-        modified << disks
+        p action
+        #send(action, disks) # create, copy, destroy, ...
+        #modified << disks
       end
       
-      # TODO: remove rudy_mkfs method
       
+      Rye::Cmd.remove_command(:rudy_mkfs)
     end
     
-  private
-  
     def snapshot(disks)
       rdisk = Rudy::Disks.new
       rback = Rudy::Backups.new

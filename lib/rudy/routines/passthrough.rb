@@ -16,7 +16,7 @@ module Rudy; module Routines;
         ld "  executing helper: #{action}"
         helper = Rudy::Routines.get_helper action
         enjoy_every_sandwich {
-          helper.execute(action, definition, @machines, @rset, @lbox, @option, @argv)
+          helper.execute(action, definition, @rset, @lbox, @option, @argv)
         }
       end
       processed

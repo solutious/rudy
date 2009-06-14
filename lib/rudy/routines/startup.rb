@@ -18,9 +18,13 @@ module Rudy; module Routines;
       if @routine.has_key? :before_local
         helper = Rudy::Routines.get_helper :local
         enjoy_every_sandwich {
-          helper.execute(:local, definition, nil, @lbox, @option, @argv)
+          helper.execute(:local, @routine.delete( :before_local), nil, @lbox, @option, @argv)
         }
       end
+      
+      # If a before dependency is provided we don't 
+      # want generic_routine_wrapper to process it. 
+      @routine.delete :before
       
       @rmach.create do |machine|
         puts machine_separator(machine.name, machine.awsid)
@@ -77,7 +81,7 @@ module Rudy; module Routines;
       raise MachineGroupNotDefined, current_machine_group unless known_machine_group?
       # We don't check @@global.offline b/c we can't create EC2 instances
       # without an internet connection. Use passthrough for routine tests.
-      raise MachineGroupAlreadyRunning, current_machine_group if rmach.running?
+      #raise MachineGroupAlreadyRunning, current_machine_group if rmach.running?
     end
     
   end

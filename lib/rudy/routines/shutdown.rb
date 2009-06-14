@@ -16,6 +16,10 @@ module Rudy; module Routines;
       
       return unless run?
       
+      # If an after dependency is provided we don't 
+      # want generic_routine_wrapper to process it. 
+      @routine.delete :before
+      
       generic_routine_wrapper do |action,definition|
         next if ![:disks, :adduser, :authorize, :before_local, :before].member?(action)
         helper = Rudy::Routines.get_helper action

@@ -97,7 +97,8 @@ commands do
   allow :apt_get, 'apt-get', :y, :q
   allow :floo, :time, 1 do
   end
-  allow :userdel
+    allow :userdel
+    allow :ssh
 end
 
 # ----------------------------------------------------------- ROUTINES --------
@@ -108,7 +109,7 @@ routines do
   env :stage, :prod do               # We'll define routines for the stage-app
     role :app do                     # and prod-app machine groups
       
-      startup do                     # $ rudy startup
+      startup2 do                     # $ rudy startup
         adduser :rudy                # Create a user called 'rudy'
         authorize :rudy              # Enable passwordless logins as rudy
                                      #
@@ -189,12 +190,12 @@ routines do
   end
   
   uptime do                          # $ rudy uptime
-    disks do
-      create "/rudy/disk1"
-    end
+    #disks do
+    #  create "/rudy/disk1"
+    #end
     local do
       #ls :file
-      p ssh
+      ssh :a, 'localhost'
       date
     end
     #remote :root do
@@ -204,13 +205,13 @@ routines do
   
   
   startup do
-    before :uptime
+    before :three
     before_local do
       uptime
     end
-    disks do
-      path "/poop"
-    end
+    #disks do
+    #  path "/poop"
+    #end
   end
 end
 

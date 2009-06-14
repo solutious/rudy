@@ -50,7 +50,7 @@ module Rudy
         
         @@global.nocolor ? String.disable_color : String.enable_color
         @@global.yes ? Annoy.enable_skip : Annoy.disable_skip
-      
+        
         unless @@global.accesskey && @@global.secretkey
           STDERR.puts "No AWS credentials. Check your configs!"
           STDERR.puts "Try: rudy init"
@@ -170,7 +170,7 @@ module Rudy
         exit 0
       end
       
-      debug :on
+      debug :off
     end
     
     

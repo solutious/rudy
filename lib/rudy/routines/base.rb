@@ -74,47 +74,39 @@ module Rudy; module Routines;
       
       box = Rye::Box.new hostname, opts
       
-      ## TODO: add exception handler
-      
-      # We define hooks so we can still print each command and its output
-      # when running the command blocks. NOTE: We only print this in
-      # verbosity mode. 
-      if @@global.verbose > 0
-        # This block gets called for every command method call.
-        box.pre_command_hook do |cmd, args, user, host, nickname|
-          puts command_separator(box.preview_command(cmd, args), user, nickname)
-        end
-      end
-      
-      if @@global.verbose > 1
-        # And this one gets called after each command method call.
-        box.post_command_hook do |ret|
-          puts '  ' << ret.stdout.join("#{$/}  ") if !ret.stdout.empty?
-          print_response ret
-        end
-      end
       
       unless @@global.parallel
-        exhandler = Proc.new do |ex|
-          STDERR.puts "  Error: #{ex.message}".color(:red)
-          STDERR.puts ex.backtrace if Rudy.debug?
-          choice = Annoy.get_user_input('(S)kip  (R)etry  (A)bort: ') || ''
-          if choice.match(/\AS/i)
-            # do nothing
-          elsif choice.match(/\AR/i)
-            :retry   # Tells Rye::Box#run_command to retry
-          else
-            exit 12
+      
+        # We define hooks so we can still print each command and its output
+        # when running the command blocks. NOTE: We only print this in
+        # verbosity mode. 
+        if @@global.verbose > 0
+          # This block gets called for every command method call.
+          box.pre_command_hook do |cmd, args, user, host, nickname|
+            puts command_separator(box.preview_command(cmd, args), user, nickname)
           end
         end
-         
-        box.exception_hook(Rye::CommandNotFound, &exhandler)
-        box.exception_hook(Rye::CommandError, &exhandler)
-        box.exception_hook(Exception, &exhandler)
+      
+        if @@global.verbose > 1
+          # And this one gets called after each command method call.
+          box.post_command_hook do |ret|
+            puts '  ' << ret.stdout.join("#{$/}  ") if !ret.stdout.empty?
+            print_response ret
+          end
+        end
+      
+        box.exception_hook(Rye::CommandError, &rbox_exception_handler)
+        box.exception_hook(Exception, &rbox_exception_handler)
+        
+        ## It'd better for unknown commands to be handled elsewhere
+        ## because it doesn't make sense to retry a method that doesn't exist
+        ##box.exception_hook(Rye::CommandNotFound, &rbox_exception_handler)
       end
       
       box
     end
+    
+
     
     # Create an instance of Rye::Set from a list of +hostnames+.
     # +hostnames+ can contain hostnames or Rudy::Machine objects.
@@ -200,34 +192,47 @@ module Rudy; module Routines;
     
     def print_response(rap)
       colour = rap.exit_code != 0 ? :red : :normal
-      [:stderr].each do |sumpin|
-        next if rap.send(sumpin).empty?
-        STDERR.puts
-        STDERR.puts(("  #{sumpin.to_s.upcase}  " << '-'*38).color(colour).bright)
-        STDERR.puts "  " << rap.send(sumpin).join("#{$/}  ").color(colour)
+      return if rap.stderr.empty?
+      STDERR.puts(("  STDERR  " << '-'*38).color(colour).bright)
+      STDERR.puts "  " << rap.stderr.join("#{$/}  ").color(colour)
+      if rap.exit_code != 0
+        STDERR.puts "  Exit code: #{rap.exit_code}".color(colour) 
       end
-      STDERR.puts "  Exit code: #{rap.exit_code}".color(colour) if rap.exit_code != 0
     end
     
+
+    
+  private 
     def enjoy_every_sandwich(ret=nil, &bloc_party)
       begin
         ret = bloc_party.call
       rescue => ex
-        STDERR.puts "  Error: #{ex.message}".color(:red)
-        STDERR.puts ex.backtrace if Rudy.debug?
-        choice = Annoy.get_user_input('(S)kip  (R)etry  (A)bort: ') || ''
-         if choice.match(/\AS/i)
-           return
-         elsif choice.match(/\AR/i)
-           retry
-         else
-           exit 12
+        unless @@global.parallel
+          choice = rbox_exception_handler.call(ex)
+           if choice == :retry
+             retry
+           end
          end
       rescue Interrupt
         puts "Aborting..."
         exit 12
       end
       ret
+    end
+  
+    def rbox_exception_handler
+      Proc.new do |ex|
+        STDERR.puts "  #{ex.class}: #{ex.message}".color(:red)
+        STDERR.puts ex.backtrace if Rudy.debug?
+        choice = Annoy.get_user_input('(S)kip  (R)etry  (A)bort: ') || ''
+        if choice.match(/\AS/i)
+          # do nothing
+        elsif choice.match(/\AR/i)
+          :retry   # Tells Rye::Box#run_command to retry
+        else
+          exit 12
+        end
+      end
     end
     
   end

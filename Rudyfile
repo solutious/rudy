@@ -193,8 +193,8 @@ routines do
       create "/rudy/disk1"
     end
     local do
-      uptime
-      ls 'fire'
+      #ls :file
+      p ssh
       date
     end
     #remote :root do

@@ -17,7 +17,13 @@ module Rudy; module Routines;
       routine.disks.values.collect { |d| d.keys }.flatten
     end
     
-    def execute(routine, machine, rbox)
+    def execute(type, batch, machines, rset, lbox, option=nil, argv=nil)
+      p machines
+      p batch
+      p type
+    end
+    
+    def execute2(routine, machine, rbox)
       return unless routine
       raise "Not a Rudy::Machine" unless machine.is_a?(Rudy::Machine)
       raise "Not a Rye::Box" unless rbox.is_a?(Rye::Box)
@@ -49,6 +55,8 @@ module Rudy; module Routines;
       
     end
     
+  private
+  
     def snapshot(disks)
       rdisk = Rudy::Disks.new
       rback = Rudy::Backups.new

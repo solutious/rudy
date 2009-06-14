@@ -34,9 +34,7 @@ module RudyCLI_SDB
   # ------------------------------------------------------------------
   
   default :domains
-  debug :off
-  
-  
+
 end
 
 

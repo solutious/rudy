@@ -51,14 +51,7 @@ module Rudy
        Annoy.pose_question("  Keep going?\a ", /yes|y|ya|sure|you bet!/i, STDERR)
      end
      
-     # Returns a formatted string for printing command info
-     def command_separator(cmd, user, host)
-       cmd ||= ""
-       cmd, user = cmd.to_s, user.to_s
-       prompt = user == "root" ? "#" : "$"
-       ("%s@%s%s %s" % [user, host, prompt, cmd.bright])
-     end
-     
+
   private 
     def print_response(rap)
       colour = rap.exit_code != 0 ? :red : :normal

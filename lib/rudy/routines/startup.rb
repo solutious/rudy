@@ -6,21 +6,68 @@ module Rudy; module Routines;
     Rudy::Routines.add_handler :startup, self
     
     def init(*args)
-      @routine = fetch_routine_config(:startup)   # NOTE: could use @name here
+      #
     end
     
-    # * +each_mach+ is an optional block which is executed between 
-    # disk creation and the after scripts. The will receives two 
-    # arguments: instances of Rudy::Machine and Rye::Box.
-    # Returns an Array of Rudy::Machine objects
-    def execute(&each_mach)
-      routine_separator(:startup)
-      unless @routine
-        STDERR.puts "[this is a generic startup routine]"
-        @routine = {}
+    def execute
+      ld "Executing routine: #{@name}"
+      li "[this is a generic routine]" unless @routine
+      
+      return unless run?
+      
+      if @routine.has_key? :before_local
+        helper = Rudy::Routines.get_helper :local
+        enjoy_every_sandwich {
+          helper.execute(:local, definition, nil, @lbox, @option, @argv)
+        }
       end
-      machines = generic_machine_runner(:create) 
-      machines
+      
+      @rmach.create do |machine|
+        puts machine_separator(machine.name, machine.awsid)
+        
+        enjoy_every_sandwich {
+          Rudy::Utils.waiter(3, 120, STDOUT, "Waiting for instance...", 0) {
+            inst = machine.get_instance
+            inst && inst.running?
+          }
+        }
+        
+        sleep 1
+        
+        # Add instance info to machine and save it. This is really important
+        # for the initial startup so the metadata is updated right away. But
+        # it's also important to call here because if a routine was executed
+        # and an unexpected exception occurs before this update is executed
+        # the machine metadata won't contain the DNS information. Calling it
+        # here ensure that the metadata is always up-to-date.
+        enjoy_every_sandwich {
+          machine.update
+        }
+        
+        # Windows machine do not have an SSH daemon
+        next if (machine.os || '').to_s == 'win32'
+        
+        enjoy_every_sandwich {
+          Rudy::Utils.waiter(2, 30, STDOUT, "Waiting for SSH daemon...", 0) {
+            Rudy::Utils.service_available?(machine.dns_public, 22)
+          }
+        }
+      end
+      
+      enjoy_every_sandwich {
+        @machines = @rmach.list  
+        @rset = create_rye_set @machines
+      }
+      
+      generic_routine_wrapper do |action,definition|
+        next if ![:disks, :adduser, :authorize, :after_local, :after].member?(action)
+        helper = Rudy::Routines.get_helper action
+        enjoy_every_sandwich {
+          helper.execute(action, definition, @machines, @rset, @lbox, @option, @argv)
+        }
+      end
+      
+      @machines
     end
 
     # Called by generic_machine_runner

@@ -7,31 +7,27 @@ module Rudy; module Routines;
     Rudy::Routines.add_helper :adduser, self
     Rudy::Routines.add_helper :authorize, self
     
-    def adduser?(routine)
-      (!routine.adduser.nil? && !routine.adduser.to_s.empty?)
+    def execute(type, user, machines, rset, lbox, option=nil, argv=nil)
+      send(type, user, rset)
     end
-    def adduser(routine, machine, rbox)
+    
+    def adduser(user, robj)
       
       # On Solaris, the user's home directory needs to be specified
       # explicitly so we do it for linux too for fun. 
-      homedir = rbox.guess_user_home(routine.adduser.to_s)
-      args = [:m, :d, homedir, :s, '/bin/bash', routine.adduser.to_s]
-      puts command_separator(rbox.preview_command(:useradd, args), rbox.user, rbox.host)
+      homedir = robj.guess_user_home(user.to_s)
+      args = [:m, :d, homedir, :s, '/bin/bash', user.to_s]
       
       # NOTE: We'll may to use platform specific code here. 
       # Linux has adduser and useradd commands:
       # adduser can prompt for info which we don't want. 
       # useradd does not prompt (on Debian/Ubuntu at least). 
       # We need to specify bash b/c the default is /bin/sh
-      trap_rbox_errors { rbox.useradd(args) }
+      robj.useradd(args)
     end
     
-    def authorize?(routine)
-      (!routine.authorize.nil? && !routine.authorize.to_s.empty?)
-    end
-    def authorize(routine, machine, rbox)
-      puts command_separator(:authorize_keys_remote, rbox.user, rbox.host)
-      trap_rbox_errors { rbox.authorize_keys_remote(routine.authorize) }
+    def authorize(user, robj)
+      robj.authorize_keys_remote(user.to_s)
     end
     
     

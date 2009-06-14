@@ -44,8 +44,6 @@ module RudyCLI_S3
   # ------------------------------------------------------------------
   
   default :buckets
-  debug :off
-  
   
 end
 

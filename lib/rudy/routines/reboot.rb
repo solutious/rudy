@@ -6,7 +6,8 @@ module Rudy; module Routines;
     Rudy::Routines.add_handler :reboot, self
     
     def init(*args)
-      @routine = fetch_routine_config(:reboot)
+      @machines = @rmach.list || []
+      @rset = create_rye_set @machines
     end
     
     # * +each_mach+ is an optional block which is executed between 

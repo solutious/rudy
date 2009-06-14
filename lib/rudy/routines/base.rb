@@ -42,27 +42,151 @@ module Rudy; module Routines;
       @rkey = Rudy::AWS::EC2::KeyPairs.new(a, s, r)
       @rvol = Rudy::AWS::EC2::Volumes.new(a, s, r)
       @rsnap = Rudy::AWS::EC2::Snapshots.new(a, s, r)
-      
       @rmach = Rudy::Machines.new
       
-      local_rye_opts = {
-        :info => (@@global.verbose > 3), 
-        :debug => false
-      }
+      # Grab the routines configuration for this routine name
+      # e.g. startup, sysupdate, installdeps
+      @routine = fetch_routine_config @name 
       
-      @lbox = Rye::Box.new @@global.localhost, local_rye_opts
-      @machines = @rmach.list unless @@global.offline
-      @machines ||= []
+      ld "Routine: #{@routine.inspect}"
       
-      init(*args)
+      @lbox = create_rye_box @@global.localhost
+       
+      init(*args) if respond_to? :init
     end
     
-                      def init; raise "Please override"; end
-                   def execute; raise "Please override"; end
-    def raise_early_exceptions; raise "Please override"; end    
+    def raise_early_exceptions; raise "Please override"; end
+    def execute; raise "Please override"; end
+    
+    # Create an instance of Rye::Box for +hostname+. +opts+ is
+    # an optional Hash of options. See Rye::Box.initialize
+    #
+    # This method should be used throughout the Rudy::Routines 
+    # namespace rather than creating instances manually b/c it 
+    # applies some fancy pants defaults like command hooks.
+    def create_rye_box(hostname, opts={})
+      
+      opts = {
+        :info => (@@global.verbose > 2), 
+        :debug => false,
+        :user => @@global.localuser
+      }.merge opts
+      
+      box = Rye::Box.new hostname, opts
+      
+      ## TODO: add exception handler
+      
+      # We define hooks so we can still print each command and its output
+      # when running the command blocks. NOTE: We only print this in
+      # verbosity mode. 
+      if @@global.verbose > 0
+        # This block gets called for every command method call.
+        box.pre_command_hook do |cmd, args, user, host, nickname|
+          puts command_separator(box.preview_command(cmd, args), user, nickname)
+        end
+      end
+      
+      if @@global.verbose > 1
+        # And this one gets called after each command method call.
+        box.post_command_hook do |ret|
+          puts '  ' << ret.stdout.join("#{$/}  ") if !ret.stdout.empty?
+          print_response ret
+        end
+      end
+      
+      box
+    end
+    
+    # Create an instance of Rye::Set from a list of +hostnames+.
+    # +hostnames+ can contain hostnames or Rudy::Machine objects.
+    # +opts+ is an optional Hash of options. See Rye::Box.initialize
+    #
+    # NOTE: Windows machines are skipped and not added to the set. 
+    def create_rye_set(hostnames=[], opts={})
+      opts = {
+        :user => (fetch_machine_param(:user) || @@global.localuser).to_s
+      }.merge(opts)
+      set = Rye::Set.new current_machine_group, opts 
+      
+      hostnames.each do |m| 
+        # This is a short-circuit for Windows instances. We don't support
+        # disks for windows yet and there's no SSH so routines are out of
+        # the picture too. 
+        next if (m.os || '').to_s == 'win32'
+          
+        if m.is_a?(Rudy::Machine)
+          m.update if m.dns_public.nil? || m.dns_public.empty?
+          if m.dns_public.nil? || m.dns_public.empty?
+            le "Cannot find public DNS for #{m.name}"
+            next
+          end
+          rbox = create_rye_box(m.dns_public, opts) 
+          rbox.nickname = m.name
+        else
+          # Otherwise we assume it's a hostname
+          rbox = create_rye_box(m)
+        end
+        rbox.add_key user_keypairpath(opts[:user])
+        set.add_box rbox
+      end
+      
+      if set.empty?
+        ld "Machines Set: [empty]"
+      else
+        ld "Machines Set:"
+        set.boxes.each do |b|
+          ld b.inspect
+        end
+      end
+      
+      set
+    end
+    
+    
+    def generic_routine_wrapper(&routine_action)
+      
+      routine = @routine
+      raise "No routine supplied" unless routine.kind_of?(Hash)
+
+      # This gets and removes the dependencies from the routines hash.
+      # We grab the after ones now too, so they can also be removed.
+      before_deps = Rudy::Routines::DependsHelper.get(:before, routine)
+      after_deps  = Rudy::Routines::DependsHelper.get(:after,  routine) 
+      
+      Rudy::Routines::DependsHelper.execute_all before_deps
+      
+      # This is the meat of the sandwich
+      if routine_action && run?
+        routine.each_pair { |action,defenition| 
+          routine_action.call action, defenition
+        }
+      end
+      
+      Rudy::Routines::DependsHelper.execute_all after_deps
+      
+    end
     
     def machine_separator(name, awsid)
       ('%s %-50s awsid: %s ' % [$/, name, awsid]).att(:reverse)
+    end
+    
+    # Returns a formatted string for printing command info
+    def command_separator(cmd, user, host)
+      cmd ||= ""
+      cmd, user = cmd.to_s, user.to_s
+      prompt = user == "root" ? "#" : "$"
+      ("%s@%s%s %s" % [user, host, prompt, cmd.bright])
+    end
+    
+    def print_response(rap)
+      colour = rap.exit_code != 0 ? :red : :normal
+      [:stderr].each do |sumpin|
+        next if rap.send(sumpin).empty?
+        STDERR.puts
+        STDERR.puts(("  #{sumpin.to_s.upcase}  " << '-'*38).color(colour).bright)
+        STDERR.puts "  " << rap.send(sumpin).join("#{$/}  ").color(colour)
+      end
+      STDERR.puts "  Exit code: #{rap.exit_code}".color(colour) if rap.exit_code != 0
     end
     
     def enjoy_every_sandwich(ret=nil, &bloc_party)

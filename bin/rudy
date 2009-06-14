@@ -20,28 +20,33 @@ require 'rudy/cli'
 # Command-line interface for /bin/rudy
 class RudyCLI < Rudy::CLI::Base
   
-  debug :on
   default :machines       # when no command is provided
   trawler :passthrough    # unknown command names will forward here.
   
   # ------------------------------------------  RUDY GLOBALS  --------
   # ------------------------------------------------------------------
   
-  global :e, :environment, String, "Connect to the specified environment (ie: #{Rudy::DEFAULT_ENVIRONMENT})"
-  global :r, :role, String, "Connect to a machine with the specified role (ie: #{Rudy::DEFAULT_ROLE})"
-  global :p, :position, String, "Position in the machine in its group (ie: #{Rudy::DEFAULT_POSITION})"
+  global :e, :environment, String, "Connect to the specified environment (e.g. #{Rudy::DEFAULT_ENVIRONMENT})"
+  global :r, :role, String, "Connect to a machine with the specified role (e.g. #{Rudy::DEFAULT_ROLE})"
+  global :p, :position, String, "Position in the machine in its group (e.g. #{Rudy::DEFAULT_POSITION})"
   global :t, :testrun, "Test run. Don't execute action (EXPERIMENTAL)."
+  global :P, :parallel, "Execute remote commands in parallel (EXPERIMENTAL)."
   
   # ------------------------------------------  RUDY OBJECTS  --------
   # ------------------------------------------------------------------
   
   about "View Machines"
+  usage "rudy"
+  usage "rudy machines"
+  usage "rudy machines -l"
   option :l, :all, "Display machines for all environments and roles"
   action :W, :wash, "Wash machine metadata."
   command :machines => Rudy::CLI::Machines
   command_alias :machines, :m
   
   about "View Disks"
+  usage "rudy disks"
+  usage "rudy disks -l"
   action :W, :wash, "Wash disk metadata."
   option :b, :backups, "Display backups"
   option :l, :all, "Display all disks"

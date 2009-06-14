@@ -97,6 +97,7 @@ commands do
   allow :apt_get, 'apt-get', :y, :q
   allow :floo, :time, 1 do
   end
+  allow :userdel
 end
 
 # ----------------------------------------------------------- ROUTINES --------
@@ -111,9 +112,9 @@ routines do
         adduser :rudy                # Create a user called 'rudy'
         authorize :rudy              # Enable passwordless logins as rudy
                                      #
-        disks do                     # Define EBS volume routines
-          create '/rudy/disk1'       # Create an EBS volume, attach it, give
-        end                          # it a filesystem, and mount it.
+        #disks do                     # Define EBS volume routines
+        #  create '/rudy/disk1'       # Create an EBS volume, attach it, give
+        #end                          # it a filesystem, and mount it.
                                      #
         after :rudy do               # Run remote SSH commands after startup
           mkdir :p, 'great'          # $ mkdir -p great
@@ -126,9 +127,9 @@ routines do
         before :root do              # Run remote SSH commands before shutdown
           uptime               
         end                               
-        disks do                     
-          destroy '/rudy/disk1'      # Unmount and destroy the EBS volume
-        end                          
+        #disks do                     
+        #  destroy '/rudy/disk1'      # Unmount and destroy the EBS volume
+        #end                          
       end                            
       
       reboot do                      # $ rudy reboot
@@ -177,27 +178,43 @@ routines do
   end
   
   three do
-    local do
+    remote :delano do
+      uname :a
     end
   end
   
   two do
-    remote do
+    local do
     end
   end
   
   uptime do                          # $ rudy uptime
-    #before :two
-    #before :three
+    before :two
+    before_local :delano do
+      date
+    end
     disks do
+      create "poop"
     end
     local do
       uptime
+      pwd
     end
-    remote do
-    end
+    #remote :root do
+    #  uname
+    #end
   end
   
+  
+  startup do
+    before :uptime
+    before_local do
+      uptime
+    end
+    disks do
+      path "/poop"
+    end
+  end
 end
 
 

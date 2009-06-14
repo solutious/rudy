@@ -36,6 +36,8 @@ module Rudy
     field :localuser
     field :localhost
     
+    field :parallel
+    
     field :offline
     
     field :config => String
@@ -48,6 +50,7 @@ module Rudy
       @verbose ||= 0
       @nocolor = true unless @nocolor == "false" || @nocolor == false
       @quiet ||= false
+      @parallel ||= false
       @format ||= :string # as in, to_s
       @print_header = true if @print_header == nil
       @yes = false if @yes.nil?
@@ -58,7 +61,8 @@ module Rudy
       if config.defaults?
         # Apply the "color" default before "nocolor" so nocolor has presedence
         @nocolor = !config.defaults.color unless config.defaults.color.nil?
-        %w[region zone environment role position user nocolor quiet yes].each do |name|
+        %w[region zone environment role position localuser 
+           localhost nocolor quiet yes parallel].each do |name|
           val = config.defaults.send(name)
           self.send("#{name}=", val) unless val.nil?
         end

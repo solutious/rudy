@@ -13,10 +13,14 @@ NOTE: The following changes are planned for the 0.9.0 release.
 * script_local, before_local, after_local will be removed from routines syntax. This will cause runtime errors in 0.8.x and earlier
 
 
-#### 0.8.6 (2009-06-08) ###############################
+#### 0.8.6 (2009-06-14) ###############################
 
 * TODO: Authorize user@localhost in "rudy init"
-
+* CHANGE: Rudy::Machine.inspect now prints in a standard Ruby inspect format
+* CHANGE: Routines have been completely rebuilt but should remain backwards compatible. 
+* CONFIG CHANGE: "user" is now named "localuser". This affects the defaults config. 
+* FIXED: Routine blocks now process directives in the order their given 
+  (in Ruby 1.8 and 1.9). 
 
 
 #### 0.8.5 (2009-06-08) ###############################

@@ -6,22 +6,38 @@ module Rudy; module Routines;
     Rudy::Routines.add_handler :shutdown, self
     
     def init(*args)
-      @routine = fetch_routine_config(:shutdown)
+      @machines = @rmach.list || []
+      @rset = create_rye_set @machines
     end
     
     def execute
-      routine_separator(:list)
-      unless @routine
-        STDERR.puts "[this is a generic shutdown routine]"
-        @routine = {}
+      ld "Executing routine: #{@name}"
+      li "[this is a generic routine]" unless @routine
+      
+      return unless run?
+      
+      generic_routine_wrapper do |action,definition|
+        next if ![:disks, :adduser, :authorize, :before_local, :before].member?(action)
+        helper = Rudy::Routines.get_helper action
+        enjoy_every_sandwich {
+          helper.execute(action, definition, @machines, @rset, @lbox, @option, @argv)
+        }
       end
-
-      machines = generic_machine_runner(:list) do |machine|
-        machine.destroy
+      
+      @machines.each do |machine|
+        enjoy_every_sandwich { machine.destroy }
       end
-      machines
+      
+      if @routine.has_key? :after_local
+        helper = Rudy::Routines.get_helper :local
+        enjoy_every_sandwich {
+          helper.execute(:local, definition, nil, nil, @lbox, @option, @argv)
+        }
+      end
+      
+      @machines
     end
-
+    
     # Called by generic_machine_runner
     def raise_early_exceptions
       rmach = Rudy::Machines.new

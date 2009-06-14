@@ -78,9 +78,10 @@ module Rudy; module CLI;
         end
       end
       
-      execute_check :medium
+      #execute_check :medium
       
       machines = @rr.execute
+      
       puts $/, "The following instances have been destroyed:"
       machines.each do |machine|
         puts '%s %s ' % [machine.name.bright, machine.awsid]

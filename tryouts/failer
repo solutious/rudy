@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# For some reason when this echo is commented out
+# and Net::SSH always reports the exit code as 0.
+echo "Failing with $1"
+exit $1

@@ -177,11 +177,4 @@ class Rudy::Config
 
   end
   
-  
-  class Networks < Caesars #:nodoc:all
-  end
-  class Controls < Caesars #:nodoc:all
-  end
-  class Services < Caesars #:nodoc:all
-  end
 end

@@ -10,19 +10,13 @@ module Rudy
     dsl Rudy::Config::Routines::DSL    # Organized processes
     dsl Rudy::Config::Machines::DSL    # Organized instances
     dsl Rudy::Config::Commands::DSL    # Custom SSH commands
-    #dsl Rudy::Config::Networks::DSL    # Network design
-    #dsl Rudy::Config::Controls::DSL    # Network access
-    #dsl Rudy::Config::Services::DSL    # Stuff running on ports
     
-    def accounts?; self.respond_to?(:accounts) && !self[:accounts].nil?; end #a
-    def defaults?; self.respond_to?(:defaults) && !self[:defaults].nil?; end #u
-    def machines?; self.respond_to?(:machines) && !self[:machines].nil?; end #t
-    def commands?; self.respond_to?(:commands) && !self[:commands].nil?; end #o
-    def routines?; self.respond_to?(:routines) && !self[:routines].nil?; end #g
-    #def networks?; self.respond_to?(:networks) && !self[:networks].nil?; end #e
-    #def controls?; self.respond_to?(:controls) && !self[:controls].nil?; end #n
-    #def services?; self.respond_to?(:services) && !self[:services].nil?; end #!
-    
+    def accounts?; self.respond_to?(:accounts) && !self[:accounts].nil?; end 
+    def defaults?; self.respond_to?(:defaults) && !self[:defaults].nil?; end 
+    def machines?; self.respond_to?(:machines) && !self[:machines].nil?; end 
+    def commands?; self.respond_to?(:commands) && !self[:commands].nil?; end 
+    def routines?; self.respond_to?(:routines) && !self[:routines].nil?; end 
+
     # This method is called by Caesars::Config.refresh for every DSL 
     # file that is loaded and parsed. If we want to run processing
     # for a particular config (machines, @routines, etc...) we can

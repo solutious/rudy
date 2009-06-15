@@ -194,9 +194,9 @@ routines do
     #  create "/rudy/disk1"
     #end
     local do
-      #ls :file
-      ssh :a, 'localhost'
-      date
+      sh '/Users/delano/Projects/opensource/rudy/tryouts/failer', 23
+      ls 'poop'
+      sudo 'date'
     end
     #remote :root do
     #  uname
@@ -226,7 +226,7 @@ defaults do
   environment :stage
   role :app
   user Rudy.sysinfo.user.to_sym      # This will be the user running Rudy
-  color false                        # Terminal colors? true/false
+  color true                        # Terminal colors? true/false
   yes false                          # Auto-confirm? true/false
 end
 

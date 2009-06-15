@@ -67,7 +67,7 @@ module Rudy; module Routines;
     def create_rye_box(hostname, opts={})
       
       opts = {
-        :info => (@@global.verbose > 2), 
+        :info => (@@global.verbose > 3),  # rudy -vvvv 
         :debug => false,
         :user => @@global.localuser
       }.merge opts
@@ -82,8 +82,8 @@ module Rudy; module Routines;
         # verbosity mode. 
         if @@global.verbose > 0
           # This block gets called for every command method call.
-          box.pre_command_hook do |cmd, args, user, host, nickname|
-            puts command_separator(box.preview_command(cmd, args), user, nickname)
+          box.pre_command_hook do |cmd, user, host, nickname|
+            puts command_separator(cmd, user, nickname)
           end
         end
       
@@ -191,6 +191,7 @@ module Rudy; module Routines;
     end
     
     def print_response(rap)
+      return if rap.exit_code != 0
       colour = rap.exit_code != 0 ? :red : :normal
       return if rap.stderr.empty?
       STDERR.puts(("  STDERR  " << '-'*38).color(colour).bright)
@@ -208,10 +209,14 @@ module Rudy; module Routines;
         ret = bloc_party.call
       rescue => ex
         unless @@global.parallel
-          choice = rbox_exception_handler.call(ex)
-           if choice == :retry
-             retry
-           end
+          STDERR.puts "  #{ex.class}: #{ex.message}".color(:red)
+          STDERR.puts ex.backtrace if Rudy.debug?
+          choice = Annoy.get_user_input('(S)kip  (A)bort: ') || ''
+          if choice.match(/\AS/i)
+            # do nothing
+          else
+            exit 12
+          end
          end
       rescue Interrupt
         puts "Aborting..."
@@ -222,11 +227,15 @@ module Rudy; module Routines;
   
     def rbox_exception_handler
       Proc.new do |ex|
-        STDERR.puts "  #{ex.class}: #{ex.message}".color(:red)
+        if ex.is_a?(Rye::CommandError)
+          STDERR.puts "  #{ex.message}".color(:red)
+        else
+          STDERR.puts "  #{ex.class}: #{ex.message}".color(:red)
+        end
         STDERR.puts ex.backtrace if Rudy.debug?
         choice = Annoy.get_user_input('(S)kip  (R)etry  (A)bort: ') || ''
         if choice.match(/\AS/i)
-          # do nothing
+          :skip
         elsif choice.match(/\AR/i)
           :retry   # Tells Rye::Box#run_command to retry
         else

@@ -13,11 +13,11 @@ module Rudy
          print_response(ret)
        rescue IOError => ex
          STDERR.puts "  Connection Error (#{ex.message})".color(:red)
-         choice = Annoy.get_user_input('(S)kip  (R)etry  (A)bort: ') || ''
+         choice = Annoy.get_user_input('(S)kip  (A)bort: ') || ''
           if choice.match(/\AS/i)
             return
-          elsif choice.match(/\AR/i)
-            retry
+          #elsif choice.match(/\AR/i)
+          #  retry
           else
             exit 12
           end

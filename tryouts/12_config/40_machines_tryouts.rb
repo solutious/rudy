@@ -5,6 +5,7 @@ group "Config"
 library :rudy, rudy_lib_path
 
 tryout "Machines" do
+  ## drill "Setup vars", :dream => true do
   drill "Setup vars" do
     dream true
     @@config = Rudy::Config.new

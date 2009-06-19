@@ -163,7 +163,7 @@ routines do
   # install essential libraries. 
   # See http://github.com/rudy/arcade
   sysupdate do                       # $ rudy sysupdate
-    before :root do                  
+    remote :root do                  
       apt_get 'update'               # Update debian / ubuntu 
       apt_get 'install', 'build-essential', 'sqlite3', 'libsqlite3-dev'
       apt_get 'install', 'apache2-prefork-dev', 'libapr1-dev'
@@ -172,7 +172,7 @@ routines do
   end
   
   anything do                        # $ rudy anything
-    before :uptime                   # Specify a dependency
+    ##depends :uptime                   # Specify a dependency
     local do                         # This is Ruby, so any valid syntax
       ls :l                          # can be used in the definitions. 
     end                              # See: SysInfo gem for more info.
@@ -184,8 +184,14 @@ routines do
     end
   end
   
-  two do
-    local do
+  two_short do
+    local { date } 
+  end
+  
+  two_long do
+    local do |o,a|
+      p o
+      p a
     end
   end
   

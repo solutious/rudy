@@ -20,7 +20,7 @@ module Rudy; module Routines;
     def execute(type, routine, rset, lbox, option=nil, argv=nil)
       
       # We need to add mkfs since it's not enabled by default. 
-      # We give it a funny name so we can delete it. 
+      # We prepend the command with rudy_ so we can delete it. 
       Rye::Cmd.add_command(:rudy_mkfs) do |*args|
         cmd('mkfs', args)
       end

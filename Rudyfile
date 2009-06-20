@@ -190,7 +190,8 @@ defaults do
   zone :'us-east-1b'
   environment :stage
   role :app
-  user ENV['USER']                   # The default remote user
+  localuser ENV['USER']              # The default remote user
+  localhost 'POOP'
   color true                         # Terminal colors? true/false
   yes false                          # Auto-confirm? true/false
 end

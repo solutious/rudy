@@ -5,11 +5,6 @@ module AWS; module EC2;
   
   class Images < Rudy::CLI::CommandBase
     
-    #def print_header
-    #  puts @global.print_header, @@global.print_header
-    #end
-    
-    
     def images_valid?
       if @option.owner == 'self'
         raise "AWS_ACCOUNT_NUMBER not set" unless @@global.accountnum 

@@ -151,12 +151,12 @@ class Rudy::Config
     forced_hash :restore
     
     # Script blocks
-    forced_hash :before          # TODO: Clean for 0.9
+    forced_hash :before         
     forced_hash :after         
     forced_hash :local
     forced_hash :remote
     forced_hash :script_local
-    forced_hash :before_local  
+    forced_hash :before_local
     forced_hash :after_local     # We force hash the script keywords b/c
     forced_hash :script          # we want them to store the usernames 
     chill :before                # as hash keys. 
@@ -168,10 +168,6 @@ class Rudy::Config
     chill :local
     chill :remote
         
-    # Version control systems
-    forced_hash :git
-    forced_hash :svn
-    
     def init      
     end
 

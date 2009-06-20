@@ -57,10 +57,18 @@ module Rudy
           exit 1
         end
         
-        if @@global.environment =~ /^prod/ && Drydock.debug?
+        if @@global.environment =~ /^prod/ && Rudy.debug?
           puts Rudy::Utils.banner("PRODUCTION ACCESS IS DISABLED IN DEBUG MODE")
           exit 1
         end
+        
+        if @@global.verbose > 4
+          format = @@global.format == :json ? :json : :yaml
+          gcopy = @@global.dup
+          gcopy.secretkey = "[HIDDEN]"
+          puts "# GLOBALS: ", gcopy.dump(format)
+        end
+        
         
       end
       

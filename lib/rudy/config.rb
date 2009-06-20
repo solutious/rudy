@@ -59,6 +59,7 @@ module Rudy
         break
       end
       
+      # self.keys returns the current config types (machines, routines, etc...)
       typelist = self.keys.collect { |g| "#{g}.rb" }.join(',')
       
       # Rudy then looks for the rest of the config in these locations

@@ -1,6 +1,16 @@
 
-
 module Rudy
+  
+  # = Rudy::Routines
+  # 
+  # Every Rudy routine is associated to a handler. There are four standard
+  # handler types: Startup, Shutdown, Reboot, and Passthrough. The first 
+  # three are associated to routines of the same same. All other routines
+  # are handled by Rudy::Routines::Passthrough. 
+  # 
+  # An individual routine is made up of various actions. Each action is
+  # associated to one of the following helpers: depends, disk, script, 
+  # user. See each helper for the list of actions it is responsible for. 
   module Routines
     
     require 'rudy/routines/base'
@@ -21,6 +31,14 @@ module Rudy
       def message; "Unknown routine action '#{@obj}'"; end
     end
     
+    class EmptyDepends < Rudy::Error
+      def message; "Empty #{@obj} block in routine."; end
+    end
+    
+    class EmptyDepends < Rudy::Error
+      def message; "Empty depends block in routine."; end
+    end
+    
     # Add a routine handler to @@handler.
     #
     # * +routine_name+ Literally the name of the routine that will 
@@ -29,8 +47,8 @@ module Rudy
     #   inherit Rudy::Routine::Base
     #
     # Returns the value of +handler+.
-    def self.add_handler(routine_name, handler)
-      add_some_class @@handler, Rudy::Routines::Base, routine_name, handler
+    def self.add_handler(routine_name, klass)
+      add_some_class @@handler, Rudy::Routines::Base, routine_name, klass
     end
     
     # Returns the value in the @@handler associated to the key +routine_name+
@@ -40,30 +58,30 @@ module Rudy
     end
     
     # Add a routine helper to @@helper.
-    def self.add_helper(name, handler)
-      add_some_class @@helper, Rudy::Routines::HelperBase, name, handler
+    def self.add_helper(action_name, klass)
+      add_some_class @@helper, Rudy::Routines::HelperBase, action_name, klass
     end
     
     # Returns the value in the @@helper associated to the key +name+
     # if it exists, otherwise it returns nil
-    def self.get_helper(name)
-      get_some_class(@@helper, name) || nil
+    def self.get_helper(action_name)
+      get_some_class(@@helper, action_name) || nil
     end
     
     def self.has_handler?(name); @@handler.has_key?(name); end
-    def self.has_helper?(name); @@helper.has_key?(name); end
+    def self.has_helper?(name);  @@helper.has_key?(name);  end
     
   private 
   
     # See Rudy::Routines.add_handler
-    def self.add_some_class(store, klass, routine_name, handler)
-      if store.has_key? routine_name
-        Rudy::Huxtable.li "Redefining routine handler for #{routine_name}"
+    def self.add_some_class(store, super_klass, name, klass)
+      if store.has_key? name
+        Rudy::Huxtable.li "Redefining class for #{name}"
       end
-      unless handler.ancestors.member? klass
-        raise "#{handler} does not inherit #{klass}"
+      unless klass.ancestors.member? super_klass
+        raise "#{klass} does not inherit #{super_klass}"
       end
-      store[routine_name] = handler
+      store[name] = klass
     end
     
     # See Rudy::Routines.get_handler

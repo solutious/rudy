@@ -7,6 +7,10 @@ module Rudy; module Routines;
     
     Rudy::Routines.add_helper :disks, self
     
+    def raise_early_exceptions(type, batch, rset, lbox, option=nil, argv=nil)
+      
+    end
+    
     def disks?(routine)
       (routine.is_a?(Caesars::Hash) && routine.disks && 
       routine.disks.is_a?(Caesars::Hash) && !routine.disks.empty?) ? true : false

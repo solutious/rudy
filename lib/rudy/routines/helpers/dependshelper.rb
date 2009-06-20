@@ -4,21 +4,33 @@ module Rudy; module Routines;
     include Rudy::Routines::HelperBase  # TODO: use trap_rbox_errors
     extend self 
     
-    ## NOTE: Dependencies don't use Rudy::Routines.add_helper 
-    ## Rudy::Routines.add_helper :depends, self
+    ## NOTE: Dependencies don't use Rudy::Routines.add_helper but we
+    ## define them ehere anyway so raise_early_exceptions passes. 
+    Rudy::Routines.add_helper :before,  self
+    Rudy::Routines.add_helper :after, self
     
-    # Returns an Array of the dependent routines for the given +timing+ 
+    def raise_early_exceptions(type, depends, rset, lbox, option=nil, argv=nil)
+      raise Rudy::Routines::EmptyDepends, type if depends.nil? || depends.empty?
+      depends.each_pair do |name,v|
+        unless name.is_a?(Symbol)
+          raise Rudy::Error, "Dependency must be a symbol (#{name})" 
+        end
+        raise Rudy::Routines::NoRoutine, name unless valid_routine?(name)
+      end
+    end
+    
+    # Returns an Array of the dependent routines for the given +timing+
     # which can be anything but is most often one of: :before, :after.
     def get(timing, routine)
       return unless routine.has_key? timing
-      # Backwards compatability for 0.8 and earlier which 
+      # Backwards compatability for 0.8 and earlier which
       # forced before and after blocks to be Hash objects.
       a = routine[timing].is_a?(Hash) ? routine[timing].keys : routine[timing]
       
       dependencies = []
       a.each do |routine_name|
         # Non-nil values are regular blocks not references
-        next unless routine[timing][routine_name].nil?  
+        next unless routine[timing][routine_name].nil?
         dependencies << routine_name
         # Remove the names of routine dependencies from
         # the routine but leave the ones with values
@@ -38,14 +50,15 @@ module Rudy; module Routines;
       dependencies
     end
     
-    # A simple wrapper for executing a routine. 
-    # * +routine_name+ should be a Symbol representing a routine 
-    #   available to the current machine group. 
-    # This method finds the handler for the given routine, 
-    # creates an instance, calls raise_early_exceptions, 
-    # and finally executes the routine. 
+    # A simple wrapper for executing a routine.
+    # * +routine_name+ should be a Symbol representing a routine
+    # available to the current machine group.
+    # This method finds the handler for the given routine,
+    # creates an instance, calls raise_early_exceptions,
+    # and finally executes the routine.
     def execute(routine_name)
       handler = Rudy::Routines.get_handler routine_name
+      ld "Executing dependency: #{routine_name} (#{handler})"
       routine = handler.new routine_name
       routine.raise_early_exceptions
       routine.execute

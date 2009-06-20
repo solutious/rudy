@@ -11,21 +11,15 @@ module Rudy; module Routines;
     Rudy::Routines.add_helper :local,  self
     Rudy::Routines.add_helper :remote, self
     
-    # NOTE: Only routines that don't use Routines.generic_routine_wrapper
-    # will processes these routine keywords.
-    Rudy::Routines.add_helper :before, self
-    Rudy::Routines.add_helper :after,  self
-    Rudy::Routines.add_helper :script, self
-    Rudy::Routines.add_helper :before_local, self
-    Rudy::Routines.add_helper :after_local,  self
-    Rudy::Routines.add_helper :script_local, self
-        
+    def raise_early_exceptions(type, batch, rset, lbox, option=nil, argv=nil)
+      
+    end
+    
     def execute(type, batch, rset, lbox, option=nil, argv=nil)
-
+      # It's important this stay a regex rather than a literal comparison
       if type.to_s =~ /local/   
         batch = { lbox.user => batch } if batch.is_a?(Proc)
         execute_command(batch, lbox, option, argv)
-        
       else
         batch = { rset.user => batch } if batch.is_a?(Proc)
         execute_command(batch, rset, option, argv)

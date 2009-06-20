@@ -155,7 +155,7 @@ module Rudy; module Routines;
     end
     
     
-    def generic_routine_wrapper(&routine_action)
+    def each_routine_action(&routine_action)
       
       routine = @routine
       raise "No routine supplied" unless routine.kind_of?(Hash)

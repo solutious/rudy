@@ -33,7 +33,7 @@ module Rudy
     
     field :testrun
     
-    field :localuser
+    field :user
     field :localhost
     
     field :parallel
@@ -61,7 +61,7 @@ module Rudy
       if config.defaults?
         # Apply the "color" default before "nocolor" so nocolor has presedence
         @nocolor = !config.defaults.color unless config.defaults.color.nil?
-        %w[region zone environment role position localuser 
+        %w[region zone environment role position user 
            localhost nocolor quiet yes parallel].each do |name|
           val = config.defaults.send(name)
           self.send("#{name}=", val) unless val.nil?
@@ -80,8 +80,7 @@ module Rudy
     
     
     def update(ghash={})
-      ghash = ghash.marshal_dump if ghash.is_a?(OpenStruct)
-      
+      ghash = ghash.marshal_dump if ghash.is_a?(OpenStruct) 
       if ghash.is_a?(Hash)
         ghash.each_pair { |n,v| self.send("#{n}=", v) } 
       else
@@ -116,7 +115,7 @@ module Rudy
       @accountnum ||= ENV['AWS_ACCOUNT_NUMBER']
       @cert ||= ENV['EC2_CERT']
       @privatekey ||= ENV['EC2_PRIVATE_KEY']
-      @localuser = ENV['USER'] 
+      @user = ENV['USER'] 
     end
     
     def apply_system_defaults
@@ -125,8 +124,8 @@ module Rudy
       @environment ||= Rudy::DEFAULT_ENVIRONMENT
       @role ||= Rudy::DEFAULT_ROLE
       @position ||= Rudy::DEFAULT_POSITION
-      @localuser = Rudy.sysinfo.user || 'rudy'
-      @localhost = Rudy.sysinfo.hostname || 'localhost'
+      @user ||= Rudy.sysinfo.user || 'rudy'
+      @localhost ||= Rudy.sysinfo.hostname || 'localhost'
     end
     
   end

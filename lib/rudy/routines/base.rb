@@ -69,7 +69,7 @@ module Rudy; module Routines;
       opts = {
         :info => (@@global.verbose > 3),  # rudy -vvvv 
         :debug => false,
-        :user => @@global.localuser
+        :user => @@global.user
       }.merge opts
       
       box = Rye::Box.new hostname, opts
@@ -115,7 +115,7 @@ module Rudy; module Routines;
     # NOTE: Windows machines are skipped and not added to the set. 
     def create_rye_set(hostnames=[], opts={})
       opts = {
-        :user => (fetch_machine_param(:user) || @@global.localuser).to_s
+        :user => (fetch_machine_param(:user) || @@global.user).to_s
       }.merge(opts)
       set = Rye::Set.new current_machine_group, opts 
       

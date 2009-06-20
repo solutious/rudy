@@ -131,20 +131,25 @@ class RudyCLI < Rudy::CLI::Base
     
     Rudy::Huxtable.update_config
     
-    unless File.exists?(Rudy::CONFIG_FILE)
+    unless File.exists? Rudy::CONFIG_FILE
       Rudy::Config.init_config_dir
     end
   
     begin
 
-      unless Rudy::Huxtable.domain_exists?
+      if Rudy::Huxtable.domain_exists?
+        puts "SimpleDB domain #{Rudy::Huxtable.domain} already exists"
+      else
         puts "Creating SimpleDB domain #{Rudy::Huxtable.domain}"
         Rudy::Huxtable.create_domain
-        puts "Initialized"
-      else
-        puts "Already Initialized"
       end
-    
+      
+      user, host = Rudy.sysinfo.user, Rudy::Huxtable.global.localhost
+
+      puts "Authorizing public keys for #{user}@#{host}"
+      rbox = Rye::Box.new host
+      rbox.authorize_keys_local
+      
     rescue Rudy::AWS::SDB::NoSecretKey, 
            Rudy::AWS::SDB::NoAccessKey, 
            Rudy::NoConfig => ex

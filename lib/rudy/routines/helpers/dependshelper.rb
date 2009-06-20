@@ -5,6 +5,7 @@ module Rudy; module Routines;
     extend self 
     
     ## NOTE: Dependencies don't use Rudy::Routines.add_helper 
+    ## Rudy::Routines.add_helper :depends, self
     
     # Returns an Array of the dependent routines for the given +timing+ 
     # which can be anything but is most often one of: :before, :after.

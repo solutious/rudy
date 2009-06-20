@@ -35,6 +35,13 @@ class RudyCLI < Rudy::CLI::Base
   # ------------------------------------------  RUDY OBJECTS  --------
   # ------------------------------------------------------------------
   
+  about "View Routines"
+  usage "rudy routines"
+  usage "rudy routines -l"
+  option :l, :all, "Display routines for all environments and roles"
+  command :routines => Rudy::CLI::Routines
+  command_alias :routines, :r
+  
   about "View Machines"
   usage "rudy"
   usage "rudy machines"

@@ -3,6 +3,30 @@
 module Rudy; module CLI;
   class Routines < Rudy::CLI::CommandBase
     
+    def routines_valid?
+      raise Rudy::NoRoutinesConfig unless @@config.routines
+      true
+    end
+    
+    def routines
+      if @@config.nil? || @@config.empty?
+        return if @@global.quiet
+        raise Rudy::NoConfig
+      end
+      
+      if @option.all
+        routine = @@config.routines
+      else
+        routine = {}
+        routine.merge! @@config.routines.find_deferred(@@global.environment, @@global.role) || {}
+        routine.merge! @@config.routines.find(@@global.role) || {}
+      end
+      
+      outform = @@global.format == :json ? :to_json : :to_yaml
+      
+      puts routine.to_hash.send(outform)
+    end
+    
     def startup_valid?
       @rr = Rudy::Routines::Startup.new(@alias, @option, @argv)
       @rr.raise_early_exceptions

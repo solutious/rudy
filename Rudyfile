@@ -25,26 +25,26 @@
 #
 
 # ---------------------------------------------------------  MACHINES  --------
-# The machines block describes the "physical" characteristics of your machines. 
+# The machines block describes the 'physical' characteristics of your machines. 
 machines do
   
-  zone :"us-east-1b" do
+  zone :'us-east-1b' do
     ami 'ami-e348af8a'               # Alestic Debian 5.0, 32-bit (US)
   end
-  zone :"eu-west-1b" do
+  zone :'eu-west-1b' do
     ami 'ami-6ecde51a'               # Alestic Debian 5.0, 32-bit (EU)
   end
   
-  hostname :rudy                     # One of: :default, :rudy, "your-name"
+  hostname :rudy                     # One of: :default, :rudy, 'your-name'
   
-  # We've defined an environment called "stage" with one role: "app". 
+  # We've defined an environment called 'stage' with one role: 'app'. 
   # The configuration inside the env block is available to all its 
   # roles. The configuration inside the role blocks is available only
   # to machines in that specific role. 
   env :stage, :prod do
     user :root                       # User to connect as
     size 'm1.small'                  # EC2 machine type for all machines
-                                     # in the "stage" environment
+                                     # in the 'stage' environment
     role :app do
       positions 1                    # Only 1 machine in stage-app
       #addresses '11.22.33.44'       # Define an elastic IP to reuse
@@ -64,7 +64,7 @@ machines do
     
     users do                         # Specify existing private keys per user
       rudy do                       
-        keypair "/path/2/private-key"
+        keypair '/path/2/private-key'
       end
     end
     
@@ -109,13 +109,13 @@ routines do
   env :stage, :prod do               # We'll define routines for the stage-app
     role :app do                     # and prod-app machine groups
       
-      startup2 do                     # $ rudy startup
+      startup do                     # $ rudy startup
         adduser :rudy                # Create a user called 'rudy'
         authorize :rudy              # Enable passwordless logins as rudy
                                      #
-        #disks do                     # Define EBS volume routines
-        #  create '/rudy/disk1'       # Create an EBS volume, attach it, give
-        #end                          # it a filesystem, and mount it.
+        disks do                     # Define EBS volume routines
+          create '/rudy/disk1'       # Create an EBS volume, attach it, give
+        end                          # it a filesystem, and mount it.
                                      #
         after :rudy do               # Run remote SSH commands after startup
           mkdir :p, 'great'          # $ mkdir -p great
@@ -128,9 +128,9 @@ routines do
         before :root do              # Run remote SSH commands before shutdown
           uptime               
         end                               
-        #disks do                     
-        #  destroy '/rudy/disk1'      # Unmount and destroy the EBS volume
-        #end                          
+        disks do                     
+          destroy '/rudy/disk1'      # Unmount and destroy the EBS volume
+        end                          
       end                            
       
       reboot do                      # $ rudy reboot
@@ -172,53 +172,12 @@ routines do
   end
   
   anything do                        # $ rudy anything
-    ##depends :uptime                   # Specify a dependency
+    depends :uptime                  # Specify a dependency
     local do                         # This is Ruby, so any valid syntax
       ls :l                          # can be used in the definitions. 
     end                              # See: SysInfo gem for more info.
   end
   
-  three do
-    remote :delano do
-      uname :a
-    end
-  end
-  
-  two_short do
-    local { date } 
-  end
-  
-  two_long do
-    local do |o,a|
-      p o
-      p a
-    end
-  end
-  
-  uptime do                          # $ rudy uptime
-    #disks do
-    #  create "/rudy/disk1"
-    #end
-    local do
-      sh '/Users/delano/Projects/opensource/rudy/tryouts/failer', 23
-      ls 'poop'
-      sudo 'date'
-    end
-    #remote :root do
-    #  uname
-    #end
-  end
-  
-  
-  startup do
-    before :three
-    before_local do
-      uptime
-    end
-    #disks do
-    #  path "/poop"
-    #end
-  end
 end
 
 
@@ -227,12 +186,12 @@ end
 # non-boolean values are expected to be Symbols. 
 #
 defaults do
-  region :"us-east-1" 
-  zone :"us-east-1b"
+  region :'us-east-1' 
+  zone :'us-east-1b'
   environment :stage
   role :app
-  user Rudy.sysinfo.user.to_sym      # This will be the user running Rudy
-  color true                        # Terminal colors? true/false
+  user ENV['USER']                   # The default remote user
+  color true                         # Terminal colors? true/false
   yes false                          # Auto-confirm? true/false
 end
 

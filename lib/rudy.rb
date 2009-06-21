@@ -63,8 +63,8 @@ module Rudy
     
     DEFAULT_ZONE = :'us-east-1b'.freeze 
     DEFAULT_REGION = DEFAULT_ZONE.to_s.gsub(/[a-z]$/, '').to_sym.freeze
-    DEFAULT_ENVIRONMENT = :'stage'.freeze
-    DEFAULT_ROLE = :'app'.freeze
+    DEFAULT_ENVIRONMENT = :stage.freeze
+    DEFAULT_ROLE = :app.freeze
     DEFAULT_POSITION = '01'.freeze
 
     DEFAULT_EC2_HOST = "ec2.amazonaws.com"
@@ -72,25 +72,24 @@ module Rudy
     
     MAX_INSTANCES = 5.freeze
     
-    SUPPORTED_SCM_NAMES = [:svn, :git].freeze
-  
     ID_MAP = {
-      :disk => 'disk',
-      :instance => 'i',
-      :backup => 'back',
-      :machine => 'm',
-      :volume => 'vol',
-      :snapshot => 'snap',
-      :kernel => 'aki',
-      :image => 'ami',
-      :ram => 'ari',
-      :log => 'log',
-      :key => 'key',
-      :awspk => 'pk',
-      :awscert => 'cert',
+      :instance    => 'i',
+      :machine     => 'm',
       :reservation => 'r',
-      :dns_public => 'ec2',
-      :dns_private => 'domU',
+      :privatekey  => 'pk',
+      :volume      => 'vol',
+      :kernel      => 'aki',
+      :image       => 'ami',
+      :ramdisk     => 'ari',
+      :group       => 'grp',
+      :log         => 'log',
+      :key         => 'key',
+      :dns_public  => 'ec2',
+      :disk        => 'disk',
+      :backup      => 'back',
+      :snapshot    => 'snap',
+      :certificate => 'cert',
+      :dns_private => 'domU'
     }.freeze
 
   end

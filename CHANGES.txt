@@ -4,25 +4,25 @@ RUDY, CHANGES
 
 #### 0.9.0 (2009-06-??) ###############################
 
+NOTE: This is a significant re-write from 0.8
+
 * FIXED: Routine blocks now process directives in the order their given (in Ruby 1.8 and 1.9). 
 * FIXED: Ambiguity when specifying zone and region. Region is now based on the zone. 
 * CHANGE: Rudy::Machine.inspect now prints in a standard Ruby inspect format
 * CHANGE: Routines have been completely rebuilt but should remain backwards compatible. 
-* CHANGE: Now requires rye-0.8.0 (pre_command_hook args change, parallel stuff, quietly)
+* CHANGE: Now requires Rye 0.8 (pre_command_hook args change, parallel stuff, quietly)
 * CHANGE: before / after routine actions are now used for dependencies.
 * CHANGE: Removed script_local, after_local, before_local from passthrough routines syntax.
 * CHANGE: Allowed before_local for startup routines
 * CHANGE: Allowed before_local and before_remote for reboot routines
 * CHANGE: Allowed after_local for shutdown routines
 * CHANGE: Removed machines config (now recommend uploading local files)
+* CHANGE: Group names now take the form: grp-us-east-1b-stage-app
 * ADDED: routines command for displaying available routines
 * ADDED: "rudy init" now authorizes public keys for user@localhost
 * ADDED: Parallel processing for remote machines
 
-* TODO: zone is now a single letter: a, b, c, etc... The long form (us-east-1b) will set the region too.
 * TODO: Support rudy -e all -r all startup
-* TODO: group identifier will be changed to 'grp' from 'g'
-* TODO: machine identifier will be changes to 'mach' from 'm'
 * TODO: private keys are stored in ~/.ssh/
 * TODO: Disk syntax in the routines DSL will change. The DSL no longer accepts arguments, just the action (create, destroy, ...) and path. 
 * TODO: Disk backups will be removed (temporarily -- probably until on of the early 1.x releases). 

@@ -1,4 +1,4 @@
-= Rudy - v0.8 BETA
+= Rudy - v0.9 BETA
 
 <b>Not your grandparents' EC2 deployment tool.</b>
 
@@ -10,7 +10,7 @@ When you put all this together, you have a unique name for every machine. The de
               v        v    v   
         m-us-east-1b-stage-app-01
         ^                       ^
-     "machine"                position
+    "machine"               "position"
 
 All configuration is organized into the zones, environments, and roles that you specify (Rudy assumes positions are identical which is important for backups and scaling). And as you'd expect, the defaults can be changed too (in <tt>~/.rudy/config</tt>).
 
@@ -57,10 +57,10 @@ The routines configuration describes repeatable processes that you can execute o
         restore "/rudy/disk1"    # from a backup
       end                       
                             
-      after :rudy do      # Run remote SSH commands
+      remote :rudy do     # Run remote SSH commands
         mkdir :p, "great"        # $ mkdir -p great
         touch "great/scott"      # $ touch great/scott
-        ls :l, :a                # $ ls -l -a
+        mysql_init :start 
       end                          
     end
 

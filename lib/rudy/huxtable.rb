@@ -140,7 +140,7 @@ module Rudy
     end
     
     def current_group_name
-      "g-#{current_machine_group}"
+      "grp-#{@@global.zone}-#{current_machine_group}"
     end
     
     def current_machine_count

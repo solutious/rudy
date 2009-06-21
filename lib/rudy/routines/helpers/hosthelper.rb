@@ -9,7 +9,7 @@ module Rudy; module Routines;
     def is_running?(rset)
       rset.batch(rset.parallel) do |parallel|
         msg = "Starting #{self.nickname}..."
-        output = parallel ? nil : @@logger 
+        output = parallel ? nil : Rudy::Huxtable.logger 
         Rudy::Utils.waiter(3, 120, output, msg, 0) {
           inst = self.stash.get_instance
           inst && inst.running?

@@ -105,10 +105,13 @@
   lib/rudy/metadata/objectbase.rb
   lib/rudy/mixins.rb
   lib/rudy/mixins/hash.rb
+  lib/rudy/mixins/symbol.rb
   lib/rudy/routines.rb
-  lib/rudy/routines/helper.rb
+  lib/rudy/routines/base.rb
+  lib/rudy/routines/helperbase.rb
   lib/rudy/routines/helpers/dependshelper.rb
   lib/rudy/routines/helpers/diskhelper.rb
+  lib/rudy/routines/helpers/hosthelper.rb
   lib/rudy/routines/helpers/scripthelper.rb
   lib/rudy/routines/helpers/userhelper.rb
   lib/rudy/routines/passthrough.rb
@@ -121,6 +124,42 @@
   support/randomize-root-password
   support/rudy-ec2-startup
   support/update-ec2-ami-tools
+  tryouts/01_mixins/01_hash_tryouts.rb
+  tryouts/10_require_time/10_rudy_tryouts.rb
+  tryouts/10_require_time/15_global_tryouts.rb
+  tryouts/12_config/10_load_config_tryouts.rb
+  tryouts/12_config/20_defaults_tryouts.rb
+  tryouts/12_config/30_accounts_tryouts.rb
+  tryouts/12_config/40_machines_tryouts.rb
+  tryouts/12_config/50_commands_tryouts.rb
+  tryouts/12_config/60_routines_tryouts.rb
+  tryouts/15_huxtable/10_huxtable_tryouts.rb
+  tryouts/20_simpledb/10_domains_tryouts.rb
+  tryouts/20_simpledb/20_objects_tryouts.rb
+  tryouts/25_ec2/00_setup_test.rb
+  tryouts/25_ec2/10_keypairs_test.rb
+  tryouts/25_ec2/10_keypairs_tryouts.rb
+  tryouts/25_ec2/20_groups_test.rb
+  tryouts/25_ec2/30_addresses_test.rb
+  tryouts/25_ec2/40_volumes_test.rb
+  tryouts/25_ec2/50_snapshots_test.rb
+  tryouts/26_ec2_instances/00_setup_test.rb
+  tryouts/26_ec2_instances/10_instances_test.rb
+  tryouts/26_ec2_instances/50_images_test.rb
+  tryouts/30_metadata/50_disk_old_tryouts.rb
+  tryouts/30_metadata/50_disk_tryouts.rb
+  tryouts/80_cli/10_rudyec2_dreams.rb
+  tryouts/80_cli/10_rudyec2_tryouts.rb
+  tryouts/80_cli/60_rudy_dreams.rb
+  tryouts/80_cli/60_rudy_tryouts.rb
+  tryouts/failer
+  tryouts/misc/console_tryout.rb
+  tryouts/misc/disks_tryout.rb
+  tryouts/misc/drydock_tryout.rb
+  tryouts/misc/nested_methods.rb
+  tryouts/misc/session_tryout.rb
+  tryouts/misc/tryouts.rb
+  tryouts/misc/usage_tryout.rb
   )
 
   

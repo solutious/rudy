@@ -34,11 +34,9 @@ module Rudy
       # nil and bad paths sent to look_and_load are ignored
       @@config.look_and_load(path || @@global.config)
       @@global.apply_config(@@config)
-      # And then update global again b/c some values come from @@config
-      update_global  ## TODO: Check if this can be removed
     end
 
-    def self.update_global(ghash={}); @@global.update(ghash); end
+    def self.update_global(ghash); @@global.update(ghash); end
     def self.update_logger(logger);   @@logger = logger; end
     
     def self.reset_config; @@config = Rudy::Config.new; end
@@ -143,7 +141,7 @@ module Rudy
     end
     
     def current_group_name
-      "grp-#{current_machine_group}"
+      "g-#{current_machine_group}"
     end
     
     def current_machine_count

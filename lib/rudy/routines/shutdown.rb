@@ -5,39 +5,47 @@ module Rudy; module Routines;
     
     Rudy::Routines.add_handler :shutdown, self
     
+    @@allowed_actions = [:before, :disks, :adduser, :authorize,
+                         :local, :remote, :after_local, :after]
+                         
     def init(*args)
       @machines = @rmach.list || []
       @rset = create_rye_set @machines
+      @routine ||= {}
     end
     
+    # Startup routines run in the following order:
+    # * before dependencies
+    # * all other actions (except after_local)
+    # * Shutdown instances
+    # * after_local (if present)
+    # * after dependencies
     def execute
       ld "Executing routine: #{@name}"
-      li "[this is a generic routine]" unless @routine
+      li "[this is a generic routine]" if @routine.empty?
       
       return unless run?
       
-      # If an after dependency is provided we don't 
-      # want generic_routine_wrapper to process it. 
-      @routine.delete :before
+      # We need to remove after_local so the runner doesn't see it
+      after_local = @routine.delete(:after_local)
       
-      generic_routine_wrapper do |action,definition|
-        next if ![:disks, :adduser, :authorize, :before_local, :before].member?(action)
-        helper = Rudy::Routines.get_helper action
-        enjoy_every_sandwich {
-          helper.execute(action, definition, @rset, @lbox, @option, @argv)
-        }
-      end
+      Rudy::Routines::DependsHelper.execute_all @before
+      
+      # This is the meat of the sandwich
+      Rudy::Routines.runner(@routine, @rset, @lbox, @option, @argv)
       
       @machines.each do |machine|
-        enjoy_every_sandwich { machine.destroy }
+        Rudy::Routines.rescue { machine.destroy }
       end
       
-      if @routine.has_key? :after_local
+      if after_local
         helper = Rudy::Routines.get_helper :local
-        enjoy_every_sandwich {
-          helper.execute(:local, definition, nil, @lbox, @option, @argv)
+        Rudy::Routines.rescue {
+          helper.execute(:local, after_local, nil, @lbox, @option, @argv)
         }
       end
+      
+      Rudy::Routines::DependsHelper.execute_all @after
       
       @machines
     end
@@ -45,12 +53,17 @@ module Rudy; module Routines;
     # Called by generic_machine_runner
     def raise_early_exceptions
       rmach = Rudy::Machines.new
+      raise NoMachinesConfig unless @@config.machines
       raise MachineGroupNotRunning, current_machine_group unless rmach.running?
       ## NOTE: This check is disabled for now. If the private key doesn't exist
       ## it prevents shutting down.
       # Check private key after machine group, otherwise we could get an error
       # about there being no key which doesn't make sense if the group isn't running.
       ##raise Rudy::PrivateKeyNotFound, root_keypairpath unless has_keypair?(:root)
+      if @routine
+        bad = @routine.keys - @@allowed_actions
+        raise UnsupportedActions.new(@name, bad) unless bad.empty?
+      end
     end
     
   end

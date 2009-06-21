@@ -32,11 +32,14 @@ module Rudy
     end
     
     class EmptyDepends < Rudy::Error
-      def message; "Empty #{@obj} block in routine."; end
+      def message; "Empty depends block in routine."; end
     end
     
-    class EmptyDepends < Rudy::Error
-      def message; "Empty depends block in routine."; end
+    class UnsupportedActions < Rudy::Error
+      def initialize(klass, actions)
+        @klass, @actions = klass, [actions].flatten
+      end
+      def message; "#{@klass} does not support: #{@actions.join(', ')}"; end
     end
     
     # Add a routine handler to @@handler.
@@ -70,6 +73,38 @@ module Rudy
     
     def self.has_handler?(name); @@handler.has_key?(name); end
     def self.has_helper?(name);  @@helper.has_key?(name);  end
+    
+    # Executes a routine block
+    def self.runner(routine, rset, lbox, option=nil, argv=nil)
+      routine.each_pair do |action,definition| 
+        helper = Rudy::Routines.get_helper action
+        Rudy::Huxtable.ld "  executing helper: #{action}"
+        Rudy::Routines.rescue {
+          helper.execute(action, definition, rset, lbox, option, argv)
+        }
+      end
+    end
+    
+    def self.rescue(ret=nil, &bloc_party)
+      begin
+        ret = bloc_party.call
+      rescue => ex
+        unless Rudy::Huxtable.global.parallel
+          STDERR.puts "  #{ex.class}: #{ex.message}".color(:red)
+          STDERR.puts ex.backtrace if Rudy.debug?
+          choice = Annoy.get_user_input('(S)kip  (A)bort: ') || ''
+          if choice.match(/\AS/i)
+            # do nothing
+          else
+            exit 12
+          end
+         end
+      rescue Interrupt
+        puts "Aborting..."
+        exit 12
+      end
+      ret
+    end
     
   private 
   

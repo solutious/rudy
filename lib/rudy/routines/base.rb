@@ -48,10 +48,18 @@ module Rudy; module Routines;
       # e.g. startup, sysupdate, installdeps
       @routine = fetch_routine_config @name 
       
+      if @routine
+        # This gets and removes the dependencies from the routines hash.
+        # We grab the after ones now too, so they can also be removed.
+        @before, @after = @routine.delete(:before), @routine.delete(:after)
+      end
+      
       ld "Routine: #{@routine.inspect}"
       
       @lbox = create_rye_box @@global.localhost
-       
+      
+      disable_run if @@global.testrun
+      
       init(*args) if respond_to? :init
     end
     
@@ -69,7 +77,7 @@ module Rudy; module Routines;
       opts = {
         :info => (@@global.verbose > 3),  # rudy -vvvv 
         :debug => false,
-        :user => @@global.user
+        :user => Rudy.sysinfo.user
       }.merge opts
       
       box = Rye::Box.new hostname, opts
@@ -155,27 +163,6 @@ module Rudy; module Routines;
     end
     
     
-    def generic_routine_wrapper(&routine_action)
-      
-      raise "No routine supplied" unless @routine.kind_of?(Hash)
-
-      # This gets and removes the dependencies from the routines hash.
-      # We grab the after ones now too, so they can also be removed.
-      before, after = @routine.delete(:before), @routine.delete(:after)
-      
-      Rudy::Routines::DependsHelper.execute_all before
-      
-      # This is the meat of the sandwich
-      if routine_action && run?
-        @routine.each_pair { |action,definition| 
-          routine_action.call action, definition
-        }
-      end
-      
-      Rudy::Routines::DependsHelper.execute_all after
-      
-    end
-    
     def machine_separator(name, awsid)
       ('%s %-50s awsid: %s ' % [$/, name, awsid]).att(:reverse)
     end
@@ -202,26 +189,7 @@ module Rudy; module Routines;
 
     
   private 
-    def enjoy_every_sandwich(ret=nil, &bloc_party)
-      begin
-        ret = bloc_party.call
-      rescue => ex
-        unless @@global.parallel
-          STDERR.puts "  #{ex.class}: #{ex.message}".color(:red)
-          STDERR.puts ex.backtrace if Rudy.debug?
-          choice = Annoy.get_user_input('(S)kip  (A)bort: ') || ''
-          if choice.match(/\AS/i)
-            # do nothing
-          else
-            exit 12
-          end
-         end
-      rescue Interrupt
-        puts "Aborting..."
-        exit 12
-      end
-      ret
-    end
+
   
     def rbox_exception_handler
       Proc.new do |ex|

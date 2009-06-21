@@ -81,12 +81,7 @@ module Rudy
     
     def update(ghash={})
       ghash = ghash.marshal_dump if ghash.is_a?(OpenStruct) 
-      if ghash.is_a?(Hash)
-        ghash.each_pair { |n,v| self.send("#{n}=", v) } 
-      else
-        raise "Unexpected #{ghash.class.to_s}"
-      end
-      
+      ghash.each_pair { |n,v| self.send("#{n}=", v) } 
       postprocess
     end
     
@@ -115,7 +110,6 @@ module Rudy
       @accountnum ||= ENV['AWS_ACCOUNT_NUMBER']
       @cert ||= ENV['EC2_CERT']
       @privatekey ||= ENV['EC2_PRIVATE_KEY']
-      @user = ENV['USER'] 
     end
     
     def apply_system_defaults

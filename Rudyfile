@@ -70,14 +70,6 @@ machines do
     
   end  
 
-  # The routines section below contains calls to local and remote
-  # scripts. The config contained in this block is made available
-  # those scripts in the form of a yaml file. The file is called
-  # rudy-config.yml. 
-  config do                 
-    dbmaster 'localhost'
-    newparam 573114
-  end
 end
 
 

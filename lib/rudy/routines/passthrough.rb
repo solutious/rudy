@@ -10,13 +10,16 @@ module Rudy; module Routines;
     def execute
       ld "Executing routine: #{@name}"
       processed = []
-      generic_routine_wrapper do |action,definition|
-        helper = Rudy::Routines.get_helper action
-        ld "  executing helper: #{action}"
-        enjoy_every_sandwich {
-          helper.execute(action, definition, @rset, @lbox, @option, @argv)
-        }
-      end
+      
+      return unless run?
+      
+      Rudy::Routines::DependsHelper.execute_all @before
+      
+      # This is the meat of the sandwich
+      Rudy::Routines.runner(@routine, @rset, @lbox, @option, @argv)
+      
+      Rudy::Routines::DependsHelper.execute_all @after
+
       processed
     end
     

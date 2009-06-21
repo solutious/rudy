@@ -243,7 +243,7 @@ module Rudy
       machines = list
       machines.each do |mach|
         each_mach.call(mach) if each_mach
-        puts "Restarting #{mach.name}"
+        #puts "Restarting #{mach.name}"
         mach.restart
       end
       machines

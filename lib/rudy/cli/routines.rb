@@ -72,8 +72,7 @@ module Rudy; module CLI;
     # raise an exception.
     #
     def passthrough
-      @rr.disable_run if @global.testrun
-      
+            
       machines = @rr.execute
       
       

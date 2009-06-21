@@ -29,6 +29,7 @@ class Rudy::Config
         next unless self[k].is_a?(Array)
         raise Defaults::DoubleDefined.new(:defaults, k)
       end
+      self.keydir &&= File.expand_path(self.keydir)
     end
   end
   

@@ -46,6 +46,9 @@ module Rudy; module Routines;
       original_user = robj.user
       
       batch.each_pair do |user, proc|
+        unless File.exists?(user_keypairpath(user) || '')
+          le "Cannot find key for #{user}: #{user_keypairpath(user)}"
+        end
         
         if user.to_s != robj.user
           begin

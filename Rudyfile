@@ -99,7 +99,9 @@ end
 routines do
   
   env :stage, :prod do               # We'll define routines for the stage-app
-    role :app do                     # and prod-app machine groups
+    role :app do                     # and prod-app machine groups.
+      
+      user :root                     # The default remote user
       
       startup do                     # $ rudy startup
         adduser :rudy                # Create a user called 'rudy'
@@ -109,7 +111,7 @@ routines do
           create '/rudy/disk1'       # Create an EBS volume, attach it, give
         end                          # it a filesystem, and mount it.
                                      #
-        after :rudy do               # Run remote SSH commands after startup
+        remote :rudy do              # Run remote SSH commands after startup
           mkdir :p, 'great'          # $ mkdir -p great
           touch 'great/scott'        # $ touch great/scott
           ls :l, :a                  # $ ls -l -a *
@@ -117,7 +119,7 @@ routines do
       end                            
                                      
       shutdown do                    # $ rudy shutdown
-        before :root do              # Run remote SSH commands before shutdown
+        remote :root do              # Run remote SSH commands before shutdown
           uptime               
         end                               
         disks do                     
@@ -126,10 +128,10 @@ routines do
       end                            
       
       reboot do                      # $ rudy reboot
-        before :root do              # Run any pre-reboot tasks like stopping
+        before_remote do             # Run any pre-reboot tasks like stopping
           uptime                     # web servers and databases. 
         end                          #
-        after :root do               # Run any startup tasks like starting
+        remote do                    # Run any startup tasks like starting
           uptime                     # processes or initializing the filesystem
         end
       end
@@ -164,10 +166,14 @@ routines do
   end
   
   anything do                        # $ rudy anything
-    depends :uptime                  # Specify a dependency
+    before :uptime                   # Specify a dependency
     local do                         # This is Ruby, so any valid syntax
       ls :l                          # can be used in the definitions. 
     end                              # See: SysInfo gem for more info.
+  end
+  
+  uptime do                          # $ rudy uptime
+    remote { uptime }                # Short block syntax
   end
   
 end
@@ -185,5 +191,6 @@ defaults do
   #localhost 'hostname'              # A local hostname instead of localhost
   #color true                        # Terminal colors? true/false
   #yes false                         # Auto-confirm? true/false
+  #keydir '~/.ssh/'                  # The path to store SSH keys
 end
 

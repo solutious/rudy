@@ -31,12 +31,10 @@ module Rudy
     field :cert
     field :privatekey
     
-    field :testrun
-    
     field :localhost
-    
     field :parallel
     
+    field :testrun
     field :offline
     
     field :config => String

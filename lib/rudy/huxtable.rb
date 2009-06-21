@@ -109,15 +109,18 @@ module Rudy
       return unless @@global && @@config && @@config.machines
       
       zon, env, rol = @@global.zone, @@global.environment, @@global.role
-      path = @@config.machines.find_deferred(zon, env, rol, [:users, name, :keypair])
+      path = @@global.pkey
+      path ||= @@config.machines.find_deferred(zon, env, rol, [:users, name, :keypair])
       path ||= @@config.machines.find_deferred(env, rol, [:users, name, :keypair])
       path ||= @@config.machines.find_deferred(rol, [:users, name, :keypair])
+      
+      ssh_key_dir = @@config.defaults.keydir || Rudy::SSH_KEY_DIR
       
       # EC2 Keypairs that were created are intended for starting the machine instances. 
       # These are used as the root SSH keys. If we can find a user defined key, we'll 
       # check the config path for a generated one. 
       if !path && name.to_s == 'root'
-        path = File.join(self.config_dirname, "key-#{@@global.zone}-#{current_machine_group}")
+        path = File.join(ssh_key_dir, "key-#{@@global.zone}-#{current_machine_group}")
       end
       path = File.expand_path(path) if path && File.exists?(path)
       path

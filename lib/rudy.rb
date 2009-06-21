@@ -60,6 +60,7 @@ module Rudy
   
     CONFIG_DIR = File.join(@@sysinfo.home, '.rudy').freeze
     CONFIG_FILE = File.join(Rudy::CONFIG_DIR, 'config').freeze
+    SSH_KEY_DIR = File.expand_path('~/.ssh').freeze
     
     DEFAULT_ZONE = :'us-east-1b'.freeze 
     DEFAULT_REGION = DEFAULT_ZONE.to_s.gsub(/[a-z]$/, '').to_sym.freeze

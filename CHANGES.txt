@@ -18,12 +18,12 @@ NOTE: This is a significant re-write from 0.8
 * CHANGE: Allowed after_local for shutdown routines
 * CHANGE: Removed machines config (now recommend uploading local files)
 * CHANGE: Group names now take the form: grp-us-east-1b-stage-app
+* CHANGE: private keys are stored in ~/.ssh/
 * ADDED: routines command for displaying available routines
 * ADDED: "rudy init" now authorizes public keys for user@localhost
 * ADDED: Parallel processing for remote machines
 
 * TODO: Support rudy -e all -r all startup
-* TODO: private keys are stored in ~/.ssh/
 * TODO: Disk syntax in the routines DSL will change. The DSL no longer accepts arguments, just the action (create, destroy, ...) and path. 
 * TODO: Disk backups will be removed (temporarily -- probably until on of the early 1.x releases). 
 

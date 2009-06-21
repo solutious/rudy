@@ -82,35 +82,31 @@ module Rudy; module Routines;
       
       box = Rye::Box.new hostname, opts
       
-      
-      unless @@global.parallel
-      
-        # We define hooks so we can still print each command and its output
-        # when running the command blocks. NOTE: We only print this in
-        # verbosity mode. 
-        if @@global.verbose > 0
-          # This block gets called for every command method call.
-          box.pre_command_hook do |cmd, user, host, nickname|
-            puts command_separator(cmd, user, nickname)
-          end
+    
+      # We define hooks so we can still print each command and its output
+      # when running the command blocks. NOTE: We only print this in
+      # verbosity mode. 
+      if @@global.verbose > 0
+        # This block gets called for every command method call.
+        box.pre_command_hook do |cmd, user, host, nickname|
+          print_command user, nickname, cmd
         end
-      
-        if @@global.verbose > 1
-          # And this one gets called after each command method call.
-          box.post_command_hook do |ret|
-            puts '  ' << ret.stdout.join("#{$/}  ") if !ret.stdout.empty?
-            print_response ret
-          end
-        end
-      
-        box.exception_hook(Rye::CommandError, &rbox_exception_handler)
-        box.exception_hook(Exception, &rbox_exception_handler)
-        
-        ## It'd better for unknown commands to be handled elsewhere
-        ## because it doesn't make sense to retry a method that doesn't exist
-        ##box.exception_hook(Rye::CommandNotFound, &rbox_exception_handler)
       end
+    
+      if @@global.verbose > 1
+        # And this one gets called after each command method call.
+        box.post_command_hook do |ret|
+          print_response ret
+        end
+      end
+    
+      box.exception_hook(Rye::CommandError, &rbox_exception_handler)
+      box.exception_hook(Exception, &rbox_exception_handler)
       
+      ## It'd better for unknown commands to be handled elsewhere
+      ## because it doesn't make sense to retry a method that doesn't exist
+      ##box.exception_hook(Rye::CommandNotFound, &rbox_exception_handler)
+    
       box
     end
     
@@ -121,11 +117,16 @@ module Rudy; module Routines;
     # +opts+ is an optional Hash of options. See Rye::Box.initialize
     #
     # NOTE: Windows machines are skipped and not added to the set. 
-    def create_rye_set(hostnames=[], opts={})
+    def create_rye_set(hostnames, opts={})
+      hostnames ||= []
+      
       opts = {
-        :user => (fetch_machine_param(:user) || @@global.user).to_s
+        :user => (current_machine_user).to_s,
+        :parallel => @@global.parallel
       }.merge(opts)
       set = Rye::Set.new current_machine_group, opts 
+      
+      opts.delete(:parallel)   # Not used by Rye::Box.new
       
       hostnames.each do |m| 
         # This is a short-circuit for Windows instances. We don't support
@@ -136,8 +137,8 @@ module Rudy; module Routines;
         if m.is_a?(Rudy::Machine)
           m.update if m.dns_public.nil? || m.dns_public.empty?
           if m.dns_public.nil? || m.dns_public.empty?
-            le "Cannot find public DNS for #{m.name}"
-            next
+            ld "Cannot find public DNS for #{m.name} (continuing...)"
+            ##next
           end
           rbox = create_rye_box(m.dns_public, opts) 
           rbox.stash = m   # Store the machine instance in the stash
@@ -150,39 +151,36 @@ module Rudy; module Routines;
         set.add_box rbox
       end
       
-      if set.empty?
-        ld "Machines Set: [empty]"
-      else
-        ld "Machines Set:"
-        set.boxes.each do |b|
-          ld b.inspect
-        end
-      end
+      ld "Machines Set: %s" % [set.empty? ? '[empty]' : set.inspect]
       
       set
     end
     
     
-    def machine_separator(name, awsid)
-      ('%s %-50s awsid: %s ' % [$/, name, awsid]).att(:reverse)
-    end
+
     
     # Returns a formatted string for printing command info
-    def command_separator(cmd, user, host)
+    def print_command(user, host, cmd)
+      return if @@global.parallel
       cmd ||= ""
       cmd, user = cmd.to_s, user.to_s
       prompt = user == "root" ? "#" : "$"
-      ("%s@%s%s %s" % [user, host, prompt, cmd.bright])
+      puts ("%s@%s%s %s" % [user, host, prompt, cmd.bright])
     end
     
     def print_response(rap)
-      return if rap.exit_code != 0
-      colour = rap.exit_code != 0 ? :red : :normal
-      return if rap.stderr.empty?
-      STDERR.puts(("  STDERR  " << '-'*38).color(colour).bright)
-      STDERR.puts "  " << rap.stderr.join("#{$/}  ").color(colour)
-      if rap.exit_code != 0
-        STDERR.puts "  Exit code: #{rap.exit_code}".color(colour) 
+      if @@global.parallel
+        puts ('%s: %s: %s' % [rap.box.nickname, rap.cmd, rap.stdout.inspect])
+      else
+        puts '  ' << rap.stdout.join("#{$/}  ") if !rap.stdout.empty?
+        return if rap.exit_code != 0
+        colour = rap.exit_code != 0 ? :red : :normal
+        return if rap.stderr.empty?
+        STDERR.puts(("  STDERR  " << '-'*38).color(colour).bright)
+        STDERR.puts "  " << rap.stderr.join("#{$/}  ").color(colour)
+        if rap.exit_code != 0
+          STDERR.puts "  Exit code: #{rap.exit_code}".color(colour) 
+        end
       end
     end
     

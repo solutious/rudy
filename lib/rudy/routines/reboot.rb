@@ -94,7 +94,12 @@ module Rudy; module Routines;
       # There's no keypair check here because Rudy::Machines will attempt 
       # to create one.
       raise MachineGroupNotDefined, current_machine_group unless known_machine_group?
-      raise MachineGroupNotRunning, current_machine_group unless rmach.running?
+      
+      # If this is a test run we don't care if the group is running
+      if run?
+        raise MachineGroupNotRunning, current_machine_group unless rmach.running?
+      end
+      
       if @routine
         bad = @routine.keys - @@allowed_actions
         raise UnsupportedActions.new(@name, bad) unless bad.empty?

@@ -134,20 +134,9 @@ class RudyCLI_Interactive < Rudy::CLI::Base # :nodoc:all
   # Change Group
   #def cg(name); end
 
-  def ssh(*args)
-    @@rmach.switch_user :root
-    @@rmach.connect(*args)
-    @@rmach.switch_user # back to previous user
-    nil
-  end
   
   
 end
 
 #include RudyCLI_Interactive  # So we don't have to say CLI.example in the REPL. 
 
-
-__END__
-#@rbox = Rye::Box.new('ec2-174-129-173-3.compute-1.amazonaws.com', 'root')
-#@rbox2 = Rye::Box.new('ec2-174-129-173-3.compute-1.amazonaws.com', 'root')
-#@rbox.add_keys('/Users/delano/Projects/git/rudy/.rudy/key-test-app.private')

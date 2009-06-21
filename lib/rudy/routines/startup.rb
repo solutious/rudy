@@ -23,59 +23,56 @@ module Rudy; module Routines;
       ld "Executing routine: #{@name}"
       li "[this is a generic routine]" if @routine.empty?
       
-      return unless run?
       
-      Rudy::Routines::DependsHelper.execute_all @before
+      if run?
+        Rudy::Routines::DependsHelper.execute_all @before
       
-      if @routine.has_key? :before_local
-        helper = Rudy::Routines.get_helper :local
-        Rudy::Routines.rescue {
-          helper.execute(:local, @routine.delete(:before_local), nil, @lbox, @option, @argv)
-        }
+        if @routine.has_key? :before_local
+          helper = Rudy::Routines.get_helper :local
+          Rudy::Routines.rescue {
+            helper.execute(:local, @routine.delete(:before_local), nil, @lbox, @option, @argv)
+          }
+        end
       end
       
-      @rmach.create do |machine|
-        puts machine_separator(machine.name, machine.awsid)
-        
-        Rudy::Routines.rescue {
-          Rudy::Utils.waiter(3, 120, STDOUT, "Waiting for instance...", 0) {
-            inst = machine.get_instance
-            inst && inst.running?
-          }
-        }
-        
-        sleep 1
-        
-        # Add instance info to machine and save it. This is really important
-        # for the initial startup so the metadata is updated right away. But
-        # it's also important to call here because if a routine was executed
-        # and an unexpected exception occurs before this update is executed
-        # the machine metadata won't contain the DNS information. Calling it
-        # here ensure that the metadata is always up-to-date.
-        Rudy::Routines.rescue { machine.update }
-        
-        
-        # Windows machine do not have an SSH daemon
-        next if (machine.os || '').to_s == 'win32'
-        
-        Rudy::Routines.rescue {
-          Rudy::Utils.waiter(2, 30, STDOUT, "Waiting for SSH daemon...", 0) {
-            Rudy::Utils.service_available?(machine.dns_public, 22)
-          }
-        }
-      end
+      ## puts Rudy::Routines.machine_separator(machine.name, machine.awsid)
+      
+      # If this is a testrun we won't create new instances
+      # we'll just grab the list of machines in this group. 
+      # NOTE: Expect errors if there are no machines.
+      @machines = run? ? @rmach.create : @rmach.list
+      @rset = create_rye_set @machines
       
       Rudy::Routines.rescue {
-        @machines = @rmach.list  
-        @rset = create_rye_set @machines
+        if !Rudy::Routines::HostHelper.is_running? @rset
+          a = @rset.boxes.select { |box| !box.stash.running? }
+          raise GroupNotRunning, a
+        end
       }
       
-      Rudy::Routines::HostnameHelper.set_hostname @rset
+      # This is important b/c the machines will not 
+      # have DNS info until after they are running. 
+      Rudy::Routines.rescue { Rudy::Routines::HostHelper.update_dns @rset }
       
-      # This is the meat of the sandwich
-      Rudy::Routines.runner @routine, @rset, @lbox, @option, @argv
-      
-      Rudy::Routines::DependsHelper.execute_all @after
+      Rudy::Routines.rescue {
+        if !Rudy::Routines::HostHelper.is_available? @rset
+          a = @rset.boxes.select { |box| !box.stash.available? }
+          raise GroupNotAvailable, a
+        end
+      }
+      Rudy::Routines.rescue {
+        Rudy::Routines::HostHelper.set_hostname @rset      
+      }
+      if run?
+
+        
+        # This is the meat of the sandwich
+        Rudy::Routines.runner @routine, @rset, @lbox, @option, @argv
+        
+        Rudy::Routines.rescue {
+          Rudy::Routines::DependsHelper.execute_all @after
+        }
+      end
       
       @machines
     end
@@ -86,9 +83,15 @@ module Rudy; module Routines;
       raise NoMachinesConfig unless @@config.machines
       # There's no keypair check here because Rudy::Machines will create one 
       raise MachineGroupNotDefined, current_machine_group unless known_machine_group?
-      # We don't check @@global.offline b/c we can't create EC2 instances
-      # without an internet connection. Use passthrough for routine tests.
-      #raise MachineGroupAlreadyRunning, current_machine_group if rmach.running?
+      
+      # If this is a testrun, we don't create instances anyway so
+      # it doesn't matter if there are already instances running.
+      if run?
+        # We don't check @@global.offline b/c we can't create EC2 instances
+        # without an internet connection. Use passthrough for routine tests.
+        raise MachineGroupAlreadyRunning, current_machine_group if rmach.running?
+      end
+      
       if @routine
         bad = @routine.keys - @@allowed_actions
         raise UnsupportedActions.new(@name, bad) unless bad.empty?

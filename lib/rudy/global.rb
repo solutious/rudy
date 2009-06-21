@@ -33,7 +33,6 @@ module Rudy
     
     field :testrun
     
-    field :user
     field :localhost
     
     field :parallel
@@ -61,7 +60,12 @@ module Rudy
       if config.defaults?
         # Apply the "color" default before "nocolor" so nocolor has presedence
         @nocolor = !config.defaults.color unless config.defaults.color.nil?
-        %w[region zone environment role position user 
+        # WARNING: Don't add user to this list. The global value should return
+        # the value specified on the command line or nil. If it is nil, we can
+        # check the value from the machines config. If that is nil, we use the
+        # value from the defaults config. 
+        # TODO: investigate removing this apply_config method
+        %w[region zone environment role position 
            localhost nocolor quiet yes parallel].each do |name|
           val = config.defaults.send(name)
           self.send("#{name}=", val) unless val.nil?
@@ -118,7 +122,6 @@ module Rudy
       @environment ||= Rudy::DEFAULT_ENVIRONMENT
       @role ||= Rudy::DEFAULT_ROLE
       @position ||= Rudy::DEFAULT_POSITION
-      @user ||= Rudy.sysinfo.user || 'rudy'
       @localhost ||= Rudy.sysinfo.hostname || 'localhost'
     end
     

@@ -65,11 +65,7 @@ module Rudy
     
     def li(msg); Rudy::Huxtable.li msg; end
     def ld(msg); Rudy::Huxtable.ld msg; end
-    
-    # Print +msg+ to +@@logger+
-    def self.lip(msg); @@logger.print "I: #{msg}";                end
-    def lip(msg); Rudy::Huxtable.lip msg; end
-    
+    def le(msg); Rudy::Huxtable.le msg; end
     
     def config_dirname
       raise "No config paths defined" unless @@config.is_a?(Rudy::Config) && @@config.paths.is_a?(Array)
@@ -131,12 +127,9 @@ module Rudy
       path = user_keypairpath(:root)
       (!path.nil? && !path.empty?)
     end
-    
-    def current_user
-      @@global.user
-    end
+
     def current_user_keypairpath
-      user_keypairpath(current_user)
+      user_keypairpath(current_machine_user)
     end
     
     def current_machine_group
@@ -188,20 +181,9 @@ module Rudy
     def current_machine_name
       [@@global.zone, current_machine_group, @@global.position].join(Rudy::DELIM)
     end
-
-    # +name+ the name of the remote user to use for the remainder of the command
-    # (or until switched again). If no name is provided, the user will be revert
-    # to whatever it was before the previous switch. 
-    # TODO: deprecate
-    def switch_user(name=nil)
-      if name == nil && @switch_user_previous
-        @@global.user = @switch_user_previous
-      elsif @@global.user != name
-        raise "No root keypair defined for #{name}!" unless has_keypair?(name)
-        @@logger.puts "Remote commands will be run as #{name} user"
-        @switch_user_previous = @@global.user
-        @@global.user = name
-      end
+    
+    def current_machine_user
+      @@global.user || fetch_machine_param(:user) || Rudy.sysinfo.user
     end
     
     def self.keypair_path_to_name(kp)

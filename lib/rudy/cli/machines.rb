@@ -50,13 +50,13 @@ module Rudy
       
       def ssh
         # TODO: Give this methos a good look over
-        pkey = user_keypairpath(@@global.user)
+        pkey = user_keypairpath(current_machine_user)
         unless pkey
-          puts "No private key configured for #{@@global.user} in #{current_machine_group}"
+          puts "No private key configured for #{current_machine_user} in #{current_machine_group}"
         end
         
         # Options to be sent to Net::SSH
-        ssh_opts = { :user => @@global.user || Rudy.sysinfo.user, :debug => nil }
+        ssh_opts = { :user => current_machine_user, :debug => nil }
         if pkey 
           raise "Cannot find file #{pkey}" unless File.exists?(pkey)
           raise InsecureKeyPermissions, @pkey unless File.stat(pkey).mode == 33152

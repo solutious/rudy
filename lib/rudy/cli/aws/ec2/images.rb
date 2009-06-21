@@ -98,8 +98,6 @@ module AWS; module EC2;
       opts = {}
       opts[:id] = @option.instid if @option.instid
       
-      @@global.user = 'root'
-      
       puts "You may want to run rudy-ec2 #{@alias} --prepare first".bright
       puts "NOTE 1: This process is currently Linux-only"
       puts "NOTE 2: If you plan to create a public machine image, there are "
@@ -109,7 +107,7 @@ module AWS; module EC2;
       exit unless Annoy.pose_question("  Continue?\a ", /yes|y|ya|sure|you bet!/i, STDERR)
 
       # Options to be sent to Net::SSH
-      ssh_opts = { :user => @@global.user || Rudy.sysinfo.user, :debug => nil  }
+      ssh_opts = { :user => current_machine_user, :debug => nil  }
       if @@global.pkey 
         raise "Cannot find file #{@@global.pkey}" unless File.exists?(@@global.pkey)
         raise InsecureKeyPermissions, @@global.pkey unless File.stat(@@global.pkey).mode == 33152

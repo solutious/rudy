@@ -1,9 +1,9 @@
 
 
 module Rudy
-  module Guidelines #:nodoc:all
+  module Guidelines
     extend self
-    AFE = "Always fail early"   # [ed: the A's are a work in progress]
+    AFE = "Always fail early"
     ABA = "Always be accurate"
     CBC = "Consistency before cuteness"
     UNO = "Ugly's not okay"

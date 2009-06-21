@@ -35,6 +35,14 @@ module Rudy
       def message; "Empty depends block in routine."; end
     end
     
+    class GroupNotRunning < Rudy::Error
+      def message; "Some machines are not running:#{$/}#{@obj.inspect}"; end
+    end
+    
+    class GroupNotAvailable < Rudy::Error
+      def message; "Some machines are not available:#{$/}#{@obj.inspect}"; end
+    end
+    
     class UnsupportedActions < Rudy::Error
       def initialize(klass, actions)
         @klass, @actions = klass, [actions].flatten
@@ -104,6 +112,10 @@ module Rudy
         exit 12
       end
       ret
+    end
+    
+    def self.machine_separator(name, awsid)
+      ('%s %-50s awsid: %s ' % [$/, name, awsid]).att(:reverse)
     end
     
   private 

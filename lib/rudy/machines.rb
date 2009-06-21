@@ -25,6 +25,12 @@ module Rudy
     
     attr_reader :instance
     
+      # An ephemeral value which is set after checking whether 
+      # the SSH daemon is running. By default this will be set 
+      # to false but can be set to true to avoid checking again.
+      # See available?
+    attr_accessor :available
+    
     def init
       #@created = 
       @rtype = 'm'
@@ -35,7 +41,11 @@ module Rudy
       @position = find_next_position || '01'
       @state = 'no-instance'
       @os = 'unknown'
+      @available = false
     end
+    
+    # See +available+ attribute
+    def available?; @available; end
     
     def liner_note
       update #if !dns_public? && @awsid

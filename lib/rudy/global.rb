@@ -82,6 +82,10 @@ module Rudy
       postprocess
     end
     
+    def zone=(z)
+      @zone = z.to_sym
+      @region = @zone.to_s.gsub(/[a-z]$/, '').to_sym
+    end
     
     def update(ghash={})
       ghash = ghash.marshal_dump if ghash.is_a?(OpenStruct) 

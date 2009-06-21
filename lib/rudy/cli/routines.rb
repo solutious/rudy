@@ -100,7 +100,7 @@ module Rudy; module CLI;
         end
       end
       
-      #execute_check :medium
+      execute_check :medium
       
       machines = @rr.execute
       

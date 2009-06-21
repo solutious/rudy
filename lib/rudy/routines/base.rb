@@ -165,7 +165,7 @@ module Rudy; module Routines;
       cmd ||= ""
       cmd, user = cmd.to_s, user.to_s
       prompt = user == "root" ? "#" : "$"
-      puts ("%s@%s%s %s" % [user, host, prompt, cmd.bright])
+      li ("%s@%s%s %s" % [user, host, prompt, cmd.bright])
     end
     
     def print_response(rap)
@@ -174,7 +174,9 @@ module Rudy; module Routines;
       return if rap.exit_code != 0
       
       if @@global.parallel
-        li ('%s: %s: %s' % [rap.box.nickname, rap.cmd, rap.exit_code, rap.stdout.inspect])
+        cmd, user = cmd.to_s, user.to_s
+        prompt = user == "root" ? "#" : "$"
+        li "%s@%s%s %s%s%s" % [rap.box.user, rap.box.nickname, prompt, rap.cmd.bright, $/, rap.stdout.inspect]
         unless rap.stderr.empty?
           le "#{rap.box.nickname}: " << rap.stderr.join("#{rap.box.nickname}: ")
         end

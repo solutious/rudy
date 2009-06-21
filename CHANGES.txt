@@ -5,6 +5,7 @@ RUDY, CHANGES
 #### 0.9.0 (2009-06-??) ###############################
 
 * FIXED: Routine blocks now process directives in the order their given (in Ruby 1.8 and 1.9). 
+* FIXED: Ambiguity when specifying zone and region. Region is now based on the zone. 
 * CHANGE: Rudy::Machine.inspect now prints in a standard Ruby inspect format
 * CHANGE: Routines have been completely rebuilt but should remain backwards compatible. 
 * CHANGE: Now requires rye-0.8.0 (pre_command_hook args change, parallel stuff, quietly)

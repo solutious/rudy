@@ -155,26 +155,24 @@ module Rudy; module Routines;
     end
     
     
-    def each_routine_action(&routine_action)
+    def generic_routine_wrapper(&routine_action)
       
-      routine = @routine
-      raise "No routine supplied" unless routine.kind_of?(Hash)
+      raise "No routine supplied" unless @routine.kind_of?(Hash)
 
       # This gets and removes the dependencies from the routines hash.
       # We grab the after ones now too, so they can also be removed.
-      before_deps = Rudy::Routines::DependsHelper.get(:before, routine)
-      after_deps  = Rudy::Routines::DependsHelper.get(:after,  routine) 
+      before, after = @routine.delete(:before), @routine.delete(:after)
       
-      Rudy::Routines::DependsHelper.execute_all before_deps
+      Rudy::Routines::DependsHelper.execute_all before
       
       # This is the meat of the sandwich
       if routine_action && run?
-        routine.each_pair { |action,defenition| 
-          routine_action.call action, defenition
+        @routine.each_pair { |action,definition| 
+          routine_action.call action, definition
         }
       end
       
-      Rudy::Routines::DependsHelper.execute_all after_deps
+      Rudy::Routines::DependsHelper.execute_all after
       
     end
     

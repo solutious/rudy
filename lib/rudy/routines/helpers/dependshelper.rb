@@ -10,44 +10,13 @@ module Rudy; module Routines;
     Rudy::Routines.add_helper :after, self
     
     def raise_early_exceptions(type, depends, rset, lbox, option=nil, argv=nil)
+      unless depends.kind_of? Array
+        raise Rudy::Error, "#{type} must be a kind of Array (#{depends.class})" 
+      end
       raise Rudy::Routines::EmptyDepends, type if depends.nil? || depends.empty?
-      depends.each_pair do |name,v|
-        unless name.is_a?(Symbol)
-          raise Rudy::Error, "Dependency must be a symbol (#{name})" 
-        end
+      depends.flatten.compact.each do |name|
         raise Rudy::Routines::NoRoutine, name unless valid_routine?(name)
       end
-    end
-    
-    # Returns an Array of the dependent routines for the given +timing+
-    # which can be anything but is most often one of: :before, :after.
-    def get(timing, routine)
-      return unless routine.has_key? timing
-      # Backwards compatability for 0.8 and earlier which
-      # forced before and after blocks to be Hash objects.
-      a = routine[timing].is_a?(Hash) ? routine[timing].keys : routine[timing]
-      
-      dependencies = []
-      a.each do |routine_name|
-        # Non-nil values are regular blocks not references
-        next unless routine[timing][routine_name].nil?
-        dependencies << routine_name
-        # Remove the names of routine dependencies from
-        # the routine but leave the ones with values
-        # because will be processed by ScriptHandler.
-        routine[timing].delete routine_name
-        unless valid_routine? routine_name
-          raise Rudy::Routines::NoRoutine, routine_name
-        end
-      end
-      
-      # We've already deleted the routine references from routine[timing]
-      # so it's empty we will delete it too because there is nothing left
-      routine.delete(timing) if routine[timing].empty?
-      
-      ld "Found #{timing} dependencies: #{dependencies.join(', ')}"
-      
-      dependencies
     end
     
     # A simple wrapper for executing a routine.
@@ -64,11 +33,13 @@ module Rudy; module Routines;
       routine.execute
     end
     
-    # Calls execute for each routine name in +routines+ (an Array).
+    # Calls execute for each routine name in +depends+ (an Array).
     # Does nothing if given an empty Array or nil.
-    def execute_all(routines)
-      return if routines.nil? || routines.empty?
-      routines.each { |routine| execute(routine) }
+    def execute_all(depends)
+      return if depends.nil? || depends.empty?
+      depends = depends.flatten.compact
+      ld "Found depenencies: #{depends.join(', ')}"
+      depends.each { |routine| execute(routine) }
     end
     
   end

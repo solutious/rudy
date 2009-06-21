@@ -10,7 +10,7 @@ module Rudy; module Routines;
     def execute
       ld "Executing routine: #{@name}"
       processed = []
-      each_routine_action do |action,definition|
+      generic_routine_wrapper do |action,definition|
         helper = Rudy::Routines.get_helper action
         ld "  executing helper: #{action}"
         enjoy_every_sandwich {

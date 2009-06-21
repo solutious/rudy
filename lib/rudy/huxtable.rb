@@ -59,11 +59,11 @@ module Rudy
     end
     
     # Print +msg+ to +@@logger+
-    def self.li(msg);  @@logger.puts msg;                end
+    def self.li(msg); @@logger.puts "I: #{msg}";                end
     # Print +msg+ to +@@logger+ if +Rudy.debug?+ returns true
-    def self.ld(msg); @@logger.puts msg if Rudy.debug?; end
+    def self.ld(msg); @@logger.puts "D: #{msg}" if Rudy.debug?; end
     # Print +msg+ to +@@logger+ with "ERROR: " prepended
-    def self.le(msg); @@logger.puts "ERROR: #{msg}" end
+    def self.le(msg); @@logger.puts "E: #{msg}" end
     
     def li(msg);  Rudy::Huxtable.li msg;  end
     def ld(msg); Rudy::Huxtable.ld msg; end

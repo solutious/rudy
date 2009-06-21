@@ -75,8 +75,7 @@ module Rudy; module CLI;
             
       machines = @rr.execute
       
-      
-      unless machines.empty?
+      if @global.verbose > 1 && !machines.empty?
         puts $/, "The following machines were processed:"
         machines.each do |machine|
           puts machine

@@ -57,15 +57,15 @@ module Rudy
     end
     
     # Puts +msg+ to +@@logger+
-    def self.li(msg); @@logger.puts "I: #{msg}";                end
+    def self.li(*msg); msg.each { |m| @@logger.puts m }; end
     # Puts +msg+ to +@@logger+ if +Rudy.debug?+ returns true
-    def self.ld(msg); @@logger.puts "D: #{msg}" if Rudy.debug?; end
+    def self.ld(*msg); msg.each { |m| @@logger.puts "D: #{m}" } if Rudy.debug?; end
     # Puts +msg+ to +@@logger+ with "ERROR: " prepended
-    def self.le(msg); @@logger.puts "E: #{msg}" end
+    def self.le(*msg); msg.each { |m| @@logger.puts "  #{m}" }; end
     
-    def li(msg); Rudy::Huxtable.li msg; end
-    def ld(msg); Rudy::Huxtable.ld msg; end
-    def le(msg); Rudy::Huxtable.le msg; end
+    def li(*msg); Rudy::Huxtable.li *msg; end
+    def ld(*msg); Rudy::Huxtable.ld *msg; end
+    def le(*msg); Rudy::Huxtable.le *msg; end
     
     def config_dirname
       raise "No config paths defined" unless @@config.is_a?(Rudy::Config) && @@config.paths.is_a?(Array)
@@ -101,11 +101,14 @@ module Rudy
     
     def user_keypairpath(name)
       raise Rudy::Error, "No user provided" unless name
-      raise NoConfig unless @@config
-      raise NoMachinesConfig unless @@config.machines
-      raise NoGlobal unless @@global
+      ## NOTE: I think it is more appropriate to return nil here
+      ## than raise errors. This stuff should be checked already
+      ##raise NoConfig unless @@config
+      ##raise NoMachinesConfig unless @@config.machines
+      ##raise NoGlobal unless @@global
+      return unless @@global && @@config && @@config.machines
+      
       zon, env, rol = @@global.zone, @@global.environment, @@global.role
-      #Caesars.enable_debug
       path = @@config.machines.find_deferred(zon, env, rol, [:users, name, :keypair])
       path ||= @@config.machines.find_deferred(env, rol, [:users, name, :keypair])
       path ||= @@config.machines.find_deferred(rol, [:users, name, :keypair])

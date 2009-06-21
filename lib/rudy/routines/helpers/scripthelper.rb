@@ -18,6 +18,7 @@ module Rudy; module Routines;
     def execute(type, batch, rset, lbox, option=nil, argv=nil)
       # It's important this stay a regex rather than a literal comparison
       if type.to_s =~ /local/   
+        lbox.cd Dir.pwd
         batch = { lbox.user => batch } if batch.is_a?(Proc)
         execute_command(batch, lbox, option, argv)
       else

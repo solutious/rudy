@@ -99,7 +99,7 @@ module Rudy; module Routines;
           print_response ret
         end
       end
-    
+      
       box.exception_hook(Rye::CommandError, &rbox_exception_handler)
       box.exception_hook(Exception, &rbox_exception_handler)
       
@@ -169,43 +169,51 @@ module Rudy; module Routines;
     end
     
     def print_response(rap)
+      # Non zero exit codes raise exceptions so  
+      # the erorrs have already been handled. 
+      return if rap.exit_code != 0
+      
       if @@global.parallel
-        puts ('%s: %s: %s' % [rap.box.nickname, rap.cmd, rap.stdout.inspect])
+        li ('%s: %s: %s' % [rap.box.nickname, rap.cmd, rap.exit_code, rap.stdout.inspect])
+        unless rap.stderr.empty?
+          le "#{rap.box.nickname}: " << rap.stderr.join("#{rap.box.nickname}: ")
+        end
       else
-        puts '  ' << rap.stdout.join("#{$/}  ") if !rap.stdout.empty?
-        return if rap.exit_code != 0
+        li '  ' << rap.stdout.join("#{$/}  ") if !rap.stdout.empty?
         colour = rap.exit_code != 0 ? :red : :normal
-        return if rap.stderr.empty?
-        STDERR.puts(("  STDERR  " << '-'*38).color(colour).bright)
-        STDERR.puts "  " << rap.stderr.join("#{$/}  ").color(colour)
-        if rap.exit_code != 0
-          STDERR.puts "  Exit code: #{rap.exit_code}".color(colour) 
+        unless rap.stderr.empty?
+          le ("  STDERR  " << '-'*38).color(colour).bright
+          le "  " << rap.stderr.join("#{$/}  ").color(colour)
         end
       end
     end
     
-
-    
   private 
-
-  
+    
     def rbox_exception_handler
-      Proc.new do |ex|
-        if ex.is_a?(Rye::CommandError)
-          STDERR.puts "  #{ex.message}".color(:red)
-        else
-          STDERR.puts "  #{ex.class}: #{ex.message}".color(:red)
-        end
-        STDERR.puts ex.backtrace if Rudy.debug?
-        choice = Annoy.get_user_input('(S)kip  (R)etry  (A)bort: ') || ''
-        if choice.match(/\AS/i)
-          :skip
-        elsif choice.match(/\AR/i)
-          :retry   # Tells Rye::Box#run_command to retry
-        else
-          exit 12
+      Proc.new do |ex, cmd, user, host, nickname|
+        print_exception(user, host, cmd, nickname, ex)
+        unless @@global.parallel
+          choice = Annoy.get_user_input('(S)kip  (R)etry  (A)bort: ') || ''
+          if choice.match(/\AS/i)
+            :skip
+          elsif choice.match(/\AR/i)
+            :retry   # Tells Rye::Box#run_command to retry
+          else
+            exit 12
+          end
         end
       end
+    end
+    
+    def print_exception(user, host, cmd, nickname, ex)
+      prefix = @@global.parallel ? "#{nickname}: #{cmd}: " : ""
+      if ex.is_a?(Rye::CommandError)
+        le prefix << ex.message.color(:red)
+      else
+        le prefix << "#{ex.class}: #{ex.message}".color(:red)
+      end
+      le *ex.backtrace
     end
     
   end

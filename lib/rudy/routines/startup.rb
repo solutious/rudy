@@ -63,9 +63,8 @@ module Rudy; module Routines;
       Rudy::Routines.rescue {
         Rudy::Routines::HostHelper.set_hostname @rset      
       }
-      if run?
 
-        
+      if run?
         # This is the meat of the sandwich
         Rudy::Routines.runner @routine, @rset, @lbox, @option, @argv
         

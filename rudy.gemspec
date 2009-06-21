@@ -14,24 +14,24 @@
   s.require_paths = %w[lib]
   s.rubygems_version = '1.1.1'
   
+  s.add_dependency 'rye',        '>= 0.8.0'
+  s.add_dependency 'annoy',      '>= 0.5.3'
   s.add_dependency 'drydock',    '>= 0.6.5'
   s.add_dependency 'caesars',    '>= 0.7.2'
-  s.add_dependency 'rye',        '>= 0.7.6'
   s.add_dependency 'sysinfo',    '>= 0.5.1'
   s.add_dependency 'storable',   '>= 0.5.3'
-  s.add_dependency 'annoy',      '>= 0.5.2'
   
-  s.add_dependency 'echoe'
-  s.add_dependency 'amazon-ec2', '>= 0.3.8'  # Region fix
   s.add_dependency 'aws-s3',     '>= 0.6.1'  # Ruby 1.9.1 compatability
   s.add_dependency 'highline',   '>= 1.5.1'  # Ruby 1.9.1 compatability
+  s.add_dependency 'amazon-ec2', '>= 0.3.8'  # Region fix
 
   # One of the other dependencies needs these gems 
   # but doesn't seem to specify them. Why I outta!
+  s.add_dependency 'tenderlove-frex'
   s.add_dependency 'archive-tar-minitar'
   s.add_dependency 'nokogiri'
+  s.add_dependency 'echoe'
   s.add_dependency 'racc'
-  s.add_dependency 'tenderlove-frex'
   s.add_dependency 'hoe'
   
   # libxml2 libxml2-dev libxslt-dev

@@ -10,8 +10,6 @@ module Rudy; module Routines;
                          :local, :remote, :after]
                          
     def init(*args)
-      @machines = @rmach.list || []
-      @rset = create_rye_set @machines
       @routine ||= {}
     end
     
@@ -26,63 +24,59 @@ module Rudy; module Routines;
     def execute
       ld "Executing routine: #{@name}"
       li "[this is a generic routine]" if @routine.empty?
+
       
-      return unless run?
+      # If this is a testrun we won't create new instances
+      # we'll just grab the list of machines in this group. 
+      # NOTE: Expect errors if there are no machines.
+      @machines = run? ? @rmach.restart : @rmach.list
+      @rset = create_rye_set @machines
       
-      if @routine.has_key? :before_local
-        helper = Rudy::Routines.get_helper :local
-        Rudy::Routines.rescue {
-          helper.execute(:local, @routine.delete(:before_local), nil, @lbox, @option, @argv)
-        }
-      end
-      
-      if @routine.has_key? :before_remote
-        helper = Rudy::Routines.get_helper :remote
-        Rudy::Routines.rescue {
-          helper.execute(:remote, @routine.delete(:before_remote), @rset, @lbox, @option, @argv)
-        }
-      end
-      
-      @rmach.restart do |machine|
-        puts machine_separator(machine.name, machine.awsid)
-        
-        Rudy::Routines.rescue {
-          Rudy::Utils.waiter(3, 120, STDOUT, "Waiting for instance...", 0) {
-            inst = machine.get_instance
-            inst && inst.running?
+      if run?
+        if @routine.has_key? :before_local
+          helper = Rudy::Routines.get_helper :local
+          Rudy::Routines.rescue {
+            helper.execute(:local, @routine.delete(:before_local), nil, @lbox, @option, @argv)
           }
-        }
-        
-        sleep 1
-        
-        # Add instance info to machine and save it. This is really important
-        # for the initial startup so the metadata is updated right away. But
-        # it's also important to call here because if a routine was executed
-        # and an unexpected exception occurs before this update is executed
-        # the machine metadata won't contain the DNS information. Calling it
-        # here ensure that the metadata is always up-to-date.
-        Rudy::Routines.rescue { machine.update }
-        
-        
-        # Windows machine do not have an SSH daemon
-        next if (machine.os || '').to_s == 'win32'
-        
-        Rudy::Routines.rescue {
-          Rudy::Utils.waiter(2, 30, STDOUT, "Waiting for SSH daemon...", 0) {
-            Rudy::Utils.service_available?(machine.dns_public, 22)
+        end
+      
+        if @routine.has_key? :before_remote
+          helper = Rudy::Routines.get_helper :remote
+          Rudy::Routines.rescue {
+            helper.execute(:remote, @routine.delete(:before_remote), @rset, @lbox, @option, @argv)
           }
-        }
+        end
       end
       
       Rudy::Routines.rescue {
-        @machines = @rmach.list  
-        @rset = create_rye_set @machines
+        if !Rudy::Routines::HostHelper.is_running? @rset
+          a = @rset.boxes.select { |box| !box.stash.running? }
+          raise GroupNotRunning, a
+        end
       }
       
-      Rudy::Routines::HostnameHelper.set_hostname @rset
+      # This is important b/c the machines will not 
+      # have DNS info until after they are running. 
+      Rudy::Routines.rescue { Rudy::Routines::HostHelper.update_dns @rset }
       
-      # This is the meat of the sandwich
-      Rudy::Routines.runner @routine, @rset, @lbox, @option, @argv
+      Rudy::Routines.rescue {
+        if !Rudy::Routines::HostHelper.is_available? @rset
+          a = @rset.boxes.select { |box| !box.stash.available? }
+          raise GroupNotAvailable, a
+        end
+      }
+      Rudy::Routines.rescue {
+        Rudy::Routines::HostHelper.set_hostname @rset      
+      }
+      
+      if run?
+        # This is the meat of the sandwich
+        Rudy::Routines.runner @routine, @rset, @lbox, @option, @argv
+        
+        Rudy::Routines.rescue {
+          Rudy::Routines::DependsHelper.execute_all @after
+        }
+      end
       
       @machines
     end

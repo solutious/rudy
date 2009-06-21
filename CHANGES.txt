@@ -16,6 +16,7 @@ RUDY, CHANGES
 * CHANGE: Removed machines config (now recommend uploading local files)
 * ADDED: routines command for displaying available routines
 * ADDED: "rudy init" now authorizes public keys for user@localhost
+* ADDED: Parallel processing for remote machines
 
 * TODO: zone is now a single letter: a, b, c, etc... The long form (us-east-1b) will set the region too.
 * TODO: Support rudy -e all -r all startup

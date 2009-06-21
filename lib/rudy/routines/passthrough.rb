@@ -9,9 +9,8 @@ module Rudy; module Routines;
     
     def execute
       ld "Executing routine: #{@name}"
-      processed = []
-      
-      return unless run?
+
+      return @machines unless run?
       
       Rudy::Routines::DependsHelper.execute_all @before
       
@@ -20,7 +19,7 @@ module Rudy; module Routines;
       
       Rudy::Routines::DependsHelper.execute_all @after
 
-      processed
+      @machines
     end
     
     # Called by generic_machine_runner

@@ -10,6 +10,10 @@ RUDY, CHANGES
 * CHANGE: Now requires rye-0.7.6 (pre_command_hook args change)
 * CHANGE: before / after routine actions are now used for dependencies.
 * CHANGE: Removed script_local, after_local, before_local from passthrough routines syntax.
+* CHANGE: Allowed before_local for startup routines
+* CHANGE: Allowed before_local and before_remote for reboot routines
+* CHANGE: Allowed after_local for shutdown routines
+* CHANGE: Removed machines config (now recommend uploading local files)
 * ADDED: routines command for displaying available routines
 * ADDED: "rudy init" now authorizes public keys for user@localhost
 

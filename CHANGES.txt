@@ -7,7 +7,7 @@ RUDY, CHANGES
 * FIXED: Routine blocks now process directives in the order their given (in Ruby 1.8 and 1.9). 
 * CHANGE: Rudy::Machine.inspect now prints in a standard Ruby inspect format
 * CHANGE: Routines have been completely rebuilt but should remain backwards compatible. 
-* CHANGE: Now requires rye-0.7.6 (pre_command_hook args change)
+* CHANGE: Now requires rye-0.8.0 (pre_command_hook args change, parallel stuff, quietly)
 * CHANGE: before / after routine actions are now used for dependencies.
 * CHANGE: Removed script_local, after_local, before_local from passthrough routines syntax.
 * CHANGE: Allowed before_local for startup routines

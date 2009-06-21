@@ -56,16 +56,19 @@ module Rudy
       Rudy::DOMAIN
     end
     
-    # Print +msg+ to +@@logger+
+    # Puts +msg+ to +@@logger+
     def self.li(msg); @@logger.puts "I: #{msg}";                end
-    # Print +msg+ to +@@logger+ if +Rudy.debug?+ returns true
+    # Puts +msg+ to +@@logger+ if +Rudy.debug?+ returns true
     def self.ld(msg); @@logger.puts "D: #{msg}" if Rudy.debug?; end
-    # Print +msg+ to +@@logger+ with "ERROR: " prepended
+    # Puts +msg+ to +@@logger+ with "ERROR: " prepended
     def self.le(msg); @@logger.puts "E: #{msg}" end
     
-    def li(msg);  Rudy::Huxtable.li msg;  end
+    def li(msg); Rudy::Huxtable.li msg; end
     def ld(msg); Rudy::Huxtable.ld msg; end
     
+    # Print +msg+ to +@@logger+
+    def self.lip(msg); @@logger.print "I: #{msg}";                end
+    def lip(msg); Rudy::Huxtable.lip msg; end
     
     
     def config_dirname

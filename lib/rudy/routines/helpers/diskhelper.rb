@@ -40,7 +40,6 @@ module Rudy; module Routines;
         #modified << disks
       end
       
-      
       Rye::Cmd.remove_command(:rudy_mkfs)
     end
     

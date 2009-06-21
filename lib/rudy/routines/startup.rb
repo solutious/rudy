@@ -16,6 +16,7 @@ module Rudy; module Routines;
     # * before dependencies
     # * before_local (if present)
     # * Startup instances
+    # * Set hostname
     # * all other actions
     # * after dependencies
     def execute
@@ -32,7 +33,6 @@ module Rudy; module Routines;
           helper.execute(:local, @routine.delete(:before_local), nil, @lbox, @option, @argv)
         }
       end
-      
       
       @rmach.create do |machine|
         puts machine_separator(machine.name, machine.awsid)
@@ -70,8 +70,10 @@ module Rudy; module Routines;
         @rset = create_rye_set @machines
       }
       
+      Rudy::Routines::HostnameHelper.set_hostname @rset
+      
       # This is the meat of the sandwich
-      Rudy::Routines.runner(@routine, @rset, @lbox, @option, @argv)
+      Rudy::Routines.runner @routine, @rset, @lbox, @option, @argv
       
       Rudy::Routines::DependsHelper.execute_all @after
       

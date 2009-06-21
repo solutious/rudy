@@ -19,6 +19,7 @@ module Rudy; module Routines;
     # * before_local (if present)
     # * before_remote (if present)
     # * Reboot instances
+    # * Set hostname
     # * before dependencies
     # * all other actions
     # * after dependencies
@@ -78,8 +79,10 @@ module Rudy; module Routines;
         @rset = create_rye_set @machines
       }
       
+      Rudy::Routines::HostnameHelper.set_hostname @rset
+      
       # This is the meat of the sandwich
-      Rudy::Routines.runner(@routine, @rset, @lbox, @option, @argv)
+      Rudy::Routines.runner @routine, @rset, @lbox, @option, @argv
       
       @machines
     end

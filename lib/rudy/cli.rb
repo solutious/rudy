@@ -38,8 +38,6 @@ module Rudy
         # Send The Huxtables the global values from the command-line
         Rudy::Huxtable.update_global @global
         
-        p [:user2, @@global.user]
-        
         # Reload configuration. This must come after update_global 
         # so it will catch the @@global.config path (if supplied).
         begin

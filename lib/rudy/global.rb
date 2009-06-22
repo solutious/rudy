@@ -33,6 +33,7 @@ module Rudy
     
     field :localhost
     field :parallel
+    field :identity
     
     field :testrun
     field :offline

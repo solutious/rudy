@@ -109,7 +109,7 @@ module Rudy
       return unless @@global && @@config && @@config.machines
       
       zon, env, rol = @@global.zone, @@global.environment, @@global.role
-      path = @@global.pkey
+      path = @@global.identity
       path ||= @@config.machines.find_deferred(zon, env, rol, [:users, name, :keypair])
       path ||= @@config.machines.find_deferred(env, rol, [:users, name, :keypair])
       path ||= @@config.machines.find_deferred(rol, [:users, name, :keypair])

@@ -5,7 +5,7 @@ RUDY, CHANGES
 * TODO: Re-implement metadata
 
 
-#### 0.9.0 (2009-06-22) ###############################
+#### 0.9.0 (2009-06-XX) ###############################
 
 NOTE: This is a significant re-write from 0.8 (routines, metadata)
 NOTE: The implementation for storing machine, disk, and backup 
@@ -33,6 +33,8 @@ metadata will be replaced in one of the early 0.9.x releases.
 * ADDED: "rudy init" now authorizes public keys for user@localhost
 * ADDED: Parallel processing for remote machines
 * ADDED: Routines now have access to $global and $option (which are frozen)
+
+* TODO: Re-enable disk routines. 
 
 
 #### 0.8.5 (2009-06-08) ###############################

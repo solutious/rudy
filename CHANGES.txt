@@ -14,6 +14,7 @@ metadata will be replaced in one of the early 0.9.x releases.
 * FIXED: Routine blocks now process directives in the order their given (in Ruby 1.8 and 1.9). 
 * FIXED: Ambiguity when specifying zone and region. Region is now based on the zone. 
 * FIXED: Reboot routines are now fully supported
+* FIXED: Unless position (-p) is specified, it's assume command apply to the entire group. 
 * CHANGE: Rudy::Machine.inspect now prints in a standard Ruby inspect format
 * CHANGE: Routines have been completely rebuilt but should remain backwards compatible. 
 * CHANGE: Now requires Rye 0.8 (pre_command_hook args change, parallel stuff, quietly)

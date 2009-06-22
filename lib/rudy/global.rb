@@ -126,7 +126,6 @@ module Rudy
       @zone ||= Rudy::DEFAULT_ZONE
       @environment ||= Rudy::DEFAULT_ENVIRONMENT
       @role ||= Rudy::DEFAULT_ROLE
-      @position ||= Rudy::DEFAULT_POSITION
       @localhost ||= Rudy.sysinfo.hostname || 'localhost'
     end
     

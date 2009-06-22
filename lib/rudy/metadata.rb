@@ -42,9 +42,16 @@ module Rudy
       names = [:region, :zone, :environment, :role].compact
       names -= [*less].flatten.uniq.compact
       values = names.collect do |n|
-        local[n.to_sym] || @@global.send(n.to_sym)
+         local[n.to_sym] || @@global.send(n.to_sym)
       end
-      names.zip(values) + more
+      criteria = names.zip(values) + more   # a weird array
+      # If a position was specified we'll add that to the 
+      # select criteria. This is not added by default. 
+      unless (local[:position] || @@global.send(:position)).nil?
+        criteria << [:position, (local[:position] || @@global.send(:position))]
+      end
+      ld criteria.inspect
+      criteria
     end
     
     def to_query(more=[], less=[], local={})

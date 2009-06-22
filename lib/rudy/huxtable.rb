@@ -192,6 +192,10 @@ module Rudy
       @@global.user || fetch_machine_param(:user) || Rudy.sysinfo.user
     end
     
+    def current_machine_bucket
+      @@global.bucket || fetch_machine_param(:bucket) || nil
+    end
+    
     def self.keypair_path_to_name(kp)
       return nil unless kp
       name = File.basename kp

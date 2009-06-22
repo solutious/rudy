@@ -36,6 +36,7 @@ module Rudy
     
     field :testrun
     field :offline
+    field :bucket
     
     field :config => String
     
@@ -62,6 +63,7 @@ module Rudy
         # the value specified on the command line or nil. If it is nil, we can
         # check the value from the machines config. If that is nil, we use the
         # value from the defaults config. 
+        # WARNING: Don't add bucket either or any machines configuration param 
         # TODO: investigate removing this apply_config method
         %w[region zone environment role position 
            localhost nocolor quiet yes parallel].each do |name|

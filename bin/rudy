@@ -29,6 +29,7 @@ class RudyCLI < Rudy::CLI::Base
   global :e, :environment, String, "Connect to the specified environment (e.g. #{Rudy::DEFAULT_ENVIRONMENT})"
   global :r, :role, String, "Connect to a machine with the specified role (e.g. #{Rudy::DEFAULT_ROLE})"
   global :p, :position, String, "Position in the machine in its group (e.g. #{Rudy::DEFAULT_POSITION})"
+  global :b, :bucket, String, "An S3 bucket name (used when creating images)"
   global :t, :testrun, "Test run. Don't execute action (EXPERIMENTAL)."
   global :P, :parallel, "Execute remote commands in parallel (EXPERIMENTAL)."
   

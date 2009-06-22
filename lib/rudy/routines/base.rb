@@ -13,8 +13,6 @@ module Rudy; module Routines;
     def disable_run; @@run = false; end
     def enable_run; @@run = true; end
     
-      # The Rye::Box instance used for all local actions
-    attr_reader :lbox
       # An Array Rudy::Machines objects that will be processed
     attr_reader :machines
     
@@ -56,7 +54,7 @@ module Rudy; module Routines;
       
       ld "Routine: #{@routine.inspect}"
       
-      @lbox = create_rye_box @@global.localhost
+      @@lbox = create_rye_box @@global.localhost unless defined?(@@lbox)
       
       disable_run if @@global.testrun
       

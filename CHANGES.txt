@@ -21,10 +21,13 @@ NOTE: This is a significant re-write from 0.8 (routines, metadata)
 * CHANGE: Group names now take the form: grp-us-east-1b-stage-app
 * CHANGE: private keys are stored in ~/.ssh/
 * CHANGE: Removed create_image and prepare_image actions from rudy-ec2
+* CHANGE: local routine blocks now share a single Rye::Box instance (@instvars too...)
+* CHANGE: remote routine blocks now share a single Rye::Set instance
 * ADDED: routines command for displaying available routines
 * ADDED: "rudy init" now authorizes public keys for user@localhost
 * ADDED: Parallel processing for remote machines
 * ADDED: Routines now have access to $global and $option (which are frozen)
+
 
 * TODO: Update ebstest and the arcade
 * TODO: @@rset, @@lbox

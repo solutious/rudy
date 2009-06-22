@@ -34,7 +34,6 @@ module AWS; module EC2;
       puts "Destroying: #{kp.name}"
       execute_check(:medium)
       execute_action { rkey.destroy(kp.name) }
-      keypairs
     end
     
     def keypairs

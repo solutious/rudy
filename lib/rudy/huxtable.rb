@@ -57,7 +57,7 @@ module Rudy
     end
     
     # Puts +msg+ to +@@logger+
-    def self.li(*msg); msg.each { |m| @@logger.puts m }; end
+    def self.li(*msg); msg.each { |m| @@logger.puts m } if !@@global.quiet; end
     # Puts +msg+ to +@@logger+ if +Rudy.debug?+ returns true
     def self.ld(*msg); msg.each { |m| @@logger.puts "D: #{m}" } if Rudy.debug?; end
     # Puts +msg+ to +@@logger+ with "ERROR: " prepended

@@ -203,16 +203,16 @@ module Rudy
       end
       
       unless @rgrp.exists?(current_group_name)
-        puts "Creating group: #{current_group_name}"
+        li "Creating group: #{current_group_name}"
         @rgrp.create(current_group_name)
       end
       
       unless @rkey.exists?(root_keypairname)
-        kp_file = File.join(Rudy::CONFIG_DIR, root_keypairname)
+        kp_file = root_keypairpath
         raise PrivateKeyFileExists, kp_file if File.exists?(kp_file)
-        puts "Creating keypair: #{root_keypairname}"
+        li "Creating keypair: #{root_keypairname}"
         kp = @rkey.create(root_keypairname)
-        puts "Saving #{kp_file}"
+        li "Saving #{kp_file}"
         Rudy::Utils.write_to_file(kp_file, kp.private_key, 'w', 0600)
       else
         kp_file = root_keypairpath

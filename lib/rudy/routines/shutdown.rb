@@ -31,7 +31,7 @@ module Rudy; module Routines;
         Rudy::Routines::DependsHelper.execute_all @before
       
         # This is the meat of the sandwich
-        Rudy::Routines.runner(@routine, @rset, @lbox, @option, @argv)
+        Rudy::Routines.runner(@routine, @rset, @lbox, @argv)
       
         @machines.each do |machine|
           Rudy::Routines.rescue { machine.destroy }
@@ -40,7 +40,7 @@ module Rudy; module Routines;
         if after_local
           helper = Rudy::Routines.get_helper :local
           Rudy::Routines.rescue {
-            helper.execute(:local, after_local, nil, @lbox, @option, @argv)
+            helper.execute(:local, after_local, nil, @lbox, @argv)
           }
         end
       

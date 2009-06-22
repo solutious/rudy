@@ -11,30 +11,29 @@ module Rudy; module Routines;
     Rudy::Routines.add_helper :local,  self
     Rudy::Routines.add_helper :remote, self
     
-    def raise_early_exceptions(type, batch, rset, lbox, option=nil, argv=nil)
+    def raise_early_exceptions(type, batch, rset, lbox, argv=nil)
       
     end
     
-    def execute(type, batch, rset, lbox, option=nil, argv=nil)
+    def execute(type, batch, rset, lbox, argv=nil)
       # It's important this stay a regex rather than a literal comparison
       if type.to_s =~ /local/   
         lbox.cd Dir.pwd
         batch = { lbox.user => batch } if batch.is_a?(Proc)
-        execute_command(batch, lbox, option, argv)
+        execute_command(batch, lbox, argv)
       else
         batch = { rset.user => batch } if batch.is_a?(Proc)
-        execute_command(batch, rset, option, argv)
+        execute_command(batch, rset, argv)
       end
     end
 
     
   private  
 
-    # * +timing+ is one of: after, before, after_local, before_local
-    # * +routine+ a single routine hash (startup, shutdown, etc...)
-    # * +sconf+ is a config hash from machines config (ignored if nil)
+    # * +batch+ a single routine hash (startup, shutdown, etc...)
     # * +robj+ an instance of Rye::Set or Rye::Box 
-    def execute_command(batch, robj, option=nil, argv=nil)
+    # * +argv+ command line args
+    def execute_command(batch, robj, argv=nil)
       
       # We need to explicitly add the rm command for rbox so we
       # can delete the script config file when we're done. This
@@ -66,7 +65,7 @@ module Rudy; module Routines;
         
         ### EXECUTE THE COMMANDS BLOCK
         begin
-          robj.batch(option, argv, &proc)
+          robj.batch(argv, &proc)
         ensure
           robj.enable_safe_mode          # In case it was disabled
           robj.switch_user original_user # Return to the user it was provided with

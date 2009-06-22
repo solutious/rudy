@@ -83,12 +83,12 @@ module Rudy
     def self.has_helper?(name);  @@helper.has_key?(name);  end
     
     # Executes a routine block
-    def self.runner(routine, rset, lbox, option=nil, argv=nil)
+    def self.runner(routine, rset, lbox, argv=nil)
       routine.each_pair do |action,definition| 
         helper = Rudy::Routines.get_helper action
         Rudy::Huxtable.ld "  executing helper: #{action}"
         Rudy::Routines.rescue {
-          helper.execute(action, definition, rset, lbox, option, argv)
+          helper.execute(action, definition, rset, lbox, argv)
         }
       end
     end

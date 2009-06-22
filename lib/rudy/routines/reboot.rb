@@ -36,14 +36,14 @@ module Rudy; module Routines;
         if @routine.has_key? :before_local
           helper = Rudy::Routines.get_helper :local
           Rudy::Routines.rescue {
-            helper.execute(:local, @routine.delete(:before_local), nil, @lbox, @option, @argv)
+            helper.execute(:local, @routine.delete(:before_local), nil, @lbox, @argv)
           }
         end
       
         if @routine.has_key? :before_remote
           helper = Rudy::Routines.get_helper :remote
           Rudy::Routines.rescue {
-            helper.execute(:remote, @routine.delete(:before_remote), @rset, @lbox, @option, @argv)
+            helper.execute(:remote, @routine.delete(:before_remote), @rset, @lbox, @argv)
           }
         end
       end
@@ -71,7 +71,7 @@ module Rudy; module Routines;
       
       if run?
         # This is the meat of the sandwich
-        Rudy::Routines.runner @routine, @rset, @lbox, @option, @argv
+        Rudy::Routines.runner @routine, @rset, @lbox, @argv
         
         Rudy::Routines.rescue {
           Rudy::Routines::DependsHelper.execute_all @after

@@ -60,6 +60,11 @@ module Rudy; module Routines;
       
       disable_run if @@global.testrun
       
+      # We create these frozen globals for the benefit of 
+      # the local and remote routine blocks. 
+      $global = @@global.dup.freeze unless $global
+      $option = option.dup.freeze unless $option
+      
       init(*args) if respond_to? :init
     end
     
@@ -185,7 +190,7 @@ module Rudy; module Routines;
         colour = rap.exit_code != 0 ? :red : :normal
         unless rap.stderr.empty?
           le ("  STDERR  " << '-'*38).color(colour).bright
-          le "  " << rap.stderr.join("#{$/}  ").color(colour)
+          le "  " << rap.stderr.join("#{$/}    ").color(colour)
         end
       end
     end

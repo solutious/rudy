@@ -9,7 +9,7 @@ module Rudy; module Routines;
     Rudy::Routines.add_helper :before,  self
     Rudy::Routines.add_helper :after, self
     
-    def raise_early_exceptions(type, depends, rset, lbox, option=nil, argv=nil)
+    def raise_early_exceptions(type, depends, rset, lbox, argv=nil)
       unless depends.kind_of? Array
         raise Rudy::Error, "#{type} must be a kind of Array (#{depends.class})" 
       end

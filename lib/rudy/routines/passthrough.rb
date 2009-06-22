@@ -15,7 +15,7 @@ module Rudy; module Routines;
       Rudy::Routines::DependsHelper.execute_all @before
       
       # This is the meat of the sandwich
-      Rudy::Routines.runner(@routine, @rset, @lbox, @option, @argv)
+      Rudy::Routines.runner(@routine, @rset, @lbox, @argv)
       
       Rudy::Routines::DependsHelper.execute_all @after
 
@@ -32,7 +32,7 @@ module Rudy; module Routines;
       @routine.each_pair do |action,definition|
         raise NoHelper, action unless Rudy::Routines.has_helper?(action)
         helper = Rudy::Routines.get_helper action
-        helper.raise_early_exceptions(action, definition, @rset, @lbox, @option, @argv)
+        helper.raise_early_exceptions(action, definition, @rset, @lbox, @argv)
       end
     end
     

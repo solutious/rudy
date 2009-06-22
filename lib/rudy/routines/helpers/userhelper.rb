@@ -7,11 +7,11 @@ module Rudy; module Routines;
     Rudy::Routines.add_helper :adduser, self
     Rudy::Routines.add_helper :authorize, self
     
-    def raise_early_exceptions(type, user, rset, lbox, option=nil, argv=nil)
+    def raise_early_exceptions(type, user, rset, lbox, argv=nil)
       
     end
     
-    def execute(type, user, rset, lbox, option=nil, argv=nil)
+    def execute(type, user, rset, lbox, argv=nil)
       send(type, user, rset)
     end
     

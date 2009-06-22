@@ -7,7 +7,7 @@ module Rudy; module Routines;
     
     Rudy::Routines.add_helper :disks, self
     
-    def raise_early_exceptions(type, batch, rset, lbox, option=nil, argv=nil)
+    def raise_early_exceptions(type, batch, rset, lbox, argv=nil)
       
     end
     
@@ -21,7 +21,7 @@ module Rudy; module Routines;
       routine.disks.values.collect { |d| d.keys }.flatten
     end
     
-    def execute(type, routine, rset, lbox, option=nil, argv=nil)
+    def execute(type, routine, rset, lbox, argv=nil)
       
       # We need to add mkfs since it's not enabled by default. 
       # We prepend the command with rudy_ so we can delete it. 

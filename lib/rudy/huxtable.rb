@@ -316,6 +316,7 @@ module Rudy
       raise NoGlobal unless @@global
       zon, env, rol = @@global.zone, @@global.environment, @@global.role
       hashes = []
+      # This is fucked!
       hashes << @@config.machines.find(env, rol)
       hashes << @@config.machines.find(zon, env, rol)
       hashes << @@config.machines.find(zon, [env, rol])

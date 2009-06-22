@@ -29,7 +29,8 @@ NOTE: This is a significant re-write from 0.8 (routines, metadata)
 * ADDED: Parallel processing for remote machines
 * ADDED: Routines now have access to $global and $option (which are frozen)
 
-
+* TODO: Supply dns values in machines config
+* TODO: Supply machines config to routines blocks with only the specific machine group context 
 * TODO: Update ebstest and the arcade
 * TODO: Disk syntax in the routines DSL will change. The DSL no longer accepts arguments, just the action (create, destroy, ...) and path. 
 * TODO: Disk backups will be removed (temporarily -- probably until on of the early 1.x releases). 

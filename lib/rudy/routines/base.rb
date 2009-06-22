@@ -62,6 +62,9 @@ module Rudy; module Routines;
       # the local and remote routine blocks. 
       $global = @@global.dup.freeze unless $global
       $option = option.dup.freeze unless $option
+      ## TODO: get the machine config for just the current machine group. This
+      ## probably requires Caesars to be aware of which nodes are structural.  
+      ##$config = fetch_machine_config unless $config
       
       init(*args) if respond_to? :init
     end

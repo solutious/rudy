@@ -87,10 +87,9 @@ end
 commands do
   allow :gem_install, '/usr/bin/gem', 'install', :V, '--no-rdoc', '--no-ri'
   allow :apt_get, 'apt-get', :y, :q
-  allow :floo, :time, 1 do
+  allow :rubycode do
+    puts "Some ruby code running in #{self}"
   end
-    allow :userdel
-    allow :ssh
 end
 
 # ----------------------------------------------------------- ROUTINES --------

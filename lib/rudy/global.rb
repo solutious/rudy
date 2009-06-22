@@ -29,7 +29,7 @@ module Rudy
     field :accountnum
     field :accountname  # TODO: use this. And accounttype (aws)
     field :cert
-    field :privatekey
+    field :pkey
     
     field :localhost
     field :parallel
@@ -73,7 +73,7 @@ module Rudy
       end
       
       if config.accounts? && config.accounts.aws
-        %w[accesskey secretkey accountnum cert privatekey].each do |name|
+        %w[accesskey secretkey accountnum cert pkey].each do |name|
           val = config.accounts.aws.send(name)
           self.send("#{name}=", val) unless val.nil?
         end
@@ -105,7 +105,7 @@ module Rudy
       apply_system_defaults
       @nocolor = !@color unless @color.nil?
       @cert &&= File.expand_path(@cert)
-      @privatekey &&= File.expand_path(@privatekey)
+      @pkey &&= File.expand_path(@pkey)
       @position &&= @position.to_s.rjust(2, '0')  
       @format &&= @format.to_sym rescue nil
       @quiet ? Rudy.enable_quiet : Rudy.disable_quiet
@@ -117,7 +117,7 @@ module Rudy
       @secretkey ||= ENV['AWS_SECRET_KEY'] || ENV['AWS_SECRET_ACCESS_KEY']
       @accountnum ||= ENV['AWS_ACCOUNT_NUMBER']
       @cert ||= ENV['EC2_CERT']
-      @privatekey ||= ENV['EC2_PRIVATE_KEY']
+      @pkey ||= ENV['EC2_PRIVATE_KEY']
     end
     
     def apply_system_defaults

@@ -10,15 +10,15 @@ tryout "Defaults" do
     @@config.look_and_load   # looks for and loads config files
   end
   
-  drill "has all defaults" do
+  drill "has some defaults" do
     # Sorted so we can add new keys without breaking the test
     @@config.defaults.keys.collect { |v| v.to_s }.sort
   end
   
 end
 dreams "Defaults" do
-  dream "has all defaults" do 
-    output ["color", "environment", "region", "role", "user", "yes", "zone"].sort
+  dream "has some defaults" do 
+    output ["environment", "role", "zone"].sort
   end
   
 end

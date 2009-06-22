@@ -91,7 +91,7 @@ module Rudy
               accountnum ""
               accesskey ""
               secretkey ""
-              privatekey "~/path/2/pk-xxxx.pem" 
+              pkey "~/path/2/pk-xxxx.pem" 
               cert "~/path/2/cert-xxxx.pem"
             end
           end

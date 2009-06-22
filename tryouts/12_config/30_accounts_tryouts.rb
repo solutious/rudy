@@ -18,7 +18,7 @@ tryout "Accounts" do
 end
 dreams "Accounts" do
   dream "has aws account" do 
-    output ["accesskey", "accountnum", "cert", "name", "privatekey", "secretkey"]
+    output ["accesskey", "accountnum", "cert", "name", "pkey", "secretkey"]
   end
   
 end

@@ -23,6 +23,7 @@ NOTE: This is a significant re-write from 0.8 (routines, metadata)
 * CHANGE: Removed create_image and prepare_image actions from rudy-ec2
 * CHANGE: local routine blocks now share a single Rye::Box instance (@instvars too...)
 * CHANGE: remote routine blocks now share a single Rye::Set instance
+* CHANGE: "privatekey" in accounts config is renamed to "pkey"
 * ADDED: routines command for displaying available routines
 * ADDED: "rudy init" now authorizes public keys for user@localhost
 * ADDED: Parallel processing for remote machines
@@ -30,8 +31,6 @@ NOTE: This is a significant re-write from 0.8 (routines, metadata)
 
 
 * TODO: Update ebstest and the arcade
-* TODO: @@rset, @@lbox
-* TODO: Support rudy -e all -r all startup
 * TODO: Disk syntax in the routines DSL will change. The DSL no longer accepts arguments, just the action (create, destroy, ...) and path. 
 * TODO: Disk backups will be removed (temporarily -- probably until on of the early 1.x releases). 
 

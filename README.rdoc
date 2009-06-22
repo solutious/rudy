@@ -21,6 +21,8 @@ All configuration is organized into the zones, environments, and roles that you 
 
 <em>This is a BETA release. That means Rudy's not ready for production use! See Project-Status[http://wiki.github.com/solutious/rudy/project-status].</em>
 
+This is a major release with many internal and external changes from previous releases. Use it, break it, fork it, go bizonkers! I could use all the testing help I can get. 
+
 I'm currently rebuilding[http://github.com/solutious/rudy/tree/metadata-refactor] the metadata implementation. This is the part of Rudy that stores your machine, disk, and backup infoz in SimpleDB so it's pretty important! The implementation in the 0.8.4 release (and this master branch) are functional but frail so I want to re-emphasize not to use Rudy for production right now.
 
 

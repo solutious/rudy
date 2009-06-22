@@ -44,11 +44,11 @@ tryout "Global knows ENV" do
   end
   drill "reads EC2_PRIVATE_KEY" do
     ENV['EC2_PRIVATE_KEY'] = 'PK100' and Rudy::Huxtable.reset_global
-    Rudy::Huxtable.global.privatekey
+    Rudy::Huxtable.global.pkey
   end
   drill "reads EC2_PRIVATE_KEY" do
     ENV['USER'] = 'PK100'
-    Rudy::Huxtable.global.privatekey
+    Rudy::Huxtable.global.pkey
   end
 end
 dreams "Global knows ENV" do

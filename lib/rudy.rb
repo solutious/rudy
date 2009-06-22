@@ -77,7 +77,7 @@ module Rudy
       :instance    => 'i',
       :machine     => 'm',
       :reservation => 'r',
-      :privatekey  => 'pk',
+      :pkey        => 'pk',
       :volume      => 'vol',
       :kernel      => 'aki',
       :image       => 'ami',
@@ -89,7 +89,7 @@ module Rudy
       :disk        => 'disk',
       :backup      => 'back',
       :snapshot    => 'snap',
-      :certificate => 'cert',
+      :cert        => 'cert',
       :dns_private => 'domU'
     }.freeze
 

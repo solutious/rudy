@@ -112,8 +112,6 @@ module Rudy::AWS
           :instance_type => opts[:size].to_s,
           :kernel_id => nil
         }
-        #p opts[:machine_data]
-        #exit
         
         response = execute_request({}) { @ec2.run_instances(old_opts) }
         return nil unless response['instancesSet'].is_a?(Hash)

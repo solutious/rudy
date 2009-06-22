@@ -28,10 +28,10 @@
 # The machines block describes the 'physical' characteristics of your machines. 
 machines do
   
-  zone :'us-east-1b' do
+  region :'us-east-1' do
     ami 'ami-e348af8a'               # Alestic Debian 5.0, 32-bit (US)
   end
-  zone :'eu-west-1b' do
+  region :'eu-west-1' do
     ami 'ami-6ecde51a'               # Alestic Debian 5.0, 32-bit (EU)
   end
   
@@ -183,7 +183,7 @@ end
 # non-boolean values are expected to be Symbols. 
 #
 defaults do
-  zone :'us-east-1b'
+  zone :'us-east-1d'
   environment :stage
   role :app
   #user ENV['USER']                  # The default remote user

@@ -38,7 +38,7 @@ module Rudy; module Routines;
       
       original_user = robj.user
       original_dir = robj.current_working_directory
-      
+
       batch.each_pair do |user, proc|
         
         # The error doesn't apply to the local Rye::Box instance
@@ -49,10 +49,11 @@ module Rudy; module Routines;
         if user.to_s != robj.user
           begin
             ld "Switching user to: #{user} (was: #{robj.user})"
+            ld "(key: #{user_keypairpath(user)})"
             
             robj.add_key user_keypairpath(user)
             robj.switch_user user
-            robj.connect
+            
           rescue Net::SSH::AuthenticationFailed, Net::SSH::HostKeyMismatch => ex  
             STDERR.puts "Error connecting: #{ex.message}".color(:red)
             STDERR.puts "Skipping user #{user}".color(:red)

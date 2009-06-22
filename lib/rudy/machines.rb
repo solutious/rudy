@@ -175,9 +175,9 @@ module Rudy
         :zone => @@global.zone.to_s,
         :environment => @@global.environment.to_s,
         :role => @@global.role.to_s,
-        :position => @@global.position.to_s,
+        :position => (@@global.position || '01').to_s,
         :hosts => { # Add hosts to the /etc/hosts file 
-          :dbmaster => "127.0.0.1",
+          #:dbmaster => "127.0.0.1",
         }
       } 
       data

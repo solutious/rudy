@@ -1,10 +1,15 @@
 RUDY, CHANGES
 
+* TODO: Supply dns values in machines config
+* TODO: Supply machines config to routines blocks with only the specific machine group context 
+* TODO: Re-implement metadata
 
 
-#### 0.9.0 (2009-06-??) ###############################
+#### 0.9.0 (2009-06-22) ###############################
 
 NOTE: This is a significant re-write from 0.8 (routines, metadata)
+NOTE: The implementation for storing machine, disk, and backup 
+metadata will be replaced in one of the early 0.9.x releases.
 
 * FIXED: Routine blocks now process directives in the order their given (in Ruby 1.8 and 1.9). 
 * FIXED: Ambiguity when specifying zone and region. Region is now based on the zone. 
@@ -28,13 +33,6 @@ NOTE: This is a significant re-write from 0.8 (routines, metadata)
 * ADDED: "rudy init" now authorizes public keys for user@localhost
 * ADDED: Parallel processing for remote machines
 * ADDED: Routines now have access to $global and $option (which are frozen)
-
-* TODO: Supply dns values in machines config
-* TODO: Supply machines config to routines blocks with only the specific machine group context 
-* TODO: Update ebstest and the arcade
-* TODO: Disk syntax in the routines DSL will change. The DSL no longer accepts arguments, just the action (create, destroy, ...) and path. 
-* TODO: Disk backups will be removed (temporarily -- probably until on of the early 1.x releases). 
-
 
 
 #### 0.8.5 (2009-06-08) ###############################

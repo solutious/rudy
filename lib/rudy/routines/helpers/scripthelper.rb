@@ -45,7 +45,9 @@ module Rudy; module Routines;
       original_user = robj.user
       
       batch.each_pair do |user, proc|
-        unless File.exists?(user_keypairpath(user) || '')
+        
+        # The error doesn't apply to the local Rye::Box instance
+        if robj.is_a?(Rye::Set) && !File.exists?(user_keypairpath(user) || '')
           le "Cannot find key for #{user}: #{user_keypairpath(user)}"
         end
         

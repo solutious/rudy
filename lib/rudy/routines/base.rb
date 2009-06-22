@@ -78,7 +78,7 @@ module Rudy; module Routines;
     def create_rye_box(hostname, opts={})
       
       opts = {
-        :info => (@@global.verbose > 3),  # rudy -vvvv 
+        :info => (@@global.verbose >= 3),  # rudy -vvv 
         :debug => false,
         :user => Rudy.sysinfo.user
       }.merge opts

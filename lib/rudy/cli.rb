@@ -62,7 +62,7 @@ module Rudy
           exit 1
         end
         
-        if @@global.verbose > 4
+        if @@global.verbose >= 4    # -vvvv
           format = @@global.format == :json ? :json : :yaml
           gcopy = @@global.dup
           gcopy.secretkey = "[HIDDEN]"

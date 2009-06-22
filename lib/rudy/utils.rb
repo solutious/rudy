@@ -25,7 +25,6 @@ module Rudy
       rescue SocketError, Errno::ETIMEDOUT => ex
         STDERR.puts "Connection Error. Check your internets!"
       end
-      ip += "/32" if ip
       ip
     end
     
@@ -36,7 +35,6 @@ module Rudy
       # turn off reverse DNS resolution temporarily 
       orig, Socket.do_not_reverse_lookup = Socket.do_not_reverse_lookup, true   
       ip = UDPSocket.open {|s| s.connect('75.101.137.7', 1); s.addr.last } # Solutious IP
-      ip += "/24" if ip
       ip
     ensure  
       Socket.do_not_reverse_lookup = orig

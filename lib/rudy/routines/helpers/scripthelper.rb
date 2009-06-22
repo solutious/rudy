@@ -35,14 +35,8 @@ module Rudy; module Routines;
     # * +argv+ command line args
     def execute_command(batch, robj, argv=nil)
       
-      # We need to explicitly add the rm command for rbox so we
-      # can delete the script config file when we're done. This
-      # adds the method to this instance of rbox only.
-      # We give it a funny so we can delete it knowing we're not
-      # deleting a method added somewhere else. 
-      def robj.rudy_tmp_rm(*args); cmd('rm', args); end
-      
       original_user = robj.user
+      original_dir = robj.current_working_directory
       
       batch.each_pair do |user, proc|
         
@@ -69,11 +63,12 @@ module Rudy; module Routines;
         begin
           robj.batch(argv, &proc)
         ensure
-          robj.enable_safe_mode          # In case it was disabled
-          robj.switch_user original_user # Return to the user it was provided with
+          robj.enable_safe_mode            # In case it was disabled
+          robj.switch_user original_user   # Return to the user it was provided with          
+          robj.cd                          # reset to home dir
+          robj.cd original_dir             # return to previous directory
         end
         
-        robj.cd # reset to home dir
       end
       
       

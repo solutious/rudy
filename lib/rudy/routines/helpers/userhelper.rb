@@ -12,6 +12,7 @@ module Rudy; module Routines;
     end
     
     def execute(type, user, rset, lbox, argv=nil)
+      raise NoMachines if rset.boxes.empty?
       send(type, user, rset)
     end
     

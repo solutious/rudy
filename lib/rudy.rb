@@ -145,6 +145,9 @@ module Rudy
   class MachineGroupNotRunning < Rudy::Error
     def message; "Machine group #{@obj} is not running."; end
   end
+  class NoMachines < Rudy::Error;
+    def message; "Specified remote machine(s) not running"; end
+  end 
   class MachineGroupNotDefined < Rudy::Error 
     def message; "#{@obj} is not defined in machines config."; end
   end

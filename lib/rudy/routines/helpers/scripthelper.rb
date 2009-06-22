@@ -23,6 +23,7 @@ module Rudy; module Routines;
         execute_command(batch, lbox, argv)
       else
         batch = { rset.user => batch } if batch.is_a?(Proc)
+        raise NoMachines if rset.boxes.empty?
         execute_command(batch, rset, argv)
       end
     end

@@ -7,6 +7,7 @@ module Rudy; module Routines;
     ## NOTE: This helper doesn't use Rudy::Routines.add_helper
     
     def is_running?(rset)
+      raise NoMachines if rset.boxes.empty?
       rset.batch(rset.parallel) do |parallel|
         msg = "Starting #{self.nickname}..."
         output = parallel ? nil : Rudy::Huxtable.logger 
@@ -26,6 +27,7 @@ module Rudy; module Routines;
     # Each Rye:Box instance has a Rudy::Machine instance in its stash so
     # self.stash.update == machine.update
     def update_dns(rset)
+      raise NoMachines if rset.boxes.empty?
       rset.batch do 
         self.stash.update 
         self.host = self.stash.dns_public
@@ -33,6 +35,7 @@ module Rudy; module Routines;
     end
     
     def is_available?(rset, port=22)
+      raise NoMachines if rset.boxes.empty?
       rset.batch(rset.parallel, port) do |parallel,p|
         # Windows machine do not have an SSH daemon
         unless (self.stash.os || '').to_s == 'win32'
@@ -45,6 +48,7 @@ module Rudy; module Routines;
     end
     
     def set_hostname(rset)
+      raise NoMachines if rset.boxes.empty?
       # Set the hostname if specified in the machines config. 
       # :rudy -> change to Rudy's machine name
       # :default -> leave the hostname as it is

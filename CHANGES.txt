@@ -11,15 +11,21 @@ NOTE: This is a significant re-write from 0.8 (routines, metadata)
 NOTE: The implementation for storing machine, disk, and backup 
 metadata will be replaced in one of the early 0.9.x releases.
 
-* FIXED: Routine blocks now process directives in the order their given (in Ruby 1.8 and 1.9). 
-* FIXED: Ambiguity when specifying zone and region. Region is now based on the zone. 
+* FIXED: Routine blocks now process directives in the order their given 
+  (in Ruby 1.8 and 1.9). 
+* FIXED: Ambiguity when specifying zone and region. Region is now based 
+  on the zone. 
 * FIXED: Reboot routines are now fully supported
-* FIXED: Unless position (-p) is specified, it's assume command apply to the entire group. 
+* FIXED: Unless position (-p) is specified, it's assume command apply 
+  to the entire group. 
 * CHANGE: Rudy::Machine.inspect now prints in a standard Ruby inspect format
-* CHANGE: Routines have been completely rebuilt but should remain backwards compatible. 
-* CHANGE: Now requires Rye 0.8 (pre_command_hook args change, parallel stuff, quietly)
+* CHANGE: Routines have been completely rebuilt but should remain 
+  backwards compatible. 
+* CHANGE: Now requires Rye 0.8 (pre_command_hook args change, parallel 
+  stuff, quietly)
 * CHANGE: before / after routine actions are now used for dependencies.
-* CHANGE: Removed script_local, after_local, before_local from passthrough routines syntax.
+* CHANGE: Removed script_local, after_local, before_local from passthrough 
+  routines syntax.
 * CHANGE: Allowed before_local for startup routines
 * CHANGE: Allowed before_local and before_remote for reboot routines
 * CHANGE: Allowed after_local for shutdown routines
@@ -27,7 +33,7 @@ metadata will be replaced in one of the early 0.9.x releases.
 * CHANGE: Group names now take the form: grp-us-east-1b-stage-app
 * CHANGE: private keys are stored in ~/.ssh/
 * CHANGE: Removed create_image and prepare_image actions from rudy-ec2
-* CHANGE: local routine blocks now share a single Rye::Box instance (@instvars too...)
+* CHANGE: local routine blocks now share a single Rye::Box instance
 * CHANGE: remote routine blocks now share a single Rye::Set instance
 * CHANGE: "privatekey" in accounts config is renamed to "pkey"
 * ADDED: routines command for displaying available routines

@@ -108,7 +108,7 @@ class Rudy::Config
         
         if args.last.is_a?(Proc)
           block = args.pop
-          Rye::Cmd.add_command(cmd, nil, args, &block)
+          Rye::Cmd.add_command(cmd, nil, *args, &block)
         else
           # If no path was specified, we can assume cmd is in the remote path so
           # when we add the method to Rye::Cmd, we'll it the path is "cmd".
@@ -116,7 +116,7 @@ class Rudy::Config
           
           raise PathNotString.new(:commands, cmd) if path && !path.is_a?(String)
           
-          Rye::Cmd.add_command cmd, path, args
+          Rye::Cmd.add_command cmd, path, *args
           
         end
         

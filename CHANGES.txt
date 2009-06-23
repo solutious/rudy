@@ -40,6 +40,7 @@ metadata will be replaced in one of the early 0.9.x releases.
 * ADDED: "rudy init" now authorizes public keys for user@localhost
 * ADDED: Parallel processing for remote machines
 * ADDED: Routines now have access to $global and $option (which are frozen)
+* ADDED: xremote and xlocal routine actions for quick skipping
 
 * TODO: Re-enable disk routines. 
 

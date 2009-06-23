@@ -160,7 +160,11 @@ class Rudy::Config
     forced_hash :remote             # store the usernames.
     chill :local                    # Chill b/c we want to execute
     chill :remote                   # the blocks with Rye::Box#batch
-    
+    forced_hash :xlocal              
+    forced_hash :xremote             
+    chill :xlocal                    
+    chill :xremote                   
+        
     # Startup, Shutdown, Reboot routines
     forced_hash :before_local
     forced_hash :before_remote

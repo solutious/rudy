@@ -11,13 +11,19 @@ module Rudy; module Routines;
     Rudy::Routines.add_helper :local,  self
     Rudy::Routines.add_helper :remote, self
     
+    Rudy::Routines.add_helper :xlocal,  self
+    Rudy::Routines.add_helper :xremote, self
+    
     def raise_early_exceptions(type, batch, rset, lbox, argv=nil)
       
     end
     
     def execute(type, batch, rset, lbox, argv=nil)
+      if type.to_s =~ /\Ax/  
+        # do nothing
+        
       # It's important this stay a regex rather than a literal comparison
-      if type.to_s =~ /local/   
+      elsif type.to_s =~ /local/   
         lbox.cd Dir.pwd
         batch = { lbox.user => batch } if batch.is_a?(Proc)
         execute_command(batch, lbox, argv)

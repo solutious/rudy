@@ -102,7 +102,6 @@ module Rudy
             msg = "YOU ARE PLAYING WITH PRODUCTION"
             puts Rudy::Utils.banner(msg, :normal), $/
           end
-          puts Rudy::Utils.banner("THIS IS EC2"), $/ if Rudy.in_situ?
         end
       end
       

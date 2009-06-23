@@ -24,14 +24,17 @@ module Rudy
       # i.e. if [prod][app][ami] is not available, it will check [prod][ami]
       # and then [ami]. 
       #
-      #     # Display the value for a specific machine.
-      #     $ rudy -e prod -r db config param-name
-      #
       #     # Display all configuration
       #     $ rudy config --all
       #
+      #     # Display just machines
+      #     $ rudy config --defaults
+      #
       def config
-        # if Rudy.in_situ? # TODO: do something intelligent when running on EC2
+        
+        # TODO: Re-enable:
+        #     # Display the value for a specific machine.
+        #     $ rudy -e prod -r db config param-name
         
         if @@config.nil? || @@config.empty?
           return if @@global.quiet

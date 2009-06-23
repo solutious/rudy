@@ -3,7 +3,8 @@ module Rudy::AWS
   class S3
     
     def initialize(access_key=nil, secret_key=nil, region=nil, debug=nil)
-     
+      require 'aws/s3'    
+      
       url ||= 'http://sdb.amazonaws.com'
       # There is a bug with passing :server to EC2::Base.new so 
       # we'll use the environment variable for now. 

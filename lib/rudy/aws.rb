@@ -1,7 +1,7 @@
 
 
-require 'EC2'       # Motley
-require 'aws/s3'    # crew
+require 'EC2'       # amazon-ec2 gem
+
 
 module Rudy
   module AWS

@@ -156,7 +156,7 @@ module AWS; module EC2;
       lt = rudy.list_group(opts[:group], :running, opts[:id]) do |inst|
         
         if @option.print
-          Rudy::Utils.scp_command inst.dns_public, @@global.pkey, opts[:user], opts[:paths], opts[:dest], (opts[:task] == :download), false, @option.print
+          scp_command inst.dns_public, @@global.pkey, opts[:user], opts[:paths], opts[:dest], (opts[:task] == :download), false, @option.print
           next
         end
         
@@ -181,6 +181,34 @@ module AWS; module EC2;
 
     end
     
+    
+    
+    private 
+    
+    def scp_command(host, keypair, user, paths, to_path, to_local=false, verbose=false, printonly=false)
+
+      paths = [paths] unless paths.is_a?(Array)
+      from_paths = ""
+      if to_local
+        paths.each do |path|
+          from_paths << "#{user}@#{host}:#{path} "
+        end  
+        #puts "Copying FROM remote TO this machine", $/
+
+      else
+        to_path = "#{user}@#{host}:#{to_path}"
+        from_paths = paths.join(' ')
+        #puts "Copying FROM this machine TO remote", $/
+      end
+
+
+      cmd = "scp -r "
+      cmd << "-i #{keypair}" if keypair
+      cmd << " #{from_paths} #{to_path}"
+
+      puts cmd if verbose
+      printonly ? (puts cmd) : system(cmd)
+    end
     
     
     

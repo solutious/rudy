@@ -41,30 +41,18 @@ module Rudy
     end
     
     # Generates a canonical tag name in the form:
-    #     rudy-2009-12-31-01
-    # where r1 refers to the revision number that day
-    def generate_tag(revision=1)
+    #     2009-12-31-USER-SUFFIX
+    # where USER is equal to the user executing the Rudy process and 
+    # SUFFIX is equal to +suffix+ (optional)
+    def generate_tag(suffix=nil)
       n = DateTime.now
-      y = n.year.to_s.rjust(4, "20")
-      m = n.month.to_s.rjust(2, "0")
-      d = n.mday.to_s.rjust(2, "0")
-      "rudy-%4s-%2s-%2s-r%s" % [y, m, d, revision.to_s.rjust(2, "0")] 
+      y, m = n.year.to_s.rjust(4, "20"), n.month.to_s.rjust(2, "0")
+      d, u = n.mday.to_s.rjust(2, "0"), Rudy.sysinfo.user
+      criteria = [y, m, d, u]
+      criteria << suffix unless suffix.nil? || suffix.empty?
+      criteria.join Rudy::DELIM 
     end
     
-    
-    
-    
-    # Determine if we're running directly on EC2 or
-    # "some other machine". We do this by checking if
-    # the file /etc/ec2/instance-id exists. This
-    # file is written by /etc/init.d/rudy-ec2-startup. 
-    # NOTE: Is there a way to know definitively that this is EC2?
-    # We could make a request to the metadata IP addresses. 
-    def Rudy.in_situ?
-      File.exists?('/etc/ec2/instance-id')
-    end
-
-
     # Wait for something to happen. 
     # * +duration+ seconds to wait between tries (default: 2).
     # * +max+ maximum time to wait (default: 120). Throws an exception when exceeded.
@@ -277,42 +265,10 @@ module Rudy
       str.gsub(/^[[:blank:]]{#{indent}}/, '')
     end
       
-    
-    
-    
-    ######### Everything below here is TO BE REMOVED. 
-    
-    # (TO BE REMOVED)
-    # TODO: This is old and nasty.
-    def scp_command(host, keypair, user, paths, to_path, to_local=false, verbose=false, printonly=false)
-
-      paths = [paths] unless paths.is_a?(Array)
-      from_paths = ""
-      if to_local
-        paths.each do |path|
-          from_paths << "#{user}@#{host}:#{path} "
-        end  
-        #puts "Copying FROM remote TO this machine", $/
-
-      else
-        to_path = "#{user}@#{host}:#{to_path}"
-        from_paths = paths.join(' ')
-        #puts "Copying FROM this machine TO remote", $/
-      end
-
-
-      cmd = "scp -r "
-      cmd << "-i #{keypair}" if keypair
-      cmd << " #{from_paths} #{to_path}"
-
-      puts cmd if verbose
-      printonly ? (puts cmd) : system(cmd)
-    end
-
   end
 end
 
-# = RSSReader
+# = Rudy::Utils::RSSReader
 #
 # A rudimentary way to read an RSS feed as a hash.
 # Adapted from: http://snippets.dzone.com/posts/show/68

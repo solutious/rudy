@@ -3,7 +3,7 @@
 module Rudy; module Routines;
   class Reboot < Rudy::Routines::Base
     
-    Rudy::Routines.add_handler :reboot, self
+    Rudy::Routines.add_routine :reboot, self
     
     @@allowed_actions = [:before, :disks, :adduser, :authorize,
                          :before_local, :before_remote, 
@@ -34,22 +34,22 @@ module Rudy; module Routines;
       
       if run?
         if @routine.has_key? :before_local
-          helper = Rudy::Routines.get_helper :local
+          handler = Rudy::Routines.get_handler :local
           Rudy::Routines.rescue {
-            helper.execute(:local, @routine.delete(:before_local), nil, @@lbox, @argv)
+            handler.execute(:local, @routine.delete(:before_local), nil, @@lbox, @argv)
           }
         end
       
         if @routine.has_key? :before_remote
-          helper = Rudy::Routines.get_helper :remote
+          handler = Rudy::Routines.get_handler :remote
           Rudy::Routines.rescue {
-            helper.execute(:remote, @routine.delete(:before_remote), @@rset, @@lbox, @argv)
+            handler.execute(:remote, @routine.delete(:before_remote), @@rset, @@lbox, @argv)
           }
         end
       end
       
       Rudy::Routines.rescue {
-        if !Rudy::Routines::HostHelper.is_running? @@rset
+        if !Rudy::Routines::Handlers::Host.is_running? @@rset
           a = @@rset.boxes.select { |box| !box.stash.running? }
           raise GroupNotRunning, a
         end
@@ -57,16 +57,16 @@ module Rudy; module Routines;
       
       # This is important b/c the machines will not 
       # have DNS info until after they are running. 
-      Rudy::Routines.rescue { Rudy::Routines::HostHelper.update_dns @@rset }
+      Rudy::Routines.rescue { Rudy::Routines::Handlers::Host.update_dns @@rset }
       
       Rudy::Routines.rescue {
-        if !Rudy::Routines::HostHelper.is_available? @@rset
+        if !Rudy::Routines::Handlers::Host.is_available? @@rset
           a = @@rset.boxes.select { |box| !box.stash.available? }
           raise GroupNotAvailable, a
         end
       }
       Rudy::Routines.rescue {
-        Rudy::Routines::HostHelper.set_hostname @@rset      
+        Rudy::Routines::Handlers::Host.set_hostname @@rset      
       }
       
       if run?
@@ -74,7 +74,7 @@ module Rudy; module Routines;
         Rudy::Routines.runner @routine, @@rset, @@lbox, @argv
         
         Rudy::Routines.rescue {
-          Rudy::Routines::DependsHelper.execute_all @after
+          Rudy::Routines::Handlers::Depends.execute_all @after
         }
       end
       

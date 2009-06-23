@@ -3,7 +3,7 @@
 module Rudy; module Routines;
   class Startup < Rudy::Routines::Base
     
-    Rudy::Routines.add_handler :startup, self
+    Rudy::Routines.add_routine :startup, self
     
     @@allowed_actions = [:before, :before_local, :disks, :adduser, 
                          :authorize, :local, :remote, :after]
@@ -25,12 +25,12 @@ module Rudy; module Routines;
       
       
       if run?
-        Rudy::Routines::DependsHelper.execute_all @before
+        Rudy::Routines::Handlers::Depends.execute_all @before
       
         if @routine.has_key? :before_local
-          helper = Rudy::Routines.get_helper :local
+          handler = Rudy::Routines.get_handler :local
           Rudy::Routines.rescue {
-            helper.execute(:local, @routine.delete(:before_local), nil, @@lbox, @argv)
+            handler.execute(:local, @routine.delete(:before_local), nil, @@lbox, @argv)
           }
         end
       end
@@ -44,7 +44,7 @@ module Rudy; module Routines;
       @@rset = create_rye_set @machines unless defined?(@@rset)
       
       Rudy::Routines.rescue {
-        if !Rudy::Routines::HostHelper.is_running? @@rset
+        if !Rudy::Routines::Handlers::Host.is_running? @@rset
           a = @@rset.boxes.select { |box| !box.stash.running? }
           raise GroupNotRunning, a
         end
@@ -52,16 +52,16 @@ module Rudy; module Routines;
       
       # This is important b/c the machines will not 
       # have DNS info until after they are running. 
-      Rudy::Routines.rescue { Rudy::Routines::HostHelper.update_dns @@rset }
+      Rudy::Routines.rescue { Rudy::Routines::Handlers::Host.update_dns @@rset }
       
       Rudy::Routines.rescue {
-        if !Rudy::Routines::HostHelper.is_available? @@rset
+        if !Rudy::Routines::Handlers::Host.is_available? @@rset
           a = @@rset.boxes.select { |box| !box.stash.available? }
           raise GroupNotAvailable, a
         end
       }
       Rudy::Routines.rescue {
-        Rudy::Routines::HostHelper.set_hostname @@rset      
+        Rudy::Routines::Handlers::Host.set_hostname @@rset      
       }
 
       if run?
@@ -69,7 +69,7 @@ module Rudy; module Routines;
         Rudy::Routines.runner @routine, @@rset, @@lbox, @argv
         
         Rudy::Routines.rescue {
-          Rudy::Routines::DependsHelper.execute_all @after
+          Rudy::Routines::Handlers::Depends.execute_all @after
         }
       end
       

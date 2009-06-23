@@ -20,6 +20,6 @@ class Hash
     end
     steps
   end
-
+  
 end
 

@@ -9,19 +9,20 @@ module Rudy
   # are handled by Rudy::Routines::Passthrough. 
   # 
   # An individual routine is made up of various actions. Each action is
-  # associated to one of the following helpers: depends, disk, script, 
-  # user. See each helper for the list of actions it is responsible for. 
+  # associated to one of the following handlers: depends, disk, script, 
+  # user. See each handler for the list of actions it is responsible for. 
   module Routines
     
     require 'rudy/routines/base'
+    require 'rudy/routines/handlers/base'
     
     # A Hash of routine names pointing to a specific handler. 
-    # See Rudy::Routines.add_handler
-    @@handler = {}
+    # See Rudy::Routines.add_routine
+    @@routine = {}
     
-    # A Hash of routine keywords pointing to a specifc helper.
-    # See Rudy::Routines.add_helper
-    @@helper = {}
+    # A Hash of routine keywords pointing to a specifc handler.
+    # See Rudy::Routines.add_routine
+    @@handler = {}
     
     class NoRoutine < Rudy::Error
       def message; "Unknown routine '#{@obj}'"; end
@@ -50,7 +51,7 @@ module Rudy
       def message; "#{@klass} does not support: #{@actions.join(', ')}"; end
     end
     
-    # Add a routine handler to @@handler.
+    # Add a routine handler to @@routine.
     #
     # * +routine_name+ Literally the name of the routine that will 
     #   have a special handler, like startup, shutdown, and reboot.
@@ -58,37 +59,37 @@ module Rudy
     #   inherit Rudy::Routine::Base
     #
     # Returns the value of +handler+.
-    def self.add_handler(routine_name, klass)
-      add_some_class @@handler, Rudy::Routines::Base, routine_name, klass
+    def self.add_routine(name, klass)
+      add_some_class @@routine, Rudy::Routines::Base, name, klass
     end
     
-    # Returns the value in the @@handler associated to the key +routine_name+
+    # Returns the value in the @@routine associated to the key +routine_name+
     # if it exists, otherwise it returns Rudy::Routines::Passthrough
-    def self.get_handler(routine_name)
-      get_some_class(@@handler, routine_name) || Rudy::Routines::Passthrough
+    def self.get_routine(name)
+      get_some_class(@@routine, name) || Rudy::Routines::Passthrough
     end
     
-    # Add a routine helper to @@helper.
-    def self.add_helper(action_name, klass)
-      add_some_class @@helper, Rudy::Routines::HelperBase, action_name, klass
+    # Add a routine handler to @@handler.
+    def self.add_handler(name, klass)
+      add_some_class @@handler, Rudy::Routines::Handlers::Base, name, klass
     end
     
-    # Returns the value in the @@helper associated to the key +name+
+    # Returns the value in the @@handler associated to the key +name+
     # if it exists, otherwise it returns nil
-    def self.get_helper(action_name)
-      get_some_class(@@helper, action_name) || nil
+    def self.get_handler(name)
+      get_some_class(@@handler, name) || nil
     end
     
-    def self.has_handler?(name); @@handler.has_key?(name); end
-    def self.has_helper?(name);  @@helper.has_key?(name);  end
+    def self.has_routine?(name); @@routine.has_key?(name); end
+    def self.has_handler?(name);  @@handler.has_key?(name);  end
     
     # Executes a routine block
     def self.runner(routine, rset, lbox, argv=nil)
-      routine.each_pair do |action,definition| 
-        helper = Rudy::Routines.get_helper action
-        Rudy::Huxtable.ld "  executing helper: #{action}"
+      routine.each_pair do |name,definition| 
+        handler = Rudy::Routines.get_handler name
+        Rudy::Huxtable.ld "  executing handler: #{name}"
         Rudy::Routines.rescue {
-          helper.execute(action, definition, rset, lbox, argv)
+          handler.execute(name, definition, rset, lbox, argv)
         }
       end
     end
@@ -120,7 +121,7 @@ module Rudy
     
   private 
   
-    # See Rudy::Routines.add_handler
+    # See Rudy::Routines.add_routine
     def self.add_some_class(store, super_klass, name, klass)
       if store.has_key? name
         Rudy::Huxtable.li "Redefining class for #{name}"
@@ -131,7 +132,7 @@ module Rudy
       store[name] = klass
     end
     
-    # See Rudy::Routines.get_handler
+    # See Rudy::Routines.get_routine
     def self.get_some_class(store, routine_name)
       routine_name &&= routine_name.to_sym
       store[routine_name]
@@ -141,5 +142,5 @@ module Rudy
 end
 
 Rudy::Utils.require_glob(RUDY_LIB, 'rudy', 'routines', '*.rb')
-Rudy::Utils.require_glob(RUDY_LIB, 'rudy', 'routines', 'helpers', '*.rb')
+Rudy::Utils.require_glob(RUDY_LIB, 'rudy', 'routines', 'handlers', '*.rb')
 

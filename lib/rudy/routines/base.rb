@@ -46,14 +46,15 @@ module Rudy; module Routines;
       # e.g. startup, sysupdate, installdeps
       @routine = fetch_routine_config @name 
       
+      ld "Routine: #{@routine.inspect}"
+      
       if @routine
-        # This gets and removes the dependencies from the routines hash.
-        # We grab the after ones now too, so they can also be removed.
+        # Removes the dependencies from the routines hash. 
+        # We run these separately from the other actions.
         @before, @after = @routine.delete(:before), @routine.delete(:after)
       end
       
-      ld "Routine: #{@routine.inspect}"
-      
+      # Share one Rye::Box instance for localhost across all routines
       @@lbox = create_rye_box @@global.localhost unless defined?(@@lbox)
       
       disable_run if @@global.testrun

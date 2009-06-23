@@ -1,18 +1,15 @@
-require 'tempfile'
 
-module Rudy; module Routines; 
-  #--
-  # TODO: Rename to ShellHelper
-  #++
-  module ScriptHelper
-    include Rudy::Routines::HelperBase 
+
+module Rudy; module Routines; module Handlers;
+  module Script
+    include Rudy::Routines::Handlers::Base 
     extend self
     
-    Rudy::Routines.add_helper :local,  self
-    Rudy::Routines.add_helper :remote, self
+    Rudy::Routines.add_handler :local,  self
+    Rudy::Routines.add_handler :remote, self
     
-    Rudy::Routines.add_helper :xlocal,  self
-    Rudy::Routines.add_helper :xremote, self
+    Rudy::Routines.add_handler :xlocal,  self
+    Rudy::Routines.add_handler :xremote, self
     
     def raise_early_exceptions(type, batch, rset, lbox, argv=nil)
       
@@ -85,4 +82,4 @@ module Rudy; module Routines;
     end
   end
   
-end;end
+end;end;end

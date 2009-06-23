@@ -3,7 +3,7 @@
 module Rudy; module Routines;
   class Shutdown < Rudy::Routines::Base
     
-    Rudy::Routines.add_handler :shutdown, self
+    Rudy::Routines.add_routine :shutdown, self
     
     @@allowed_actions = [:before, :disks, :adduser, :authorize,
                          :local, :remote, :after_local, :after]
@@ -28,7 +28,7 @@ module Rudy; module Routines;
       after_local = @routine.delete(:after_local)
       
       if run?
-        Rudy::Routines::DependsHelper.execute_all @before
+        Rudy::Routines::Handlers::Depends.execute_all @before
       
         # This is the meat of the sandwich
         Rudy::Routines.runner(@routine, @@rset, @@lbox, @argv)
@@ -38,13 +38,13 @@ module Rudy; module Routines;
         end
       
         if after_local
-          helper = Rudy::Routines.get_helper :local
+          handler = Rudy::Routines.get_handler :local
           Rudy::Routines.rescue {
-            helper.execute(:local, after_local, nil, @@lbox, @argv)
+            handler.execute(:local, after_local, nil, @@lbox, @argv)
           }
         end
       
-        Rudy::Routines::DependsHelper.execute_all @after
+        Rudy::Routines::Handlers::Depends.execute_all @after
       end
       
       @machines

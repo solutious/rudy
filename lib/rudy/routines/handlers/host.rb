@@ -1,10 +1,10 @@
 
-module Rudy; module Routines; 
-  module HostHelper
-    include Rudy::Routines::HelperBase  # TODO: use trap_rbox_errors
+module Rudy; module Routines; module Handlers;
+  module Host
+    include Rudy::Routines::Handlers::Base
     extend self 
     
-    ## NOTE: This helper doesn't use Rudy::Routines.add_helper
+    ## NOTE: This handler doesn't use Rudy::Routines.add_handler
     
     def is_running?(rset)
       raise NoMachines if rset.boxes.empty?
@@ -65,4 +65,4 @@ module Rudy; module Routines;
     end
     
   end
-end; end
+end; end; end

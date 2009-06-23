@@ -1,11 +1,10 @@
 
-
-module Rudy; module Routines; 
-  module DiskHelper
-    include Rudy::Routines::HelperBase  # TODO: use trap_rbox_errors
+module Rudy; module Routines; module Handlers;
+  module Disks
+    include Rudy::Routines::Handlers::Base
     extend self
     
-    Rudy::Routines.add_helper :disks, self
+    Rudy::Routines.add_handler :disks, self
     
     def raise_early_exceptions(type, batch, rset, lbox, argv=nil)
       
@@ -396,4 +395,4 @@ module Rudy; module Routines;
     end
     
   end
-end;end
+end; end; end

@@ -1,11 +1,11 @@
 
-module Rudy; module Routines; 
-  module UserHelper
-    include Rudy::Routines::HelperBase  # TODO: use trap_rbox_errors
+module Rudy; module Routines; module Handlers;
+  module User
+    include Rudy::Routines::Handlers::Base
     extend self 
     
-    Rudy::Routines.add_helper :adduser, self
-    Rudy::Routines.add_helper :authorize, self
+    Rudy::Routines.add_handler :adduser, self
+    Rudy::Routines.add_handler :authorize, self
     
     def raise_early_exceptions(type, user, rset, lbox, argv=nil)
       
@@ -38,4 +38,4 @@ module Rudy; module Routines;
     
   end
   
-end; end  
+end; end; end

@@ -95,15 +95,18 @@ module Rudy
 
   end
   
-  def Rudy.debug?; @@debug == true; end
   def Rudy.quiet?; @@quiet == true; end
-  def Rudy.yes?; @@yes == true; end
-  def Rudy.enable_debug; @@debug = true; end
   def Rudy.enable_quiet; @@quiet = true; end
-  def Rudy.enable_yes; @@yes = true; end
-  def Rudy.disable_debug; @@debug = false; end
   def Rudy.disable_quiet; @@quiet = false; end
+  
+  def Rudy.yes?; @@yes == true; end
+  def Rudy.enable_yes; @@yes = true; end
   def Rudy.disable_yes; @@yes = false; end
+  
+  def Rudy.debug?; @@debug == true; end
+  def Rudy.enable_debug; @@debug = true; end
+  def Rudy.disable_debug; @@debug = false; end
+  
   
   def Rudy.sysinfo; @@sysinfo; end
   def sysinfo; @@sysinfo;  end

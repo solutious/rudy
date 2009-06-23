@@ -1,13 +1,13 @@
 
-module Rudy; module Routines; 
-  module DependsHelper
-    include Rudy::Routines::HelperBase  # TODO: use trap_rbox_errors
+module Rudy; module Routines; module Handlers;
+  module Depends
+    include Rudy::Routines::Handlers::Base 
     extend self 
     
-    ## NOTE: Dependencies don't use Rudy::Routines.add_helper but we
+    ## NOTE: Dependencies don't use Rudy::Routines.add_handler but we
     ## define them ehere anyway so raise_early_exceptions passes. 
-    Rudy::Routines.add_helper :before,  self
-    Rudy::Routines.add_helper :after, self
+    Rudy::Routines.add_handler :before,  self
+    Rudy::Routines.add_handler :after, self
     
     def raise_early_exceptions(type, depends, rset, lbox, argv=nil)
       unless depends.kind_of? Array
@@ -44,4 +44,4 @@ module Rudy; module Routines;
     
   end
   
-end; end
+end; end; end

@@ -14,28 +14,22 @@ tryouts "Domains" do
     true
   end
   
-  drill "create simpledb connection" do
+  drill "create simpledb connection", Rudy::AWS::SDB, :class do
     @@sdb
   end
   
-  drill "create a domain (#{test_domain})" do
+  drill "create a domain (#{test_domain})", true do
     @@sdb.create_domain test_domain
   end
   
-  drill "list domains" do
+  drill "list domains", Array, :class do
     stash :domains, @@sdb.list_domains
   end
   
-  drill "destroy a domain (#{test_domain})" do
+  drill "destroy a domain (#{test_domain})", true do
     @@sdb.destroy_domain test_domain
   end
   
-end
-dreams "Domains" do
-  dream "create simpledb connection", Rudy::AWS::SDB, :class
-  dream "create a domain (#{test_domain})", true
-  dream "list domains", Array, :class
-  dream "destroy a domain (#{test_domain})", true
 end
 
 

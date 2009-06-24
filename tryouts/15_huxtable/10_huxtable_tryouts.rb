@@ -9,21 +9,15 @@ tryout "Is well kept" do
     #Rudy::Huxtable.update_config
   end
 
-  drill "has config", Rudy::Huxtable.config  
-  drill "has global", Rudy::Huxtable.global  
-  drill "has logger", Rudy::Huxtable.logger
-  drill "specify logger" do
+  drill "has config", Rudy::Huxtable.config, Rudy::Config, :class
+  drill "has global", Rudy::Huxtable.global, Rudy::Global, :class 
+  drill "has logger", Rudy::Huxtable.logger, StringIO, :class
+  drill "specify logger", IO, :class do
     Rudy::Huxtable.update_logger STDOUT
     Rudy::Huxtable.logger
   end
   
  # drill "knows where config lives", Rudy::Huxtable.config_dirname 
-end
-dreams "Is well kept" do
-  dream "has config", Rudy::Config, :class
-  dream "has global", Rudy::Global, :class
-  dream "has logger", StringIO, :class
-  dream "specify logger", IO, :class
 end
 
 tryout "Loads configuration" do
@@ -38,17 +32,13 @@ tryout "Knows the defaults" do
     end
   end
   
-  drill "create olivia" do
+  drill "create olivia", 'Olivia' do
     @@olivia = Olivia.new
     @@olivia.class.to_s
   end
   
-  drill "machine group" do
+  drill "machine group", 'stage-app' do
     @@olivia.current_machine_group
   end
   
-end
-dreams "Knows the defaults" do
-  dream "create olivia", 'Olivia'
-  dream "machine group", 'stage-app'
 end

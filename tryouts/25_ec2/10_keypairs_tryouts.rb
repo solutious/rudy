@@ -19,9 +19,10 @@ tryouts "Domains" do
   end
   
 end
-dreams "Domains" do
-  dream "create simpledb connection", Rudy::AWS::SDB, :class
-  dream "create a domain (#{test_domain})", true
-  dream "list domains", Array, :class
-  dream "destroy a domain (#{test_domain})", true
-end
+#dreams "Domains" do
+#  dream "create simpledb connection", Rudy::AWS::SDB, :class
+#  dream "create a domain (#{test_domain})", true
+#  dream "list domains", Array, :class
+#  dream "destroy a domain (#{test_domain})", true
+#end
+#

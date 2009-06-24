@@ -30,6 +30,7 @@ tryout "Global knows ENV" do
   end
   
   dream 'SACCESS7'
+  dream String, :class
   drill "reads AWS_SECRET_ACCESS_KEY" do
     ENV['AWS_SECRET_ACCESS_KEY'] = 'SACCESS7'
     ENV['AWS_SECRET_KEY'] = nil or Rudy::Huxtable.reset_global

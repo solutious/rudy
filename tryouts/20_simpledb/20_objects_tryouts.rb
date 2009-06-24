@@ -19,44 +19,36 @@ tryouts "Objects" do
     @@sdb = Rudy::AWS::SDB.new(akey, skey, region)
   end
   
-  drill "create test domain (#{test_domain})" do
+  drill "create test domain (#{test_domain})", true do
     @@sdb.create_domain test_domain
   end
   
-  drill "put object" do
+  drill "put object", true do
     stash :product1, produce
     @@sdb.put(test_domain, 'produce1', produce, :replace)
   end
   
-  drill "get object by name" do
+  drill "get object by name", [produce.keys.sort, produce.values.sort] do
     from_sdb = @@sdb.get(test_domain, 'produce1')
     stash :product1, from_sdb
     [from_sdb.keys.sort, from_sdb.values.collect { |v| v.first }.sort ]
   end
   
-  drill "select object" do
+  drill "select object", 0, :gt do
     stash[:query] = "select * from #{test_domain}"
     stash[:items] = @@sdb.select stash[:query]
-    stash[:items].is_a?(Hash) && stash[:items].keys.size > 0
+    stash[:items].is_a?(Hash) && stash[:items].keys.size
   end
   
-  drill "destroy objects by name" do
+  drill "destroy objects by name", true do
     items = @@sdb.select "select * from #{test_domain}"
     items.keys.each { |name| @@sdb.destroy test_domain, name }
     @@sdb.select("select * from #{test_domain}").nil?
   end
   
-  drill "destroy test domain (#{test_domain})" do
+  drill "destroy test domain (#{test_domain})", true do
     @@sdb.destroy_domain test_domain
   end
   
 end
-dreams "Objects" do
-  dream "create simpledb connection", Rudy::AWS::SDB, :class
-  dream "create test domain (#{test_domain})", true
-  dream "put object", true
-  dream "get object by name", [produce.keys.sort, produce.values.sort]
-  dream "select object", true
-  dream "destroy objects by name", true
-  dream "destroy test domain (#{test_domain})", true
-end
+

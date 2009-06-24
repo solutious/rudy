@@ -14,7 +14,7 @@ tryout "Old Disk API" do
     akey, skey, region = global.accesskey, global.secretkey, global.region
     @@sdb = Rudy::AWS::SDB.new(akey, skey, region)
     def new_disk(path, env)
-      disk = Rudy::MetaData::Disk.new(path, 1, '/dev/sds')
+      disk = Rudy::Metadata::Disk.new(path, 1, '/dev/sds')
       disk.environment = env
       disk
     end

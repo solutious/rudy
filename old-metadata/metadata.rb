@@ -1,6 +1,6 @@
 
 module Rudy
-  module MetaData
+  module Metadata
     include Rudy::Huxtable
     
     attr_reader :sdb_domain

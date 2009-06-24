@@ -32,19 +32,19 @@ tryout "Disk API" do
       # disk-us-east-1b-env_xxxxxx-app-01-rudy-disk
     dream ['disk', tmp, 'sergeant', 'disk'].join(Rudy::DELIM)
     
-    disk = Rudy::MetaData::Disk.new('/sergeant/disk', 1, '/dev/sds')    
+    disk = Rudy::Metadata::Disk.new('/sergeant/disk', 1, '/dev/sds')    
     disk.name
   end
   
   dream [1, '/dev/sdh', '/']
   drill "has a default size and device" do
-    disk = Rudy::MetaData::Disk.new('/')
+    disk = Rudy::Metadata::Disk.new('/')
     [disk.size, disk.device, disk.path]
   end
   
   dream nil, 1, "wrong number of arguments (0 for 1)"
   drill "will fail if given no path" do
-    Rudy::MetaData::Disk.new
+    Rudy::Metadata::Disk.new
   end
   
   

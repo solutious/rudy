@@ -69,7 +69,7 @@ class RudyCLI < Rudy::CLI::Base
   option :l, :all, "Display metadata for all environments and roles"
   action :D, :delete, "Delete an object"
   argv :oid
-  command :metadata => Rudy::CLI::MetaData
+  command :metadata => Rudy::CLI::Metadata
   
   about "Log in to a machine"
   command :ssh => Rudy::CLI::Machines

@@ -1,6 +1,6 @@
-module Rudy::MetaData
+module Rudy::Metadata
 class Disk < Storable
-  include Rudy::MetaData::ObjectBase
+  include Rudy::Metadata::ObjectBase
   
   
   field :rtype
@@ -89,7 +89,7 @@ class Disk < Storable
   
   def backup
     raise "No volume to backup" unless @awsid
-    bup = Rudy::MetaData::Backup.new(@awsid, @path, @position)
+    bup = Rudy::Metadata::Backup.new(@awsid, @path, @position)
     bup.size = @size || 1
     bup.fstype = @fstype || 'ext3'
     bup.create

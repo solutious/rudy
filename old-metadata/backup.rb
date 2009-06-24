@@ -1,6 +1,6 @@
-module Rudy::MetaData
+module Rudy::Metadata
     class Backup < Storable
-    include Rudy::MetaData::ObjectBase
+    include Rudy::Metadata::ObjectBase
     
     field :rtype
     field :awsid
@@ -71,7 +71,7 @@ module Rudy::MetaData
     
     def disk
       rdisk = Rudy::Disks.new
-      disk = Rudy::MetaData::Disk.new(@path, nil, nil, @position)
+      disk = Rudy::Metadata::Disk.new(@path, nil, nil, @position)
       disk.region, disk.zone = @region, @zone
       disk.environment, disk.role, disk.position = @environment, @role, @position
       diskobj = rdisk.get(disk.name)

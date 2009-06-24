@@ -47,7 +47,7 @@ module Rudy; module Routines; module Handlers;
       rback = Rudy::Backups.new
       
       disks.each_pair do |path, props|
-        adisk = Rudy::MetaData::Disk.new(path, props[:size], props[:device], @machine.position)
+        adisk = Rudy::Metadata::Disk.new(path, props[:size], props[:device], @machine.position)
         disk = rdisk.get(adisk.name)
         if disk == nil
           puts "Not found: #{adisk.name}".color(:red)
@@ -63,7 +63,7 @@ module Rudy; module Routines; module Handlers;
       rback = Rudy::Backups.new
       
       disks.each_pair do |path, props|
-        disk = Rudy::MetaData::Disk.new(path, props[:size], props[:device], @machine.position)
+        disk = Rudy::Metadata::Disk.new(path, props[:size], props[:device], @machine.position)
         
         olddisk = rdisk.get(disk.name)
         back = nil
@@ -131,7 +131,7 @@ module Rudy; module Routines; module Handlers;
       rdisk = Rudy::Disks.new
       
       disks.each_pair do |path, props|
-        disk = Rudy::MetaData::Disk.new(path, props[:size], props[:device], @machine.position)
+        disk = Rudy::Metadata::Disk.new(path, props[:size], props[:device], @machine.position)
         olddisk = rdisk.get(disk.name)
         if olddisk && olddisk.exists?
           olddisk.update
@@ -212,7 +212,7 @@ module Rudy; module Routines; module Handlers;
       rdisk = Rudy::Disks.new
       
       disks.each_pair do |path, props|
-        disk = Rudy::MetaData::Disk.new(path, props[:size], props[:device], @machine.position)
+        disk = Rudy::Metadata::Disk.new(path, props[:size], props[:device], @machine.position)
         olddisk = rdisk.get(disk.name)
         if olddisk && olddisk.exists?
           disk.update
@@ -251,7 +251,7 @@ module Rudy; module Routines; module Handlers;
     def detach(disks, destroy=false)
       rdisk = Rudy::Disks.new
       disks.each_pair do |path, props|
-        adisk = Rudy::MetaData::Disk.new(path, props[:size], props[:device], @machine.position)
+        adisk = Rudy::Metadata::Disk.new(path, props[:size], props[:device], @machine.position)
         disk = rdisk.get adisk.name
         
         if disk == nil
@@ -278,7 +278,7 @@ module Rudy; module Routines; module Handlers;
     def mount(disks)
       rdisk = Rudy::Disks.new
       disks.each_pair do |path, props|
-        adisk = Rudy::MetaData::Disk.new(path, props[:size], props[:device], @machine.position)
+        adisk = Rudy::Metadata::Disk.new(path, props[:size], props[:device], @machine.position)
         disk = rdisk.get(adisk.name)
         if disk == nil
           puts "Not found: #{adisk.name}".color(:red)
@@ -329,7 +329,7 @@ module Rudy; module Routines; module Handlers;
     def umount(disks)
       rdisk = Rudy::Disks.new
       disks.each_pair do |path, props|
-        adisk = Rudy::MetaData::Disk.new(path, props[:size], props[:device], @machine.position)
+        adisk = Rudy::Metadata::Disk.new(path, props[:size], props[:device], @machine.position)
         disk = rdisk.get(adisk.name)
         if disk == nil
           puts "Not found: #{adisk.name}".color(:red)
@@ -363,7 +363,7 @@ module Rudy; module Routines; module Handlers;
       rdisk = Rudy::Disks.new
       
       disks.each_pair do |path, props|
-        adisk = Rudy::MetaData::Disk.new(path, props[:size], props[:device], @machine.position)
+        adisk = Rudy::Metadata::Disk.new(path, props[:size], props[:device], @machine.position)
         disk = rdisk.get(adisk.name)
         if disk == nil
           puts "Not found: #{adisk.name}".color(:red)

@@ -2,7 +2,7 @@
 
 module Rudy
   module CLI
-    class MetaData < Rudy::CLI::CommandBase
+    class Metadata < Rudy::CLI::CommandBase
       
       
       def metadata
@@ -10,7 +10,7 @@ module Rudy
         less = [:environment, :role, :zone, :region] if @option.all
         more += [:rtype, @option.otype] if @option.otype
         
-        rdebug = Rudy::MetaData::Debug.new
+        rdebug = Rudy::Metadata::Debug.new
         objlist = rdebug.list(more, less) || []
         objlist.each do |o|
           p o
@@ -23,7 +23,7 @@ module Rudy
       end
       
       def metadata_delete
-        rdebug = Rudy::MetaData::Debug.new
+        rdebug = Rudy::Metadata::Debug.new
         unless @@global.quiet
           msg = "NOTE: This will delete only the metadata and "
           msg << "not the EC2 object (volume, instance, etc...)"

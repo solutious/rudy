@@ -111,7 +111,7 @@ metadata will be replaced in one of the early 0.9.x releases.
 * CHANGE: Moved non-rudy specific modules to separate projects (storable, sysinfo, annoy, 
           console -> Drydock, escape -> Rye, tryouts -> tryouts/).
 * CHANGE: Renamed restart routine to reboot to make it clear it's about the machine
-* CHANGE: Renamed Rudy::Disk to Rudy::MetaData::Disk
+* CHANGE: Renamed Rudy::Disk to Rudy::Metadata::Disk
 * CHANGE: Short alias for rudy-ec2 snapshot is now 's' (instead of 't')
 * CHANGE: Removed highline-1.5.1 from vendor (it's now available as a gem)
 * FIXED: Bug in Huxtable when loading global. Wasn't reloaded after config was updated. 

@@ -1,8 +1,8 @@
 
 
-module Rudy; module MetaData
+module Rudy; module Metadata
 class Debug
-  include Rudy::MetaData
+  include Rudy::Metadata
   
   def init
   end

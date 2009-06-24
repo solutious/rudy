@@ -2,11 +2,11 @@
 
 module Rudy
 class Backups
-  include Rudy::MetaData
+  include Rudy::Metadata
   
   def init
     now = Time.now.utc
-    datetime = Rudy::MetaData::Backup.format_timestamp(now).split(Rudy::DELIM)
+    datetime = Rudy::Metadata::Backup.format_timestamp(now).split(Rudy::DELIM)
     @created = now.to_i
     @date, @time, @second = datetime
   end
@@ -36,7 +36,7 @@ class Backups
     list = @sdb.select(query) || {}
     backups = {}
     list.each_pair do |n,d|
-      backups[n] = Rudy::MetaData::Backup.from_hash(d)
+      backups[n] = Rudy::Metadata::Backup.from_hash(d)
     end
     backups.each_pair { |n,backup| each_backup.call(backup) } if each_backup
     backups = nil if backups.empty?
@@ -46,7 +46,7 @@ class Backups
   def get(rname=nil)
     dhash = @sdb.get(Rudy::DOMAIN, rname)
     return nil if dhash.nil? || dhash.empty?
-    d = Rudy::MetaData::Backup.from_hash(dhash)
+    d = Rudy::Metadata::Backup.from_hash(dhash)
     d.update if d
     d
   end

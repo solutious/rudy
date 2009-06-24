@@ -1,7 +1,7 @@
 
 
 module Rudy
-  module MetaData
+  module Metadata
     module ObjectBase
       include Rudy::Huxtable
       

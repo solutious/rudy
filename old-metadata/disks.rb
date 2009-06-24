@@ -2,7 +2,7 @@
 
 module Rudy
 class Disks
-  include Rudy::MetaData
+  include Rudy::Metadata
   
   
   def init
@@ -38,7 +38,7 @@ class Disks
     list = @sdb.select(query) || {}
     disks = {}
     list.each_pair do |n,d|
-      disks[n] = Rudy::MetaData::Disk.from_hash(d)
+      disks[n] = Rudy::Metadata::Disk.from_hash(d)
     end
     disks.each_pair { |n,disk| each_disk.call(disk) } if each_disk
     disks = nil if disks.empty?
@@ -48,7 +48,7 @@ class Disks
   def get(rname=nil)
     dhash = @sdb.get(Rudy::DOMAIN, rname)
     return nil if dhash.nil? || dhash.empty?
-    d = Rudy::MetaData::Disk.from_hash(dhash)
+    d = Rudy::Metadata::Disk.from_hash(dhash)
     d.update if d
     d
   end

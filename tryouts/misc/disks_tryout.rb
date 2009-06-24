@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 
-# Tryout - New Rudy::MetaData::Disk API
+# Tryout - New Rudy::Metadata::Disk API
 #
 
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
@@ -25,7 +25,7 @@ mach7 = Rudy::Machine.new
 
 
 
-#disk1 = Rudy::MetaData::Disk.new('/mnt/ride', 1, '/dev/sdh')
+#disk1 = Rudy::Metadata::Disk.new('/mnt/ride', 1, '/dev/sdh')
 #p disk1.valid?
 #p disk1.name
 #disk1.save

@@ -37,13 +37,6 @@ module RudyCLI_SDB
 
 end
 
-
-#puts Rudy::Utils.banner("THIS IS RUBY #{RUBY_VERSION}") if Drydock.debug?
-
-# We call Drydock specifically otherwise it will run at_exit. Rye also
-# uses at_exit for shutting down the ssh-agent. Ruby executes at_exit
-# blocks in reverse order so if Drydock is required first, it's block
-# will run after Rye shuts down the ssh-agent. 
 begin
   Drydock.run!(ARGV, STDIN) if Drydock.run? && !Drydock.has_run?
 rescue Drydock::ArgError, Drydock::OptError => ex
@@ -60,7 +53,5 @@ rescue => ex
 rescue Interrupt
   puts "#{$/}Exiting... "
   exit 1
-rescue SystemExit
-  # Don't balk
 end
 

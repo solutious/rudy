@@ -226,13 +226,8 @@ class RudyCLI < Rudy::CLI::Base
   end
 end
 
-# We call Drydock specifically otherwise it will run at_exit. Rye also
-# uses at_exit for shutting down the ssh-agent. Ruby executes at_exit
-# blocks in reverse order so if Drydock is required first, it's block
-# will run after Rye shuts down the ssh-agent. 
 begin
   Drydock.run!(ARGV, STDIN) if Drydock.run? && !Drydock.has_run?
-
 rescue Drydock::ArgError, Drydock::OptError => ex
   STDERR.puts ex.message
   STDERR.puts ex.usage
@@ -241,12 +236,10 @@ rescue Drydock::InvalidArgument => ex
 rescue Rudy::Error => ex
   STDERR.puts ex.message
   STDERR.puts ex.backtrace if Drydock.debug?
-rescue => ex
-  STDERR.puts "ERROR (#{ex.class.to_s}): #{ex.message}"
-  STDERR.puts ex.backtrace if Drydock.debug?
 rescue Interrupt
   puts "#{$/}Exiting... "
   exit 1
-rescue SystemExit
-  # Don't balk
+rescue => ex
+  STDERR.puts "ERROR (#{ex.class.to_s}): #{ex.message}"
+  STDERR.puts ex.backtrace if Drydock.debug?
 end

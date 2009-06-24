@@ -1,8 +1,6 @@
 
-rudy_lib_path = File.expand_path(File.join(GYMNASIUM_HOME, '..', 'lib'))
-
 group "Config"
-library :rudy, rudy_lib_path
+library :rudy, File.expand_path(File.join(GYMNASIUM_HOME, '..', 'lib'))
 
 tryout "Defaults" do
   setup do
@@ -10,15 +8,9 @@ tryout "Defaults" do
     @@config.look_and_load   # looks for and loads config files
   end
   
-  drill "has some defaults" do
+  drill "has some defaults", ["environment", "role", "zone"].sort do
     # Sorted so we can add new keys without breaking the test
     @@config.defaults.keys.collect { |v| v.to_s }.sort
-  end
-  
-end
-dreams "Defaults" do
-  dream "has some defaults" do 
-    output ["environment", "role", "zone"].sort
   end
   
 end

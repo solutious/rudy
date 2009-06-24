@@ -10,11 +10,8 @@ tryout "Commands" do
     @@config.look_and_load   # looks for and loads config files
   end
   
-  drill "is a well-formed hash" do
+  drill "is a well-formed hash", [:allow] do
     @@config.commands.to_hash.keys.uniq.sort
   end
   
-end
-dreams "Commands" do
-  dream "is a well-formed hash", [:allow]
 end

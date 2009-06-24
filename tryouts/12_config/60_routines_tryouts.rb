@@ -10,12 +10,7 @@ tryout "Routines" do
     @@config.look_and_load   # looks for and loads config files
   end
   
-  drill "has aws account" do
-  end
-  
-end
-dreams "Routines" do
-  dream "has aws account" do 
+  xdrill "has aws account" do
   end
   
 end

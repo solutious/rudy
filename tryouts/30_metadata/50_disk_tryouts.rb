@@ -36,14 +36,14 @@ tryout "Disk API" do
     disk.name
   end
   
+  dream [1, '/dev/sdh', '/']
   drill "has a default size and device" do
-    dream [1, '/dev/sdh', '/']
     disk = Rudy::MetaData::Disk.new('/')
     [disk.size, disk.device, disk.path]
   end
   
+  dream nil, 1, "wrong number of arguments (0 for 1)"
   drill "will fail if given no path" do
-    dream nil, 1, "wrong number of arguments (0 for 1)"
     Rudy::MetaData::Disk.new
   end
   

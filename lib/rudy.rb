@@ -162,11 +162,10 @@ module Rudy
   end
 end
 
-require 'rudy/utils'      # The
-require 'rudy/global'     # order    
-require 'rudy/config'     # of 
-require 'rudy/huxtable'   # requires
-require 'rudy/aws'        # is
-require 'rudy/metadata'   # important
-require 'rudy/machines'
-require 'rudy/routines'
+require 'rudy/utils'               # The
+require 'rudy/global'              # order    
+require 'rudy/config'              # of 
+require 'rudy/huxtable'            # requires
+require 'rudy/aws'                 # is
+require 'rudy/metadata'            # super
+require 'rudy/routines'            # important.

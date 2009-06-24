@@ -1,55 +1,43 @@
 
-rudy_lib_path = File.expand_path(File.join(GYMNASIUM_HOME, '..', 'lib'))
-
 group "Config"
-library :rudy, rudy_lib_path
+library :rudy, File.expand_path(File.join(GYMNASIUM_HOME, '..', 'lib'))
 
 tryout "Loads config files" do
   
-  drill "load configs when created" do
+  drill "load configs when created", 1 do
     @@config = Rudy::Config.new Rudy::CONFIG_FILE
     @@config.paths.size
   end
   
-  drill "has accounts" do
+  drill "has accounts", Rudy::Config::Accounts, :class do
     @@config.accounts
   end
-  drill "has defaults" do
+  drill "has defaults", Rudy::Config::Defaults, :class do
     @@config.defaults
   end
   
-  drill "loads additional configs" do
+  drill "loads additional configs", 2 do
     @@config.paths << File.join(RUDY_HOME, 'Rudyfile')
     @@config.refresh
     @@config.paths.size
   end
   
-  drill "has machines" do
+  drill "has machines", Rudy::Config::Machines, :class do
     @@config.machines
   end
-  drill "has commands" do
+  drill "has commands", Rudy::Config::Commands, :class do
     @@config.commands
   end
-  drill "has routines" do
+  drill "has routines", Rudy::Config::Routines, :class do
     @@config.routines
   end
   
-  drill "autoloads known configs" do
+  drill "autoloads known configs", true do
     conf = Rudy::Config.new
     conf.look_and_load   # Needs to run before checking accounts, et al
     (!conf.paths.empty? && !conf.paths.nil?)
   end
   
-end
-dreams "Loads config files" do
-  dream "load configs when created", 1
-  dream "has accounts", Rudy::Config::Accounts, :class
-  dream "has defaults", Rudy::Config::Defaults, :class
-  dream "loads additional configs", 2
-  dream "has machines", Rudy::Config::Machines, :class
-  dream "has commands", Rudy::Config::Commands, :class
-  dream "has routines", Rudy::Config::Routines, :class
-  dream "autoloads known configs", true
 end
 
 

@@ -178,7 +178,7 @@ module Rudy
         exit 0
       end
       
-      debug :off
+      debug :on
     end
     
     

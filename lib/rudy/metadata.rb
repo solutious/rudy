@@ -3,7 +3,12 @@
 module Rudy
   module Metadata
     include Rudy::Huxtable
+    extend self
     
+    def domain(name=nil)
+      return @@domain if name.nil?
+      @@domain = name
+    end
     
     
   end

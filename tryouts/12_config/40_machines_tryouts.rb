@@ -41,5 +41,10 @@ tryout "Machines" do
     find_def = @@config.machines.find_deferred(@@env, @@rol)
     find == find_def
   end
+  
+  drill "config has a gash", '87d792aefceb893b2d966828827c61636b0ace3e' do
+    @@config.machines.gash
+  end
+  
 end
 

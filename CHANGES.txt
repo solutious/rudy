@@ -8,8 +8,6 @@ RUDY, CHANGES
 #### 0.9.0 (2009-06-XX) ###############################
 
 NOTE: This is a significant re-write from 0.8 (routines, metadata)
-NOTE: The implementation for storing machine, disk, and backup 
-metadata will be replaced in one of the early 0.9.x releases.
 
 * FIXED: Routine blocks now process directives in the order their given 
   (in Ruby 1.8 and 1.9). 
@@ -43,7 +41,7 @@ metadata will be replaced in one of the early 0.9.x releases.
 * ADDED: xremote and xlocal routine actions for quick skipping
 
 * TODO: Re-enable disk routines. 
-
+* TODO: Re-implement metadata
 
 #### 0.8.5 (2009-06-08) ###############################
 

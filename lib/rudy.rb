@@ -4,7 +4,7 @@ unless defined?(RUDY_HOME)
   RUDY_LIB = File.join(File.dirname(__FILE__), '..', 'lib')
 end
 
-local_libs = %w{net-ssh net-scp amazon-ec2 aws-s3 caesars drydock rye storable sysinfo annoy}
+local_libs = %w{net-ssh net-scp amazon-ec2 aws-s3 caesars drydock rye storable sysinfo annoy gibbler}
 local_libs.each { |dir| $:.unshift File.join(RUDY_HOME, '..', dir, 'lib') }
 #require 'rubygems'
 
@@ -20,6 +20,7 @@ require 'timeout'
 require 'tempfile'
 require 'rudy/mixins'
 require 'storable'
+require 'gibbler'
 require 'sysinfo'
 require 'annoy'
 require 'rye'

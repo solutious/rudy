@@ -12,10 +12,16 @@ tryout "Machines" do
     true
   end
   
-  dream 'SHA1', :hash
-  xdrill "example stage is defined" do
-    @@config.machines.stage
+  dream Rudy::Config::Machines, :class
+  dream "3d36ae6684f1c46dead065cdb6db16e53f491706", :to_gibble
+  drill "has instance of Rudy::Config::Machines" do
+    @@config.machines
   end
+  
+  drill "is not gibbled (yet)", false, :gibbled? do
+    @@config.machines
+  end
+  
   drill "has example AMIs by zone", ["ami-e348af8a", "ami-6ecde51a"] do
     [@@config.machines[:'us-east-1'].ami, @@config.machines[:'eu-west-1'].ami]
   end
@@ -41,10 +47,7 @@ tryout "Machines" do
     find_def = @@config.machines.find_deferred(@@env, @@rol)
     find == find_def
   end
-  
-  drill "config has a gash", '87d792aefceb893b2d966828827c61636b0ace3e' do
-    @@config.machines.gash
-  end
+
   
 end
 

@@ -26,14 +26,12 @@ tryout "Disk API" do
     disk.sdb_domain
   end
   
+  dream Rudy::Metadata::Disk.new('/sergeant/disk', 1, '/dev/sds').name
   drill "name a disk properly" do
     tmp  = [Rudy::Huxtable.global.zone, test_env]
     tmp += [Rudy::Huxtable.global.role, Rudy::Huxtable.global.position]
       # disk-us-east-1b-env_xxxxxx-app-01-rudy-disk
-    dream ['disk', tmp, 'sergeant', 'disk'].join(Rudy::DELIM)
-    
-    disk = Rudy::Metadata::Disk.new('/sergeant/disk', 1, '/dev/sds')    
-    disk.name
+    ['disk', tmp, 'sergeant', 'disk'].join(Rudy::DELIM)
   end
   
   dream [1, '/dev/sdh', '/']
@@ -42,7 +40,7 @@ tryout "Disk API" do
     [disk.size, disk.device, disk.path]
   end
   
-  dream nil, 1, "wrong number of arguments (0 for 1)"
+  dream nil
   drill "will fail if given no path" do
     Rudy::Metadata::Disk.new
   end

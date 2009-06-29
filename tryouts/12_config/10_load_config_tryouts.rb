@@ -9,10 +9,10 @@ tryout "Loads config files" do
     @@config.paths.size
   end
   
-  drill "has accounts", Rudy::Config::Accounts, :class do
+  drill "has accounts", :class, Rudy::Config::Accounts do
     @@config.accounts
   end
-  drill "has defaults", Rudy::Config::Defaults, :class do
+  drill "has defaults", :class, Rudy::Config::Defaults do
     @@config.defaults
   end
   
@@ -22,13 +22,13 @@ tryout "Loads config files" do
     @@config.paths.size
   end
   
-  drill "has machines", Rudy::Config::Machines, :class do
+  drill "has machines", :class, Rudy::Config::Machines do
     @@config.machines
   end
-  drill "has commands", Rudy::Config::Commands, :class do
+  drill "has commands", :class, Rudy::Config::Commands do
     @@config.commands
   end
-  drill "has routines", Rudy::Config::Routines, :class do
+  drill "has routines", :class, Rudy::Config::Routines do
     @@config.routines
   end
   

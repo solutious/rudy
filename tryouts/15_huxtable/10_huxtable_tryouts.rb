@@ -1,18 +1,17 @@
 
-rudy_lib_path = File.expand_path(File.join(GYMNASIUM_HOME, '..', 'lib'))
 
 group "Rudy::Huxtable"
-library :rudy, rudy_lib_path
+library :rudy, 'lib'
 
 tryout "Is well kept" do
   setup do
     #Rudy::Huxtable.update_config
   end
 
-  drill "has config", Rudy::Huxtable.config, Rudy::Config, :class
-  drill "has global", Rudy::Huxtable.global, Rudy::Global, :class 
-  drill "has logger", Rudy::Huxtable.logger, StringIO, :class
-  drill "specify logger", IO, :class do
+  drill "has config", Rudy::Huxtable.config, :class, Rudy::Config
+  drill "has global", Rudy::Huxtable.global, :class, Rudy::Global 
+  drill "has logger", Rudy::Huxtable.logger, :class, StringIO
+  drill "specify logger", :class, IO do
     Rudy::Huxtable.update_logger STDOUT
     Rudy::Huxtable.logger
   end

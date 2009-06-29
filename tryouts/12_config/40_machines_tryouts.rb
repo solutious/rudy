@@ -12,13 +12,13 @@ tryout "Machines" do
     true
   end
   
-  dream Rudy::Config::Machines, :class
-  dream "3d36ae6684f1c46dead065cdb6db16e53f491706", :to_gibble
+  dream :class, Rudy::Config::Machines
+  dream :gibbler, "3d36ae6684f1c46dead065cdb6db16e53f491706" 
   drill "has instance of Rudy::Config::Machines" do
     @@config.machines
   end
   
-  drill "is not gibbled (yet)", false, :gibbled? do
+  drill "is not gibbled (yet)", :gibbled?, false do
     @@config.machines
   end
   

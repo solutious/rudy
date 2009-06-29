@@ -12,7 +12,7 @@ tryout "Rudy Initialization" do
     @spec.version.to_s
   end
   
-  drill             "has sysinfo", Rudy.sysinfo, SysInfo, :class
+  drill             "has sysinfo", Rudy.sysinfo, :class, SysInfo
   drill       "debug is disabled", Rudy.debug?, false
   drill       "quiet is disabled", Rudy.quiet?, false
   drill    "auto-yes is disabled", Rudy.yes?, false

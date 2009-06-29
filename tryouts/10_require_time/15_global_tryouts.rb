@@ -5,7 +5,7 @@ library :rudy, rudy_lib_path
 
 tryout "Initialization of Global" do
   global = Rudy::Huxtable.global
-  drill "has global", global, Rudy::Global, :class
+  drill "has global", global, :class, Rudy::Global
   drill "has default region", global.region, :'us-east-1'
   drill "has default zone", global.zone, :'us-east-1b'
   drill "has default environment", global.environment, :stage
@@ -30,7 +30,7 @@ tryout "Global knows ENV" do
   end
   
   dream 'SACCESS7'
-  dream String, :class
+  dream :class, String
   drill "reads AWS_SECRET_ACCESS_KEY" do
     ENV['AWS_SECRET_ACCESS_KEY'] = 'SACCESS7'
     ENV['AWS_SECRET_KEY'] = nil or Rudy::Huxtable.reset_global

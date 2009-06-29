@@ -33,7 +33,20 @@ class Rudy::Config
     end
   end
   
-  class Machines < Caesars; end
+  class Machines < Caesars
+    include Gibbler
+
+    def __gibbler(h=self)
+      klass = h.class
+      d = h.keys.sort { |a,b| a.inspect <=> b.inspect }
+      d.collect! do |name| 
+        '%s:%s:%s' % [klass, name, h[name].__gibbler]
+      end 
+      a = d.join($/).__gibbler 
+      gibbler_debug [klass, a]
+      a  
+    end  
+  end
   
   # Modify the SSH command available in routines. The default
   # set of commands is defined by Rye::Cmd (Rudy executes all

@@ -40,6 +40,13 @@ NOTE: This is a significant re-write from 0.8 (routines, metadata)
 * ADDED: Routines now have access to $global and $option (which are frozen)
 * ADDED: xremote and xlocal routine actions for quick skipping
 
+* TODO: Rudy::Routines::Arcade. 
+  * install/uninstall: uses package management for the specific os impl
+  * compile: from source. 
+  * e.g. rudy -a experimental install git (for ruby-unix-osx)
+  * How to handle multiple package managers?
+  * How to handle multiple app versions? 
+* TODO: look for config file in ./.rudy, then ../.rudy, etc... (git-like)
 * TODO: http://opensoul.org/2009/6/24/capistrano-git-and-ssh-keys
 * TODO: Re-enable disk routines. 
 * TODO: Re-implement metadata

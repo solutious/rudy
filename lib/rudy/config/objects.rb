@@ -1,4 +1,5 @@
 
+Caesars.enable_debug
 
 class Rudy::Config
   class Error < Rudy::Error
@@ -9,15 +10,17 @@ class Rudy::Config
   end
   
   class Accounts < Caesars
-    def valid?
-      (!aws.nil? && !aws.accesskey.nil? && !aws.secretkey.nil?) &&
-      (!aws.account.empty? && !aws.accesskey.empty? && !aws.secretkey.empty?)
-    end
+    include Gibbler::Complex
+    
+    aws Hash
+    
   end
   
   # Default configuration. All of the defaults can be overridden 
   # on the command line with global options.
   class Defaults < Caesars
+    include Gibbler::Complex
+    
     class DoubleDefined < Rudy::Config::Error
       def message; "Check your defaults config. '#{@obj}' has been defined twice"; end
     end
@@ -34,18 +37,8 @@ class Rudy::Config
   end
   
   class Machines < Caesars
-    include Gibbler
-
-    def __gibbler(h=self)
-      klass = h.class
-      d = h.keys.sort { |a,b| a.inspect <=> b.inspect }
-      d.collect! do |name| 
-        '%s:%s:%s' % [klass, name, h[name].__gibbler]
-      end 
-      a = d.join($/).__gibbler 
-      gibbler_debug [klass, a]
-      a  
-    end  
+    include Gibbler::Complex
+    
   end
   
   # Modify the SSH command available in routines. The default
@@ -56,6 +49,8 @@ class Rudy::Config
   # important that new keywords do not conflict with existing
   # Rudy keywords. Strange things may happen!
   class Commands < Caesars
+    include Gibbler::Complex
+    
     class AlreadyDefined < Rudy::Config::Error
       def message; "The command '#{@obj}' has already been defined for this project"; end
     end
@@ -68,15 +63,28 @@ class Rudy::Config
     class BadArg < Rudy::Config::Error
       def message; "Arguments for #{cmd} must be: Symbols, Strings only"; end
     end
-      
+    
+    class Allow < Caesars::Array
+      ALLOW_BLOCK = true
+      STORE_BLOCK = true
+    end
+    
+    
+    class Deny < Caesars::Array
+      ALLOW_BLOCK = false
+    end
+    
     @@processed = false  
     
     ## Not used currently. May be revived. 
     ##@@allowed = []        ## Commands which have been processed
     
-    forced_array :allow
-    forced_array :deny
-    chill :allow
+    allow Allow
+    deny Deny
+    
+    #forced_array :allow
+    #forced_array :deny
+    #chill :allow
     
     def init
       # We can't process the Rye::Cmd commands here because the
@@ -151,45 +159,49 @@ class Rudy::Config
   end
   
   class Routines < Caesars
+    include Gibbler::Complex
     
-    # All routines
-    forced_array :before         
-    forced_array :after
+    local Proc, :global
+    remote Proc, :global
     
-    # Disk routines
-    forced_hash :create
-    forced_hash :destroy
-    forced_hash :restore
-    forced_hash :umount
-    forced_hash :unmount
-    forced_hash :mount
-    forced_hash :attach
-    forced_hash :detach
-    forced_hash :snapshot
-    forced_hash :restore
-    
-    # Passthrough routines
-    forced_hash :local              # Force hash b/c we want to 
-    forced_hash :remote             # store the usernames.
-    chill :local                    # Chill b/c we want to execute
-    chill :remote                   # the blocks with Rye::Box#batch
-    forced_hash :xlocal              
-    forced_hash :xremote             
-    chill :xlocal                    
-    chill :xremote                   
-        
-    forced_hash :network
-    chill :network
-       
-    # Startup, Shutdown, Reboot routines
-    forced_hash :before_local
-    forced_hash :before_remote
-    forced_hash :after_local
-    forced_hash :after_remote            
-    chill :before_local
-    chill :before_remote
-    chill :after_local           
-    chill :after_remote
+ #   # All routines
+ #   forced_array :before         
+ #   forced_array :after
+ #   
+ #   # Disk routines
+ #   forced_hash :create
+ #   forced_hash :destroy
+ #   forced_hash :restore
+ #   forced_hash :umount
+ #   forced_hash :unmount
+ #   forced_hash :mount
+ #   forced_hash :attach
+ #   forced_hash :detach
+ #   forced_hash :snapshot
+ #   forced_hash :restore
+ #   
+ #   # Passthrough routines
+ #   forced_hash :local              # Force hash b/c we want to 
+ #   forced_hash :remote             # store the usernames.
+ #   chill :local                    # Chill b/c we want to execute
+ #   chill :remote                   # the blocks with Rye::Box#batch
+ #   forced_hash :xlocal              
+ #   forced_hash :xremote             
+ #   chill :xlocal                    
+ #   chill :xremote                   
+ #       
+ #   forced_hash :network
+ #   chill :network
+ #      
+ #   # Startup, Shutdown, Reboot routines
+ #   forced_hash :before_local
+ #   forced_hash :before_remote
+ #   forced_hash :after_local
+ #   forced_hash :after_remote            
+ #   chill :before_local
+ #   chill :before_remote
+ #   chill :after_local           
+ #   chill :after_remote
                        
     def init      
     end

@@ -60,6 +60,7 @@ module Rudy
           #puts "# ACCOUNTS: [not displayed]" if types.delete(:accounts)
           types.each do |conftype|
             puts "# #{conftype.to_s.upcase}"
+            puts "# #{@@config[conftype].gibbler}"
             next unless @@config[conftype]  # Nothing to output
             @@config[conftype][:aws][:secretkey] = '[hidden]' if conftype == :accounts
             puts @@config[conftype].to_hash.send(outform)

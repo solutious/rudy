@@ -1,5 +1,4 @@
 
-Caesars.enable_debug
 
 class Rudy::Config
   class Error < Rudy::Error
@@ -12,8 +11,10 @@ class Rudy::Config
   class Accounts < Caesars
     include Gibbler::Complex
     
-    aws Hash
-    
+    def valid?
+      (!aws.nil? && !aws.accesskey.nil? && !aws.secretkey.nil?) &&
+      (!aws.account.empty? && !aws.accesskey.empty? && !aws.secretkey.empty?)
+    end
   end
   
   # Default configuration. All of the defaults can be overridden 
@@ -63,28 +64,15 @@ class Rudy::Config
     class BadArg < Rudy::Config::Error
       def message; "Arguments for #{cmd} must be: Symbols, Strings only"; end
     end
-    
-    class Allow < Caesars::Array
-      ALLOW_BLOCK = true
-      STORE_BLOCK = true
-    end
-    
-    
-    class Deny < Caesars::Array
-      ALLOW_BLOCK = false
-    end
-    
+      
     @@processed = false  
     
     ## Not used currently. May be revived. 
     ##@@allowed = []        ## Commands which have been processed
     
-    allow Allow
-    deny Deny
-    
-    #forced_array :allow
-    #forced_array :deny
-    #chill :allow
+    forced_array :allow
+    forced_array :deny
+    chill :allow
     
     def init
       # We can't process the Rye::Cmd commands here because the
@@ -161,47 +149,44 @@ class Rudy::Config
   class Routines < Caesars
     include Gibbler::Complex
     
-    local Proc, :global
-    remote Proc, :global
+    # All routines
+    forced_array :before         
+    forced_array :after
     
- #   # All routines
- #   forced_array :before         
- #   forced_array :after
- #   
- #   # Disk routines
- #   forced_hash :create
- #   forced_hash :destroy
- #   forced_hash :restore
- #   forced_hash :umount
- #   forced_hash :unmount
- #   forced_hash :mount
- #   forced_hash :attach
- #   forced_hash :detach
- #   forced_hash :snapshot
- #   forced_hash :restore
- #   
- #   # Passthrough routines
- #   forced_hash :local              # Force hash b/c we want to 
- #   forced_hash :remote             # store the usernames.
- #   chill :local                    # Chill b/c we want to execute
- #   chill :remote                   # the blocks with Rye::Box#batch
- #   forced_hash :xlocal              
- #   forced_hash :xremote             
- #   chill :xlocal                    
- #   chill :xremote                   
- #       
- #   forced_hash :network
- #   chill :network
- #      
- #   # Startup, Shutdown, Reboot routines
- #   forced_hash :before_local
- #   forced_hash :before_remote
- #   forced_hash :after_local
- #   forced_hash :after_remote            
- #   chill :before_local
- #   chill :before_remote
- #   chill :after_local           
- #   chill :after_remote
+    # Disk routines
+    forced_hash :create
+    forced_hash :destroy
+    forced_hash :restore
+    forced_hash :umount
+    forced_hash :unmount
+    forced_hash :mount
+    forced_hash :attach
+    forced_hash :detach
+    forced_hash :snapshot
+    forced_hash :restore
+    
+    # Passthrough routines
+    forced_hash :local              # Force hash b/c we want to 
+    forced_hash :remote             # store the usernames.
+    chill :local                    # Chill b/c we want to execute
+    chill :remote                   # the blocks with Rye::Box#batch
+    forced_hash :xlocal              
+    forced_hash :xremote             
+    chill :xlocal                    
+    chill :xremote                   
+        
+    forced_hash :network
+    chill :network
+       
+    # Startup, Shutdown, Reboot routines
+    forced_hash :before_local
+    forced_hash :before_remote
+    forced_hash :after_local
+    forced_hash :after_remote            
+    chill :before_local
+    chill :before_remote
+    chill :after_local           
+    chill :after_remote
                        
     def init      
     end

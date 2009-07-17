@@ -8,7 +8,8 @@ test_env = 'env_' << Rudy::Utils.strand
 
 tryout "Rudy::Machine instance API" do
 
-  drill "create new machine instance", Rudy::Machine, :class do
+  dream :class, Rudy::Machine
+  drill "create new machine instance" do
     Rudy::Machine.new
   end
   
@@ -17,30 +18,30 @@ end
 
 tryout "Rudy::Machine class API" do
   
-  dream /reg/, :match
-  dream /c.ntent/, :match
+  dream :match, /reg/
+  dream :match, /c.ntent/
   drill "data" do
     Rudy::Machine.data
   end
   
-  dream 0, :size
-  dream Array, :class
+  dream :size, 0
+  dream :class, Array
   drill "can list" do
     Rudy::Machine.list
   end
   
-  dream 0, :size
-  dream Hash, :class
+  dream :size, 0
+  dream :class, Hash
   drill "can list as hash" do
     Rudy::Machine.list_as_hash
   end
   
-  dream Rudy::Machine, :class
+  dream :class, Rudy::Machine
   drill "can get a machine" do
     Rudy::Machine.get
   end
   
-  dream Rudy::Machine, :class
+  dream :class, Rudy::Machine
   drill "can find a machine" do
     Rudy::Machine.find
   end

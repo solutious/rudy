@@ -40,12 +40,14 @@ NOTE: This is a significant re-write from 0.8 (routines, metadata)
 * CHANGE: local routine blocks now share a single Rye::Box instance
 * CHANGE: remote routine blocks now share a single Rye::Set instance
 * CHANGE: "privatekey" in accounts config is renamed to "pkey"
+* CHANGE: Reduced Rudy::AWS#execute_request timeout to 15 seconds.
 * ADDED: routines command for displaying available routines
 * ADDED: "rudy init" now authorizes public keys for user@localhost
 * ADDED: Parallel processing for remote machines
 * ADDED: Routines now have access to $global and $option (which are frozen)
 * ADDED: xremote and xlocal routine actions for quick skipping
 * ADDED: Dependency Attic 0.4
+* ADDED: New 'objects' command for rudy-sdb
 
 * TODO: Re-enable disk routines. 
 * TODO: Re-implement metadata

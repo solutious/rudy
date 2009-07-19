@@ -51,6 +51,18 @@ module Rudy
       parts.join Rudy::DELIM
     end
     
+    def save(replace=true)
+      @@sdb.put(@@domain, self.name, self.to_hash, replace) # Always returns nil
+      true
+    end
+    
+    def refresh
+      ld [:sdbget, self.name]
+      h = @@sdb.get(@@domain, self.name) || {}
+      ld [:found, h]
+      self.from_hash(h)
+    end
+    
   end
 end
 

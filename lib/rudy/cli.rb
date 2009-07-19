@@ -26,7 +26,7 @@ module Rudy
       
     protected
       def init
-        
+
         if Drydock.debug?
           #Caesars.enable_debug
           Rudy.enable_debug

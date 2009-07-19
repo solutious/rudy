@@ -28,7 +28,12 @@ module RudyCLI_SDB
   action :D, :destroy, "Destroy a domain"
   argv :name
   command :domains => Rudy::CLI::AWS::SDB::Domains
+  command_alias :domains, :domain
   
+  about "Displays objects contained in a SimpleDB domain"
+  argv :name, :key
+  command :objects => Rudy::CLI::AWS::SDB::Objects
+  command_alias :objects, :object
   
   # --------------------------------  RUDY-SDB MISCELLANEOUS  --------
   # ------------------------------------------------------------------

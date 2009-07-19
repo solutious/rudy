@@ -13,33 +13,50 @@ module Rudy
 
     field :device
     field :size
+    field :fstype
+    
     #field :backups => Array
-
+    
     # Is the associated volume formatted? One of: true, false, [empty]. 
     # [empty] means we don't know and it's the default. 
     field :raw
-
-    field :fstype
     field :mounted
-
     field :created
 
-    def initialize(path, size=1, device='/dev/sdh', position=nil)
-      super 'disk'
-      @path, @size, @device = path, size, device
-
-      @mounted = false
-
+    # * +path+ is a an absolute filesystem path (required)
+    # * +opts+ is a hash of disk options.
+    #
+    # Valid options are:
+    # * +:size+ 
+    # * +:device+
+    # * +:position+
+    #
+    def initialize(path, opts={})
+      super 'disk'  # Calls Rudy::Metadata#initialize with rtype
+      opts = {
+        :size => 1,
+        :device => '/dev/sdh',
+        :position => '01'
+      }.merge opts
+      
+      @path = path
+      opts.each_pair do |n,v|
+        raise "Unknown attribute for #{self.class}: #{n}" if !self.has_field? n
+        self.send("#{n}=", v)
+      end
+      
+      # Defaults:
       now = Time.now.utc
       #datetime = Backup.format_timestamp(now).split(Rudy::DELIM)
       @created = now.to_i
-
+      @mounted = false
       postprocess
     end
 
     def postprocess
+      # sdb values are stored as strings. Some quick conversion. 
       @size &&= @size.to_i
-      @mounted = true if @mounted == "true"
+      @mounted = true if @mounted == "true"  
     end
     
     def name
@@ -49,7 +66,7 @@ module Rudy
         unless @path == File::SEPARATOR
           dirs.shift while dirs && (dirs[0].nil? || dirs[0].empty?)
         end
-        super(*dirs)
+        super *dirs  # Calls Rudy::Metadata.name with disk specific components
       else
         raise UnsupportedOS, "Disks are not available for #{Rudy.sysinfo.os}"
       end

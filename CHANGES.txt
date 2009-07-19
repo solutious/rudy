@@ -39,6 +39,7 @@ NOTE: This is a significant re-write from 0.8 (routines, metadata)
 * ADDED: Parallel processing for remote machines
 * ADDED: Routines now have access to $global and $option (which are frozen)
 * ADDED: xremote and xlocal routine actions for quick skipping
+* ADDED: Dependency Attic 0.4
 
 * TODO: Rudy::Routines::Arcade. 
   * install/uninstall: uses package management for the specific os impl

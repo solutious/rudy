@@ -22,6 +22,7 @@ require 'rudy/mixins'
 require 'storable'
 require 'gibbler'
 require 'sysinfo'
+require 'attic'
 require 'annoy'
 require 'rye'
 

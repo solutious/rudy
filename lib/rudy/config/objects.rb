@@ -9,6 +9,8 @@ class Rudy::Config
   end
   
   class Accounts < Caesars
+    include Gibbler::Complex
+    
     def valid?
       (!aws.nil? && !aws.accesskey.nil? && !aws.secretkey.nil?) &&
       (!aws.account.empty? && !aws.accesskey.empty? && !aws.secretkey.empty?)
@@ -18,6 +20,8 @@ class Rudy::Config
   # Default configuration. All of the defaults can be overridden 
   # on the command line with global options.
   class Defaults < Caesars
+    include Gibbler::Complex
+    
     class DoubleDefined < Rudy::Config::Error
       def message; "Check your defaults config. '#{@obj}' has been defined twice"; end
     end
@@ -34,18 +38,8 @@ class Rudy::Config
   end
   
   class Machines < Caesars
-    include Gibbler
-
-    def __gibbler(h=self)
-      klass = h.class
-      d = h.keys.sort { |a,b| a.inspect <=> b.inspect }
-      d.collect! do |name| 
-        '%s:%s:%s' % [klass, name, h[name].__gibbler]
-      end 
-      a = d.join($/).__gibbler 
-      gibbler_debug [klass, a]
-      a  
-    end  
+    include Gibbler::Complex
+    
   end
   
   # Modify the SSH command available in routines. The default
@@ -56,6 +50,8 @@ class Rudy::Config
   # important that new keywords do not conflict with existing
   # Rudy keywords. Strange things may happen!
   class Commands < Caesars
+    include Gibbler::Complex
+    
     class AlreadyDefined < Rudy::Config::Error
       def message; "The command '#{@obj}' has already been defined for this project"; end
     end
@@ -151,6 +147,7 @@ class Rudy::Config
   end
   
   class Routines < Caesars
+    include Gibbler::Complex
     
     # All routines
     forced_array :before         

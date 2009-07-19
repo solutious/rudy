@@ -22,7 +22,7 @@
   s.add_dependency 'sysinfo',    '>= 0.5.1'
   s.add_dependency 'gibbler',    '>= 0.5.4'
   s.add_dependency 'tryouts',    '>= 0.6.2'
-  s.add_dependency 'storable',   '>= 0.5.3'
+  s.add_dependency 'storable',   '>= 0.5.6'
   
   s.add_dependency 'aws-s3',     '>= 0.6.1'  # Ruby 1.9.1 compatability
   s.add_dependency 'highline',   '>= 1.5.1'  # Ruby 1.9.1 compatability
@@ -87,6 +87,7 @@
   lib/rudy/cli/aws/s3/buckets.rb
   lib/rudy/cli/aws/s3/store.rb
   lib/rudy/cli/aws/sdb/domains.rb
+  lib/rudy/cli/aws/sdb/objects.rb
   lib/rudy/cli/candy.rb
   lib/rudy/cli/config.rb
   lib/rudy/cli/disks.rb
@@ -98,25 +99,22 @@
   lib/rudy/global.rb
   lib/rudy/guidelines.rb
   lib/rudy/huxtable.rb
-  lib/rudy/machines.rb
   lib/rudy/metadata.rb
   lib/rudy/metadata/backup.rb
-  lib/rudy/metadata/backups.rb
-  lib/rudy/metadata/debug.rb
   lib/rudy/metadata/disk.rb
-  lib/rudy/metadata/disks.rb
-  lib/rudy/metadata/objectbase.rb
+  lib/rudy/metadata/machine.rb
   lib/rudy/mixins.rb
   lib/rudy/mixins/hash.rb
   lib/rudy/mixins/symbol.rb
   lib/rudy/routines.rb
   lib/rudy/routines/base.rb
-  lib/rudy/routines/helperbase.rb
-  lib/rudy/routines/helpers/dependshelper.rb
-  lib/rudy/routines/helpers/diskhelper.rb
-  lib/rudy/routines/helpers/hosthelper.rb
-  lib/rudy/routines/helpers/scripthelper.rb
-  lib/rudy/routines/helpers/userhelper.rb
+  lib/rudy/routines/handlers/base.rb
+  lib/rudy/routines/handlers/depends.rb
+  lib/rudy/routines/handlers/disks.rb
+  lib/rudy/routines/handlers/host.rb
+  lib/rudy/routines/handlers/machines.rb
+  lib/rudy/routines/handlers/script.rb
+  lib/rudy/routines/handlers/user.rb
   lib/rudy/routines/passthrough.rb
   lib/rudy/routines/reboot.rb
   lib/rudy/routines/shutdown.rb
@@ -149,11 +147,9 @@
   tryouts/26_ec2_instances/00_setup_test.rb
   tryouts/26_ec2_instances/10_instances_test.rb
   tryouts/26_ec2_instances/50_images_test.rb
-  tryouts/30_metadata/50_disk_old_tryouts.rb
   tryouts/30_metadata/50_disk_tryouts.rb
-  tryouts/80_cli/10_rudyec2_dreams.rb
+  tryouts/30_metadata/70_machine_tryouts.rb
   tryouts/80_cli/10_rudyec2_tryouts.rb
-  tryouts/80_cli/60_rudy_dreams.rb
   tryouts/80_cli/60_rudy_tryouts.rb
   tryouts/failer
   tryouts/misc/console_tryout.rb

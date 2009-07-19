@@ -10,11 +10,21 @@ sdb_connection = nil    # set in setup block
 tryout "Disk API" do
   
   setup do
+    Rudy.enable_debug
+    Rudy::Huxtable.global.offline = true
     Rudy::Huxtable.update_config          # Read config files
     global = Rudy::Huxtable.global
     global.environment = test_env
     akey, skey, region = global.accesskey, global.secretkey, global.region
     sdb_connection = Rudy::AWS::SDB.new(akey, skey, region)
+  end
+  
+  clean do
+    if Rudy.debug?
+      puts $/, "Rudy Debugging:"
+      Rudy::Huxtable.logger.rewind
+      puts Rudy::Huxtable.logger.read
+    end
   end
   
   xdrill "can create test domain (#{test_domain})" do
@@ -54,9 +64,17 @@ tryout "Disk API" do
     Rudy::Disk.new
   end
   
-  
   drill "save disk metadata", true do
     Rudy::Disk.new('/any/path').save
+  end
+  
+  dream :class, Rudy::Disk
+  dream :mounted, false
+  xdrill "refresh disk metadata" do
+    d = Rudy::Disk.new('/any/path')
+    d.mounted = true
+    d.refresh
+    d
   end
   
   xdrill "won't save over a disk with the same name" do

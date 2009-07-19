@@ -5,49 +5,58 @@ group "Metadata"
 
 test_domain = 'test_' #<< Rudy::Utils.strand
 test_env = 'env_' << Rudy::Utils.strand
+sdb_connection = nil    # set in setup block
 
 tryout "Disk API" do
   
   setup do
-    Rudy::Huxtable.update_config
+    Rudy::Huxtable.update_config          # Read config files
     global = Rudy::Huxtable.global
     global.environment = test_env
     akey, skey, region = global.accesskey, global.secretkey, global.region
-    @@sdb = Rudy::AWS::SDB.new(akey, skey, region)
+    sdb_connection = Rudy::AWS::SDB.new(akey, skey, region)
   end
   
   xdrill "can create test domain (#{test_domain})" do
-    @@sdb.create_domain test_domain
+    sdb_connection.create_domain test_domain
   end
   
-  xdrill "can set test domain" do
-    disk = new_disk '/', test_env
-    disk.sdb_domain = test_domain
-    disk.sdb_domain
-  end
-  
-  dream Rudy::Metadata::Disk.new('/sergeant/disk', 1, '/dev/sds').name
-  drill "name a disk properly" do
-    tmp  = [Rudy::Huxtable.global.zone, test_env]
-    tmp += [Rudy::Huxtable.global.role, Rudy::Huxtable.global.position]
+  dream :class, Rudy::Disk
+  dream :name do
+    tmp  = [Rudy::Huxtable.global.zone, Rudy::Huxtable.global.environment]
+    tmp += [Rudy::Huxtable.global.role, '01']
       # disk-us-east-1b-env_xxxxxx-app-01-rudy-disk
-    ['disk', tmp, 'sergeant', 'disk'].join(Rudy::DELIM)
+    ['disk', tmp].join(Rudy::DELIM)
+  end
+  drill "can create disk object for root path" do
+    Rudy::Disk.new('/')
   end
   
-  dream [1, '/dev/sdh', '/']
+  dream :name, do
+    tmp  = [Rudy::Huxtable.global.zone, Rudy::Huxtable.global.environment]
+    tmp += [Rudy::Huxtable.global.role, '01']
+      # disk-us-east-1b-env_xxxxxx-app-01-any-path
+    ['disk', tmp, 'any', 'path'].join(Rudy::DELIM)
+  end
+  drill "can create disk object for an arbitrary path" do
+    Rudy::Disk.new('/any/path')
+  end
+  
+  dream :size, 1
+  dream :device, '/dev/sdh'
+  dream :path, '/'
   drill "has a default size and device" do
-    disk = Rudy::Metadata::Disk.new('/')
-    [disk.size, disk.device, disk.path]
+    Rudy::Disk.new('/')
   end
   
-  dream nil
+  dream :exception, ArgumentError
   drill "will fail if given no path" do
-    Rudy::Metadata::Disk.new
+    Rudy::Disk.new
   end
   
   
-  xdrill "save disk metadata" do
-    Rudy::Disk.new(path, 1, '/dev/sds').save
+  drill "save disk metadata", true do
+    Rudy::Disk.new('/any/path').save
   end
   
   xdrill "won't save over a disk with the same name" do
@@ -79,7 +88,7 @@ tryout "Disk API" do
   end
   
   xdrill "destroy a domain (#{test_domain})" do
-    @@sdb.destroy_domain test_domain
+    sdb_connection.destroy_domain test_domain
   end
   
 end

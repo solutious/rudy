@@ -161,6 +161,7 @@ module Rudy
   class PrivateKeyNotFound < Rudy::Error
     def message; "Private key file #{@obj} not found."; end
   end
+  class UnsupportedOS < Rudy::Error; end
 end
 
 require 'rudy/utils'               # The

@@ -2,9 +2,7 @@
 
 module Rudy
   class Machine < Storable 
-    extend Rudy::Metadata
-    
-    domain :rudy_state
+    include Rudy::Metadata
     
     class << self
       

@@ -1,8 +1,14 @@
 RUDY, CHANGES
 
 * TODO: Supply dns values in machines config
-* TODO: Supply machines config to routines blocks with only the specific machine group context 
-* TODO: Re-implement metadata
+* TODO: Rudy::Routines::Arcade. 
+  * install/uninstall: uses package management for the specific os impl
+  * compile: from source. 
+  * e.g. rudy -a experimental install git (for ruby-unix-osx)
+  * How to handle multiple package managers?
+  * How to handle multiple app versions? 
+* TODO: http://opensoul.org/2009/6/24/capistrano-git-and-ssh-keys
+* TODO: look for config file in ./.rudy, then ../.rudy, etc... (git-like)
 
 
 #### 0.9.0 (2009-06-XX) ###############################
@@ -41,16 +47,11 @@ NOTE: This is a significant re-write from 0.8 (routines, metadata)
 * ADDED: xremote and xlocal routine actions for quick skipping
 * ADDED: Dependency Attic 0.4
 
-* TODO: Rudy::Routines::Arcade. 
-  * install/uninstall: uses package management for the specific os impl
-  * compile: from source. 
-  * e.g. rudy -a experimental install git (for ruby-unix-osx)
-  * How to handle multiple package managers?
-  * How to handle multiple app versions? 
-* TODO: look for config file in ./.rudy, then ../.rudy, etc... (git-like)
-* TODO: http://opensoul.org/2009/6/24/capistrano-git-and-ssh-keys
 * TODO: Re-enable disk routines. 
 * TODO: Re-implement metadata
+* TODO: Supply machines config to routines blocks with only the specific machine group context 
+* TODO: Update gemspec
+
 
 #### 0.8.5 (2009-06-08) ###############################
 

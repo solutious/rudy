@@ -33,7 +33,7 @@ module Rudy
       # Returns the return value from the request is returned untouched
       # or the default value on error or if the request returned nil. 
       def execute_request(default=nil, timeout=nil, &request)
-        timeout ||= 30
+        timeout ||= 15
         raise "No block provided" unless request
         response = nil
         begin

@@ -5,7 +5,6 @@ group "Metadata"
 
 test_domain = 'test_' #<< Rudy::Utils.strand
 test_env = 'env_' << Rudy::Utils.strand
-sdb_connection = nil    # set in setup block
 
 tryout "Disk API" do
   
@@ -16,7 +15,7 @@ tryout "Disk API" do
     global = Rudy::Huxtable.global
     global.environment = test_env
     akey, skey, region = global.accesskey, global.secretkey, global.region
-    sdb_connection = Rudy::AWS::SDB.new(akey, skey, region)
+    Rudy::Metadata.connect akey, skey, region
   end
   
   clean do
@@ -28,8 +27,9 @@ tryout "Disk API" do
   end
   
   xdrill "can create test domain (#{test_domain})" do
-    sdb_connection.create_domain test_domain
+    Rudy::Metadata.create_domain test_domain
   end
+  
   
   dream :class, Rudy::Disk
   dream :name do
@@ -64,39 +64,39 @@ tryout "Disk API" do
     Rudy::Disk.new
   end
   
-  drill "save disk metadata", true do
+  xdrill "save disk metadata", true do
     Rudy::Disk.new('/any/path').save
   end
   
   dream :exception, Rudy::Metadata::DuplicateRecord
-  drill "won't save over a disk with the same name" do
+  xdrill "won't save over a disk with the same name" do
     Rudy::Disk.new('/any/path').save
   end
   
-  drill "will save over a disk with the same name if forced", true do
+  xdrill "will save over a disk with the same name if forced", true do
     Rudy::Disk.new('/any/path').save(:replace)
   end
   
   dream :class, Rudy::Disk
-  drill "get disk metadata" do
+  xdrill "get disk metadata" do
     Rudy::Disk.get '/any/path'
   end
   
   dream :class, Rudy::Disk
   dream :mounted, false
-  drill "refresh disk metadata" do
+  xdrill "refresh disk metadata" do
     d = Rudy::Disk.new('/any/path')
     d.mounted = true
     d.refresh
     d
   end
   
-
-  
+  dream false
   xdrill "create disk instance with volume" do
-    disk = new_disk('/sergeant/disk', test_env)
+    disk = Rudy::Disk.new '/sergeant/disk'
     disk.create
     stash :awsid, disk.awsid
+    disk.awsid.nil?
   end
   
   xdrill "refresh disk" do
@@ -118,7 +118,7 @@ tryout "Disk API" do
   end
   
   xdrill "destroy a domain (#{test_domain})" do
-    sdb_connection.destroy_domain test_domain
+    Rudy::Metadata.destroy_domain test_domain
   end
   
 end

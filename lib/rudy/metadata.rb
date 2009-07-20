@@ -7,12 +7,16 @@ module Rudy
     # Raised when trying to save a record with a key that already exists
     class DuplicateRecord < Rudy::Error; end
     
-    @@sdb = nil
+    @@rsdb = nil
+    @@rvol = nil
+    
     @@domain = Rudy::DOMAIN
     
     def self.connect(accesskey, secretkey, region, reconnect=false)
-      return @@sdb unless reconnect || @@sdb.nil?
-      @@sdb = Rudy::AWS::SDB.new accesskey, secretkey, region
+      return @@rsdb unless reconnect || @@rsdb.nil?
+      @@rsdb = Rudy::AWS::SDB.new accesskey, secretkey, region
+      @@rvol = Rudy::AWS::EC2::Volumes.new accesskey, secretkey, region
+      true
     end
     def self.domain(name=nil)
       return @@domain if name.nil?
@@ -22,10 +26,22 @@ module Rudy
     def self.domain=(*args)
       domain *args
     end
-
+    
+    # Creates a SimpleDB domain named +n+ and updates +@@domain+ if successful
+    def self.create_domain(n)
+      domain = n if @@rsdb.create_domain n
+    end
+    
+    # Destroys a SimpleDB domain named +n+ and sets +@@domain+ to Rudy::DOMAIN
+    def self.destroy_domain(n)
+      @@rsdb.destroy_domain n
+      domain Rudy::DOMAIN
+    end
+    
+    # Get a record from SimpleDB with the key +n+
     def self.get(n)
       Rudy::Huxtable.ld [:sdb_get, n]
-      ret = @@sdb.get(@@domain, n)
+      ret = @@rsdb.get(@@domain, n)
       Rudy::Huxtable.ld [:found, ret]
       ret
     end
@@ -66,7 +82,7 @@ module Rudy
       unless replace || Rudy::Metadata.get(self.name).nil?
         raise DuplicateRecord, self.name 
       end
-      @@sdb.put(@@domain, self.name, self.to_hash, replace) # Returns nil
+      @@rsdb.put(@@domain, self.name, self.to_hash, replace) # Returns nil
       true
     end
     

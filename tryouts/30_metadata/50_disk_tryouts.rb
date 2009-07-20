@@ -1,12 +1,11 @@
-rudy_lib_path = File.expand_path(File.join(GYMNASIUM_HOME, '..', 'lib'))
-library :rudy, rudy_lib_path
 
 group "Metadata"
-
-test_domain = 'test_' #<< Rudy::Utils.strand
-test_env = 'env_' << Rudy::Utils.strand
+library :rudy, 'lib'
 
 tryout "Disk API" do
+  
+  set :test_domain, 'test_' #<< Rudy::Utils.strand(4)
+  set :test_env, 'env_' << Rudy::Utils.strand(4)
   
   setup do
     Rudy.enable_debug
@@ -26,7 +25,7 @@ tryout "Disk API" do
     end
   end
   
-  xdrill "can create test domain (#{test_domain})" do
+  xdrill "can create test domain", test_domain do
     Rudy::Metadata.create_domain test_domain
   end
   
@@ -64,12 +63,12 @@ tryout "Disk API" do
     Rudy::Disk.new
   end
   
-  drill "save disk metadata", true do
+  xdrill "save disk metadata", true do
     Rudy::Disk.new('/any/path').save
   end
   
   dream :exception, Rudy::Metadata::DuplicateRecord
-  drill "won't save over a disk with the same name" do
+  xdrill "won't save over a disk with the same name" do
     Rudy::Disk.new('/any/path').save
   end
   

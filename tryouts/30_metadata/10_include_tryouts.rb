@@ -1,8 +1,8 @@
-test_domain = 'test_' #<< Rudy::Utils.strand
 
 group "Metadata"
 library :rudy, 'lib'
 tryouts "include Rudy::Metadata" do
+  set :test_domain, 'test_' #<< Rudy::Utils.strand
   
   setup do
     Rudy::Huxtable.global.offline = true

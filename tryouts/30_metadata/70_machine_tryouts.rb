@@ -4,7 +4,7 @@ library :rudy, File.expand_path(File.join(GYMNASIUM_HOME, '..', 'lib'))
 group "Metadata"
 
 test_domain = 'test_' #<< Rudy::Utils.strand
-test_env = 'env_' << Rudy::Utils.strand
+
 
 xtryout "Rudy::Machine instance API" do
 
@@ -17,6 +17,9 @@ xtryout "Rudy::Machine instance API" do
 end
 
 xtryout "Rudy::Machine class API" do
+  
+  set :test_env, 'env_' << Rudy::Utils.strand
+  set :test_domain, 'test_' #<< Rudy::Utils.strand
   
   dream :match, /reg/
   dream :match, /c.ntent/

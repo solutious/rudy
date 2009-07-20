@@ -52,11 +52,15 @@ module Rudy
       @mounted = false
       postprocess
     end
-
+    
+    def valid?
+      !@path.nil? && !@path.empty?
+    end
+    
     def postprocess
       # sdb values are stored as strings. Some quick conversion. 
       @size &&= @size.to_i
-      @mounted = true if @mounted == "true"  
+      @mounted = (@mounted == "true") unless @mounted.is_a?(TrueClass)
     end
     
     def name
@@ -72,5 +76,15 @@ module Rudy
       end
     end
     
+    def self.get(path)
+      Rudy::Huxtable.ld :path, path
+      tmp = Rudy::Disk.new path
+      record = Rudy::Metadata.get tmp.name
+      Rudy::Huxtable.ld [:record, record.is_a?(Hash)]
+      return nil unless record.is_a?(Hash)
+      d = Rudy::Disk.new path
+      d.from_hash record
+    end
+        
   end
 end

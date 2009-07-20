@@ -20,9 +20,17 @@ module Rudy
       domain *args
     end
 
+    def self.get(n)
+      Rudy::Huxtable.ld [:sdb_get, n]
+      ret = @@sdb.get(@@domain, n)
+      Rudy::Huxtable.ld [:found, ret]
+      ret
+    end
+    
     
     module ClassMethods
-      extend self      
+      extend self 
+      
     end
     
     def self.included(obj)
@@ -57,9 +65,7 @@ module Rudy
     end
     
     def refresh
-      ld [:sdbget, self.name]
-      h = @@sdb.get(@@domain, self.name) || {}
-      ld [:found, h]
+      h = Rudy::Metadata.get self.name
       self.from_hash(h)
     end
     

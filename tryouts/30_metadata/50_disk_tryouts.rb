@@ -69,8 +69,13 @@ tryout "Disk API" do
   end
   
   dream :class, Rudy::Disk
+  drill "get disk metadata" do
+    Rudy::Disk.get '/any/path'
+  end
+  
+  dream :class, Rudy::Disk
   dream :mounted, false
-  xdrill "refresh disk metadata" do
+  drill "refresh disk metadata" do
     d = Rudy::Disk.new('/any/path')
     d.mounted = true
     d.refresh

@@ -23,13 +23,19 @@ module AWS; module EC2;
 
 
     def destroy_volumes_valid?
-      raise "You must supply a volume ID. See rudy volume -h" unless @argv.volid      
+      raise "You must supply a volume ID. See rudy volume -h" unless @argv.volid    
+      
+      @rvol = Rudy::AWS::EC2::Volumes.new(@@global.accesskey, @@global.secretkey, @@global.region)
+      unless @rvol.exists? @argv.volid
+        raise Rudy::AWS::EC2::UnknownVolume, @argv.volid
+      end
       true
     end
     
     def destroy_volumes
-      @rvol = Rudy::AWS::EC2::Volumes.new(@@global.accesskey, @@global.secretkey, @@global.region)
+      
       @volume = @rvol.get(@argv.volid)
+      
       raise "Volume #{@volume.awsid} does not exist" unless @volume
       raise "Volume #{@volume.awsid} is still in-use" if @volume.in_use?
       raise "Volume #{@volume.awsid} is still attached" if @volume.attached?
@@ -40,6 +46,7 @@ module AWS; module EC2;
       execute_action("Destroy Failed") { @rvol.destroy(@volume.awsid) }
       
       vol = @rvol.get(@volume.awsid)
+
       puts @global.verbose > 1 ? vol.inspect : vol.dump(@@global.format)
     end
     

@@ -12,6 +12,9 @@ module Rudy
     
     @@domain = Rudy::DOMAIN
     
+    # Creates instances of the following and stores to class variables:
+    # * Rudy::AWS::SDB
+    # * Rudy::AWS::EC2::Volumes
     def self.connect(accesskey, secretkey, region, reconnect=false)
       return @@rsdb unless reconnect || @@rsdb.nil?
       @@rsdb = Rudy::AWS::SDB.new accesskey, secretkey, region
@@ -49,7 +52,6 @@ module Rudy
     
     module ClassMethods
       extend self 
-      
     end
     
     def self.included(obj)
@@ -82,7 +84,7 @@ module Rudy
       unless replace || Rudy::Metadata.get(self.name).nil?
         raise DuplicateRecord, self.name 
       end
-      @@rsdb.put(@@domain, self.name, self.to_hash, replace) # Returns nil
+      @@rsdb.put(@@domain, self.name, self.to_hash, replace)
       true
     end
     

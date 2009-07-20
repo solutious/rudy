@@ -6,7 +6,7 @@ group "Metadata"
 test_domain = 'test_' #<< Rudy::Utils.strand
 test_env = 'env_' << Rudy::Utils.strand
 
-tryout "Rudy::Machine instance API" do
+xtryout "Rudy::Machine instance API" do
 
   dream :class, Rudy::Machine
   drill "create new machine instance" do
@@ -16,7 +16,7 @@ tryout "Rudy::Machine instance API" do
   
 end
 
-tryout "Rudy::Machine class API" do
+xtryout "Rudy::Machine class API" do
   
   dream :match, /reg/
   dream :match, /c.ntent/

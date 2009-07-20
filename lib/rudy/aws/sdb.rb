@@ -294,7 +294,7 @@ module Rudy
           error = doc.get_elements('*/Errors/Error')[0]
           raise(
             Module.class_eval(
-              "AwsSdb::#{error.get_elements('Code')[0].text}Error"
+              "Rudy::AWS::SDB::#{error.get_elements('Code')[0].text}Error"
             ).new(
               error.get_elements('Message')[0].text,
               doc.get_elements('*/RequestID')[0].text

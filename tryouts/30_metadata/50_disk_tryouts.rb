@@ -64,12 +64,12 @@ tryout "Disk API" do
     Rudy::Disk.new
   end
   
-  xdrill "save disk metadata", true do
+  drill "save disk metadata", true do
     Rudy::Disk.new('/any/path').save
   end
   
   dream :exception, Rudy::Metadata::DuplicateRecord
-  xdrill "won't save over a disk with the same name" do
+  drill "won't save over a disk with the same name" do
     Rudy::Disk.new('/any/path').save
   end
   

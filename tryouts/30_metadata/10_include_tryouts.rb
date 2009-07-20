@@ -23,12 +23,14 @@ tryouts "include Rudy::Metadata" do
     Rudy::Metadata.connect akey, skey, region
   end
   
-  drill "can create test domain (automatically sets new internal domain)", test_domain do
+  dream test_domain
+  drill "can create test domain (automatically sets new internal domain)" do
     Rudy::Metadata.domain = Rudy::DOMAIN
     Rudy::Metadata.create_domain test_domain
   end
   
-  drill "can destroy domain (automatically returns to default)", Rudy::DOMAIN do
+  dream Rudy::DOMAIN 
+  drill "can destroy domain (automatically returns to default)" do
     Rudy::Metadata.destroy_domain test_domain
   end
   

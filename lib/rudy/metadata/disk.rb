@@ -77,13 +77,10 @@ module Rudy
     end
     
     def self.get(path)
-      Rudy::Huxtable.ld :path, path
       tmp = Rudy::Disk.new path
       record = Rudy::Metadata.get tmp.name
-      Rudy::Huxtable.ld [:record, record.is_a?(Hash)]
       return nil unless record.is_a?(Hash)
-      d = Rudy::Disk.new path
-      d.from_hash record
+      tmp.from_hash record
     end
         
   end

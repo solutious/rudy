@@ -68,6 +68,15 @@ tryout "Disk API" do
     Rudy::Disk.new('/any/path').save
   end
   
+  dream :exception, Rudy::Metadata::DuplicateRecord
+  drill "won't save over a disk with the same name" do
+    Rudy::Disk.new('/any/path').save
+  end
+  
+  drill "will save over a disk with the same name if forced", true do
+    Rudy::Disk.new('/any/path').save(:replace)
+  end
+  
   dream :class, Rudy::Disk
   drill "get disk metadata" do
     Rudy::Disk.get '/any/path'
@@ -82,9 +91,7 @@ tryout "Disk API" do
     d
   end
   
-  xdrill "won't save over a disk with the same name" do
-    new_disk('/sergeant/disk', test_env).save
-  end
+
   
   xdrill "create disk instance with volume" do
     disk = new_disk('/sergeant/disk', test_env)

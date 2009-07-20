@@ -4,6 +4,9 @@ module Rudy
   module Metadata
     include Rudy::Huxtable
     
+    # Raised when trying to save a record with a key that already exists
+    class DuplicateRecord < Rudy::Error; end
+    
     @@sdb = nil
     @@domain = Rudy::DOMAIN
     
@@ -59,8 +62,11 @@ module Rudy
       parts.join Rudy::DELIM
     end
     
-    def save(replace=true)
-      @@sdb.put(@@domain, self.name, self.to_hash, replace) # Always returns nil
+    def save(replace=false)
+      unless replace || Rudy::Metadata.get(self.name).nil?
+        raise DuplicateRecord, self.name 
+      end
+      @@sdb.put(@@domain, self.name, self.to_hash, replace) # Returns nil
       true
     end
     

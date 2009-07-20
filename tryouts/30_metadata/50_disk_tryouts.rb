@@ -67,6 +67,14 @@ tryout "Disk API" do
     Rudy::Disk.new('/any/path').save
   end
   
+  xdrill "knows when an object exists", true do
+    Rudy::Disk.new('/any/path').exists?
+  end
+  
+  xdrill "knows when an object doesn't exist", false do
+    Rudy::Disk.new('/no/such/disk').exists?
+  end
+  
   dream :exception, Rudy::Metadata::DuplicateRecord
   xdrill "won't save over a disk with the same name" do
     Rudy::Disk.new('/any/path').save

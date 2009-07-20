@@ -49,6 +49,7 @@ module Rudy; module AWS
     class VolumeAlreadyAttached < Rudy::Error; end
     class VolumeNotAvailable < Rudy::Error; end
     class VolumeNotAttached < Rudy::Error; end
+    class UnknownVolume < Rudy::Error; end
     class NoInstanceID < Rudy::Error; end
     class NoVolumeID < Rudy::Error; end
     class UnknownState < Rudy::Error; end

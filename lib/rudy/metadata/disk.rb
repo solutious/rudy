@@ -3,9 +3,10 @@
 module Rudy
   class Disk < Storable 
     include Rudy::Metadata
+    include Gibbler::Complex
     
     field :rtype
-    field :awsid
+    field :volid
     field :status
     field :instid
 
@@ -33,6 +34,7 @@ module Rudy
     #
     def initialize(path, opts={})
       super 'disk'  # Calls Rudy::Metadata#initialize with rtype
+      
       opts = {
         :size => 1,
         :device => '/dev/sdh',
@@ -51,10 +53,8 @@ module Rudy
       @created = now.to_i
       @mounted = false
       postprocess
-    end
-    
-    def valid?
-      !@path.nil? && !@path.empty?
+      
+      
     end
     
     def postprocess
@@ -76,6 +76,36 @@ module Rudy
       end
     end
     
+    def create(size=nil, zone=nil, snapshot=nil)
+      raise "#{self.name} already exists" if exists?
+      vol = @@rvol.create(size || @size, zone || @zone, snapshot) 
+      @volid, @raw = vol.awsid, true
+      self.save
+      self
+    end
+    
+    def destroy(force=false)
+      if @awsid && !deleting?
+        if !force
+          raise Rudy::AWS::EC2::VolumeNotAvailable, @awsid if attached?
+        else
+          detach if exists? && attached?
+          sleep 0.1
+        end
+        raise Rudy::AWS::EC2::VolumeNotAvailable, @awsid if in_use?
+        @rvol.destroy(@awsid) if exists? && available?
+      end
+      super() # quotes, otherwise Ruby will send this method's args
+    end
+    
+    def valid?
+      !@path.nil? && !@path.empty?
+    end
+    
+
+    
+    
+    # ----------------------------------------  CLASS METHODS  -----
     def self.get(path)
       tmp = Rudy::Disk.new path
       record = Rudy::Metadata.get tmp.name

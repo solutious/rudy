@@ -32,13 +32,13 @@ module Rudy
     
     # Creates a SimpleDB domain named +n+ and updates +@@domain+ if successful
     def self.create_domain(n)
-      domain = n if @@rsdb.create_domain n
+      @@domain = n if @@rsdb.create_domain n
     end
     
     # Destroys a SimpleDB domain named +n+ and sets +@@domain+ to Rudy::DOMAIN
     def self.destroy_domain(n)
       @@rsdb.destroy_domain n
-      domain Rudy::DOMAIN
+      @@domain = Rudy::DOMAIN
     end
     
     # Get a record from SimpleDB with the key +n+
@@ -49,13 +49,23 @@ module Rudy
       ret
     end
     
-    
     module ClassMethods
       extend self 
     end
     
+    # All classes which include Rudy::Metadata must reimplement
+    # the method stubs in this module. These methods only raise
+    # exceptions. 
+    module InstanceMethods
+      class << self
+        def valid?; raise "implement valid?"; end
+        def name; raise "implement name"; end
+      end 
+    end
+    
     def self.included(obj)
       obj.extend Rudy::Metadata::ClassMethods  
+      obj.send :include, Rudy::Metadata::InstanceMethods
       
       # Add common storable fields
       obj.field :region
@@ -81,10 +91,8 @@ module Rudy
     end
     
     def save(replace=false)
-      unless replace || Rudy::Metadata.get(self.name).nil?
-        raise DuplicateRecord, self.name 
-      end
-      @@rsdb.put(@@domain, self.name, self.to_hash, replace)
+      raise DuplicateRecord, self.name unless replace || !self.exists?
+      @@rsdb.put @@domain, self.name, self.to_hash, replace
       true
     end
     
@@ -93,7 +101,19 @@ module Rudy
       self.from_hash(h)
     end
     
+    # Compares the names between two Rudy::Metadata objects. 
+    def ==(other)
+      return false unless other === self.class
+      self.name == other.name
+    end
+    
+    # Is there an object in SimpleDB where the key == self.name
+    def exists?
+      !Rudy::Metadata.get(self.name).nil?
+    end
+    
   end
 end
 
 Rudy::Utils.require_glob(RUDY_LIB, 'rudy', 'metadata', '*.rb')
+

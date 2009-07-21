@@ -78,8 +78,8 @@ module Rudy
     
     def create(size=nil, zone=nil, snapshot=nil)
       raise "#{self.name} already exists" if exists?
-      #vol = @@rvol.create(size || @size, zone || @zone, snapshot) 
-      vol = @@rvol.list.first
+      vol = @@rvol.create(size || @size, zone || @zone, snapshot) 
+      #vol = @@rvol.list(:available).first   # debugging
       @volid, @raw = vol.awsid, true
       self.save
       self

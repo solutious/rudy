@@ -35,6 +35,11 @@ module RudyCLI_SDB
   command :objects => Rudy::CLI::AWS::SDB::Objects
   command_alias :objects, :object
   
+  about "Execute a SimpleDB select query"
+  argv :query
+  command :query => Rudy::CLI::AWS::SDB::Select
+  
+  
   # --------------------------------  RUDY-SDB MISCELLANEOUS  --------
   # ------------------------------------------------------------------
   

@@ -6,16 +6,14 @@ module Rudy
 
       
       def disks
-        rdisk = Rudy::Disks.new
-        rback = Rudy::Backups.new
-        more, less = [], []
+        more, less = {}, []
         less = [:environment, :role] if @option.all
         # We first get the disk metadata
-        disk_list = rdisk.list(more, less) || []
+        disk_list = Rudy::Disk.list(more, less) || []
         # If there are no disks currently, there could be backups
         # so we grab those to create a list of disks. 
         if @option.backups
-          backups = rback.list(more, less) || []
+          backups = Rudy::Backup.list(more, less) || []
           backups.each_with_index do |b, index|
             disk_list << b.disk
           end

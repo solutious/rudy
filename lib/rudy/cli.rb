@@ -69,6 +69,7 @@ module Rudy
           puts "# GLOBALS: ", gcopy.dump(format)
         end
         
+        Rudy::Metadata.connect @@global.accesskey, @@global.secretkey, @@global.region
       end
       
       def execute_action(emsg="Failed", &action)

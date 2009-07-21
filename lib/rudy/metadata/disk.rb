@@ -63,6 +63,10 @@ module Rudy
       @mounted = (@mounted == "true") unless @mounted.is_a?(TrueClass)
     end
     
+    def to_s(with_titles=true)
+      "%s; %s" % [self.name, self.to_hash.inspect]
+    end
+    
     def name
       sep = File::SEPARATOR
       if Rudy.sysinfo.os == :unix

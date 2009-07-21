@@ -38,17 +38,20 @@ module Rudy
     
     # Destroys a SimpleDB domain named +n+ and sets +@@domain+ to Rudy::DOMAIN
     def self.destroy_domain(n)
+      Rudy::Huxtable.ld "DESTROY: #{n}" if Rudy.debug?
       @@rsdb.destroy_domain n
       @@domain = Rudy::DOMAIN
     end
     
     # Get a record from SimpleDB with the key +n+
     def self.get(n)
+      Rudy::Huxtable.ld "GET: #{n}" if Rudy.debug?
       @@rsdb.get @@domain, n
     end
     
     def self.select(fields={})
       squery = Rudy::AWS::SDB.generate_select @@domain, fields
+      Rudy::Huxtable.ld "SELECT: #{squery}" if Rudy.debug?
       @@rsdb.select squery
     end
     
@@ -93,6 +96,7 @@ module Rudy
       class << self
         def valid?; raise "implement valid?"; end
         def name; raise "implement name"; end
+        def postprocess; raise "implement postprocess"; end
       end 
     end
     
@@ -109,7 +113,6 @@ module Rudy
     end
     
     def initialize(rtype)
-      Rudy::Metadata.connect @@global.accesskey, @@global.secretkey, @@global.region
       @rtype = rtype
       @region = @@global.region
       @zone = @@global.zone
@@ -137,7 +140,9 @@ module Rudy
     
     def refresh
       h = Rudy::Metadata.get self.name
-      self.from_hash(h)
+      obj = self.from_hash(h)
+      obj.postprocess
+      obj
     end
     
     # Compares the names between two Rudy::Metadata objects. 

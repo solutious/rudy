@@ -197,7 +197,8 @@ module Rudy
         query = query.join('&')
         url = "#{@base_url}?#{query}"
         uri = URI.parse(url)
-        @debug.puts("#{url}") if @debug
+        
+        #Rudy::Huxtable.ld url if Rudy.debug?
         
         response = execute_request(nil) {
           Net::HTTP.new(uri.host, uri.port).send_request(method, uri.request_uri)

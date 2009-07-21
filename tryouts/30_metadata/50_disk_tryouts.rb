@@ -4,8 +4,8 @@ library :rudy, 'lib'
 
 tryout "Disk API" do
   
-  set :test_domain, 'test_' #<< Rudy::Utils.strand(4)
-  set :test_env, 'env_' << Rudy::Utils.strand(4)
+  set :test_domain, Rudy::DOMAIN #'test_' << Rudy::Utils.strand(4)
+  set :test_env, 'env_7jjp' #'env_' << Rudy::Utils.strand(4)
   
   setup do
     Rudy.enable_debug
@@ -58,70 +58,45 @@ tryout "Disk API" do
     Rudy::Disk.new('/')
   end
   
-  dream :exception, ArgumentError
-  drill "will fail if given no path" do
-    Rudy::Disk.new
-  end
-  
-  xdrill "save disk metadata", true do
+  drill "save disk metadata", true do
     Rudy::Disk.new('/any/path').save
   end
   
-  xdrill "knows when an object exists", true do
+  drill "knows when an object exists", true do
     Rudy::Disk.new('/any/path').exists?
   end
   
-  xdrill "knows when an object doesn't exist", false do
+  drill "knows when an object doesn't exist", false do
     Rudy::Disk.new('/no/such/disk').exists?
   end
   
   dream :exception, Rudy::Metadata::DuplicateRecord
-  xdrill "won't save over a disk with the same name" do
+  drill "won't save over a disk with the same name" do
     Rudy::Disk.new('/any/path').save
   end
   
-  xdrill "will save over a disk with the same name if forced", true do
+  drill "will save over a disk with the same name if forced", true do
     Rudy::Disk.new('/any/path').save(:replace)
   end
   
   dream :class, Rudy::Disk
-  xdrill "get disk metadata" do
+  drill "get disk metadata" do
     Rudy::Disk.get '/any/path'
   end
   
   dream :class, Rudy::Disk
   dream :mounted, false
-  xdrill "refresh disk metadata" do
+  drill "refresh disk metadata" do
     d = Rudy::Disk.new('/any/path')
     d.mounted = true
     d.refresh
     d
   end
   
-  dream false
-  xdrill "create disk instance with volume" do
-    disk = Rudy::Disk.new '/sergeant/disk'
-    disk.create
-    stash :awsid, disk.awsid
-    disk.awsid.nil?
-  end
-  
-  xdrill "refresh disk" do
-    disk = new_disk('/sergeant/disk', test_env)
-    disk.refresh
-    disk.awsid
-  end
-  
-  xdrill "knows about the state of the volume" do
-    disk = new_disk('/sergeant/disk', test_env)
-    disk.refresh
-    [disk.exists?, disk.attached?, disk.in_use?]
-  end
-  
-  xdrill "destroy disk with volume" do
-    disk = new_disk('/sergeant/disk', test_env)
-    disk.update
-    disk.destroy
+  dream true
+  drill "destroy disk metadata" do
+    d = Rudy::Disk.new('/any/path')
+    d.destroy
   end
   
   xdrill "destroy a domain (#{test_domain})" do

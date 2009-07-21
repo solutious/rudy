@@ -63,29 +63,16 @@ module Rudy
       end
       
       
-      # Takes a zipped Array or Hash of criteria.
+      # Takes a Hash of criteria.
       # Returns a string suitable for a SimpleDB Select
-      def self.generate_select(domain, *fields)
-        q = args.fields.is_a?(Hash)? fields.first : Hash[*fields.flatten]
+      def self.generate_select(domain, fields={})
         query = []
-        q.each_pair do |n,v| 
+        fields.each_pair do |n,v| 
           query << "#{Rudy::AWS.escape n}='#{Rudy::AWS.escape v}'"
         end
         str = "select * from #{domain} " 
         str << " where "<< query.join(' and ') unless query.empty?
         str
-      end
-
-      
-      # Takes a zipped Array or Hash of criteria.
-      # Returns a string suitable for a SimpleDB Query
-      def self.generate_query(*args)
-        q = args.first.is_a?(Hash)? args.first : Hash[*args.flatten]
-        query = []
-        q.each do |n,v| 
-          query << "['#{Rudy::AWS.escape n}'='#{Rudy::AWS.escape v}']"
-        end
-        query.join(" intersection ")
       end
 
 
@@ -122,72 +109,6 @@ module Rudy
         hash_results.empty? ? nil : hash_results
       end
       
-      # <QueryResult><ItemName>in-c2ffrw</ItemName><ItemName>in-72yagt</ItemName><ItemName>in-52j8gj</ItemName>
-      def query(domain, query, max = nil, token = nil)
-        params = {
-          'Action' => 'Query',
-          'QueryExpression' => query,
-          'DomainName' => domain.to_s
-        }
-        params['NextToken'] =
-          token unless token.nil? || token.empty?
-        params['MaxNumberOfItems'] =
-          max.to_s unless max.nil? || max.to_i == 0
-
-
-        doc = call(:get, params)
-        results = []
-        if doc
-          REXML::XPath.each(doc, '//ItemName/text()') do |item|
-            results << item.to_s
-          end
-        end
-        
-        #return results, REXML::XPath.first(doc, '//NextToken/text()').to_s
-        results.empty? ? nil : results
-        
-      end
-
-
-
-      # <QueryWithAttributesResult><Item><Name>in-c2ffrw</Name><Attribute><Name>code</Name><Value>in-c2ffrw</Value></Attribute><Attribute><Name>date_created</Name><Value>2008-10-31</Value></Attribute></Item><Item>
-      def query_with_attributes(domain, query, max = nil, token = nil)
-        params = {
-          'Action' => 'QueryWithAttributes',
-          'QueryExpression' => query,
-          'DomainName' => domain.to_s
-        }
-        params['NextToken'] =
-          token unless token.nil? || token.empty?
-        params['MaxNumberOfItems'] =
-          max.to_s unless max.nil? || max.to_i == 0
-
-        doc = call(:get, params)
-        results = []
-        if doc
-          REXML::XPath.each(doc, "//Item") do |item|
-            name = REXML::XPath.first(item, './Name/text()').to_s
-
-            attributes = {'Name' => name}
-            REXML::XPath.each(item, "./Attribute") do |attr|
-              key = REXML::XPath.first(attr, './Name/text()').to_s
-              value = REXML::XPath.first(attr, './Value/text()').to_s
-              ( attributes[key] ||= [] ) << value
-            end
-            results << attributes
-          end
-          #return results, REXML::XPath.first(doc, '//NextToken/text()').to_s
-        end
-        
-        hash_results = {}
-        results.each do |item|
-          hash_results[item.delete('Name')] = item
-        end
-        
-        hash_results
-      end
-
-
 
       def put_attributes(domain, item, attributes, replace = true)
         replace = true if replace == :replace

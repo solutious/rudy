@@ -23,16 +23,17 @@ module Rudy
     field :raw
     field :mounted
     field :created
-
-    # * +path+ is a an absolute filesystem path (required)
+    
+    # * +path+ is a an absolute filesystem path
     # * +opts+ is a hash of disk options.
     #
     # Valid options are:
+    # * +:path+ is a an absolute filesystem path (overridden by +path+ arg)
     # * +:size+ 
     # * +:device+
     # * +:position+
     #
-    def initialize(path, opts={})
+    def initialize(path=nil, opts={})
       super 'disk'  # Calls Rudy::Metadata#initialize with rtype
       
       opts = {
@@ -41,11 +42,11 @@ module Rudy
         :position => '01'
       }.merge opts
       
-      @path = path
       opts.each_pair do |n,v|
         raise "Unknown attribute for #{self.class}: #{n}" if !self.has_field? n
         self.send("#{n}=", v)
       end
+      @path = path
       
       # Defaults:
       now = Time.now.utc
@@ -54,11 +55,10 @@ module Rudy
       @mounted = false
       postprocess
       
-      
     end
     
+    # sdb values are stored as strings. Some quick conversion. 
     def postprocess
-      # sdb values are stored as strings. Some quick conversion. 
       @size &&= @size.to_i
       @mounted = (@mounted == "true") unless @mounted.is_a?(TrueClass)
     end
@@ -78,22 +78,23 @@ module Rudy
     
     def create(size=nil, zone=nil, snapshot=nil)
       raise "#{self.name} already exists" if exists?
-      vol = @@rvol.create(size || @size, zone || @zone, snapshot) 
+      #vol = @@rvol.create(size || @size, zone || @zone, snapshot) 
+      vol = @@rvol.list.first
       @volid, @raw = vol.awsid, true
       self.save
       self
     end
     
     def destroy(force=false)
-      if @awsid && !deleting?
+      if @volid && !volume_deleting?
         if !force
-          raise Rudy::AWS::EC2::VolumeNotAvailable, @awsid if attached?
+          raise Rudy::AWS::EC2::VolumeNotAvailable, @volid if volume_attached?
         else
-          detach if exists? && attached?
+          volume_detach if volume_exists? && volume_attached?
           sleep 0.1
         end
-        raise Rudy::AWS::EC2::VolumeNotAvailable, @awsid if in_use?
-        @rvol.destroy(@awsid) if exists? && available?
+        raise Rudy::AWS::EC2::VolumeNotAvailable, @volid if volume_in_use?
+        @@rvol.destroy(@volid) if volume_exists? && volume_available?
       end
       super() # quotes, otherwise Ruby will send this method's args
     end
@@ -102,7 +103,25 @@ module Rudy
       !@path.nil? && !@path.empty?
     end
     
+    
+    def volume_attach(instid)
+      raise Rudy::Error, "No volume id" unless volume_exists?
+      vol = @rvol.attach(@volid, instid, @device)
+    end
 
+    def volume_detach
+      raise Rudy::Error, "No volume id" unless volume_exists?
+      vol = @rvol.detach(@volid)
+    end
+
+
+    # Create volume_*? methods
+    %w[exists? deleting? available? attached? in_use?].each do |state|
+      define_method("volume_#{state}") do
+        return false if @volid.nil? || @volid.empty?
+        @@rvol.send(state, @volid) rescue false # deleting?, available?, etc...
+      end
+    end
     
     
     # ----------------------------------------  CLASS METHODS  -----
@@ -112,6 +131,6 @@ module Rudy
       return nil unless record.is_a?(Hash)
       tmp.from_hash record
     end
-        
+    
   end
 end

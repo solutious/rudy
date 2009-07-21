@@ -4,7 +4,7 @@ library :rudy, 'lib'
 tryout "Disk Volume API" do
   
   set :test_domain, 'test_' #<< Rudy::Utils.strand(4)
-  set :test_env, 'env_' << Rudy::Utils.strand(4)
+  set :test_env, 'stage' << Rudy::Utils.strand(4)
   
   setup do
     Rudy.enable_debug
@@ -31,18 +31,37 @@ tryout "Disk Volume API" do
   
   dream :nil?, false
   dream :class, String
-  drill "can create volume" do
-    d = Rudy::Disk.new('/any/path', :size => 3)
-    d.create
-    d.volid
+  drill "create disk instance with volume" do
+    disk = Rudy::Disk.new '/sergeant/disk'
+    disk.create
+    disk.volid
+  end
+  
+  dream :nil?, false
+  drill "refresh disk" do
+    disk = Rudy::Disk.new '/sergeant/disk'
+    disk.refresh
+    disk.volid
   end
   
   xdrill "can attach volume to instance"
   xdrill "can mount volume"
   xdrill "can detach volume from instance"
   
-  drill "can destroy volume" do
-    
+  dream [true, false, false]
+  drill "knows about the state of the volume" do
+    disk = Rudy::Disk.new '/sergeant/disk'
+    disk.refresh
+    [disk.volume_exists?, disk.volume_attached?, disk.volume_in_use?]
   end
+  
+  dream true
+  drill "destroy disk with volume" do
+    disk = Rudy::Disk.new '/sergeant/disk'
+    disk.refresh
+    disk.destroy
+  end
+  
+  
   
 end

@@ -6,6 +6,7 @@ module Rudy
     
     # Raised when trying to save a record with a key that already exists
     class DuplicateRecord < Rudy::Error; end
+    class UnknownRecord < Rudy::Error; end
     
     @@rsdb = nil
     @@rvol = nil
@@ -43,14 +44,46 @@ module Rudy
     
     # Get a record from SimpleDB with the key +n+
     def self.get(n)
-      Rudy::Huxtable.ld [:sdb_get, n]
-      ret = @@rsdb.get(@@domain, n)
-      Rudy::Huxtable.ld [:found, ret]
-      ret
+      @@rsdb.get @@domain, n
+    end
+    
+    def self.select(fields={})
+      squery = Rudy::AWS::SDB.generate_select @@domain, fields
+      @@rsdb.select squery
+    end
+    
+    def self.build_criteria(fields={}, less=[])
+      names = [:region, :zone, :environment, :role]
+      names << :position unless @@global.position.nil?
+      names -= [*less].flatten.uniq.compact
+      values = names.collect { |n| @@global.send(n.to_sym) }
+      fields.merge(Hash[names.zip(values)])
     end
     
     module ClassMethods
-      extend self 
+      extend self
+
+      def list(fields={}, less=[], &block)
+        fields = Rudy::Metadata.build_criteria fields, less
+        records_raw, records = Rudy::Metadata.select(fields), []
+        return nil if records_raw.nil? || records_raw.empty?
+        records_raw.each_pair do |p, r|
+          obj = self.from_hash r
+          records << obj
+        end
+        records
+      end
+
+      def list_as_hash(fields={}, less=[], &block)
+        fields = Rudy::Metadata.build_criteria fields, less
+        records_raw, records = Rudy::Metadata.select(fields), {}
+        return nil if records_raw.nil? || records_raw.empty?
+        records_raw.each_pair do |p, r|
+          obj = self.from_hash r
+          records[p] = obj
+        end
+        records
+      end
     end
     
     # All classes which include Rudy::Metadata must reimplement
@@ -64,7 +97,7 @@ module Rudy
     end
     
     def self.included(obj)
-      obj.extend Rudy::Metadata::ClassMethods  
+      obj.extend Rudy::Metadata::ClassMethods
       obj.send :include, Rudy::Metadata::InstanceMethods
       
       # Add common storable fields
@@ -93,6 +126,12 @@ module Rudy
     def save(replace=false)
       raise DuplicateRecord, self.name unless replace || !self.exists?
       @@rsdb.put @@domain, self.name, self.to_hash, replace
+      true
+    end
+    
+    def destroy(force=false)
+      raise UnknownRecord, self.name unless self.exists?
+      @@rsdb.destroy @@domain, self.name
       true
     end
     

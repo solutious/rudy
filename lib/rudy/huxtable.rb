@@ -324,6 +324,7 @@ module Rudy
       hashes << @@config.machines.find(env)
       hashes << @@config.machines.find(zon)
       hashes << @@config.machines.find(rol)
+      hashes << @@config.machines.find(@@global.region)
       compilation = {}
       hashes.reverse.each do |conf|
         compilation.merge! conf if conf

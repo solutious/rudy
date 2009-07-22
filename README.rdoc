@@ -2,6 +2,8 @@
 
 <b>Not your grandparents' EC2 deployment tool.</b>
 
+<i>NOTE: Rudy 0.9 will be released by the first week of August 2009. There are many improvements[http://github.com/solutious/rudy/blob/metadata-refactor/CHANGES.txt], including updates to the configuration syntax and metadata implementation so environments created with earlier versions will not be compatible.</i>
+
 Rudy is a command-line development and deployment tool for Amazon Web Services. It helps you build and manage machines in EC2 by organizing them into groups of _environments_ and _roles_. These are called _machine_ _groups_. <tt>stage</tt> is the default environment and <tt>app</tt> is the default role. You can run multiple machines with the same role. These are called _positions_. Rudy also supports running machine groups across availability _zones_. 
 
 When you put all this together, you have a unique name for every machine. The default machine is:

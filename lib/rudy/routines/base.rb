@@ -40,7 +40,6 @@ module Rudy; module Routines;
       @rkey = Rudy::AWS::EC2::KeyPairs.new(a, s, r)
       @rvol = Rudy::AWS::EC2::Volumes.new(a, s, r)
       @rsnap = Rudy::AWS::EC2::Snapshots.new(a, s, r)
-      @rmach = Rudy::Machines.new
       
       # Grab the routines configuration for this routine name
       # e.g. startup, sysupdate, installdeps

@@ -1,54 +1,75 @@
 
-library :rudy, File.expand_path(File.join(GYMNASIUM_HOME, '..', 'lib'))
-
+library :rudy, 'lib'
 group "Metadata"
 
-test_domain = 'test_' #<< Rudy::Utils.strand
+tryout "Rudy::Machine API" do
+  
+  set :test_domain, Rudy::DOMAIN #'test_' << Rudy::Utils.strand(4)
+  set :test_env, 'stage' #'env_' << Rudy::Utils.strand(4)
 
-
-xtryout "Rudy::Machine instance API" do
-
+  setup do
+    Rudy.enable_debug
+    Rudy::Huxtable.global.offline = true
+    Rudy::Huxtable.update_config          # Read config files
+    global = Rudy::Huxtable.global
+    global.environment = test_env
+    akey, skey, region = global.accesskey, global.secretkey, global.region
+    Rudy::Metadata.connect akey, skey, region
+  end
+  
+  clean do
+    if Rudy.debug?
+      puts $/, "Rudy Debugging:"
+      Rudy::Huxtable.logger.rewind
+      puts Rudy::Huxtable.logger.read
+    end
+  end
+  
   dream :class, Rudy::Machine
+  dream :position, '02'
   drill "create new machine instance" do
-    Rudy::Machine.new
+    Rudy::Machine.new '02'
   end
-  
-  
-end
 
-xtryout "Rudy::Machine class API" do
-  
-  set :test_env, 'env_' << Rudy::Utils.strand
-  set :test_domain, 'test_' #<< Rudy::Utils.strand
-  
-  dream :match, /reg/
-  dream :match, /c.ntent/
-  drill "data" do
-    Rudy::Machine.data
+  drill "save machine metadata", true do
+    Rudy::Machine.new.save
   end
   
-  dream :size, 0
-  dream :class, Array
-  drill "can list" do
-    Rudy::Machine.list
+  drill "knows when an object exists", true do
+    Rudy::Machine.new.exists?
   end
   
-  dream :size, 0
-  dream :class, Hash
-  drill "can list as hash" do
-    Rudy::Machine.list_as_hash
+  drill "knows when an object doesn't exist", false do
+    Rudy::Machine.new('99').exists?
   end
   
-  dream :class, Rudy::Machine
-  drill "can get a machine" do
-    Rudy::Machine.get
+  
+  dream :exception, Rudy::Metadata::DuplicateRecord
+  drill "won't save over a machine with the same name" do
+    Rudy::Machine.new.save
+  end
+  
+  drill "will save over a disk with the same name if forced", true do
+    Rudy::Machine.new.save(:replace)
   end
   
   dream :class, Rudy::Machine
-  drill "can find a machine" do
-    Rudy::Machine.find
+  drill "get machine metadata" do
+    Rudy::Machine.get '01'
   end
   
+  dream :class, Rudy::Machine
+  dream :available, false
+  xdrill "refresh disk metadata" do
+    d = Rudy::Machine.new
+    d.available = true
+    d.refresh
+    d
+  end
+  
+  drill "destroy machine metadata", true do
+    Rudy::Machine.new.destroy
+  end
   
   
 end

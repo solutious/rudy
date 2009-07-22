@@ -33,6 +33,32 @@ module Rudy; module Routines;
             handler.execute(:local, @routine.delete(:before_local), nil, @@lbox, @argv)
           }
         end
+        
+        
+        unless (1..MAX_INSTANCES).member?(current_machine_count)
+          raise "Instance count must be more than 0, less than #{MAX_INSTANCES}"
+        end
+
+        unless @rgrp.exists?(current_group_name)
+          puts "Creating group: #{current_group_name}"
+          @rgrp.create(current_group_name)
+        end
+        
+        unless @rkey.exists?(root_keypairname)
+          kp_file = File.join(Rudy::CONFIG_DIR, root_keypairname)
+          raise PrivateKeyFileExists, kp_file if File.exists?(kp_file)
+          puts "Creating keypair: #{root_keypairname}"
+          kp = @rkey.create(root_keypairname)
+          puts "Saving #{kp_file}"
+          Rudy::Utils.write_to_file(kp_file, kp.private_key, 'w', 0600)
+        else
+          kp_file = root_keypairpath
+          # This means no keypair file can be found
+          raise PrivateKeyNotFound, root_keypairname if kp_file.nil?
+          # This means we found a keypair in the config but we cannot find the private key file.
+          raise PrivateKeyNotFound, kp_file if !File.exists?(kp_file)
+        end
+        
       end
       
       ## puts Rudy::Routines.machine_separator(machine.name, machine.awsid)
@@ -78,7 +104,6 @@ module Rudy; module Routines;
 
     # Called by generic_machine_runner
     def raise_early_exceptions
-      rmach = Rudy::Machines.new
       raise NoMachinesConfig unless @@config.machines
       # There's no keypair check here because Rudy::Machines will create one 
       raise MachineGroupNotDefined, current_machine_group unless known_machine_group?

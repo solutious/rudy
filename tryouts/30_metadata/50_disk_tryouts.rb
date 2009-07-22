@@ -41,7 +41,7 @@ tryout "Disk API" do
     Rudy::Disk.new('/')
   end
   
-  dream :name, do
+  dream :name do
     tmp  = [Rudy::Huxtable.global.zone, Rudy::Huxtable.global.environment]
     tmp += [Rudy::Huxtable.global.role, '01']
       # disk-us-east-1b-env_xxxxxx-app-01-any-path

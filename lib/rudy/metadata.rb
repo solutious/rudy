@@ -8,9 +8,12 @@ module Rudy
     class DuplicateRecord < Rudy::Error; end
     class UnknownRecord < Rudy::Error; end
     
-    @@rsdb = nil
-    @@rvol = nil
-    
+    @@rsdb   = nil
+    @@rvol   = nil
+    @@rinst  = nil 
+    @@radd   = nil
+    @@rkey   = nil 
+    @@rgrp   = nil
     @@domain = Rudy::DOMAIN
     
     # Creates instances of the following and stores to class variables:
@@ -18,8 +21,12 @@ module Rudy
     # * Rudy::AWS::EC2::Volumes
     def self.connect(accesskey, secretkey, region, reconnect=false)
       return @@rsdb unless reconnect || @@rsdb.nil?
-      @@rsdb = Rudy::AWS::SDB.new accesskey, secretkey, region
-      @@rvol = Rudy::AWS::EC2::Volumes.new accesskey, secretkey, region
+      @@rsdb  = Rudy::AWS::SDB.new accesskey, secretkey, region
+      @@rvol  = Rudy::AWS::EC2::Volumes.new accesskey, secretkey, region
+      @@rinst = Rudy::AWS::EC2::Instances.new accesskey, secretkey, region
+      @@radd  = Rudy::AWS::EC2::Addresses.new accesskey, secretkey, region
+      @@rkey  = Rudy::AWS::EC2::KeyPairs.new accesskey, secretkey, region
+      @@rgrp  = Rudy::AWS::EC2::Groups.new accesskey, secretkey, region
       true
     end
     def self.domain(name=nil)
@@ -112,13 +119,19 @@ module Rudy
       obj.field :position
     end
     
-    def initialize(rtype)
+    def initialize(rtype, opts={})
       @rtype = rtype
       @region = @@global.region
       @zone = @@global.zone
       @environment = @@global.environment
       @role = @@global.role
       @position = position || @@global.position || '01'
+      
+      opts.each_pair do |n,v|
+        raise "Unknown attribute for #{self.class}: #{n}" if !self.has_field? n
+        self.send("#{n}=", v)
+      end
+      
     end
     
     def name(*other)
@@ -139,7 +152,9 @@ module Rudy
     end
     
     def refresh
+      raise UnknownRecord, self.name unless self.exists?
       h = Rudy::Metadata.get self.name
+      return false if h.nil? || h.empty?
       obj = self.from_hash(h)
       obj.postprocess
       obj

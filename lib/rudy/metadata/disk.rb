@@ -22,7 +22,7 @@ module Rudy
     # [empty] means we don't know and it's the default. 
     field :raw
     field :mounted
-    field :created
+    field :created  => Time
     
     # * +path+ is a an absolute filesystem path
     # * +opts+ is a hash of disk options.
@@ -34,24 +34,19 @@ module Rudy
     # * +:position+
     #
     def initialize(path=nil, opts={})
-      super 'disk'  # Calls Rudy::Metadata#initialize with rtype
       
       opts = {
         :size => 1,
-        :device => '/dev/sdh',
-        :position => '01'
+        :device => '/dev/sdh'
       }.merge opts
       
-      opts.each_pair do |n,v|
-        raise "Unknown attribute for #{self.class}: #{n}" if !self.has_field? n
-        self.send("#{n}=", v)
-      end
+      super 'disk', opts  # Rudy::Metadata#initialize
+      
       @path = path
       
       # Defaults:
-      now = Time.now.utc
       #datetime = Backup.format_timestamp(now).split(Rudy::DELIM)
-      @created = now.to_i
+      @created = Time.now.utc
       @mounted = false
       postprocess
       

@@ -34,8 +34,7 @@ module Rudy
       end
       
       def disks_wash
-        rdisk = Rudy::Disks.new
-        dirt = (rdisk.list || [])#.select { |d| d.available? }
+        dirt = (Rudy::Disk.list || []).select { |d| d.volume_exists? }
         if dirt.empty?
           puts "Nothing to wash in #{rdisk.current_machine_group}"
           return
@@ -43,6 +42,7 @@ module Rudy
         
         puts "The following disk metadata will be deleted:"
         puts dirt.collect {|d| d.name }
+        
         execute_check(:medium)
 
         dirt.each do |d|

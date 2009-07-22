@@ -8,7 +8,7 @@ module Rudy
     def create(&each_mach)
       raise MachineGroupAlreadyRunning, current_machine_group if running?
       raise MachineGroupNotDefined, current_machine_group unless known_machine_group?
-
+      
       unless (1..MAX_INSTANCES).member?(current_machine_count)
         raise "Instance count must be more than 0, less than #{MAX_INSTANCES}"
       end
@@ -32,7 +32,7 @@ module Rudy
         # This means we found a keypair in the config but we cannot find the private key file.
         raise PrivateKeyNotFound, kp_file if !File.exists?(kp_file)
       end
-
+      
       machines = []
       current_machine_count.times do |i|
         machine = Rudy::Machine.new

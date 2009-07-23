@@ -1,28 +1,52 @@
-rudy_lib_path = File.expand_path(File.join(GYMNASIUM_HOME, '..', 'lib'))
-library :rudy, rudy_lib_path
 
-group "SimpleDB"
+group "EC2"
+library :rudy, 'lib'
 
-test_domain = 'test_' << Rudy::Utils.strand
 
-tryouts "Domains" do
-  drill "Has stuff" do
+tryouts "Keypairs" do
+  
+  set :keypair_name, 'key-' << Rudy::Utils.strand
+  
+  setup do
     Rudy::Huxtable.update_config
     global = Rudy::Huxtable.global
     akey, skey, region = global.accesskey, global.secretkey, global.region
-    @@ec2 = Rudy::AWS::SDB.new(akey, skey, region)
-    true
+    Rudy::AWS::EC2.connect akey, skey, region
   end
   
-  drill "has ec2 instance" do
-    @@ec2
+  dream [Rudy::AWS::EC2::Keypair, false]
+  drill "create keypair" do
+    k = Rudy::AWS::EC2::Keypairs.create keypair_name
+    [k.class, k.private_key.nil?]
+  end
+  
+  drill "get keypair", :class, Rudy::AWS::EC2::Keypair do
+    Rudy::AWS::EC2::Keypairs.get keypair_name
+  end
+  
+  drill "has fingerprint", :empty?, false do
+    k = Rudy::AWS::EC2::Keypairs.get keypair_name
+    k.fingerprint
+  end
+  
+  drill "private key is not available later", nil do
+    k = Rudy::AWS::EC2::Keypairs.get keypair_name
+    k.private_key
+  end
+  
+  dream :class, Array
+  dream :empty?, false
+  drill "list keypairs" do
+    Rudy::AWS::EC2::Keypairs.list
+  end
+  
+  drill "destroy keypairs", nil do
+    keypairs = Rudy::AWS::EC2::Keypairs.list
+    keypairs.each do |kp|
+      Rudy::AWS::EC2::Keypairs.destroy kp.name
+    end
+    Rudy::AWS::EC2::Keypairs.list
   end
   
 end
-#dreams "Domains" do
-#  dream "create simpledb connection", Rudy::AWS::SDB, :class
-#  dream "create a domain (#{test_domain})", true
-#  dream "list domains", Array, :class
-#  dream "destroy a domain (#{test_domain})", true
-#end
-#
+

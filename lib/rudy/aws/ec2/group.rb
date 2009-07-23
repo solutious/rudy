@@ -42,7 +42,7 @@ module Rudy::AWS
       lines.join($/)
     end
     
-    def inspect
+    def pretty
       lines = [@name.bright]
       field_names.each do |key|
         next unless self.respond_to?(key)

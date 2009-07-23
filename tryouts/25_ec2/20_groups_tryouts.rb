@@ -42,7 +42,6 @@ tryouts "Groups" do
     list.uniq
   end
   
-  
   dream :class, Array
   dream :size, 1
   drill "destroy groups" do

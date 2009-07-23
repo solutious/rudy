@@ -99,7 +99,7 @@ module Rudy
         @created = @started = Time.now
         @state = inst.state
         # We need to be safe when creating machines because if an exception is
-        # raised, instances will have been creating but the calling class won't know. 
+        # raised, instances will have been created but the calling class won't know. 
         begin
           # Assign IP address only if we have one for that position
           if @address

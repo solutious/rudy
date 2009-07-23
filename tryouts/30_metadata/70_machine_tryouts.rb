@@ -43,7 +43,6 @@ tryout "Rudy::Machine API" do
     Rudy::Machine.new('99').exists?
   end
   
-  
   dream :exception, Rudy::Metadata::DuplicateRecord
   drill "won't save over a machine with the same name" do
     Rudy::Machine.new.save

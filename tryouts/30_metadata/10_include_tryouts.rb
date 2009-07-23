@@ -29,6 +29,11 @@ tryouts "include Rudy::Metadata" do
     Rudy::Metadata.create_domain test_domain
   end
   
+  dream [:environment, :region, :role, :zone]
+  drill "can build a default criteria" do
+    Rudy::Metadata.build_criteria.keys.sort
+  end
+  
   dream Rudy::DOMAIN 
   drill "can destroy domain (automatically returns to default)" do
     Rudy::Metadata.destroy_domain test_domain

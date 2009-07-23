@@ -56,18 +56,30 @@ module Rudy
       @@rsdb.get @@domain, n
     end
     
+    # Generates and executes a SimpleDB select query based on
+    # the specified +fields+ Hash. See self.build_criteria.
+    #
+    # Returns a Hash. keys are SimpleDB object IDs and values
+    # are the object attributes. 
     def self.select(fields={})
       squery = Rudy::AWS::SDB.generate_select @@domain, fields
       Rudy::Huxtable.ld "SELECT: #{squery}" if Rudy.debug?
       @@rsdb.select squery
     end
     
+    # Generates a default criteria for all metadata based on
+    # region, zone, environment, and role. If a position has
+    # been specified in the globals it will also be included.
+    # +fields+ replaces and adds values to this criteria and
+    # +less+ removes keys from the default criteria. 
+    #
+    # Returns a Hash. 
     def self.build_criteria(fields={}, less=[])
       names = [:region, :zone, :environment, :role]
       names << :position unless @@global.position.nil?
       names -= [*less].flatten.uniq.compact
       values = names.collect { |n| @@global.send(n.to_sym) }
-      fields.merge(Hash[names.zip(values)])
+      Hash[names.zip(values)].merge(fields)
     end
     
     module ClassMethods

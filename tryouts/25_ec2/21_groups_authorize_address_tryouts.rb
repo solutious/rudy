@@ -22,13 +22,13 @@ tryouts "Groups Authorize Address" do
     Rudy::AWS::EC2::Groups.authorize group_name, addresses, ports, protocols
   end
   
-  dream :proc, lambda { |group|
-    group.addresses.each_pair do |address,rules|
-      return false unless rules.is_a? Array
-      return false unless rules.size == 7
-    end
-    true
-  }
+    dream :proc, lambda { |group|
+      group.addresses.each_pair do |address,rules|
+        return false unless rules.is_a? Array
+        return false unless rules.size == 7
+      end
+      true
+    }
   drill "group (#{group_name}) contains new rules" do
     stash :group, Rudy::AWS::EC2::Groups.get(group_name)
   end
@@ -37,13 +37,13 @@ tryouts "Groups Authorize Address" do
     Rudy::AWS::EC2::Groups.revoke(group_name, addresses, ports, protocols)
   end
   
-  dream :proc, lambda { |group|
-    group.addresses.each_pair do |address,rules|
-      return false unless rules.is_a? Array
-      return false unless rules.size == 3
-    end
-    true
-  }
+    dream :proc, lambda { |group|
+      group.addresses.each_pair do |address,rules|
+        return false unless rules.is_a? Array
+        return false unless rules.size == 3
+      end
+      true
+    }
   drill "group does not contain new rules" do
     group = Rudy::AWS::EC2::Groups.get(group_name)
     stash :group, group 

@@ -25,13 +25,13 @@ tryouts "Groups Authorize/Revoke Account" do
     Rudy::AWS::EC2::Groups.authorize_group group_name, group_name, accountnum
   end
   
-  dream :class, Rudy::AWS::EC2::Group
-  dream :proc, lambda { |group|
-    accountnum = Rudy::Huxtable.config.accounts.aws.accountnum
-    should_have = "#{accountnum}:#{group_name}"
-    return false unless group.groups.is_a?(Hash)
-    group.groups.has_key?(should_have) == true
-  }
+    dream :class, Rudy::AWS::EC2::Group
+    dream :proc, lambda { |group|
+      accountnum = Rudy::Huxtable.config.accounts.aws.accountnum
+      should_have = "#{accountnum}:#{group_name}"
+      return false unless group.groups.is_a?(Hash)
+      group.groups.has_key?(should_have) == true
+    }
   drill "group (#{group_name}) contains new rules" do
     stash :group, Rudy::AWS::EC2::Groups.get(group_name)
   end
@@ -41,13 +41,13 @@ tryouts "Groups Authorize/Revoke Account" do
     Rudy::AWS::EC2::Groups.revoke_group group_name, group_name, accountnum
   end
   
-  dream :proc, lambda { |group| 
-    accountnum = Rudy::Huxtable.config.accounts.aws.accountnum
-    should_have = "#{accountnum}:#{group_name}"
-    return false unless group.groups.is_a?(Hash)
-    group.groups.has_key?(should_have) == false
-  }
-  drill "group (#{group_name}) does not contain new rules" do
+    dream :proc, lambda { |group| 
+      accountnum = Rudy::Huxtable.config.accounts.aws.accountnum
+      should_have = "#{accountnum}:#{group_name}"
+      return false unless group.groups.is_a?(Hash)
+      group.groups.has_key?(should_have) == false
+    }
+    drill "group (#{group_name}) does not contain new rules" do
     stash :group, Rudy::AWS::EC2::Groups.get(group_name)
   end
 

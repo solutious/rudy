@@ -13,7 +13,6 @@ module Rudy
     class SDB
       class NoAccessKey < RuntimeError; end
       class NoSecretKey < RuntimeError; end
-      include Rudy::AWS::ObjectBase
       
       require 'rudy/aws/sdb/error'
       
@@ -33,7 +32,7 @@ module Rudy
         @base_url = url
         @debug = debug || StringIO.new
       end
-
+      
       def list_domains(max = nil, token = nil)
         params = { 'Action' => 'ListDomains' }
         params['NextToken'] =

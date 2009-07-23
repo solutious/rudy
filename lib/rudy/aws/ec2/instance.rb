@@ -67,9 +67,9 @@ module Rudy::AWS
   
   
   module EC2
-    class Instances
-      include Rudy::AWS::ObjectBase
-      include Rudy::AWS::EC2::Base
+    module Instances
+      include Rudy::AWS::EC2
+
       
       unless defined?(KNOWN_STATES)
         KNOWN_STATES = [:running, :pending, :shutting_down, :terminated, :degraded].freeze 
@@ -113,7 +113,7 @@ module Rudy::AWS
           :kernel_id => nil
         }
         
-        response = execute_request({}) { @ec2.run_instances(old_opts) }
+        response = execute_request({}) { @@ec2.run_instances(old_opts) }
         return nil unless response['instancesSet'].is_a?(Hash)
         instances = response['instancesSet']['item'].collect do |inst|
           self.class.from_hash(inst)
@@ -129,7 +129,7 @@ module Rudy::AWS
         raise NoRunningInstances if instances.empty?
         inst_ids = objects_to_instance_ids(inst_ids)
         response = execute_request({}) {
-          @ec2.reboot_instances(:instance_id => inst_ids)
+          @@ec2.reboot_instances(:instance_id => inst_ids)
         }
         response['return'] == 'true'
       end
@@ -141,7 +141,7 @@ module Rudy::AWS
         inst_ids = objects_to_instance_ids(inst_ids)
             
         response = execute_request({}) {
-          @ec2.terminate_instances(:instance_id => inst_ids)
+          @@ec2.terminate_instances(:instance_id => inst_ids)
         }
       
         #instancesSet: 
@@ -227,7 +227,7 @@ module Rudy::AWS
         inst_ids = objects_to_instance_ids(inst_ids)
       
         response = execute_request({}) {
-          @ec2.describe_instances(:instance_id => inst_ids)
+          @@ec2.describe_instances(:instance_id => inst_ids)
         }
       
         # requestId: c16878ac-28e4-4859-9878-ef93af45789c
@@ -279,7 +279,7 @@ module Rudy::AWS
       def console(inst_id, &each_inst)
         inst_ids = objects_to_instance_ids([inst_id])
         response = execute_request({}) { 
-          @ec2.get_console_output(:instance_id => inst_ids.first)
+          @@ec2.get_console_output(:instance_id => inst_ids.first)
         }
         response['output']
       end

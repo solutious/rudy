@@ -48,9 +48,9 @@ module Rudy::AWS
     end
   
   
-    class Volumes
-      include Rudy::AWS::ObjectBase
-      include Rudy::AWS::EC2::Base
+    module Volumes
+      include Rudy::AWS::EC2
+
     
       unless defined?(KNOWN_STATES)
         KNOWN_STATES = [:available, :creating, :deleting, :attached, :detaching].freeze 
@@ -72,11 +72,11 @@ module Rudy::AWS
         # "availabilityZone"=>"us-east-1b", 
         # "createTime"=>"2009-03-17T20:10:48.000Z", 
         # "volumeId"=>"vol-48826421"
-        vol = execute_request({}) { @ec2.create_volume(opts) }
+        vol = execute_request({}) { @@ec2.create_volume(opts) }
       
         # TODO: use a waiter?
         #Rudy.waiter(1, 30) do
-        #  ret = @@ec2.volumes.available?(volume.awsid)
+        #  ret = @@@ec2.volumes.available?(volume.awsid)
         #end
       
         reqid = vol['requestId']
@@ -86,7 +86,7 @@ module Rudy::AWS
       def destroy(vol_id)
         vol_id = Volumes.get_vol_id(vol_id)
         raise VolumeNotAvailable, vol_id unless available?(vol_id)
-        ret = execute_request({}) { @ec2.delete_volume(:volume_id => vol_id) }
+        ret = execute_request({}) { @@ec2.delete_volume(:volume_id => vol_id) }
         (ret['return'] == 'true') 
       end
     
@@ -103,7 +103,7 @@ module Rudy::AWS
           :instance_id => inst_id, 
           :device => device.to_s    # Solaris devices are numbers
         }
-        ret = execute_request(false) { @ec2.attach_volume(opts) }
+        ret = execute_request(false) { @@ec2.attach_volume(opts) }
         (ret['status'] == 'attaching')
       end
     
@@ -111,7 +111,7 @@ module Rudy::AWS
         vol_id = Volumes.get_vol_id(vol_id)
         raise NoVolumeID unless vol_id
         raise VolumeNotAttached, vol_id unless attached?(vol_id)
-        ret = execute_request({}) { @ec2.detach_volume(:volume_id => vol_id) }
+        ret = execute_request({}) { @@ec2.detach_volume(:volume_id => vol_id) }
         (ret['status'] == 'detaching') 
       end
     
@@ -130,7 +130,7 @@ module Rudy::AWS
           :volume_id => vol_id ? [vol_id].flatten : [] 
         }
 
-        vlist = execute_request({}) { @ec2.describe_volumes(opts) }
+        vlist = execute_request({}) { @@ec2.describe_volumes(opts) }
 
         volumes = {}
         return volumes unless vlist['volumeSet'].is_a?(Hash)
@@ -223,8 +223,3 @@ module Rudy::AWS
   end
 end
 
-
-class Rudy::AWS::EC2::Volumes
-  
-
-end

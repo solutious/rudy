@@ -22,13 +22,11 @@ module Rudy::AWS
       end
     end
   
-    class Addresses
-      include Rudy::AWS::ObjectBase
-      include Rudy::AWS::EC2::Base
-    
-      
+    module Addresses
+      include Rudy::AWS::EC2
+  
       def create
-        ret = @ec2.allocate_address
+        ret = @@ec2.allocate_address
         return false unless ret && ret['publicIp']
         address = Rudy::AWS::EC2::Address.new
         address.ipaddress = ret['publicIp']
@@ -42,7 +40,7 @@ module Rudy::AWS
         opts ={
           :public_ip => address || raise("No public IP address supplied")
         }
-        ret = @ec2.release_address(opts)
+        ret = @@ec2.release_address(opts)
         (ret && ret['return'] == 'true')
       end
 
@@ -61,7 +59,7 @@ module Rudy::AWS
           :instance_id => instance,
           :public_ip => address
         }
-        ret = @ec2.associate_address(opts)
+        ret = @@ec2.associate_address(opts)
         (ret && ret['return'] == 'true')
       end
 
@@ -76,7 +74,7 @@ module Rudy::AWS
         opts ={
           :public_ip => address
         }
-        ret = @ec2.disassociate_address(opts)
+        ret = @@ec2.disassociate_address(opts)
         (ret && ret['return'] == 'true')
       end
 
@@ -93,7 +91,7 @@ module Rudy::AWS
       def list_as_hash(addresses=[])
         addresses ||= []
         addresses = [addresses].flatten.compact
-        alist = @ec2.describe_addresses(:addresses=> addresses)
+        alist = @@ec2.describe_addresses(:addresses=> addresses)
         
         return nil unless alist['addressesSet'].is_a?(Hash)
       

@@ -19,9 +19,8 @@ module Rudy::AWS
 
     end
     
-    class Zones
-      include Rudy::AWS::ObjectBase
-      include Rudy::AWS::EC2::Base
+    module Zones
+      include Rudy::AWS::EC2
       
       def list(*names)
         zones = list_as_hash(names)
@@ -31,7 +30,7 @@ module Rudy::AWS
       
       def list_as_hash(*names)
         names = names.flatten
-        zlist = @ec2.describe_availability_zones(:zone_name => names)
+        zlist = @@ec2.describe_availability_zones(:zone_name => names)
         return unless zlist['availabilityZoneInfo'].is_a?(Hash)
         zones = {}
         zlist['availabilityZoneInfo']['item'].each do |zhash| 

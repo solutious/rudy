@@ -52,11 +52,10 @@ module Rudy::AWS
     
   end
   
-  module EC2
-    
-    class Images
-      include Rudy::AWS::ObjectBase
-      include Rudy::AWS::EC2::Base
+  module EC2    
+    module Images
+      include Rudy::AWS::EC2
+
       
       def list(owner=[], image_ids=[], executable_by=[], &each_image)
         images = list_as_hash(owner, image_ids, executable_by)
@@ -81,7 +80,7 @@ module Rudy::AWS
           :executable_by => executable_by || []
         }
         
-        response = execute_request({}) { @ec2.describe_images(opts) }
+        response = execute_request({}) { @@ec2.describe_images(opts) }
         
         return nil unless response['imagesSet'].is_a?(Hash)  # No instances 
       
@@ -105,7 +104,7 @@ module Rudy::AWS
         opts = {
           :image_id => id
         }
-        ret = @ec2.deregister_image(opts)
+        ret = @@ec2.deregister_image(opts)
         return false unless ret && ret.is_a?(Hash)
         true
       end
@@ -116,7 +115,7 @@ module Rudy::AWS
         opts = {
           :image_location => path
         }
-        ret = @ec2.register_image(opts)
+        ret = @@ec2.register_image(opts)
         return nil unless ret && ret.is_a?(Hash)
         ret['imageId']
       end

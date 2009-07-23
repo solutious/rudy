@@ -2,7 +2,7 @@
 module Rudy::AWS
   module EC2
     
-    class KeyPair < Storable
+    class Keypair < Storable
       
       field :name
       field :fingerprint
@@ -25,20 +25,20 @@ module Rudy::AWS
 
     end
     
-    class KeyPairs
-      include Rudy::AWS::ObjectBase
-      include Rudy::AWS::EC2::Base
+    module EC2::Keypairs
+      extend self
+      include Rudy::AWS::EC2
       
       def create(name)
         raise "No name provided" unless name
-        ret = @ec2.create_keypair(:key_name => name)
-        self.class.from_hash(ret)
+        ret = @@ec2.create_keypair(:key_name => name)
+        from_hash(ret)
       end
       
       def destroy(name)
-        name = name.name if name.is_a?(Rudy::AWS::EC2::KeyPair)
+        name = name.name if name.is_a?(Rudy::AWS::EC2::Keypair)
         raise "No name provided" unless name.is_a?(String)
-        ret = @ec2.delete_keypair(:key_name => name)
+        ret = @@ec2.delete_keypair(:key_name => name)
         (ret && ret['return'] == 'true') # BUG? Always returns true
       end
       
@@ -50,23 +50,23 @@ module Rudy::AWS
       
       def list_as_hash(*names)
         names = names.flatten
-        klist = @ec2.describe_keypairs(:key_name => names)
+        klist = @@ec2.describe_keypairs(:key_name => names)
         return unless klist['keySet'].is_a?(Hash)
         keypairs = {}
         klist['keySet']['item'].each do |oldkp| 
-          kp = self.class.from_hash(oldkp)
+          kp = from_hash(oldkp)
           keypairs[kp.name] = kp
         end
         keypairs
       end
       
-      def self.from_hash(h)
+      def from_hash(h)
         # keyName: test-c5g4v3pe
         # keyFingerprint: 65:d0:ce:e7:6a:b0:88:4a:9c:c7:2d:b8:33:0c:fd:3b:c8:0f:0a:3c
         # keyMaterial: |-
         #   -----BEGIN RSA PRIVATE KEY-----
         # 
-        keypair = Rudy::AWS::EC2::KeyPair.new
+        keypair = Rudy::AWS::EC2::Keypair.new
         keypair.fingerprint = h['keyFingerprint']
         keypair.name = h['keyName']
         keypair.private_key = h['keyMaterial']
@@ -91,13 +91,7 @@ module Rudy::AWS
       end
       
     end
-    
-    class Keypairs #:nodoc:
-      def initialize(*args)
-        raise "Oops! The correct class uses a capital 'P': Rudy::AWS::EC2::KeyPairs"
-      end
-    end
-    
+        
   end
 end
 

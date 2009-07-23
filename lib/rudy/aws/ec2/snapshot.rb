@@ -38,9 +38,9 @@ module Rudy::AWS
       
     end
     
-    class Snapshots
-      include Rudy::AWS::ObjectBase
-      include Rudy::AWS::EC2::Base
+    module Snapshots
+      include Rudy::AWS::EC2
+
 
       def list(snap_id=[])
         snapshots = list_as_hash(snap_id)
@@ -51,7 +51,7 @@ module Rudy::AWS
       end
       def list_as_hash(snap_id=[])
         snap_id = [snap_id].flatten.compact
-        slist = @ec2.describe_snapshots(:snapshot_id => snap_id)
+        slist = @@ec2.describe_snapshots(:snapshot_id => snap_id)
         return unless slist['snapshotSet'].is_a?(Hash)
         snapshots = {}
         slist['snapshotSet']['item'].each do |snap| 
@@ -63,13 +63,13 @@ module Rudy::AWS
       
       def create(vol_id)
         vol_id = (vol_id.is_a?(Rudy::AWS::EC2::Volume)) ? vol_id.awsid : vol_id
-        shash = @ec2.create_snapshot(:volume_id => vol_id)
+        shash = @@ec2.create_snapshot(:volume_id => vol_id)
         snap = Snapshots.from_hash(shash)
         snap
       end
       
       def destroy(snap_id)
-        ret = @ec2.delete_snapshot(:snapshot_id => snap_id)
+        ret = @@ec2.delete_snapshot(:snapshot_id => snap_id)
         (ret && ret['return'] == 'true') 
       end
       

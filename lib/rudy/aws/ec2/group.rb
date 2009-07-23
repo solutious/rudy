@@ -84,15 +84,14 @@ module Rudy::AWS
   
   
   module EC2
-    class Groups
-      include Rudy::AWS::ObjectBase
-      include Rudy::AWS::EC2::Base
+    module Groups
+      include Rudy::AWS::EC2
   
       # Create a new EC2 security group
       # Returns list of created groups
       def create(name, desc=nil, addresses=[], ports=[], protocols=[], &each_group)
         desc ||= "Security Group #{name}"
-        ret = @ec2.create_security_group(:group_name => name, :group_description => desc)
+        ret = @@ec2.create_security_group(:group_name => name, :group_description => desc)
         return false unless (ret && ret['return'] == 'true')
         authorize(name, addresses, ports, protocols)
         get(name, &each_group)
@@ -102,7 +101,7 @@ module Rudy::AWS
       # Returns true/false whether successful
       def destroy(name, &each_group)
         list(name, &each_group) if each_group
-        ret = @ec2.delete_security_group(:group_name => name)
+        ret = @@ec2.delete_security_group(:group_name => name)
         (ret && ret['return'] == 'true')
       end
       
@@ -140,7 +139,7 @@ module Rudy::AWS
       # Returns an Array of Rudy::AWS::EC2::Group objects
       def list_as_hash(group_names=[], &each_group)
         group_names = [group_names].flatten.compact
-        glist = @ec2.describe_security_groups(:group_name => group_names) || {}
+        glist = @@ec2.describe_security_groups(:group_name => group_names) || {}
         return unless glist['securityGroupInfo'].is_a?(Hash)
         groups = {}
         glist['securityGroupInfo']['item'].each do |oldg| 
@@ -274,7 +273,7 @@ module Rudy::AWS
           :to_port => to_port,
           :cidr_ip => ipa
         }
-        ret = @ec2.send("#{meth}_security_group_ingress", opts)
+        ret = @@ec2.send("#{meth}_security_group_ingress", opts)
         (ret && ret['return'] == 'true')
       end
       
@@ -289,7 +288,7 @@ module Rudy::AWS
           :source_security_group_name => gname,
           :source_security_group_owner_id => gowner
         }
-        ret = @ec2.send("#{meth}_security_group_ingress", opts)
+        ret = @@ec2.send("#{meth}_security_group_ingress", opts)
         (ret && ret['return'] == 'true')
       end
 

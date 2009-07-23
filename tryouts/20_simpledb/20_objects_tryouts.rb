@@ -5,7 +5,7 @@ group "SimpleDB"
 
 tryouts "Objects" do
 
-  set :test_domain, 'test_' #<< Rudy::Utils.strand
+  set :test_domain, 'test_' << Rudy::Utils.strand
   set :produce, Hash[
     'orange' => (rand(100) * 10).to_s,
     'celery' => (rand(100) * 100).to_s,
@@ -20,7 +20,7 @@ tryouts "Objects" do
     @sdb = Rudy::AWS::SDB.new(akey, skey, region)
   end
   
-  xdrill "create test domain (#{test_domain})", true do
+  drill "create test domain (#{test_domain})", true do
     @sdb.create_domain test_domain
   end
   
@@ -42,13 +42,13 @@ tryouts "Objects" do
   end
   
   dream true
-  xdrill "destroy objects by name" do
+  drill "destroy objects by name" do
     items = @sdb.select "select * from #{test_domain}"
     items.keys.each { |name| @sdb.destroy test_domain, name }
     @sdb.select("select * from #{test_domain}").nil?
   end
   
-  xdrill "destroy test domain (#{test_domain})", true do
+  drill "destroy test domain (#{test_domain})", true do
     @sdb.destroy_domain test_domain
   end
   

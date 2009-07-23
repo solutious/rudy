@@ -55,14 +55,14 @@ module Rudy
     
     # Wait for something to happen. 
     # * +duration+ seconds to wait between tries (default: 2).
-    # * +max+ maximum time to wait (default: 120). Throws an exception when exceeded.
+    # * +max+ maximum time to wait (default: 3600). Throws an exception when exceeded.
     # * +logger+ IO object to print +dot+ to.
     # * +msg+ the message to print before executing the block. 
     # * +bells+ number of terminal bells to ring. Set to nil or false to keep the waiter silent
     #
     # The +check+ block must return false while waiting. Once it returns true
     # the waiter will return true too.
-    def waiter(duration=2, max=120, logger=STDOUT, msg=nil, bells=0, &check)
+    def waiter(duration=2, max=3600, logger=STDOUT, msg=nil, bells=0, &check)
       # TODO: Move to Drydock. [ed-why?]
       raise "The waiter needs a block!" unless check
       duration = 1 if duration < 1

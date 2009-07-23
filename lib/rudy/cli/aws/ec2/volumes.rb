@@ -13,10 +13,9 @@ module AWS; module EC2;
     end
     def volumes_create
       puts "Creating #{@option.size}GB volume in #{@@global.zone}"
-      rvol = Rudy::AWS::EC2::Volumes.new(@@global.accesskey, @@global.secretkey, @@global.region)
       execute_check(:low)
       vol = execute_action("Create Failed") { 
-        rvol.create(@option.size, @@global.zone, @option.snapshot) 
+        Rudy::AWS::EC2::Volumes.create(@option.size, @@global.zone, @option.snapshot) 
       }
       puts @global.verbose > 1 ? vol.inspect : vol.dump(@@global.format)
     end
@@ -25,8 +24,7 @@ module AWS; module EC2;
     def destroy_volumes_valid?
       raise "You must supply a volume ID. See rudy volume -h" unless @argv.volid    
       
-      @rvol = Rudy::AWS::EC2::Volumes.new(@@global.accesskey, @@global.secretkey, @@global.region)
-      unless @rvol.exists? @argv.volid
+      unless Rudy::AWS::EC2::Volumes.exists? @argv.volid
         raise Rudy::AWS::EC2::UnknownVolume, @argv.volid
       end
       true
@@ -34,7 +32,7 @@ module AWS; module EC2;
     
     def destroy_volumes
       
-      @volume = @rvol.get(@argv.volid)
+      @volume = Rudy::AWS::EC2::Volumes.get(@argv.volid)
       
       raise "Volume #{@volume.awsid} does not exist" unless @volume
       raise "Volume #{@volume.awsid} is still in-use" if @volume.in_use?
@@ -43,9 +41,9 @@ module AWS; module EC2;
       
       puts "Destroying #{@volume.awsid}"
       execute_check(:medium)
-      execute_action("Destroy Failed") { @rvol.destroy(@volume.awsid) }
+      execute_action("Destroy Failed") { Rudy::AWS::EC2::Volumes.destroy(@volume.awsid) }
       
-      vol = @rvol.get(@volume.awsid)
+      vol = Rudy::AWS::EC2::Volumes.get(@volume.awsid)
 
       puts @global.verbose > 1 ? vol.inspect : vol.dump(@@global.format)
     end
@@ -58,7 +56,7 @@ module AWS; module EC2;
     end
     def volumes_attach
       @option.device ||= "/dev/sdh"
-      
+      raise "TODO"
       rvol = Rudy::AWS::EC2::Volumes.new(@@global.accesskey, @@global.secretkey, @@global.region)
       rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey, @@global.region)
       raise "Volume #{@argv.volid} does not exist" unless rvol.exists?(@argv.volid)
@@ -83,7 +81,7 @@ module AWS; module EC2;
     def volumes_detach
       rvol = Rudy::AWS::EC2::Volumes.new(@@global.accesskey, @@global.secretkey, @@global.region)
       raise "Volume #{@argv.volid} does not exist" unless rvol.exists?(@argv.volid)
-      
+      raise "TODO"
       vol = rvol.get(@argv.volid)
       raise "Volume #{vol.awsid} is not attached" unless vol.attached?
       
@@ -97,8 +95,7 @@ module AWS; module EC2;
     
     
     def volumes
-      rvol = Rudy::AWS::EC2::Volumes.new(@@global.accesskey, @@global.secretkey, @@global.region)
-      volumes = rvol.list || []
+      volumes = Rudy::AWS::EC2::Volumes.list || []
       volumes.each do |vol|
         puts @global.verbose > 1 ? vol.inspect : vol.dump(@@global.format)
       end

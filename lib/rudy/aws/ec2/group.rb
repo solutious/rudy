@@ -85,8 +85,8 @@ module Rudy::AWS
   
   module EC2
     module Groups
-      extend self
-      include Rudy::AWS::EC2
+      include Rudy::AWS::EC2  # important! include,
+      extend self             # then extend
   
       # Create a new EC2 security group
       # Returns list of created groups
@@ -148,6 +148,7 @@ module Rudy::AWS
           groups[g.name] = g
         end
         groups.each_value { |g| each_group.call(g) } if each_group
+        groups = nil if groups.empty?
         groups
       end
       

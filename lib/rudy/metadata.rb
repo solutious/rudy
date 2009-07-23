@@ -22,11 +22,6 @@ module Rudy
     def self.connect(accesskey, secretkey, region, reconnect=false)
       return @@rsdb unless reconnect || @@rsdb.nil?
       @@rsdb  = Rudy::AWS::SDB.new accesskey, secretkey, region
-      @@rvol  = Rudy::AWS::EC2::Volumes.new accesskey, secretkey, region
-      @@rinst = Rudy::AWS::EC2::Instances.new accesskey, secretkey, region
-      @@radd  = Rudy::AWS::EC2::Addresses.new accesskey, secretkey, region
-      @@rkey  = Rudy::AWS::EC2::Keypairs.new accesskey, secretkey, region
-      @@rgrp  = Rudy::AWS::EC2::Groups.new accesskey, secretkey, region
       true
     end
     def self.domain(name=nil)

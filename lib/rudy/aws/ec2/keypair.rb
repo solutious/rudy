@@ -26,8 +26,8 @@ module Rudy::AWS
     end
     
     module EC2::Keypairs
-      extend self
-      include Rudy::AWS::EC2
+      include Rudy::AWS::EC2  # important! include,
+      extend self             # then extend
       
       def create(name)
         raise "No name provided" unless name
@@ -57,6 +57,7 @@ module Rudy::AWS
           kp = from_hash(oldkp)
           keypairs[kp.name] = kp
         end
+        keypairs = nil if keypairs.empty?
         keypairs
       end
       

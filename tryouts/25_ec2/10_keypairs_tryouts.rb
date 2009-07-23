@@ -14,6 +14,10 @@ tryouts "Keypairs" do
     Rudy::AWS::EC2.connect akey, skey, region
   end
   
+  drill "no existing keypairs", false do
+    Rudy::AWS::EC2::Keypairs.any?
+  end
+  
   dream [Rudy::AWS::EC2::Keypair, false]
   drill "create keypair" do
     k = Rudy::AWS::EC2::Keypairs.create keypair_name

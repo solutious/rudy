@@ -7,14 +7,19 @@ module Rudy::AWS
       
       field :awsid
       field :status
-      field :size
+      field :size  => Integer
       field :snapid
-      field :zone
-      field :create_time
-      field :attach_time
+      field :zone  => Symbol
+      field :create_time => Time
+      field :attach_time => Time
       field :instid
       field :device
     
+      def postprocess
+        @zone &&= @zone.to_sym
+        @size &&= @size.to_i
+      end
+      
       def liner_note
         info = attached? ? "attached to #{@instid}" : @status
         "%s (%s)" % [(self.awsid || '').bright, info]
@@ -26,7 +31,7 @@ module Rudy::AWS
         line
       end
       
-      def inspect
+      def pretty
         lines = [liner_note]
         field_names.each do |n|
            lines << sprintf(" %12s:  %s", n, self.send(n)) if self.send(n)
@@ -49,10 +54,10 @@ module Rudy::AWS
   
   
     module Volumes
-      extend self
-      include Rudy::AWS::EC2
-
-    
+      include Rudy::AWS::EC2  # important! include,
+      extend self             # then extend
+      
+      
       unless defined?(KNOWN_STATES)
         KNOWN_STATES = [:available, :creating, :deleting, :attached, :detaching].freeze 
       end
@@ -73,7 +78,7 @@ module Rudy::AWS
         # "availabilityZone"=>"us-east-1b", 
         # "createTime"=>"2009-03-17T20:10:48.000Z", 
         # "volumeId"=>"vol-48826421"
-        vol = execute_request({}) { @@ec2.create_volume(opts) }
+        vol = Rudy::AWS::EC2.execute_request({}) { @@ec2.create_volume(opts) }
       
         # TODO: use a waiter?
         #Rudy.waiter(1, 30) do
@@ -87,7 +92,7 @@ module Rudy::AWS
       def destroy(vol_id)
         vol_id = Volumes.get_vol_id(vol_id)
         raise VolumeNotAvailable, vol_id unless available?(vol_id)
-        ret = execute_request({}) { @@ec2.delete_volume(:volume_id => vol_id) }
+        ret = Rudy::AWS::EC2.execute_request({}) { @@ec2.delete_volume(:volume_id => vol_id) }
         (ret['return'] == 'true') 
       end
     
@@ -104,7 +109,7 @@ module Rudy::AWS
           :instance_id => inst_id, 
           :device => device.to_s    # Solaris devices are numbers
         }
-        ret = execute_request(false) { @@ec2.attach_volume(opts) }
+        ret = Rudy::AWS::EC2.execute_request(false) { @@ec2.attach_volume(opts) }
         (ret['status'] == 'attaching')
       end
     
@@ -112,13 +117,17 @@ module Rudy::AWS
         vol_id = Volumes.get_vol_id(vol_id)
         raise NoVolumeID unless vol_id
         raise VolumeNotAttached, vol_id unless attached?(vol_id)
-        ret = execute_request({}) { @@ec2.detach_volume(:volume_id => vol_id) }
+        ret = Rudy::AWS::EC2.execute_request({}) { 
+          @@ec2.detach_volume(:volume_id => vol_id) 
+        }
         (ret['status'] == 'detaching') 
       end
     
     
       def list(state=nil, vol_id=[])
-        list_as_hash(state, vol_id).values
+        volumes = list_as_hash(state, vol_id)
+        volumes &&= volumes.values
+        volumes
       end
     
       def list_as_hash(state=nil, vol_id=[])
@@ -131,7 +140,9 @@ module Rudy::AWS
           :volume_id => vol_id ? [vol_id].flatten : [] 
         }
 
-        vlist = execute_request({}) { @@ec2.describe_volumes(opts) }
+        vlist = Rudy::AWS::EC2.execute_request({}) { 
+          @@ec2.describe_volumes(opts) 
+        }
 
         volumes = {}
         return volumes unless vlist['volumeSet'].is_a?(Hash)
@@ -140,11 +151,13 @@ module Rudy::AWS
           next if state && v.state != state.to_s
           volumes[v.awsid] = v
         end
+        volumes = nil if volumes.empty?
         volumes
       end
     
       def any?(state=nil,vol_id=[])
-        !list(state, vol_id).nil?
+        vols = list(state, vol_id)
+        !vols.nil?
       end
     
       def exists?(vol_id)
@@ -204,6 +217,7 @@ module Rudy::AWS
           vol.attach_time = item['attachTime']
           vol.instid = item['instanceId']
         end
+        vol.postprocess
         vol
       end
 

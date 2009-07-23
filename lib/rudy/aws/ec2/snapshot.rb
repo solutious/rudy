@@ -39,8 +39,8 @@ module Rudy::AWS
     end
     
     module Snapshots
-      extend self
-      include Rudy::AWS::EC2
+      include Rudy::AWS::EC2  # important! include,
+      extend self             # then extend
 
 
       def list(snap_id=[])
@@ -59,6 +59,7 @@ module Rudy::AWS
           kp = self.class.from_hash(snap)
           snapshots[kp.awsid] = kp
         end
+        snapshots = nil if snapshots.empty?
         snapshots
       end
       

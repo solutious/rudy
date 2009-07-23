@@ -20,8 +20,8 @@ module Rudy::AWS
     end
     
     module Zones
-      extend self
-      include Rudy::AWS::EC2
+      include Rudy::AWS::EC2  # important! include,
+      extend self             # then extend
       
       def list(*names)
         zones = list_as_hash(names)
@@ -38,6 +38,7 @@ module Rudy::AWS
           zon = Zones.from_hash(zhash)
           zones[zon.name] = zon
         end
+        zones = nil if zones.empty?
         zones
       end
 

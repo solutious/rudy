@@ -68,8 +68,8 @@ module Rudy::AWS
   
   module EC2
     module Instances
-      extend self
-      include Rudy::AWS::EC2
+      include Rudy::AWS::EC2  # important! include,
+      extend self             # then extend
 
       
       unless defined?(KNOWN_STATES)

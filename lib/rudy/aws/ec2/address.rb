@@ -23,8 +23,8 @@ module Rudy::AWS
     end
   
     module Addresses
-      extend self
-      include Rudy::AWS::EC2
+      include Rudy::AWS::EC2  # important! include,
+      extend self             # then extend
   
       def create
         ret = @@ec2.allocate_address
@@ -101,7 +101,7 @@ module Rudy::AWS
           address = Addresses.from_hash(address)
           addresses[address.ipaddress] = address
         end
-        
+        addresses = nil if addresses.empty?
         addresses
       end
     

@@ -54,8 +54,8 @@ module Rudy::AWS
   
   module EC2    
     module Images
-      extend self
-      include Rudy::AWS::EC2
+      include Rudy::AWS::EC2  # important! include,
+      extend self             # then extend
 
       
       def list(owner=[], image_ids=[], executable_by=[], &each_image)

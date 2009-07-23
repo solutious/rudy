@@ -1,7 +1,7 @@
 
 module Rudy; module AWS
   module EC2
-    include Rudy::Huxtable
+#    include Rudy::Huxtable
     
     def self.connect(access_key=nil, secret_key=nil, region=nil, logger=nil)
       
@@ -20,14 +20,14 @@ module Rudy; module AWS
     end
     
   protected
-
+  
     # Execute AWS requests safely. This will trap errors and return
     # a default value (if specified).
     # * +default+ A default response value
     # * +request+ A block which contains the AWS request
     # Returns the return value from the request is returned untouched
     # or the default value on error or if the request returned nil. 
-    def execute_request(default=nil, timeout=nil, &request)
+    def self.execute_request(default=nil, timeout=nil, &request)
       timeout ||= 15
       raise "No block provided" unless request
       response = nil

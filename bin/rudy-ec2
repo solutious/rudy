@@ -136,14 +136,14 @@ module RudyCLI_EC2
   command_alias :instances, :in
   command_alias :instances, :i
   
-  about "Amazon EC2 KeyPairs"
+  about "Amazon EC2 EC2::Keypairs"
   usage "rudy-ec2 keypairs"
   usage "rudy-ec2 keypairs -C name"
   usage "rudy-ec2 keypairs -D name"
   action :D, :destroy, "Unregister keypair from EC2 (this is permanent!)"
   action :C, :create, "Create and register a keypair with EC2"
   argv :name
-  command :keypairs => Rudy::CLI::AWS::EC2::KeyPairs
+  command :keypairs => Rudy::CLI::AWS::EC2::Keypairs
   command_alias :keypairs, :keypair
   command_alias :keypairs, :k
   

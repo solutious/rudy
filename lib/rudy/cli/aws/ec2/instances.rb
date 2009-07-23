@@ -163,7 +163,7 @@ module AWS; module EC2;
       opts[:group] = @option.group if @option.group
       opts[:state] = @option.state if @option.state
 
-      # A nil value forces the @ec2.instances.list to return all instances
+      # A nil value forces the @@ec2.instances.list to return all instances
       if @option.all
         opts[:state] = :any
         opts[:group] = :any

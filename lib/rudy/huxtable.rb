@@ -20,6 +20,7 @@ module Rudy
   #     end
   #
   module Huxtable
+    extend self
     
     @@config = Rudy::Config.new
     @@global = Rudy::Global.new
@@ -81,7 +82,7 @@ module Rudy
     
     # Returns the name of the current keypair for the given user. 
     # If there's a private key path in the config this will return
-    # the basename (it's assumed the Amazon KeyPair has the same
+    # the basename (it's assumed the Amazon Keypair has the same
     # name as the file). Otherwise this returns the Rudy style
     # name: <tt>key-ZONE-ENV-ROLE-USER</tt>. Or if this the user is 
     # root: <tt>key-ZONE-ENV-ROLE</tt>

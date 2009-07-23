@@ -76,6 +76,7 @@ module Rudy
     end
     
     def postprocess
+      @position &&= @position.to_s.rjust(2, '0')
     end
     
     def create
@@ -148,29 +149,6 @@ module Rudy
       define_method("instance_#{state}") do
         return false if @instid.nil? || @instid.empty?
         @@rinst.send(state, @instid) rescue false # exists?, running?, etc...
-      end
-    end
-    
-    # ----------------------------------------  CLASS METHODS  -----
-    def self.get(position)
-      tmp = Rudy::Machine.new position
-      record = Rudy::Metadata.get tmp.name
-      return nil unless record.is_a?(Hash)
-      tmp.from_hash record
-    end
-    
-    def self.find_next_position
-      raise "reimplement by looking at position values"
-      list = Rudy::Machine.list({}, [:position]) || []
-      pos = list.size + 1
-      pos.to_s.rjust(2, '0')
-    end
-    
-    def self.running?(pos)
-      if pos.is_a? Range
-        
-      else
-        !get(pos).nil?
       end
     end
     

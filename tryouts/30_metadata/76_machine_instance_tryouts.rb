@@ -32,7 +32,7 @@ tryout "Rudy::Machine Instance API" do
   
   dream :nil?, false
   dream :class, String
-  drill "create machine instance with volume" do
+  drill "create machine with instance" do
     mach = Rudy::Machine.new '02'
     mach.create
     mach.instid

@@ -70,6 +70,7 @@ module Rudy
         end
         
         Rudy::Metadata.connect @@global.accesskey, @@global.secretkey, @@global.region
+        Rudy::AWS::EC2.connect @@global.accesskey, @@global.secretkey, @@global.region
       end
       
       def execute_action(emsg="Failed", &action)

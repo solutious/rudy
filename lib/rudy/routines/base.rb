@@ -34,12 +34,12 @@ module Rudy; module Routines;
       option = OpenStruct.new(option) if option.is_a? Hash
       @name, @option, @argv = name.to_sym, option, argv
       a, s, r = @@global.accesskey, @@global.secretkey, @@global.region
-      @sdb = Rudy::AWS::SDB.new(a, s, r)
-      @rinst = Rudy::AWS::EC2::Instances.new(a, s, r)
-      @rgrp = Rudy::AWS::EC2::Groups.new(a, s, r)
-      @rkey = Rudy::AWS::EC2::KeyPairs.new(a, s, r)
-      @rvol = Rudy::AWS::EC2::Volumes.new(a, s, r)
-      @rsnap = Rudy::AWS::EC2::Snapshots.new(a, s, r)
+      @@sdb ||= Rudy::AWS::SDB.new(a, s, r)
+      @@rinst ||= Rudy::AWS::EC2::Instances.new(a, s, r)
+      @@rgrp ||= Rudy::AWS::EC2::Groups.new(a, s, r)
+      @@rkey ||= Rudy::AWS::EC2::Keypairs.new(a, s, r)
+      @@rvol ||= Rudy::AWS::EC2::Volumes.new(a, s, r)
+      @@rsnap ||= Rudy::AWS::EC2::Snapshots.new(a, s, r)
       
       # Grab the routines configuration for this routine name
       # e.g. startup, sysupdate, installdeps

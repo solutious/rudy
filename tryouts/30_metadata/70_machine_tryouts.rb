@@ -30,12 +30,19 @@ tryout "Rudy::Machine API" do
   drill "create new machine instance" do
     Rudy::Machine.new '02'
   end
-
+  
+  dream :class, Rudy::Machine
+  dream :position, '04'
+  drill "create new machine instance with integer position" do
+    Rudy::Machine.new 4
+  end
+  
   drill "save machine metadata", true do
     Rudy::Machine.new.save
   end
   
   drill "knows when an object exists", true do
+    sleep 1  # eventual consistency 
     Rudy::Machine.new.exists?
   end
   
@@ -50,11 +57,6 @@ tryout "Rudy::Machine API" do
   
   drill "will save over a disk with the same name if forced", true do
     Rudy::Machine.new.save(:replace)
-  end
-  
-  dream :class, Rudy::Machine
-  drill "get machine metadata" do
-    Rudy::Machine.get '01'
   end
   
   dream :class, Rudy::Machine

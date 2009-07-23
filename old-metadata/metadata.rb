@@ -11,7 +11,7 @@ module Rudy
       @radd = Rudy::AWS::EC2::Addresses.new(a, s, r)
       @rinst = Rudy::AWS::EC2::Instances.new(a, s, r)
       @rgrp = Rudy::AWS::EC2::Groups.new(a, s, r)
-      @rkey = Rudy::AWS::EC2::KeyPairs.new(a, s, r)
+      @rkey = Rudy::AWS::EC2::Keypairs.new(a, s, r)
       @sdb_domain = Rudy::DOMAIN
       init(*args)
     end

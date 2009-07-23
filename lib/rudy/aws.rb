@@ -20,48 +20,7 @@ module Rudy
     def escape!(str)
       str.to_s.tr!("[\0\n\r\032\\\\]", '').gsub!(/([\'\"])/, '\\1\\1')
     end
-    
-    module ObjectBase
-      include Rudy::Huxtable
-      
-    protected
-
-      # Execute AWS requests safely. This will trap errors and return
-      # a default value (if specified).
-      # * +default+ A default response value
-      # * +request+ A block which contains the AWS request
-      # Returns the return value from the request is returned untouched
-      # or the default value on error or if the request returned nil. 
-      def execute_request(default=nil, timeout=nil, &request)
-        timeout ||= 15
-        raise "No block provided" unless request
-        response = nil
-        begin
-          Timeout::timeout(timeout) do
-            response = request.call
-          end
-        # Raise the EC2 exceptions
-        rescue ::EC2::Error, ::EC2::InvalidInstanceIDMalformed => ex  
-          raise Rudy::AWS::Error, ex.message
         
-        # NOTE: The InternalError is returned for non-existent volume IDs. 
-        # It's probably a bug so we're ignoring it -- Dave. 
-        rescue ::EC2::InternalError => ex
-          raise Rudy::AWS::Error, ex.message
-          
-        rescue Timeout::Error => ex
-          STDERR.puts "Timeout (#{timeout}): #{ex.message}!"
-        rescue SocketError => ex
-          #STDERR.puts ex.message
-          #STDERR.puts ex.backtrace
-          raise SocketError, "Check your Internets!" unless @@global.offline
-        ensure
-          response ||= default
-        end
-        response
-      end
-    end
-    
     require 'rudy/aws/sdb'
     require 'rudy/aws/ec2'
     require 'rudy/aws/s3'

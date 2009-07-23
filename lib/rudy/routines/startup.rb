@@ -66,7 +66,7 @@ module Rudy; module Routines;
       # If this is a testrun we won't create new instances
       # we'll just grab the list of machines in this group. 
       # NOTE: Expect errors if there are no machines.
-      @machines = run? ? @rmach.create : @rmach.list
+      @machines = run? ? Rudy::Machine.create_group : Rudy::Machine.list
       @@rset = create_rye_set @machines unless defined?(@@rset)
       
       Rudy::Routines.rescue {

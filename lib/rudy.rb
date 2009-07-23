@@ -173,4 +173,7 @@ require 'rudy/config'              # of
 require 'rudy/huxtable'            # requires
 require 'rudy/aws'                 # is
 require 'rudy/metadata'            # super
-require 'rudy/routines'            # important.
+require 'rudy/machines'            # important.
+require 'rudy/backups'
+require 'rudy/disks'
+require 'rudy/routines'

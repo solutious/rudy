@@ -54,6 +54,7 @@ module Rudy::AWS
   
   module EC2    
     module Images
+      extend self
       include Rudy::AWS::EC2
 
       

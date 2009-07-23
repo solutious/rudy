@@ -68,6 +68,7 @@ module Rudy::AWS
   
   module EC2
     module Instances
+      extend self
       include Rudy::AWS::EC2
 
       

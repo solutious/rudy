@@ -20,6 +20,7 @@ module Rudy::AWS
     end
     
     module Zones
+      extend self
       include Rudy::AWS::EC2
       
       def list(*names)

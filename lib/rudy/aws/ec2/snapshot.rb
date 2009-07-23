@@ -39,6 +39,7 @@ module Rudy::AWS
     end
     
     module Snapshots
+      extend self
       include Rudy::AWS::EC2
 
 

@@ -23,6 +23,7 @@ module Rudy::AWS
     end
   
     module Addresses
+      extend self
       include Rudy::AWS::EC2
   
       def create

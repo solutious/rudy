@@ -85,6 +85,7 @@ module Rudy::AWS
   
   module EC2
     module Groups
+      extend self
       include Rudy::AWS::EC2
   
       # Create a new EC2 security group

@@ -49,6 +49,7 @@ module Rudy::AWS
   
   
     module Volumes
+      extend self
       include Rudy::AWS::EC2
 
     

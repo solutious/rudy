@@ -12,6 +12,7 @@ tryout "List Machines" do
     global = Rudy::Huxtable.global
     akey, skey, region = global.accesskey, global.secretkey, global.region
     Rudy::Metadata.connect akey, skey, region
+    Rudy::AWS::EC2.connect akey, skey, region
     ('01'..'03').each { |i| Rudy::Machine.new(i).save }
     ('04'..'05').each { |i| Rudy::Machine.new(i, :environment => :test).save }
     sleep 1 # SimpleDB, eventual consistency

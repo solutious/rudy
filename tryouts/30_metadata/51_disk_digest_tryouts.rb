@@ -12,6 +12,7 @@ tryout "Disk API" do
     global = Rudy::Huxtable.global
     akey, skey, region = global.accesskey, global.secretkey, global.region
     Rudy::Metadata.connect akey, skey, region
+    Rudy::AWS::EC2.connect akey, skey, region
   end
   
   dream :class, Gibbler::Digest

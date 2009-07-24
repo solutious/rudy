@@ -79,7 +79,7 @@ module Rudy
     
     module ClassMethods
       extend self
-
+      # TODO: MOVE TO Rudy:Disks etc...
       def list(fields={}, less=[], &block)
         fields = Rudy::Metadata.build_criteria fields, less
         records_raw, records = Rudy::Metadata.select(fields), []

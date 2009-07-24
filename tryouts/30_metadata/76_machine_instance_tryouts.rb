@@ -15,6 +15,7 @@ tryout "Rudy::Machine Instance API" do
     global.environment = test_env
     akey, skey, region = global.accesskey, global.secretkey, global.region
     Rudy::Metadata.connect akey, skey, region
+    Rudy::AWS::EC2.connect akey, skey, region
   end
   
   clean do

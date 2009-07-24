@@ -95,7 +95,7 @@ module Rudy
       
       Rudy::Huxtable.ld "OPTS: #{opts.inspect}"
       
-      @@rinst.create(opts) do |inst|
+      Rudy::AWS::EC2::Instances.create(opts) do |inst|
         @instid = inst.instid
         @created = @started = Time.now
         @state = inst.state
@@ -105,9 +105,9 @@ module Rudy
           # Assign IP address only if we have one for that position
           if @address
             # Make sure the address is associated to the current account
-            if @@radd.exists?(@address)
+            if Rudy::AWS::EC2::Addresses.exists?(@address)
               puts "Associating #{@address} to #{@instid}"
-              @@radd.associate(@address, @instid)
+              Rudy::AWS::EC2::Addresses.associate(@address, @instid)
             else
               STDERR.puts "Unknown address: #{@address}"
             end
@@ -122,12 +122,12 @@ module Rudy
     end
     
     def destroy
-      @@rinst.destroy(@instid) if instance_running?
+      Rudy::AWS::EC2::Instances.destroy(@instid) if instance_running?
       super
     end
     
     def restart
-      @@rinst.restart(@instid) if instance_running?
+      Rudy::AWS::EC2::Instances.restart(@instid) if instance_running?
     end
     
     def generate_machine_data
@@ -148,7 +148,7 @@ module Rudy
     %w[exists? running? pending? terminated? shutting_down? unavailable?].each do |state|
       define_method("instance_#{state}") do
         return false if @instid.nil? || @instid.empty?
-        @@rinst.send(state, @instid) rescue false # exists?, running?, etc...
+        Rudy::AWS::EC2::Instances.send(state, @instid) rescue false # exists?, running?, etc...
       end
     end
     

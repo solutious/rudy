@@ -15,6 +15,7 @@ tryout "Disk API" do
     global.environment = test_env
     akey, skey, region = global.accesskey, global.secretkey, global.region
     Rudy::Metadata.connect akey, skey, region
+    Rudy::AWS::EC2.connect akey, skey, region
   end
   
   clean do
@@ -81,7 +82,7 @@ tryout "Disk API" do
   
   dream :class, Rudy::Disk
   drill "get disk metadata" do
-    Rudy::Disk.get '/any/path'
+    Rudy::Disks.get '/any/path'
   end
   
   dream :class, Rudy::Disk

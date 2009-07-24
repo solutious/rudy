@@ -77,8 +77,8 @@ module Rudy
     
     def create(size=nil, zone=nil, snapshot=nil)
       raise "#{self.name} already exists" if exists?
-      vol = @@rvol.create(size || @size, zone || @zone, snapshot) 
-      #vol = @@rvol.list(:available).first   # debugging
+      vol = Rudy::AWS::EC2::Volumes.create(size || @size, zone || @zone, snapshot) 
+      #vol = Rudy::AWS::EC2::Volumes.list(:available).first   # debugging
       @volid, @raw = vol.awsid, true
       self.save
       self
@@ -93,7 +93,7 @@ module Rudy
           sleep 0.1
         end
         raise Rudy::AWS::EC2::VolumeNotAvailable, @volid if volume_in_use?
-        @@rvol.destroy(@volid) if volume_exists? && volume_available?
+        Rudy::AWS::EC2::Volumes.destroy(@volid) if volume_exists? && volume_available?
       end
       super() # quotes, otherwise Ruby will send this method's args
     end
@@ -118,7 +118,7 @@ module Rudy
     %w[exists? deleting? available? attached? in_use?].each do |state|
       define_method("volume_#{state}") do
         return false if @volid.nil? || @volid.empty?
-        @@rvol.send(state, @volid) rescue false # deleting?, available?, etc...
+        Rudy::AWS::EC2::Volumes.send(state, @volid) rescue false # deleting?, available?, etc...
       end
     end
     

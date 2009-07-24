@@ -13,8 +13,7 @@ module Rudy
         more, less = nil, nil
         less = [:environment, :role] if @option.all
         
-        rmach = Rudy::Machines.new
-        mlist = rmach.list(more, less) || []
+        mlist = Rudy::Machines.list(more, less) || []
         if mlist.empty?
           if @option.all
             puts "No machines running"
@@ -29,8 +28,7 @@ module Rudy
       end
       
       def machines_wash
-        rmach = Rudy::Machines.new
-        dirt = (rmach.list || []).select { |m| !m.running? }
+        dirt = (Rudy::Machines.list || []).select { |m| !m.running? }
         if dirt.empty?
           puts "Nothing to wash in #{rmach.current_machine_group}"
           return
@@ -76,10 +74,9 @@ module Rudy
 
 
         checked = false
-        rudy = Rudy::Machines.new
-        lt = rudy.list 
+        lt = Rudy::Machines.list 
         unless lt
-          puts "No machines running in #{rudy.current_machine_group}"
+          puts "No machines running in #{current_machine_group}"
           exit
         end
         lt.each do |machine|

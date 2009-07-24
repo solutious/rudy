@@ -70,6 +70,7 @@ module Rudy
     #
     # Returns a Hash. 
     def self.build_criteria(fields={}, less=[])
+      fields ||= {}
       names = [:region, :zone, :environment, :role]
       names << :position unless @@global.position.nil?
       names -= [*less].flatten.uniq.compact

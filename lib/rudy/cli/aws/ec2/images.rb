@@ -31,6 +31,7 @@ module AWS; module EC2;
       unless @argv.ami && Rudy::Utils.is_id?(:image, @argv.ami)  
         raise "Must supply an AMI ID (ami-XXXXXXX)" 
       end
+      true
     end
     def destroy_images
      puts Rudy::AWS::EC2::Images.deregister(@argv.ami) ? "Done" : "Unknown error"
@@ -40,7 +41,7 @@ module AWS; module EC2;
       unless @argv.first
         raise "Must supply a valid manifest path (bucket/ami-name.manifest.xml)"
       end
-
+      true
     end
     def register_images
       puts Rudy::AWS::EC2::Images.register(@argv.first)

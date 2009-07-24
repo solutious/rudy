@@ -10,8 +10,7 @@ module AWS; module EC2;
       true
     end
     def create_keypairs
-      rkey = Rudy::AWS::EC2::Keypairs.new(@@global.accesskey, @@global.secretkey, @@global.region)
-      kp = execute_action { rkey.create(@argv.name) }
+      kp = execute_action { Rudy::AWS::EC2::Keypairs.create(@argv.name) }
       if [:s, :string].member?(@@global.format)
         puts "Name: #{kp.name}"
         puts "Fingerprint: #{kp.fingerprint}", $/
@@ -28,20 +27,18 @@ module AWS; module EC2;
       true
     end
     def destroy_keypairs
-      rkey = Rudy::AWS::EC2::Keypairs.new(@@global.accesskey, @@global.secretkey, @@global.region)
-      raise "Keypair #{@argv.name} does not exist" unless rkey.exists?(@argv.name)
-      kp = rkey.get(@argv.name)
+      raise "Keypair #{@argv.name} does not exist" unless Rudy::AWS::EC2::Keypairs.exists?(@argv.name)
+      kp = Rudy::AWS::EC2::Keypairs.get(@argv.name)
       puts "Destroying: #{kp.name}"
       execute_check(:medium)
-      execute_action { rkey.destroy(kp.name) }
+      execute_action { Rudy::AWS::EC2::Keypairs.destroy(kp.name) }
     end
     
     def keypairs
-      rkey = Rudy::AWS::EC2::Keypairs.new(@@global.accesskey, @@global.secretkey, @@global.region)
-      (rkey.list || []).each do |kp|
+      (Rudy::AWS::EC2::Keypairs.list || []).each do |kp|
         puts @@global.verbose > 0 ? kp.inspect : kp.dump(@@global.format)
       end
-      puts "No keypairs" unless rkey.any?
+      puts "No keypairs" unless Rudy::AWS::EC2::Keypairs.any?
     end
     
     

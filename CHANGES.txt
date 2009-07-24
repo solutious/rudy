@@ -44,6 +44,7 @@ NOTE: This is a significant re-write from 0.8 (routines, metadata)
 * CHANGE: Removed Rudy:Disks, now use Rudy::Disk class methods
 * CHANGE: Removed Rudy:Machines, now use Rudy::Machine class methods
 * CHANGE: Removed Rudy:Backups, now use Rudy::Backup class methods
+* CHANGE: Rudy::AWS::EC2 functionality is now available as class methods
 * ADDED: routines command for displaying available routines
 * ADDED: "rudy init" now authorizes public keys for user@localhost
 * ADDED: Parallel processing for remote machines

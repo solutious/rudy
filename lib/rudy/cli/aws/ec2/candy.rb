@@ -49,9 +49,8 @@ module AWS; module EC2;
         raise "Insecure permissions for #{@@global.pkey}" unless (File.stat(@@global.pkey).mode & 600) == 0
       end
       if @option.group
-        rgroup = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey, @@global.region)
         raise "Cannot supply group and instance ID" if @option.instid
-        raise "Group #{@option.group} does not exist" unless rgroup.exists?(@option.group)
+        raise "Group #{@option.group} does not exist" unless Rudy::AWS::EC2::Groups.exists?(@option.group)
       end
       if @option.instid && !Rudy::Utils.is_id?(:instance, @option.instid)
         raise "#{@option.instid} is not an instance ID" 
@@ -85,8 +84,7 @@ module AWS; module EC2;
       end
       
       checked = false
-      rudy = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey, @@global.region)
-      lt = rudy.list_group(opts[:group], :running, opts[:id]) do |inst|
+      lt = Rudy::AWS::EC2::Instances.list_group(opts[:group], :running, opts[:id]) do |inst|
         
         # Print header
         if @@global.quiet
@@ -152,8 +150,7 @@ module AWS; module EC2;
       
 
       checked = false
-      rudy = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey, @@global.region)
-      lt = rudy.list_group(opts[:group], :running, opts[:id]) do |inst|
+      lt = Rudy::AWS::EC2::Instances.list_group(opts[:group], :running, opts[:id]) do |inst|
         
         if @option.print
           scp_command inst.dns_public, @@global.pkey, opts[:user], opts[:paths], opts[:dest], (opts[:task] == :download), false, @option.print

@@ -7,33 +7,31 @@ module AWS; module EC2;
 
     
     def create_groups_valid?
-      @rgroups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey, @@global.region)
       raise Drydock::ArgError.new('group name', @alias) unless @argv.name
-      raise "Group #{@argv.name} alread exists" if @rgroups.exists?(@argv.name)
+      raise "Group #{@argv.name} alread exists" if Rudy::AWS::EC2::Groups.exists?(@argv.name)
       true
     end
     def create_groups
       opts = check_options
       execute_action { 
-        @rgroups.create(@argv.name, @option.description, opts[:addresses], opts[:ports], opts[:protocols])
+        Rudy::AWS::EC2::Groups.create(@argv.name, @option.description, opts[:addresses], opts[:ports], opts[:protocols])
       }
-      @rgroups.list(@argv.name) do |group|
+      Rudy::AWS::EC2::Groups.list(@argv.name) do |group|
         puts @@global.verbose > 0 ? group.inspect : group.dump(@@global.format)
       end
     end
     
     
     def destroy_groups_valid?
-      @rgroups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey, @@global.region)
       raise Drydock::ArgError.new('group name', @alias) unless @argv.name
-      raise "Group #{@argv.name} does not exist" unless @rgroups.exists?(@argv.name)
+      raise "Group #{@argv.name} does not exist" unless Rudy::AWS::EC2::Groups.exists?(@argv.name)
       true
     end
     
     def destroy_groups
       puts "Destroying group: #{@argv.name}"
       execute_check(:medium)
-      execute_action { @rgroups.destroy(@argv.name) }
+      execute_action { Rudy::AWS::EC2::Groups.destroy(@argv.name) }
       @argv.clear # so groups will print all other groups
       groups
     end
@@ -47,8 +45,7 @@ module AWS; module EC2;
     def groups
       opts = {}
       name = @option.all ? nil : @argv.name
-      rgroups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey, @@global.region)
-      rgroups.list(name).each do |group|
+      Rudy::AWS::EC2::Groups.list(name).each do |group|
         puts @@global.verbose > 0 ? group.inspect : group.dump(@@global.format)
       end
     end
@@ -69,7 +66,7 @@ module AWS; module EC2;
       end
       
       raise Drydock::ArgError.new('group name', @alias) unless @argv.name
-      @groups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey, @@global.region)
+      true
     end
     
     def modify_group(action)
@@ -83,13 +80,12 @@ module AWS; module EC2;
         print "on #{opts[:protocols].join(', ').bright} "
          puts "ports: #{opts[:ports].map { |p| "#{p.join(' to ').bright}" }.join(', ')}"
       end
-      rgroups = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey, @@global.region)
       execute_check(:medium)
       execute_action { 
         if (@option.group || @option.owner)
-          rgroups.send("#{action.to_s}_group", @argv.name, opts[:group], opts[:owner])
+          Rudy::AWS::EC2::Groups.send("#{action.to_s}_group", @argv.name, opts[:group], opts[:owner])
         else
-          rgroups.send(action, @argv.name, opts[:addresses], opts[:ports], opts[:protocols])
+          Rudy::AWS::EC2::Groups.send(action, @argv.name, opts[:addresses], opts[:ports], opts[:protocols])
         end
       }
       groups # prints on the modified group b/c of @argv.name

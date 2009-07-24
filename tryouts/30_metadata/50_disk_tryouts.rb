@@ -59,6 +59,12 @@ tryout "Disk API" do
     Rudy::Disk.new('/')
   end
   
+  dream :path, '/anything'
+  dream :position, '09'
+  drill "can specify a position" do
+    Rudy::Disk.new '09', '/anything' 
+  end
+  
   drill "save disk metadata", true do
     Rudy::Disk.new('/any/path').save
   end

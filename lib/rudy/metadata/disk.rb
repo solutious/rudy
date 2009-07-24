@@ -18,22 +18,30 @@ module Rudy
     
     #field :backups => Array
     
-    # Is the associated volume formatted? One of: true, false, [empty]. 
-    # [empty] means we don't know and it's the default. 
+    # Is the associated volume formatted? One of: true, false
     field :raw
     field :mounted
     field :created  => Time
     
+    # If one argument is supplied:
+    # * +path+ is a an absolute filesystem path
+    # * +opts+ is a hash of disk options.
+    #
+    # If two arguments are supplied:
+    # * +position+ 
     # * +path+ is a an absolute filesystem path
     # * +opts+ is a hash of disk options.
     #
     # Valid options are:
     # * +:path+ is a an absolute filesystem path (overridden by +path+ arg)
+    # * +:position+ (overridden by +position+ arg)
     # * +:size+ 
     # * +:device+
-    # * +:position+
     #
-    def initialize(path=nil, opts={})
+    def initialize(position=nil, path=nil, opts={})
+      # Swap arg values if only one is supplied. 
+      path, position = position, nil if !position.nil? && path.nil?
+      position ||= '01'
       
       opts = {
         :size => 1,
@@ -42,14 +50,14 @@ module Rudy
       
       super 'disk', opts  # Rudy::Metadata#initialize
       
-      @path = path
+      @position, @path = position, path
       
       # Defaults:
       #datetime = Backup.format_timestamp(now).split(Rudy::DELIM)
       @created = Time.now.utc
       @mounted = false
       postprocess
-      
+
     end
     
     # sdb values are stored as strings. Some quick conversion. 

@@ -68,8 +68,8 @@ module Rudy
         # TODO: investigate removing this apply_config method
         %w[region zone environment role position 
            localhost nocolor quiet yes parallel].each do |name|
-          val = config.defaults.send(name)
-          self.send("#{name}=", val) unless val.nil?
+          curval, defval = self.send(name), config.defaults.send(name)
+          self.send("#{name}=", val) if curval.nil? && !defval.nil?
         end
       end
       

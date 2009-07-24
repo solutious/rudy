@@ -23,6 +23,12 @@ module Rudy; module Routines; module Handlers;
       Rudy::AWS::EC2::Groups.exists? name
     end
     
+    def destroy(name=nil)
+      name ||= current_group_name
+      return unless exists? name
+      li "Destroying group: #{name}"
+      Rudy::AWS::EC2::Groups.destroy name
+    end
     
   end
 end; end; end

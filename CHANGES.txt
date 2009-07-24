@@ -11,7 +11,7 @@ RUDY, CHANGES
 * TODO: look for config file in ./.rudy, then ../.rudy, etc... (git-like)
 
 
-#### 0.9.0 (2009-06-XX) ###############################
+#### 0.9.0 (2009-07-XX) ###############################
 
 NOTE: This is a significant re-write from 0.8 (routines, metadata)
 
@@ -53,8 +53,8 @@ NOTE: This is a significant re-write from 0.8 (routines, metadata)
 * ADDED: Dependency Attic 0.4
 * ADDED: New 'objects' and 'query' commands for rudy-sdb
 
+
 * TODO: Update CLI::Machines
-* TODO: Move Metadata::Classmethods to Rudy::Disks, etc...
 * TODO: Re-enable disk routines. 
 * TODO: Supply machines config to routines blocks with only the specific machine group context 
 * TODO: Update gemspec

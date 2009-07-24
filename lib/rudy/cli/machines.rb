@@ -4,7 +4,6 @@ module Rudy
   module CLI
     class Machines < Rudy::CLI::CommandBase
       
-      
       def machines
         # Rudy::Machines.list takes two optional args for adding or 
         # removing metadata attributes to modify the select query. 

@@ -33,21 +33,21 @@ tryout "List Machines" do
   dream :empty?, false
   dream :size, 3
   drill "list available disks in default environment" do
-    ret = Rudy::Machine.list
+    ret = Rudy::Machines.list
     #puts ret.to_json
     ret
   end
   
   dream :size, 2
   drill "list available disks in 'test' environment" do
-    ret = Rudy::Machine.list({:environment => :test})
+    ret = Rudy::Machines.list({:environment => :test})
     #puts ret.to_json
     ret
   end
   
   dream :size, 5
   drill "list all available disks" do
-    ret = Rudy::Machine.list({}, [:environment])
+    ret = Rudy::Machines.list({}, [:environment])
     #puts ret.to_json
     ret
   end

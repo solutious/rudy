@@ -4,7 +4,7 @@ module Rudy
   
   module Machines
     extend self
-    include Rudy::Huxtable
+    extend Rudy::Metadata::ClassMethods
    
     def get(position)
       tmp = Rudy::Machine.new position
@@ -35,6 +35,10 @@ module Rudy
         m.create
         m
       end
+    end
+    
+    def from_hash(h)
+      Rudy::Machine.from_hash h
     end
     
   end

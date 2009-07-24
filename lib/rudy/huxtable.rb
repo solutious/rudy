@@ -75,10 +75,6 @@ module Rudy
       base_dir
     end
     
-    def has_keypair?(name=nil)
-      kp = user_keypairpath(name)
-      (!kp.nil? && File.exists?(kp))
-    end
     
     # Returns the name of the current keypair for the given user. 
     # If there's a private key path in the config this will return
@@ -86,10 +82,11 @@ module Rudy
     # name as the file). Otherwise this returns the Rudy style
     # name: <tt>key-ZONE-ENV-ROLE-USER</tt>. Or if this the user is 
     # root: <tt>key-ZONE-ENV-ROLE</tt>
-    def user_keypairname(user)
-      kp = user_keypairpath(user)
-      if kp
-        kp = Huxtable.keypair_path_to_name(kp)
+    def user_keypairname(user=nil)
+      user ||= current_machine_user
+      path = defined_keypairpath user
+      if path
+        Huxtable.keypair_path_to_name(path)
       else
         n = (user.to_s == 'root') ? '' : "-#{user}"
         "key-%s-%s%s" % [@@global.zone, current_machine_group, n]
@@ -98,9 +95,30 @@ module Rudy
     def root_keypairname
       user_keypairname :root
     end
+    def current_user_keypairname
+      user_keypairname current_machine_user
+    end
     
-    
-    def user_keypairpath(name)
+    def user_keypairpath(name=nil)
+      name ||= current_machine_user
+      path = defined_keypairpath name
+      # If we can't find a user defined key, we'll 
+      # check the config path for a generated one.
+      if path
+        raise "Private key file not found (#{path})" unless File.exists?(path)
+        path = File.expand_path(path)
+      else
+        ssh_key_dir = @@config.defaults.keydir || Rudy::SSH_KEY_DIR
+        path = File.join(ssh_key_dir, user_keypairname(name))
+      end
+      path
+    end
+    def root_keypairpath
+      user_keypairpath :root
+    end
+
+    def defined_keypairpath(name=nil)
+      name ||= current_machine_user
       raise Rudy::Error, "No user provided" unless name
       ## NOTE: I think it is more appropriate to return nil here
       ## than raise errors. This stuff should be checked already
@@ -108,36 +126,24 @@ module Rudy
       ##raise NoMachinesConfig unless @@config.machines
       ##raise NoGlobal unless @@global
       return unless @@global && @@config && @@config.machines
-      
       zon, env, rol = @@global.zone, @@global.environment, @@global.role
       path = @@global.identity
       path ||= @@config.machines.find_deferred(zon, env, rol, [:users, name, :keypair])
       path ||= @@config.machines.find_deferred(env, rol, [:users, name, :keypair])
       path ||= @@config.machines.find_deferred(rol, [:users, name, :keypair])
-      
-      ssh_key_dir = @@config.defaults.keydir || Rudy::SSH_KEY_DIR
-      
-      # EC2 Keypairs that were created are intended for starting the machine instances. 
-      # These are used as the root SSH keys. If we can find a user defined key, we'll 
-      # check the config path for a generated one. 
-      if !path && name.to_s == 'root'
-        path = File.join(ssh_key_dir, "key-#{@@global.zone}-#{current_machine_group}")
-      end
-      path = File.expand_path(path) if path && File.exists?(path)
+      path ||= @@config.machines.find_deferred(@@global.region, [:users, name, :keypair])
       path
     end
-    def root_keypairpath
-      user_keypairpath :root
-    end
     
-    def has_root_keypair?
+    def has_user_pkey?(name=nil)
+      kp = user_keypairpath(name)
+      (!kp.nil? && File.exists?(kp))
+    end
+    def has_root_pkey?
       path = user_keypairpath(:root)
       (!path.nil? && !path.empty?)
     end
-
-    def current_user_keypairpath
-      user_keypairpath(current_machine_user)
-    end
+    
     
     def current_machine_group
       [@@global.environment, @@global.role].join(Rudy::DELIM)

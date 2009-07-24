@@ -46,7 +46,7 @@ module Rudy::AWS
       lines.join($/)
     end
     
-    def inspect
+    def pretty
       lines = []
       lines << liner_note
       field_names.each do |key|
@@ -70,7 +70,6 @@ module Rudy::AWS
     module Instances
       include Rudy::AWS::EC2  # important! include,
       extend self             # then extend
-
       
       unless defined?(KNOWN_STATES)
         KNOWN_STATES = [:running, :pending, :shutting_down, :terminated, :degraded].freeze 
@@ -114,10 +113,10 @@ module Rudy::AWS
           :kernel_id => nil
         }
         
-        response = execute_request({}) { @@ec2.run_instances(old_opts) }
+        response = Rudy::AWS::EC2.execute_request({}) { @@ec2.run_instances(old_opts) }
         return nil unless response['instancesSet'].is_a?(Hash)
         instances = response['instancesSet']['item'].collect do |inst|
-          self.class.from_hash(inst)
+          self.from_hash(inst)
         end
         instances.each { |inst| 
           each_inst.call(inst) 
@@ -129,7 +128,7 @@ module Rudy::AWS
         instances = list(:running, inst_ids, &each_inst) || []
         raise NoRunningInstances if instances.empty?
         inst_ids = objects_to_instance_ids(inst_ids)
-        response = execute_request({}) {
+        response = Rudy::AWS::EC2.execute_request({}) {
           @@ec2.reboot_instances(:instance_id => inst_ids)
         }
         response['return'] == 'true'
@@ -141,7 +140,7 @@ module Rudy::AWS
       
         inst_ids = objects_to_instance_ids(inst_ids)
             
-        response = execute_request({}) {
+        response = Rudy::AWS::EC2.execute_request({}) {
           @@ec2.terminate_instances(:instance_id => inst_ids)
         }
       
@@ -227,7 +226,7 @@ module Rudy::AWS
         # This method always returns an Array.
         inst_ids = objects_to_instance_ids(inst_ids)
       
-        response = execute_request({}) {
+        response = Rudy::AWS::EC2.execute_request({}) {
           @@ec2.describe_instances(:instance_id => inst_ids)
         }
       
@@ -279,7 +278,7 @@ module Rudy::AWS
       #
       def console(inst_id, &each_inst)
         inst_ids = objects_to_instance_ids([inst_id])
-        response = execute_request({}) { 
+        response = Rudy::AWS::EC2.execute_request({}) { 
           @@ec2.get_console_output(:instance_id => inst_ids.first)
         }
         response['output']

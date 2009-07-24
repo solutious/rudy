@@ -16,8 +16,9 @@ module AWS; module EC2;
       raise "Cannot supply an instance ID" if @option.instid
       
       if @option.group
-        rgroup = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey, @@global.region)
-        raise "Group #{@option.group} does not exist" unless rgroup.exists?(@option.group)
+        unless Rudy::AWS::EC2::Groups.exists?(@option.group)
+          raise "Group #{@option.group} does not exist"
+        end
       end
       
       true
@@ -30,14 +31,15 @@ module AWS; module EC2;
         :size => 'm1.small',
         :zone => @@global.zone
       }
-      
-      radd = Rudy::AWS::EC2::Addresses.new(@@global.accesskey, @@global.secretkey, @@global.region)
-      rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey, @@global.region)
-      
+            
       if @option.address
         raise "Cannot specify both -a and -n" if @option.newaddress
-        raise "#{@option.address} is not allocated to you" unless radd.exists?(@option.address)
-        raise "#{@option.address} is already associated!" if radd.associated?(@option.address)
+        unless Rudy::AWS::EC2::Addresses.exists?(@option.address)
+          raise "#{@option.address} is not allocated to you" 
+        end
+        if Rudy::AWS::EC2::Addresses.associated?(@option.address)
+          raise "#{@option.address} is already associated!" 
+        end
       end
       
       # These can be sent directly to EC2 class
@@ -53,7 +55,7 @@ module AWS; module EC2;
         exit unless Annoy.proceed?(:low)
       end
       
-      instances = rinst.list_group(opts[:group], :running)
+      instances = Rudy::AWS::EC2::Instances.list_group(opts[:group], :running)
       
       if instances && instances.size > 0
         instance_count = (instances.size == 1) ? 'is 1 instance' : "are #{instances.size} instances"
@@ -63,19 +65,19 @@ module AWS; module EC2;
       
       if @option.newaddress
         print "Creating address... "
-        address = radd.create
+        address = Rudy::AWS::EC2::Addresses.create
         puts "#{address.ipaddress}"
         @option.address = address.ipaddress
       end
          
       execute_action do
         first_instance = true
-        rinst.create(opts) do |inst| # Rudy::AWS::EC2::Instance objects
+        Rudy::AWS::EC2::Instances.create(opts) do |inst| # Rudy::AWS::EC2::Instance objects
         
           # Assign IP address to only the first instance
           if first_instance && @option.address
             puts "Associating #{@option.address} to #{inst.awsid}"
-            radd.associate(@option.address, inst.awsid)
+            Rudy::AWS::EC2::Addresses.associate(@option.address, inst.awsid)
             first_instance = false
           end
         
@@ -89,16 +91,16 @@ module AWS; module EC2;
       raise NoInstanceError.new(nil, @alias) if !@option.group && !@argv.instid
       
       if @option.group
-        rgroup = Rudy::AWS::EC2::Groups.new(@@global.accesskey, @@global.secretkey, @@global.region)
-        raise "Group #{@option.group} does not exist" unless rgroup.exists?(@option.group)
+        unless Rudy::AWS::EC2::Groups.exists?(@option.group)
+          raise "Group #{@option.group} does not exist"
+        end
       end
       
       if @option.private
         raise Drydock::OptsError.new(nil, @alias, "Cannot allocate public IP for private instance") if @option.address || @option.newadress
       end
       
-      @rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey, @@global.region)
-      raise "No instances" unless @rinst.any?
+      raise "No instances" unless Rudy::AWS::EC2::Instances.any?
       true
     end
     alias :instances_destroy_valid? :instances_restart_valid?
@@ -112,12 +114,11 @@ module AWS; module EC2;
     end
     
     def consoles_valid?
-      @rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey, @@global.region)
       if @@global.pkey
         raise "Cannot find file #{@@global.pkey}" unless File.exists?(@@global.pkey)
         raise "Insecure permissions for #{@@global.pkey}" unless (File.stat(@@global.pkey).mode & 600) == 0
       end
-      raise "No instances" unless @rinst.any?
+      raise "No instances" unless Rudy::AWS::EC2::Instances.any?
       true
     end
     def consoles
@@ -126,9 +127,9 @@ module AWS; module EC2;
       opts[:id] = @argv.instid if @argv.instid
       opts[:id] &&= [opts[:id]].flatten
       
-      lt = @rinst.list_group(opts[:group], :any, opts[:id]) do |inst|
+      lt = Rudy::AWS::EC2::Instances.list_group(opts[:group], :any, opts[:id]) do |inst|
         puts instance_separator(inst.dns_public || inst.state, inst.awsid)
-        console = @rinst.console(inst.awsid)
+        console = Rudy::AWS::EC2::Instances.console(inst.awsid)
         output = console ? Base64.decode64(console) : "Unavailable"
         
         # The linux console can include ANSI escape codes for color, 
@@ -172,8 +173,7 @@ module AWS; module EC2;
       opts[:id] = @argv.instid if @argv.instid
       opts[:id] &&= [opts[:id]].flatten
     
-      rudy = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey, @@global.region)
-      lt = rudy.list_group(opts[:group], opts[:state], opts[:id]) do |inst|
+      lt = Rudy::AWS::EC2::Instances.list_group(opts[:group], opts[:state], opts[:id]) do |inst|
         puts @@global.verbose > 0 ? inst.inspect : inst.dump(@@global.format)
       end
       puts "No instances running" if !lt || lt.empty?
@@ -190,7 +190,7 @@ module AWS; module EC2;
       opts[:id] = @argv.instid if @argv.instid
       opts[:id] &&= [opts[:id]].flatten
       
-      instances = @rinst.list_group(opts[:group], :running, opts[:id])
+      instances = Rudy::AWS::EC2::Instances.list_group(opts[:group], :running, opts[:id])
       raise "No matching instances running" if instances.nil?
       
       inst_names = instances.collect { |inst| inst.dns_public || inst.awsid }
@@ -204,7 +204,7 @@ module AWS; module EC2;
       execute_check(:medium)
       
       execute_action("#{action.to_s.capitalize} Failed") { 
-        @rinst.send(action, inst_ids)
+        Rudy::AWS::EC2::Instances.send(action, inst_ids)
       }
       status
     end

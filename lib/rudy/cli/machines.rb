@@ -46,8 +46,8 @@ module Rudy
       
       
       def ssh
-        # TODO: Give this methos a good look over
-        pkey = user_keypairpath(current_machine_user)
+        # TODO: Give this method a good look over
+        pkey = current_user_keypairpath
         unless pkey
           puts "No private key configured for #{current_machine_user} in #{current_machine_group}"
         end

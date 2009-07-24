@@ -135,15 +135,6 @@ module Rudy
       path
     end
     
-    def has_user_pkey?(name=nil)
-      kp = user_keypairpath(name)
-      (!kp.nil? && File.exists?(kp))
-    end
-    def has_root_pkey?
-      path = user_keypairpath(:root)
-      (!path.nil? && !path.empty?)
-    end
-    
     
     def current_machine_group
       [@@global.environment, @@global.role].join(Rudy::DELIM)

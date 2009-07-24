@@ -2,12 +2,11 @@ group "EC2"
 library :rudy, 'lib'
 
 tryouts "Groups Authorize/Revoke Account" do
+  set :global, Rudy::Huxtable.global
   set :group_name, 'grp-' << Rudy::Utils.strand
   setup do
     Rudy::Huxtable.update_config
-    global = Rudy::Huxtable.global
-    akey, skey, region = global.accesskey, global.secretkey, global.region
-    Rudy::AWS::EC2.connect akey, skey, region
+    Rudy::AWS::EC2.connect global.accesskey, global.secretkey, global.region
     Rudy::AWS::EC2::Groups.create group_name
   end
   clean do 

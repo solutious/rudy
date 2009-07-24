@@ -2,6 +2,7 @@ group "EC2"
 library :rudy, 'lib'
 
 tryouts "Groups Authorize Address" do
+  set :global, Rudy::Huxtable.global
   set :group_name, 'grp-' << Rudy::Utils.strand
   set :protocols, ['tcp', 'udp']
   set :external_ip, Rudy::Utils::external_ip_address || '192.168.0.1/32'
@@ -9,9 +10,7 @@ tryouts "Groups Authorize Address" do
   set :ports, [[3100,3150],[3200,3250]]
   setup do
     Rudy::Huxtable.update_config
-    global = Rudy::Huxtable.global
-    akey, skey, region = global.accesskey, global.secretkey, global.region
-    Rudy::AWS::EC2.connect akey, skey, region
+    Rudy::AWS::EC2.connect global.accesskey, global.secretkey, global.region
     Rudy::AWS::EC2::Groups.create group_name
   end
   clean do 

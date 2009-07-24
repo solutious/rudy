@@ -124,13 +124,13 @@ module Rudy::AWS
       end
     
     
-      def list(state=nil, vol_id=[])
-        volumes = list_as_hash(state, vol_id)
+      def list(state=nil, vol_id=[], &each_vol)
+        volumes = list_as_hash(state, vol_id, &each_vol)
         volumes &&= volumes.values
         volumes
       end
     
-      def list_as_hash(state=nil, vol_id=[])
+      def list_as_hash(state=nil, vol_id=[], &each_vol)
         state &&= state.to_sym
         state = nil if state == :any
         # A nil state is fine, but we don't want an unknown one!
@@ -151,6 +151,7 @@ module Rudy::AWS
           next if state && v.state != state.to_s
           volumes[v.awsid] = v
         end
+        volumes.values.each { |v| each_vol.call(v) } if each_vol
         volumes = nil if volumes.empty?
         volumes
       end

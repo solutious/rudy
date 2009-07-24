@@ -2,13 +2,12 @@ group "EC2"
 library :rudy, 'lib'
 
 tryouts "Groups" do
+  set :global, Rudy::Huxtable.global
   set :group_name, 'grp-' << Rudy::Utils.strand
   set :group_desc, 'desc-' << group_name
   setup do
     Rudy::Huxtable.update_config
-    global = Rudy::Huxtable.global
-    akey, skey, region = global.accesskey, global.secretkey, global.region
-    Rudy::AWS::EC2.connect akey, skey, region
+    Rudy::AWS::EC2.connect global.accesskey, global.secretkey, global.region
   end
   
   dream :class, Rudy::AWS::EC2::Group

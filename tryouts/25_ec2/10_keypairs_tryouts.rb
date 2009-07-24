@@ -4,14 +4,12 @@ library :rudy, 'lib'
 
 
 tryouts "Keypairs" do
-  
+  set :global, Rudy::Huxtable.global
   set :keypair_name, 'key-' << Rudy::Utils.strand
   
   setup do
     Rudy::Huxtable.update_config
-    global = Rudy::Huxtable.global
-    akey, skey, region = global.accesskey, global.secretkey, global.region
-    Rudy::AWS::EC2.connect akey, skey, region
+    Rudy::AWS::EC2.connect global.accesskey, global.secretkey, global.region
   end
   
   drill "no existing keypairs", false do

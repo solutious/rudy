@@ -21,7 +21,7 @@ module Rudy::AWS
         @@sformat % [liner_note,  @volid, @status]
       end
       
-      def inspect
+      def pretty
         lines = []
         lines << liner_note
         field_names.each do |key|
@@ -56,7 +56,7 @@ module Rudy::AWS
         return unless slist['snapshotSet'].is_a?(Hash)
         snapshots = {}
         slist['snapshotSet']['item'].each do |snap| 
-          kp = self.class.from_hash(snap)
+          kp = self.from_hash(snap)
           snapshots[kp.awsid] = kp
         end
         snapshots = nil if snapshots.empty?

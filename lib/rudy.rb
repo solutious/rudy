@@ -152,6 +152,9 @@ module Rudy
   class MachineGroupNotRunning < Rudy::Error
     def message; "Machine group #{@obj} is not running."; end
   end
+  class MachineGroupMetadataExists < Rudy::Error 
+    def message; "Machine group #{@obj} has existing metadata."; end
+  end
   class NoMachines < Rudy::Error;
     def message; "Specified remote machine(s) not running"; end
   end 

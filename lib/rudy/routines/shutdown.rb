@@ -9,7 +9,7 @@ module Rudy; module Routines;
                          :local, :remote, :after_local, :after]
                          
     def init(*args)
-      @machines = @rmach.list || []
+      @machines = Rudy::Machines.list || []
       @@rset = create_rye_set @machines unless defined?(@@rset)
       @routine ||= {}
     end
@@ -52,12 +52,11 @@ module Rudy; module Routines;
     
     # Called by generic_machine_runner
     def raise_early_exceptions
-      rmach = Rudy::Machines.new
       raise NoMachinesConfig unless @@config.machines
       
       # If this is a test run we don't care if the group is running
       if run?
-        raise MachineGroupNotRunning, current_machine_group unless rmach.running?
+        raise MachineGroupNotRunning, current_machine_group unless Rudy::Machines.running?
       end
       
       ## NOTE: This check is disabled for now. If the private key doesn't exist

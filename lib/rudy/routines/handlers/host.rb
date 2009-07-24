@@ -29,7 +29,7 @@ module Rudy; module Routines; module Handlers;
     def update_dns(rset)
       raise NoMachines if rset.boxes.empty?
       rset.batch do 
-        self.stash.update 
+        self.stash.refresh 
         self.host = self.stash.dns_public
       end
     end

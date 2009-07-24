@@ -55,7 +55,7 @@ module Rudy; module Routines; module Handlers;
     
     def registered?(name=:root)
       keyname = user_keypairname name
-      Rudy::AWS::EC2::Keypairs.exists? keyname
+      Rudy::AWS::EC2::Keypairs.exists?( keyname) rescue false
     end
     
     def pkey(name=:root)

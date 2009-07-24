@@ -35,11 +35,6 @@ module Rudy; module Routines;
       @name, @option, @argv = name.to_sym, option, argv
       a, s, r = @@global.accesskey, @@global.secretkey, @@global.region
       @@sdb ||= Rudy::AWS::SDB.new(a, s, r)
-      @@rinst ||= Rudy::AWS::EC2::Instances.new(a, s, r)
-      @@rgrp ||= Rudy::AWS::EC2::Groups.new(a, s, r)
-      @@rkey ||= Rudy::AWS::EC2::Keypairs.new(a, s, r)
-      @@rvol ||= Rudy::AWS::EC2::Volumes.new(a, s, r)
-      @@rsnap ||= Rudy::AWS::EC2::Snapshots.new(a, s, r)
       
       # Grab the routines configuration for this routine name
       # e.g. startup, sysupdate, installdeps
@@ -79,7 +74,7 @@ module Rudy; module Routines;
     # namespace rather than creating instances manually b/c it 
     # applies some fancy pants defaults like command hooks.
     def create_rye_box(hostname, opts={})
-      
+      ld [:hostname, hostname, opts, caller[0]]
       opts = {
         :info => (@@global.verbose >= 3),  # rudy -vvv 
         :debug => false,
@@ -141,11 +136,12 @@ module Rudy; module Routines;
         next if (m.os || '').to_s == 'win32'
           
         if m.is_a?(Rudy::Machine)
-          m.update if m.dns_public.nil? || m.dns_public.empty?
+          m.refresh if m.dns_public.nil? || m.dns_public.empty?
           if m.dns_public.nil? || m.dns_public.empty?
             ld "Cannot find public DNS for #{m.name} (continuing...)"
             ##next
           end
+          ld [:dns_public, m.dns_public, m.instid]
           rbox = create_rye_box(m.dns_public, opts) 
           rbox.stash = m   # Store the machine instance in the stash
           rbox.nickname = m.name

@@ -116,7 +116,10 @@ module Rudy
     def root_keypairpath
       user_keypairpath :root
     end
-
+    def current_user_keypairpath
+      user_keypairpath current_machine_user
+    end
+    
     def defined_keypairpath(name=nil)
       name ||= current_machine_user
       raise Rudy::Error, "No user provided" unless name

@@ -28,9 +28,9 @@ module Rudy
       end
       
       def machines_wash
-        dirt = (Rudy::Machines.list || []).select { |m| !m.running? }
+        dirt = (Rudy::Machines.list || []).select { |m| !m.instance_running? }
         if dirt.empty?
-          puts "Nothing to wash in #{rmach.current_machine_group}"
+          puts "Nothing to wash in #{current_machine_group}"
           return
         end
         
@@ -80,7 +80,7 @@ module Rudy
           exit
         end
         lt.each do |machine|
-          machine.update  # make sure we have the latest DNS info
+          machine.refresh  # make sure we have the latest DNS info
           
           # mount -t ext3 /dev/sdr /rudy/disk1
           
@@ -88,7 +88,7 @@ module Rudy
           if @@global.quiet
             print "You are #{ssh_opts[:user].to_s.bright}. " if !checked # only the 1st
           else
-            puts machine_separator(machine.name, machine.awsid)
+            puts machine_separator(machine.name, machine.instid)
             puts "Connecting #{ssh_opts[:user].to_s.bright}@#{machine.dns_public} "
             puts
           end

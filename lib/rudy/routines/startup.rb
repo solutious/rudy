@@ -34,30 +34,17 @@ module Rudy; module Routines;
           }
         end
         
+        Rudy::Routines.rescue {
+          unless Rudy::Routines::Handlers::Group.exists? 
+            Rudy::Routines::Handlers::Group.create
+          end
+        }
         
-        unless (1..MAX_INSTANCES).member?(current_machine_count)
-          raise "Instance count must be more than 0, less than #{MAX_INSTANCES}"
-        end
-
-        unless @rgrp.exists?(current_group_name)
-          puts "Creating group: #{current_group_name}"
-          @rgrp.create(current_group_name)
-        end
-        
-        unless @rkey.exists?(root_keypairname)
-          kp_file = File.join(Rudy::CONFIG_DIR, root_keypairname)
-          raise PrivateKeyFileExists, kp_file if File.exists?(kp_file)
-          puts "Creating keypair: #{root_keypairname}"
-          kp = @rkey.create(root_keypairname)
-          puts "Saving #{kp_file}"
-          Rudy::Utils.write_to_file(kp_file, kp.private_key, 'w', 0600)
-        else
-          kp_file = root_keypairpath
-          # This means no keypair file can be found
-          raise PrivateKeyNotFound, root_keypairname if kp_file.nil?
-          # This means we found a keypair in the config but we cannot find the private key file.
-          raise PrivateKeyNotFound, kp_file if !File.exists?(kp_file)
-        end
+        Rudy::Routines.rescue {
+          unless Rudy::Routines::Handlers::Keypair.exists? 
+            Rudy::Routines::Handlers::Keypair.create
+          end
+        }
         
       end
       
@@ -66,8 +53,10 @@ module Rudy; module Routines;
       # If this is a testrun we won't create new instances
       # we'll just grab the list of machines in this group. 
       # NOTE: Expect errors if there are no machines.
-      @machines = run? ? Rudy::Machine.create_group : Rudy::Machine.list
-      @@rset = create_rye_set @machines unless defined?(@@rset)
+      Rudy::Routines.rescue {
+        @machines = run? ? Rudy::Machines.create : Rudy::Machines.list
+        @@rset = create_rye_set @machines unless defined?(@@rset)
+      }
       
       Rudy::Routines.rescue {
         if !Rudy::Routines::Handlers::Host.is_running? @@rset
@@ -89,14 +78,15 @@ module Rudy; module Routines;
       Rudy::Routines.rescue {
         Rudy::Routines::Handlers::Host.set_hostname @@rset      
       }
-
+      
       if run?
         # This is the meat of the sandwich
         Rudy::Routines.runner @routine, @@rset, @@lbox, @argv
-        
+
         Rudy::Routines.rescue {
           Rudy::Routines::Handlers::Depends.execute_all @after
         }
+        
       end
       
       @machines
@@ -107,13 +97,18 @@ module Rudy; module Routines;
       raise NoMachinesConfig unless @@config.machines
       # There's no keypair check here because Rudy::Machines will create one 
       raise MachineGroupNotDefined, current_machine_group unless known_machine_group?
+        
+      unless (1..MAX_INSTANCES).member?(current_machine_count)
+        raise "Instance count must be more than 0, less than #{MAX_INSTANCES}"
+      end
       
       # If this is a testrun, we don't create instances anyway so
       # it doesn't matter if there are already instances running.
       if run?
         # We don't check @@global.offline b/c we can't create EC2 instances
         # without an internet connection. Use passthrough for routine tests.
-        raise MachineGroupAlreadyRunning, current_machine_group if rmach.running?
+        raise MachineGroupAlreadyRunning, current_machine_group if Rudy::Machines.running?
+        raise MachineGroupMetadataExists, current_machine_group if Rudy::Machines.exists?
       end
       
       if @routine

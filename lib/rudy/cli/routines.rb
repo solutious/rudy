@@ -106,7 +106,7 @@ module Rudy; module CLI;
       
       puts $/, "The following instances have been destroyed:"
       machines.each do |machine|
-        puts '%s %s ' % [machine.name.bright, machine.awsid]
+        puts '%s %s ' % [machine.name.bright, machine.instid]
       end
       
       

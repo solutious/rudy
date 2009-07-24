@@ -10,18 +10,16 @@ def generic_machine_runner(machine_action, routine=nil, skip_check=false, skip_h
   is_available= false
   
   if @@global.offline
-    rmach = Rudy::Machines::Offline.new
     skip_check = true
     remote_user = Rudy.sysinfo.user
   else
-    rmach = Rudy::Machines.new
     remote_user = 'root'
   end
   
   routine ||= @routine
   raise "No routine supplied" unless routine
   raise "No machine action supplied" unless machine_action
-  unless rmach.respond_to?(machine_action)
+  unless Rudy::Machines.respond_to?(machine_action)
     raise "Unknown machine action #{machine_action}" 
   end
   
@@ -67,7 +65,7 @@ def generic_machine_runner(machine_action, routine=nil, skip_check=false, skip_h
   }
   
   # Execute the action (create, list, destroy, restart)
-  machines = enjoy_every_sandwich([]) { rmach.send(machine_action) } || []
+  machines = enjoy_every_sandwich([]) { Rudy::Machines.send(machine_action) } || []
   
   machines.each do |machine|
     puts machine_separator(machine.name, machine.awsid) unless skip_header

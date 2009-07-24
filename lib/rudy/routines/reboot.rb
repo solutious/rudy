@@ -29,7 +29,7 @@ module Rudy; module Routines;
       # If this is a testrun we won't create new instances
       # we'll just grab the list of machines in this group. 
       # NOTE: Expect errors if there are no machines.
-      @machines = run? ? @rmach.restart : @rmach.list
+      @machines = run? ? Rudy::Machines.restart : Rudy::Machines.list
       @@rset = create_rye_set @machines unless defined?(@@rset)
       
       if run?
@@ -83,7 +83,6 @@ module Rudy; module Routines;
 
     # Called by generic_machine_runner
     def raise_early_exceptions
-      rmach = Rudy::Machines.new
       raise NoMachinesConfig unless @@config.machines
       # There's no keypair check here because Rudy::Machines will attempt 
       # to create one.
@@ -91,7 +90,7 @@ module Rudy; module Routines;
       
       # If this is a test run we don't care if the group is running
       if run?
-        raise MachineGroupNotRunning, current_machine_group unless rmach.running?
+        raise MachineGroupNotRunning, current_machine_group unless Rudy::Machines.running?
       end
       
       if @routine

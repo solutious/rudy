@@ -88,7 +88,7 @@ module Rudy
       routine.each_pair do |name,definition| 
         handler = Rudy::Routines.get_handler name
         Rudy::Huxtable.ld "  executing handler: #{name}"
-        Rudy::Routines.rescue {
+        self.rescue {
           handler.execute(name, definition, rset, lbox, argv)
         }
       end
@@ -101,7 +101,7 @@ module Rudy
         unless Rudy::Huxtable.global.parallel
           STDERR.puts "  #{ex.class}: #{ex.message}".color(:red)
           STDERR.puts ex.backtrace if Rudy.debug?
-          choice = Annoy.get_user_input('(S)kip  (A)bort: ') || ''
+          choice = Annoy.get_user_input('(S)kip  (A)bort: ', nil, 3600) || ''
           if choice.match(/\AS/i)
             # do nothing
           else

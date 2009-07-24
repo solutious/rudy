@@ -11,13 +11,5 @@ module Rudy; module Routines; module Handlers;
     end
     
     
-    def create_security_group
-      unless Rudy::AWS::EC2::Groups.exists?(current_group_name)
-        li "Creating group: #{current_group_name}"
-        Rudy::AWS::EC2::Groups.create(current_group_name)
-      end
-    end
-      
-    
   end
 end; end; end

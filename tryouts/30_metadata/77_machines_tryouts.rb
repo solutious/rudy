@@ -17,9 +17,15 @@ tryout "Rudy::Machines API" do
     akey, skey, region = global.accesskey, global.secretkey, global.region
     Rudy::Metadata.connect akey, skey, region
     Rudy::AWS::EC2.connect akey, skey, region
+    Rudy::Machine.new('07').save
+    Rudy::Machine.new('08').save
+    Rudy::Machine.new('09').save
   end
   
   clean do
+    Rudy::Machine.new('07').destroy
+    Rudy::Machine.new('08').destroy
+    Rudy::Machine.new('09').destroy
     if Rudy.debug?
       puts $/, "Rudy Debugging:"
       Rudy::Huxtable.logger.rewind
@@ -29,6 +35,11 @@ tryout "Rudy::Machines API" do
   
   dream :class, Rudy::Machine
   drill "get machine metadata" do
-    Rudy::Machines.get '01'
+    Rudy::Machines.get '07'
   end
+  
+  drill "knows when the current group is not running", false do
+    Rudy::Machines.running?
+  end
+
 end

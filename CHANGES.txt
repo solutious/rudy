@@ -9,7 +9,7 @@ RUDY, CHANGES
   * How to handle multiple app versions? 
 * TODO: http://opensoul.org/2009/6/24/capistrano-git-and-ssh-keys
 * TODO: look for config file in ./.rudy, then ../.rudy, etc... (git-like)
-
+* TODO: FIX: When shutting down, warns about disks even when they don't exist (CLI::Routines)
 
 #### 0.9.0 (2009-07-XX) ###############################
 
@@ -54,6 +54,7 @@ NOTE: This is a significant re-write from 0.8 (routines, metadata)
 * ADDED: New 'objects' and 'query' commands for rudy-sdb
 
 
+* TODO: Annoy.are_you_sure still times out quickly
 * TODO: Update CLI::Machines
 * TODO: Re-enable disk routines. 
 * TODO: Supply machines config to routines blocks with only the specific machine group context 

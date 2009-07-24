@@ -79,6 +79,14 @@ module Rudy
       @position &&= @position.to_s.rjust(2, '0')
     end
     
+    def to_s(*args)
+      self.name
+    end
+    
+    def get_instance
+      Rudy::AWS::EC2::Instances.get @instid
+    end
+    
     def create
       raise "#{name} is already running" if instance_running?
       
@@ -96,7 +104,7 @@ module Rudy
       Rudy::Huxtable.ld "OPTS: #{opts.inspect}"
       
       Rudy::AWS::EC2::Instances.create(opts) do |inst|
-        @instid = inst.instid
+        @instid = inst.awsid
         @created = @started = Time.now
         @state = inst.state
         # We need to be safe when creating machines because if an exception is
@@ -128,6 +136,20 @@ module Rudy
     
     def restart
       Rudy::AWS::EC2::Instances.restart(@instid) if instance_running?
+    end
+    
+    def refresh
+      super # update metadata
+      @instance = get_instance
+      if @instance.is_a?(Rudy::AWS::EC2::Instance)
+        @dns_public, @dns_private = @instance.dns_public, @instance.dns_private
+        @state = @instance.state
+        save :replace
+      elsif @instance.nil?
+        @awsid = @dns_public = @dns_private = nil
+        @state = 'rogue'
+        # Don't save it b/c it's possible the EC2 server is just down. 
+      end
     end
     
     def generate_machine_data

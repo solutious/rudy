@@ -3,7 +3,7 @@ module Rudy; module Routines;
   class Passthrough < Rudy::Routines::Base
     
     def init(*args)
-      @machines = @rmach.list || []
+      @machines = Rudy::Machines.list || []
       @@rset = create_rye_set @machines unless defined?(@@rset)
     end
     

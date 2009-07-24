@@ -4,8 +4,7 @@ module Rudy
     class Candy < Rudy::CLI::CommandBase
       
       def open
-        rmach = Rudy::Machines.new
-        machines = rmach.list
+        machines = Rudy::Machines.list
         
         if machines
           `open http://#{machines.first.dns_public}`

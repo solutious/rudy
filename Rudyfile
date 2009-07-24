@@ -104,7 +104,6 @@ routines do
       
       startup do                     # $ rudy startup
         adduser :rudy                # Create a user called 'rudy'
-        authorize :rudy              # Enable passwordless logins as rudy
                                      #
         disks do                     # Define EBS volume routines
           create '/rudy/disk1'       # Create an EBS volume, attach it, give

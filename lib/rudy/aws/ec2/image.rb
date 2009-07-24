@@ -81,7 +81,7 @@ module Rudy::AWS
           :executable_by => executable_by || []
         }
         
-        response = execute_request({}) { @@ec2.describe_images(opts) }
+        response = Rudy::AWS::EC2.execute_request({}) { @@ec2.describe_images(opts) }
         
         return nil unless response['imagesSet'].is_a?(Hash)  # No instances 
       

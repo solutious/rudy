@@ -15,13 +15,12 @@ module AWS; module EC2;
     end
     def images
       
-      rimages = Rudy::AWS::EC2::Images.new(@@global.accesskey, @@global.secretkey, @@global.region)
       unless @option.all
         @option.owner ||= 'amazon' 
         puts "Images owned by #{@option.owner.bright}" unless @argv.awsid
       end
       
-      images = rimages.list(@option.owner, @argv) || []
+      images = Rudy::AWS::EC2::Images.list(@option.owner, @argv) || []
       images.each do |img|
         puts @@global.verbose > 0 ? img.inspect : img.dump(@@global.format)
       end
@@ -32,20 +31,19 @@ module AWS; module EC2;
       unless @argv.ami && Rudy::Utils.is_id?(:image, @argv.ami)  
         raise "Must supply an AMI ID (ami-XXXXXXX)" 
       end
-      @rimages = Rudy::AWS::EC2::Images.new(@@global.accesskey, @@global.secretkey, @@global.region)
     end
     def destroy_images
-     puts @rimages.deregister(@argv.ami) ? "Done" : "Unknown error"
+     puts Rudy::AWS::EC2::Images.deregister(@argv.ami) ? "Done" : "Unknown error"
     end 
     
     def register_images_valid?
       unless @argv.first
         raise "Must supply a valid manifest path (bucket/ami-name.manifest.xml)"
       end
-      @rimages = Rudy::AWS::EC2::Images.new(@@global.accesskey, @@global.secretkey, @@global.region)
+
     end
     def register_images
-      puts @rimages.register(@argv.first)
+      puts Rudy::AWS::EC2::Images.register(@argv.first)
     end
 
 

@@ -57,17 +57,25 @@ tryout "Rudy::Machine API" do
   end
   
   drill "will save over a disk with the same name if forced", true do
-    Rudy::Machine.new.save(:replace)
+    Rudy::Machine.new.save :replace
   end
   
   dream :class, Rudy::Machine
-  dream :available, false
-  xdrill "refresh disk metadata" do
-    d = Rudy::Machine.new
-    d.available = true
-    d.refresh
-    d
+  dream :size, 'm1.small'
+  drill "refresh machine metadata" do
+    m = Rudy::Machine.new
+    m.save :replace
+    m.size = :nothing
+    m.refresh!
+    m
   end
+  
+  ##dream :class, Rudy::Machine
+  ##dream :zone, 'zone9000'
+  ##xdrill "correctly saves zone" do
+  ##  Rudy::Machine.new(9, :zone => 'zone9000').save
+  ##  Rudy::Machine.new(9, :zone => 'zone9000').refresh!
+  ##end
   
   drill "destroy machine metadata", true do
     Rudy::Machine.new.destroy

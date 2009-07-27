@@ -7,7 +7,6 @@ module Rudy
     
     extend self
     extend Rudy::Metadata::ClassMethods 
-    include Rudy::Huxtable
     extend Rudy::Huxtable
     
     def get(position)
@@ -40,7 +39,7 @@ module Rudy
     
     # Returns an Array of newly created Rudy::Machine objects
     def create(size=1)
-      if @@global.position.nil?
+      if Rudy::Huxtable.global.position.nil?
         size ||= current_machine_count.to_i
         group = Array.new(size) do |i|
           m = Rudy::Machine.new(i + 1)
@@ -48,7 +47,7 @@ module Rudy
           m
         end
       else
-        m = Rudy::Machine.new(@@global.position)
+        m = Rudy::Machine.new(Rudy::Huxtable.global.position)
         m.create
         [m]
       end
@@ -64,7 +63,6 @@ module Rudy
     end
     
     def from_hash(h)
-      p h
       Rudy::Machine.from_hash h
     end
     

@@ -136,7 +136,7 @@ module Rudy; module Routines;
         next if (m.os || '').to_s == 'win32'
           
         if m.is_a?(Rudy::Machine)
-          m.refresh if m.dns_public.nil? || m.dns_public.empty?
+          m.refresh! if m.dns_public.nil? || m.dns_public.empty?
           if m.dns_public.nil? || m.dns_public.empty?
             ld "Cannot find public DNS for #{m.name} (continuing...)"
             ##next

@@ -81,6 +81,7 @@ module Rudy::AWS
       #
       # +opts+ supports the following parameters:
       #
+      # * +:zone+
       # * +:ami+          
       # * +:group+        
       # * +:size+          

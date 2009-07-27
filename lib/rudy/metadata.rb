@@ -8,6 +8,8 @@ module Rudy
     class DuplicateRecord < Rudy::Error; end
     class UnknownRecord < Rudy::Error; end
     
+    COMMON_FIELDS = [:region, :zone, :environment, :role].freeze
+    
     @@rsdb   = nil
     @@rvol   = nil
     @@rinst  = nil 
@@ -15,6 +17,20 @@ module Rudy
     @@rkey   = nil 
     @@rgrp   = nil
     @@domain = Rudy::DOMAIN
+    
+    #
+    def self.get_rclass(rtype)
+      case rtype
+      when Rudy::Machines::RTYPE
+        Rudy::Machines
+      when Rudy::Disks::RTYPE
+        Rudy::Disks
+      when Rudy::Backups::RTYPE
+        Rudy::Backups
+      else
+        raise UnknownRecordType, rtype
+      end
+    end
     
     # Creates instances of the following and stores to class variables:
     # * Rudy::AWS::SDB
@@ -51,6 +67,20 @@ module Rudy
       @@rsdb.get @@domain, n
     end
     
+    def self.exists?(n)
+      !get(n).nil?
+    end
+    
+    def self.put(n, o, replace=false)
+      Rudy::Huxtable.ld "PUT: #{n}" if Rudy.debug?
+      @@rsdb.put @@domain, n, o, replace
+    end
+    
+    def self.destroy(n)
+      Rudy::Huxtable.ld "DESTROY: #{n}" if Rudy.debug?
+      @@rsdb.destroy @@domain, n
+    end
+    
     # Generates and executes a SimpleDB select query based on
     # the specified +fields+ Hash. See self.build_criteria.
     #
@@ -61,22 +91,25 @@ module Rudy
       Rudy::Huxtable.ld "SELECT: #{squery}" if Rudy.debug?
       @@rsdb.select squery
     end
+
     
     # Generates a default criteria for all metadata based on
     # region, zone, environment, and role. If a position has
     # been specified in the globals it will also be included.
-    # +fields+ replaces and adds values to this criteria and
-    # +less+ removes keys from the default criteria. 
+    # * +rtype+ is the record type. One of: m, disk, or back.
+    # * +fields+ replaces and adds values to this criteria
+    # * +less+ removes keys from the default criteria. 
     #
     # Returns a Hash. 
     def self.build_criteria(rtype, fields={}, less=[])
       fields ||= {}
       fields[:rtype] = rtype
       fields[:position] = @@global.position unless @@global.position.nil?
-      names = [:region, :zone, :environment, :role]
-      names -= [*less].flatten.uniq.compact
+      names = Rudy::Metadata::COMMON_FIELDS
       values = names.collect { |n| @@global.send(n.to_sym) }
-      Hash[names.zip(values)].merge(fields)
+      criteria = Hash[names.zip(values)].merge(fields)
+      criteria.reject! { |n,v| less.member?(n) }
+      criteria
     end
     
     module ClassMethods
@@ -122,24 +155,26 @@ module Rudy
       obj.extend Rudy::Metadata::ClassMethods
       obj.send :include, Rudy::Metadata::InstanceMethods
       
-      # Add common storable fields
-      obj.field :region
-      obj.field :zone
-      obj.field :environment
-      obj.field :role
-      obj.field :position
+      # Add common storable fields. 
+      [*COMMON_FIELDS, :position].each do |n|
+        obj.field n
+      end
+      
     end
     
     def initialize(rtype, opts={})
       @rtype = rtype
-      @region = @@global.region
-      @zone = @@global.zone
-      @environment = @@global.environment
-      @role = @@global.role
       @position = position || @@global.position || '01'
+      
+      COMMON_FIELDS.each { |n|
+        ld "SETTING: #{n}: #{@@global.send(n)}"
+        instance_variable_set("@#{n}", @@global.send(n))
+      }
       
       opts.each_pair do |n,v|
         raise "Unknown attribute for #{self.class}: #{n}" if !self.has_field? n
+        next if v.nil? || v.empty?
+        ld "RESETTING: #{n}: #{v}"
         self.send("#{n}=", v)
       end
       
@@ -152,19 +187,19 @@ module Rudy
     
     def save(replace=false)
       raise DuplicateRecord, self.name unless replace || !self.exists?
-      @@rsdb.put @@domain, self.name, self.to_hash, replace
+      Rudy::Metadata.put self.name, self.to_hash, replace
       true
     end
     
     def destroy(force=false)
       raise UnknownRecord, self.name unless self.exists?
-      @@rsdb.destroy @@domain, self.name
+      Rudy::Metadata.destroy self.name
       true
     end
     
     # Refresh the metadata object from SimpleDB. If the record doesn't 
     # exist it will raise an UnknownRecord error 
-    def refresh
+    def refresh!
       raise UnknownRecord, self.name unless self.exists?
       h = Rudy::Metadata.get self.name
       return false if h.nil? || h.empty?

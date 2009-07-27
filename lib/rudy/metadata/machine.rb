@@ -138,7 +138,7 @@ module Rudy
       Rudy::AWS::EC2::Instances.restart(@instid) if instance_running?
     end
     
-    def refresh
+    def refresh!
       super # update metadata
       @instance = get_instance
       if @instance.is_a?(Rudy::AWS::EC2::Instance)

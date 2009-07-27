@@ -194,7 +194,7 @@ module Rudy
         rescue SocketError => ex
           #STDERR.puts ex.message
           #STDERR.puts ex.backtrace
-          raise SocketError, "Check your Internets!" unless @@global.offline
+          raise SocketError, "Check your Internets!" unless Rudy::Huxtable.global.offline
         ensure
           response ||= default
         end

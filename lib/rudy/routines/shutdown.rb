@@ -22,7 +22,7 @@ module Rudy; module Routines;
     # * after dependencies
     def execute
       ld "Executing routine: #{@name}"
-      li "[this is a generic routine]" if @routine.empty?
+      ld "[this is a generic routine]" if @routine.empty?
       
       # We need to remove after_local so the runner doesn't see it
       after_local = @routine.delete(:after_local)

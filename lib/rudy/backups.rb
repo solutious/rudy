@@ -1,8 +1,11 @@
 module Rudy
   
   module Backups
+    RTYPE = 'back'.freeze
+    
     extend self
-    include Rudy::Huxtable
+    extend Rudy::Metadata::ClassMethods 
+    extend Rudy::Huxtable
     
   end
   

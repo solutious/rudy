@@ -21,7 +21,7 @@ module Rudy; module Routines;
     # * after dependencies
     def execute
       ld "Executing routine: #{@name}"
-      li "[this is a generic routine]" if @routine.empty?
+      ld "[this is a generic routine]" if @routine.empty?
       
       
       if run?

@@ -174,6 +174,12 @@ module Rudy
     def message; "Private key file #{@obj} not found."; end
   end
   class UnsupportedOS < Rudy::Error; end
+  class UnknownRecordType < Rudy::Error
+    def message; "Unknown record type: #{@obj}"; end
+  end
+  class UnknownObject < Rudy::Error
+    def message; "Unknown object: #{@obj}"; end
+  end
 end
 
 require 'rudy/utils'               # The

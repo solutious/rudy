@@ -16,23 +16,27 @@ module Rudy
 
         objlist = @metaobj.list(more, less) || []
         objlist.each do |o|
-          p o
+          puts "#{o}: " << o.inspect
         end
       end
       
       def metadata_delete_valid?
         raise "Must supply object ID" unless @argv.oid
+        raise UnknownObject, @argv.oid unless Rudy::Metadata.exists? @argv.oid
         true
       end
       
       def metadata_delete
-        rdebug = Rudy::Metadata::Debug.new
+
         unless @@global.quiet
           msg = "NOTE: This will delete only the metadata and "
           msg << "not the EC2 object (volume, instance, etc...)"
           puts msg
         end
-        p rdebug.get( @argv.oid)
+        
+        execute_check(:medium)
+        
+        Rudy::Metadata.destroy @argv.oid
       end
     
     end

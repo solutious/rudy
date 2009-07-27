@@ -63,9 +63,9 @@ class RudyCLI < Rudy::CLI::Base
   
   about "View raw metadata"
   usage "rudy metadata"
-  usage "rudy metadata -l -o [disk|back|m]"
+  usage "rudy metadata -l -r [disk|back|m]"
   usage "rudy metadata -D object-id"
-  option :o, :otype, String, "Object type. One of: disk, back, m"
+  option :r, :rtype, String, "Record type. One of: disk, back, m (default)"
   option :l, :all, "Display metadata for all environments and roles"
   action :D, :delete, "Delete an object"
   argv :oid

@@ -6,6 +6,8 @@ module Rudy::CLI
   class Base
     extend Drydock
     
+    debug :off
+    
     before do |obj|
       # Don't print Rudy header unless requested to
       obj.global.print_header = false  if (obj.global.verbose == 0)
@@ -46,7 +48,7 @@ module Rudy::CLI
       exit 0
     end
     
-    debug :on
+    
   end
 
 end

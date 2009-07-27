@@ -48,7 +48,7 @@ module Rudy
         :device => '/dev/sdh'
       }.merge opts
       
-      super 'disk', opts  # Rudy::Metadata#initialize
+      super Rudy::Disks::RTYPE, opts  # Rudy::Metadata#initialize
       
       @position, @path = position, path
       

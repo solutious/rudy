@@ -3,6 +3,8 @@
 module Rudy
   
   module Machines
+    RTYPE = 'm'.freeze
+    
     extend self
     extend Rudy::Metadata::ClassMethods 
     include Rudy::Huxtable
@@ -62,6 +64,7 @@ module Rudy
     end
     
     def from_hash(h)
+      p h
       Rudy::Machine.from_hash h
     end
     

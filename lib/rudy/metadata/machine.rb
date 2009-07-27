@@ -64,7 +64,7 @@ module Rudy
       
       opts[:address] = current_machine_address opts[:position] || position
       
-      super 'm', opts  # Rudy::Metadata#initialize
+      super Rudy::Machines::RTYPE, opts  # Rudy::Metadata#initialize
       
       @position = position
       

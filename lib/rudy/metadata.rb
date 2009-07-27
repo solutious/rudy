@@ -69,10 +69,11 @@ module Rudy
     # +less+ removes keys from the default criteria. 
     #
     # Returns a Hash. 
-    def self.build_criteria(fields={}, less=[])
+    def self.build_criteria(rtype, fields={}, less=[])
       fields ||= {}
+      fields[:rtype] = rtype
+      fields[:position] = @@global.position unless @@global.position.nil?
       names = [:region, :zone, :environment, :role]
-      names << :position unless @@global.position.nil?
       names -= [*less].flatten.uniq.compact
       values = names.collect { |n| @@global.send(n.to_sym) }
       Hash[names.zip(values)].merge(fields)
@@ -82,10 +83,9 @@ module Rudy
       extend self
       extend Rudy::Huxtable
       
-      
       # TODO: MOVE TO Rudy:Disks etc...
       def list(fields={}, less=[], &block)
-        fields = Rudy::Metadata.build_criteria fields, less
+        fields = Rudy::Metadata.build_criteria self::RTYPE, fields, less
         records_raw, records = Rudy::Metadata.select(fields), []
         return nil if records_raw.nil? || records_raw.empty?
         records_raw.each_pair do |p, r|
@@ -163,9 +163,9 @@ module Rudy
     end
     
     # Refresh the metadata object from SimpleDB. If the record doesn't 
-    # exist it will be saved to SimpleDB and returned unchanged. 
+    # exist it will raise an UnknownRecord error 
     def refresh
-      ##raise UnknownRecord, self.name unless self.exists?
+      raise UnknownRecord, self.name unless self.exists?
       h = Rudy::Metadata.get self.name
       return false if h.nil? || h.empty?
       obj = self.from_hash(h)

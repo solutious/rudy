@@ -4,14 +4,17 @@ module Rudy
   module CLI
     class Metadata < Rudy::CLI::CommandBase
       
+      def metadata_valid?
+        @option.rtype ||= 'm'
+        @metaobj = Rudy::Metadata.get_rclass @option.rtype
+        true
+      end
       
       def metadata
-        more, less = [], []
-        less = [:environment, :role, :zone, :region] if @option.all
-        more += [:rtype, @option.otype] if @option.otype
-        
-        rdebug = Rudy::Metadata::Debug.new
-        objlist = rdebug.list(more, less) || []
+        more, less = {}, []
+        less = [:environment, :role, :zone, :region, :position] if @option.all
+
+        objlist = @metaobj.list(more, less) || []
         objlist.each do |o|
           p o
         end

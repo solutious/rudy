@@ -11,7 +11,7 @@ module Rudy
         # environment and role to we remove these attributes from
         # the select. 
         more, less = nil, nil
-        less = [:environment, :role] if @option.all
+        less = Rudy::Metadata::COMMON_FIELDS if @option.all
         
         mlist = Rudy::Machines.list(more, less) || []
         if mlist.empty?
@@ -80,7 +80,7 @@ module Rudy
           exit
         end
         lt.each do |machine|
-          machine.refresh  # make sure we have the latest DNS info
+          machine.refresh!  # make sure we have the latest DNS info
           
           # mount -t ext3 /dev/sdr /rudy/disk1
           

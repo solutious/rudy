@@ -32,7 +32,7 @@ module Rudy; module Routines;
       
         # This is the meat of the sandwich
         Rudy::Routines.runner(@routine, @@rset, @@lbox, @argv)
-      
+       p 11
         @machines.each do |machine|
           Rudy::Routines.rescue { machine.destroy }
         end

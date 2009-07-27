@@ -52,11 +52,12 @@ module Rudy
       @parallel ||= false
       @format ||= :string # as in, to_s
       @print_header = true if @print_header == nil
-      @yes = false if @yes.nil?
     end
     
     def apply_config(config)
       return unless config.is_a?(Rudy::Config)
+      clear_system_defaults  # temporarily unapply default values
+      
       if config.defaults?
         # Apply the "color" default before "nocolor" so nocolor has presedence
         @nocolor = !config.defaults.color unless config.defaults.color.nil?
@@ -69,7 +70,7 @@ module Rudy
         %w[region zone environment role position 
            localhost nocolor quiet yes parallel].each do |name|
           curval, defval = self.send(name), config.defaults.send(name)
-          self.send("#{name}=", val) if curval.nil? && !defval.nil?
+          self.send("#{name}=", defval) if curval.nil? && !defval.nil?
         end
       end
       
@@ -79,7 +80,6 @@ module Rudy
           self.send("#{name}=", val) unless val.nil?
         end
       end
-      
       postprocess
     end
     
@@ -121,12 +121,27 @@ module Rudy
       @pkey ||= ENV['EC2_PRIVATE_KEY']
     end
     
+    # Apply defaults for parameters that must have values
     def apply_system_defaults
       @region ||= Rudy::DEFAULT_REGION
       @zone ||= Rudy::DEFAULT_ZONE
       @environment ||= Rudy::DEFAULT_ENVIRONMENT
       @role ||= Rudy::DEFAULT_ROLE
       @localhost ||= Rudy.sysinfo.hostname || 'localhost'
+      @yes = false if @yes.nil?
+    end
+    
+    # Unapply defaults for parameters that must have values. 
+    # This is important when reloading configuration since
+    # we don't overwrite existing values. If the default
+    # ones remained the configuration would not be applied.
+    def clear_system_defaults
+      @region = nil if @region == Rudy::DEFAULT_REGION
+      @zone = nil if @zone == Rudy::DEFAULT_ZONE
+      @environment = nil if @environment == Rudy::DEFAULT_ENVIRONMENT
+      @role = nil if @role == Rudy::DEFAULT_ROLE
+      @localhost = nil if @localhost == (Rudy.sysinfo.hostname || 'localhost')
+      @yes = nil if @yes == false
     end
     
   end

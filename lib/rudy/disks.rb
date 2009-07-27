@@ -5,6 +5,8 @@ module Rudy
   module Disks
     extend self
     extend Rudy::Metadata::ClassMethods
+    include Rudy::Huxtable
+    extend Rudy::Huxtable
     
     def get(path)
       tmp = Rudy::Disk.new path

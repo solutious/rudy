@@ -80,6 +80,9 @@ module Rudy
     
     module ClassMethods
       extend self
+      extend Rudy::Huxtable
+      
+      
       # TODO: MOVE TO Rudy:Disks etc...
       def list(fields={}, less=[], &block)
         fields = Rudy::Metadata.build_criteria fields, less
@@ -159,8 +162,10 @@ module Rudy
       true
     end
     
+    # Refresh the metadata object from SimpleDB. If the record doesn't 
+    # exist it will be saved to SimpleDB and returned unchanged. 
     def refresh
-      raise UnknownRecord, self.name unless self.exists?
+      ##raise UnknownRecord, self.name unless self.exists?
       h = Rudy::Metadata.get self.name
       return false if h.nil? || h.empty?
       obj = self.from_hash(h)

@@ -37,9 +37,9 @@ module Rudy; module Routines; module Handlers;
     def is_available?(rset, port=22)
       raise NoMachines if rset.boxes.empty?
       rset.batch(rset.parallel, port) do |parallel,p|
-        # Windows machine do not have an SSH daemon
+        # Windows machines do not have an SSH daemon
         unless (self.stash.os || '').to_s == 'win32'
-          msg = parallel ? nil : "Waiting for #{self.nickname}:#{p}..."
+          msg = parallel ? nil : "Waiting for SSH on port #{p}..."
           Rudy::Utils.waiter(2, 30, STDOUT, msg, 0) {
             Rudy::Utils.service_available?(self.stash.dns_public, p)
           }

@@ -56,7 +56,14 @@ module Rudy; module Routines;
       
       # If this is a test run we don't care if the group is running
       if run?
-        raise MachineGroupNotRunning, current_machine_group unless Rudy::Machines.running?
+        if @@global.position.nil?
+          raise MachineGroupNotRunning, current_machine_group unless Rudy::Machines.running?
+        else
+          unless Rudy::Machines.running? @@global.position
+            m = Rudy::Machine.new @@global.position
+            raise MachineNotRunning, m.name 
+          end
+        end
       end
       
       ## NOTE: This check is disabled for now. If the private key doesn't exist

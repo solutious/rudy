@@ -105,10 +105,15 @@ module Rudy; module Routines;
       # If this is a testrun, we don't create instances anyway so
       # it doesn't matter if there are already instances running.
       if run?
-        # We don't check @@global.offline b/c we can't create EC2 instances
-        # without an internet connection. Use passthrough for routine tests.
-        raise MachineGroupAlreadyRunning, current_machine_group if Rudy::Machines.running?
-        raise MachineGroupMetadataExists, current_machine_group if Rudy::Machines.exists?
+        if @@global.position.nil?
+          raise MachineGroupAlreadyRunning, current_machine_group if Rudy::Machines.running?
+          raise MachineGroupMetadataExists, current_machine_group if Rudy::Machines.exists?
+        else
+          if Rudy::Machines.running? @@global.position
+            m = Rudy::Machine.new @@global.position
+            raise MachineAlreadyRunning, m.name 
+          end
+        end
       end
       
       if @routine

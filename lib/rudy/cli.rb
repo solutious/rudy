@@ -180,7 +180,7 @@ module Rudy
         exit 0
       end
       
-      debug :on
+      debug :off
     end
     
     

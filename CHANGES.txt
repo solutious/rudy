@@ -10,6 +10,7 @@ RUDY, CHANGES
 * TODO: http://opensoul.org/2009/6/24/capistrano-git-and-ssh-keys
 * TODO: look for config file in ./.rudy, then ../.rudy, etc... (git-like)
 * TODO: FIX: When shutting down, warns about disks even when they don't exist (CLI::Routines)
+* TODO: Investigate SSH daemon on Windows
 
 #### 0.9.0 (2009-07-XX) ###############################
 
@@ -52,7 +53,7 @@ NOTE: This is a significant re-write from 0.8 (routines, metadata)
 * ADDED: xremote and xlocal routine actions for quick skipping
 * ADDED: Dependency Attic 0.4
 * ADDED: New 'objects' and 'query' commands for rudy-sdb
-
+* ADDED: Execute routines on individual machines in a group
 
 * TODO: Annoy.are_you_sure still times out quickly
 * TODO: Update CLI::Machines

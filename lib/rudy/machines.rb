@@ -5,6 +5,7 @@ module Rudy
   module Machines
     extend self
     extend Rudy::Metadata::ClassMethods 
+    include Rudy::Huxtable
     extend Rudy::Huxtable
     
     def get(position)
@@ -22,24 +23,32 @@ module Rudy
     end
     
     # Returns true if any machine metadata exists for this group
-    def exists?
-      !list.nil?
+    def exists?(pos=nil)
+      machines = pos.nil? ? list : get(pos)
+      !machines.nil?
     end
     
     # Returns true if all machines in the group are running instances
-    def running?
-      group = list
-      return false if group.nil?
+    def running?(pos=nil)
+      group = pos.nil? ? list : [get(pos)].compact
+      return false if group.nil? || group.empty?
       group.collect! { |m| m.instance_running? }
       !group.member?(false)
     end
     
+    # Returns an Array of newly created Rudy::Machine objects
     def create(size=1)
-      size ||= current_machine_count.to_i
-      group = Array.new(size) do |i|
-        m = Rudy::Machine.new(i + 1)
+      if @@global.position.nil?
+        size ||= current_machine_count.to_i
+        group = Array.new(size) do |i|
+          m = Rudy::Machine.new(i + 1)
+          m.create
+          m
+        end
+      else
+        m = Rudy::Machine.new(@@global.position)
         m.create
-        m
+        [m]
       end
     end
     

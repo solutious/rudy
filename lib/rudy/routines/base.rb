@@ -163,7 +163,7 @@ module Rudy; module Routines;
     
     # Returns a formatted string for printing command info
     def print_command(user, host, cmd)
-      return if @@global.parallel
+      #return if @@global.parallel
       cmd ||= ""
       cmd, user = cmd.to_s, user.to_s
       prompt = user == "root" ? "#" : "$"

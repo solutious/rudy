@@ -59,7 +59,7 @@ module Rudy; module Routines; module Handlers;
       rset.batch(type) do |hn|
         if hn != :default
           hn = self.stash.name if hn == :rudy
-          self.hostname(hn) 
+          self.quietly { hostname(hn) }
         end
       end
     end

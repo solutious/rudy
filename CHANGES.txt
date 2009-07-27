@@ -56,7 +56,6 @@ NOTE: This is a significant re-write from 0.8 (routines, metadata)
 * ADDED: Execute routines on individual machines in a group
 
 * TODO: Annoy.are_you_sure still times out quickly
-* TODO: Update CLI::Machines
 * TODO: Re-enable disk routines. 
 * TODO: Supply machines config to routines blocks with only the specific machine group context 
 * TODO: Update gemspec

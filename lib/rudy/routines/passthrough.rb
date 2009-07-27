@@ -23,7 +23,7 @@ module Rudy; module Routines;
       ##raise MachineGroupNotDefined, current_machine_group unless known_machine_group?
       # Call raise_early_exceptions for each handler used in the routine
       @routine.each_pair do |action,definition|
-        raise NoHelper, action unless Rudy::Routines.has_handler?(action)
+        raise NoHandler, action unless Rudy::Routines.has_handler?(action)
         handler = Rudy::Routines.get_handler action
         handler.raise_early_exceptions(action, definition, @@rset, @@lbox, @argv)
       end

@@ -38,6 +38,10 @@ module Rudy; module Routines;
           unless Rudy::Routines::Handlers::Group.exists? 
             Rudy::Routines::Handlers::Group.create
           end
+          # Run this every startup incase the ip address has changed. 
+          # If there's an exception it's probably b/c the address is
+          # already authorized for port 22. 
+          Rudy::Routines::Handlers::Group.authorize rescue nil
         }
         
         Rudy::Routines.rescue {

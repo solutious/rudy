@@ -6,7 +6,7 @@ module Rudy::CLI
   class Base
     extend Drydock
     
-    debug :off
+    debug :on
     
     before do |obj|
       # Don't print Rudy header unless requested to
@@ -21,7 +21,6 @@ module Rudy::CLI
         puts "Elapsed: %.2f seconds" % @elapsed.to_f if @elapsed > 0.1
       end
     end
-    
     
     # These globals are used by all bin/ executables
     global :A, :accesskey, String, "AWS Access Key"

@@ -10,10 +10,10 @@ module Rudy
         # When all is specified we want to find machines in every
         # environment and role to we remove these attributes from
         # the select. 
-        more, less = nil, nil
+        fields, less = {}, []
         less = Rudy::Metadata::COMMON_FIELDS if @option.all
         
-        mlist = Rudy::Machines.list(more, less) || []
+        mlist = Rudy::Machines.list(fields, less) || []
         if mlist.empty?
           if @option.all
             puts "No machines running"

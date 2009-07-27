@@ -20,15 +20,17 @@ module Rudy; module Routines; module Handlers;
     end
     
     # A simple wrapper for executing a routine.
+    #
     # * +routine_name+ should be a Symbol representing a routine
-    # available to the current machine group.
+    #   available to the current machine group.
+    #
     # This method finds the handler for the given routine,
     # creates an instance, calls raise_early_exceptions,
     # and finally executes the routine.
     def execute(routine_name)
-      handler = Rudy::Routines.get_handler routine_name
-      ld "Executing dependency: #{routine_name} (#{handler})"
-      routine = handler.new routine_name
+      routine_obj = Rudy::Routines.get_routine routine_name
+      ld "Executing dependency: #{routine_name} (#{routine_obj})"
+      routine = routine_obj.new routine_name
       routine.raise_early_exceptions
       routine.execute
     end

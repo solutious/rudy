@@ -173,7 +173,7 @@ module Rudy
       
       opts.each_pair do |n,v|
         raise "Unknown attribute for #{self.class}: #{n}" if !self.has_field? n
-        next if v.nil? || v.empty?
+        next if v.nil?
         ld "RESETTING: #{n}: #{v}"
         self.send("#{n}=", v)
       end

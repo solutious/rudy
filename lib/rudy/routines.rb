@@ -28,7 +28,7 @@ module Rudy
       def message; "Unknown routine '#{@obj}'"; end
     end
     
-    class NoHelper < Rudy::Error
+    class NoHandler < Rudy::Error
       def message; "Unknown routine action '#{@obj}'"; end
     end
     

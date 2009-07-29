@@ -9,7 +9,7 @@ module Rudy
         more, less = {}, []
         less = [:environment, :role] if @option.all
         # We first get the disk metadata
-        disk_list = Rudy::Disk.list(more, less) || []
+        disk_list = Rudy::Disks.list(more, less) || []
         # If there are no disks currently, there could be backups
         # so we grab those to create a list of disks. 
         if @option.backups
@@ -34,7 +34,7 @@ module Rudy
       end
       
       def disks_wash
-        dirt = (Rudy::Disk.list || []).select { |d| d.volume_exists? }
+        dirt = (Rudy::Disks.list || []).select { |d| d.volume_exists? }
         if dirt.empty?
           puts "Nothing to wash in #{rdisk.current_machine_group}"
           return

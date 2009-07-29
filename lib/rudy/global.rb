@@ -23,6 +23,7 @@ module Rudy
     field :format
     field :print_header
     field :yes
+    field :force
     
     field :accesskey
     field :secretkey
@@ -50,6 +51,7 @@ module Rudy
       @nocolor = true unless @nocolor == "false" || @nocolor == false
       @quiet ||= false
       @parallel ||= false
+      @force ||= false
       @format ||= :string # as in, to_s
       @print_header = true if @print_header == nil
     end
@@ -68,7 +70,7 @@ module Rudy
         # WARNING: Don't add bucket either or any machines configuration param 
         # TODO: investigate removing this apply_config method
         %w[region zone environment role position 
-           localhost nocolor quiet yes parallel].each do |name|
+           localhost nocolor quiet yes force parallel].each do |name|
           curval, defval = self.send(name), config.defaults.send(name)
           self.send("#{name}=", defval) if curval.nil? && !defval.nil?
         end

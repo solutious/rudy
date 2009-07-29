@@ -63,6 +63,7 @@ module Rudy
     # sdb values are stored as strings. Some quick conversion. 
     def postprocess
       @size &&= @size.to_i
+      @raw = true if @raw == "true" unless @raw.is_a?(TrueClass)
       @mounted = (@mounted == "true") unless @mounted.is_a?(TrueClass)
     end
     
@@ -113,15 +114,22 @@ module Rudy
     
     def volume_attach(instid)
       raise Rudy::Error, "No volume id" unless volume_exists?
-      vol = @rvol.attach(@volid, instid, @device)
+      vol = Rudy::AWS::EC2::Volumes.attach(@volid, instid, @device)
     end
 
     def volume_detach
       raise Rudy::Error, "No volume id" unless volume_exists?
-      vol = @rvol.detach(@volid)
+      vol = Rudy::AWS::EC2::Volumes.detach(@volid)
     end
-
-
+    
+    def raw?
+      @raw == true
+    end
+    
+    def mounted?
+      @mounted == true
+    end
+    
     # Create volume_*? methods
     %w[exists? deleting? available? attached? in_use?].each do |state|
       define_method("volume_#{state}") do

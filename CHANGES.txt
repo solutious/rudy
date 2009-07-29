@@ -11,6 +11,7 @@ RUDY, CHANGES
 * TODO: look for config file in ./.rudy, then ../.rudy, etc... (git-like)
 * TODO: FIX: When shutting down, warns about disks even when they don't exist (CLI::Routines)
 * TODO: Investigate SSH daemon on Windows
+* TODO: Allow colons in place of dashes (rudy publish:gem)
 
 #### 0.9.0 (2009-07-XX) ###############################
 

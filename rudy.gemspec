@@ -55,7 +55,6 @@
   README.rdoc
   Rakefile
   Rudyfile
-  bin/ird
   bin/rudy
   bin/rudy-ec2
   bin/rudy-s3
@@ -74,6 +73,7 @@
   lib/rudy/aws/s3.rb
   lib/rudy/aws/sdb.rb
   lib/rudy/aws/sdb/error.rb
+  lib/rudy/backups.rb
   lib/rudy/cli.rb
   lib/rudy/cli/aws/ec2/addresses.rb
   lib/rudy/cli/aws/ec2/candy.rb
@@ -88,17 +88,22 @@
   lib/rudy/cli/aws/s3/store.rb
   lib/rudy/cli/aws/sdb/domains.rb
   lib/rudy/cli/aws/sdb/objects.rb
+  lib/rudy/cli/aws/sdb/select.rb
+  lib/rudy/cli/base.rb
   lib/rudy/cli/candy.rb
   lib/rudy/cli/config.rb
   lib/rudy/cli/disks.rb
+  lib/rudy/cli/execbase.rb
   lib/rudy/cli/machines.rb
   lib/rudy/cli/metadata.rb
   lib/rudy/cli/routines.rb
   lib/rudy/config.rb
   lib/rudy/config/objects.rb
+  lib/rudy/disks.rb
   lib/rudy/global.rb
   lib/rudy/guidelines.rb
   lib/rudy/huxtable.rb
+  lib/rudy/machines.rb
   lib/rudy/metadata.rb
   lib/rudy/metadata/backup.rb
   lib/rudy/metadata/disk.rb
@@ -111,7 +116,9 @@
   lib/rudy/routines/handlers/base.rb
   lib/rudy/routines/handlers/depends.rb
   lib/rudy/routines/handlers/disks.rb
+  lib/rudy/routines/handlers/group.rb
   lib/rudy/routines/handlers/host.rb
+  lib/rudy/routines/handlers/keypair.rb
   lib/rudy/routines/handlers/machines.rb
   lib/rudy/routines/handlers/script.rb
   lib/rudy/routines/handlers/user.rb
@@ -120,6 +127,17 @@
   lib/rudy/routines/shutdown.rb
   lib/rudy/routines/startup.rb
   lib/rudy/utils.rb
+  old-metadata/50_disk_old_tryouts.rb
+  old-metadata/backup.rb
+  old-metadata/backups.rb
+  old-metadata/debug.rb
+  old-metadata/disk.rb
+  old-metadata/disks.rb
+  old-metadata/machine.rb
+  old-metadata/machines.rb
+  old-metadata/metadata.rb
+  old-metadata/objectbase.rb
+  old-routines/routine-scraps.rb
   rudy.gemspec
   support/mailtest
   support/randomize-root-password
@@ -135,20 +153,30 @@
   tryouts/12_config/50_commands_tryouts.rb
   tryouts/12_config/60_routines_tryouts.rb
   tryouts/15_huxtable/10_huxtable_tryouts.rb
+  tryouts/15_huxtable/20_user_tryouts.rb
   tryouts/20_simpledb/10_domains_tryouts.rb
   tryouts/20_simpledb/20_objects_tryouts.rb
-  tryouts/25_ec2/00_setup_test.rb
-  tryouts/25_ec2/10_keypairs_test.rb
   tryouts/25_ec2/10_keypairs_tryouts.rb
-  tryouts/25_ec2/20_groups_test.rb
-  tryouts/25_ec2/30_addresses_test.rb
-  tryouts/25_ec2/40_volumes_test.rb
-  tryouts/25_ec2/50_snapshots_test.rb
-  tryouts/26_ec2_instances/00_setup_test.rb
-  tryouts/26_ec2_instances/10_instances_test.rb
-  tryouts/26_ec2_instances/50_images_test.rb
+  tryouts/25_ec2/20_groups_tryouts.rb
+  tryouts/25_ec2/21_groups_authorize_address_tryouts.rb
+  tryouts/25_ec2/22_groups_authorize_account_tryouts.rb
+  tryouts/25_ec2/30_addresses_tryouts.rb
+  tryouts/25_ec2/40_volumes_tryouts.rb
+  tryouts/25_ec2/50_snapshots_tryouts.rb
+  tryouts/26_ec2_instances/10_instance_tryouts.rb
+  tryouts/26_ec2_instances/50_images_tryouts.rb
+  tryouts/30_metadata/10_include_tryouts.rb
+  tryouts/30_metadata/13_object_tryouts.rb
   tryouts/30_metadata/50_disk_tryouts.rb
+  tryouts/30_metadata/51_disk_digest_tryouts.rb
+  tryouts/30_metadata/53_disk_list_tryouts.rb
+  tryouts/30_metadata/56_disk_volume_tryouts.rb
   tryouts/30_metadata/70_machine_tryouts.rb
+  tryouts/30_metadata/73_machine_list_tryouts.rb
+  tryouts/30_metadata/76_machine_instance_tryouts.rb
+  tryouts/30_metadata/77_machines_tryouts.rb
+  tryouts/40_routines/10_keypair_handler_tryouts.rb
+  tryouts/40_routines/11_group_handler_tryouts.rb
   tryouts/80_cli/10_rudyec2_tryouts.rb
   tryouts/80_cli/60_rudy_tryouts.rb
   tryouts/failer

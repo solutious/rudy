@@ -4,18 +4,9 @@ module Rudy
   module Metadata
     include Rudy::Huxtable
     
-    # Raised when trying to save a record with a key that already exists
-    class DuplicateRecord < Rudy::Error; end
-    class UnknownRecord < Rudy::Error; end
-    
     COMMON_FIELDS = [:region, :zone, :environment, :role].freeze
     
     @@rsdb   = nil
-    @@rvol   = nil
-    @@rinst  = nil 
-    @@radd   = nil
-    @@rkey   = nil 
-    @@rgrp   = nil
     @@domain = Rudy::DOMAIN
     
     #
@@ -152,7 +143,6 @@ module Rudy
     end
     
     def self.included(obj)
-      obj.extend Rudy::Metadata::ClassMethods
       obj.send :include, Rudy::Metadata::InstanceMethods
       
       # Add common storable fields. 
@@ -192,7 +182,7 @@ module Rudy
     end
     
     def destroy(force=false)
-      raise UnknownRecord, self.name unless self.exists?
+      raise UnknownObject, self.name unless self.exists?
       Rudy::Metadata.destroy self.name
       true
     end
@@ -200,7 +190,7 @@ module Rudy
     # Refresh the metadata object from SimpleDB. If the record doesn't 
     # exist it will raise an UnknownRecord error 
     def refresh!
-      raise UnknownRecord, self.name unless self.exists?
+      raise UnknownObject, self.name unless self.exists?
       h = Rudy::Metadata.get self.name
       return false if h.nil? || h.empty?
       obj = self.from_hash(h)

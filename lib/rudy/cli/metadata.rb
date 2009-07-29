@@ -22,7 +22,7 @@ module Rudy
       
       def metadata_delete_valid?
         raise "Must supply object ID" unless @argv.oid
-        raise UnknownObject, @argv.oid unless Rudy::Metadata.exists? @argv.oid
+        raise Rudy::Metadata::UnknownObject, @argv.oid unless Rudy::Metadata.exists? @argv.oid
         true
       end
       

@@ -12,7 +12,7 @@ module Rudy; module Routines; module Handlers;
        print_response(ret)
      rescue IOError => ex
        STDERR.puts "  Connection Error (#{ex.message})".color(:red)
-       choice = Annoy.get_user_input('(S)kip  (A)bort: ') || ''
+       choice = Annoy.get_user_input('(S)kip  (A)bort: ', nil, 3600) || ''
         if choice.match(/\AS/i)
           return
         #elsif choice.match(/\AR/i)

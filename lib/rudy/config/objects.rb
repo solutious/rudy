@@ -164,6 +164,7 @@ class Rudy::Config
     forced_hash :detach
     forced_hash :snapshot
     forced_hash :restore
+    forced_hash :format
     
     # Passthrough routines
     forced_hash :local              # Force hash b/c we want to 

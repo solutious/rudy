@@ -56,20 +56,17 @@ module AWS; module EC2;
     end
     def volumes_attach
       @option.device ||= "/dev/sdh"
-      raise "TODO"
-      rvol = Rudy::AWS::EC2::Volumes.new(@@global.accesskey, @@global.secretkey, @@global.region)
-      rinst = Rudy::AWS::EC2::Instances.new(@@global.accesskey, @@global.secretkey, @@global.region)
-      raise "Volume #{@argv.volid} does not exist" unless rvol.exists?(@argv.volid)
-      raise "Volume #{@argv.volid} is already attached" if rvol.attached?(@argv.volid)
-      raise "Instance #{@option.instance} does not exist" unless rinst.exists?(@option.instance)
+      raise "Volume #{@argv.volid} does not exist" unless Rudy::AWS::EC2::Volumes.exists?(@argv.volid)
+      raise "Volume #{@argv.volid} is already attached" if Rudy::AWS::EC2::Volumes.attached?(@argv.volid)
+      raise "Instance #{@option.instance} does not exist" unless Rudy::AWS::EC2::Instances.exists?(@option.instance)
       
       puts "Attaching #{@argv.volid} to #{@option.instance} on #{@option.device}"
       execute_check(:low)
       execute_action("Attach Failed") { 
-        rvol.attach(@argv.volid, @option.instance, @option.device) 
+        Rudy::AWS::EC2::Volumes.attach(@argv.volid, @option.instance, @option.device) 
       }
       
-      vol = rvol.get(@argv.volid)
+      vol = Rudy::AWS::EC2::Volumes.get(@argv.volid)
       puts @global.verbose > 1 ? vol.inspect : vol.dump(@@global.format)
     end
     
@@ -79,17 +76,15 @@ module AWS; module EC2;
     end
     
     def volumes_detach
-      rvol = Rudy::AWS::EC2::Volumes.new(@@global.accesskey, @@global.secretkey, @@global.region)
-      raise "Volume #{@argv.volid} does not exist" unless rvol.exists?(@argv.volid)
-      raise "TODO"
-      vol = rvol.get(@argv.volid)
+      raise "Volume #{@argv.volid} does not exist" unless Rudy::AWS::EC2::Volumes.exists?(@argv.volid)
+      vol = Rudy::AWS::EC2::Volumes.get(@argv.volid)
       raise "Volume #{vol.awsid} is not attached" unless vol.attached?
       
       puts "Detaching #{vol.awsid} from #{vol.instid}"
       execute_check(:medium)
-      execute_action("Detach Failed") { rvol.detach(vol.awsid) }
+      execute_action("Detach Failed") { Rudy::AWS::EC2::Volumes.detach(vol.awsid) }
       
-      vol = rvol.get(vol.awsid)
+      vol = Rudy::AWS::EC2::Volumes.get(vol.awsid)
       puts @global.verbose > 1 ? vol.inspect : vol.dump(@@global.format)
     end
     

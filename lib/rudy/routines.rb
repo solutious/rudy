@@ -99,7 +99,7 @@ module Rudy
         ret = bloc_party.call
       rescue => ex
         unless Rudy::Huxtable.global.parallel
-          STDERR.puts "  #{ex.class}: #{ex.message}".color(:red)
+          STDERR.puts "  #{ex.message}".color(:red)
           STDERR.puts ex.backtrace if Rudy.debug?
           choice = Annoy.get_user_input('(S)kip  (A)bort: ', nil, 3600) || ''
           if choice.match(/\AS/i)

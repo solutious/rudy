@@ -6,7 +6,7 @@ module Rudy::CLI
   class Base
     extend Drydock
     
-    debug :on
+    debug :off
     
     before do |obj|
       # Don't print Rudy header unless requested to

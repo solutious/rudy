@@ -32,6 +32,7 @@ class RudyCLI < Rudy::CLI::Base
   global :b, :bucket, String, "An S3 bucket name (used when creating images)"
   global :t, :testrun, "Test run. Don't execute action (EXPERIMENTAL)."
   global :P, :parallel, "Execute remote commands in parallel (EXPERIMENTAL)."
+  global :F, :force, "Force an action despite warnings"
   
   # ------------------------------------------  RUDY OBJECTS  --------
   # ------------------------------------------------------------------

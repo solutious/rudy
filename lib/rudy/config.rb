@@ -84,18 +84,18 @@ module Rudy
 
       unless File.exists?(Rudy::CONFIG_FILE)
         puts "Creating #{Rudy::CONFIG_FILE}"
-        rudy_config = Rudy::Utils.without_indent %Q{
-          accounts do                           # Account Access Indentifiers
-            aws do                              # amazon web services 
+        rudy_config = Rudy::Utils.without_indent %Q`
+          accounts {                           # Account Access Indentifiers
+            aws {                              # amazon web services 
               name "Rudy Default"
-              accountnum ""
-              accesskey ""
-              secretkey ""
+              accountnum "012345678912"
+              accesskey "ACCESSACCESS"
+              secretkey "SECRETSECRET"
               pkey "~/path/2/pk-xxxx.pem" 
               cert "~/path/2/cert-xxxx.pem"
-            end
-          end
-        }
+            }
+          }
+        `
         Rudy::Utils.write_to_file(Rudy::CONFIG_FILE, rudy_config, 'w', 0600)
       end
     end

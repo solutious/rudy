@@ -21,7 +21,7 @@ tryout "Disk Volume API" do
     if Rudy.debug?
       puts $/, "Rudy Debugging:"
       Rudy::Huxtable.logger.rewind
-      puts Rudy::Huxtable.logger.read
+      puts Rudy::Huxtable.logger.read unless Rudy::Huxtable.logger.closed_read?
     end
   end
   
@@ -41,7 +41,7 @@ tryout "Disk Volume API" do
   dream :nil?, false
   drill "refresh disk" do
     disk = Rudy::Disk.new '/sergeant/disk'
-    disk.refresh
+    disk.refresh!
     disk.volid
   end
   
@@ -52,14 +52,14 @@ tryout "Disk Volume API" do
   dream [true, false, false]
   drill "knows about the state of the volume" do
     disk = Rudy::Disk.new '/sergeant/disk'
-    disk.refresh
+    disk.refresh!
     [disk.volume_exists?, disk.volume_attached?, disk.volume_in_use?]
   end
   
   dream true
   drill "destroy disk with volume" do
     disk = Rudy::Disk.new '/sergeant/disk'
-    disk.refresh
+    disk.refresh!
     disk.destroy
   end
   

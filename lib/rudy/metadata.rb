@@ -157,14 +157,14 @@ module Rudy
       @position = position || @@global.position || '01'
       
       COMMON_FIELDS.each { |n|
-        ld "SETTING: #{n}: #{@@global.send(n)}"
+        ld "SETTING: #{n}: #{@@global.send(n)}" if @@global.verbose > 3
         instance_variable_set("@#{n}", @@global.send(n))
       }
       
       opts.each_pair do |n,v|
         raise "Unknown attribute for #{self.class}: #{n}" if !self.has_field? n
         next if v.nil?
-        ld "RESETTING: #{n}: #{v}"
+        ld "RESETTING: #{n}: #{v}" if @@global.verbose > 3
         self.send("#{n}=", v)
       end
       

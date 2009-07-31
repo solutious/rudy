@@ -22,7 +22,7 @@ tryout "Disk API" do
     if Rudy.debug?
       puts $/, "Rudy Debugging:"
       Rudy::Huxtable.logger.rewind
-      puts Rudy::Huxtable.logger.read
+      puts Rudy::Huxtable.logger.read unless Rudy::Huxtable.logger.closed_read?
     end
   end
   
@@ -96,7 +96,7 @@ tryout "Disk API" do
   drill "refresh disk metadata" do
     d = Rudy::Disk.new('/any/path')
     d.mounted = true
-    d.refresh
+    d.refresh!
     d
   end
   

@@ -4,10 +4,14 @@ group "Rudy::Huxtable"
 library :rudy, 'lib'
 
 tryout "Is well kept" do
+  set :oldlogger, Rudy::Huxtable.logger
   setup do
     #Rudy::Huxtable.update_config
   end
-
+  clean do
+    Rudy::Huxtable.update_logger oldlogger
+  end
+  
   drill "has config", Rudy::Huxtable.config, :class, Rudy::Config
   drill "has global", Rudy::Huxtable.global, :class, Rudy::Global 
   drill "has logger", Rudy::Huxtable.logger, :class, StringIO

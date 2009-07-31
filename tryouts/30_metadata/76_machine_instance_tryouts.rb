@@ -22,7 +22,7 @@ tryout "Rudy::Machine Instance API" do
     if Rudy.debug?
       puts $/, "Rudy Debugging:"
       Rudy::Huxtable.logger.rewind
-      puts Rudy::Huxtable.logger.read
+      puts Rudy::Huxtable.logger.read unless Rudy::Huxtable.logger.closed_read?
     end
   end
 
@@ -42,21 +42,21 @@ tryout "Rudy::Machine Instance API" do
   dream :nil?, false
   drill "refresh machine" do
     mach = Rudy::Machine.new '02'
-    mach.refresh
+    mach.refresh!
     mach.instid
   end
   
   dream [true, true]
   drill "knows about the state of the instance" do
     mach = Rudy::Machine.new '02'
-    mach.refresh
+    mach.refresh!
     [mach.instance_exists?, mach.instance_running?]
   end
   
   dream true
   drill "destroy machine with instance" do
     mach = Rudy::Machine.new '02'
-    mach.refresh
+    mach.refresh!
     mach.destroy
   end
   

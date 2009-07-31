@@ -24,7 +24,7 @@ tryout "List Machines" do
     if Rudy.debug?
       puts $/, "Rudy Debugging:"
       Rudy::Huxtable.logger.rewind
-      puts Rudy::Huxtable.logger.read
+      puts Rudy::Huxtable.logger.read unless Rudy::Huxtable.logger.closed_read?
     end
   end
   

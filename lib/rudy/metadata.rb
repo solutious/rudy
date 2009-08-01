@@ -146,7 +146,7 @@ module Rudy
       obj.send :include, Rudy::Metadata::InstanceMethods
       
       # Add common storable fields. 
-      [*COMMON_FIELDS, :position].each do |n|
+      [COMMON_FIELDS, :position].flatten.each do |n|
         obj.field n
       end
       

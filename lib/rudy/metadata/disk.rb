@@ -91,6 +91,13 @@ module Rudy
       self
     end
     
+    def archive
+      raise Rudy::AWS::EC2::VolumeNotAvailable, @volid unless volume_attached?
+      back = Rudy::Backup.new @position, @path, self.descriptors
+      back.create
+      back
+    end
+    
     def destroy(force=false)
       if @volid && !volume_deleting?
         if !force
@@ -104,6 +111,12 @@ module Rudy
       end
       super() # quotes, otherwise Ruby will send this method's args
     end
+    
+    def descriptors
+      super :position, :path
+    end
+    
+    
     
     def valid?
       !@path.nil? && !@path.empty?

@@ -13,7 +13,7 @@ module Rudy
         # If there are no disks currently, there could be backups
         # so we grab those to create a list of disks. 
         if @option.backups
-          backups = Rudy::Backup.list(more, less) || []
+          backups = Rudy::Backups.list(more, less) || []
           backups.each_with_index do |b, index|
             disk_list << b.disk
           end
@@ -34,9 +34,9 @@ module Rudy
       end
       
       def disks_wash
-        dirt = (Rudy::Disks.list || []).select { |d| d.volume_exists? }
+        dirt = (Rudy::Disks.list || []).select { |d| !d.volume_exists? }
         if dirt.empty?
-          puts "Nothing to wash in #{rdisk.current_machine_group}"
+          puts "Nothing to wash in #{current_machine_group}"
           return
         end
         

@@ -61,7 +61,15 @@ class RudyCLI < Rudy::CLI::Base
   option :l, :all, "Display all disks"
   command :disks => Rudy::CLI::Disks
   command_alias :disks, :d
-  
+
+  about "View Backups"
+  usage "rudy backups"
+  usage "rudy backups -l"
+  action :W, :wash, "Wash backups metadata."
+  option :l, :all, "Display all backups"
+  command :backups => Rudy::CLI::Backups
+  command_alias :backups, :b
+
   about "View raw metadata"
   usage "rudy metadata"
   usage "rudy metadata -l -r [disk|back|m]"

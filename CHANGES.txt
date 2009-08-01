@@ -27,6 +27,7 @@ NOTE: This is a significant re-write from 0.8 (routines, metadata)
 * CHANGE: Reduced Rudy::AWS#execute_request timeout to 15 seconds.
 * CHANGE: Rudy:Disks, Rudy::Machines, and Rudy::Backups now use class methods
 * CHANGE: Rudy::AWS::EC2 now uses class methods
+* CHANGE: Renamed disk action 'snapshot' to 'archive'
 * ADDED: routines command for displaying available routines
 * ADDED: "rudy init" now authorizes public keys for user@localhost
 * ADDED: Parallel processing for remote machines
@@ -35,6 +36,7 @@ NOTE: This is a significant re-write from 0.8 (routines, metadata)
 * ADDED: Dependency Attic 0.4
 * ADDED: New 'objects' and 'query' commands for rudy-sdb
 * ADDED: Execute routines on individual machines in a group
+* ADDED: rudy backups command
 
 * TODO: Update gemspec
 

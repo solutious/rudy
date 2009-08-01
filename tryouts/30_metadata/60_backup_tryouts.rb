@@ -89,15 +89,13 @@ tryout "Backup API" do
   drill "raises exception when disk doesn't exist" do
     Rudy::Backup.new(1, '/no/such/disk').create
   end
-    
-  drill "destroy metadata", [true, true] do
-    back = Rudy::Backup.new(1, '/any/path', :created => sample_time)
-    a = back.disk.destroy
-    b = back.destroy
-    [true, true]
+  
+  drill "destroy all backups", false do
+    Rudy::Backups.list.each { |b| b.destroy }
+    Rudy::Backups.any?
   end
   
-  xdrill "destroy a domain (#{test_domain})" do
+  xdrill "destroy a domain (#{test_domain})", true do
     Rudy::Metadata.destroy_domain test_domain
   end
 end

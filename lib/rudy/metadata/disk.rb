@@ -87,7 +87,7 @@ module Rudy
       vol = Rudy::AWS::EC2::Volumes.create(size || @size, zone || @zone, snapshot) 
       #vol = Rudy::AWS::EC2::Volumes.list(:available).first   # debugging
       @volid, @raw = vol.awsid, true
-      self.save
+      self.save :replace
       self
     end
     

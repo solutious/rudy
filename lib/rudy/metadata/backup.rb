@@ -13,6 +13,12 @@ module Rudy
     field :path
     
     field :created => Time
+    field :year
+    field :month
+    field :day
+    field :hour
+    field :minute
+    field :second
     
     field :user
     field :size
@@ -53,6 +59,12 @@ module Rudy
     
     def postprocess
       @position &&= @position.to_s.rjust(2, '0')
+      @year = @created.year
+      @month = @created.month.to_s.rjust(2, '0')
+      @day = @created.mday.to_s.rjust(2, '0')
+      @hour = @created.hour.to_s.rjust(2, '0')
+      @minute = @created.min.to_s.rjust(2, '0')
+      @second = @created.sec.to_s.rjust(2, '0')
     end
     
     def to_s(with_titles=true)
@@ -69,25 +81,52 @@ module Rudy
       super [dirs, date, time, second]
     end
     
+    def date
+      "%s%s%s" % [@year, @month, @day]
+    end
+    
+    def time
+      "%s%s" % [@hour, @minute]
+    end
+    
     def create
-      disk = self.disk
       raise DuplicateRecord, self.name if exists?
+      disk = self.disk
+      ld "DISK: #{disk.name}"
       raise Rudy::Backups::NoDisk, disk.name unless disk.exists?
       @volid ||= disk.volid
-      snap = Rudy::AWS::EC2::Snapshot.create(@volid) 
+      snap = Rudy::AWS::EC2::Snapshots.create(@volid) 
       #snap = Rudy::AWS::EC2::Snapshots.list.first   # debugging
+      ld "SNAP: #{snap.inspect}"
       @snapid, @raw = snap.awsid, true
-      self.save
+      self.save :replace
       self
+    end
+    
+    def restore
+      raise UnknownObject, self.name unless exists?
+      raise Rudy::Backups::NoBackup, self.name unless any?
+      
+    end
+    
+    # Are there any backups for the associated disk?
+    def any?
+      backups = Rudy::Backups.list self.descriptors, [:year, :month, :day, :hour, :second]
+      !backups.nil?
+    end
+    
+    def descriptors
+      super :position, :path, :year, :month, :day, :hour, :second
+    end
+    
+    def destroy 
+      Rudy::AWS::EC2::Snapshots.destroy(@snapid) if snapshot_exists?
+      super()
     end
     
     def valid?
       !@path.nil? && !@path.empty? && @created.is_a?(Time) && !@volid.nil?
     end
-    
-    def date;    @created.strftime '%Y%m%d'; end
-    def time;    @created.strftime '%H%M';   end
-    def second;  @created.strftime '%S';     end
     
     def disk
       opts = {

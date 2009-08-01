@@ -50,6 +50,7 @@ module Rudy
       Rudy::Huxtable.ld "DESTROY: #{n}" if Rudy.debug?
       @@rsdb.destroy_domain n
       @@domain = Rudy::DOMAIN
+      true
     end
     
     # Get a record from SimpleDB with the key +n+
@@ -98,8 +99,10 @@ module Rudy
       fields[:position] = @@global.position unless @@global.position.nil?
       names = Rudy::Metadata::COMMON_FIELDS
       values = names.collect { |n| @@global.send(n.to_sym) }
-      criteria = Hash[names.zip(values)].merge(fields)
+      mixer = names.zip(values).flatten
+      criteria = Hash[*mixer].merge(fields)
       criteria.reject! { |n,v| less.member?(n) }
+      Rudy::Huxtable.ld "CRITERIA: #{criteria.inspect}"
       criteria
     end
     
@@ -116,11 +119,11 @@ module Rudy
           obj = self.from_hash r
           records << obj
         end
-        records
+        records.sort { |a,b| a.name <=> b.name }
       end
 
       def list_as_hash(fields={}, less=[], &block)
-        fields = Rudy::Metadata.build_criteria fields, less
+        fields = Rudy::Metadata.build_criteria self::RTYPE, fields, less
         records_raw, records = Rudy::Metadata.select(fields), {}
         return nil if records_raw.nil? || records_raw.empty?
         records_raw.each_pair do |p, r|
@@ -129,6 +132,11 @@ module Rudy
         end
         records
       end
+      
+      def any?(fields={}, less=[])
+        !list(fields, less).nil?
+      end
+      
     end
     
     # All classes which include Rudy::Metadata must reimplement
@@ -187,8 +195,20 @@ module Rudy
       true
     end
     
+    def descriptors(*additional)
+      criteria = {
+        :region => @region,  :zone => @zone,
+        :environment => @environment, :role => @role
+      }
+      additional.each do |att|
+        criteria[att] = self.send(att)
+      end
+      ld "DESCRIPTORS: #{criteria.inspect} (#{additional})"
+      criteria
+    end
+    
     # Refresh the metadata object from SimpleDB. If the record doesn't 
-    # exist it will raise an UnknownRecord error 
+    # exist it will raise an UnknownObject error 
     def refresh!
       raise UnknownObject, self.name unless self.exists?
       h = Rudy::Metadata.get self.name

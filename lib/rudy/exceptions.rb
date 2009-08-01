@@ -89,6 +89,7 @@ module Rudy
   
   module Backups
     class NoDisk < Rudy::Error; end
+    class NoBackup < Rudy::Error; end
   end
   
 end

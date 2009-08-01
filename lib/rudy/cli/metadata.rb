@@ -15,11 +15,11 @@ module Rudy
           h = Rudy::Metadata.get(@argv.first)
           return if h.nil?
           @metaobj = Rudy::Metadata.get_rclass h['rtype'].first
-          objlist = [@metaobj.from_hash(h)]
+          objlist = Hash[@argv.first => @metaobj.from_hash(h)]
         else
           more, less = {}, []
           less = [:environment, :role, :zone, :region, :position] if @option.all
-          objlist = @metaobj.list_as_hash(more, less) || []
+          objlist = @metaobj.list_as_hash(more, less) || {}
         end
         
         objlist.each_pair do |k,o|

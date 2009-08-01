@@ -27,22 +27,50 @@ tryout "Backup Snapshot API" do
     end
   end
   
+  dream :class, Rudy::Disk
+  drill "Creates disk object with volume" do
+    b = Rudy::Backup.new(1, '/any/path', :created => sample_time)
+    b.disk.create
+  end
+  
   dream :class, String
   dream :empty?, false
   drill "refreshes associated disk object" do
-    d = Rudy::Disk.new(1, '/any/path')
-    d.create
     b = Rudy::Backup.new(1, '/any/path', :created => sample_time)
-    b.save
     b.disk.volid
   end
   
-  drill "destroy metadata", [true, true] do
-    back = Rudy::Backup.new(1, '/any/path', :created => sample_time)
-    a = back.disk.destroy
-    b = back.destroy
-    [true, true]
+  dream :class, String
+  dream :empty?, false
+  drill "create backups with snapshot" do
+    b = Rudy::Backup.new(1, '/any/path', :created => sample_time)
+    b.create
+    b.snapid
   end
   
+  dream :any?, true
+  drill "knows when there's at least one backup" do
+    Rudy::Backup.new(1, '/any/path')
+  end
+  
+  dream :any?, false
+  drill "knows when there are no backups" do
+    Rudy::Backup.new(1, '/no/such/path')
+  end
+  
+  drill "destroy disk", true do
+    back = Rudy::Backup.new(1, '/any/path', :created => sample_time)
+    back.disk.destroy
+  end
+  
+  xdrill "destroy backup", true do
+    back = Rudy::Backup.new(1, '/any/path', :created => sample_time)
+    back.destroy
+  end
+  
+  drill "destroy all backups", false do
+    Rudy::Backups.list.each { |b| b.destroy }
+    Rudy::Backups.any?
+  end
   
 end

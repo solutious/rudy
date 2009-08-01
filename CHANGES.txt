@@ -1,49 +1,31 @@
 RUDY, CHANGES
 
-* TODO: Supply dns values in machines config
-* TODO: Rudy::Routines::Arcade. 
-  * install/uninstall: uses package management for the specific os impl
-  * compile: from source. 
-  * e.g. rudy -a experimental install git (for ruby-unix-osx)
-  * How to handle multiple package managers?
-  * How to handle multiple app versions? 
-* TODO: http://opensoul.org/2009/6/24/capistrano-git-and-ssh-keys
-* TODO: look for config file in ./.rudy, then ../.rudy, etc... (git-like)
-* TODO: FIX: When shutting down, warns about disks even when they don't exist (CLI::Routines)
-* TODO: Investigate SSH daemon on Windows
-* TODO: Allow colons in place of dashes (rudy publish:gem)
 
 #### 0.9.0 (2009-07-XX) ###############################
 
 NOTE: This is a significant re-write from 0.8 (routines, metadata)
 
-* FIXED: Routine blocks now process directives in the order their given 
-  (in Ruby 1.8 and 1.9). 
-* FIXED: Ambiguity when specifying zone and region. Region is now based 
-  on the zone. 
+* FIXED: Routine blocks now process directives in the order their given (in Ruby 1.8 and 1.9). 
+* FIXED: Region is now based on the zone. Corrects ambiguity when specifying zone and region.
 * FIXED: Reboot routines are now fully supported
-* FIXED: Unless position (-p) is specified, it's assumed that a command 
-  applies to the entire machine group. 
-* CHANGE: Rudy::Machine.inspect now prints in a standard Ruby inspect format
-* CHANGE: Routines have been completely rebuilt but should remain 
-  backwards compatible. 
-* CHANGE: Now requires Rye 0.8 (pre_command_hook args change, parallel 
-  stuff, quietly)
+* FIXED: Unless position (-p) is specified, it's assumed that a command applies to the entire machine group. 
+* CHANGE: Rudy::Machine#inspect now prints in a standard Ruby inspect format
+* CHANGE: Routines have been completely rebuilt
+* CHANGE: Now requires Rye 0.8
 * CHANGE: before / after routine actions are now used for dependencies only.
-* CHANGE: Removed script_local, after_local, before_local from passthrough 
-  routines syntax.
+* CHANGE: Removed script_local, after_local, before_local from passthrough routines
 * CHANGE: Support before_local for startup routines
 * CHANGE: Support before_local and before_remote for reboot routines
 * CHANGE: Support after_local for shutdown routines
 * CHANGE: Removed machines config (now recommend uploading local files)
 * CHANGE: Group names now take the form: grp-us-east-1b-stage-app
-* CHANGE: private keys are stored in ~/.ssh/
+* CHANGE: private keys are now stored in ~/.ssh/
 * CHANGE: Removed create_image and prepare_image actions from rudy-ec2
 * CHANGE: local routine blocks now share a single Rye::Box instance
 * CHANGE: remote routine blocks now share a single Rye::Set instance
 * CHANGE: "privatekey" in accounts config is renamed to "pkey"
 * CHANGE: Reduced Rudy::AWS#execute_request timeout to 15 seconds.
-* CHANGE: Removed Rudy:Disks, Rudy::Machines, and Rudy::Backups now use class methods
+* CHANGE: Rudy:Disks, Rudy::Machines, and Rudy::Backups now use class methods
 * CHANGE: Rudy::AWS::EC2 now uses class methods
 * ADDED: routines command for displaying available routines
 * ADDED: "rudy init" now authorizes public keys for user@localhost
@@ -54,9 +36,6 @@ NOTE: This is a significant re-write from 0.8 (routines, metadata)
 * ADDED: New 'objects' and 'query' commands for rudy-sdb
 * ADDED: Execute routines on individual machines in a group
 
-* TODO: Annoy.are_you_sure still times out quickly
-* TODO: Re-enable disk routines. 
-* TODO: Supply machines config to routines blocks with only the specific machine group context 
 * TODO: Update gemspec
 
 
@@ -288,7 +267,21 @@ NOTE: This is a complete re-write from 0.1
 * ADDED: "rudy groups" overhaul. Display, creates, destroys groups. 
 
 
-
 #### 0.1 (2009-02-06) ###############################
 
 * Initial public release
+
+
+* TODO: Supply dns values in machines config
+* TODO: Rudy::Routines::Arcade. 
+  * install/uninstall: uses package management for the specific os impl
+  * compile: from source. 
+  * e.g. rudy -a experimental install git (for ruby-unix-osx)
+  * How to handle multiple package managers?
+  * How to handle multiple app versions? 
+* TODO: http://opensoul.org/2009/6/24/capistrano-git-and-ssh-keys
+* TODO: look for config file in ./.rudy, then ../.rudy, etc... (git-like)
+* TODO: FIX: When shutting down, warns about disks even when they don't exist (CLI::Routines)
+* TODO: Investigate SSH daemon on Windows
+* TODO: Allow colons in place of dashes (rudy publish:gem)
+* TODO: Supply machines config to routines blocks with only the specific machine group context 

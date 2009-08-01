@@ -25,6 +25,9 @@ module Rudy::Routines::Handlers;
     
     
     def execute(type, routine, rset, lbox, argv=nil)
+      original_user = rset.user
+      rset.add_key user_keypairpath('root')
+      rset.switch_user 'root'
       
       # We need to add mkfs since it's not enabled by default. 
       # We prepend the command with rudy_ so we can delete it. 
@@ -50,6 +53,7 @@ module Rudy::Routines::Handlers;
       
       Rye::Cmd.remove_command(:rudy_mkfs)
       
+      rset.switch_user original_user
     end
     
 

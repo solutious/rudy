@@ -58,7 +58,7 @@ module Rudy; module Routines;
       # we'll just grab the list of machines in this group. 
       # NOTE: Expect errors if there are no machines.
       Rudy::Routines.rescue {
-        @machines = run? ? Rudy::Machines.create : Rudy::Machines.list
+        @machines = run? ? Rudy::Machines.list : Rudy::Machines.list
         @@rset = create_rye_set @machines unless defined?(@@rset)
       }
       
@@ -72,7 +72,6 @@ module Rudy; module Routines;
       # This is important b/c the machines will not 
       # have DNS info until after they are running. 
       Rudy::Routines.rescue { Rudy::Routines::Handlers::Host.update_dns @@rset }
-      
       Rudy::Routines.rescue {
         if !Rudy::Routines::Handlers::Host.is_available? @@rset
           a = @@rset.boxes.select { |box| !box.stash.available? }
@@ -108,7 +107,7 @@ module Rudy; module Routines;
       
       # If this is a testrun, we don't create instances anyway so
       # it doesn't matter if there are already instances running.
-      if run?
+      if run? && !@@global.force
         if @@global.position.nil?
           raise MachineGroupAlreadyRunning, current_machine_group if Rudy::Machines.running?
           raise MachineGroupMetadataExists, current_machine_group if Rudy::Machines.exists?

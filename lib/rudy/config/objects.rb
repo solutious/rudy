@@ -162,7 +162,7 @@ class Rudy::Config
     forced_hash :mount
     forced_hash :attach
     forced_hash :detach
-    forced_hash :snapshot
+    forced_hash :archive
     forced_hash :restore
     forced_hash :format
     

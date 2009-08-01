@@ -4,7 +4,7 @@ module Rudy::Routines::Handlers;
     include Rudy::Routines::Handlers::Base
     extend self
     
-    ACTIONS = [:create, :destroy, :snapshot, :mount, :restore,
+    ACTIONS = [:create, :destroy, :archive, :mount, :restore,
                :attach, :detach, :mount, :umount].freeze
     
     Rudy::Routines.add_handler :disks, self
@@ -191,17 +191,14 @@ module Rudy::Routines::Handlers;
       disk.destroy
     end
     
-    
-    def snapshot(rbox, disk)
-      raise NotImplemented
+    def archive(rbox, disk)
       raise Rudy::Metadata::UnknownObject, disk.name unless disk.exists?
       disk.refresh!
       
       raise Rudy::Disks::NotAttached, disk.name if !disk.volume_attached?
       
-      back = disk.backup
+      back = disk.archive
       puts "Created backup: #{back.name}"
-
     end
     
     def restore(rbox, disk)

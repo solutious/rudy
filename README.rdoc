@@ -2,28 +2,18 @@
 
 <b>Not your grandparents' EC2 deployment tool.</b>
 
-Rudy is a command-line development and deployment tool for Amazon Web Services. It helps you build and manage machines in EC2 by organizing them into groups of _environments_ and _roles_. These are called _machine_ _groups_. <tt>stage</tt> is the default environment and <tt>app</tt> is the default role. You can run multiple machines with the same role. These are called _positions_. Rudy also supports running machine groups across availability _zones_. 
+Rudy is a development and deployment tool for Amazon Web Services. It helps you build and infrastructures in EC2 by organizing them into groups of _zones_,  _environments_, and _roles_. You can run multiple machines with the same role. When you put all this together, you have a unique name for every machine. The default machine is called <tt>m-us-east-1b-stage-app-01</tt> but you can also give them custom names. 
 
-When you put all this together, you have a unique name for every machine. The default machine is:
+All configuration is organized into the zones, environments, and roles that you specify (Rudy assumes positions are identical which is important for backups and scaling). And as you'd expect, the defaults can be changed too.
 
-             zone     env  role
-              v        v    v   
-        m-us-east-1b-stage-app-01
-        ^                       ^
-    "machine"               "position"
-
-All configuration is organized into the zones, environments, and roles that you specify (Rudy assumes positions are identical which is important for backups and scaling). And as you'd expect, the defaults can be changed too (in <tt>~/.rudy/config</tt>).
-
-<b>See Getting-Started[http://solutious.com/products/rudy/getting-started.html] for more info.</b>
+<b>See Getting-Started[http://solutious.com/products/rudy/getting-started/] for more info.</b>
 
 
 == Project Status
 
 <em>This is a BETA release. That means Rudy's not ready for production use! See Project-Status[http://wiki.github.com/solutious/rudy/project-status].</em>
 
-This is a major release with many internal and external changes from previous releases. Use it, break it, fork it, go bizonkers! I could use all the testing help I can get. 
-
-I'm currently rebuilding[http://github.com/solutious/rudy/tree/metadata-refactor] the metadata implementation. This is the part of Rudy that stores your machine, disk, and backup infoz in SimpleDB so it's pretty important! The implementation in the 0.8.4 release (and this master branch) are functional but frail so I want to re-emphasize not to use Rudy for production right now.
+The 0.9 release has many changes from previous releases. Use it, break it, fork it!
 
 
 == Configuration
@@ -32,13 +22,13 @@ I'm currently rebuilding[http://github.com/solutious/rudy/tree/metadata-refactor
 
 The machines configuration describes the "physical" characteristics of your infrastructure. 
 
-    env :stage do         # Define an environment
+    env :stage do                   # Define an environment
       ami 'ami-e348af8a'         
                              
-      role :app do        # Define a role
-        addresses '11.22.33.44'  # Use elastic IPs
+      role :app do                  # Define a role
+        addresses '11.22.33.44'     # Use elastic IPs
                              
-        disks do          # Create EBS volumes
+        disks do                    # Define EBS volumes
           path "/rudy/disk1" do  
             size 100             
             device "/dev/sdr"     
@@ -51,17 +41,17 @@ The machines configuration describes the "physical" characteristics of your infr
 
 The routines configuration describes repeatable processes that you can execute on your machines. 
 
-    startup do            # $ rudy startup
+    startup do                      # $ rudy startup
       adduser :rudy       
-      authorize :rudy     # Enable passwordless login
+      authorize :rudy               # Enable passwordless login
                              
-      disks do                   # Create a disk 
-        restore "/rudy/disk1"    # from a backup
+      disks do                   
+        create "/rudy/disk1"        # Create a disk 
       end                       
                             
-      remote :rudy do     # Run remote SSH commands
-        mkdir :p, "great"        # $ mkdir -p great
-        touch "great/scott"      # $ touch great/scott
+      remote :rudy do               # Run remote commands via SSH
+        mkdir :p, "great"           # $ mkdir -p great
+        touch "great/scott"         # $ touch great/scott
         mysql_init :start 
       end                          
     end
@@ -70,15 +60,15 @@ The routines configuration describes repeatable processes that you can execute o
 
 == Features
 
-* Create complex environments with a single command
+* Create complex IT infrastructures from a simple configuration
   * Launch multiple instances 
   * Assign elastic IP addresses
   * Create EBS volumes, attach to instances, format, and mount
-  * Run scripts locally and remotely automatically
+* Run SSH commands on machine groups in parallel
 * Organize instances into environments and roles
 * Powerful command-line tools
   * <tt>$ rudy -u root ssh</tt>
-  * <tt>$ rudy -e testing -r database startup</tt>
+  * <tt>$ rudy -e testing -r database backup-mysql</tt>
 * Use _any Linux_ Amazon machine image (AMI) (partial Solaris support)
 * Complete command-line interface for EC2. See <tt>bin/rudy-ec2</tt>.
 
@@ -95,7 +85,7 @@ or via download:
 
 NOTE: <em>If you are not installing via RubyGems, you need to make sure the dependencies are in your LOAD_PATH (<tt>$:</tt>). Ryan Tomayko wrote a gist[http://gist.github.com/54177] about it.</em>
 
-<b>See Getting-Started[http://solutious.com/products/rudy/getting-started.html] for more info.</b>
+<b>See Getting-Started[http://solutious.com/products/rudy/getting-started/] for more info.</b>
 
 
 == Pre-Requisites
@@ -104,8 +94,9 @@ NOTE: <em>If you are not installing via RubyGems, you need to make sure the depe
   * EC2[http://aws.amazon.com/ec2/]
   * SimpleDB[http://aws.amazon.com/simpledb/]
   * S3[http://aws.amazon.com/s3/]
+* OpenSSL[http://www.openssl.org/]
 * OpenSSH[http://www.openssh.com/]
-* Ruby[http://ruby-lang.org] 1.8.x, 1.9.x, or JRuby[http://jruby.codehaus.org] 1.2
+* Ruby[http://ruby-lang.org] 1.8.x, 1.9.x, or JRuby[http://jruby.codehaus.org] 1.3
   * Net::SSH[http://net-ssh.rubyforge.org/]
   * Net::SCP[http://net-ssh.rubyforge.org/]
   * amazon-ec2[http://github.com/grempe/amazon-ec2]
@@ -113,6 +104,7 @@ NOTE: <em>If you are not installing via RubyGems, you need to make sure the depe
   * Rye[http://github.com/delano/rye]
   * Drydock[http://github.com/delano/drydock]
   * Caesars[http://github.com/delano/caesars]
+  * Gibbler[http://github.com/delano/gibbler]
 
 
 == More Info
@@ -122,7 +114,7 @@ NOTE: <em>If you are not installing via RubyGems, you need to make sure the depe
 * Submit issues to the IssueTracker[http://github.com/solutious/rudy/issues]
 * Start a discussion on the GoogleGroup[http://groups.google.com/group/rudy-deployment]
 * Find some Inspiration[http://www.youtube.com/watch?v=CgaiIW5Rzes]
-* For all other inquires, email me directly: delano@solutious.com
+* For all other inquires, email me directly: delano (@solutious.com)
 
 
 == Thanks
@@ -144,10 +136,8 @@ NOTE: <em>If you are not installing via RubyGems, you need to make sure the depe
 
 == Contributions
 
-I'm very open to contributions! 
-
 * For bigger features please fork the git repo and send me a pull request. 
-* For small or single file changes, send me an email with the details: <tt>delano@solutious.com</tt>
+* For small or single file changes, send me an email with the details: Delano (@solutious.com)
 
 
 == Credits

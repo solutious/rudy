@@ -8,6 +8,9 @@ tryouts "include Rudy::Metadata" do
     Rudy::Huxtable.global.offline = true
     Rudy::Huxtable.update_config          # Read config files
   end
+  clean do
+    Rudy::Huxtable.global.offline = false
+  end
   
   drill "has default domain", Rudy::DOMAIN do
     Rudy::Metadata.domain

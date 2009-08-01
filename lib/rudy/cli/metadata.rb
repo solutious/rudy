@@ -11,12 +11,19 @@ module Rudy
       end
       
       def metadata
-        more, less = {}, []
-        less = [:environment, :role, :zone, :region, :position] if @option.all
-
-        objlist = @metaobj.list(more, less) || []
-        objlist.each do |o|
-          puts "#{o}: " << o.inspect
+        unless @argv.empty?
+          h = Rudy::Metadata.get(@argv.first)
+          return if h.nil?
+          @metaobj = Rudy::Metadata.get_rclass h['rtype'].first
+          objlist = [@metaobj.from_hash(h)]
+        else
+          more, less = {}, []
+          less = [:environment, :role, :zone, :region, :position] if @option.all
+          objlist = @metaobj.list_as_hash(more, less) || []
+        end
+        
+        objlist.each_pair do |k,o|
+          puts "#{k}: " << o.inspect
         end
       end
       

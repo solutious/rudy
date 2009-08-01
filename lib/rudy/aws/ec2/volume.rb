@@ -164,6 +164,8 @@ module Rudy::AWS
       def exists?(vol_id)
         vol_id = Volumes.get_vol_id(vol_id)
         vol = get(vol_id)
+        return false if vol.nil?
+        return false if vol.deleting?
         !vol.nil?
       end
     

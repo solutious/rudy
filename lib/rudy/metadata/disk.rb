@@ -62,6 +62,7 @@ module Rudy
     
     # sdb values are stored as strings. Some quick conversion. 
     def postprocess
+      @position &&= @position.to_s.rjust(2, '0')
       @size &&= @size.to_i
       @raw = true if @raw == "true" unless @raw.is_a?(TrueClass)
       @mounted = (@mounted == "true") unless @mounted.is_a?(TrueClass)
@@ -73,19 +74,16 @@ module Rudy
     
     def name
       sep = File::SEPARATOR
-      if Rudy.sysinfo.os == :unix
-        dirs = @path.split sep if @path && !@path.empty?
-        unless @path == File::SEPARATOR
-          dirs.shift while dirs && (dirs[0].nil? || dirs[0].empty?)
-        end
-        super *dirs  # Calls Rudy::Metadata.name with disk specific components
-      else
-        raise UnsupportedOS, "Disks are not available for #{Rudy.sysinfo.os}"
+      dirs = @path.split sep if @path && !@path.empty?
+      unless @path == File::SEPARATOR
+        dirs.shift while dirs && (dirs[0].nil? || dirs[0].empty?)
       end
+      # Calls Rudy::Metadata#name with disk specific components
+      super *dirs  
     end
     
     def create(size=nil, zone=nil, snapshot=nil)
-      raise "#{self.name} already exists" if exists?
+      raise DuplicateRecord, self.name if exists?
       vol = Rudy::AWS::EC2::Volumes.create(size || @size, zone || @zone, snapshot) 
       #vol = Rudy::AWS::EC2::Volumes.list(:available).first   # debugging
       @volid, @raw = vol.awsid, true

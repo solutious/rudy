@@ -105,6 +105,11 @@ module Rudy::AWS
         !get(snap_id).nil?
       end
       
+      def completed?(id)
+        s = get(snap_id)
+        return false if s.nil?
+        s.completed?
+      end
     end
     
   end

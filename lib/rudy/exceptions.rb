@@ -87,4 +87,8 @@ module Rudy
     class InUse < Rudy::Error; end
   end
   
+  module Backups
+    class NoDisk < Rudy::Error; end
+  end
+  
 end

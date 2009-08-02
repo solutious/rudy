@@ -51,7 +51,7 @@ module Rudy
   unless defined? Rudy::DOMAIN # We can assume all constants are defined
     
     @@quiet = false
-    @@yes = false
+    @@auto = false
     @@debug = false
     @@sysinfo = SysInfo.new.freeze
     
@@ -100,9 +100,9 @@ module Rudy
   def Rudy.enable_quiet; @@quiet = true; end
   def Rudy.disable_quiet; @@quiet = false; end
   
-  def Rudy.yes?; @@yes == true; end
-  def Rudy.enable_yes; @@yes = true; end
-  def Rudy.disable_yes; @@yes = false; end
+  def Rudy.auto?; @@auto == true; end
+  def Rudy.enable_auto; @@auto = true; end
+  def Rudy.disable_auto; @@auto = false; end
   
   def Rudy.debug?; @@debug == true; end
   def Rudy.enable_debug; @@debug = true; end

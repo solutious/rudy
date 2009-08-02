@@ -15,7 +15,7 @@ tryout "Rudy Initialization" do
   drill             "has sysinfo", Rudy.sysinfo, :class, SysInfo
   drill       "debug is disabled", Rudy.debug?, false
   drill       "quiet is disabled", Rudy.quiet?, false
-  drill    "auto-yes is disabled", Rudy.yes?, false
+  drill    "auto-yes is disabled", Rudy.auto?, false
   
   drill "debug can be enabled", true do
     Rudy.enable_debug

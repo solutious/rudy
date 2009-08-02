@@ -22,7 +22,7 @@ module Rudy
     field :verbose
     field :format
     field :print_header
-    field :yes
+    field :auto
     field :force
     
     field :accesskey
@@ -70,7 +70,7 @@ module Rudy
         # WARNING: Don't add bucket either or any machines configuration param 
         # TODO: investigate removing this apply_config method
         %w[region zone environment role position 
-           localhost nocolor quiet yes force parallel].each do |name|
+           localhost nocolor quiet auto force parallel].each do |name|
           curval, defval = self.send(name), config.defaults.send(name)
           self.send("#{name}=", defval) if curval.nil? && !defval.nil?
         end
@@ -112,7 +112,7 @@ module Rudy
       @position &&= @position.to_s.rjust(2, '0')  
       @format &&= @format.to_sym rescue nil
       @quiet ? Rudy.enable_quiet : Rudy.disable_quiet
-      @yes ? Rudy.enable_yes : Rudy.disable_yes
+      @auto ? Rudy.enable_auto : Rudy.disable_auto
     end
     
     def apply_environment_variables
@@ -130,7 +130,7 @@ module Rudy
       @environment ||= Rudy::DEFAULT_ENVIRONMENT
       @role ||= Rudy::DEFAULT_ROLE
       @localhost ||= Rudy.sysinfo.hostname || 'localhost'
-      @yes = false if @yes.nil?
+      @auto = false if @auto.nil?
     end
     
     # Unapply defaults for parameters that must have values. 
@@ -143,7 +143,7 @@ module Rudy
       @environment = nil if @environment == Rudy::DEFAULT_ENVIRONMENT
       @role = nil if @role == Rudy::DEFAULT_ROLE
       @localhost = nil if @localhost == (Rudy.sysinfo.hostname || 'localhost')
-      @yes = nil if @yes == false
+      @auto = nil if @auto == false
     end
     
   end

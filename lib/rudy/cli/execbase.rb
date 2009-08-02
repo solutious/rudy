@@ -35,7 +35,7 @@ module Rudy::CLI
     global :f, :format, String, "Output format"
     global :n, :nocolor, "Disable output colors"
     global :C, :config, String, "Specify another configuration file to read (e.g. #{Rudy::CONFIG_FILE})"
-    global :Y, :yes, "Assume a correct answer to confirmation questions"
+    global :Y, :auto, "Skip interactive confirmation"
     global :q, :quiet, "Run with less output"
     global :O, :offline, "Be cool about the internet being down"
     global :v, :verbose, "Increase verbosity of output (e.g. -v or -vv or -vvv)" do

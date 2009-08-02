@@ -171,24 +171,24 @@ routines do
   end
   
   uptime do                          # $ rudy uptime
-    remote { uptime }                # Short block syntax
+    local { uptime }                 # Short block syntax
   end
   
 end
 
 
 # ----------------------------------------------------------- DEFAULTS --------
-# These values are used as defaults for their respective global settings. All
-# non-boolean values are expected to be Symbols. 
+# These values are used as defaults for their respective global settings. They
+# can be overridden by the command-line global options.  
 #
 defaults do
   zone :'us-east-1d'
   environment :stage
   role :app
-  #user ENV['USER']                  # The default remote user
+  color true                         # Terminal colors? true/false
+  #user 'someuser'                   # The default remote user
   #localhost 'hostname'              # A local hostname instead of localhost
-  #color true                        # Terminal colors? true/false
-  #yes false                         # Auto-confirm? true/false
-  #keydir '~/.ssh/'                  # The path to store SSH keys
+  #auto true                         # Skip interactive confirmation?
+  #keydir 'path/2/keys/'             # The path to store SSH keys
 end
 

@@ -32,7 +32,7 @@ module Rudy::CLI
       end
 
       @@global.nocolor ? String.disable_color : String.enable_color
-      @@global.yes ? Annoy.enable_skip : Annoy.disable_skip
+      @@global.auto ? Annoy.enable_skip : Annoy.disable_skip
 
       unless @@global.accesskey && @@global.secretkey
         STDERR.puts "No AWS credentials. Check your configs!"

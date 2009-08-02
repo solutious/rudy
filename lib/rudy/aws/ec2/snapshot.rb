@@ -101,11 +101,11 @@ module Rudy::AWS
         list(snap_id).first || nil
       end
       
-      def exists?(id)
+      def exists?(snap_id)
         !get(snap_id).nil?
       end
       
-      def completed?(id)
+      def completed?(snap_id)
         s = get(snap_id)
         return false if s.nil?
         s.completed?

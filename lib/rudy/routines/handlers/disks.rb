@@ -56,7 +56,33 @@ module Rudy::Routines::Handlers;
       rset.switch_user original_user
     end
     
+    
+    def create(rbox, disk)
+      if disk.exists?
+        puts "Disk found: #{disk.name}"
+        disk.refresh!          
+      end
+      
+      unless @@global.force
+        raise Rudy::Disks::AlreadyAttached, disk.name if disk.volume_attached?
+      end
+      
+      unless disk.volume_exists?
+        msg = "Creating volume... "
+        disk.create
+        Rudy::Utils.waiter(2, 60, STDOUT, msg) { 
+          disk.volume_available?
+        }
+      end
+      
+      attach rbox, disk unless disk.volume_attached?
+      format rbox, disk if disk.raw?
+      mount rbox, disk unless disk.mounted?
 
+      disk.save :replace
+    end
+    
+    
     
     def detach(rbox, disk)
       
@@ -149,33 +175,6 @@ module Rudy::Routines::Handlers;
       disk.save :replace
     end
     
-    def create(rbox, disk)
-      if disk.exists?
-        puts "Disk found: #{disk.name}"
-        disk.refresh!          
-      end
-      
-      unless @@global.force
-        raise Rudy::Disks::AlreadyAttached, disk.name if disk.volume_attached?
-      end
-      
-      unless disk.volume_exists?
-        msg = "Creating volume... "
-        disk.create
-        Rudy::Utils.waiter(2, 60, STDOUT, msg) { 
-          disk.volume_available?
-        }
-      end
-      
-      attach rbox, disk unless disk.volume_attached?
-      format rbox, disk if disk.raw?
-      mount rbox, disk unless disk.mounted?
-
-      disk.save :replace
-    end
-    
-    
-    
     def destroy(rbox, disk)
       raise Rudy::Metadata::UnknownObject, disk.name unless disk.exists?
       disk.refresh!
@@ -202,71 +201,36 @@ module Rudy::Routines::Handlers;
     end
     
     def restore(rbox, disk)
-      raise NotImplemented
-      rdisk = Rudy::Disks.new
-      rback = Rudy::Backups.new
       
-
-        disk = Rudy::Metadata::Disk.new(path, props[:size], props[:device], @machine.position)
-        
-        olddisk = rdisk.get(disk.name)
-        back = nil
-        if olddisk && olddisk.exists?
-          olddisk.update
-          puts "Disk found: #{olddisk.name}. Skipping...".color(:red)
-          return
-        else
-          disk.fstype = props[:fstype] || 'ext3'
-          more = [:environment, props[:environment]] if props[:environment]
-          more += [:role, props[:role]] if props[:role]
-          back = (rback.list(more, nil) || []).first
-          raise "No backup found" unless back
-          puts "Found backup #{back.name} "
-        end
-        
-        unless disk.exists? # Checks the EBS volume
-          msg = "Creating volume from snapshot (#{back.snapid})... "
-          disk.create(back.size, @@global.zone, back.snapid)
-          Rudy::Utils.waiter(2, 60, STDOUT, msg) { 
-            disk.available?
-          }
-        end
-        
-        msg = "Attaching #{disk.volid} to #{rbox.stash.instid}... "
-        disk.attach(rbox.stash.instid)
-        Rudy::Utils.waiter(2, 10, STDOUT, msg) { 
-          disk.attached?
+      if disk.exists?
+        puts "Disk found: #{disk.name}"
+        disk.refresh!       
+      end
+      
+      unless @@global.force
+        raise Rudy::Disks::AlreadyAttached, disk.name if disk.volume_attached?
+      end
+      
+      latest_backup = disk.backups.last
+      disk.size, disk.fstype = latest_backup.size, latest_backup.fstype
+      
+      puts "Backup found: #{latest_backup.name}"
+      
+      unless disk.volume_exists?
+        msg = "Creating volume... "
+        disk.create latest_backup.size, latest_backup.zone, latest_backup.snapid
+        Rudy::Utils.waiter(2, 60, STDOUT, msg) { 
+          disk.volume_available?
         }
         
-        sleep 2
-        
-        begin
-          @rbox.mkdir(:p, disk.path)
-          
-          print "Mounting at #{disk.path}... "
+      end
+      disk.raw = false
       
-          ret = @rbox.mount(:t, disk.fstype, disk.device, disk.path) 
-          print_response ret
-          if ret.exit_code > 0
-            STDERR.puts "Error creating disk".color(:red)
-            return
-          else
-            puts "done"
-          end
-          disk.mounted = true
-          disk.save :replace
-          
-        rescue Net::SSH::AuthenticationFailed, Net::SSH::HostKeyMismatch => ex  
-          STDERR.puts "Error creating disk".color(:red)
-          STDERR.puts ex.message.color(:red)
-         rescue Rye::CommandNotFound => ex
-          puts "  CommandNotFound: #{ex.message}".color(:red)
-          
-        rescue
-          STDERR.puts "Error creating disk" .color(:red)
-          Rudy::Utils.bug
-        end
-        
+      attach rbox, disk unless disk.volume_attached?
+      #format rbox, disk if disk.raw?
+      mount rbox, disk unless disk.mounted?
+      
+      disk.save :replace
 
     end
     

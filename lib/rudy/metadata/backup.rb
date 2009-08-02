@@ -99,6 +99,7 @@ module Rudy
       #snap = Rudy::AWS::EC2::Snapshots.list.first   # debugging
       ld "SNAP: #{snap.inspect}"
       @snapid, @raw = snap.awsid, true
+      @size, @fstype = disk.size, disk.fstype
       self.save :replace
       self
     end
@@ -131,10 +132,13 @@ module Rudy
     def disk
       opts = {
         :region => @region,  :zone => @zone,
-        :environment => @environment, :role => @role
+        :environment => @environment, :role => @role, 
+        :size => @size, :fstype => @fstype
       }
       disk = Rudy::Disk.new @position, @path, opts
       disk.refresh! if disk.exists?
+      disk.size = @size
+      disk.fstype = @fstype
       disk
     end
     
@@ -146,7 +150,7 @@ module Rudy
     %w[exists? completed?].each do |state|
       define_method("snapshot_#{state}") do
         return false if @snapid.nil? || @snapid.empty?
-        Rudy::AWS::EC2::Snapshots.send(state, @snapid) rescue false
+        Rudy::AWS::EC2::Snapshots.send(state, @snapid) 
       end
     end
     

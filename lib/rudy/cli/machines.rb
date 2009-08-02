@@ -65,7 +65,7 @@ module Rudy
         # session so we need to prepare the command and its arguments
         if @argv.first
           command, command_args = @argv.shift, @argv || []
-          puts "#{command} #{command_args.join(' ')}" if @@global.verbose > 1
+          Rudy::Huxtable.ld "COMMAND: #{command} #{command_args.join(' ')}" if @@global.verbose > 1
 
         # otherwise, we'll open an ssh session or print command
         else

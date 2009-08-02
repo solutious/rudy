@@ -95,8 +95,14 @@ module Rudy
       raise Rudy::AWS::EC2::VolumeNotAvailable, @volid unless volume_attached?
       back = Rudy::Backup.new @position, @path, self.descriptors
       back.create
+      back.size, back.fstype = @size, @fstype
       back
     end
+    
+    def backups
+      Rudy::Backups.list self.descriptors
+    end
+    
     
     def destroy(force=false)
       if @volid && !volume_deleting?

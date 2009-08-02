@@ -86,6 +86,7 @@ module Rudy
       end
       
       if msg && logger
+        logger.puts
         logger.flush
       end
       
@@ -142,7 +143,7 @@ module Rudy
       Rudy::ID_MAP[key]
     end
 
-    # Return a string ID without the identifier. i.e. key-stage-app-root => stage-app-root
+    # Return a string ID without the identifier. e.g. key-stage-app-root => stage-app-root
     def noid(str)
       el = str.split('-')
       el.shift

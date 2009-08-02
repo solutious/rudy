@@ -1,7 +1,7 @@
 @spec = Gem::Specification.new do |s|
 	s.name = "rudy"
   s.rubyforge_project = 'rudy'
-	s.version = "0.8.5"
+	s.version = "0.9.0-RC1"
 	s.summary = "Rudy: Not your grandparents' EC2 deployment tool."
 	s.description = s.summary
 	s.author = "Delano Mandelbaum"
@@ -14,14 +14,14 @@
   s.require_paths = %w[lib]
   s.rubygems_version = '1.3.0'
   
-  s.add_dependency 'rye',        '>= 0.8.1'
+  s.add_dependency 'rye',        '>= 0.8.5'
   s.add_dependency 'attic',      '>= 0.4.0'
-  s.add_dependency 'annoy',      '>= 0.5.3'
-  s.add_dependency 'drydock',    '>= 0.6.5'
-  s.add_dependency 'caesars',    '>= 0.7.2'
-  s.add_dependency 'sysinfo',    '>= 0.5.1'
-  s.add_dependency 'gibbler',    '>= 0.5.4'
-  s.add_dependency 'tryouts',    '>= 0.6.2'
+  s.add_dependency 'annoy',      '>= 0.5.5'
+  s.add_dependency 'drydock',    '>= 0.6.6'
+  s.add_dependency 'caesars',    '>= 0.7.3'
+  s.add_dependency 'sysinfo',    '>= 0.6.2'
+  s.add_dependency 'gibbler',    '>= 0.6.0'
+  s.add_dependency 'tryouts',    '>= 0.8.4'
   s.add_dependency 'storable',   '>= 0.5.6'
   
   s.add_dependency 'aws-s3',     '>= 0.6.1'  # Ruby 1.9.1 compatability
@@ -89,6 +89,7 @@
   lib/rudy/cli/aws/sdb/domains.rb
   lib/rudy/cli/aws/sdb/objects.rb
   lib/rudy/cli/aws/sdb/select.rb
+  lib/rudy/cli/backups.rb
   lib/rudy/cli/base.rb
   lib/rudy/cli/candy.rb
   lib/rudy/cli/config.rb
@@ -100,6 +101,7 @@
   lib/rudy/config.rb
   lib/rudy/config/objects.rb
   lib/rudy/disks.rb
+  lib/rudy/exceptions.rb
   lib/rudy/global.rb
   lib/rudy/guidelines.rb
   lib/rudy/huxtable.rb
@@ -127,21 +129,9 @@
   lib/rudy/routines/shutdown.rb
   lib/rudy/routines/startup.rb
   lib/rudy/utils.rb
-  old-metadata/50_disk_old_tryouts.rb
-  old-metadata/backup.rb
-  old-metadata/backups.rb
-  old-metadata/debug.rb
-  old-metadata/disk.rb
-  old-metadata/disks.rb
-  old-metadata/machine.rb
-  old-metadata/machines.rb
-  old-metadata/metadata.rb
-  old-metadata/objectbase.rb
-  old-routines/routine-scraps.rb
   rudy.gemspec
   support/mailtest
   support/randomize-root-password
-  support/rudy-ec2-startup
   support/update-ec2-ami-tools
   tryouts/01_mixins/01_hash_tryouts.rb
   tryouts/10_require_time/10_rudy_tryouts.rb
@@ -171,6 +161,10 @@
   tryouts/30_metadata/51_disk_digest_tryouts.rb
   tryouts/30_metadata/53_disk_list_tryouts.rb
   tryouts/30_metadata/56_disk_volume_tryouts.rb
+  tryouts/30_metadata/60_backup_tryouts.rb
+  tryouts/30_metadata/63_backup_list_tryouts.rb
+  tryouts/30_metadata/64_backup_disk_tryouts.rb
+  tryouts/30_metadata/66_backup_snapshot_tryouts.rb
   tryouts/30_metadata/70_machine_tryouts.rb
   tryouts/30_metadata/73_machine_list_tryouts.rb
   tryouts/30_metadata/76_machine_instance_tryouts.rb

@@ -1,4 +1,4 @@
-= Rudy - v0.9 BETA
+= Rudy - v0.9-RC1
 
 <b>Not your grandparents' EC2 deployment tool.</b>
 
@@ -13,7 +13,7 @@ All configuration is organized into the zones, environments, and roles that you 
 
 <em>This is a BETA release. That means Rudy's not ready for production use! See Project-Status[http://wiki.github.com/solutious/rudy/project-status].</em>
 
-The 0.9 release has many changes from previous releases. Use it, break it, fork it!
+The 0.9 release is a major re-write and has many changes from previous releases. 0.9-RC1 is the first public release from the 0.9 branch and much of the code has not been tested. DO NOT USE IN PRODUCTION. Try it out have some fun and if you have the time send a patch or pull request!
 
 
 == Configuration

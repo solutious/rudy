@@ -21,7 +21,7 @@ module Rudy
       #
       # It will return the most specific configuration available. If the 
       # attribute isn'e found it will check each parent for the same attribute. 
-      # i.e. if [prod][app][ami] is not available, it will check [prod][ami]
+      # e.g. if [prod][app][ami] is not available, it will check [prod][ami]
       # and then [ami]. 
       #
       #     # Display all configuration

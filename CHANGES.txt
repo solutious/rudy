@@ -3,7 +3,9 @@ RUDY, CHANGES
 
 #### 0.9.0-RC2 (2009-08-01) ###########################
 
+* FIXED: Some status lines were printing on the same line during routines
 * CHANGE: Renamed config parameter 'yes' to 'auto'
+* ADDED: "rudy ssh" can now run commands in parallel
 
 
 #### 0.9.0-RC1 (2009-08-01) ###########################

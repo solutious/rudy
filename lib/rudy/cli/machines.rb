@@ -52,12 +52,12 @@ module Rudy
           puts "No private key configured for #{current_machine_user} in #{current_machine_group}"
         end
         
-        # Options to be sent to Net::SSH
-        ssh_opts = { :user => current_machine_user, :debug => nil }
+        # Options to be sent to Rye::Box
+        rye_opts = { :user => current_machine_user, :debug => nil }
         if pkey 
           raise "Cannot find file #{pkey}" unless File.exists?(pkey)
           raise InsecureKeyPermissions, @pkey unless File.stat(pkey).mode == 33152
-          ssh_opts[:keys] = pkey 
+          rye_opts[:keys] = pkey 
         end
 
 
@@ -71,42 +71,95 @@ module Rudy
         else
           command, command_args = :interactive_ssh, @option.print.nil?
         end
-
-
+        
+        if command == :interactive_ssh && @global.parallel
+          raise "Cannot run interactive sessions in parallel"
+        end
+        
         checked = false
         lt = Rudy::Machines.list 
         unless lt
           puts "No machines running in #{current_machine_group}"
-          exit
+          return
         end
+        
+        rset = Rye::Set.new(current_machine_group, :parallel => @global.parallel)
         lt.each do |machine|
           machine.refresh!  # make sure we have the latest DNS info
-          
-          # mount -t ext3 /dev/sdr /rudy/disk1
-          
-          # Print header
-          if @@global.quiet
-            print "You are #{ssh_opts[:user].to_s.bright}. " if !checked # only the 1st
+          rbox = Rye::Box.new(machine.dns_public, rye_opts)
+          rbox.nickname = machine.name
+          if command == :interactive_ssh
+            # Print header
+            if @@global.quiet
+              print "You are #{rye_opts[:user].to_s.bright}. " if !checked # only the 1st
+            else
+              puts machine_separator(machine.name, machine.instid)
+              puts "Connecting #{rye_opts[:user].to_s.bright}@#{machine.dns_public} "
+              puts
+            end
           else
-            puts machine_separator(machine.name, machine.instid)
-            puts "Connecting #{ssh_opts[:user].to_s.bright}@#{machine.dns_public} "
-            puts
+            unless @global.parallel
+              rbox.pre_command_hook do |cmd,user,host,nickname|
+                print_command user, nickname, cmd
+              end
+            end
+            rbox.post_command_hook do |ret|
+              print_response ret
+            end
           end
 
           # Make sure we want to run this command on all instances
           if !checked && command != :interactive_ssh 
-            execute_check(:low) if ssh_opts[:user] == "root"
+            execute_check(:low) if rye_opts[:user] == "root"
             checked = true
           end
           
-          # Open the connection and run the command
-          rbox = Rye::Box.new(machine.dns_public, ssh_opts)
-          ret = rbox.send(command, command_args)
-          puts ret unless command == :interactive_ssh
+          # Open the connection and run the command          
+          if command == :interactive_ssh
+            rbox.send(command, command_args) 
+          else
+            rset.add_box rbox
+          end
         end
+        
+        rset.send(command, command_args) unless command == :interactive_ssh
+        
       end
 
+      
+      private 
+      # Returns a formatted string for printing command info
+      def print_command(user, host, cmd)
+        #return if @@global.parallel
+        cmd ||= ""
+        cmd, user = cmd.to_s, user.to_s
+        prompt = user == "root" ? "#" : "$"
+        li ("%s@%s%s %s" % [user, host, prompt, cmd.bright])
+      end
+      
+      
+      def print_response(rap)
+        # Non zero exit codes raise exceptions so  
+        # the erorrs have already been handled. 
+        return if rap.exit_code != 0
 
+        if @@global.parallel
+          cmd, user = cmd.to_s, user.to_s
+          prompt = user == "root" ? "#" : "$"
+          li "%s@%s%s %s%s%s" % [rap.box.user, rap.box.nickname, prompt, rap.cmd.bright, $/, rap.stdout.inspect]
+          unless rap.stderr.empty?
+            le "#{rap.box.nickname}: " << rap.stderr.join("#{rap.box.nickname}: ")
+          end
+        else
+          li '  ' << rap.stdout.join("#{$/}  ") if !rap.stdout.empty?
+          colour = rap.exit_code != 0 ? :red : :normal
+          unless rap.stderr.empty?
+            le ("  STDERR  " << '-'*38).color(colour).bright
+            le "  " << rap.stderr.join("#{$/}    ").color(colour)
+          end
+        end
+      end
+      
     end
   end
 end

@@ -46,7 +46,7 @@ machines do
     size 'm1.small'                  # EC2 machine type for all machines
                                      # in the 'stage' environment
     role :app do
-      positions 1                    # Only 1 machine in stage-app
+      positions 2                    # 2 machines in stage-app
       #addresses '11.22.33.44'       # Define an elastic IP to reuse
       
       disks do                       # Define EBS volumes 

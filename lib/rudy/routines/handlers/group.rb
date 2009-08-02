@@ -22,7 +22,7 @@ module Rudy; module Routines; module Handlers;
       name ||= current_group_name
       addresses ||= [Rudy::Utils::external_ip_address]
       ports ||= [[22,22]]
-      li "Authorizing group: #{addresses.inspect} (#{ports.inspect})"
+      li "Authorizing SSH access for: #{addresses.join(', ')}"
       Rudy::AWS::EC2::Groups.authorize(name, addresses, ports)
     end
     

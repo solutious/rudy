@@ -64,11 +64,11 @@ module AWS; module EC2;
       opts[:id] = @option.instid if @option.instid
       
       # Options to be sent to Rye::Box
-      ssh_opts = { :user => @global.user || Rudy.sysinfo.user, :debug => nil  }
+      rye_opts = { :user => @global.user || Rudy.sysinfo.user, :debug => nil  }
       if @@global.pkey 
         raise "Cannot find file #{@@global.pkey}" unless File.exists?(@@global.pkey)
         raise InsecureKeyPermissions, @@global.pkey unless File.stat(@@global.pkey).mode == 33152
-        ssh_opts[:keys] = @@global.pkey 
+        rye_opts[:keys] = @@global.pkey 
       end
       
       
@@ -88,20 +88,20 @@ module AWS; module EC2;
         
         # Print header
         if @@global.quiet
-          print "You are #{ssh_opts[:user].bright}. " if !checked # only the 1st
+          print "You are #{rye_opts[:user].bright}. " if !checked # only the 1st
         else
-          print "Connecting #{ssh_opts[:user].bright}@#{inst.dns_public} "
+          print "Connecting #{rye_opts[:user].bright}@#{inst.dns_public} "
           puts "(#{inst.awsid}, groups: #{inst.groups.join(', ')})"
         end
         
         # Make sure we want to run this command on all instances
         if !checked && command != :interactive_ssh 
-          execute_check(:medium) if ssh_opts[:user] == "root"
+          execute_check(:medium) if rye_opts[:user] == "root"
           checked = true
         end
         
         # Open the connection and run the command
-        rbox = Rye::Box.new(inst.dns_public, ssh_opts)
+        rbox = Rye::Box.new(inst.dns_public, rye_opts)
         ret = rbox.send(command, command_args)
         puts ret unless command == :interactive_ssh
       end
@@ -123,11 +123,11 @@ module AWS; module EC2;
       opts[:id] &&= [opts[:id]].flatten
       
       # Options to be sent to Net::SSH
-      ssh_opts = { :user => @global.user || Rudy.sysinfo.user, :debug => nil  }
+      rye_opts = { :user => @global.user || Rudy.sysinfo.user, :debug => nil  }
       if @@global.pkey 
         raise "Cannot find file #{@@global.pkey}" unless File.exists?(@@global.pkey)
         raise InsecureKeyPermissions, @@global.pkey unless File.stat(@@global.pkey).mode == 33152
-        ssh_opts[:keys] = @@global.pkey 
+        rye_opts[:keys] = @@global.pkey 
       end
       
       opts[:paths] = @argv
@@ -141,11 +141,11 @@ module AWS; module EC2;
     
       # Options to be sent to Rye::Box
       info = @@global.quiet ? nil : STDERR
-      ssh_opts = { :user => @global.user || Rudy.sysinfo.user, :info => info }
+      rye_opts = { :user => @global.user || Rudy.sysinfo.user, :info => info }
       if @@global.pkey 
         raise "Cannot find file #{@@global.pkey}" unless File.exists?(@@global.pkey)
         raise InsecureKeyPermissions, @@global.pkey unless File.stat(@@global.pkey).mode == 33152
-        ssh_opts[:keys] = @@global.pkey 
+        rye_opts[:keys] = @@global.pkey 
       end
       
 
@@ -159,9 +159,9 @@ module AWS; module EC2;
         
         # Print header
         if @@global.quiet
-          print "You are #{ssh_opts[:user].bright}. " if !checked # only the 1st
+          print "You are #{rye_opts[:user].bright}. " if !checked # only the 1st
         else
-          print "Connecting #{ssh_opts[:user].bright}@#{inst.dns_public} "
+          print "Connecting #{rye_opts[:user].bright}@#{inst.dns_public} "
           puts "(#{inst.awsid}, groups: #{inst.groups.join(', ')})"
         end
         
@@ -172,7 +172,7 @@ module AWS; module EC2;
         end
         
         # Open the connection and run the command
-        rbox = Rye::Box.new(inst.dns_public, ssh_opts)
+        rbox = Rye::Box.new(inst.dns_public, rye_opts)
         rbox.send(opts[:task], opts[:paths], opts[:dest])
       end
 

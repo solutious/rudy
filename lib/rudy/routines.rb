@@ -97,10 +97,10 @@ module Rudy
     def self.rescue(ret=nil, &bloc_party)
       begin
         ret = bloc_party.call
-      rescue => ex
+      rescue NameError, ArgumentError, RuntimeError => ex
+        STDERR.puts "  #{ex.class}: #{ex.message}".color(:red)
+        STDERR.puts ex.backtrace if Rudy.debug?
         unless Rudy::Huxtable.global.parallel
-          STDERR.puts "  #{ex.class}: #{ex.message}".color(:red)
-          STDERR.puts ex.backtrace if Rudy.debug?
           choice = Annoy.get_user_input('(S)kip  (A)bort: ', nil, 3600) || ''
           if choice.match(/\AS/i)
             # do nothing

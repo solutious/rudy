@@ -4,6 +4,7 @@ module Rudy
   module CLI
     class Machines < Rudy::CLI::CommandBase
       
+      
       def machines
         # Rudy::Machines.list takes two optional args for adding or 
         # removing metadata attributes to modify the select query. 
@@ -44,7 +45,26 @@ module Rudy
         
       end
       
-      def machines_available
+      
+      def update_machines
+        fields, less = {}, []
+        less = Rudy::Metadata::COMMON_FIELDS if @option.all
+        mlist = Rudy::Machines.list(fields, less) || []
+        rset = Rye::Set.new(current_group_name, :parallel => @@global.parallel, :user => 'root')
+        mlist.each do |m|
+          m.refresh!
+          rbox = Rye::Box.new( m.dns_public, :user => 'root')
+          rbox.add_key user_keypairpath('root')
+          rbox.nickname = m.name
+          rbox.stash = m
+          rset.add_boxes rbox
+        end
+        puts "Updating hostnames for #{current_group_name}"
+        Rudy::Routines::Handlers::Host.set_hostname rset
+        puts rset.hostname.flatten
+      end
+      
+      def available_machines
         fields, less = {}, []
         less = Rudy::Metadata::COMMON_FIELDS if @option.all
         mlist = Rudy::Machines.list(fields, less) || []

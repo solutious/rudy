@@ -48,8 +48,8 @@ module Rudy; module Routines; module Handlers;
     def set_hostname(rset)
       raise NoMachines if rset.boxes.empty?
       original_user = rset.user
+      rset.switch_user 'root' 
       rset.add_key user_keypairpath('root')
-      rset.switch_user 'root'
       # Set the hostname if specified in the machines config. 
       # :rudy -> change to Rudy's machine name
       # :default -> leave the hostname as it is

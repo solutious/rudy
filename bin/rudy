@@ -51,6 +51,7 @@ class RudyCLI < Rudy::CLI::Base
   option :l, :all, "Display machines for all environments and roles"
   action :W, :wash, "Wash machine metadata"
   action :A, :available, "Display availablity"
+  action :U, :update, "Update machines based on configuration"
   command :machines => Rudy::CLI::Machines
   command_alias :machines, :m
   
@@ -89,7 +90,7 @@ class RudyCLI < Rudy::CLI::Base
   usage "rudy networks -U"
   option :e, :external, "Display only external IP address"
   option :i, :internal, "Display only internal IP address"
-  action :U, :update, "Update network configuration"
+  action :U, :update, "Update networks based on configuration"
   action :L, :local, "Show local network configuration"
   command :networks => Rudy::CLI::Networks
   command_alias :networks, :n

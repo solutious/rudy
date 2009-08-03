@@ -109,7 +109,7 @@ routines do
           create '/rudy/disk1'       # Create an EBS volume, attach it, give
         end                          # it a filesystem, and mount it.
                                      #
-        remote :rudy do              # Run remote SSH commands after startup
+        remote :root do              # Run remote SSH commands after startup
           mkdir :p, 'great'          # $ mkdir -p great
           touch 'great/scott'        # $ touch great/scott
           ls :l, :a                  # $ ls -l -a *

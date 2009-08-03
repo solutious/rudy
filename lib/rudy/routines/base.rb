@@ -218,7 +218,7 @@ module Rudy; module Routines;
       else
         le prefix << "#{ex.class}: #{ex.message}".color(:red)
       end
-      le *ex.backtrace
+      le *ex.backtrace if @@global.verbose > 2
     end
     
   end

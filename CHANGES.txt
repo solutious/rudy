@@ -9,6 +9,7 @@ RUDY, CHANGES
 * FIXED: Startup routine was creating only one machine
 * FIXED: Reboot now executes commands in correct order
 * FIXED: GH-18 (Error when running startup, reboot, shutdown routines in parallel mode)
+* FIXED: Routine::Handler::User.adduser was specifying invalid home directory with multiple machines
 * CHANGE: Renamed config parameter 'yes' to 'auto'
 * CHANGE: Global config parameter processed differently (see Rudy::Config#look_and_load)
 * CHANGE: "rudy myaddress" is now "rudy networks -L"

@@ -21,6 +21,10 @@ module Rudy; module Routines; module Handlers;
       # On Solaris, the user's home directory needs to be specified
       # explicitly so we do it for linux too for fun. 
       homedir = robj.guess_user_home(user.to_s)
+      
+      # When more than one machine is running, this will be an Array
+      homedir = homedir.first if homedir.kind_of?(Array)
+      
       args = [:m, :d, homedir, :s, '/bin/bash', user.to_s]
       
       # NOTE: We'll may to use platform specific code here. 

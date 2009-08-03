@@ -96,6 +96,7 @@ module Rudy
       back = Rudy::Backup.new @position, @path, self.descriptors
       back.create
       back.size, back.fstype = @size, @fstype
+      back.save :replace
       back
     end
     

@@ -5,6 +5,9 @@ RUDY, CHANGES
 
 * FIXED: Some status lines were printing on the same line during routines
 * FIXED: user value in defaults wasn't being used for remote commands
+* FIXED: Double printing SSH commands in parallel mode
+* FIXED: Startup routine was creating only one machine
+* FIXED: Reboot now executes commands in correct order
 * CHANGE: Renamed config parameter 'yes' to 'auto'
 * CHANGE: Global config parameter processed differently (see Rudy::Config#look_and_load)
 * ADDED: "rudy ssh" can now run commands in parallel

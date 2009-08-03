@@ -16,8 +16,8 @@ module Rudy; module Routines; module Handlers;
     end
     
     def execute(type, batch, rset, lbox, argv=nil)
-      if type.to_s =~ /\Ax/  
-        # do nothing
+      if type.to_s =~ /\Ax/     # (e.g. xremote, xlocal)
+        # do nothing 
         
       # It's important this stay a regex rather than a literal comparison
       elsif type.to_s =~ /local/   

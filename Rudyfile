@@ -130,7 +130,7 @@ routines do
           uptime                     # web servers and databases. 
         end                          #
         remote do                    # Run any startup tasks like starting
-          uptime                     # processes or initializing the filesystem
+          uname                      # processes or initializing the filesystem
         end
       end
       

@@ -12,7 +12,7 @@ module Rudy
       end
       
       def update_networks
-        Rudy::Routines::Handlers::Group.authorize 
+        Rudy::Routines::Handlers::Group.authorize rescue nil
       end
       
     end

@@ -24,12 +24,8 @@ module Rudy; module Routines;
     def execute
       ld "Executing routine: #{@name}"
       ld "[this is a generic routine]" if @routine.empty?
-
       
-      # If this is a testrun we won't create new instances
-      # we'll just grab the list of machines in this group. 
-      # NOTE: Expect errors if there are no machines.
-      @machines = run? ? Rudy::Machines.restart : Rudy::Machines.list
+      @machines = Rudy::Machines.list
       @@rset = create_rye_set @machines unless defined?(@@rset)
       
       if run?
@@ -47,6 +43,9 @@ module Rudy; module Routines;
           }
         end
       end
+      
+      li "Rebooting #{current_group_name}..."
+      @machines.each { |m| m.restart } if run?
       
       Rudy::Routines.rescue {
         if !Rudy::Routines::Handlers::Host.is_running? @@rset

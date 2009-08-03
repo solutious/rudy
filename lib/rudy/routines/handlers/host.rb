@@ -11,7 +11,7 @@ module Rudy; module Routines; module Handlers;
       rset.batch(rset.parallel) do |parallel|
         msg = "Starting #{self.nickname}..."
         output = parallel ? nil : Rudy::Huxtable.logger 
-        Rudy::Utils.waiter(3, 120, output, msg, 0) {
+        Rudy::Utils.waiter(3, 240, output, msg, 0) {
           inst = self.stash.get_instance
           inst && inst.running?
         }

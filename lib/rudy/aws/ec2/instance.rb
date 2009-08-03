@@ -263,7 +263,7 @@ module Rudy::AWS
         instances = nil if instances.empty? # Don't return an empty hash
         instances
       end
-    
+
       # System console output. 
       #
       # * +inst_id+ instance ID (String) or Instance object.

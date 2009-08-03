@@ -10,8 +10,8 @@ module Rudy::AWS
       field :size  => Integer
       field :snapid
       field :zone  => Symbol
-      field :create_time => Time
-      field :attach_time => Time
+      field :created => Time
+      field :attachd => Time
       field :instid
       field :device
     
@@ -212,12 +212,12 @@ module Rudy::AWS
         vol.snapid = h['snapshotId']
         vol.zone = h['availabilityZone']
         vol.awsid = h['volumeId']
-        vol.create_time = h['createTime']
+        vol.created = h['createTime']
         if h['attachmentSet'].is_a?(Hash)
           item = h['attachmentSet']['item'].first
           vol.status = item['status']   # Overwrite "available status". Possibly a bad idea. 
           vol.device = item['device']
-          vol.attach_time = item['attachTime']
+          vol.attached = item['attachTime']
           vol.instid = item['instanceId']
         end
         vol.postprocess

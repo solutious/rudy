@@ -199,11 +199,14 @@ module Rudy; module Routines;
       Proc.new do |ex, cmd, user, host, nickname|
         print_exception(user, host, cmd, nickname, ex)
         unless @@global.parallel
-          choice = Annoy.get_user_input('(S)kip  (R)etry  (A)bort: ', nil, 3600) || ''
+          choice = Annoy.get_user_input('(S)kip  (R)etry  (F)orce  (A)bort: ', nil, 3600) || ''
           if choice.match(/\AS/i)
             :skip
           elsif choice.match(/\AR/i)
             :retry   # Tells Rye::Box#run_command to retry
+          elsif choice.match(/\AF/i)
+            @@global.force = true
+            :retry
           else
             exit 12
           end

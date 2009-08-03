@@ -145,7 +145,9 @@ module Rudy::Routines::Handlers;
       disk.refresh!
       
       raise Rudy::Disks::NotAttached, disk.name if !disk.volume_attached?
-      raise Rudy::Disks::NotMounted, disk.name if !disk.mounted?
+      if @@global.force
+        raise Rudy::Disks::NotMounted, disk.name if !disk.mounted?
+      end
       
       puts "Unmounting #{disk.path}... "
       rbox.umount(disk.path)
@@ -201,7 +203,7 @@ module Rudy::Routines::Handlers;
     end
     
     def restore(rbox, disk)
-      
+
       if disk.exists?
         puts "Disk found: #{disk.name}"
         disk.refresh!       
@@ -212,6 +214,7 @@ module Rudy::Routines::Handlers;
       end
       
       latest_backup = disk.backups.last
+      latest_backup.fstype = 'ext3' if latest_backup.fstype.nil? || latest_backup.fstype.empty?
       disk.size, disk.fstype = latest_backup.size, latest_backup.fstype
       
       puts "Backup found: #{latest_backup.name}"
@@ -222,12 +225,11 @@ module Rudy::Routines::Handlers;
         Rudy::Utils.waiter(2, 60, STDOUT, msg) { 
           disk.volume_available?
         }
-        
+        disk.raw = false
+        disk.save :replace  
       end
-      disk.raw = false
       
       attach rbox, disk unless disk.volume_attached?
-      #format rbox, disk if disk.raw?
       mount rbox, disk unless disk.mounted?
       
       disk.save :replace

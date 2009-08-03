@@ -11,6 +11,7 @@ RUDY, CHANGES
 * FIXED: Rudy::AWS::EC2.connect now correctly reconnects when run for the second time
 * FIXED: Global CLI option -R (region) was being ignored in lieu of -z (zone)
 * FIXED: Rudy::Disk#archive wasn't storing size, fstype
+* FIXED: Disk restore was balking when no FS type supplied
 * CHANGE: "rudy myaddress" is now "rudy networks -L"
 * CHANGE: Renamed Volume attributes: create_time, attach_time -> created, attached
 * CHANGE: Renamed Instance attribute: launch_time -> created

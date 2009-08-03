@@ -63,9 +63,9 @@ machines do
     end
     
     users do                         # Specify existing private keys per user
-      rudy do                       
-        keypair '/path/2/private-key'
-      end
+      #rudy do                       
+      #  keypair '/path/2/private-key'
+      #end
     end
     
   end  
@@ -132,20 +132,10 @@ routines do
         remote do                    # Run any startup tasks like starting
           uname                      # processes or initializing the filesystem
         end
-      end
-      
-      backup do                      # $ rudy backup
-        disks do                     # A simple routine that creates an EBS
-          snapshot '/rudy/disk1'     # snapshot of the specified volume.
+        disks do
+          mount "/rudy/disk1"
         end
       end
-      
-      restore do                     # $ rudy restore
-        disks do                     # A contrived example of restoring a 
-          destroy '/rudy/disk1'      # disk from a backup. NOTE: You'll need
-          restore '/rudy/disk1'      # to run 'rudy backup' at least once 
-        end                          # before otherise there are no backups
-      end                            # to restore from. 
       
     end                              
   end                                

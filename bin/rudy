@@ -49,14 +49,15 @@ class RudyCLI < Rudy::CLI::Base
   usage "rudy machines"
   usage "rudy machines -l"
   option :l, :all, "Display machines for all environments and roles"
-  action :W, :wash, "Wash machine metadata."
+  action :W, :wash, "Wash machine metadata"
+  action :A, :available, "Display availablity"
   command :machines => Rudy::CLI::Machines
   command_alias :machines, :m
   
   about "View Disks"
   usage "rudy disks"
   usage "rudy disks -l"
-  action :W, :wash, "Wash disk metadata."
+  action :W, :wash, "Wash disk metadata"
   option :b, :backups, "Display backups"
   option :l, :all, "Display all disks"
   command :disks => Rudy::CLI::Disks
@@ -65,7 +66,7 @@ class RudyCLI < Rudy::CLI::Base
   about "View Backups"
   usage "rudy backups"
   usage "rudy backups -l"
-  action :W, :wash, "Wash backups metadata."
+  action :W, :wash, "Wash backup metadata"
   option :l, :all, "Display all backups"
   command :backups => Rudy::CLI::Backups
   command_alias :backups, :b

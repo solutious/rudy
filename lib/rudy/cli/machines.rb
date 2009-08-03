@@ -44,6 +44,22 @@ module Rudy
         
       end
       
+      def machines_available
+        fields, less = {}, []
+        less = Rudy::Metadata::COMMON_FIELDS if @option.all
+        mlist = Rudy::Machines.list(fields, less) || []
+        mlist.each do |m|
+          print "#{m.name}: "
+          m.refresh!
+          Rudy::Utils.waiter(2, 60, STDOUT, nil, 0) {
+            Rudy::Utils.service_available?(m.dns_public, 22)
+          }
+          available = Rudy::Utils.service_available?(m.dns_public, 22)
+          puts available ? 'up' : 'down'
+        end
+        
+      end
+      
       
       def ssh
         # TODO: Give this method a good look over

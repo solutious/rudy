@@ -19,7 +19,7 @@
   s.add_dependency 'annoy',      '>= 0.5.5'
   s.add_dependency 'drydock',    '>= 0.6.6'
   s.add_dependency 'caesars',    '>= 0.7.3'
-  s.add_dependency 'sysinfo',    '>= 0.6.2'
+  s.add_dependency 'sysinfo',    '>= 0.6.3'
   s.add_dependency 'gibbler',    '>= 0.6.0'
   s.add_dependency 'tryouts',    '>= 0.8.4'
   s.add_dependency 'storable',   '>= 0.5.6'

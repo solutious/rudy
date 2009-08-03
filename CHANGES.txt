@@ -1,18 +1,23 @@
 RUDY, CHANGES
 
 
-#### 0.9.0-RC2 (2009-08-01) ###########################
+#### 0.9.0-RC3 (2009-08-03) ###########################
+
+* FIXED: GH-18 (Error when running startup, reboot, shutdown routines in parallel mode)
+* FIXED: Routine::Handler::User.adduser was specifying invalid home directory with multiple machines
+* CHANGE: "rudy myaddress" is now "rudy networks -L"
+* ADDED: "rudy machines -A" to display available machines
+
+
+#### 0.9.0-RC2 (2009-08-02) ###########################
 
 * FIXED: Some status lines were printing on the same line during routines
 * FIXED: user value in defaults wasn't being used for remote commands
 * FIXED: Double printing SSH commands in parallel mode
 * FIXED: Startup routine was creating only one machine
 * FIXED: Reboot now executes commands in correct order
-* FIXED: GH-18 (Error when running startup, reboot, shutdown routines in parallel mode)
-* FIXED: Routine::Handler::User.adduser was specifying invalid home directory with multiple machines
 * CHANGE: Renamed config parameter 'yes' to 'auto'
 * CHANGE: Global config parameter processed differently (see Rudy::Config#look_and_load)
-* CHANGE: "rudy myaddress" is now "rudy networks -L"
 * ADDED: "rudy ssh" can now run commands in parallel
 * ADDED: rudy networks command
 

@@ -61,7 +61,11 @@ module Rudy
           types.each do |conftype|
             puts "# #{conftype.to_s.upcase}"
             next unless @@config[conftype]  # Nothing to output
-            @@config[conftype][:aws][:secretkey] = '[hidden]' if conftype == :accounts
+            if conftype == :accounts
+              skey = @@config[conftype][:aws][:secretkey]
+              @@config[conftype][:aws][:secretkey] = hide_secret_key(skey)
+            end
+            
             puts @@config[conftype].to_hash.send(outform)
           end
         end
@@ -76,8 +80,14 @@ module Rudy
         end
         gtmp = @@global.clone
         gtmp.format = "yaml" if gtmp.format == :s || gtmp.format == :string
-        gtmp.accesskey = gtmp.secretkey = "[not displayed]"
+        gtmp.secretkey = hide_secret_key(gtmp.secretkey)
         puts gtmp.dump(gtmp.format)
+      end
+      
+      private
+      def hide_secret_key(skey)
+        skey = skey.to_s
+        "%s%s%s" % [skey[0], '.'*18, skey[-1]]
       end
       
     end

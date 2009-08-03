@@ -59,8 +59,7 @@ module Rudy
           raise InsecureKeyPermissions, @pkey unless File.stat(pkey).mode == 33152
           rye_opts[:keys] = pkey 
         end
-
-
+        
         # The user specified a command to run. We won't create an interactive
         # session so we need to prepare the command and its arguments
         if @argv.first

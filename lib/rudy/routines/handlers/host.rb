@@ -40,7 +40,7 @@ module Rudy; module Routines; module Handlers;
         # Windows machines do not have an SSH daemon
         unless (self.stash.os || '').to_s == 'win32'
           msg = parallel ? nil : "Waiting for SSH on port #{p}..."
-          Rudy::Utils.waiter(2, 30, STDOUT, msg, 0) {
+          Rudy::Utils.waiter(2, 60, STDOUT, msg, 0) {
             Rudy::Utils.service_available?(self.stash.dns_public, p)
           }
         end

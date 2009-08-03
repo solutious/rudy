@@ -190,7 +190,7 @@ module Rudy
     end
     
     def current_machine_user
-      @@global.user || fetch_machine_param(:user) || Rudy.sysinfo.user
+      @@global.user || fetch_machine_param(:user) || @@config.defaults.user || Rudy.sysinfo.user
     end
     
     def current_machine_bucket

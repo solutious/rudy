@@ -97,6 +97,7 @@
   lib/rudy/cli/execbase.rb
   lib/rudy/cli/machines.rb
   lib/rudy/cli/metadata.rb
+  lib/rudy/cli/networks.rb
   lib/rudy/cli/routines.rb
   lib/rudy/config.rb
   lib/rudy/config/objects.rb
@@ -173,14 +174,9 @@
   tryouts/40_routines/11_group_handler_tryouts.rb
   tryouts/80_cli/10_rudyec2_tryouts.rb
   tryouts/80_cli/60_rudy_tryouts.rb
+  tryouts/exploration/console.rb
+  tryouts/exploration/machine.rb
   tryouts/failer
-  tryouts/misc/console_tryout.rb
-  tryouts/misc/disks_tryout.rb
-  tryouts/misc/drydock_tryout.rb
-  tryouts/misc/nested_methods.rb
-  tryouts/misc/session_tryout.rb
-  tryouts/misc/tryouts.rb
-  tryouts/misc/usage_tryout.rb
   )
 
   

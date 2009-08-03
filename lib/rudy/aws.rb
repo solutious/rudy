@@ -8,10 +8,10 @@ module Rudy
     extend self
     
     unless defined?(Rudy::AWS::VALID_REGIONS)
-      VALID_REGIONS = ['eu-west-1', 'us-east-1'].freeze
+      VALID_REGIONS = [:'eu-west-1', :'us-east-1'].freeze
     end
     
-    def valid_region?(r); VALID_REGIONS.member?(r.to_s || ''); end
+    def valid_region?(r); VALID_REGIONS.member?(r.to_sym || ''); end
     
     # Modifies +str+ by removing <tt>[\0\n\r\032\\\\]</tt> and escaping <tt>[\'\"]</tt>
     def escape(str)

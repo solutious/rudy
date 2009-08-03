@@ -4,7 +4,7 @@ module Rudy; module AWS
 #    include Rudy::Huxtable
     
     def self.connect(access_key=nil, secret_key=nil, region=nil, logger=nil)
-      
+
       if region
         raise InvalidRegion, region unless Rudy::AWS.valid_region?(region)
         host = "#{region}.ec2.amazonaws.com"

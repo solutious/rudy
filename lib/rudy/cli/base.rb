@@ -51,7 +51,7 @@ module Rudy::CLI
         gcopy.secretkey = "[HIDDEN]"
         puts "# GLOBALS: ", gcopy.dump(format)
       end
-
+      
       Rudy::Metadata.connect @@global.accesskey, @@global.secretkey, @@global.region
       Rudy::AWS::EC2.connect @@global.accesskey, @@global.secretkey, @@global.region
     end

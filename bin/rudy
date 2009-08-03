@@ -131,7 +131,11 @@ class RudyCLI < Rudy::CLI::Base
 
   # ------------------------------------  RUDY MISCELLANEOUS  --------
   # ------------------------------------------------------------------
-    
+  
+  about "Display existing environment objects"  
+  option :l, :all, "Include all regions"
+  command :status => Rudy::CLI::Status
+  
   usage "rudy [-f config-file] config [param-name]"
   about "Check Rudy configuration."
   option :l, :all, "Display all configs for all machines"

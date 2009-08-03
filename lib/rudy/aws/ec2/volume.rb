@@ -11,7 +11,7 @@ module Rudy::AWS
       field :snapid
       field :zone  => Symbol
       field :created => Time
-      field :attachd => Time
+      field :attached => Time
       field :instid
       field :device
     

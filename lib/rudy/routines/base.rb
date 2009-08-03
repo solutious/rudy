@@ -88,7 +88,7 @@ module Rudy; module Routines;
       # We define hooks so we can still print each command and its output
       # when running the command blocks. NOTE: We only print this in
       # verbosity mode. 
-      if @@global.verbose > 0
+      if @@global.verbose > 0 && !@@global.parallel
         # This block gets called for every command method call.
         box.pre_command_hook do |cmd, user, host, nickname|
           print_command user, nickname, cmd

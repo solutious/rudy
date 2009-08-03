@@ -200,15 +200,28 @@ module Rudy
     # Errno::EAFNOSUPPORT, Errno::ECONNREFUSED, SocketError, Timeout::Error
     #
     def service_available?(host, port, wait=3)
-      begin
-        status = Timeout::timeout(wait) do
-          socket = Socket.new( AF_INET, SOCK_STREAM, 0 )
-          sockaddr = Socket.pack_sockaddr_in( port, host )
-          socket.connect( sockaddr )
+      if Rudy.sysinfo.vm == :java
+        begin
+          iadd = Java::InetSocketAddress.new host, port      
+          socket = Java::Socket.new
+          socket.connect iadd, wait * 1000  # milliseconds
+          success = !socket.isClosed && socket.isConnected
+        rescue NativeException => ex
+          puts ex.message, ex.backtrace if Rudy.debug?
+          false
         end
-        true
-      rescue Errno::EAFNOSUPPORT, Errno::ECONNREFUSED, SocketError, Timeout::Error => ex
-        false
+      else 
+        begin
+          status = Timeout::timeout(wait) do
+            socket = Socket.new( AF_INET, SOCK_STREAM, 0 )
+            sockaddr = Socket.pack_sockaddr_in( port, host )
+            socket.connect( sockaddr )
+          end
+          true
+        rescue Errno::EAFNOSUPPORT, Errno::ECONNREFUSED, SocketError, Timeout::Error => ex
+          puts ex.message, ex.backtrace if Rudy.debug?
+          false
+        end
       end
     end
     

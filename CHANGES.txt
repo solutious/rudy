@@ -5,6 +5,7 @@ RUDY, CHANGES
 
 * FIXED: GH-18 (Error when running startup, reboot, shutdown routines in parallel mode)
 * FIXED: Routine::Handler::User.adduser was specifying invalid home directory with multiple machines
+* FIXED: Socket.connect error in JRuby when checking if SSH is available
 * CHANGE: "rudy myaddress" is now "rudy networks -L"
 * ADDED: "rudy machines -A" to display available machines
 

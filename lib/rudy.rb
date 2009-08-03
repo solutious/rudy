@@ -27,7 +27,6 @@ require 'attic'
 require 'annoy'
 require 'rye'
 
-
 # = Rudy
 #
 #
@@ -112,6 +111,14 @@ module Rudy
   def Rudy.sysinfo; @@sysinfo; end
   def sysinfo; @@sysinfo;  end
   
+end
+
+if Rudy.sysinfo.vm == :java
+  require 'java'
+  module Java
+    include_class java.net.Socket unless defined?(Java::Socket)
+    include_class java.net.InetSocketAddress unless defined?(Java::InetSocketAddress)
+  end
 end
 
 require 'rudy/exceptions'

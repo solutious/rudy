@@ -38,9 +38,9 @@ module Rudy
     end
     
     # Returns an Array of newly created Rudy::Machine objects
-    def create(size=1)
+    def create(size=nil)
       if Rudy::Huxtable.global.position.nil?
-        size ||= current_machine_count.to_i
+        size ||= current_machine_count.to_i || 1
         group = Array.new(size) do |i|
           m = Rudy::Machine.new(i + 1)
           m.create

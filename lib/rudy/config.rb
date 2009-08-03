@@ -67,7 +67,7 @@ module Rudy
     #
     # If +adhoc_path+ is supplied (e.g. rudy -C config/file/path routines), this method
     # will look for ~/.rudy/config or ./.rudy/config but none of the other default file
-    # locations other than the supplied path. 
+    # locations other than the supplied path. If it's an Array, all paths will be loaded. 
     def look_and_load(adhoc_path=nil)
       cwd = Dir.pwd
       cwd_path = File.join(cwd, '.rudy', 'config')
@@ -96,7 +96,7 @@ module Rudy
         @paths += Dir.glob(File.join('/etc', 'rudy', '*.rb')) || []
         @paths &&= @paths.uniq
       else
-        @paths << adhoc_path
+        @paths += [adhoc_path].flatten
       end
       
       refresh

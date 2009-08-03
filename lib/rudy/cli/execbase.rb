@@ -34,10 +34,13 @@ module Rudy::CLI
     global :c, :cert, String, "AWS Private Certificate (cert-****.pem)"
     global :f, :format, String, "Output format"
     global :n, :nocolor, "Disable output colors"
-    global :C, :config, String, "Specify another configuration file to read (e.g. #{Rudy::CONFIG_FILE})"
     global :Y, :auto, "Skip interactive confirmation"
     global :q, :quiet, "Run with less output"
     global :O, :offline, "Be cool about the internet being down"
+    global :C, :config, String, "Specify another configuration file to read (e.g. #{Rudy::CONFIG_FILE})" do |val|
+      @configs ||= []
+      @configs << val
+    end
     global :v, :verbose, "Increase verbosity of output (e.g. -v or -vv or -vvv)" do
       @verbose ||= 0
       @verbose += 1

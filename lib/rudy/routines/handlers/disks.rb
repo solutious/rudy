@@ -13,9 +13,17 @@ module Rudy::Routines::Handlers;
       
     end
     
-    def disks?(routine)
+    def any?(routine)
       (routine.kind_of?(Hash) && routine.disks && 
       routine.disks.kind_of?(Hash) && !routine.disks.empty?) ? true : false
+    end
+    
+    # Create mount?, create?, umount? etc... methods
+    ACTIONS.each do |action|
+      define_method "#{action}?" do |routine|
+        return false unless any? routine
+        routine.disks.member? action
+      end
     end
     
     def paths(routine)

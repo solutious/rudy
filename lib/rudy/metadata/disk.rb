@@ -69,7 +69,7 @@ module Rudy
     end
     
     def to_s(with_titles=true)
-      "%s; %s" % [self.name, self.to_hash.inspect]
+      self.name
     end
     
     def name

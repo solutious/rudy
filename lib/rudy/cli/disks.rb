@@ -25,7 +25,7 @@ module Rudy
           seen << d.name
           puts @@global.verbose > 0 ? d.inspect : d.dump(@@global.format)
           if @option.backups
-            d.list_backups.each_with_index do |b, index|
+            d.backups.each_with_index do |b, index|
               puts '  %s' % b.name
               ##break if @option.all.nil? && index >= 2 # display only 3, unless all
             end

@@ -45,6 +45,78 @@ module Rudy
         
       end
       
+      def static_machines_valid?
+        @mlist = Rudy::Machines.list || []
+        @alist = Rudy::AWS::EC2::Addresses.list || []
+        @alist_used    = @alist.select { |a|  a.associated? }
+        @alist_unused  = @alist.select { |a| !a.associated? }
+        @alist_unused.collect! { |a| a.ipaddress }
+        @alist_instids = @alist_used.collect { |a| a.instid }
+        @mlist_static  = @mlist.select do |m| 
+          @alist_instids.member?(m.instid)
+        end
+        
+        unless @@global.force
+          unless @mlist_static.empty?
+            msg = "Some machines already have static IP addresses: #{$/}"
+            msg << @mlist_static.collect { |m| "#{m.name}: #{m.dns_public}" }.join($/)
+            raise Rudy::Error, msg 
+          end
+        
+          if !@argv.empty? && @mlist.size > @argv.size
+            msg = "You supplied #{@argv.size} addresses for #{@mlist.size} "
+            msg << "machines. Try: rudy --force machines -S #{@argv.join(' ')}"
+            raise Rudy::Error, msg
+          end
+        
+          if @alist_unused.size > 0 && @alist_unused.size < @mlist.size
+            msg = "There are only #{@alist_unused.size} available addresses for "
+            msg << "#{@mlist.size} machines. Try: rudy --force machines -S #{@argv.join(' ')}"
+            raise Rudy::Error, msg
+          end
+        end
+        
+        @argv.each do |address|
+          unless Rudy::AWS::EC2::Addresses.exists?(address)
+            raise "#{address} is not allocated to you" 
+          end
+          if Rudy::AWS::EC2::Addresses.associated?(address)
+            raise "#{address} is already associated!"
+          end
+        end
+        
+        @alist_unused = @argv unless @argv.empty? 
+        
+        true
+      end
+      
+      def static_machines 
+
+        @mlist.each do |m|
+          next if @mlist_static.member?(m)
+          address = @alist_unused.shift
+          puts "Associating #{address} to #{m.name} (#{m.instid})"
+          Rudy::AWS::EC2::Addresses.associate(address, m.instid)
+          sleep 2
+          m.refresh!
+        end
+        
+        @alist = Rudy::AWS::EC2::Addresses.list || []
+        @alist_used    = @alist.select { |a|  a.associated? }
+        @alist_instids = @alist_used.collect { |a| a.instid }
+        @mlist_static  = @mlist.select do |m| 
+          @alist_instids.member?(m.instid)
+        end
+        
+        unless @mlist_static.empty?
+          @mlist_static.each do |m|
+            puts "%s: %s" % [m.name, m.dns_public]
+          end
+        end
+      end
+      
+      def dynamic_machines
+      end
       
       def update_machines
         fields, less = {}, []
@@ -53,7 +125,7 @@ module Rudy
         rset = Rye::Set.new(current_group_name, :parallel => @@global.parallel, :user => 'root')
         mlist.each do |m|
           m.refresh!
-          rbox = Rye::Box.new( m.dns_public, :user => 'root')
+          rbox = Rye::Box.new(m.dns_public, :user => 'root')
           rbox.add_key user_keypairpath('root')
           rbox.nickname = m.name
           rbox.stash = m

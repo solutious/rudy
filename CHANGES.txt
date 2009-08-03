@@ -18,6 +18,7 @@ RUDY, CHANGES
 * ADDED: "rudy machines -A" to display available machines
 * ADDED: "rudy status" to display all EC2 objects
 * ADDED: "rudy machines -U" to update hostnames
+* ADDED: "rudy machines -S" to create static IP addresses
 * ADDED: Rudy::Routines::Handlers::Disks.mount? etc... methods
 
 

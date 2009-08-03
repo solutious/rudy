@@ -119,6 +119,7 @@ NOTE: <em>If you are not installing via RubyGems, you need to make sure the depe
 
 == Thanks
 
+* Kalin Harvey for all the feedback
 * The Rilli.com[http://rilli.com] team
   * Adam Bognar
   * Andrew Simpson

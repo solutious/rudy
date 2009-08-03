@@ -34,24 +34,24 @@ class RudyCLI < Rudy::CLI::Base
   global :P, :parallel, "Execute remote commands in parallel (EXPERIMENTAL)."
   global :F, :force, "Force an action despite warnings"
   
+  
   # ------------------------------------------  RUDY OBJECTS  --------
   # ------------------------------------------------------------------
-  
-  about "View Routines"
-  usage "rudy routines"
-  usage "rudy routines -l"
-  option :l, :all, "Display routines for all environments and roles"
-  command :routines => Rudy::CLI::Routines
-  command_alias :routines, :r
   
   about "View Machines"
   usage "rudy"
   usage "rudy machines"
   usage "rudy machines -l"
+  usage "rudy machines -U"
+  usage "rudy machines -A"
+  usage "rudy machines -S [static ip address]"
+  usage "rudy machines -D"
   option :l, :all, "Display machines for all environments and roles"
   action :W, :wash, "Wash machine metadata"
   action :A, :available, "Display availablity"
   action :U, :update, "Update machines based on configuration"
+  action :S, :static, "Create static IP addresses or display existing ones"
+  action :D, :dynamic, "Delete static IP addresses"
   command :machines => Rudy::CLI::Machines
   command_alias :machines, :m
   
@@ -82,7 +82,7 @@ class RudyCLI < Rudy::CLI::Base
   argv :oid
   command :metadata => Rudy::CLI::Metadata
   
-  about "View Network configuration"
+  about "View Network configuration (local network only)"
   usage "rudy networks"
   usage "rudy networks -L"
   usage "rudy networks -L -i"
@@ -95,17 +95,16 @@ class RudyCLI < Rudy::CLI::Base
   command :networks => Rudy::CLI::Networks
   command_alias :networks, :n
   
-  about "Log in to a machine"
-  command :ssh => Rudy::CLI::Machines
-  
-  #about "Open the machine in your default browser (OSX only)"
-  #option :s, :https, "Use HTTPS"
-  #option :p, :port, Integer, "Port"
-  #command :open => Rudy::CLI::Candy
-  
     
   # -----------------------------------------  RUDY ROUTINES  --------
   # ------------------------------------------------------------------
+  
+  about "View Routines"
+  usage "rudy routines"
+  usage "rudy routines -l"
+  option :l, :all, "Display routines for all environments and roles"
+  command :routines => Rudy::CLI::Routines
+  command_alias :routines, :r
   
   # A "do nothing" routine. Passthrough simply executes a routine
   # config block. Drydock's trawler uses this for unknown commands.
@@ -136,6 +135,14 @@ class RudyCLI < Rudy::CLI::Base
   about "Display existing environment objects"  
   option :l, :all, "Include all regions"
   command :status => Rudy::CLI::Status
+  
+  about "Log in to a machine"
+  command :ssh => Rudy::CLI::Machines
+  
+  #about "Open the machine in your default browser (OSX only)"
+  #option :s, :https, "Use HTTPS"
+  #option :p, :port, Integer, "Port"
+  #command :open => Rudy::CLI::Candy
   
   usage "rudy [-f config-file] config [param-name]"
   about "Check Rudy configuration."

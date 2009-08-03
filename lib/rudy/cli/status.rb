@@ -29,7 +29,7 @@ module Rudy
         
         puts "  Volumes".bright
         (Rudy::AWS::EC2::Volumes.list || []).collect do |vol|
-          puts "    %s: %sGB; %s (%s); %s" % [vol.awsid, vol.size, vol.status, vol.instid, vol.created]
+          puts "    %s (%s): %sGB; %s" % [vol.awsid, vol.instid || vol.status, vol.size, vol.created]
         end
                 
         puts "  Snapshots".bright
@@ -38,7 +38,9 @@ module Rudy
         end
         
         puts "  Addresses".bright
-        puts (Rudy::AWS::EC2::Addresses.list || []).collect { |o| "    #{o.address}" }
+        (Rudy::AWS::EC2::Addresses.list || []).collect do |o| 
+          puts "    %s (%s)" % [o.ipaddress, o.instid || 'available']
+        end
         
         puts "  Groups".bright
         puts Rudy::AWS::EC2::Groups.list.collect { |o| "    #{o.name}" }

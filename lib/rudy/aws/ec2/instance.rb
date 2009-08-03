@@ -7,7 +7,7 @@ module Rudy::AWS
     field :aki
     field :ari
     field :launch_index => Time
-    field :launch_time
+    field :created
     field :keyname
     field :size
     field :ami
@@ -374,7 +374,7 @@ module Rudy::AWS
         inst = Rudy::AWS::EC2::Instance.new
         inst.aki = h['kernelId']
         inst.ami = h['imageId']
-        inst.launch_time = h['launchTime']
+        inst.created = h['launchTime']
         inst.keyname = h['keyName']
         inst.launch_index = h['amiLaunchIndex']
         inst.size = h['instanceType']

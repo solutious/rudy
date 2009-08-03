@@ -148,14 +148,10 @@ NOTE: <em>If you are not installing via RubyGems, you need to make sure the depe
 
 == Related Projects
 
-* Sprinkle -- http://github.com/crafterm/sprinkle/
-* Wakame -- http://wakame.rubyforge.org/
-* Pool Party -- http://www.poolpartyrb.com/
-* Rubber -- http://github.com/wr0ngway/rubber/wikis
-* Moonshine -- http://github.com/railsmachine/moonshine/tree
+* Rake -- http://rake.rubyforge.org/
+* Moonshine -- http://github.com/railsmachine/moonshine/tree/
 * Boto -- http://code.google.com/p/boto/
 * Fabric -- http://www.nongnu.org/fab/
-
 
 
 == License

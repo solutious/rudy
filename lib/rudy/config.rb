@@ -44,6 +44,30 @@ module Rudy
       @defaults = Rudy::Config::Defaults.new if @defaults.nil?
     end
     
+    # Looks for a loads configuration files from standard locations. 
+    #     ./.rudy/config
+    #     ~/.rudy/config
+    #
+    #     ~/.rudy/*.rb
+    #     ./Rudyfile
+    #     ./machines.rb, ./routines.rb, ./commands.rb
+    #     ./config/rudy/*.rb
+    #     ./.rudy/*.rb
+    #     /etc/rudy/*.rb
+    #
+    # When multuple files are found, the configuration is NOT OVERRIDDEN,
+    # it's ADDED or APPENDED depending on context. This means you can split 
+    # configuration across as many files as you please. 
+    #
+    # There are five sections: accounts, defaults, machines, commands and routines.
+    # 
+    # By convention, accounts go in ./.rudy/config or ~/.rudy/config 
+    # machines, commands, routines, and defaults configuration go in ./Rudyfile or  
+    # into separate files in ./.rudy or ./config/rudy (machines.rb, commands.rb, ...)
+    #
+    # If +adhoc_path+ is supplied (e.g. rudy -C config/file/path routines), this method
+    # will look for ~/.rudy/config or ./.rudy/config but none of the other default file
+    # locations other than the supplied path. 
     def look_and_load(adhoc_path=nil)
       cwd = Dir.pwd
       cwd_path = File.join(cwd, '.rudy', 'config')
@@ -52,24 +76,28 @@ module Rudy
       # The "core" config file can have any or all configuration
       # but it should generally only contain the access identifiers
       # and defaults. That's why we only load one of them. 
-      core_config_paths = [adhoc_path, cwd_path, Rudy::CONFIG_FILE]
+      core_config_paths = [cwd_path, Rudy::CONFIG_FILE]
       core_config_paths.each do |path|
         next unless path && File.exists?(path)
         @paths << path
         break
       end
       
-      # self.keys returns the current config types (machines, routines, etc...)
-      typelist = self.keys.collect { |g| "#{g}.rb" }.join(',')
+      if adhoc_path.nil?
+        # self.keys returns the current config types (machines, routines, etc...)
+        typelist = self.keys.collect { |g| "#{g}.rb" }.join(',')
       
-      # Rudy then looks for the rest of the config in these locations
-      @paths += Dir.glob(File.join(Rudy.sysinfo.home, '.rudy', '*.rb')) || []
-      @paths += Dir.glob(File.join(cwd, 'Rudyfile')) || []
-      @paths += Dir.glob(File.join(cwd, 'config', 'rudy', '*.rb')) || []
-      @paths += Dir.glob(File.join(cwd, '.rudy', '*.rb')) || []
-      @paths += Dir.glob(File.join(cwd, "{#{typelist}}")) || []
-      @paths += Dir.glob(File.join('/etc', 'rudy', '*.rb')) || []
-      @paths &&= @paths.uniq
+        # Rudy then looks for the rest of the config in these locations
+        @paths += Dir.glob(File.join(Rudy.sysinfo.home, '.rudy', '*.rb')) || []
+        @paths += Dir.glob(File.join(cwd, 'Rudyfile')) || []
+        @paths += Dir.glob(File.join(cwd, 'config', 'rudy', '*.rb')) || []
+        @paths += Dir.glob(File.join(cwd, '.rudy', '*.rb')) || []
+        @paths += Dir.glob(File.join(cwd, "{#{typelist}}")) || []
+        @paths += Dir.glob(File.join('/etc', 'rudy', '*.rb')) || []
+        @paths &&= @paths.uniq
+      else
+        @paths << adhoc_path
+      end
       
       refresh
     end

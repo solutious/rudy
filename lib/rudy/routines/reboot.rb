@@ -11,6 +11,8 @@ module Rudy; module Routines;
                          
     def init(*args)
       @routine ||= {}
+      @machines = Rudy::Machines.list
+      @@rset = create_rye_set @machines unless defined?(@@rset)
     end
     
     # Startup routines run in the following order:
@@ -24,9 +26,6 @@ module Rudy; module Routines;
     def execute
       ld "Executing routine: #{@name}"
       ld "[this is a generic routine]" if @routine.empty?
-      
-      @machines = Rudy::Machines.list
-      @@rset = create_rye_set @machines unless defined?(@@rset)
       
       if run?
         if @routine.has_key? :before_local
@@ -47,9 +46,11 @@ module Rudy; module Routines;
       li "Rebooting #{current_group_name}..."
       @machines.each { |m| m.restart } if run?
       
+      15.times { print '.'; Kernel.sleep 2 }; puts $/  # Wait for 30 seconds
+      
       Rudy::Routines.rescue {
         if !Rudy::Routines::Handlers::Host.is_running? @@rset
-          a = @@rset.boxes.select { |box| !box.stash.running? }
+          a = @@rset.boxes.select { |box| !box.stash.instance_running? }
           raise GroupNotRunning, a
         end
       }
@@ -60,7 +61,7 @@ module Rudy; module Routines;
       
       Rudy::Routines.rescue {
         if !Rudy::Routines::Handlers::Host.is_available? @@rset
-          a = @@rset.boxes.select { |box| !box.stash.available? }
+          a = @@rset.boxes.select { |box| !box.stash.instance_available? }
           raise GroupNotAvailable, a
         end
       }
@@ -96,6 +97,12 @@ module Rudy; module Routines;
         bad = @routine.keys - @@allowed_actions
         raise UnsupportedActions.new(@name, bad) unless bad.empty?
       end
+      
+      if @machines
+        down = @@rset.boxes.select { |box| !box.stash.instance_running? }
+        raise GroupNotAvailable, down unless down.empty?
+      end
+      
     end
     
   end

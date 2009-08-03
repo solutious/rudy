@@ -64,7 +64,7 @@ module Rudy; module Routines;
       
       Rudy::Routines.rescue {
         if !Rudy::Routines::Handlers::Host.is_running? @@rset
-          a = @@rset.boxes.select { |box| !box.stash.running? }
+          a = @@rset.boxes.select { |box| !box.stash.instance_running? }
           raise GroupNotRunning, a
         end
       }
@@ -72,9 +72,10 @@ module Rudy; module Routines;
       # This is important b/c the machines will not 
       # have DNS info until after they are running. 
       Rudy::Routines.rescue { Rudy::Routines::Handlers::Host.update_dns @@rset }
+      
       Rudy::Routines.rescue {
         if !Rudy::Routines::Handlers::Host.is_available? @@rset
-          a = @@rset.boxes.select { |box| !box.stash.available? }
+          a = @@rset.boxes.select { |box| !box.stash.instance_available? }
           raise GroupNotAvailable, a
         end
       }

@@ -82,8 +82,14 @@ class RudyCLI < Rudy::CLI::Base
   
   about "View Network configuration"
   usage "rudy networks"
+  usage "rudy networks -L"
+  usage "rudy networks -L -i"
+  usage "rudy networks -L -e"
   usage "rudy networks -U"
+  option :e, :external, "Display only external IP address"
+  option :i, :internal, "Display only internal IP address"
   action :U, :update, "Update network configuration"
+  action :L, :local, "Show local network configuration"
   command :networks => Rudy::CLI::Networks
   command_alias :networks, :n
   
@@ -184,24 +190,7 @@ class RudyCLI < Rudy::CLI::Base
     t = obj.option.local ? Time.now : Time.now.utc
     puts '%s' % t.strftime("%Y-%m-%d %T %Z (%z)")
   end
-
-  usage "rudy myaddress [-i] [-e]"
-  about "Displays you current internal and external IP addresses"
-  option :e, :external, "Display only external IP address"
-  option :i, :internal, "Display only internal IP address"
-  command :myaddress do |obj|
-    ea = Rudy::Utils::external_ip_address || '' 
-    ia = Rudy::Utils::internal_ip_address || ''
-    if obj.global.quiet
-      puts ia unless obj.option.external && !obj.option.internal
-      puts ea unless obj.option.internal && !obj.option.external
-    else
-      puts "%10s: %s" % ['Internal', ia] unless obj.option.external && !obj.option.internal
-      puts "%10s: %s" % ['External', ea] unless obj.option.internal && !obj.option.external
-    end
-    obj.global.quiet = true  # don't print elapsed time
-  end
-
+  
   usage "rudy [global options] annoy [-h -m -l] [-e]"
   about "Play around with Rudy's annoying challenges"
   option :s, :string, "A numeric challenge"
@@ -236,7 +225,7 @@ class RudyCLI < Rudy::CLI::Base
     end
   end
   
-  
+  about "Display basic system information"
   command :sysinfo do
     puts Rudy.sysinfo.to_yaml
   end

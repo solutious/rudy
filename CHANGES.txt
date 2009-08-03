@@ -8,8 +8,10 @@ RUDY, CHANGES
 * FIXED: Double printing SSH commands in parallel mode
 * FIXED: Startup routine was creating only one machine
 * FIXED: Reboot now executes commands in correct order
+* FIXED: GH-18 (Error when running startup, reboot, shutdown routines in parallel mode)
 * CHANGE: Renamed config parameter 'yes' to 'auto'
 * CHANGE: Global config parameter processed differently (see Rudy::Config#look_and_load)
+* CHANGE: "rudy myaddress" is now "rudy networks -L"
 * ADDED: "rudy ssh" can now run commands in parallel
 * ADDED: rudy networks command
 

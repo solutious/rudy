@@ -15,7 +15,7 @@ module Rudy; module AWS
       host ||= DEFAULT_EC2_HOST
       port ||= DEFAULT_EC2_PORT
       
-      @@ec2 ||= ::EC2::Base.new(:port => port, :server=> host, :access_key_id => access_key, :secret_access_key => secret_key)
+      @@ec2 = ::EC2::Base.new(:port => port, :server=> host, :access_key_id => access_key, :secret_access_key => secret_key)
       @@logger = logger
     end
     

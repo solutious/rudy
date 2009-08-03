@@ -8,11 +8,10 @@ module Rudy; module Routines; module Handlers;
     
     def is_running?(rset)
       raise NoMachines if rset.boxes.empty?
-      rset.batch(rset.parallel) do |parallel|
-        msg = "Starting #{self.nickname}..."
-        output = parallel ? nil : Rudy::Huxtable.logger 
-        Rudy::Utils.waiter(3, 240, output, msg, 0) {
-          inst = self.stash.get_instance
+      rset.boxes.each do |rbox|
+        msg = "Waiting for #{rbox.nickname} to boot..."
+        Rudy::Utils.waiter(3, 240, Rudy::Huxtable.logger, msg, 0) {
+          inst = rbox.stash.get_instance
           inst && inst.running?
         }
       end
@@ -25,23 +24,22 @@ module Rudy; module Routines; module Handlers;
     # the machine metadata won't contain the DNS information. Calling it
     # here ensure that the metadata is always up-to-date.
     # Each Rye:Box instance has a Rudy::Machine instance in its stash so
-    # self.stash.update == machine.update
+    # rbox.stash.refresh! == machine.refresh!
     def update_dns(rset)
       raise NoMachines if rset.boxes.empty?
-      rset.batch do 
-        self.stash.refresh! 
-        self.host = self.stash.dns_public
+      rset.boxes.each do |rbox|
+        rbox.stash.refresh! 
+        rbox.host = rbox.stash.dns_public
       end
     end
     
     def is_available?(rset, port=22)
       raise NoMachines if rset.boxes.empty?
-      rset.batch(rset.parallel, port) do |parallel,p|
-        # Windows machines do not have an SSH daemon
-        unless (self.stash.os || '').to_s == 'win32'
-          msg = parallel ? nil : "Waiting for SSH on port #{p}..."
+      rset.boxes.each do |rbox|
+        unless (rbox.stash.os || '').to_s == 'win32' # No SSH daemon in windows
+          msg = "Waiting for SSH (#{port}) on #{rbox.nickname} ..."
           Rudy::Utils.waiter(2, 60, STDOUT, msg, 0) {
-            Rudy::Utils.service_available?(self.stash.dns_public, p)
+            Rudy::Utils.service_available?(rbox.stash.dns_public, port)
           }
         end
       end

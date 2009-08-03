@@ -7,6 +7,7 @@ RUDY, CHANGES
 * FIXED: Routine::Handler::User.adduser was specifying invalid home directory with multiple machines
 * FIXED: Socket.connect error in JRuby when checking if SSH is available
 * FIXED: Rudy::AWS::EC2.connect now correctly reconnects when run for the second time
+* FIXED: Global CLI option -R (region) was being ignored in lieu of -z (zone)
 * CHANGE: "rudy myaddress" is now "rudy networks -L"
 * CHANGE: Renamed Volume attributes: create_time, attach_time -> created, attached
 * CHANGE: Renamed Instance attribute: launch_time -> created

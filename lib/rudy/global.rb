@@ -57,6 +57,7 @@ module Rudy
     end
     
     def apply_config(config)
+
       return unless config.is_a?(Rudy::Config)
       clear_system_defaults  # temporarily unapply default values
       
@@ -72,7 +73,9 @@ module Rudy
         %w[region zone environment role position 
            localhost nocolor quiet auto force parallel].each do |name|
           curval, defval = self.send(name), config.defaults.send(name)
-          self.send("#{name}=", defval) if curval.nil? && !defval.nil?
+          if curval.nil? && !defval.nil?
+            self.instance_variable_set("@#{name}", defval) 
+          end
         end
       end
       

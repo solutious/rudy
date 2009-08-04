@@ -164,7 +164,9 @@ module Rudy
         rye_opts = { :user => current_machine_user, :debug => nil }
         if pkey 
           raise "Cannot find file #{pkey}" unless File.exists?(pkey)
-          raise InsecureKeyPermissions, @pkey unless File.stat(pkey).mode == 33152
+          if Rudy.sysinfo.os != :win32 && File.stat(pkey).mode == 33152
+            raise InsecureKeyPermissions, @pkey 
+          end
           rye_opts[:keys] = pkey 
         end
         

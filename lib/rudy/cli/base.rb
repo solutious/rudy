@@ -35,7 +35,10 @@ module Rudy::CLI
       @@global.auto ? Annoy.enable_skip : Annoy.disable_skip
       
       # ANSI codes look like garbage in DOS
-      String.disable_color if Rudy.sysinfo.os.to_s == 'win32'
+      if Rudy.sysinfo.os.to_s == 'win32'
+        String.disable_color 
+        raise Rudy::Error, 'Ruby 1.9 is not supported (yet)' if Rudy.sysinfo.ruby == [1,9,1]
+      end
       
       unless @@global.accesskey && @@global.secretkey
         STDERR.puts "No AWS credentials. Check your configs!"

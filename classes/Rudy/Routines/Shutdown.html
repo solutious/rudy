@@ -45,42 +45,64 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000149">execute</a></li>
-              <li><a href="#M000148">init</a></li>
-              <li><a href="#M000150">raise_early_exceptions</a></li>
+              <li><a href="#M000444">execute</a></li>
+              <li><a href="#M000443">init</a></li>
+              <li><a href="#M000445">raise_early_exceptions</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000149'>
-                <a name='M000149'>      </a>
+              <div class='public-instance method' id='method-M000444'>
+                <a name='M000444'>      </a>
                 <div class='synopsis'>
                   <span class='name'>execute</span>
                   <span class='arguments'>()</span>
                 </div>
+                <div class='description'>
+                  <p>
+                  <a href="Startup.html">Startup</a> routines run in the following order:
+                  </p>
+                  <ul>
+                  <li>before dependencies
+                  
+                  </li>
+                  <li>all other actions (except after_local)
+                  
+                  </li>
+                  <li><a href="Shutdown.html">Shutdown</a> instances
+                  
+                  </li>
+                  <li>after_local (if present)
+                  
+                  </li>
+                  <li>after dependencies
+                  
+                  </li>
+                  </ul>
+                </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000149-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000444-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000149-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/shutdown.rb, line 10</span>&#x000A;10:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">execute</span>&#x000A;11:       <span class="ruby-identifier">routine_separator</span>(<span class="ruby-identifier">:list</span>)&#x000A;12:       <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@routine</span>&#x000A;13:         <span class="ruby-constant">STDERR</span>.<span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;[this is a generic shutdown routine]&quot;</span>&#x000A;14:         <span class="ruby-ivar">@routine</span> = {}&#x000A;15:       <span class="ruby-keyword kw">end</span>&#x000A;16: &#x000A;17:       <span class="ruby-identifier">machines</span> = <span class="ruby-identifier">generic_machine_runner</span>(<span class="ruby-identifier">:list</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">machine</span><span class="ruby-operator">|</span>&#x000A;18:         <span class="ruby-identifier">machine</span>.<span class="ruby-identifier">destroy</span>&#x000A;19:       <span class="ruby-keyword kw">end</span>&#x000A;20:       <span class="ruby-identifier">machines</span>&#x000A;21:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000444-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/shutdown.rb, line 23</span>&#x000A;23:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">execute</span>&#x000A;24:       <span class="ruby-identifier">ld</span> <span class="ruby-node">&quot;Executing routine: #{@name}&quot;</span>&#x000A;25:       <span class="ruby-identifier">ld</span> <span class="ruby-value str">&quot;[this is a generic routine]&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@routine</span>.<span class="ruby-identifier">empty?</span>&#x000A;26:       &#x000A;27:       <span class="ruby-comment cmt"># We need to remove after_local so the runner doesn't see it</span>&#x000A;28:       <span class="ruby-identifier">after_local</span> = <span class="ruby-ivar">@routine</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:after_local</span>)&#x000A;29:       &#x000A;30:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">run?</span>&#x000A;31:         <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Routines</span>.<span class="ruby-identifier">rescue</span> {&#x000A;32:           <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Routines</span><span class="ruby-operator">::</span><span class="ruby-constant">Handlers</span><span class="ruby-operator">::</span><span class="ruby-constant">Group</span>.<span class="ruby-identifier">authorize</span> <span class="ruby-keyword kw">rescue</span> <span class="ruby-keyword kw">nil</span>&#x000A;33:         }&#x000A;34:         &#x000A;35:         <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Routines</span><span class="ruby-operator">::</span><span class="ruby-constant">Handlers</span><span class="ruby-operator">::</span><span class="ruby-constant">Depends</span>.<span class="ruby-identifier">execute_all</span> <span class="ruby-ivar">@before</span>&#x000A;36:       &#x000A;37:         <span class="ruby-comment cmt"># This is the meat of the sandwich</span>&#x000A;38:         <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Routines</span>.<span class="ruby-identifier">runner</span>(<span class="ruby-ivar">@routine</span>, <span class="ruby-ivar">@@rset</span>, <span class="ruby-ivar">@@lbox</span>, <span class="ruby-ivar">@argv</span>)&#x000A;39:         &#x000A;40:         <span class="ruby-ivar">@machines</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">machine</span><span class="ruby-operator">|</span>&#x000A;41:           <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Routines</span>.<span class="ruby-identifier">rescue</span> { <span class="ruby-identifier">machine</span>.<span class="ruby-identifier">destroy</span> }&#x000A;42:         <span class="ruby-keyword kw">end</span>&#x000A;43:       &#x000A;44:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">after_local</span>&#x000A;45:           <span class="ruby-identifier">handler</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Routines</span>.<span class="ruby-identifier">get_handler</span> <span class="ruby-identifier">:local</span>&#x000A;46:           <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Routines</span>.<span class="ruby-identifier">rescue</span> {&#x000A;47:             <span class="ruby-identifier">handler</span>.<span class="ruby-identifier">execute</span>(<span class="ruby-identifier">:local</span>, <span class="ruby-identifier">after_local</span>, <span class="ruby-keyword kw">nil</span>, <span class="ruby-ivar">@@lbox</span>, <span class="ruby-ivar">@argv</span>)&#x000A;48:           }&#x000A;49:         <span class="ruby-keyword kw">end</span>&#x000A;50:       &#x000A;51:         <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Routines</span><span class="ruby-operator">::</span><span class="ruby-constant">Handlers</span><span class="ruby-operator">::</span><span class="ruby-constant">Depends</span>.<span class="ruby-identifier">execute_all</span> <span class="ruby-ivar">@after</span>&#x000A;52:       <span class="ruby-keyword kw">end</span>&#x000A;53:       &#x000A;54:       <span class="ruby-ivar">@machines</span>&#x000A;55:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000148'>
-                <a name='M000148'>      </a>
+              <div class='public-instance method' id='method-M000443'>
+                <a name='M000443'>      </a>
                 <div class='synopsis'>
                   <span class='name'>init</span>
                   <span class='arguments'>(*args)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000148-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000443-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000148-source'>   <span class="ruby-comment cmt"># File lib/rudy/routines/shutdown.rb, line 6</span>&#x000A;6:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">init</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;7:       <span class="ruby-ivar">@routine</span> = <span class="ruby-identifier">fetch_routine_config</span>(<span class="ruby-identifier">:shutdown</span>)&#x000A;8:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000443-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/shutdown.rb, line 11</span>&#x000A;11:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">init</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;12:       <span class="ruby-ivar">@machines</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machines</span>.<span class="ruby-identifier">list</span> <span class="ruby-operator">||</span> []&#x000A;13:       <span class="ruby-ivar">@@rset</span> = <span class="ruby-identifier">create_rye_set</span> <span class="ruby-ivar">@machines</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-keyword kw">defined?</span>(<span class="ruby-ivar">@@rset</span>)&#x000A;14:       <span class="ruby-ivar">@routine</span> <span class="ruby-operator">||=</span> {}&#x000A;15:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000150'>
-                <a name='M000150'>      </a>
+              <div class='public-instance method' id='method-M000445'>
+                <a name='M000445'>      </a>
                 <div class='synopsis'>
                   <span class='name'>raise_early_exceptions</span>
                   <span class='arguments'>()</span>
@@ -91,10 +113,10 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000150-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000445-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000150-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/shutdown.rb, line 24</span>&#x000A;24:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">raise_early_exceptions</span>&#x000A;25:       <span class="ruby-identifier">rmach</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machines</span>.<span class="ruby-identifier">new</span>&#x000A;26:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">MachineGroupNotRunning</span>, <span class="ruby-identifier">current_machine_group</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">rmach</span>.<span class="ruby-identifier">running?</span>&#x000A;27:       <span class="ruby-comment cmt">## NOTE: This check is disabled for now. If the private key doesn't exist</span>&#x000A;28:       <span class="ruby-comment cmt">## it prevents shutting down.</span>&#x000A;29:       <span class="ruby-comment cmt"># Check private key after machine group, otherwise we could get an error</span>&#x000A;30:       <span class="ruby-comment cmt"># about there being no key which doesn't make sense if the group isn't running.</span>&#x000A;31:       <span class="ruby-comment cmt">##raise Rudy::PrivateKeyNotFound, root_keypairpath unless has_keypair?(:root)</span>&#x000A;32:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000445-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/shutdown.rb, line 58</span>&#x000A;58:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">raise_early_exceptions</span>&#x000A;59:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">NoMachinesConfig</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@@config</span>.<span class="ruby-identifier">machines</span>&#x000A;60:       &#x000A;61:       <span class="ruby-comment cmt"># If this is a test run we don't care if the group is running</span>&#x000A;62:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">run?</span>&#x000A;63:         <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">position</span>.<span class="ruby-identifier">nil?</span>&#x000A;64:           <span class="ruby-identifier">raise</span> <span class="ruby-constant">MachineGroupNotRunning</span>, <span class="ruby-identifier">current_machine_group</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machines</span>.<span class="ruby-identifier">running?</span>&#x000A;65:         <span class="ruby-keyword kw">else</span>&#x000A;66:           <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machines</span>.<span class="ruby-identifier">running?</span> <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">position</span>&#x000A;67:             <span class="ruby-identifier">m</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machine</span>.<span class="ruby-identifier">new</span> <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">position</span>&#x000A;68:             <span class="ruby-identifier">raise</span> <span class="ruby-constant">MachineNotRunning</span>, <span class="ruby-identifier">m</span>.<span class="ruby-identifier">name</span> &#x000A;69:           <span class="ruby-keyword kw">end</span>&#x000A;70:         <span class="ruby-keyword kw">end</span>&#x000A;71:       <span class="ruby-keyword kw">end</span>&#x000A;72:       &#x000A;73:       <span class="ruby-comment cmt">## NOTE: This check is disabled for now. If the private key doesn't exist</span>&#x000A;74:       <span class="ruby-comment cmt">## it prevents shutting down.</span>&#x000A;75:       <span class="ruby-comment cmt"># Check private key after machine group, otherwise we could get an error</span>&#x000A;76:       <span class="ruby-comment cmt"># about there being no key which doesn't make sense if the group isn't running.</span>&#x000A;77:       <span class="ruby-comment cmt">##raise Rudy::PrivateKeyNotFound, root_keypairpath unless has_keypair?(:root)</span>&#x000A;78:       <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@routine</span>&#x000A;79:         <span class="ruby-identifier">bad</span> = <span class="ruby-ivar">@routine</span>.<span class="ruby-identifier">keys</span> <span class="ruby-operator">-</span> <span class="ruby-ivar">@@allowed_actions</span>&#x000A;80:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">UnsupportedActions</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@name</span>, <span class="ruby-identifier">bad</span>) <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">bad</span>.<span class="ruby-identifier">empty?</span>&#x000A;81:       <span class="ruby-keyword kw">end</span>&#x000A;82:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

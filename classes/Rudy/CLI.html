@@ -58,31 +58,52 @@
             <a href="../../files/lib/rudy/cli/aws/ec2/zones_rb.html">lib/rudy/cli/aws/ec2/zones.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/rudy/cli/aws/s3/store_rb.html">lib/rudy/cli/aws/s3/store.rb</a>
+            <a href="../../files/lib/rudy/cli/aws/s3/buckets_rb.html">lib/rudy/cli/aws/s3/buckets.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/rudy/cli/aws/s3/buckets_rb.html">lib/rudy/cli/aws/s3/buckets.rb</a>
+            <a href="../../files/lib/rudy/cli/aws/s3/store_rb.html">lib/rudy/cli/aws/s3/store.rb</a>
           </li>
           <li class='other'>
             <a href="../../files/lib/rudy/cli/aws/sdb/domains_rb.html">lib/rudy/cli/aws/sdb/domains.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/rudy/cli/candy_rb.html">lib/rudy/cli/candy.rb</a>
+            <a href="../../files/lib/rudy/cli/aws/sdb/objects_rb.html">lib/rudy/cli/aws/sdb/objects.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/rudy/cli/config_rb.html">lib/rudy/cli/config.rb</a>
+            <a href="../../files/lib/rudy/cli/aws/sdb/select_rb.html">lib/rudy/cli/aws/sdb/select.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../../files/lib/rudy/cli/backups_rb.html">lib/rudy/cli/backups.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../../files/lib/rudy/cli/base_rb.html">lib/rudy/cli/base.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../../files/lib/rudy/cli/candy_rb.html">lib/rudy/cli/candy.rb</a>
           </li>
           <li class='other'>
             <a href="../../files/lib/rudy/cli/disks_rb.html">lib/rudy/cli/disks.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/rudy/cli/metadata_rb.html">lib/rudy/cli/metadata.rb</a>
+            <a href="../../files/lib/rudy/cli/config_rb.html">lib/rudy/cli/config.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../../files/lib/rudy/cli/execbase_rb.html">lib/rudy/cli/execbase.rb</a>
           </li>
           <li class='other'>
             <a href="../../files/lib/rudy/cli/machines_rb.html">lib/rudy/cli/machines.rb</a>
           </li>
           <li class='other'>
+            <a href="../../files/lib/rudy/cli/metadata_rb.html">lib/rudy/cli/metadata.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../../files/lib/rudy/cli/networks_rb.html">lib/rudy/cli/networks.rb</a>
+          </li>
+          <li class='other'>
             <a href="../../files/lib/rudy/cli/routines_rb.html">lib/rudy/cli/routines.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../../files/lib/rudy/cli/status_rb.html">lib/rudy/cli/status.rb</a>
           </li>
           <li class='other'>
             <a href="../../files/lib/rudy/cli_rb.html">lib/rudy/cli.rb</a>
@@ -105,37 +126,40 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000014">generate_header</a></li>
+              <li><a href="#M000177">generate_header</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='class-list'>
               <h2>Classes and Modules</h2>
               Module <a href="CLI/AWS.html" class="link">Rudy::CLI::AWS</a><br />
+              Class <a href="CLI/Backups.html" class="link">Rudy::CLI::Backups</a><br />
               Class <a href="CLI/Base.html" class="link">Rudy::CLI::Base</a><br />
               Class <a href="CLI/Candy.html" class="link">Rudy::CLI::Candy</a><br />
               Class <a href="CLI/CommandBase.html" class="link">Rudy::CLI::CommandBase</a><br />
               Class <a href="CLI/Config.html" class="link">Rudy::CLI::Config</a><br />
               Class <a href="CLI/Disks.html" class="link">Rudy::CLI::Disks</a><br />
               Class <a href="CLI/Machines.html" class="link">Rudy::CLI::Machines</a><br />
-              Class <a href="CLI/MetaData.html" class="link">Rudy::CLI::MetaData</a><br />
+              Class <a href="CLI/Metadata.html" class="link">Rudy::CLI::Metadata</a><br />
+              Class <a href="CLI/Networks.html" class="link">Rudy::CLI::Networks</a><br />
               Class <a href="CLI/NoCred.html" class="link">Rudy::CLI::NoCred</a><br />
               Class <a href="CLI/Output.html" class="link">Rudy::CLI::Output</a><br />
               Class <a href="CLI/Routines.html" class="link">Rudy::CLI::Routines</a><br />
+              Class <a href="CLI/Status.html" class="link">Rudy::CLI::Status</a><br />
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='public-class method' id='method-M000014'>
-                <a name='M000014'>      </a>
+              <div class='public-class method' id='method-M000177'>
+                <a name='M000177'>      </a>
                 <div class='synopsis'>
                   <span class='name'>generate_header</span>
                   <span class='arguments'>(global, config)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000014-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000177-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000014-source'>     <span class="ruby-comment cmt"># File lib/rudy/cli.rb, line 108</span>&#x000A;108:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">generate_header</span>(<span class="ruby-identifier">global</span>, <span class="ruby-identifier">config</span>)&#x000A;109:       <span class="ruby-keyword kw">return</span> <span class="ruby-value str">&quot;&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">global</span>.<span class="ruby-identifier">quiet</span>&#x000A;110:       <span class="ruby-identifier">header</span> = <span class="ruby-constant">StringIO</span>.<span class="ruby-identifier">new</span>&#x000A;111:       <span class="ruby-identifier">title</span>, <span class="ruby-identifier">name</span> = <span class="ruby-node">&quot;RUDY v#{Rudy::VERSION}&quot;</span>, <span class="ruby-identifier">config</span>.<span class="ruby-identifier">accounts</span>.<span class="ruby-identifier">aws</span>.<span class="ruby-identifier">name</span>&#x000A;112:       <span class="ruby-identifier">now_utc</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>.<span class="ruby-identifier">utc</span>.<span class="ruby-identifier">strftime</span>(<span class="ruby-value str">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)&#x000A;113:       <span class="ruby-identifier">criteria</span> = []&#x000A;114:       [<span class="ruby-identifier">:region</span>, <span class="ruby-identifier">:zone</span>, <span class="ruby-identifier">:environment</span>, <span class="ruby-identifier">:role</span>, <span class="ruby-identifier">:position</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">n</span><span class="ruby-operator">|</span>&#x000A;115:         <span class="ruby-identifier">key</span>, <span class="ruby-identifier">val</span> = <span class="ruby-identifier">n</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-value">0</span>,<span class="ruby-value">1</span>).<span class="ruby-identifier">att</span>, <span class="ruby-identifier">global</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">n</span>) &#x000A;116:         <span class="ruby-identifier">key</span> = <span class="ruby-value str">'R'</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">n</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">:region</span>&#x000A;117:         <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">val</span>&#x000A;118:         <span class="ruby-identifier">criteria</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;#{key.att}:#{val.to_s.bright}&quot;</span>&#x000A;119:       <span class="ruby-keyword kw">end</span>&#x000A;120:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">config</span>.<span class="ruby-identifier">accounts</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">config</span>.<span class="ruby-identifier">accounts</span>.<span class="ruby-identifier">aws</span>&#x000A;121:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">global</span>.<span class="ruby-identifier">verbose</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>&#x000A;122:           <span class="ruby-identifier">header</span>.<span class="ruby-identifier">puts</span> <span class="ruby-value str">'%s -- %s -- %s UTC'</span> <span class="ruby-operator">%</span> [<span class="ruby-identifier">title</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">now_utc</span>]&#x000A;123:         <span class="ruby-keyword kw">end</span>&#x000A;124:         <span class="ruby-identifier">header</span>.<span class="ruby-identifier">puts</span> <span class="ruby-value str">'[%s]'</span> <span class="ruby-operator">%</span> [<span class="ruby-identifier">criteria</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">&quot;  &quot;</span>)], <span class="ruby-identifier">$/</span>&#x000A;125:       <span class="ruby-keyword kw">end</span>&#x000A;126:       <span class="ruby-identifier">header</span>.<span class="ruby-identifier">rewind</span>&#x000A;127:       <span class="ruby-identifier">header</span>.<span class="ruby-identifier">read</span>&#x000A;128:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000177-source'>    <span class="ruby-comment cmt"># File lib/rudy/cli.rb, line 27</span>&#x000A;27:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">generate_header</span>(<span class="ruby-identifier">global</span>, <span class="ruby-identifier">config</span>)&#x000A;28:       <span class="ruby-keyword kw">return</span> <span class="ruby-value str">&quot;&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">global</span>.<span class="ruby-identifier">quiet</span>&#x000A;29:       <span class="ruby-identifier">header</span> = <span class="ruby-constant">StringIO</span>.<span class="ruby-identifier">new</span>&#x000A;30:       <span class="ruby-identifier">title</span>, <span class="ruby-identifier">name</span> = <span class="ruby-node">&quot;RUDY v#{Rudy::VERSION}&quot;</span>, <span class="ruby-identifier">config</span>.<span class="ruby-identifier">accounts</span>.<span class="ruby-identifier">aws</span>.<span class="ruby-identifier">name</span>&#x000A;31:       <span class="ruby-identifier">now_utc</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>.<span class="ruby-identifier">utc</span>.<span class="ruby-identifier">strftime</span>(<span class="ruby-value str">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)&#x000A;32:       <span class="ruby-identifier">criteria</span> = []&#x000A;33:       [<span class="ruby-identifier">:region</span>, <span class="ruby-identifier">:zone</span>, <span class="ruby-identifier">:environment</span>, <span class="ruby-identifier">:role</span>, <span class="ruby-identifier">:position</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">n</span><span class="ruby-operator">|</span>&#x000A;34:         <span class="ruby-identifier">key</span>, <span class="ruby-identifier">val</span> = <span class="ruby-identifier">n</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-value">0</span>,<span class="ruby-value">1</span>).<span class="ruby-identifier">att</span>, <span class="ruby-identifier">global</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">n</span>) &#x000A;35:         <span class="ruby-identifier">key</span> = <span class="ruby-value str">'R'</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">n</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">:region</span>&#x000A;36:         <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">val</span>&#x000A;37:         <span class="ruby-identifier">criteria</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;#{key.att}:#{val.to_s.bright}&quot;</span>&#x000A;38:       <span class="ruby-keyword kw">end</span>&#x000A;39:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">config</span>.<span class="ruby-identifier">accounts</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">config</span>.<span class="ruby-identifier">accounts</span>.<span class="ruby-identifier">aws</span>&#x000A;40:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">global</span>.<span class="ruby-identifier">verbose</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>&#x000A;41:           <span class="ruby-identifier">header</span>.<span class="ruby-identifier">puts</span> <span class="ruby-value str">'%s -- %s -- %s UTC'</span> <span class="ruby-operator">%</span> [<span class="ruby-identifier">title</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">now_utc</span>]&#x000A;42:         <span class="ruby-keyword kw">end</span>&#x000A;43:         <span class="ruby-identifier">header</span>.<span class="ruby-identifier">puts</span> <span class="ruby-value str">'[%s]'</span> <span class="ruby-operator">%</span> [<span class="ruby-identifier">criteria</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">&quot;  &quot;</span>)], <span class="ruby-identifier">$/</span>&#x000A;44:       <span class="ruby-keyword kw">end</span>&#x000A;45:       <span class="ruby-identifier">header</span>.<span class="ruby-identifier">rewind</span>&#x000A;46:       <span class="ruby-identifier">header</span>.<span class="ruby-identifier">read</span>&#x000A;47:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

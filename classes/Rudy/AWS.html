@@ -40,10 +40,10 @@
             <a href="../../files/lib/rudy/aws/ec2/image_rb.html">lib/rudy/aws/ec2/image.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/rudy/aws/ec2/keypair_rb.html">lib/rudy/aws/ec2/keypair.rb</a>
+            <a href="../../files/lib/rudy/aws/ec2/instance_rb.html">lib/rudy/aws/ec2/instance.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/rudy/aws/ec2/instance_rb.html">lib/rudy/aws/ec2/instance.rb</a>
+            <a href="../../files/lib/rudy/aws/ec2/keypair_rb.html">lib/rudy/aws/ec2/keypair.rb</a>
           </li>
           <li class='other'>
             <a href="../../files/lib/rudy/aws/ec2/snapshot_rb.html">lib/rudy/aws/ec2/snapshot.rb</a>
@@ -80,16 +80,15 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000206">escape</a></li>
-              <li><a href="#M000207">escape!</a></li>
-              <li><a href="#M000205">valid_region?</a></li>
+              <li><a href="#M000015">escape</a></li>
+              <li><a href="#M000016">escape!</a></li>
+              <li><a href="#M000014">valid_region?</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='class-list'>
               <h2>Classes and Modules</h2>
               Module <a href="AWS/EC2.html" class="link">Rudy::AWS::EC2</a><br />
-              Module <a href="AWS/ObjectBase.html" class="link">Rudy::AWS::ObjectBase</a><br />
               Class <a href="AWS/Error.html" class="link">Rudy::AWS::Error</a><br />
               Class <a href="AWS/S3.html" class="link">Rudy::AWS::S3</a><br />
               Class <a href="AWS/SDB.html" class="link">Rudy::AWS::SDB</a><br />
@@ -101,15 +100,15 @@
                   <tr class='top-aligned-row context-row'>
                     <td class='context-item-name'>VALID_REGIONS</td>
                     <td>=</td>
-                    <td class='context-item-value'>['eu-west-1', 'us-east-1'].freeze</td>
+                    <td class='context-item-value'>[:'eu-west-1', :'us-east-1'].freeze</td>
                   </tr>
                 </table>
               </div>
             </div>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000206'>
-                <a name='M000206'>      </a>
+              <div class='public-instance method' id='method-M000015'>
+                <a name='M000015'>      </a>
                 <div class='synopsis'>
                   <span class='name'>escape</span>
                   <span class='arguments'>(str)</span>
@@ -121,36 +120,36 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000206-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000015-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000206-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws.rb, line 17</span>&#x000A;17:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">escape</span>(<span class="ruby-identifier">str</span>)&#x000A;18:       <span class="ruby-identifier">str</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">tr</span>(<span class="ruby-value str">&quot;[\0\n\r\032\\\\]&quot;</span>, <span class="ruby-value str">''</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/([\'\&quot;])/</span>, <span class="ruby-value str">'\\1\\1'</span>)&#x000A;19:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000015-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws.rb, line 17</span>&#x000A;17:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">escape</span>(<span class="ruby-identifier">str</span>)&#x000A;18:       <span class="ruby-identifier">str</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">tr</span>(<span class="ruby-value str">&quot;[\0\n\r\032\\\\]&quot;</span>, <span class="ruby-value str">''</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/([\'\&quot;])/</span>, <span class="ruby-value str">'\\1\\1'</span>)&#x000A;19:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000207'>
-                <a name='M000207'>      </a>
+              <div class='public-instance method' id='method-M000016'>
+                <a name='M000016'>      </a>
                 <div class='synopsis'>
                   <span class='name'>escape!</span>
                   <span class='arguments'>(str)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000207-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000016-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000207-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws.rb, line 20</span>&#x000A;20:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">escape!</span>(<span class="ruby-identifier">str</span>)&#x000A;21:       <span class="ruby-identifier">str</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">tr!</span>(<span class="ruby-value str">&quot;[\0\n\r\032\\\\]&quot;</span>, <span class="ruby-value str">''</span>).<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp re">/([\'\&quot;])/</span>, <span class="ruby-value str">'\\1\\1'</span>)&#x000A;22:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000016-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws.rb, line 20</span>&#x000A;20:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">escape!</span>(<span class="ruby-identifier">str</span>)&#x000A;21:       <span class="ruby-identifier">str</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">tr!</span>(<span class="ruby-value str">&quot;[\0\n\r\032\\\\]&quot;</span>, <span class="ruby-value str">''</span>).<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp re">/([\'\&quot;])/</span>, <span class="ruby-value str">'\\1\\1'</span>)&#x000A;22:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000205'>
-                <a name='M000205'>      </a>
+              <div class='public-instance method' id='method-M000014'>
+                <a name='M000014'>      </a>
                 <div class='synopsis'>
                   <span class='name'>valid_region?</span>
                   <span class='arguments'>(r)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000205-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000014-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000205-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws.rb, line 14</span>&#x000A;14:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">valid_region?</span>(<span class="ruby-identifier">r</span>); <span class="ruby-constant">VALID_REGIONS</span>.<span class="ruby-identifier">member?</span>(<span class="ruby-identifier">r</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">||</span> <span class="ruby-value str">''</span>); <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000014-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws.rb, line 14</span>&#x000A;14:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">valid_region?</span>(<span class="ruby-identifier">r</span>); <span class="ruby-constant">VALID_REGIONS</span>.<span class="ruby-identifier">member?</span>(<span class="ruby-identifier">r</span>.<span class="ruby-identifier">to_sym</span> <span class="ruby-operator">||</span> <span class="ruby-value str">''</span>); <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

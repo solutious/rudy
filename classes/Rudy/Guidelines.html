@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>: Rudy::Guidelines [Rudy: Not your grandparents' EC2 deployment tool.]</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>Module</span>
+          Rudy::Guidelines
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a href="../../files/lib/rudy/guidelines_rb.html">lib/rudy/guidelines.rb</a>
+          </li>
+        </ol>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>public instance</h3>
+            <ol>
+              <li><a href="#M000326">inspect</a></li>
+            </ol>
+          </div>
+          <div id='section'>
+            <div id='constants-list'>
+              <h2>Constants</h2>
+              <div class='name-list'>
+                <table summary='Constants'>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>AFE</td>
+                    <td>=</td>
+                    <td class='context-item-value'>&quot;Always fail early&quot;</td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>ABA</td>
+                    <td>=</td>
+                    <td class='context-item-value'>&quot;Always be accurate&quot;</td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>CBC</td>
+                    <td>=</td>
+                    <td class='context-item-value'>&quot;Consistency before cuteness&quot;</td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>UNO</td>
+                    <td>=</td>
+                    <td class='context-item-value'>&quot;Ugly's not okay&quot;</td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>WOC</td>
+                    <td>=</td>
+                    <td class='context-item-value'>&quot;Write offensive code&quot;</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div id='methods'>
+              <h2>Public instance methods</h2>
+              <div class='public-instance method' id='method-M000326'>
+                <a name='M000326'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>inspect</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000326-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000326-source'>    <span class="ruby-comment cmt"># File lib/rudy/guidelines.rb, line 11</span>&#x000A;11:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">inspect</span>&#x000A;12:       <span class="ruby-identifier">all</span> = <span class="ruby-constant">Guidelines</span>.<span class="ruby-identifier">constants</span>&#x000A;13:       <span class="ruby-identifier">g</span> = <span class="ruby-identifier">all</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span> <span class="ruby-value str">'%s=&quot;%s&quot;'</span> <span class="ruby-operator">%</span> [<span class="ruby-identifier">c</span>, <span class="ruby-identifier">const_get</span>(<span class="ruby-identifier">c</span>)] }&#x000A;14:       <span class="ruby-value str">%q{#&lt;Rudy::Guidelines:0x%s %s&gt;}</span> <span class="ruby-operator">%</span> [<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">object_id</span>, <span class="ruby-identifier">g</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">' '</span>)]&#x000A;15:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

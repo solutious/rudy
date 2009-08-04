@@ -31,40 +31,34 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>Tue Jun 09 21:54:24 -0400 2009</span>
+          <span class='datetime'>2009-08-04 18:01:17 -0400</span>
         </div>
       </div>
       <div id='content'>
         <div id='text'>
           <div id='description'>
-            <h1><a href="../classes/Rudy.html">Rudy</a> - v0.8 BETA</h1>
+            <h1><a href="../classes/Rudy.html">Rudy</a> - v0.9.0 BETA</h1>
             <p>
             <b>Not your grandparents&#8217; EC2 deployment tool.</b>
             </p>
             <p>
-            <a href="../classes/Rudy.html">Rudy</a> is a command-line development and
-            deployment tool for Amazon Web Services. It helps you build and manage
-            machines in EC2 by organizing them into groups of <em>environments</em> and
-            <em>roles</em>. These are called <em>machine</em> <em>groups</em>.
-            <tt>stage</tt> is the default environment and <tt>app</tt> is the default
-            role. You can run multiple machines with the same role. These are called
-            <em>positions</em>. <a href="../classes/Rudy.html">Rudy</a> also supports
-            running machine groups across availability <em>zones</em>.
+            <a href="../classes/Rudy.html">Rudy</a> is a development and deployment
+            tool for Amazon Web Services. It helps you build and infrastructures in EC2
+            by organizing them into groups of <em>zones</em>, <em>environments</em>,
+            and <em>roles</em>. You can run multiple machines with the same role. When
+            you put all this together, you have a unique name for every machine. The
+            default machine is called <tt>m-us-east-1b-stage-app-01</tt> but you can
+            also give them custom names.
             </p>
-            <p>
-            When you put all this together, you have a unique name for every machine.
-            The default machine is:
-            </p>
-            <pre>        zone     env  role&#x000A;         v        v    v&#x000A;   m-us-east-1b-stage-app-01&#x000A;   ^                       ^&#x000A;&quot;machine&quot;                position</pre>
             <p>
             All configuration is organized into the zones, environments, and roles that
             you specify (<a href="../classes/Rudy.html">Rudy</a> assumes positions are
             identical which is important for backups and scaling). And as you&#8217;d
-            expect, the defaults can be changed too (in <tt>~/.rudy/config</tt>).
+            expect, the defaults can be changed too.
             </p>
             <p>
             <b>See <a
-            href="http://solutious.com/products/rudy/getting-started.html">Getting-Started</a>
+            href="http://solutious.com/projects/rudy/getting-started/">Getting-Started</a>
             for more info.</b>
             </p>
             <h2>Project Status</h2>
@@ -74,14 +68,10 @@
             href="http://wiki.github.com/solutious/rudy/project-status">Project-Status</a>.</em>
             </p>
             <p>
-            I&#8217;m currently <a
-            href="http://github.com/solutious/rudy/tree/metadata-refactor">rebuilding</a>
-            the metadata implementation. This is the part of <a
-            href="../classes/Rudy.html">Rudy</a> that stores your machine, disk, and
-            backup infoz in SimpleDB so it&#8217;s pretty important! The implementation
-            in the 0.8.4 release (and this master branch) are functional but frail so I
-            want to re-emphasize not to use <a href="../classes/Rudy.html">Rudy</a> for
-            production right now.
+            The 0.9 release is a major re-write and has many changes from previous
+            releases. 0.9-RC1 is the first public release from the 0.9 branch and much
+            of the code has not been tested. DO NOT USE IN PRODUCTION. Try it out have
+            some fun and if you have the time send a patch or pull request!
             </p>
             <h2>Configuration</h2>
             <h3>Machines</h3>
@@ -89,16 +79,16 @@
             The machines configuration describes the &#8220;physical&#8221;
             characteristics of your infrastructure.
             </p>
-            <pre>env :stage do         # Define an environment&#x000A;  ami 'ami-e348af8a'&#x000A;&#x000A;  role :app do        # Define a role&#x000A;    addresses '11.22.33.44'  # Use elastic IPs&#x000A;&#x000A;    disks do          # Create EBS volumes&#x000A;      path &quot;/rudy/disk1&quot; do&#x000A;        size 100&#x000A;        device &quot;/dev/sdr&quot;&#x000A;      end&#x000A;    end&#x000A;  end&#x000A;end</pre>
+            <pre>env :stage do                   # Define an environment&#x000A;  ami 'ami-e348af8a'&#x000A;&#x000A;  role :app do                  # Define a role&#x000A;    addresses '11.22.33.44'     # Use elastic IPs&#x000A;&#x000A;    disks do                    # Define EBS volumes&#x000A;      path &quot;/rudy/disk1&quot; do&#x000A;        size 100&#x000A;        device &quot;/dev/sdr&quot;&#x000A;      end&#x000A;    end&#x000A;  end&#x000A;end</pre>
             <h3>Routines</h3>
             <p>
             The routines configuration describes repeatable processes that you can
             execute on your machines.
             </p>
-            <pre>startup do            # $ rudy startup&#x000A;  adduser :rudy&#x000A;  authorize :rudy     # Enable passwordless login&#x000A;&#x000A;  disks do                   # Create a disk&#x000A;    restore &quot;/rudy/disk1&quot;    # from a backup&#x000A;  end&#x000A;&#x000A;  after :rudy do      # Run remote SSH commands&#x000A;    mkdir :p, &quot;great&quot;        # $ mkdir -p great&#x000A;    touch &quot;great/scott&quot;      # $ touch great/scott&#x000A;    ls :l, :a                # $ ls -l -a&#x000A;  end&#x000A;end</pre>
+            <pre>startup do                      # $ rudy startup&#x000A;  adduser :rudy&#x000A;  authorize :rudy               # Enable passwordless login&#x000A;&#x000A;  disks do&#x000A;    create &quot;/rudy/disk1&quot;        # Create a disk&#x000A;  end&#x000A;&#x000A;  remote :rudy do               # Run remote commands via SSH&#x000A;    mkdir :p, &quot;great&quot;           # $ mkdir -p great&#x000A;    touch &quot;great/scott&quot;         # $ touch great/scott&#x000A;    mysql_init :start&#x000A;  end&#x000A;end</pre>
             <h2>Features</h2>
             <ul>
-            <li>Create complex environments with a single command
+            <li>Create complex IT infrastructures from a simple configuration
             
             <ul>
             <li>Launch multiple instances
@@ -110,10 +100,10 @@
             <li>Create EBS volumes, attach to instances, format, and mount
             
             </li>
-            <li>Run scripts locally and remotely automatically
-            
-            </li>
             </ul>
+            </li>
+            <li>Run SSH commands on machine groups in parallel
+            
             </li>
             <li>Organize instances into environments and roles
             
@@ -124,7 +114,7 @@
             <li><tt>$ rudy -u root ssh</tt>
             
             </li>
-            <li><tt>$ rudy -e testing -r database startup</tt>
+            <li><tt>$ rudy -e testing -r database backup-mysql</tt>
             
             </li>
             </ul>
@@ -139,9 +129,9 @@
             </ul>
             <h2>Installation</h2>
             <p>
-            Via Rubygems, one of:
+            Via Rubygems:
             </p>
-            <pre>$ sudo gem install rudy&#x000A;$ sudo gem install solutious-rudy --source http://gems.github.com/</pre>
+            <pre>$ sudo gem install rudy</pre>
             <p>
             or via download:
             </p>
@@ -156,13 +146,17 @@
             </li>
             </ul>
             <p>
+            or via git:
+            </p>
+            <pre>$ git clone git://github.com/solutious/rudy.git</pre>
+            <p>
             NOTE: <em>If you are not installing via RubyGems, you need to make sure the
             dependencies are in your LOAD_PATH (<tt>$:</tt>). Ryan Tomayko wrote a <a
             href="http://gist.github.com/54177">gist</a> about it.</em>
             </p>
             <p>
             <b>See <a
-            href="http://solutious.com/products/rudy/getting-started.html">Getting-Started</a>
+            href="http://solutious.com/projects/rudy/getting-started/">Getting-Started</a>
             for more info.</b>
             </p>
             <h2>Pre-Requisites</h2>
@@ -181,11 +175,14 @@
             </li>
             </ul>
             </li>
+            <li><a href="http://www.openssl.org/">OpenSSL</a>
+            
+            </li>
             <li><a href="http://www.openssh.com/">OpenSSH</a>
             
             </li>
             <li><a href="http://ruby-lang.org">Ruby</a> 1.8.x, 1.9.x, or <a
-            href="http://jruby.codehaus.org">JRuby</a> 1.2
+            href="http://jruby.codehaus.org">JRuby</a> 1.3
             
             <ul>
             <li><a href="http://net-ssh.rubyforge.org/">Net::SSH</a>
@@ -209,6 +206,23 @@
             <li><a href="http://github.com/delano/caesars">Caesars</a>
             
             </li>
+            <li><a href="http://github.com/delano/gibbler">Gibbler</a>
+            
+            </li>
+            </ul>
+            </li>
+            <li>Supported Platforms
+            
+            <ul>
+            <li>Linux: Ruby 1.8, 1.9, and JRuby 1.3+
+            
+            </li>
+            <li>Windows: Ruby 1.8 and JRuby 1.3+ (Net::SSH does not run under Ruby 1.9)
+            
+            </li>
+            <li>BSD: <em>Needs testing (any takers?)</em>
+            
+            </li>
             </ul>
             </li>
             </ul>
@@ -217,7 +231,7 @@
             <li>Fork at <a href="http://github.com/solutious/rudy">GitHub</a>
             
             </li>
-            <li>Read the <a href="http://wiki.github.com/solutious/rudy">Documentation</a>
+            <li>Read the <a href="http://solutious.com/projects/rudy">Documentation</a>
             
             </li>
             <li>Submit issues to the <a
@@ -232,12 +246,15 @@
             href="http://www.youtube.com/watch?v=CgaiIW5Rzes">Inspiration</a>
             
             </li>
-            <li>For all other inquires, email me directly: delano@solutious.com
+            <li>For all other inquires, email me directly: delano (@solutious.com)
             
             </li>
             </ul>
             <h2>Thanks</h2>
             <ul>
+            <li>Kalin Harvey for all the feedback
+            
+            </li>
             <li>The <a href="http://rilli.com">Rilli.com</a> team
             
             <ul>
@@ -282,15 +299,12 @@
             </li>
             </ul>
             <h2>Contributions</h2>
-            <p>
-            I&#8217;m very open to contributions!
-            </p>
             <ul>
             <li>For bigger features please fork the git repo and send me a pull request.
             
             </li>
-            <li>For small or single file changes, send me an email with the details:
-            <tt>delano@solutious.com</tt>
+            <li>For small or single file changes, send me an email with the details: Delano
+            (@solutious.com)
             
             </li>
             </ul>
@@ -306,24 +320,11 @@
             </ul>
             <h2>Related Projects</h2>
             <ul>
-            <li>Sprinkle &#8212; <a
-            href="http://github.com/crafterm/sprinkle/">github.com/crafterm/sprinkle/</a>
-            
-            </li>
-            <li>Wakame &#8212; <a
-            href="http://wakame.rubyforge.org/">wakame.rubyforge.org/</a>
-            
-            </li>
-            <li>Pool Party &#8212; <a
-            href="http://www.poolpartyrb.com/">www.poolpartyrb.com/</a>
-            
-            </li>
-            <li>Rubber &#8212; <a
-            href="http://github.com/wr0ngway/rubber/wikis">github.com/wr0ngway/rubber/wikis</a>
+            <li>Rake &#8212; <a href="http://rake.rubyforge.org/">rake.rubyforge.org/</a>
             
             </li>
             <li>Moonshine &#8212; <a
-            href="http://github.com/railsmachine/moonshine/tree">github.com/railsmachine/moonshine/tree</a>
+            href="http://github.com/railsmachine/moonshine/tree/">github.com/railsmachine/moonshine/tree/</a>
             
             </li>
             <li>Boto &#8212; <a

@@ -40,10 +40,10 @@
             <a href="../../../files/lib/rudy/aws/ec2/image_rb.html">lib/rudy/aws/ec2/image.rb</a>
           </li>
           <li class='other'>
-            <a href="../../../files/lib/rudy/aws/ec2/keypair_rb.html">lib/rudy/aws/ec2/keypair.rb</a>
+            <a href="../../../files/lib/rudy/aws/ec2/instance_rb.html">lib/rudy/aws/ec2/instance.rb</a>
           </li>
           <li class='other'>
-            <a href="../../../files/lib/rudy/aws/ec2/instance_rb.html">lib/rudy/aws/ec2/instance.rb</a>
+            <a href="../../../files/lib/rudy/aws/ec2/keypair_rb.html">lib/rudy/aws/ec2/keypair.rb</a>
           </li>
           <li class='other'>
             <a href="../../../files/lib/rudy/aws/ec2/snapshot_rb.html">lib/rudy/aws/ec2/snapshot.rb</a>
@@ -64,49 +64,114 @@
       </div>
       <div id='content'>
         <div id='text'>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>public class</h3>
+            <ol>
+              <li><a href="#M000017">connect</a></li>
+            </ol>
+            <h3>protected class</h3>
+            <ol>
+              <li><a href="#M000018">execute_request</a></li>
+            </ol>
+          </div>
           <div id='section'>
             <div id='class-list'>
               <h2>Classes and Modules</h2>
-              Module <a href="EC2/Base.html" class="link">Rudy::AWS::EC2::Base</a><br />
+              Module <a href="EC2/Addresses.html" class="link">Rudy::AWS::EC2::Addresses</a><br />
+              Module <a href="EC2/Groups.html" class="link">Rudy::AWS::EC2::Groups</a><br />
+              Module <a href="EC2/Images.html" class="link">Rudy::AWS::EC2::Images</a><br />
+              Module <a href="EC2/Instances.html" class="link">Rudy::AWS::EC2::Instances</a><br />
+              Module <a href="EC2/Keypairs.html" class="link">Rudy::AWS::EC2::Keypairs</a><br />
+              Module <a href="EC2/Snapshots.html" class="link">Rudy::AWS::EC2::Snapshots</a><br />
+              Module <a href="EC2/Volumes.html" class="link">Rudy::AWS::EC2::Volumes</a><br />
+              Module <a href="EC2/Zones.html" class="link">Rudy::AWS::EC2::Zones</a><br />
               Class <a href="EC2/Address.html" class="link">Rudy::AWS::EC2::Address</a><br />
               Class <a href="EC2/AddressAssociated.html" class="link">Rudy::AWS::EC2::AddressAssociated</a><br />
               Class <a href="EC2/AddressNotAssociated.html" class="link">Rudy::AWS::EC2::AddressNotAssociated</a><br />
-              Class <a href="EC2/Addresses.html" class="link">Rudy::AWS::EC2::Addresses</a><br />
               Class <a href="EC2/ErrorCreatingAddress.html" class="link">Rudy::AWS::EC2::ErrorCreatingAddress</a><br />
-              Class <a href="EC2/ErrorCreatingKeyPair.html" class="link">Rudy::AWS::EC2::ErrorCreatingKeyPair</a><br />
+              Class <a href="EC2/ErrorCreatingKeypair.html" class="link">Rudy::AWS::EC2::ErrorCreatingKeypair</a><br />
               Class <a href="EC2/Group.html" class="link">Rudy::AWS::EC2::Group</a><br />
-              Class <a href="EC2/Groups.html" class="link">Rudy::AWS::EC2::Groups</a><br />
               Class <a href="EC2/Image.html" class="link">Rudy::AWS::EC2::Image</a><br />
-              Class <a href="EC2/Images.html" class="link">Rudy::AWS::EC2::Images</a><br />
-              Class <a href="EC2/InsecureKeyPairPermissions.html" class="link">Rudy::AWS::EC2::InsecureKeyPairPermissions</a><br />
+              Class <a href="EC2/InsecureKeypairPermissions.html" class="link">Rudy::AWS::EC2::InsecureKeypairPermissions</a><br />
               Class <a href="EC2/Instance.html" class="link">Rudy::AWS::EC2::Instance</a><br />
-              Class <a href="EC2/Instances.html" class="link">Rudy::AWS::EC2::Instances</a><br />
               Class <a href="EC2/InvalidRegion.html" class="link">Rudy::AWS::EC2::InvalidRegion</a><br />
-              Class <a href="EC2/KeyPair.html" class="link">Rudy::AWS::EC2::KeyPair</a><br />
-              Class <a href="EC2/KeyPairAlreadyDefined.html" class="link">Rudy::AWS::EC2::KeyPairAlreadyDefined</a><br />
-              Class <a href="EC2/KeyPairExists.html" class="link">Rudy::AWS::EC2::KeyPairExists</a><br />
-              Class <a href="EC2/KeyPairs.html" class="link">Rudy::AWS::EC2::KeyPairs</a><br />
+              Class <a href="EC2/Keypair.html" class="link">Rudy::AWS::EC2::Keypair</a><br />
+              Class <a href="EC2/KeypairAlreadyDefined.html" class="link">Rudy::AWS::EC2::KeypairAlreadyDefined</a><br />
+              Class <a href="EC2/KeypairExists.html" class="link">Rudy::AWS::EC2::KeypairExists</a><br />
               Class <a href="EC2/MalformedResponse.html" class="link">Rudy::AWS::EC2::MalformedResponse</a><br />
               Class <a href="EC2/NoAMI.html" class="link">Rudy::AWS::EC2::NoAMI</a><br />
               Class <a href="EC2/NoAddress.html" class="link">Rudy::AWS::EC2::NoAddress</a><br />
               Class <a href="EC2/NoDevice.html" class="link">Rudy::AWS::EC2::NoDevice</a><br />
               Class <a href="EC2/NoGroup.html" class="link">Rudy::AWS::EC2::NoGroup</a><br />
               Class <a href="EC2/NoInstanceID.html" class="link">Rudy::AWS::EC2::NoInstanceID</a><br />
-              Class <a href="EC2/NoKeyPair.html" class="link">Rudy::AWS::EC2::NoKeyPair</a><br />
+              Class <a href="EC2/NoKeypair.html" class="link">Rudy::AWS::EC2::NoKeypair</a><br />
               Class <a href="EC2/NoPrivateKeyFile.html" class="link">Rudy::AWS::EC2::NoPrivateKeyFile</a><br />
               Class <a href="EC2/NoRunningInstances.html" class="link">Rudy::AWS::EC2::NoRunningInstances</a><br />
               Class <a href="EC2/NoVolumeID.html" class="link">Rudy::AWS::EC2::NoVolumeID</a><br />
               Class <a href="EC2/Snapshot.html" class="link">Rudy::AWS::EC2::Snapshot</a><br />
-              Class <a href="EC2/Snapshots.html" class="link">Rudy::AWS::EC2::Snapshots</a><br />
               Class <a href="EC2/UnknownAddress.html" class="link">Rudy::AWS::EC2::UnknownAddress</a><br />
               Class <a href="EC2/UnknownState.html" class="link">Rudy::AWS::EC2::UnknownState</a><br />
+              Class <a href="EC2/UnknownVolume.html" class="link">Rudy::AWS::EC2::UnknownVolume</a><br />
               Class <a href="EC2/Volume.html" class="link">Rudy::AWS::EC2::Volume</a><br />
               Class <a href="EC2/VolumeAlreadyAttached.html" class="link">Rudy::AWS::EC2::VolumeAlreadyAttached</a><br />
               Class <a href="EC2/VolumeNotAttached.html" class="link">Rudy::AWS::EC2::VolumeNotAttached</a><br />
               Class <a href="EC2/VolumeNotAvailable.html" class="link">Rudy::AWS::EC2::VolumeNotAvailable</a><br />
-              Class <a href="EC2/Volumes.html" class="link">Rudy::AWS::EC2::Volumes</a><br />
               Class <a href="EC2/Zone.html" class="link">Rudy::AWS::EC2::Zone</a><br />
-              Class <a href="EC2/Zones.html" class="link">Rudy::AWS::EC2::Zones</a><br />
+            </div>
+            <div id='methods'>
+              <h2>Public class methods</h2>
+              <div class='public-class method' id='method-M000017'>
+                <a name='M000017'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>connect</span>
+                  <span class='arguments'>(access_key=nil, secret_key=nil, region=nil, logger=nil)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  include <a href="../Huxtable.html">Rudy::Huxtable</a>
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000017-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000017-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2.rb, line 6</span>&#x000A; 6:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">connect</span>(<span class="ruby-identifier">access_key</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">secret_key</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">region</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">logger</span>=<span class="ruby-keyword kw">nil</span>)&#x000A; 7: &#x000A; 8:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">region</span>&#x000A; 9:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">InvalidRegion</span>, <span class="ruby-identifier">region</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span>.<span class="ruby-identifier">valid_region?</span>(<span class="ruby-identifier">region</span>)&#x000A;10:         <span class="ruby-identifier">host</span> = <span class="ruby-node">&quot;#{region}.ec2.amazonaws.com&quot;</span>&#x000A;11:       <span class="ruby-keyword kw">elsif</span> <span class="ruby-constant">ENV</span>[<span class="ruby-value str">'EC2_URL'</span>]&#x000A;12:         <span class="ruby-identifier">host</span> = <span class="ruby-constant">URL</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-constant">ENV</span>[<span class="ruby-value str">'EC2_URL'</span>]).<span class="ruby-identifier">host</span>&#x000A;13:       <span class="ruby-keyword kw">end</span>&#x000A;14:       &#x000A;15:       <span class="ruby-identifier">host</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">DEFAULT_EC2_HOST</span>&#x000A;16:       <span class="ruby-identifier">port</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">DEFAULT_EC2_PORT</span>&#x000A;17:       &#x000A;18:       <span class="ruby-ivar">@@ec2</span> = <span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Base</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">:port</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">port</span>, <span class="ruby-identifier">:server=</span><span class="ruby-operator">&gt;</span> <span class="ruby-identifier">host</span>, <span class="ruby-identifier">:access_key_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">access_key</span>, <span class="ruby-identifier">:secret_access_key</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">secret_key</span>)&#x000A;19:       <span class="ruby-ivar">@@logger</span> = <span class="ruby-identifier">logger</span>&#x000A;20:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <h2>Protected class methods</h2>
+              <div class='protected-class method' id='method-M000018'>
+                <a name='M000018'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>execute_request</span>
+                  <span class='arguments'>(default=nil, timeout=nil, &amp;request)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Execute <a href="../AWS.html">AWS</a> requests safely. This will trap
+                  errors and return a default value (if specified).
+                  </p>
+                  <ul>
+                  <li><tt>default</tt> A default response value
+                  
+                  </li>
+                  <li><tt>request</tt> A block which contains the <a href="../AWS.html">AWS</a>
+                  request
+                  
+                  </li>
+                  </ul>
+                  <p>
+                  Returns the return value from the request is returned untouched or the
+                  default value on error or if the request returned nil.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000018-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000018-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2.rb, line 30</span>&#x000A;30:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">execute_request</span>(<span class="ruby-identifier">default</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">timeout</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">request</span>)&#x000A;31:       <span class="ruby-identifier">timeout</span> <span class="ruby-operator">||=</span> <span class="ruby-value">15</span>&#x000A;32:       <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;No block provided&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">request</span>&#x000A;33:       <span class="ruby-identifier">response</span> = <span class="ruby-keyword kw">nil</span>&#x000A;34:       <span class="ruby-keyword kw">begin</span>&#x000A;35:         <span class="ruby-constant">Timeout</span><span class="ruby-operator">::</span><span class="ruby-identifier">timeout</span>(<span class="ruby-identifier">timeout</span>) <span class="ruby-keyword kw">do</span>&#x000A;36:           <span class="ruby-identifier">response</span> = <span class="ruby-identifier">request</span>.<span class="ruby-identifier">call</span>&#x000A;37:         <span class="ruby-keyword kw">end</span>&#x000A;38:       <span class="ruby-comment cmt"># Raise the EC2 exceptions</span>&#x000A;39:       <span class="ruby-keyword kw">rescue</span> <span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>, <span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">InvalidInstanceIDMalformed</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">ex</span>  &#x000A;40:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>, <span class="ruby-identifier">ex</span>.<span class="ruby-identifier">message</span>&#x000A;41:       &#x000A;42:       <span class="ruby-comment cmt"># NOTE: The InternalError is returned for non-existent volume IDs. </span>&#x000A;43:       <span class="ruby-comment cmt"># It's probably a bug so we're ignoring it -- Dave. </span>&#x000A;44:       <span class="ruby-keyword kw">rescue</span> <span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">InternalError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">ex</span>&#x000A;45:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>, <span class="ruby-identifier">ex</span>.<span class="ruby-identifier">message</span>&#x000A;46:         &#x000A;47:       <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">Timeout</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">ex</span>&#x000A;48:         <span class="ruby-constant">STDERR</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Timeout (#{timeout}): #{ex.message}!&quot;</span>&#x000A;49:       <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">SocketError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">ex</span>&#x000A;50:         <span class="ruby-comment cmt">#STDERR.puts ex.message</span>&#x000A;51:         <span class="ruby-comment cmt">#STDERR.puts ex.backtrace</span>&#x000A;52:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">SocketError</span>, <span class="ruby-value str">&quot;Check your Internets!&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">offline</span>&#x000A;53:       <span class="ruby-keyword kw">ensure</span>&#x000A;54:         <span class="ruby-identifier">response</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">default</span>&#x000A;55:       <span class="ruby-keyword kw">end</span>&#x000A;56:       <span class="ruby-identifier">response</span>&#x000A;57:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
             </div>
           </div>
         </div>

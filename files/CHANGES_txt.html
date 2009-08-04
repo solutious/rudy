@@ -31,7 +31,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>Tue Jun 09 21:54:24 -0400 2009</span>
+          <span class='datetime'>2009-08-04 18:01:26 -0400</span>
         </div>
       </div>
       <div id='content'>
@@ -41,37 +41,254 @@
             RUDY, CHANGES
             </p>
             <p>
-            #### 0.9.0 (TBD) ###############################
-            </p>
-            <p>
-            NOTE: The following changes are planned for the 0.9.0 release.
+            #### 0.9.0 (2009-08-04) ###########################
             </p>
             <ul>
-            <li>group identifier will be changed to &#8216;grp&#8217; from &#8216;g&#8217;
+            <li>FIXED: Better Windows support
             
             </li>
-            <li>machine identifier will be changes to &#8216;mach&#8217; from
-            &#8216;m&#8217;
+            <li>FIXED: Added rescue for disk handler in reboot routine
             
             </li>
-            <li>private keys are stored in ~/.ssh/
+            <li>FIXED: Another fix for resolving region/zone ambiguity
             
             </li>
-            <li>zone is now a single letter: a, b, c, etc... The long form (us-east-1b)
-            will set the region too.
+            <li>FIXED: No Routines config error during shutdown routine
             
             </li>
-            <li>Disk syntax in the routines DSL will change. The DSL no longer accepts
-            arguments, just the action (create, destroy, &#8230;).
+            <li>CHANGE: Renamed &#8220;rudy machines -S&#8221; to &#8220;rudy machines
+            -A&#8220;
             
             </li>
-            <li>Disk backups will be removed (temporarily &#8212; probably until on of the
-            early 1.x releases).
+            <li>CHANGE: Renamed &#8220;rudy machines -A&#8221; to &#8220;rudy machines
+            -T&#8220;
+            
+            </li>
+            <li>ADDED: Print friendly error, rather then an angry exception when running on
+            win32 with ruby 1.9
+            
+            </li>
+            <li>ADDED: &#8220;rudy machines &#8212;disassociate&#8221; command
+            
+            </li>
+            <li>ADDED: Allow colons in place of dashes (rudy publish:gem -> publish_gem do;
+            &#8230;; end)
             
             </li>
             </ul>
             <p>
-            #### 0.8.5 (2009-06-??) ###############################
+            #### 0.9.0-RC3 (2009-08-03) ###########################
+            </p>
+            <ul>
+            <li>FIXED: GH-18 (Error when running startup, reboot, shutdown routines in
+            parallel mode)
+            
+            </li>
+            <li>FIXED: Routine::Handler::User.adduser was specifying invalid home directory
+            with multiple machines
+            
+            </li>
+            <li>FIXED: Socket.connect error in JRuby when checking if SSH is available
+            
+            </li>
+            <li>FIXED: <a
+            href="../classes/Rudy/AWS/EC2.html#M000017">Rudy::AWS::EC2.connect</a> now
+            correctly reconnects when run for the second time
+            
+            </li>
+            <li>FIXED: Global CLI option -R (region) was being ignored in lieu of -z (zone)
+            
+            </li>
+            <li>FIXED: <a href="../classes/Rudy/Disk.html#M000537">Rudy::Disk#archive</a>
+            wasn&#8217;t storing size, fstype
+            
+            </li>
+            <li>FIXED: Disk restore was balking when no FS type supplied
+            
+            </li>
+            <li>FIXED: Reboot routine now automatically umounts volumes if the routine is
+            configured to mount after the reboot
+            
+            </li>
+            <li>CHANGE: &#8220;rudy myaddress&#8221; is now &#8220;rudy networks -L&#8220;
+            
+            </li>
+            <li>CHANGE: Renamed Volume attributes: create_time, attach_time -> created,
+            attached
+            
+            </li>
+            <li>CHANGE: Renamed Instance attribute: launch_time -> created
+            
+            </li>
+            <li>CHANGE: Global CLI option -C (config) can now accept multiple paths
+            
+            </li>
+            <li>ADDED: &#8220;rudy machines -A&#8221; to display available machines
+            
+            </li>
+            <li>ADDED: &#8220;rudy status&#8221; to display all EC2 objects
+            
+            </li>
+            <li>ADDED: &#8220;rudy machines -U&#8221; to update hostnames
+            
+            </li>
+            <li>ADDED: &#8220;rudy machines -S&#8221; to create static IP addresses
+            
+            </li>
+            <li>ADDED: Rudy::Routines::Handlers::Disks.mount? etc... methods
+            
+            </li>
+            </ul>
+            <p>
+            #### 0.9.0-RC2 (2009-08-02) ###########################
+            </p>
+            <ul>
+            <li>FIXED: Some status lines were printing on the same line during routines
+            
+            </li>
+            <li>FIXED: user value in defaults wasn&#8217;t being used for remote commands
+            
+            </li>
+            <li>FIXED: Double printing SSH commands in parallel mode
+            
+            </li>
+            <li>FIXED: Startup routine was creating only one machine
+            
+            </li>
+            <li>FIXED: Reboot now executes commands in correct order
+            
+            </li>
+            <li>CHANGE: Renamed config parameter &#8216;yes&#8217; to &#8216;auto&#8217;
+            
+            </li>
+            <li>CHANGE: Global config parameter processed differently (see <a
+            href="../classes/Rudy/Config.html#M000481">Rudy::Config#look_and_load</a>)
+            
+            </li>
+            <li>ADDED: &#8220;rudy ssh&#8221; can now run commands in parallel
+            
+            </li>
+            <li>ADDED: rudy networks command
+            
+            </li>
+            </ul>
+            <p>
+            #### 0.9.0-RC1 (2009-08-01) ###########################
+            </p>
+            <p>
+            NOTE: This is a significant re-write from 0.8 (primarily the routines,
+            metadata)
+            </p>
+            <ul>
+            <li>FIXED: Routine blocks now process directives in the order their given (in
+            Ruby 1.8 and 1.9).
+            
+            </li>
+            <li>FIXED: Region is now based on the zone. Corrects ambiguity when specifying
+            zone and region.
+            
+            </li>
+            <li>FIXED: Reboot routines are now fully supported
+            
+            </li>
+            <li>FIXED: Unless position (-p) is specified, it&#8217;s assumed that a command
+            applies to the entire machine group.
+            
+            </li>
+            <li>CHANGE: Rudy::Machine#inspect now prints in a standard Ruby inspect format
+            
+            </li>
+            <li>CHANGE: Routines have been completely rebuilt
+            
+            </li>
+            <li>CHANGE: Now requires Rye 0.8
+            
+            </li>
+            <li>CHANGE: before / after routine actions are now used for dependencies only.
+            
+            </li>
+            <li>CHANGE: Removed script_local, after_local, before_local from passthrough
+            routines
+            
+            </li>
+            <li>CHANGE: Support before_local for startup routines
+            
+            </li>
+            <li>CHANGE: Support before_local and before_remote for reboot routines
+            
+            </li>
+            <li>CHANGE: Support after_local for shutdown routines
+            
+            </li>
+            <li>CHANGE: Removed machines config (now recommend uploading local files)
+            
+            </li>
+            <li>CHANGE: Group names now take the form: grp-us-east-1b-stage-app
+            
+            </li>
+            <li>CHANGE: private keys are now stored in ~/.ssh/
+            
+            </li>
+            <li>CHANGE: Removed create_image and prepare_image actions from rudy-ec2
+            
+            </li>
+            <li>CHANGE: local routine blocks now share a single Rye::Box instance
+            
+            </li>
+            <li>CHANGE: remote routine blocks now share a single Rye::Set instance
+            
+            </li>
+            <li>CHANGE: &#8220;privatekey&#8221; in accounts config is renamed to
+            &#8220;pkey&#8220;
+            
+            </li>
+            <li>CHANGE: Reduced Rudy::AWS#execute_request timeout to 15 seconds.
+            
+            </li>
+            <li>CHANGE: Rudy:Disks, <a
+            href="../classes/Rudy/Machines.html">Rudy::Machines</a>, and <a
+            href="../classes/Rudy/Backups.html">Rudy::Backups</a> now use class methods
+            
+            </li>
+            <li>CHANGE: <a href="../classes/Rudy/AWS/EC2.html">Rudy::AWS::EC2</a> now uses
+            class methods
+            
+            </li>
+            <li>CHANGE: Renamed disk action &#8216;snapshot&#8217; to &#8216;archive&#8217;
+            
+            </li>
+            <li>ADDED: routines command for displaying available routines
+            
+            </li>
+            <li>ADDED: &#8220;rudy init&#8221; now authorizes public keys for
+            user@localhost
+            
+            </li>
+            <li>ADDED: Parallel processing for remote machines
+            
+            </li>
+            <li>ADDED: Routines now have access to $global and $option (which are frozen)
+            
+            </li>
+            <li>ADDED: xremote and xlocal routine actions for quick skipping
+            
+            </li>
+            <li>ADDED: Dependency Attic 0.4
+            
+            </li>
+            <li>ADDED: New &#8216;objects&#8217; and &#8216;query&#8217; commands for
+            rudy-sdb
+            
+            </li>
+            <li>ADDED: Execute routines on individual machines in a group
+            
+            </li>
+            <li>ADDED: rudy backups command
+            
+            </li>
+            </ul>
+            <p>
+            #### 0.8.5 (2009-06-08) ###############################
             </p>
             <ul>
             <li>FIXED: Bug in DiskHelper. mount method tried to attach when already
@@ -224,8 +441,8 @@
             the machine
             
             </li>
-            <li>CHANGE: Renamed Rudy::Disk to <a
-            href="../classes/Rudy/MetaData/Disk.html">Rudy::MetaData::Disk</a>
+            <li>CHANGE: Renamed <a href="../classes/Rudy/Disk.html">Rudy::Disk</a> to <a
+            href="../classes/Rudy/Disk.html">Rudy::Metadata::Disk</a>
             
             </li>
             <li>CHANGE: Short alias for rudy-ec2 snapshot is now &#8217;s&#8217; (instead
@@ -298,7 +515,7 @@
             <li>FIXED: Was disabling, but not enabling colour
             
             </li>
-            <li>FIXED: Symbol errors in 1.8
+            <li>FIXED: <a href="../classes/Symbol.html">Symbol</a> errors in 1.8
             
             </li>
             <li>FIXED: Command blocks for root user are always run first now in Routines
@@ -366,12 +583,8 @@
             <li>CHANGE: Renamed rudy config &#8212;rudy option to &#8212;project. This was
             important
             
+            <pre>to maintain consistency in documentation.</pre>
             </li>
-            </ul>
-            <p>
-            to maintain consistency in documentation.
-            </p>
-            <ul>
             <li>CHANGE: Cleaned README. See: <a
             href="http://wiki.github.com/solutious/rudy">wiki.github.com/solutious/rudy</a>
             
@@ -635,6 +848,52 @@
             </p>
             <ul>
             <li>Initial public release
+            
+            </li>
+            </ul>
+            <p>
+            #### TODO ###########################################
+            </p>
+            <ul>
+            <li>TODO: Supply dns values in machines config
+            
+            </li>
+            <li>TODO: Rudy::Routines::Arcade.
+            
+            <ul>
+            <li>install/uninstall: uses package management for the specific os impl
+            
+            </li>
+            <li>compile: from source.
+            
+            </li>
+            <li>e.g. rudy -a experimental install git (for ruby-unix-osx)
+            
+            </li>
+            <li>How to handle multiple package managers?
+            
+            </li>
+            <li>How to handle multiple app versions?
+            
+            </li>
+            </ul>
+            </li>
+            <li>TODO: <a
+            href="http://opensoul.org/2009/6/24/capistrano-git-and-ssh-keys">opensoul.org/2009/6/24/capistrano-git-and-ssh-keys</a>
+            
+            </li>
+            <li>TODO: look for config file in ./.rudy, then ../.rudy, etc... (git-like)
+            
+            </li>
+            <li>TODO: FIX: When shutting down, warns about disks even when they don&#8217;t
+            exist (CLI::Routines)
+            
+            </li>
+            <li>TODO: Investigate SSH daemon on Windows
+            
+            </li>
+            <li>TODO: Supply machines config to routines blocks with only the specific
+            machine group context
             
             </li>
             </ul>

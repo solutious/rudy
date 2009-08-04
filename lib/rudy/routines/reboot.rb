@@ -28,6 +28,10 @@ module Rudy; module Routines;
       ld "[this is a generic routine]" if @routine.empty?
       
       if run?
+        Rudy::Routines.rescue {
+          Rudy::Routines::Handlers::Group.authorize rescue nil
+        }
+        
         if @routine.has_key? :before_local
           handler = Rudy::Routines.get_handler :local
           Rudy::Routines.rescue {

@@ -38,7 +38,7 @@ module Rudy; module Routines;
       
       # Grab the routines configuration for this routine name
       # e.g. startup, sysupdate, installdeps
-      @routine = fetch_routine_config @name 
+      @routine = fetch_routine_config @name rescue {}
       
       ld "Routine: #{@routine.inspect}"
       

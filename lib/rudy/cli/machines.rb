@@ -24,7 +24,7 @@ module Rudy
           end
         end
         mlist.each do |m|
-          puts @@global.verbose > 0 ? m.inspect : m.dump(@@global.format)
+          puts @@global.verbose > 0 ? m.to_yaml : "#{m.name}: #{m.dns_public}" 
         end
       end
       
@@ -91,10 +91,10 @@ module Rudy
       end
       
       def static_machines 
-
         @mlist.each do |m|
           next if @mlist_static.member?(m)
           address = @alist_unused.shift
+          address ||= Rudy::AWS::EC2::Addresses.create
           puts "Associating #{address} to #{m.name} (#{m.instid})"
           Rudy::AWS::EC2::Addresses.associate(address, m.instid)
           sleep 2
@@ -115,7 +115,13 @@ module Rudy
         end
       end
       
+      def dynamic_machines_valid?
+        
+      end
+      
+      
       def dynamic_machines
+        
       end
       
       def update_machines
@@ -123,6 +129,7 @@ module Rudy
         less = Rudy::Metadata::COMMON_FIELDS if @option.all
         mlist = Rudy::Machines.list(fields, less) || []
         rset = Rye::Set.new(current_group_name, :parallel => @@global.parallel, :user => 'root')
+        os = current_machine_os
         mlist.each do |m|
           m.refresh!
           rbox = Rye::Box.new(m.dns_public, :user => 'root')
@@ -130,10 +137,20 @@ module Rudy
           rbox.nickname = m.name
           rbox.stash = m
           rset.add_boxes rbox
+          puts "Updating metadata"
+          if m.os.to_s != os.to_s
+            puts "os: #{os}"
+            m.os = os
+          end
+          m.save :replace
         end
-        puts "Updating hostnames for #{current_group_name}"
-        Rudy::Routines::Handlers::Host.set_hostname rset
-        puts rset.hostname.flatten
+        
+        unless os.to_s == 'win32'
+          puts "Updating hostnames for #{current_group_name}"
+          Rudy::Routines::Handlers::Host.set_hostname rset
+          puts rset.hostname.flatten
+        end
+        
       end
       
       def available_machines

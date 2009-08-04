@@ -7,8 +7,10 @@ RUDY, CHANGES
 * FIXED: Added rescue for disk handler in reboot routine
 * FIXED: Another fix for resolving region/zone ambiguity
 * FIXED: No Routines config error during shutdown routine
+* CHANGE: Renamed "rudy machines -S" to "rudy machines -A"
+* CHANGE: Renamed "rudy machines -A" to "rudy machines -T"
 * ADDED: Print friendly error, rather then an angry exception when running on win32 with ruby 1.9
-
+* ADDED: "rudy machines --disassociate" command
 
 #### 0.9.0-RC3 (2009-08-03) ###########################
 

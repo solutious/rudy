@@ -16,12 +16,7 @@ module Rudy
         
         mlist = Rudy::Machines.list(fields, less) || []
         if mlist.empty?
-          if @option.all
-            puts "No machines running"
-          else
-            puts "No machines running in #{current_machine_group}" 
-            puts "Try: rudy machines --all"
-          end
+          raise( NoMachines, @option.all ? nil : current_group_name)
         end
         mlist.each do |m|
           puts @@global.verbose > 0 ? m.to_yaml : "#{m.name}: #{m.dns_public}" 
@@ -45,7 +40,7 @@ module Rudy
         
       end
       
-      def static_machines_valid?
+      def associate_machines_valid?
         @mlist = Rudy::Machines.list || []
         @alist = Rudy::AWS::EC2::Addresses.list || []
         @alist_used    = @alist.select { |a|  a.associated? }
@@ -90,11 +85,17 @@ module Rudy
         true
       end
       
-      def static_machines 
+      def associate_machines 
+        
+        puts "Assigning static IP addresses for:"
+        puts @mlist.collect { |m| m.name }
+        
+        execute_check(:medium)
+        
         @mlist.each do |m|
           next if @mlist_static.member?(m)
           address = @alist_unused.shift
-          address ||= Rudy::AWS::EC2::Addresses.create
+          address ||= Rudy::AWS::EC2::Addresses.create.ipaddress
           puts "Associating #{address} to #{m.name} (#{m.instid})"
           Rudy::AWS::EC2::Addresses.associate(address, m.instid)
           sleep 2
@@ -115,13 +116,34 @@ module Rudy
         end
       end
       
-      def dynamic_machines_valid?
-        
+      
+      def disassociate_machines_valid?
+        @mlist = Rudy::Machines.list || []
+        @alist = Rudy::AWS::EC2::Addresses.list || []
+        @alist_used    = @alist.select { |a|  a.associated? }
+        @alist_instids = @alist_used.collect { |a| a.instid }
+        @mlist_static  = @mlist.select do |m| 
+          @alist_instids.member?(m.instid)
+        end
+        raise NoMachines, current_group_name if @mlist.empty?
+        true
       end
       
       
-      def dynamic_machines
-        
+      def disassociate_machines
+        if @mlist_static.empty?
+          puts "No machines in #{current_group_name} have static IP addresses"
+        else
+          puts "The following machines will be updated:"
+          puts @mlist_static.collect { |m| m.name }
+          puts "NOTE: Unassigned IP addresses are not removed from your account"
+          execute_check(:medium)
+          @mlist_static.each do |m|
+            address = Resolv.getaddress m.dns_public
+            puts "Disassociating #{address} from #{m.name} (#{m.instid})"
+            Rudy::AWS::EC2::Addresses.disassociate(address)
+          end
+        end
       end
       
       def update_machines

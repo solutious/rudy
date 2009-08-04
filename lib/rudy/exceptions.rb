@@ -48,7 +48,11 @@ module Rudy
     def message; "Machine #{@obj} is not running."; end
   end
   class NoMachines < Rudy::Error;
-    def message; "Specified remote machine(s) not running"; end
+    def message
+      msg = "No machines running "
+      msg << "in #{@obj}" if @obj
+      msg
+    end
   end 
   class MachineGroupNotDefined < Rudy::Error 
     def message; "#{@obj} is not defined in machines config."; end

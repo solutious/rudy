@@ -30,8 +30,8 @@ class RudyCLI < Rudy::CLI::Base
   global :r, :role, String, "Connect to a machine with the specified role (e.g. #{Rudy::DEFAULT_ROLE})"
   global :p, :position, String, "Position in the machine in its group"
   global :b, :bucket, String, "An S3 bucket name (used when creating images)"
-  global :t, :testrun, "Test run. Don't execute action (EXPERIMENTAL)."
-  global :P, :parallel, "Execute remote commands in parallel (EXPERIMENTAL)."
+  global :t, :testrun, "Test run. Don't execute action (PARTIALLY SUPPORTED)."
+  global :P, :parallel, "Execute remote commands in parallel (PARTIALLY SUPPORTED)."
   global :F, :force, "Force an action despite warnings"
   
   
@@ -48,10 +48,10 @@ class RudyCLI < Rudy::CLI::Base
   usage "rudy machines -D"
   option :l, :all, "Display machines for all environments and roles"
   action :W, :wash, "Wash machine metadata"
-  action :A, :available, "Display availablity"
+  action :T, :available, "Test availablity"
   action :U, :update, "Update machines based on configuration"
-  action :S, :static, "Create static IP addresses or display existing ones"
-  action :D, :dynamic, "Delete static IP addresses"
+  action :A, :associate, "Associate static IP addresses or display existing ones"
+  action :N, :disassociate, "Disassociate static IP addresses"
   command :machines => Rudy::CLI::Machines
   command_alias :machines, :m
   

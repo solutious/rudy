@@ -74,15 +74,18 @@ The routines configuration describes repeatable processes that you can execute o
 
 == Installation
 
-Via Rubygems, one of:
+Via Rubygems:
 
     $ sudo gem install rudy
-    $ sudo gem install solutious-rudy --source http://gems.github.com/
 
 or via download:
 * rudy-latest.tar.gz[http://github.com/solutious/rudy/tarball/latest]
 * rudy-latest.zip[http://github.com/solutious/rudy/zipball/latest]
 
+or via git:
+
+    $ git clone git://github.com/solutious/rudy.git
+    
 NOTE: <em>If you are not installing via RubyGems, you need to make sure the dependencies are in your LOAD_PATH (<tt>$:</tt>). Ryan Tomayko wrote a gist[http://gist.github.com/54177] about it.</em>
 
 <b>See Getting-Started[http://solutious.com/projects/rudy/getting-started/] for more info.</b>

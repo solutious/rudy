@@ -253,7 +253,7 @@ module Rudy
       raise NoRoutinesConfig unless @@config.routines
       raise NoGlobal unless @@global
       
-      action = action.to_s.tr('-', '_')
+      action = action.to_s.tr('-:', '_')
       
       zon, env, rol = @@global.zone, @@global.environment, @@global.role
       

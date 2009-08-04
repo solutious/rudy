@@ -74,7 +74,7 @@ module Rudy
            localhost nocolor quiet auto force parallel].each do |name|
           curval, defval = self.send(name), config.defaults.send(name)
           if curval.nil? && !defval.nil?
-            self.instance_variable_set("@#{name}", defval) 
+            self.send("#{name}=", defval) 
           end
         end
       end

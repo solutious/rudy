@@ -30,10 +30,13 @@ module Rudy::CLI
         STDERR.puts ex.backtrace if @@global.verbose > 0
         exit 81
       end
-
+      
       @@global.nocolor ? String.disable_color : String.enable_color
       @@global.auto ? Annoy.enable_skip : Annoy.disable_skip
-
+      
+      # ANSI codes look like garbage in DOS
+      String.disable_color if Rudy.sysinfo.os.to_s == 'win32'
+      
       unless @@global.accesskey && @@global.secretkey
         STDERR.puts "No AWS credentials. Check your configs!"
         STDERR.puts "Try: rudy init"

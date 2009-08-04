@@ -21,9 +21,11 @@ module Rudy; module Routines; module Handlers;
     def authorize(name=nil, addresses=nil, ports=nil)
       name ||= current_group_name
       addresses ||= [Rudy::Utils::external_ip_address]
-      ports ||= [[22,22]]
-      li "Authorizing SSH access for: #{addresses.join(', ')}"
-      Rudy::AWS::EC2::Groups.authorize(name, addresses, ports)
+      if ports.nil?
+        ports = current_machine_os.to_s == 'win32' ? [[3389,3389]] : [[22,22]]
+      end
+      li "Authorizing ports #{ports.inspect} access for: #{addresses.join(', ')}"
+      Rudy::AWS::EC2::Groups.authorize(name, addresses, ports) 
     end
     
     def exists?(name=nil)

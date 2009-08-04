@@ -219,7 +219,7 @@ module Rudy
           end
           true
         rescue Errno::EAFNOSUPPORT, Errno::ECONNREFUSED, SocketError, Timeout::Error => ex
-          puts ex.message, ex.backtrace if Rudy.debug?
+          puts ex.class, ex.message, ex.backtrace if Rudy.debug?
           false
         end
       end

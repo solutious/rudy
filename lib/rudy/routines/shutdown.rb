@@ -28,6 +28,10 @@ module Rudy; module Routines;
       after_local = @routine.delete(:after_local)
       
       if run?
+        Rudy::Routines.rescue {
+          Rudy::Routines::Handlers::Group.authorize rescue nil
+        }
+        
         Rudy::Routines::Handlers::Depends.execute_all @before
       
         # This is the meat of the sandwich

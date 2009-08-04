@@ -106,7 +106,11 @@ NOTE: <em>If you are not installing via RubyGems, you need to make sure the depe
   * Caesars[http://github.com/delano/caesars]
   * Gibbler[http://github.com/delano/gibbler]
 
-
+* Supported Platforms
+  * Linux: Ruby 1.8, 1.9, and JRuby 1.3+
+  * Windows: Ruby 1.8 and JRuby 1.3+ (Net::SSH does not run under Ruby 1.9)
+  * BSD: <i>Needs testing (any takers?)</i>
+  
 == More Info
 
 * Fork at GitHub[http://github.com/solutious/rudy]

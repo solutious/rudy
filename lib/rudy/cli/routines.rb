@@ -90,7 +90,7 @@ module Rudy; module CLI;
       true
     end
     def shutdown
-      routine = fetch_routine_config(:shutdown)
+      routine = fetch_routine_config(:shutdown) rescue {}
       
       puts "All machines in #{current_machine_group} will be shutdown".bright
       if routine && routine.disks

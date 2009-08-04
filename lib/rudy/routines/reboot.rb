@@ -47,10 +47,12 @@ module Rudy; module Routines;
         end
       end
       
-      if Rudy::Routines::Handlers::Disks.mount? @routine
-        fake = Hash[:umount => @routine.disks[:mount]]
-        Rudy::Routines::Handlers::Disks.execute :umount, fake, @@rset, @@lbox, @argv
-      end
+      Rudy::Routines.rescue {
+        if Rudy::Routines::Handlers::Disks.mount? @routine
+          fake = Hash[:umount => @routine.disks[:mount]]
+          Rudy::Routines::Handlers::Disks.execute :umount, fake, @@rset, @@lbox, @argv
+        end
+      }
       
       li "Rebooting #{current_group_name}..."
       @machines.each { |m| m.restart } if run?

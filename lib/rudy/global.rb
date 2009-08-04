@@ -74,7 +74,8 @@ module Rudy
            localhost nocolor quiet auto force parallel].each do |name|
           curval, defval = self.send(name), config.defaults.send(name)
           if curval.nil? && !defval.nil?
-            self.send("#{name}=", defval) 
+            # Don't use the accessors. These are defaults so no Region  magic. 
+            self.instance_variable_set("@#{name}", defval) 
           end
         end
       end
@@ -88,15 +89,20 @@ module Rudy
       postprocess
     end
     
-    def zone=(z)
-      @zone = z.to_sym
-      @region = @zone.to_s.gsub(/[a-z]$/, '').to_sym
-    end
-    
     def update(ghash={})
       ghash = ghash.marshal_dump if ghash.is_a?(OpenStruct) 
       ghash.each_pair { |n,v| self.send("#{n}=", v) } 
       postprocess
+    end
+    
+    def zone=(z)
+      @zone = z
+      @region = @zone.to_s.gsub(/[a-z]$/, '').to_sym
+    end
+    
+    def region=(r)
+      @region = r
+      @zone = "#{@region}b".to_sym
     end
     
     def to_s(*args)
@@ -116,6 +122,7 @@ module Rudy
       @format &&= @format.to_sym rescue nil
       @quiet ? Rudy.enable_quiet : Rudy.disable_quiet
       @auto ? Rudy.enable_auto : Rudy.disable_auto
+      
     end
     
     def apply_environment_variables
@@ -128,8 +135,14 @@ module Rudy
     
     # Apply defaults for parameters that must have values
     def apply_system_defaults
-      @region ||= Rudy::DEFAULT_REGION
-      @zone ||= Rudy::DEFAULT_ZONE
+      if    @region.nil? && @zone.nil?
+        @region, @zone = Rudy::DEFAULT_REGION, Rudy::DEFAULT_ZONE
+      elsif @region.nil?
+        @region = @zone.to_s.gsub(/[a-z]$/, '').to_sym
+      elsif @zone.nil?
+        @zone = "#{@region}b".to_sym
+      end
+      
       @environment ||= Rudy::DEFAULT_ENVIRONMENT
       @role ||= Rudy::DEFAULT_ROLE
       @localhost ||= Rudy.sysinfo.hostname || 'localhost'

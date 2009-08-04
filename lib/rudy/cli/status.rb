@@ -43,10 +43,10 @@ module Rudy
         end
         
         puts "  Groups".bright
-        puts Rudy::AWS::EC2::Groups.list.collect { |o| "    #{o.name}" }
+        puts (Rudy::AWS::EC2::Groups.list || []).collect { |o| "    #{o.name}" }
         
         puts "  Keypairs".bright
-        puts Rudy::AWS::EC2::Keypairs.list.collect { |o| "    #{o.name}" }
+        puts (Rudy::AWS::EC2::Keypairs.list || []).collect { |o| "    #{o.name}" }
 
         puts "  Images".bright
         (Rudy::AWS::EC2::Images.list('self') || []).collect do |o|

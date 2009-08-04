@@ -14,7 +14,7 @@
   s.require_paths = %w[lib]
   s.rubygems_version = '1.3.0'
   
-  s.add_dependency 'rye',        '>= 0.8.5'
+  s.add_dependency 'rye',        '>= 0.8.6'
   s.add_dependency 'attic',      '>= 0.4.0'
   s.add_dependency 'annoy',      '>= 0.5.5'
   s.add_dependency 'drydock',    '>= 0.6.6'
@@ -99,6 +99,7 @@
   lib/rudy/cli/metadata.rb
   lib/rudy/cli/networks.rb
   lib/rudy/cli/routines.rb
+  lib/rudy/cli/status.rb
   lib/rudy/config.rb
   lib/rudy/config/objects.rb
   lib/rudy/disks.rb

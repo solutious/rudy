@@ -117,7 +117,7 @@ NOTE: <em>If you are not installing via RubyGems, you need to make sure the depe
 == More Info
 
 * Fork at GitHub[http://github.com/solutious/rudy]
-* Read the Documentation[http://wiki.github.com/solutious/rudy]
+* Read the Documentation[http://solutious.com/projects/rudy]
 * Submit issues to the IssueTracker[http://github.com/solutious/rudy/issues]
 * Start a discussion on the GoogleGroup[http://groups.google.com/group/rudy-deployment]
 * Find some Inspiration[http://www.youtube.com/watch?v=CgaiIW5Rzes]

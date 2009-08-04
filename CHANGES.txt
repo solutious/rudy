@@ -6,6 +6,7 @@ RUDY, CHANGES
 * FIXED: Better Windows support
 * FIXED: Added rescue for disk handler in reboot routine
 * FIXED: Another fix for resolving region/zone ambiguity
+* FIXED: No Routines config error during shutdown routine
 * ADDED: Print friendly error, rather then an angry exception when running on win32 with ruby 1.9
 
 

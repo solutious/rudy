@@ -193,7 +193,7 @@ class RudyCLI < Rudy::CLI::Base
            Rudy::NoConfig => ex
       puts "AWS credentials must be configured to continue."
       puts "You can modify these in #{Rudy::CONFIG_FILE}"
-      exit 1
+      exit 0
     end
   
     obj.global.quiet = true  # don't print elapsed time

@@ -27,17 +27,7 @@
   s.add_dependency 'aws-s3',     '>= 0.6.1'  # Ruby 1.9.1 compatability
   s.add_dependency 'highline',   '>= 1.5.1'  # Ruby 1.9.1 compatability
   s.add_dependency 'amazon-ec2', '>= 0.3.8'  # Region fix
-
-  # One of the other dependencies needs these gems 
-  # but doesn't seem to specify them. Why I outta!
-  s.add_dependency 'tenderlove-frex'
-  s.add_dependency 'archive-tar-minitar'
-  s.add_dependency 'nokogiri'
-  s.add_dependency 'echoe'
-  s.add_dependency 'racc'
-  s.add_dependency 'hoe'
   
-  # libxml2 libxml2-dev libxslt-dev
   
   # http://bit.ly/2WaAgV
   #s.add_runtime_dependency('xml-simple', '>= 1.0.11')

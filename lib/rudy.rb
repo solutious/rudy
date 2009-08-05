@@ -42,7 +42,7 @@ module Rudy
     unless defined?(MAJOR)
       MAJOR = 0.freeze
       MINOR = 9.freeze
-      TINY  = 0.freeze
+      TINY  = 1.freeze
     end
     def self.to_s; [MAJOR, MINOR, TINY].join('.'); end
     def self.to_f; self.to_s.to_f; end

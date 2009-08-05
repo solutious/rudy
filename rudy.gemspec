@@ -28,13 +28,6 @@
   s.add_dependency 'highline',   '>= 1.5.1'  # Ruby 1.9.1 compatability
   s.add_dependency 'amazon-ec2', '>= 0.3.8'  # Region fix
   
-  
-  # http://bit.ly/2WaAgV
-  #s.add_runtime_dependency('xml-simple', '>= 1.0.11')
-  #s.add_dependency('xml-simple', '>= 1.0.11')
-  #s.add_development_dependency('jgre-monkeyspecdoc', '>= 0.1.0')
-  #s.add_development_dependency('thoughtbot-shoulda', '>= 0.1.0')
-  
   s.executables = %w[rudy rudy-ec2 rudy-sdb rudy-s3]
   
   # = MANIFEST =
@@ -49,6 +42,7 @@
   bin/rudy-ec2
   bin/rudy-s3
   bin/rudy-sdb
+  examples/gem-test.rb
   lib/rudy.rb
   lib/rudy/aws.rb
   lib/rudy/aws/ec2.rb

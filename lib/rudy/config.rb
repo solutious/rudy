@@ -116,9 +116,9 @@ module Rudy
           accounts {                           # Account Access Indentifiers
             aws {                              # amazon web services 
               name "Rudy Default"
-              accountnum "012345678912"
-              accesskey "ACCESSACCESS"
-              secretkey "SECRETSECRET"
+              accountnum ""
+              accesskey ""
+              secretkey ""
               pkey "~/path/2/pk-xxxx.pem" 
               cert "~/path/2/cert-xxxx.pem"
             }

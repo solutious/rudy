@@ -340,6 +340,5 @@ NOTE: This is a complete re-write from 0.1
 * TODO: FIX: When shutting down, warns about disks even when they don't exist (CLI::Routines)
 * TODO: Investigate SSH daemon on Windows
 * TODO: Supply machines config to routines blocks with only the specific machine group context 
-
-
+* TODO: The output for rudy -v should become the default verbose level. -v should print the command output without the header. -vv should print the header. -vvv stays the same but also print full stack traces. 
 

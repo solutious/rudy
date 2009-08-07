@@ -31,61 +31,81 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2009-08-04 18:05:51 -0400</span>
+          <span class='datetime'>2009-08-07 15:51:36 -0400</span>
         </div>
       </div>
       <div id='content'>
         <div id='text'>
           <div id='description'>
-            <h1><a href="../classes/Rudy.html">Rudy</a> - v0.9.0 BETA</h1>
+            <h1><a href="../classes/Rudy.html">Rudy</a> - v0.9 BETA</h1>
             <p>
             <b>Not your grandparents&#8217; EC2 deployment tool.</b>
             </p>
             <p>
             <a href="../classes/Rudy.html">Rudy</a> is a development and deployment
-            tool for Amazon Web Services. It helps you build and infrastructures in EC2
-            by organizing them into groups of <em>zones</em>, <em>environments</em>,
-            and <em>roles</em>. You can run multiple machines with the same role. When
-            you put all this together, you have a unique name for every machine. The
-            default machine is called <tt>m-us-east-1b-stage-app-01</tt> but you can
-            also give them custom names.
+            tool for Amazon Web Services. It helps you build and maintain
+            infrastructures in EC2 by organizing them into groups of <em>zones</em>,
+            <em>environments</em>, and <em>roles</em>. By making it quick and easy to
+            build infrastructures, <a href="../classes/Rudy.html">Rudy</a> makes it
+            feasible to run environments only for the time that you need them.
             </p>
             <p>
-            All configuration is organized into the zones, environments, and roles that
-            you specify (<a href="../classes/Rudy.html">Rudy</a> assumes positions are
-            identical which is important for backups and scaling). And as you&#8217;d
-            expect, the defaults can be changed too.
+            All configuration is organized into this hierarchy so you can define
+            properties (machine image, machine type, IP address, etc...) by role, by
+            environment, or by zone. You can also define routines for running shell
+            commands and scripts, uploading files, creating disks and backups, etc...
+            Routines are organized by hierarchy too so a &#8220;startup&#8221; routine
+            can run one thing for your database machines and another thing for your
+            application machines.
             </p>
             <p>
-            <b>See <a
-            href="http://solutious.com/projects/rudy/getting-started/">Getting-Started</a>
-            for more info.</b>
-            </p>
-            <h2>Project Status</h2>
-            <p>
-            <em>This is a BETA release. That means Rudy&#8217;s not ready for
-            production use! See <a
-            href="http://wiki.github.com/solutious/rudy/project-status">Project-Status</a>.</em>
+            <a href="../classes/Rudy.html">Rudy</a> helps with other stuff too. Every
+            machine can be given a hostname based on its zone, environment, role, and
+            position (you can run multiple machines with the same role). These names
+            look like this: <tt>m-us-east-1b-stage-app-01</tt>, but you can also assign
+            your own names. <a href="../classes/Rudy.html">Rudy</a> also automatically
+            creates a private keypair and security for each machine group (e.g.
+            <tt>key-us-east-1b-stage-app</tt> and <tt>grp-us-east-1b-stage-app</tt>).
             </p>
             <p>
-            The 0.9 release is a major re-write and has many changes from previous
-            releases. 0.9-RC1 is the first public release from the 0.9 branch and much
-            of the code has not been tested. DO NOT USE IN PRODUCTION. Try it out have
-            some fun and if you have the time send a patch or pull request!
+            <b><a
+            href="http://solutious.com/projects/rudy/getting-started/">Get-Started</a>
+            with <a href="../classes/Rudy.html">Rudy</a> today to see what all the fuss
+            is about.</b>
             </p>
             <h2>Configuration</h2>
+            <p>
+            <a href="../classes/Rudy.html">Rudy</a> is configured via several
+            Ruby-based domain specific languages.
+            </p>
             <h3>Machines</h3>
             <p>
             The machines configuration describes the &#8220;physical&#8221;
             characteristics of your infrastructure.
             </p>
-            <pre>env :stage do                   # Define an environment&#x000A;  ami 'ami-e348af8a'&#x000A;&#x000A;  role :app do                  # Define a role&#x000A;    addresses '11.22.33.44'     # Use elastic IPs&#x000A;&#x000A;    disks do                    # Define EBS volumes&#x000A;      path &quot;/rudy/disk1&quot; do&#x000A;        size 100&#x000A;        device &quot;/dev/sdr&quot;&#x000A;      end&#x000A;    end&#x000A;  end&#x000A;end</pre>
+            <pre>env :stage do                   # Define an environment&#x000A;  ami 'ami-e348af8a'            # Specify a machine image&#x000A;&#x000A;  role :app do                  # Define a role&#x000A;    addresses '11.22.33.44'     # Use elastic IPs&#x000A;&#x000A;    disks do                    # Define EBS volumes&#x000A;      path &quot;/rudy/disk1&quot; do&#x000A;        size 100&#x000A;        device &quot;/dev/sdr&quot;&#x000A;      end&#x000A;    end&#x000A;  end&#x000A;end</pre>
             <h3>Routines</h3>
             <p>
             The routines configuration describes repeatable processes that you can
             execute on your machines.
             </p>
-            <pre>startup do                      # $ rudy startup&#x000A;  adduser :rudy&#x000A;  authorize :rudy               # Enable passwordless login&#x000A;&#x000A;  disks do&#x000A;    create &quot;/rudy/disk1&quot;        # Create a disk&#x000A;  end&#x000A;&#x000A;  remote :rudy do               # Run remote commands via SSH&#x000A;    mkdir :p, &quot;great&quot;           # $ mkdir -p great&#x000A;    touch &quot;great/scott&quot;         # $ touch great/scott&#x000A;    mysql_init :start&#x000A;  end&#x000A;end</pre>
+            <pre>startup do                      # $ rudy startup&#x000A;  adduser :rudy&#x000A;  authorize :rudy               # Enable passwordless login&#x000A;&#x000A;  disks do&#x000A;    create &quot;/rudy/disk1&quot;        # Create, format, and mount a volume&#x000A;  end&#x000A;&#x000A;  remote :rudy do               # Run remote commands via SSH&#x000A;    mkdir :p, &quot;great&quot;           # $ mkdir -p great&#x000A;    mysql_init :start&#x000A;    your_script 'arg1', 'arg2'  # Call your own scripts&#x000A;  end&#x000A;end</pre>
+            <p>
+            See <a
+            href="http://github.com/solutious/rudy/raw/master/Rudyfile">Rudyfile</a>
+            for a complete configuration example.
+            </p>
+            <h2>Running Commands</h2>
+            <p>
+            <a href="../classes/Rudy.html">Rudy</a> comes with a command-line tool
+            called <tt>rudy</tt>. It provides commands for describing the
+            infrastructures you&#8217;ve built with <a
+            href="../classes/Rudy.html">Rudy</a>.
+            </p>
+            <pre>$ rudy machines&#x000A;m-us-east-1d-stage-app-01: ec2-67-202-0-112.compute-1.amazonaws.com&#x000A;m-us-east-1d-stage-app-02: ec2-174-129-117-30.compute-1.amazonaws.com&#x000A;&#x000A;$ rudy disks&#x000A;disk-us-east-1d-stage-app-01-rudy-disk1&#x000A;disk-us-east-1d-stage-app-02-rudy-disk1&#x000A;&#x000A;$ rudy backups&#x000A;back-us-east-1d-stage-app-01-rudy-disk1-20090803-1857-49&#x000A;back-us-east-1d-stage-app-01-rudy-disk1-20090803-1858-36&#x000A;back-us-east-1d-stage-app-02-rudy-disk1-20090803-1911-05</pre>
+            <p>
+            See <tt>rudy -h</tt> for more info.
+            </p>
             <h2>Features</h2>
             <ul>
             <li>Create complex IT infrastructures from a simple configuration
@@ -119,7 +139,8 @@
             </li>
             </ul>
             </li>
-            <li>Use _any Linux_ Amazon machine image (AMI) (partial Solaris support)
+            <li>Use _any Linux_ Amazon machine image (AMI) (partial Windows and Solaris
+            support)
             
             </li>
             <li>Complete command-line interface for EC2. See <tt><a
@@ -127,6 +148,13 @@
             
             </li>
             </ul>
+            <h2>Project Status</h2>
+            <p>
+            <em>This is a BETA release. That means <a
+            href="../classes/Rudy.html">Rudy</a> is not ready for production use! See
+            <a
+            href="http://wiki.github.com/solutious/rudy/project-status">Project-Status</a>.</em>
+            </p>
             <h2>Installation</h2>
             <p>
             Via Rubygems:
@@ -250,6 +278,16 @@
             
             </li>
             </ul>
+            <h2>Contributions</h2>
+            <ul>
+            <li>For bigger features please fork the git repo and send me a pull request.
+            
+            </li>
+            <li>For small or single file changes, send me an email with the details: Delano
+            (@solutious.com)
+            
+            </li>
+            </ul>
             <h2>Thanks</h2>
             <ul>
             <li>Kalin Harvey for all the feedback
@@ -298,19 +336,9 @@
             
             </li>
             </ul>
-            <h2>Contributions</h2>
-            <ul>
-            <li>For bigger features please fork the git repo and send me a pull request.
-            
-            </li>
-            <li>For small or single file changes, send me an email with the details: Delano
-            (@solutious.com)
-            
-            </li>
-            </ul>
             <h2>Credits</h2>
             <ul>
-            <li>Delano Mandelbaum (delano@solutious.com)
+            <li>Delano Mandelbaum ( <a href="http://solutious.com/">solutious.com/</a> )
             
             </li>
             <li><a href="../classes/Rudy/AWS/SDB.html">Rudy::AWS::SDB</a> adapted from

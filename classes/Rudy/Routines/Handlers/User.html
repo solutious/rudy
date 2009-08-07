@@ -41,10 +41,10 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000422">adduser</a></li>
-              <li><a href="#M000423">authorize</a></li>
-              <li><a href="#M000421">execute</a></li>
-              <li><a href="#M000420">raise_early_exceptions</a></li>
+              <li><a href="#M000420">adduser</a></li>
+              <li><a href="#M000421">authorize</a></li>
+              <li><a href="#M000419">execute</a></li>
+              <li><a href="#M000418">raise_early_exceptions</a></li>
             </ol>
           </div>
           <div id='context'>
@@ -58,56 +58,56 @@
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000422'>
-                <a name='M000422'>      </a>
+              <div class='public-instance method' id='method-M000420'>
+                <a name='M000420'>      </a>
                 <div class='synopsis'>
                   <span class='name'>adduser</span>
                   <span class='arguments'>(user, robj)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000422-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000420-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000422-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/user.rb, line 19</span>&#x000A;19:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">adduser</span>(<span class="ruby-identifier">user</span>, <span class="ruby-identifier">robj</span>)&#x000A;20:       &#x000A;21:       <span class="ruby-comment cmt"># On Solaris, the user's home directory needs to be specified</span>&#x000A;22:       <span class="ruby-comment cmt"># explicitly so we do it for linux too for fun. </span>&#x000A;23:       <span class="ruby-identifier">homedir</span> = <span class="ruby-identifier">robj</span>.<span class="ruby-identifier">guess_user_home</span>(<span class="ruby-identifier">user</span>.<span class="ruby-identifier">to_s</span>)&#x000A;24:       &#x000A;25:       <span class="ruby-comment cmt"># When more than one machine is running, this will be an Array</span>&#x000A;26:       <span class="ruby-identifier">homedir</span> = <span class="ruby-identifier">homedir</span>.<span class="ruby-identifier">first</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">homedir</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">Array</span>)&#x000A;27:       &#x000A;28:       <span class="ruby-identifier">args</span> = [<span class="ruby-identifier">:m</span>, <span class="ruby-identifier">:d</span>, <span class="ruby-identifier">homedir</span>, <span class="ruby-identifier">:s</span>, <span class="ruby-value str">'/bin/bash'</span>, <span class="ruby-identifier">user</span>.<span class="ruby-identifier">to_s</span>]&#x000A;29:       &#x000A;30:       <span class="ruby-comment cmt"># NOTE: We'll may to use platform specific code here. </span>&#x000A;31:       <span class="ruby-comment cmt"># Linux has adduser and useradd commands:</span>&#x000A;32:       <span class="ruby-comment cmt"># adduser can prompt for info which we don't want. </span>&#x000A;33:       <span class="ruby-comment cmt"># useradd does not prompt (on Debian/Ubuntu at least). </span>&#x000A;34:       <span class="ruby-comment cmt"># We need to specify bash b/c the default is /bin/sh</span>&#x000A;35:       <span class="ruby-identifier">robj</span>.<span class="ruby-identifier">useradd</span>(<span class="ruby-identifier">args</span>)&#x000A;36:     <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='public-instance method' id='method-M000423'>
-                <a name='M000423'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>authorize</span>
-                  <span class='arguments'>(user, robj)</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000423-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000423-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/user.rb, line 38</span>&#x000A;38:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">authorize</span>(<span class="ruby-identifier">user</span>, <span class="ruby-identifier">robj</span>)&#x000A;39:       <span class="ruby-identifier">robj</span>.<span class="ruby-identifier">authorize_keys_remote</span>(<span class="ruby-identifier">user</span>.<span class="ruby-identifier">to_s</span>)&#x000A;40:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000420-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/user.rb, line 19</span>&#x000A;19:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">adduser</span>(<span class="ruby-identifier">user</span>, <span class="ruby-identifier">robj</span>)&#x000A;20:       &#x000A;21:       <span class="ruby-comment cmt"># On Solaris, the user's home directory needs to be specified</span>&#x000A;22:       <span class="ruby-comment cmt"># explicitly so we do it for linux too for fun. </span>&#x000A;23:       <span class="ruby-identifier">homedir</span> = <span class="ruby-identifier">robj</span>.<span class="ruby-identifier">guess_user_home</span>(<span class="ruby-identifier">user</span>.<span class="ruby-identifier">to_s</span>)&#x000A;24:       &#x000A;25:       <span class="ruby-comment cmt"># When more than one machine is running, this will be an Array</span>&#x000A;26:       <span class="ruby-identifier">homedir</span> = <span class="ruby-identifier">homedir</span>.<span class="ruby-identifier">first</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">homedir</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">Array</span>)&#x000A;27:       &#x000A;28:       <span class="ruby-identifier">args</span> = [<span class="ruby-identifier">:m</span>, <span class="ruby-identifier">:d</span>, <span class="ruby-identifier">homedir</span>, <span class="ruby-identifier">:s</span>, <span class="ruby-value str">'/bin/bash'</span>, <span class="ruby-identifier">user</span>.<span class="ruby-identifier">to_s</span>]&#x000A;29:       &#x000A;30:       <span class="ruby-comment cmt"># NOTE: We'll may to use platform specific code here. </span>&#x000A;31:       <span class="ruby-comment cmt"># Linux has adduser and useradd commands:</span>&#x000A;32:       <span class="ruby-comment cmt"># adduser can prompt for info which we don't want. </span>&#x000A;33:       <span class="ruby-comment cmt"># useradd does not prompt (on Debian/Ubuntu at least). </span>&#x000A;34:       <span class="ruby-comment cmt"># We need to specify bash b/c the default is /bin/sh</span>&#x000A;35:       <span class="ruby-identifier">robj</span>.<span class="ruby-identifier">useradd</span>(<span class="ruby-identifier">args</span>)&#x000A;36:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='public-instance method' id='method-M000421'>
                 <a name='M000421'>      </a>
                 <div class='synopsis'>
-                  <span class='name'>execute</span>
-                  <span class='arguments'>(type, user, rset, lbox, argv=nil)</span>
+                  <span class='name'>authorize</span>
+                  <span class='arguments'>(user, robj)</span>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000421-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000421-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/user.rb, line 14</span>&#x000A;14:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">execute</span>(<span class="ruby-identifier">type</span>, <span class="ruby-identifier">user</span>, <span class="ruby-identifier">rset</span>, <span class="ruby-identifier">lbox</span>, <span class="ruby-identifier">argv</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;15:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">NoMachines</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">rset</span>.<span class="ruby-identifier">boxes</span>.<span class="ruby-identifier">empty?</span>&#x000A;16:       <span class="ruby-identifier">send</span>(<span class="ruby-identifier">type</span>, <span class="ruby-identifier">user</span>, <span class="ruby-identifier">rset</span>)&#x000A;17:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000421-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/user.rb, line 38</span>&#x000A;38:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">authorize</span>(<span class="ruby-identifier">user</span>, <span class="ruby-identifier">robj</span>)&#x000A;39:       <span class="ruby-identifier">robj</span>.<span class="ruby-identifier">authorize_keys_remote</span>(<span class="ruby-identifier">user</span>.<span class="ruby-identifier">to_s</span>)&#x000A;40:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000420'>
-                <a name='M000420'>      </a>
+              <div class='public-instance method' id='method-M000419'>
+                <a name='M000419'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>execute</span>
+                  <span class='arguments'>(type, user, rset, lbox, argv=nil)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000419-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000419-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/user.rb, line 14</span>&#x000A;14:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">execute</span>(<span class="ruby-identifier">type</span>, <span class="ruby-identifier">user</span>, <span class="ruby-identifier">rset</span>, <span class="ruby-identifier">lbox</span>, <span class="ruby-identifier">argv</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;15:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">NoMachines</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">rset</span>.<span class="ruby-identifier">boxes</span>.<span class="ruby-identifier">empty?</span>&#x000A;16:       <span class="ruby-identifier">send</span>(<span class="ruby-identifier">type</span>, <span class="ruby-identifier">user</span>, <span class="ruby-identifier">rset</span>)&#x000A;17:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000418'>
+                <a name='M000418'>      </a>
                 <div class='synopsis'>
                   <span class='name'>raise_early_exceptions</span>
                   <span class='arguments'>(type, user, rset, lbox, argv=nil)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000420-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000418-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000420-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/user.rb, line 10</span>&#x000A;10:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">raise_early_exceptions</span>(<span class="ruby-identifier">type</span>, <span class="ruby-identifier">user</span>, <span class="ruby-identifier">rset</span>, <span class="ruby-identifier">lbox</span>, <span class="ruby-identifier">argv</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;11:       &#x000A;12:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000418-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/user.rb, line 10</span>&#x000A;10:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">raise_early_exceptions</span>(<span class="ruby-identifier">type</span>, <span class="ruby-identifier">user</span>, <span class="ruby-identifier">rset</span>, <span class="ruby-identifier">lbox</span>, <span class="ruby-identifier">argv</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;11:       &#x000A;12:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

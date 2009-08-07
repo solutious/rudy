@@ -146,6 +146,7 @@ NOTE: <em>If you are not installing via RubyGems, you need to make sure the depe
   * Linux: Ruby 1.8, 1.9, and JRuby 1.3+
   * Windows: Ruby 1.8 and JRuby 1.3+ (Net::SSH does not run under Ruby 1.9)
   * BSD: <i>Needs testing (any takers?)</i>
+ 
   
 == More Info
 
@@ -159,10 +160,10 @@ NOTE: <em>If you are not installing via RubyGems, you need to make sure the depe
 
 == Contributions
 
-This is a BETA release. We encourage people to find unique and interesting ways to break rudy. If you find an issue, let us know!
+We encourage people to find unique and interesting ways to break and extend rudy.
 
 * For bigger features please fork the git repo and send me a pull request. 
-* For small or single file changes, send me an email with the details: delano (@solutious.com)
+* For small or single file changes, send an email with details to: delano (@solutious.com)
 
 
 == Thanks

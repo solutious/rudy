@@ -1,63 +1,90 @@
-= Rudy - v0.9.0 BETA
+= Rudy - v0.9 BETA
 
 <b>Not your grandparents' EC2 deployment tool.</b>
 
-Rudy is a development and deployment tool for Amazon Web Services. It helps you build and infrastructures in EC2 by organizing them into groups of _zones_,  _environments_, and _roles_. You can run multiple machines with the same role. When you put all this together, you have a unique name for every machine. The default machine is called <tt>m-us-east-1b-stage-app-01</tt> but you can also give them custom names. 
+Rudy is a development and deployment tool for Amazon Web Services. It helps you build and maintain infrastructures in EC2 by organizing them into groups of _zones_,  _environments_, and _roles_. By making it quick and easy to build infrastructures, Rudy makes it feasible to run environments only for the time that you need them. 
 
-All configuration is organized into the zones, environments, and roles that you specify (Rudy assumes positions are identical which is important for backups and scaling). And as you'd expect, the defaults can be changed too.
+All configuration is organized into this hierarchy so you can define properties (machine image, machine type, IP address, etc...) by role, by environment, or by zone. You can also define routines for running shell commands and scripts, uploading files, creating disks and backups, etc... Routines are organized by hierarchy too so a "startup" routine can run one thing for your database machines and another thing for your application machines. 
 
-<b>See Getting-Started[http://solutious.com/projects/rudy/getting-started/] for more info.</b>
+Rudy helps with other stuff too. Every machine can be given a hostname based on its zone, environment, role, and position (you can run multiple machines with the same role). These names look like this: <tt>m-us-east-1b-stage-app-01</tt>, but you can also assign your own names. Rudy also automatically creates a private keypair and security for each machine group (e.g. <tt>key-us-east-1b-stage-app</tt> and <tt>grp-us-east-1b-stage-app</tt>).
 
-
-== Project Status
-
-<em>This is a BETA release. That means Rudy's not ready for production use! See Project-Status[http://wiki.github.com/solutious/rudy/project-status].</em>
-
-The 0.9 release is a major re-write and has many changes from previous releases. 0.9-RC1 is the first public release from the 0.9 branch and much of the code has not been tested. DO NOT USE IN PRODUCTION. Try it out have some fun and if you have the time send a patch or pull request!
+<b>Get-Started[http://solutious.com/projects/rudy/getting-started/] with Rudy today to see what all the fuss is about.</b>
 
 
 == Configuration
+
+Rudy is configured via several Ruby-based domain specific languages.
+
 
 === Machines
 
 The machines configuration describes the "physical" characteristics of your infrastructure. 
 
-    env :stage do                   # Define an environment
-      ami 'ami-e348af8a'         
+    machines do
+
+      env :stage do                   # Define an environment
+        ami 'ami-e348af8a'            # Specify a machine image
+      
+        role :app do                  # Define a role
+          addresses '11.22.33.44'     # Use elastic IPs
                              
-      role :app do                  # Define a role
-        addresses '11.22.33.44'     # Use elastic IPs
-                             
-        disks do                    # Define EBS volumes
-          path "/rudy/disk1" do  
-            size 100             
-            device "/dev/sdr"     
-          end                       
+          disks do                    # Define EBS volumes
+            path "/rudy/disk1" do  
+              size 100
+              device "/dev/sdr"     
+            end                       
+          end
         end
       end
-    end
 
+    end
+    
 === Routines
 
 The routines configuration describes repeatable processes that you can execute on your machines. 
 
-    startup do                      # $ rudy startup
-      adduser :rudy       
-      authorize :rudy               # Enable passwordless login
+    routines do
+    
+      startup do                      # $ rudy startup
+        adduser :rudy       
+        authorize :rudy               # Enable passwordless login
                              
-      disks do                   
-        create "/rudy/disk1"        # Create a disk 
-      end                       
+        disks do                   
+          create "/rudy/disk1"        # Create, format, and mount a volume 
+        end                       
                             
-      remote :rudy do               # Run remote commands via SSH
-        mkdir :p, "great"           # $ mkdir -p great
-        touch "great/scott"         # $ touch great/scott
-        mysql_init :start 
-      end                          
+        remote :rudy do               # Run remote commands via SSH
+          mkdir :p, "great"           # $ mkdir -p great
+          mysql_init :start 
+          your_script 'arg1', 'arg2'  # Call your own scripts
+        end                          
+      end
+    
     end
+    
+See Rudyfile[http://github.com/solutious/rudy/raw/master/Rudyfile] for a complete configuration example. 
 
 
+== Running Commands
 
+Rudy comes with a command-line tool called <tt>rudy</tt>. It provides commands for describing the infrastructures you've built with Rudy. 
+
+    $ rudy machines
+    m-us-east-1d-stage-app-01: ec2-67-202-0-112.compute-1.amazonaws.com
+    m-us-east-1d-stage-app-02: ec2-174-129-117-30.compute-1.amazonaws.com
+    
+    $ rudy disks
+    disk-us-east-1d-stage-app-01-rudy-disk1
+    disk-us-east-1d-stage-app-02-rudy-disk1
+    
+    $ rudy backups
+    back-us-east-1d-stage-app-01-rudy-disk1-20090803-1857-49
+    back-us-east-1d-stage-app-01-rudy-disk1-20090803-1858-36
+    back-us-east-1d-stage-app-02-rudy-disk1-20090803-1911-05
+    
+See <tt>rudy -h</tt> for more info.     
+    
+    
 == Features
 
 * Create complex IT infrastructures from a simple configuration
@@ -69,8 +96,14 @@ The routines configuration describes repeatable processes that you can execute o
 * Powerful command-line tools
   * <tt>$ rudy -u root ssh</tt>
   * <tt>$ rudy -e testing -r database backup-mysql</tt>
-* Use _any Linux_ Amazon machine image (AMI) (partial Solaris support)
+* Use _any Linux_ Amazon machine image (AMI) (partial Windows and Solaris support)
 * Complete command-line interface for EC2. See <tt>bin/rudy-ec2</tt>.
+
+
+== Project Status
+
+<em>This is a BETA release. That means Rudy is not ready for production use! See Project-Status[http://wiki.github.com/solutious/rudy/project-status].</em>
+
 
 == Installation
 
@@ -113,6 +146,7 @@ NOTE: <em>If you are not installing via RubyGems, you need to make sure the depe
   * Linux: Ruby 1.8, 1.9, and JRuby 1.3+
   * Windows: Ruby 1.8 and JRuby 1.3+ (Net::SSH does not run under Ruby 1.9)
   * BSD: <i>Needs testing (any takers?)</i>
+ 
   
 == More Info
 
@@ -122,6 +156,14 @@ NOTE: <em>If you are not installing via RubyGems, you need to make sure the depe
 * Start a discussion on the GoogleGroup[http://groups.google.com/group/rudy-deployment]
 * Find some Inspiration[http://www.youtube.com/watch?v=CgaiIW5Rzes]
 * For all other inquires, email me directly: delano (@solutious.com)
+
+
+== Contributions
+
+We encourage people to find unique and interesting ways to break and extend rudy.
+
+* For bigger features please fork the git repo and send me a pull request. 
+* For small or single file changes, send an email with details to: delano (@solutious.com)
 
 
 == Thanks
@@ -141,16 +183,9 @@ NOTE: <em>If you are not installing via RubyGems, you need to make sure the depe
 * Marcel Molina Jr. for aws-s3
 * Keshia Knight Pulliam
 
-
-== Contributions
-
-* For bigger features please fork the git repo and send me a pull request. 
-* For small or single file changes, send me an email with the details: Delano (@solutious.com)
-
-
 == Credits
 
-* Delano Mandelbaum (delano@solutious.com)
+* Delano Mandelbaum ( http://solutious.com/ )
 * Rudy::AWS::SDB adapted from aws_sdb by Tim Dysinger (http://dysinger.net)
 
 

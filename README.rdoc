@@ -20,40 +20,48 @@ Rudy is configured via several Ruby-based domain specific languages.
 
 The machines configuration describes the "physical" characteristics of your infrastructure. 
 
-    env :stage do                   # Define an environment
-      ami 'ami-e348af8a'            # Specify a machine image
+    machines do
+
+      env :stage do                   # Define an environment
+        ami 'ami-e348af8a'            # Specify a machine image
       
-      role :app do                  # Define a role
-        addresses '11.22.33.44'     # Use elastic IPs
+        role :app do                  # Define a role
+          addresses '11.22.33.44'     # Use elastic IPs
                              
-        disks do                    # Define EBS volumes
-          path "/rudy/disk1" do  
-            size 100
-            device "/dev/sdr"     
-          end                       
+          disks do                    # Define EBS volumes
+            path "/rudy/disk1" do  
+              size 100
+              device "/dev/sdr"     
+            end                       
+          end
         end
       end
-    end
 
+    end
+    
 === Routines
 
 The routines configuration describes repeatable processes that you can execute on your machines. 
 
-    startup do                      # $ rudy startup
-      adduser :rudy       
-      authorize :rudy               # Enable passwordless login
+    routines do
+    
+      startup do                      # $ rudy startup
+        adduser :rudy       
+        authorize :rudy               # Enable passwordless login
                              
-      disks do                   
-        create "/rudy/disk1"        # Create, format, and mount a volume 
-      end                       
+        disks do                   
+          create "/rudy/disk1"        # Create, format, and mount a volume 
+        end                       
                             
-      remote :rudy do               # Run remote commands via SSH
-        mkdir :p, "great"           # $ mkdir -p great
-        mysql_init :start 
-        your_script 'arg1', 'arg2'  # Call your own scripts
-      end                          
+        remote :rudy do               # Run remote commands via SSH
+          mkdir :p, "great"           # $ mkdir -p great
+          mysql_init :start 
+          your_script 'arg1', 'arg2'  # Call your own scripts
+        end                          
+      end
+    
     end
-
+    
 See Rudyfile[http://github.com/solutious/rudy/raw/master/Rudyfile] for a complete configuration example. 
 
 
@@ -151,8 +159,10 @@ NOTE: <em>If you are not installing via RubyGems, you need to make sure the depe
 
 == Contributions
 
+This is a BETA release. We encourage people to find unique and interesting ways to break rudy. If you find an issue, let us know!
+
 * For bigger features please fork the git repo and send me a pull request. 
-* For small or single file changes, send me an email with the details: Delano (@solutious.com)
+* For small or single file changes, send me an email with the details: delano (@solutious.com)
 
 
 == Thanks

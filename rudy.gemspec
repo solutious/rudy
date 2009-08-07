@@ -14,6 +14,8 @@
   s.require_paths = %w[lib]
   s.rubygems_version = '1.3.0'
   
+  s.executables = %w[rudy rudy-ec2 rudy-sdb rudy-s3]
+  
   s.add_dependency 'rye',        '>= 0.8.6'
   s.add_dependency 'attic',      '>= 0.4.0'
   s.add_dependency 'annoy',      '>= 0.5.5'
@@ -27,8 +29,6 @@
   s.add_dependency 'aws-s3',     '>= 0.6.1'  # Ruby 1.9.1 compatability
   s.add_dependency 'highline',   '>= 1.5.1'  # Ruby 1.9.1 compatability
   s.add_dependency 'amazon-ec2', '>= 0.3.8'  # Region fix
-  
-  s.executables = %w[rudy rudy-ec2 rudy-sdb rudy-s3]
   
   # = MANIFEST =
   # git ls-files

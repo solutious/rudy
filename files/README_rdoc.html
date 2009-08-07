@@ -31,7 +31,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2009-08-07 15:51:36 -0400</span>
+          <span class='datetime'>2009-08-07 16:24:56 -0400</span>
         </div>
       </div>
       <div id='content'>
@@ -83,13 +83,13 @@
             The machines configuration describes the &#8220;physical&#8221;
             characteristics of your infrastructure.
             </p>
-            <pre>env :stage do                   # Define an environment&#x000A;  ami 'ami-e348af8a'            # Specify a machine image&#x000A;&#x000A;  role :app do                  # Define a role&#x000A;    addresses '11.22.33.44'     # Use elastic IPs&#x000A;&#x000A;    disks do                    # Define EBS volumes&#x000A;      path &quot;/rudy/disk1&quot; do&#x000A;        size 100&#x000A;        device &quot;/dev/sdr&quot;&#x000A;      end&#x000A;    end&#x000A;  end&#x000A;end</pre>
+            <pre>machines do&#x000A;&#x000A;  env :stage do                   # Define an environment&#x000A;    ami 'ami-e348af8a'            # Specify a machine image&#x000A;&#x000A;    role :app do                  # Define a role&#x000A;      addresses '11.22.33.44'     # Use elastic IPs&#x000A;&#x000A;      disks do                    # Define EBS volumes&#x000A;        path &quot;/rudy/disk1&quot; do&#x000A;          size 100&#x000A;          device &quot;/dev/sdr&quot;&#x000A;        end&#x000A;      end&#x000A;    end&#x000A;  end&#x000A;&#x000A;end</pre>
             <h3>Routines</h3>
             <p>
             The routines configuration describes repeatable processes that you can
             execute on your machines.
             </p>
-            <pre>startup do                      # $ rudy startup&#x000A;  adduser :rudy&#x000A;  authorize :rudy               # Enable passwordless login&#x000A;&#x000A;  disks do&#x000A;    create &quot;/rudy/disk1&quot;        # Create, format, and mount a volume&#x000A;  end&#x000A;&#x000A;  remote :rudy do               # Run remote commands via SSH&#x000A;    mkdir :p, &quot;great&quot;           # $ mkdir -p great&#x000A;    mysql_init :start&#x000A;    your_script 'arg1', 'arg2'  # Call your own scripts&#x000A;  end&#x000A;end</pre>
+            <pre>routines do&#x000A;&#x000A;  startup do                      # $ rudy startup&#x000A;    adduser :rudy&#x000A;    authorize :rudy               # Enable passwordless login&#x000A;&#x000A;    disks do&#x000A;      create &quot;/rudy/disk1&quot;        # Create, format, and mount a volume&#x000A;    end&#x000A;&#x000A;    remote :rudy do               # Run remote commands via SSH&#x000A;      mkdir :p, &quot;great&quot;           # $ mkdir -p great&#x000A;      mysql_init :start&#x000A;      your_script 'arg1', 'arg2'  # Call your own scripts&#x000A;    end&#x000A;  end&#x000A;&#x000A;end</pre>
             <p>
             See <a
             href="http://github.com/solutious/rudy/raw/master/Rudyfile">Rudyfile</a>
@@ -279,11 +279,15 @@
             </li>
             </ul>
             <h2>Contributions</h2>
+            <p>
+            We encourage people to find unique and interesting ways to break and extend
+            rudy.
+            </p>
             <ul>
             <li>For bigger features please fork the git repo and send me a pull request.
             
             </li>
-            <li>For small or single file changes, send me an email with the details: Delano
+            <li>For small or single file changes, send an email with details to: delano
             (@solutious.com)
             
             </li>

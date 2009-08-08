@@ -2,13 +2,13 @@
 
 <b>Not your grandparents' EC2 deployment tool.</b>
 
-Rudy is a development and deployment tool for Amazon Web Services. It helps you build and maintain infrastructures in EC2 by organizing them into groups of _zones_,  _environments_, and _roles_. By making it quick and easy to build infrastructures, Rudy makes it feasible to run environments only for the time that you need them. 
+Rudy is a development and deployment tool for EC2. It helps you build and maintain infrastructures by organizing them into groups of _zones_,  _environments_, and _roles_. By making it quick and easy to build infrastructures, Rudy makes it feasible to run environments only for the time that you need them. 
 
 All configuration is organized into this hierarchy so you can define properties (machine image, machine type, IP address, etc...) by role, by environment, or by zone. You can also define routines for running shell commands and scripts, uploading files, creating disks and backups, etc... Routines are organized by hierarchy too so a "startup" routine can run one thing for your database machines and another thing for your application machines. 
 
 Rudy helps with other stuff too. Every machine can be given a hostname based on its zone, environment, role, and position (you can run multiple machines with the same role). These names look like this: <tt>m-us-east-1b-stage-app-01</tt>, but you can also assign your own names. Rudy also automatically creates a private keypair and security for each machine group (e.g. <tt>key-us-east-1b-stage-app</tt> and <tt>grp-us-east-1b-stage-app</tt>).
 
-<b>Get-Started[http://solutious.com/projects/rudy/getting-started/] with Rudy today to see what all the fuss is about.</b>
+<b>Get-Started[http://solutious.com/projects/rudy/getting-started/] with Rudy now.</b>
 
 
 == Configuration

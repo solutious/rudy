@@ -1,6 +1,9 @@
 RUDY, CHANGES 
 
 
+#### 0.9.2 (2009-08-??) ###########################
+
+
 #### 0.9.1 (2009-08-05) ###########################
 
 * FIXED: "rudy init" now exits with 0
@@ -341,4 +344,12 @@ NOTE: This is a complete re-write from 0.1
 * TODO: Investigate SSH daemon on Windows
 * TODO: Supply machines config to routines blocks with only the specific machine group context 
 * TODO: The output for rudy -v should become the default verbose level. -v should print the command output without the header. -vv should print the header. -vvv stays the same but also print full stack traces. 
+
+* BUG: Check case where machine with a disk is shutdown without destroying the disk. Then a new instance is started and finds the disk. It attaches but doesn't mount b/c metadata says it's mounted.
+* BUG: after adduser and authorize, a call to "rudy -u jira ssh" raises exception: "Cannot find file /Users/delano/.ssh/key-us-east-1b-stage-app-jira". It should ignore and try the keys in ~/.ssh. 
+* BUG: Create a machine with a disk. Shut it down without doing anything to the disk. Startup a new instance. Run a routine to destroy the disk: "Rudy::Disks::NotAttached: disk-us-east-1b-stage-app-01-jira"
+* BUG: "rudy disks -l" doesn't display disks from a different zone.
+
+* TODO: "rudy networks -A 8080" to authorize port 8080
+* TODO: Add Rudy::Routines::Handlers::Disk.disk_exists? method for use in a routines block
 

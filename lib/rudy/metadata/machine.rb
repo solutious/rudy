@@ -91,7 +91,7 @@ module Rudy
     def get_console
       raise "Instance not running" unless instance_running?
       raw = Rudy::AWS::EC2::Instances.console @instid
-      console = raw ? Base64.decode64(raw) : "Unavailable"
+      console = Base64.decode64(raw)
       # The linux console can include ANSI escape codes for color, 
       # clear screen etc... We strip them out to get rid of the 
       # clear specifically. Otherwise the display is messed!
@@ -105,9 +105,11 @@ module Rudy
       end
       console = get_console
       
+      raise "Console output not yet available. Please wait." if console.nil?
+      
       unless console.match(/<Password>(.+)<\/Password>/m)  
         # /m, match multiple lines
-        raise "Password not available. Is this a custom AMI?"
+        raise "Password not yet available. Is this a custom AMI?"
       end  
       
       encrtypted_text = ($1 || '').strip
@@ -188,6 +190,11 @@ module Rudy
       end
       d
     end
+    
+    def os?(v); @os.to_s == v.to_s; end
+    def win32?; os? 'win32'; end
+    def linux?; os? 'linux'; end
+    def solaris?; os? 'solaris'; end
     
     def dns_public?;  !@dns_public.nil? && !@dns_public.empty?;   end
     def dns_private?; !@dns_private.nil? && !@dns_private.empty?; end

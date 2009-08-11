@@ -37,7 +37,7 @@ module Rudy; module Routines; module Handlers;
       raise NoMachines if rset.boxes.empty?
       rset.boxes.each do |rbox|
         unless (rbox.stash.os || '').to_s == 'win32' # No SSH daemon in windows
-          msg = "Waiting for SSH (#{port}) on #{rbox.nickname} ..."
+          msg = "Waiting for port #{port} on #{rbox.nickname} ..."
           Rudy::Utils.waiter(2, 60, STDOUT, msg, 0) {
             Rudy::Utils.service_available?(rbox.stash.dns_public, port)
           }
@@ -47,6 +47,7 @@ module Rudy; module Routines; module Handlers;
     
     def set_hostname(rset)
       raise NoMachines if rset.boxes.empty?
+      
       original_user = rset.user
       rset.switch_user 'root' 
       rset.add_key user_keypairpath('root')
@@ -58,9 +59,11 @@ module Rudy; module Routines; module Handlers;
       # run so we may want to make this an explicit action.
       type = current_machine_hostname || :rudy
       rset.batch(type) do |hn|
-        if hn != :default
-          hn = self.stash.name if hn == :rudy
-          self.quietly { hostname(hn) }
+        unless self.stash.os == :win32
+          if hn != :default
+            hn = self.stash.name if hn == :rudy
+            self.quietly { hostname(hn) }
+          end
         end
       end
       rset.switch_user original_user

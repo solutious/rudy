@@ -131,11 +131,7 @@ module Rudy; module Routines;
       opts.delete(:parallel)   # Not used by Rye::Box.new
       
       hostnames.each do |m| 
-        # This is a short-circuit for Windows instances. We don't support
-        # disks for windows yet and there's no SSH so routines are out of
-        # the picture too. 
-        next if (m.os || '').to_s == 'win32'
-          
+        
         if m.is_a?(Rudy::Machine)
           m.refresh! if m.dns_public.nil? || m.dns_public.empty?
           if m.dns_public.nil? || m.dns_public.empty?

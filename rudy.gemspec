@@ -6,7 +6,7 @@
 	s.description = s.summary
 	s.author = "Delano Mandelbaum"
 	s.email = "delano@solutious.com"
-	s.homepage = "http://github.com/solutious/rudy"
+	s.homepage = "http://solutious.com/projects/rudy/"
   
   s.extra_rdoc_files = %w[README.rdoc Rudyfile LICENSE.txt CHANGES.txt]
   s.has_rdoc = true
@@ -16,7 +16,7 @@
   
   s.executables = %w[rudy rudy-ec2 rudy-sdb rudy-s3]
   
-  s.add_dependency 'rye',        '>= 0.8.6'
+  s.add_dependency 'rye',        '>= 0.8.7'
   s.add_dependency 'attic',      '>= 0.4.0'
   s.add_dependency 'annoy',      '>= 0.5.5'
   s.add_dependency 'drydock',    '>= 0.6.6'

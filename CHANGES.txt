@@ -1,6 +1,9 @@
 RUDY, CHANGES 
 
 
+#### 0.9.2 (2009-08-??) ###########################
+
+
 #### 0.9.1 (2009-08-05) ###########################
 
 * FIXED: "rudy init" now exits with 0
@@ -326,19 +329,4 @@ NOTE: This is a complete re-write from 0.1
 * Initial public release
 
 
-#### TODO ###########################################
-
-* TODO: Supply dns values in machines config
-* TODO: Rudy::Routines::Arcade. 
-  * install/uninstall: uses package management for the specific os impl
-  * compile: from source. 
-  * e.g. rudy -a experimental install git (for ruby-unix-osx)
-  * How to handle multiple package managers?
-  * How to handle multiple app versions? 
-* TODO: http://opensoul.org/2009/6/24/capistrano-git-and-ssh-keys
-* TODO: look for config file in ./.rudy, then ../.rudy, etc... (git-like)
-* TODO: FIX: When shutting down, warns about disks even when they don't exist (CLI::Routines)
-* TODO: Investigate SSH daemon on Windows
-* TODO: Supply machines config to routines blocks with only the specific machine group context 
-* TODO: The output for rudy -v should become the default verbose level. -v should print the command output without the header. -vv should print the header. -vvv stays the same but also print full stack traces. 
 

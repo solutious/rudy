@@ -97,7 +97,7 @@ module Rudy::Routines::Handlers;
       raise Rudy::Metadata::UnknownObject, disk.name unless disk.exists?
       disk.refresh!
       
-      raise Rudy::Disks::NotAttached, disk.name if !disk.volume_attached?
+      raise Rudy::Disks::NotAttached, disk.name unless disk.volume_attached?
       
       umount rbox, disk if disk.mounted?
       raise Rudy::Disks::InUse, disk.name if disk.mounted?
@@ -189,8 +189,8 @@ module Rudy::Routines::Handlers;
       raise Rudy::Metadata::UnknownObject, disk.name unless disk.exists?
       disk.refresh!
         
-      umount rbox, disk if disk.mounted?
-      detach rbox, disk if disk.volume_attached?
+      umount rbox,disk if disk.mounted?
+      detach rbox,disk if disk.volume_attached?
       
       unless @@global.force
         raise Rudy::Disks::InUse, disk.name if disk.volume_attached?

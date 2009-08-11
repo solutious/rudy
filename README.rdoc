@@ -21,7 +21,6 @@ Rudy is configured via several Ruby-based domain specific languages.
 The machines configuration describes the "physical" characteristics of your infrastructure. 
 
     machines do
-
       env :stage do                   # Define an environment
         ami 'ami-e348af8a'            # Specify a machine image
       
@@ -35,8 +34,8 @@ The machines configuration describes the "physical" characteristics of your infr
             end                       
           end
         end
+        
       end
-
     end
     
 === Routines

@@ -31,8 +31,7 @@ commands do
 end
 
 routines do
-
-    
+  
   install_rubyforge do
     remote :root do
       gem_install 'rudy', :V

@@ -28,7 +28,7 @@ module Rudy; module AWS
     # Returns the return value from the request is returned untouched
     # or the default value on error or if the request returned nil. 
     def self.execute_request(default=nil, timeout=nil, &request)
-      timeout ||= 15
+      timeout ||= 30
       raise "No block provided" unless request
       response = nil
       begin

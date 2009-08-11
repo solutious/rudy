@@ -46,12 +46,14 @@ class RudyCLI < Rudy::CLI::Base
   usage "rudy machines -A"
   usage "rudy machines -S [static ip address]"
   usage "rudy machines -D"
-  option :l, :all, "Display machines for all environments and roles"
   action :W, :wash, "Wash machine metadata"
   action :T, :available, "Test availablity"
   action :U, :update, "Update machines based on configuration"
   action :A, :associate, "Associate static IP addresses or display existing ones"
   action :N, :disassociate, "Disassociate static IP addresses"
+  action :P, :password, "Display admin password (Windows only)"
+  action :O, :console, "Display console output"
+  option :l, :all, "Display machines for all environments and roles"
   command :machines => Rudy::CLI::Machines
   command_alias :machines, :m
   

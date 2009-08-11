@@ -5,6 +5,8 @@ RUDY, CHANGES
 
 * CHANGE: Increased AWS timeout to 30 seconds. Closes GH-19
 * ADDED: Rudy::Machine#get_console, Rudy::Machine#get_password
+* ADDED: "rudy m -console" and "rudy m --password"
+
 
 #### 0.9.1 (2009-08-05) ###########################
 

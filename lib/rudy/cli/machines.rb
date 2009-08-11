@@ -4,8 +4,7 @@ module Rudy
   module CLI
     class Machines < Rudy::CLI::CommandBase
       
-      
-      def machines
+      def get_machines
         # Rudy::Machines.list takes two optional args for adding or 
         # removing metadata attributes to modify the select query. 
         # When all is specified we want to find machines in every
@@ -18,13 +17,38 @@ module Rudy
         if mlist.empty?
           raise( NoMachines, @option.all ? nil : current_group_name)
         end
+        mlist
+      end
+      private :get_machines
+      
+      def machines
+        mlist = get_machines
         mlist.each do |m|
           puts @@global.verbose > 0 ? m.to_yaml : "#{m.name}: #{m.dns_public}" 
         end
       end
       
+      def machines_console
+        mlist = get_machines
+        mlist.each do |machine|
+          puts machine_separator(machine.name, machine.instid)
+          puts machine.get_console
+        end
+      end
+      
+      def machines_password
+        mlist = get_machines
+        mlist.each do |machine|
+          puts machine_separator(machine.name, machine.instid)
+          puts "Password for %s: %s" % [machine.dns_public, machine.get_password]
+        end
+        Rudy::Routines::Handlers::Group.authorize rescue nil
+      end
+      
       def machines_wash
-        dirt = (Rudy::Machines.list || []).select { |m| !m.instance_running? }
+        mlist = get_machines
+        dirt = mlist.select { |m| !m.instance_running? }
+        
         if dirt.empty?
           puts "Nothing to wash in #{current_machine_group}"
           return

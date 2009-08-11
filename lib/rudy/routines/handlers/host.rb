@@ -10,7 +10,10 @@ module Rudy; module Routines; module Handlers;
       raise NoMachines if rset.boxes.empty?
       rset.boxes.each do |rbox|
         msg = "Waiting for #{rbox.nickname} to boot..."
-        Rudy::Utils.waiter(3, 240, Rudy::Huxtable.logger, msg, 0) {
+        multi = rbox.stash.win32? ? 6 : 3
+        interval, max = 1*multi, 80*multi
+        li [:interval, interval, max]
+        Rudy::Utils.waiter(interval, max, Rudy::Huxtable.logger, msg, 0) {
           inst = rbox.stash.get_instance
           inst && inst.running?
         }

@@ -10,9 +10,11 @@ defaults do
 end
 
 machines do
+  region :'us-east-1' do
+    ami 'ami-e348af8a'               # Alestic Debian 5.0, 32-bit (US)
+  end
   env :test do
     role :rudy do
-      ami 'ami-e348af8a'               # Alestic Debian 5.0, 32-bit (US)
       user :root
     end
   end

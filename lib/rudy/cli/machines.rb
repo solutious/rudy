@@ -15,7 +15,11 @@ module Rudy
         
         mlist = Rudy::Machines.list(fields, less) || []
         if mlist.empty?
-          raise( NoMachines, @option.all ? nil : current_group_name)
+          if @@global.position.nil?
+            raise MachineGroupNotRunning, (@option.all ? nil : current_group_name)
+          else
+            raise MachineNotRunning, current_machine_name 
+          end
         end
         mlist
       end
@@ -65,7 +69,7 @@ module Rudy
       end
       
       def associate_machines_valid?
-        @mlist = Rudy::Machines.list || []
+        @mlist = get_machines
         @alist = Rudy::AWS::EC2::Addresses.list || []
         @alist_used    = @alist.select { |a|  a.associated? }
         @alist_unused  = @alist.select { |a| !a.associated? }
@@ -142,7 +146,7 @@ module Rudy
       
       
       def disassociate_machines_valid?
-        @mlist = Rudy::Machines.list || []
+        @mlist = get_machines
         @alist = Rudy::AWS::EC2::Addresses.list || []
         @alist_used    = @alist.select { |a|  a.associated? }
         @alist_instids = @alist_used.collect { |a| a.instid }
@@ -171,19 +175,17 @@ module Rudy
       end
       
       def update_machines
-        fields, less = {}, []
-        less = Rudy::Metadata::COMMON_FIELDS if @option.all
-        mlist = Rudy::Machines.list(fields, less) || []
+        mlist = get_machines
         rset = Rye::Set.new(current_group_name, :parallel => @@global.parallel, :user => 'root')
         os = current_machine_os
         mlist.each do |m|
+          puts "Updating #{m.name}"
           m.refresh!
           rbox = Rye::Box.new(m.dns_public, :user => 'root')
           rbox.add_key user_keypairpath('root')
           rbox.nickname = m.name
           rbox.stash = m
           rset.add_boxes rbox
-          puts "Updating metadata"
           if m.os.to_s != os.to_s
             puts "os: #{os}"
             m.os = os
@@ -200,23 +202,28 @@ module Rudy
       end
       
       def available_machines
-        fields, less = {}, []
-        less = Rudy::Metadata::COMMON_FIELDS if @option.all
-        mlist = Rudy::Machines.list(fields, less) || []
+        mlist = get_machines
         mlist.each do |m|
           print "#{m.name}: "
           m.refresh!
+          port = m.win32? ? 3389 : 22
           Rudy::Utils.waiter(2, 60, STDOUT, nil, 0) {
-            Rudy::Utils.service_available?(m.dns_public, 22)
+            Rudy::Utils.service_available?(m.dns_public, port)
           }
-          available = Rudy::Utils.service_available?(m.dns_public, 22)
+          available = Rudy::Utils.service_available?(m.dns_public, port)
           puts available ? 'up' : 'down'
         end
         
       end
       
       
+      def ssh_valid?
+        raise "SSH not supported on Windows" if current_machine_os.to_s == 'win32'
+      end
+      
       def ssh
+
+        
         # TODO: Give this method a good look over
         pkey = current_user_keypairpath
         unless pkey
@@ -249,12 +256,8 @@ module Rudy
         end
         
         checked = false
-        lt = Rudy::Machines.list 
-        unless lt
-          puts "No machines running in #{current_machine_group}"
-          return
-        end
-        
+        lt = get_machines
+
         rset = Rye::Set.new(current_machine_group, :parallel => @global.parallel)
         lt.each do |machine|
           machine.refresh!  # make sure we have the latest DNS info

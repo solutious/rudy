@@ -77,6 +77,7 @@ module Rudy
     
     def postprocess
       @position &&= @position.to_s.rjust(2, '0')
+      @os &&= @os.to_sym
     end
     
     def to_s(*args)
@@ -85,6 +86,33 @@ module Rudy
     
     def get_instance
       Rudy::AWS::EC2::Instances.get @instid
+    end
+    
+    def get_console
+      raise "Instance not running" unless instance_running?
+      raw = Rudy::AWS::EC2::Instances.console @instid
+      console = raw ? Base64.decode64(raw) : "Unavailable"
+      # The linux console can include ANSI escape codes for color, 
+      # clear screen etc... We strip them out to get rid of the 
+      # clear specifically. Otherwise the display is messed!
+      console &&= console.noansi if console.respond_to? :noansi
+      console
+    end
+    
+    def get_password
+      unless @os == :win32
+        raise "Password support is Windows only (this is #{@os})" 
+      end
+      console = get_console
+      
+      unless console.match(/<Password>(.+)<\/Password>/m)  
+        # /m, match multiple lines
+        raise "Password not available. Is this a custom AMI?"
+      end  
+      
+      encrtypted_text = ($1 || '').strip
+      k = Rye::Key.from_file root_keypairpath
+      k.decrypt encrtypted_text
     end
     
     def create

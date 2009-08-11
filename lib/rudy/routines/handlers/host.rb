@@ -39,12 +39,11 @@ module Rudy; module Routines; module Handlers;
     def is_available?(rset, port=22)
       raise NoMachines if rset.boxes.empty?
       rset.boxes.each do |rbox|
-        unless (rbox.stash.os || '').to_s == 'win32' # No SSH daemon in windows
-          msg = "Waiting for port #{port} on #{rbox.nickname} ..."
-          Rudy::Utils.waiter(2, 60, STDOUT, msg, 0) {
-            Rudy::Utils.service_available?(rbox.stash.dns_public, port)
-          }
-        end
+        port = 3389 if rbox.stash.win32?
+        msg = "Waiting for port #{port} on #{rbox.nickname} ..."
+        Rudy::Utils.waiter(2, 60, STDOUT, msg, 0) {
+          Rudy::Utils.service_available?(rbox.stash.dns_public, port)
+        }
       end
     end
     

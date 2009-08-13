@@ -28,7 +28,7 @@
   
   s.add_dependency 'aws-s3',     '>= 0.6.1'  # Ruby 1.9.1 compatability
   s.add_dependency 'highline',   '>= 1.5.1'  # Ruby 1.9.1 compatability
-  s.add_dependency 'amazon-ec2', '>= 0.3.8'  # Region fix
+  s.add_dependency 'amazon-ec2', '>= 0.5.0'  # Region fix
   
   # = MANIFEST =
   # git ls-files

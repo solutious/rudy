@@ -1,6 +1,6 @@
 
 
-require 'EC2'       # amazon-ec2 gem
+require 'AWS'       # amazon-ec2 gem
 
 
 module Rudy
@@ -27,7 +27,7 @@ module Rudy
     
     Rudy::Utils.require_glob(RUDY_LIB, 'rudy', 'aws', '{ec2,s3,sdb}', "*.rb")
     
-    class Error < ::EC2::Error; end
+    class Error < ::AWS::Error; end
   end
   
 end

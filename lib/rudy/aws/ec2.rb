@@ -15,7 +15,7 @@ module Rudy; module AWS
       host ||= DEFAULT_EC2_HOST
       port ||= DEFAULT_EC2_PORT
       
-      @@ec2 = ::EC2::Base.new(:port => port, :server=> host, :access_key_id => access_key, :secret_access_key => secret_key)
+      @@ec2 = ::AWS::EC2::Base.new(:port => port, :server=> host, :access_key_id => access_key, :secret_access_key => secret_key)
       @@logger = logger
     end
     
@@ -36,12 +36,12 @@ module Rudy; module AWS
           response = request.call
         end
       # Raise the EC2 exceptions
-      rescue ::EC2::Error, ::EC2::InvalidInstanceIDMalformed => ex  
+      rescue ::AWS::Error, ::AWS::InvalidInstanceIDMalformed => ex  
         raise Rudy::AWS::Error, ex.message
       
       # NOTE: The InternalError is returned for non-existent volume IDs. 
       # It's probably a bug so we're ignoring it -- Dave. 
-      rescue ::EC2::InternalError => ex
+      rescue ::AWS::InternalError => ex
         raise Rudy::AWS::Error, ex.message
         
       rescue Timeout::Error => ex

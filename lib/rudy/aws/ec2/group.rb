@@ -171,7 +171,7 @@ module Rudy::AWS
       def exists?(name)
         begin
           g = list([name.to_s])
-        rescue ::EC2::InvalidGroupNotFound
+        rescue ::AWS::InvalidGroupNotFound
           return false 
         end
       

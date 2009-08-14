@@ -12,7 +12,6 @@ module Rudy; module Routines; module Handlers;
         msg = "Waiting for #{rbox.nickname} to boot..."
         multi = rbox.stash.win32? ? 6 : 3
         interval, max = 1*multi, 80*multi
-        li [:interval, interval, max]
         Rudy::Utils.waiter(interval, max, Rudy::Huxtable.logger, msg, 0) {
           inst = rbox.stash.get_instance
           inst && inst.running?

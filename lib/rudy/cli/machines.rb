@@ -219,6 +219,7 @@ module Rudy
       
       def ssh_valid?
         raise "SSH not supported on Windows" if current_machine_os.to_s == 'win32'
+        true
       end
       
       def ssh

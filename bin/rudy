@@ -45,9 +45,11 @@ class RudyCLI < Rudy::CLI::Base
   usage "rudy machines"
   usage "rudy machines -l"
   usage "rudy machines -U"
-  usage "rudy machines -A"
-  usage "rudy machines -S [static ip address]"
-  usage "rudy machines -D"
+  usage "rudy machines -A [static ip address]"
+  usage "rudy machines -N"
+  usage "rudy machines -T"
+  usage "rudy machines -P"
+  usage "rudy machines -O"
   action :W, :wash, "Wash machine metadata"
   action :T, :available, "Test availablity"
   action :U, :update, "Update machines based on configuration"
@@ -58,6 +60,15 @@ class RudyCLI < Rudy::CLI::Base
   option :l, :all, "Display machines for all environments and roles"
   command :machines => Rudy::CLI::Machines
   command_alias :machines, :m
+  
+  about "View Keypairs"
+  usage "rudy keypairs"
+  #usage "rudy keypairs -A"
+  usage "rudy keypairs -S"
+  action :A, :add, "Add a keypair"
+  action :S, :show, "Show a private key"
+  command :keypairs => Rudy::CLI::Keypairs
+  command_alias :keypairs, :k
   
   about "View Disks"
   usage "rudy disks"

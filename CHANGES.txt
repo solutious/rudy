@@ -11,6 +11,7 @@ RUDY, CHANGES
 * ADDED: Rudy::Machine#get_console, Rudy::Machine#get_password
 * ADDED: Rudy::Machine#win32?, Rudy::Machine#linux?, Rudy::Machine#solaris?, Rudy::Machine#os?
 * ADDED: "rudy m -console" and "rudy m --password"
+* ADDED: "rudy keypairs"
 
 
 #### 0.9.1 (2009-08-05) ###########################

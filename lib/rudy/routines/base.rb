@@ -79,7 +79,9 @@ module Rudy; module Routines;
       opts = {
         :info => (@@global.verbose >= 3),  # rudy -vvv 
         :debug => false,
-        :user => Rudy.sysinfo.user
+        :user => Rudy.sysinfo.user, 
+        :ostype => current_machine_os || :unix,
+        :impltype => :linux
       }.merge opts
       
       box = Rye::Box.new hostname, opts

@@ -72,6 +72,14 @@ routines do
   end
   
   
+  upload_config do
+    remote do
+      disable_safe_mode
+      puts "Uploading rudy config"
+      file_upload '~/.rudy/config'
+    end
+  end
+  
 end
 
 

@@ -95,6 +95,7 @@ module Rudy
     end
     
     def self.rescue(ret=nil, &bloc_party)
+
       begin
         ret = bloc_party.call
       rescue NameError, ArgumentError, RuntimeError => ex

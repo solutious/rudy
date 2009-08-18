@@ -34,12 +34,15 @@ module Rudy::Routines::Handlers;
     
     def execute(type, routine, rset, lbox, argv=nil)
       original_user = rset.user
-      rset.add_key user_keypairpath('root')
-      rset.switch_user 'root'
+      rset.add_key user_keypairpath(current_machine_user)
+      rset.switch_user current_machine_user
       
       # We need to add mkfs since it's not enabled by default. 
       # We prepend the command with rudy_ so we can delete it. 
+      Rye::Cmd.add_command(:rudy_rm, 'rm')
       Rye::Cmd.add_command(:rudy_mkfs, 'mkfs')
+      Rye::Cmd.add_command(:rudy_format, 'C:/windows/system32/format.com')
+      Rye::Cmd.add_command(:rudy_diskpart, 'C:/windows/system32/diskpart.exe')
       
       routine.each_pair do |action, disks|
         unless respond_to?(action.to_sym)  
@@ -50,22 +53,28 @@ module Rudy::Routines::Handlers;
         # The action method does not run in the context of a Rye::Box
         # object so we need to send rset as an argument. 
         rset.batch do
+          # Windows EC2 instances have 2 disks by default (C: and D:)
+          index = Rudy::Huxtable.current_machine_os.to_s == 'win32' ? 2 : 0
           disks.each_pair do |path, props|
             # self contains the current instance of Rye::Box. 
             disk = Rudy::Disk.new(self.stash.position, path, props)
-            Rudy::Routines::Handlers::Disks.send(action, self, disk)
+            Rudy::Routines::Handlers::Disks.send(action, self, disk, index)
+            index += 1
           end
         end
 
       end
       
+      Rye::Cmd.remove_command(:rudy_rm)
       Rye::Cmd.remove_command(:rudy_mkfs)
+      Rye::Cmd.remove_command(:rudy_format)
+      Rye::Cmd.remove_command(:rudy_diskpart)
       
       rset.switch_user original_user
     end
     
     
-    def create(rbox, disk)
+    def create(rbox, disk, index)
       if disk.exists?
         puts "Disk found: #{disk.name}"
         disk.refresh!          
@@ -83,23 +92,23 @@ module Rudy::Routines::Handlers;
         }
       end
       
-      attach rbox, disk unless disk.volume_attached?
-      format rbox, disk if disk.raw?
-      mount rbox, disk unless disk.mounted?
+      attach rbox, disk, index unless disk.volume_attached?
+      format rbox, disk, index if disk.raw?
+      mount rbox, disk, index unless disk.mounted?
 
       disk.save :replace
     end
     
     
     
-    def detach(rbox, disk)
+    def detach(rbox, disk, index)
       
       raise Rudy::Metadata::UnknownObject, disk.name unless disk.exists?
       disk.refresh!
       
       raise Rudy::Disks::NotAttached, disk.name unless disk.volume_attached?
       
-      umount rbox, disk if disk.mounted?
+      umount rbox, disk, index if disk.mounted?
       raise Rudy::Disks::InUse, disk.name if disk.mounted?
 
       msg = "Detaching #{disk.volid}..."
@@ -110,7 +119,15 @@ module Rudy::Routines::Handlers;
 
     end
     
-    def attach(rbox, disk)
+    def attach(rbox, disk, index)
+      
+      unless disk.volume_exists?
+        msg = "Creating volume... "
+        disk.create
+        Rudy::Utils.waiter(2, 60, STDOUT, msg) { 
+          disk.volume_available?
+        }
+      end
       
       raise Rudy::Metadata::UnknownObject, disk.name unless disk.exists?
       disk.refresh!
@@ -119,16 +136,22 @@ module Rudy::Routines::Handlers;
       
       msg = "Attaching #{disk.volid} to #{rbox.stash.instid}... "
       disk.volume_attach(rbox.stash.instid)
-      Rudy::Utils.waiter(2, 10, STDOUT, msg) { 
+      Rudy::Utils.waiter(3, 30, STDOUT, msg) { 
         disk.volume_attached?
       }
 
     end
     
-    def mount(rbox, disk)
+    def mount(rbox, disk, index)
       
       raise Rudy::Metadata::UnknownObject, disk.name unless disk.exists?
       disk.refresh!
+      
+      if rbox.stash.win32?
+        Rudy::Huxtable.li "Skipping for Windows"
+        return 
+      end
+      
       attach rbox, disk unless disk.volume_attached?
       
       unless @@global.force
@@ -137,18 +160,20 @@ module Rudy::Routines::Handlers;
         raise Rudy::Disks::AlreadyMounted, disk.name if disk.mounted?
       end
       
-      rbox.mkdir(:p, disk.path)
-      
       puts "Mounting at #{disk.path}... "
-  
+      
+      
+      rbox.mkdir(:p, disk.path)
       rbox.mount(:t, disk.fstype, disk.device, disk.path) 
       disk.mounted = true
       disk.save :replace
       sleep 1
+
     end
     
     
-    def umount(rbox, disk)
+    def umount(rbox, disk, index)
+      
       raise Rudy::Metadata::UnknownObject, disk.name unless disk.exists?
       disk.refresh!
       
@@ -158,14 +183,19 @@ module Rudy::Routines::Handlers;
       end
       
       puts "Unmounting #{disk.path}... "
-      rbox.umount(disk.path)
+      
+      unless rbox.stash.win32?
+        rbox.umount(disk.path)
+      end
+      
       disk.mounted = false
       disk.save :replace
       sleep 2
+      
     end
     alias_method :unmount, :umount
     
-    def format(rbox, disk)
+    def format(rbox, disk, index)
       raise Rudy::Metadata::UnknownObject, disk.name unless disk.exists?
       disk.refresh!
       
@@ -177,20 +207,28 @@ module Rudy::Routines::Handlers;
         raise Rudy::Disks::AlreadyFormatted, disk.name if !disk.raw?
       end
       
-      disk.fstype = 'ext3' if disk.fstype.nil? || disk.fstype.empty?
+      if disk.fstype.nil? || disk.fstype.empty?
+        disk.fstype = rbox.stash.default_fstype
+      end
       
-      puts "Creating #{disk.fstype} filesystem for #{disk.device}... "
-      rbox.rudy_mkfs(:t, disk.fstype, :F, disk.device)
+      puts "Creating #{disk.fstype} filesystem for #{disk.path}... (index: #{index})"
+      if rbox.stash.win32?
+        win32_diskpart_partition rbox, disk, index
+        disk.mounted = true
+      else
+        rbox.rudy_mkfs(:t, disk.fstype, :F, disk.device)
+      end
+      
       disk.raw = false
       disk.save :replace
     end
     
-    def destroy(rbox, disk)
+    def destroy(rbox, disk, index)
       raise Rudy::Metadata::UnknownObject, disk.name unless disk.exists?
       disk.refresh!
         
-      umount rbox,disk if disk.mounted?
-      detach rbox,disk if disk.volume_attached?
+      umount rbox,disk,index if disk.mounted? && !rbox.stash.win32?
+      detach rbox,disk,index if disk.volume_attached?
       
       unless @@global.force
         raise Rudy::Disks::InUse, disk.name if disk.volume_attached?
@@ -200,7 +238,7 @@ module Rudy::Routines::Handlers;
       disk.destroy
     end
     
-    def archive(rbox, disk)
+    def archive(rbox, disk, index)
       raise Rudy::Metadata::UnknownObject, disk.name unless disk.exists?
       disk.refresh!
       
@@ -210,7 +248,7 @@ module Rudy::Routines::Handlers;
       puts "Created backup: #{back.name}"
     end
     
-    def restore(rbox, disk)
+    def restore(rbox, disk, index)
 
       if disk.exists?
         puts "Disk found: #{disk.name}"
@@ -222,7 +260,11 @@ module Rudy::Routines::Handlers;
       end
       
       latest_backup = disk.backups.last
-      latest_backup.fstype = 'ext3' if latest_backup.fstype.nil? || latest_backup.fstype.empty?
+      
+      if latest_backup.fstype.nil? || latest_backup.fstype.empty?
+        latest_backup.fstype = rbox.stash.default_fstype
+      end
+      
       disk.size, disk.fstype = latest_backup.size, latest_backup.fstype
       
       puts "Backup found: #{latest_backup.name}"
@@ -237,11 +279,29 @@ module Rudy::Routines::Handlers;
         disk.save :replace  
       end
       
-      attach rbox, disk unless disk.volume_attached?
-      mount rbox, disk unless disk.mounted?
+      attach rbox, disk, index unless disk.volume_attached?
+      mount rbox, disk, index unless disk.mounted?
       
       disk.save :replace
 
+    end
+    
+    
+    private
+    
+    def win32_diskpart_partition(rbox, disk, disk_num)
+      rbox.quietly { rudy_rm :f, 'diskpart-script' }
+      rbox.file_append 'diskpart-script', %Q{
+      select disk #{disk_num}
+      clean
+      create partition primary
+      select partition 1
+      active
+      assign letter=#{disk.path.tr(':/', '')}
+      exit}
+      rbox.rudy_diskpart '/s', 'diskpart-script'
+      rbox.quietly { rudy_rm :f, 'diskpart-script' }
+      rbox.rudy_format disk.path, '/V:RUDY', "/FS:#{disk.fstype}", '/Q', '/Y'
     end
     
     

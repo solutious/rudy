@@ -46,13 +46,13 @@ end
 commands do
   allow :dir
   allow :format, 'C:/windows/system32/format.com'
-  allow :diskpart#, 'C:/windows/system32/diskpart.exe'
+  allow :diskpart, 'C:/windows/system32/diskpart.exe'
   allow :rm
 end
 
 routines do
   
-  create_disks do
+  startup do
 
     disks do
       format "F:"
@@ -62,7 +62,7 @@ routines do
     
   end
   
-  destroy do
+  shutdown do
     disks do
       destroy "F:"
       destroy "P:"
@@ -72,15 +72,6 @@ routines do
   end
   
   
-  report do
-    remote do
-      #file_write 'diskpart-script', %Q{
-      #list disk
-      #exit}
-      ret = diskpart '/s', 'diskpart-script'
-      p ret
-    end
-  end
 end
 
 

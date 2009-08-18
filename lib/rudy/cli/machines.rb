@@ -218,7 +218,7 @@ module Rudy
       
       
       def ssh_valid?
-        raise "SSH not supported on Windows" if current_machine_os.to_s == 'win32'
+        #raise "SSH not supported on Windows" if current_machine_os.to_s == 'win32'
         true
       end
       
@@ -233,8 +233,8 @@ module Rudy
         
         # Options to be sent to Rye::Box
         rye_opts = { :user => current_machine_user, :debug => nil }
-        if pkey 
-          raise "Cannot find file #{pkey}" unless File.exists?(pkey)
+        if File.exists? pkey 
+          #raise "Cannot find file #{pkey}" unless File.exists?(pkey)
           if Rudy.sysinfo.os != :win32 && File.stat(pkey).mode != 33152
             raise InsecureKeyPermissions, pkey 
           end

@@ -16,13 +16,13 @@ module Rudy
       def keypairs_valid?
         @pkey = current_user_keypairpath
         unless File.exists? @pkey
-          raise "No private key configured for #{current_machine_user} in #{current_group_name}"
+          raise "No private key file for #{current_machine_user} in #{current_group_name}"
         end
         true
       end
       
       def keypairs
-        puts @pkey
+        puts Rudy::AWS::EC2::Keypairs.get(current_user_keypairname)
       end
 
       def keypairs_show_valid?
@@ -30,8 +30,11 @@ module Rudy
       end
             
       def keypairs_show
+        content = File.read(@pkey)
+        rkey = Rye::Key.new content
         puts "# #{@pkey}"
-        puts File.read(@pkey)
+        puts content
+        puts rkey.public_key
       end
       
     end

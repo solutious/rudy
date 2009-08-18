@@ -100,7 +100,7 @@ module Rudy
     end
     
     def get_password
-      unless @os == :win32
+      unless win32?
         raise "Password support is Windows only (this is #{@os})" 
       end
       console = get_console
@@ -189,6 +189,10 @@ module Rudy
         d[k] = self.send k
       end
       d
+    end
+    
+    def default_fstype
+      win32? ? Rudy::DEFAULT_WIN32_FS : Rudy::DEFAULT_LINUX_FS
     end
     
     def os?(v); @os.to_s == v.to_s; end

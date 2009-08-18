@@ -72,6 +72,9 @@ module Rudy
     DEFAULT_EC2_HOST = "ec2.amazonaws.com"
     DEFAULT_EC2_PORT = 443
     
+    DEFAULT_WIN32_FS = 'ntfs'
+    DEFAULT_LINUX_FS = 'ext3'
+    
     MAX_INSTANCES = 5.freeze
     
     ID_MAP = {

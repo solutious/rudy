@@ -55,9 +55,9 @@ routines do
   startup do
 
     disks do
-      format "F:"
-      format "P:"
-      format "E:"
+      create "F:"
+      create "P:"
+      create "E:"
     end
     
   end
@@ -74,9 +74,14 @@ routines do
   
   upload_config do
     remote do
-      disable_safe_mode
       puts "Uploading rudy config"
-      file_upload '~/.rudy/config'
+      home = guess_user_home
+      mkdir :p, "#{home}/.rudy", "#{home}/.ssh", ".ssh"
+      disable_safe_mode
+      file_upload '~/.rudy/config', "#{home}/.rudy/config"
+      puts "Uploading keypair"
+      file_upload '~/.ssh/id_rsa', '~/.ssh/key-eu-west-1b-test-windows', "#{home}/.ssh/"
+      file_upload '~/.ssh/id_rsa', '~/.ssh/key-eu-west-1b-test-windows', ".ssh/"
     end
   end
   

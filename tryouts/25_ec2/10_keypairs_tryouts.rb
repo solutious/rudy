@@ -9,6 +9,7 @@ tryouts "Keypairs" do
   
   setup do
     Rudy::Huxtable.update_config
+    #Rudy::Huxtable.global.region = :'eu-west-1'
     Rudy::AWS::EC2.connect global.accesskey, global.secretkey, global.region
   end
   

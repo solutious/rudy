@@ -8,13 +8,8 @@ module Rudy::AWS
       field :region
       field :state  
       
-      def liner_note
-        "%-10s  %9s  %s" % [self.name, self.region, self.state]
-      end
-      
       def to_s(titles=false)
-        str = titles ? "%-20s   %s#{$/}" % ['name', 'region', 'state'] : ""
-        str << liner_note
+        [@name.bright, @region, @state].join '; '
       end
 
     end

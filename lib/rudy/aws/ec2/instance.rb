@@ -23,38 +23,9 @@ module Rudy::AWS
       @groups ||= []
     end
     
-    def liner_note
-      info = self.running? ? self.dns_public : self.state
-      "%s  %-30s" % [self.awsid.bright, info]
-    end
-
-    def to_s(with_title=false)
-      lines = []
-      if @groups
-        gpstr = [@groups].flatten.compact.join(', ')
-        gpstr &&= "(#{gpstr})"
-      else
-        gpstr = ''
-      end
-      
-      lines << "%s  %s" % [liner_note, gpstr]
-      #if self.running?
-      #  k, g = @keyname || 'no-keypair', self.groups.join(', ')
-      #  lines << @@sformat % %w{zone size ami keyname groups} if with_title
-      #  lines << @@sformat % [@zone, @size, @ami, k, g]
-      #end
-      lines.join($/)
-    end
-    
-    def pretty
-      lines = []
-      lines << liner_note
-      field_names.each do |key|
-        next unless self.respond_to?(key)
-        val = self.send(key)
-        lines << sprintf(" %22s: %s", key, (val.is_a?(Array) ? val.join(', ') : val))
-      end
-      lines.join($/)
+    def to_s(*args)
+      groups = [@groups].flatten.compact.join(', ')
+      [self.awsid.bright, self.state, self.dns_public, groups].join '; '
     end
     
     def running?; self.state && self.state == 'running'; end

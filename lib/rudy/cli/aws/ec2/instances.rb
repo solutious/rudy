@@ -81,7 +81,7 @@ module AWS; module EC2;
             first_instance = false
           end
         
-          puts @@global.verbose > 0 ? inst.inspect : inst.dump(@@global.format)
+          print_stobject(inst)
         end
       end
     end
@@ -173,10 +173,8 @@ module AWS; module EC2;
       opts[:id] = @argv.instid if @argv.instid
       opts[:id] &&= [opts[:id]].flatten
     
-      lt = Rudy::AWS::EC2::Instances.list_group(opts[:group], opts[:state], opts[:id]) do |inst|
-        puts @@global.verbose > 0 ? inst.inspect : inst.dump(@@global.format)
-      end
-      puts "No instances running" if !lt || lt.empty?
+      ilist = Rudy::AWS::EC2::Instances.list_group(opts[:group], opts[:state], opts[:id])
+      ilist.nil? ? puts( "No instances running" ) : print_stobjects(ilist)
     end
     alias :instances :status
 

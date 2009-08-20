@@ -7,7 +7,7 @@ module AWS; module EC2;
     
     def addresses_create
       address = Rudy::AWS::EC2::Addresses.create
-      puts @@global.verbose > 0 ? address.inspect : address.dump(@@global.format)
+      print_stobject address
     end
     
     def addresses_destroy_valid?
@@ -24,7 +24,6 @@ module AWS; module EC2;
       puts "NOTE: this IP address will become available to other EC2 customers.".bright
       execute_check(:medium)
       execute_action { Rudy::AWS::EC2::Addresses.destroy(@argv.ipaddress) }
-      self.addresses
     end
 
     def associate_addresses_valid?
@@ -58,7 +57,7 @@ module AWS; module EC2;
       execute_check(:low)
       execute_action { Rudy::AWS::EC2::Addresses.associate(address, instance.awsid) }
       address = Rudy::AWS::EC2::Addresses.get(address)
-      puts @@global.verbose > 0 ? address.inspect : address.dump(@@global.format)
+      print_stobject address
     end
     
     def disassociate_addresses_valid?
@@ -76,17 +75,12 @@ module AWS; module EC2;
       execute_check(:medium)
       execute_action { Rudy::AWS::EC2::Addresses.disassociate(@argv.ipaddress) }
       address = Rudy::AWS::EC2::Addresses.get(@argv.ipaddress)
-      puts @@global.verbose > 0 ? address.inspect : address.dump(@@global.format)
+      print_stobject address
     end
     
     def addresses
       addresses = Rudy::AWS::EC2::Addresses.list || []
-      
-      addresses.each do |address|
-        puts @@global.verbose > 0 ? address.inspect : address.dump(@@global.format)
-      end
-      
-      puts "No Addresses" if addresses.empty?
+      print_stobjects addresses
     end
     
     

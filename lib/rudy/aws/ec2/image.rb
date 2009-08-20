@@ -13,37 +13,9 @@ module Rudy::AWS
     field :visibility
     field :location
     field :kind
-    
-    def liner_note
-      info = @location
-      # Highlight "debian-5" in /dir/debian-5.manifest.xml
-      #info = info.split(/\//) 
-      #info[-1].gsub!(/(.+?)((\.img)?\.manifest\.xml)/) { |m,n| ($1 || "").bright << $2 }
-      #info = info.join('/')
-      "%s %-6s (%s)" % [self.awsid.bright, self.arch, info] 
-    end
         
     def to_s(with_title=false)
-      lines = []
-      lines << liner_note
-      #if self.available?
-      #  p = public? ? "public" : "private" 
-      #  k, r = @aki || 'aki-unknown', @ari || 'ari-unknown'
-      #  lines << @@sformat % %w{arch owner aki ari visibility} if with_title
-      #  lines << @@sformat % [@arch, @owner, k, r, p]
-      #end
-      lines.join($/)
-    end
-    
-    def inspect
-      lines = []
-      lines << liner_note
-      field_names.each do |key|
-        next unless self.respond_to?(key)
-        val = self.send(key)
-        lines << sprintf(" %22s: %s", key, (val.is_a?(Array) ? val.join(', ') : val))
-      end
-      lines.join($/)
+      [@awsid.bright, @arch, @visibility, @location].join '; '
     end
     
     def available?; @state && @state == "available"; end

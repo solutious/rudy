@@ -3,7 +3,6 @@
 module Rudy::AWS
   module EC2
     class Snapshot < Storable
-      @@sformat = "%s <- %10s; %s"
       
       field :awsid
       field :progress
@@ -11,25 +10,8 @@ module Rudy::AWS
       field :volid
       field :status
       
-      def liner_note
-        t = Time.parse(@created)
-        info = t.strftime("%Y-%m-%d %H:%M:%S")
-        "%s (%s)" % [(self.awsid || '').bright, info]
-      end
-      
       def to_s(with_title=false)
-        @@sformat % [liner_note,  @volid, @status]
-      end
-      
-      def pretty
-        lines = []
-        lines << liner_note
-        field_names.each do |key|
-          next unless self.respond_to?(key)
-          val = self.send(key)
-          lines << sprintf(" %22s: %s", key, (val.is_a?(Array) ? val.join(', ') : val))
-        end
-        lines.join($/)
+        [@awsid.bright, @volid, @created, @status, @progress].join '; '
       end
       
       def completed?

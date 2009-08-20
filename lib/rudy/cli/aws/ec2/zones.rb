@@ -7,10 +7,8 @@ module AWS; module EC2;
     
     
     def zones
-      Rudy::AWS::EC2::Zones.list_as_hash(@argv.name).each_value do |zon|
-        puts zon.dump(@@global.format)
-      end
-      puts "No zones" unless Rudy::AWS::EC2::Zones.any?
+      zlist = Rudy::AWS::EC2::Zones.list(@argv.name)
+      print_stobjects zlist
     end
     
     

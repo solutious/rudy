@@ -21,10 +21,7 @@ module AWS; module EC2;
       end
       
       images = Rudy::AWS::EC2::Images.list(@option.owner, @argv) || []
-      images.each do |img|
-        puts @@global.verbose > 0 ? img.inspect : img.dump(@@global.format)
-      end
-      puts "No images" if images.empty?
+      print_stobjects images
     end
     
     def destroy_images_valid?

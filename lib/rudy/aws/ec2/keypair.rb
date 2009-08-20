@@ -8,13 +8,8 @@ module Rudy::AWS
       field :fingerprint
       field :private_key  
       
-      def liner_note
-        "%-20s   %s" % [self.name.bright, self.fingerprint]
-      end
-      
       def to_s(titles=false)
-        str = titles ? "%-20s   %s#{$/}" % ['name', 'fingerprint'] : ""
-        str << liner_note
+        [@name.bright, @fingerprint].join '; '
       end
       
       def public_key

@@ -81,7 +81,7 @@ module Rudy
     end
     
     def to_s(*args)
-      [self.name, self.instid, self.dns_public].join '; '
+      [self.name.bright, self.instid, self.dns_public].join '; '
     end
     
     def get_instance

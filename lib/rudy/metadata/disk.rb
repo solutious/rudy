@@ -69,7 +69,7 @@ module Rudy
     end
     
     def to_s(*args)
-      [self.name, self.volid, self.size, self.fstype].join '; '
+      [self.name.bright, self.volid, self.size, self.fstype].join '; '
     end
     
     def name

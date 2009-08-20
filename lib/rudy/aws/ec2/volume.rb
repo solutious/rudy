@@ -20,23 +20,8 @@ module Rudy::AWS
         @size &&= @size.to_i
       end
       
-      def liner_note
-        info = attached? ? "attached to #{@instid}" : @status
-        "%s (%s)" % [(self.awsid || '').bright, info]
-      end
-      
-      def to_s(with_title=false)
-        line = @@sformat % [liner_note, @zone, @size, @device]
-        line << " <- %s" % [@snapid] if @snapid
-        line
-      end
-      
-      def pretty
-        lines = [liner_note]
-        field_names.each do |n|
-           lines << sprintf(" %12s:  %s", n, self.send(n)) if self.send(n)
-         end
-        lines.join($/)
+      def to_s(*args)
+        [@awsid.bright, @zone, @size, @created, @instid, @snapid].join '; '
       end
     
       # Alias for status

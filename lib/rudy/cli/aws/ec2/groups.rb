@@ -33,7 +33,6 @@ module AWS; module EC2;
       execute_check(:medium)
       execute_action { Rudy::AWS::EC2::Groups.destroy(@argv.name) }
       @argv.clear # so groups will print all other groups
-      groups
     end
     
     def revoke_groups_valid?; modify_group_valid?; end

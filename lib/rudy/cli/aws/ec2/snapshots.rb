@@ -13,7 +13,7 @@ module AWS; module EC2;
     end
     def create_snapshots
       snap = execute_action { Rudy::AWS::EC2::Snapshots.create(@volume.awsid) }
-      puts @@global.verbose > 0 ? snap.inspect : snap.dump(@@global.format)
+      print_stobject snap
     end
     
     def destroy_snapshots_valid?
@@ -26,15 +26,11 @@ module AWS; module EC2;
       puts "Destroying: #{@snap.awsid}"
       execute_check(:medium)
       execute_action { Rudy::AWS::EC2::Snapshots.destroy(@snap.awsid) }
-      snapshots
     end
     
     def snapshots
       snaps = Rudy::AWS::EC2::Snapshots.list || []
-      snaps.each do |snap|
-        puts @@global.verbose > 0 ? snap.inspect : snap.dump(@@global.format)
-      end
-      puts "No snapshots" if snaps.empty?
+      print_stobjects snaps
     end
     
     

@@ -67,8 +67,8 @@ module Rudy
       @second = @created.sec.to_s.rjust(2, '0')
     end
     
-    def to_s(with_titles=true)
-      [self.name, self.size, self.fstype].join '; '
+    def to_s(*args)
+      [self.name, self.snapid, self.volid, self.size, self.fstype].join '; '
     end
     
     def name

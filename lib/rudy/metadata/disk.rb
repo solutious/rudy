@@ -68,8 +68,8 @@ module Rudy
       @mounted = (@mounted == "true") unless @mounted.is_a?(TrueClass)
     end
     
-    def to_s(with_titles=true)
-      self.name
+    def to_s(*args)
+      [self.name, self.volid, self.size, self.fstype].join '; '
     end
     
     def name

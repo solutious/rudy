@@ -26,9 +26,9 @@
   s.add_dependency 'tryouts',    '>= 0.8.4'
   s.add_dependency 'storable',   '>= 0.5.6'
   
-  s.add_dependency 'aws-s3',     '>= 0.6.1'  # Ruby 1.9.1 compatability
-  s.add_dependency 'highline',   '>= 1.5.1'  # Ruby 1.9.1 compatability
-  s.add_dependency 'amazon-ec2', '>= 0.5.0'  # Region fix
+  s.add_dependency 'aws-s3',     '>= 0.6.1'
+  s.add_dependency 'highline',   '>= 1.5.1'
+  s.add_dependency 'amazon-ec2', '>= 0.5.0'
   
   # = MANIFEST =
   # git ls-files
@@ -42,7 +42,10 @@
   bin/rudy-ec2
   bin/rudy-s3
   bin/rudy-sdb
+  examples/authorize.rb
   examples/gem-test.rb
+  examples/solaris.rb
+  examples/windows.rb
   lib/rudy.rb
   lib/rudy/aws.rb
   lib/rudy/aws/ec2.rb
@@ -79,6 +82,7 @@
   lib/rudy/cli/config.rb
   lib/rudy/cli/disks.rb
   lib/rudy/cli/execbase.rb
+  lib/rudy/cli/keypairs.rb
   lib/rudy/cli/machines.rb
   lib/rudy/cli/metadata.rb
   lib/rudy/cli/networks.rb

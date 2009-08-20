@@ -35,9 +35,7 @@ module Rudy; module CLI;
     def startup
       machines = @rr.execute || []
       puts $/, "The following machines are now available:" unless machines.empty?
-      machines.each do |machine|
-        puts machine
-      end
+      print_stobjects machines, :noverbose
     end
     
     def reboot_valid?
@@ -48,9 +46,7 @@ module Rudy; module CLI;
     def reboot
       machines = @rr.execute
       puts $/, "The following machines have been restarted:"
-      machines.each do |machine|
-        puts machine
-      end
+      print_stobjects machines, :noverbose
     end
     
     def passthrough_valid?
@@ -77,9 +73,7 @@ module Rudy; module CLI;
       
       if @global.verbose > 1 && !machines.empty?
         puts $/, "The following machines were processed:"
-        machines.each do |machine|
-          puts machine
-        end
+        print_stobjects machines, :noverbose
       end
       
     end
@@ -108,7 +102,6 @@ module Rudy; module CLI;
       machines.each do |machine|
         puts '%s %s ' % [machine.name.bright, machine.instid]
       end
-      
       
     end
     

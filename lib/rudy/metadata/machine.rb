@@ -81,7 +81,7 @@ module Rudy
     end
     
     def to_s(*args)
-      self.name
+      "#{self.name}: #{self.dns_public}"
     end
     
     def get_instance

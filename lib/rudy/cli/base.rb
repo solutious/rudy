@@ -95,7 +95,17 @@ module Rudy::CLI
         end
       end
     end
-
+    
+    # +stobjects+ is an Array of Storable objects
+    def print_stobjects(stobjects=[], noverbose=false)
+      stobjects.each do |m|
+        format = @@global.format
+        format = :yaml if @@global.verbose > 0 && @@global.format == :string
+        format = :string if noverbose
+        puts m.dump(format)
+      end
+    end
+    
     def machine_separator(name, awsid)
       ('%s %-50s awsid: %s ' % [$/, name, awsid]).att(:reverse)
     end

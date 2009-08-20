@@ -27,9 +27,7 @@ module Rudy
       
       def machines
         mlist = get_machines
-        mlist.each do |m|
-          puts @@global.verbose > 0 ? m.to_yaml : "#{m.name}: #{m.dns_public}" 
-        end
+        print_stobjects mlist
       end
       
       def machines_console

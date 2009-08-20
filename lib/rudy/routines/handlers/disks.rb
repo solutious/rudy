@@ -211,11 +211,13 @@ module Rudy::Routines::Handlers;
         disk.fstype = rbox.stash.default_fstype
       end
       
-      puts "Creating #{disk.fstype} filesystem for #{disk.path}... (index: #{index})"
+      print "Creating #{disk.fstype} filesystem for #{disk.path}... "
       if rbox.stash.win32?
+        puts "(index: #{index})"
         win32_diskpart_partition rbox, disk, index
         disk.mounted = true
       else
+        puts $/
         rbox.rudy_mkfs(:t, disk.fstype, :F, disk.device)
       end
       

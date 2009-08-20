@@ -58,7 +58,7 @@ module Rudy; module Routines;
       # we'll just grab the list of machines in this group. 
       # NOTE: Expect errors if there are no machines.
       Rudy::Routines.rescue {
-        @machines = run? ? Rudy::Machines.create : Rudy::Machines.list
+        @machines = run? ? Rudy::Machines.list : Rudy::Machines.list
         @@rset = create_rye_set @machines unless defined?(@@rset)
       }
       

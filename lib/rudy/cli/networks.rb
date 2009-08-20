@@ -13,6 +13,7 @@ module Rudy
       
       def update_networks
         Rudy::Routines::Handlers::Group.authorize rescue nil
+        networks
       end
       
       def local_networks

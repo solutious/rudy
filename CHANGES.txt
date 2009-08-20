@@ -3,6 +3,8 @@ RUDY, CHANGES
 
 #### 0.9.2 (2009-08-??) ###########################
 
+* FIXED: Threading error in Net::HTTP by forcing a mutex during AWS::EC2 requests
+* FIXED: errors when washing backups
 * FIXED: Host.is_available? now checks port 3389 (Remote Desktop) for Windows instances. Closes GH-16
 * FIXED: "rudy machines -T" now checks port 3389 for Windows instances. Closes GH-21. 
 * CHANGE: Increased AWS timeout to 30 seconds. Closes GH-19

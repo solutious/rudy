@@ -180,7 +180,7 @@ module Rudy::AWS
           vol_id = Volumes.get_vol_id(vol_id)
           return false unless vol_id
           vol = get(vol_id)
-          (vol && vol.status == state)
+          (vol && vol.status == state) ? true : false
         end
       end
     

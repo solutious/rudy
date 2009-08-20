@@ -3,6 +3,8 @@ module Rudy; module AWS
   module EC2
 #    include Rudy::Huxtable
     
+    @@mutex = Mutex.new 
+    
     def self.connect(access_key=nil, secret_key=nil, region=nil, logger=nil)
 
       if region
@@ -31,28 +33,33 @@ module Rudy; module AWS
       timeout ||= 30
       raise "No block provided" unless request
       response = nil
-      begin
-        Timeout::timeout(timeout) do
-          response = request.call
-        end
-      # Raise the EC2 exceptions
-      rescue ::AWS::Error, ::AWS::InvalidInstanceIDMalformed => ex  
-        raise Rudy::AWS::Error, ex.message
-      
-      # NOTE: The InternalError is returned for non-existent volume IDs. 
-      # It's probably a bug so we're ignoring it -- Dave. 
-      rescue ::AWS::InternalError => ex
-        raise Rudy::AWS::Error, ex.message
+      @@mutex.synchronize {
+        begin
         
-      rescue Timeout::Error => ex
-        STDERR.puts "Timeout (#{timeout}): #{ex.message}!"
-      rescue SocketError => ex
-        #STDERR.puts ex.message
-        #STDERR.puts ex.backtrace
-        raise SocketError, "Check your Internets!" unless @@global.offline
-      ensure
-        response ||= default
-      end
+          Timeout::timeout(timeout) do
+            response = request.call
+          end
+      
+        # Raise the EC2 exceptions
+        rescue ::AWS::Error, ::AWS::InvalidInstanceIDMalformed => ex  
+          raise Rudy::AWS::Error, ex.message
+      
+        # NOTE: The InternalError is returned for non-existent volume IDs. 
+        # It's probably a bug so we're ignoring it -- Dave. 
+        rescue ::AWS::InternalError => ex
+          raise Rudy::AWS::Error, ex.message
+        
+        rescue Timeout::Error => ex
+          STDERR.puts "Timeout (#{timeout}): #{ex.message}!"
+        rescue SocketError => ex
+          #STDERR.puts ex.message
+          #STDERR.puts ex.backtrace
+          raise SocketError, "Check your Internets!" unless @@global.offline
+        ensure
+          response ||= default
+        end
+        sleep 0.1  # defeat race conditions
+      }
       response
     end
     

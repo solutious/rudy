@@ -52,28 +52,28 @@ end
 
 routines do
   
-  startup do
+  create do
 
     disks do
-      create "F:"
-      create "P:"
-      create "E:"
+      #create "F:"
+      #create "P:"
+      #create "E:"
     end
     
   end
   
   shutdown do
     disks do
-      destroy "F:"
-      destroy "P:"
-      destroy "E:"
+      #destroy "F:"
+      #destroy "P:"
+      #destroy "E:"
     end
       
   end
   
   
   upload_config do
-    remote do
+    remote :root do
       puts "Uploading rudy config"
       home = guess_user_home
       mkdir :p, "#{home}/.rudy", "#{home}/.ssh", ".ssh"

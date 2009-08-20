@@ -77,7 +77,7 @@ module Rudy; module Routines;
     def create_rye_box(hostname, opts={})
       ld [:hostname, hostname, opts, caller[0]]
       opts = {
-        :info => (@@global.verbose >= 3),  # rudy -vvv 
+        :info => (@@global.verbose >= 3),  # rudy -vvv
         :debug => false,
         :user => Rudy.sysinfo.user, 
         :ostype => current_machine_os || :unix,

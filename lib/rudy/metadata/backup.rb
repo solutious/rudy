@@ -68,7 +68,7 @@ module Rudy
     end
     
     def to_s(with_titles=true)
-      "%s; %s" % [self.name, self.to_hash.inspect]
+      [self.name, self.size, self.fstype].join '; '
     end
     
     def name

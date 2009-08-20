@@ -23,7 +23,7 @@ module Rudy
         disk_list.each do |d|
           next if seen.member?(d.name)
           seen << d.name
-          puts @@global.verbose > 0 ? d.inspect : d.dump(@@global.format)
+          print_stobject d
           if @option.backups
             d.backups.each_with_index do |b, index|
               puts '  %s' % b.name

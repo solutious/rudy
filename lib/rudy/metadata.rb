@@ -106,6 +106,10 @@ module Rudy
       criteria
     end
     
+    
+    # These methods are common to all plural metadata classes:
+    # Rudy::Machines, Rudy::Disks, Rudy::Backups, etc...
+    # 
     module ClassMethods
       extend self
       extend Rudy::Huxtable

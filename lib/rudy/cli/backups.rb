@@ -9,10 +9,8 @@ module Rudy
         more, less = {}, []
         less = [:environment, :role] if @option.all
         # We first get the disk metadata
-        b_list = Rudy::Backups.list(more, less) || []
-        b_list.each do |back|
-          puts @global.verbose > 0 ? "#{back.name}: #{back.inspect}" : back.name
-        end
+        blist = Rudy::Backups.list(more, less) || []
+        print_stobjects blist
       end
       
       def backups_wash

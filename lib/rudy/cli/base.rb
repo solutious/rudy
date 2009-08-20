@@ -97,13 +97,18 @@ module Rudy::CLI
     end
     
     # +stobjects+ is an Array of Storable objects
+    # +noverbose+ when not false, will force to print with Object#to_s
     def print_stobjects(stobjects=[], noverbose=false)
       stobjects.each do |m|
-        format = @@global.format
-        format = :yaml if @@global.verbose > 0 && @@global.format == :string
-        format = :string if noverbose
-        puts m.dump(format)
+        print_stobject m, noverbose
       end
+    end
+    
+    def print_stobject(obj, noverbose=false)
+      format = @@global.format
+      format = :yaml if @@global.verbose > 0 && @@global.format == :string
+      format = :string if noverbose
+      puts obj.dump(format)
     end
     
     def machine_separator(name, awsid)

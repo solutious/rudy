@@ -6,11 +6,13 @@ RUDY, CHANGES
 * FIXED: Threading error in Net::HTTP by forcing a mutex during AWS::EC2 requests
 * FIXED: errors when washing backups
 * FIXED: Host.is_available? now checks port 3389 (Remote Desktop) for Windows instances. Closes GH-16
-* FIXED: "rudy machines -T" now checks port 3389 for Windows instances. Closes GH-21. 
+* FIXED: "rudy machines -T" now checks port 3389 for Windows instances. Closes GH-21
+* FIXED: "rudy disks -l" doesn't display disks from a different zone. Closes GH-24
 * CHANGE: Increased AWS timeout to 30 seconds. Closes GH-19
 * CHANGE: Increased boot wait time for windows instances to 500 seconds.
 * CHANGE: Module names have changed from EC2 to AWS::EC2 in amazon-ec2 0.5 [Dominic Cleal]
 * CHANGE: Rudy::Routines::Handlers::Disks.attach now creates a volume if the disk doesn't already have one. 
+* CHANGE: 
 * ADDED: Rudy::Machine#get_console, Rudy::Machine#get_password
 * ADDED: Rudy::Machine#win32?, Rudy::Machine#linux?, Rudy::Machine#solaris?, Rudy::Machine#os?
 * ADDED: "rudy m -console" and "rudy m --password"

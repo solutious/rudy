@@ -4,12 +4,21 @@ module Rudy
   module CLI
     class Disks < Rudy::CLI::CommandBase
 
+      def get_disks
+        # Rudy::Disks.list takes two optional args for adding or 
+        # removing metadata attributes to modify the select query. 
+        # When all is specified we want to find disks in every env
+        # environment and role to we remove these attributes from
+        # the select. 
+        fields, less = {}, []
+        less = Rudy::Metadata::COMMON_FIELDS if @option.all
+        
+        dlist = Rudy::Disks.list(fields, less) || []
+      end
+      private :get_disks
       
       def disks
-        more, less = {}, []
-        less = [:environment, :role] if @option.all
-        # We first get the disk metadata
-        disk_list = Rudy::Disks.list(more, less) || []
+        disk_list = get_disks
         # If there are no disks currently, there could be backups
         # so we grab those to create a list of disks. 
         if @option.backups
@@ -34,7 +43,7 @@ module Rudy
       end
       
       def disks_wash
-        dirt = (Rudy::Disks.list || []).select { |d| !d.volume_exists? }
+        dirt = (get_disks || []).select { |d| !d.volume_exists? }
         if dirt.empty?
           puts "Nothing to wash in #{current_machine_group}"
           return

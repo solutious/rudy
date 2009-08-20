@@ -26,7 +26,7 @@ module Rudy
         execute_check(:medium)
 
         dirt.each do |b|
-          b.destroy(:force)
+          b.destroy
         end
         
       end

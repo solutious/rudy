@@ -98,7 +98,7 @@ module Rudy::AWS
       end
       
       def get(snap_id)
-        list(snap_id).first || nil
+        list(snap_id).first rescue nil
       end
       
       def exists?(snap_id)

@@ -98,7 +98,7 @@ module Rudy
 
       begin
         ret = bloc_party.call
-      rescue NameError, ArgumentError, RuntimeError => ex
+      rescue NameError, ArgumentError, RuntimeError, Errno::ECONNREFUSED => ex
         STDERR.puts "  #{ex.class}: #{ex.message}".color(:red)
         STDERR.puts ex.backtrace if Rudy.debug?
         unless Rudy::Huxtable.global.parallel

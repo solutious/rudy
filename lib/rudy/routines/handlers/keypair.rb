@@ -23,17 +23,33 @@ module Rudy; module Routines; module Handlers;
     def create(name=:root)
       keyname = user_keypairname name
       kp_file = pkey name
-      kp = nil
-      if registered? keyname 
-        raise PrivateKeyNotFound, keyname if kp_file.nil?
+
+      if registered? name && !@@global.force 
         raise PrivateKeyNotFound, kp_file if !File.exists?(kp_file)
-      else
-        raise PrivateKeyFileExists, kp_file if File.exists?(kp_file)
-        li "Creating keypair: #{keyname}"
-        kp = Rudy::AWS::EC2::Keypairs.create(keyname)
-        li "Saving #{kp_file}"
-        Rudy::Utils.write_to_file(kp_file, kp.private_key, 'w', 0600)
       end
+
+      if Rudy::AWS::EC2::Keypairs.exists? keyname
+        if @@global.force
+          li "Destroying existing keypair: #{keyname}"
+          Rudy::AWS::EC2::Keypairs.destroy keyname
+        else
+          raise Rudy::AWS::EC2::KeypairAlreadyDefined, keyname
+        end
+      end
+      
+      if File.exists?(kp_file)
+        if @@global.force
+          delete_pkey name
+        else
+          raise PrivateKeyFileExists, kp_file 
+        end
+      end
+      
+      li "Creating keypair: #{keyname}"
+      kp = Rudy::AWS::EC2::Keypairs.create(keyname)
+      li "Saving #{kp_file}"
+      Rudy::Utils.write_to_file(kp_file, kp.private_key, 'w', 0600)
+      
       kp
     end
     
@@ -55,7 +71,7 @@ module Rudy; module Routines; module Handlers;
     
     def registered?(name=:root)
       keyname = user_keypairname name
-      Rudy::AWS::EC2::Keypairs.exists?( keyname) rescue false
+      Rudy::AWS::EC2::Keypairs.exists?(keyname)
     end
     
     def pkey(name=:root)

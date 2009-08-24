@@ -22,7 +22,7 @@ module Rudy; module Routines; module Handlers;
       name ||= current_group_name
       addresses ||= [Rudy::Utils::external_ip_address]
       if ports.nil?
-        ports = current_machine_os.to_s == 'win32' ? [3389,22] : [22]
+        ports = current_machine_os.to_s == 'windows' ? [3389,22] : [22]
       end
       
       ports.each do |port|

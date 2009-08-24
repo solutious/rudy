@@ -10,7 +10,7 @@ module Rudy; module Routines; module Handlers;
       raise NoMachines if rset.boxes.empty?
       rset.boxes.each do |rbox|
         msg = "Waiting for #{rbox.nickname} to boot..."
-        multi = rbox.stash.win32? ? 6 : 3
+        multi = rbox.stash.windows? ? 6 : 3
         interval, max = 1*multi, 80*multi
         Rudy::Utils.waiter(interval, max, Rudy::Huxtable.logger, msg, 0) {
           inst = rbox.stash.get_instance
@@ -38,7 +38,7 @@ module Rudy; module Routines; module Handlers;
     def is_available?(rset, port=22)
       raise NoMachines if rset.boxes.empty?
       rset.boxes.each do |rbox|
-        port = 3389 if rbox.stash.win32?
+        port = 3389 if rbox.stash.windows?
         msg = "Waiting for port #{port} on #{rbox.nickname} ..."
         Rudy::Utils.waiter(2, 60, STDOUT, msg, 0) {
           Rudy::Utils.service_available?(rbox.stash.dns_public, port)
@@ -60,7 +60,7 @@ module Rudy; module Routines; module Handlers;
       # run so we may want to make this an explicit action.
       type = current_machine_hostname || :rudy
       rset.batch(type) do |hn|
-        unless self.stash.os == :win32
+        unless self.stash.os == :windows
           if hn != :default
             hn = self.stash.name if hn == :rudy
             self.quietly { hostname(hn) }

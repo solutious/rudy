@@ -5,7 +5,7 @@ module Rudy::Routines::Handlers;
     extend self
     
     ACTIONS = [:create, :destroy, :archive, :mount, :restore,
-               :attach, :detach, :mount, :umount].freeze
+               :attach, :detach, :mount, :umount, :fstype].freeze
     
     Rudy::Routines.add_handler :disks, self
     
@@ -41,6 +41,7 @@ module Rudy::Routines::Handlers;
       # We prepend the command with rudy_ so we can delete it. 
       Rye::Cmd.add_command(:rudy_rm, 'rm')
       Rye::Cmd.add_command(:rudy_mkfs, 'mkfs')
+      Rye::Cmd.add_command(:rudy_blkid, 'blkid')
       Rye::Cmd.add_command(:rudy_format, 'C:/windows/system32/format.com')
       Rye::Cmd.add_command(:rudy_diskpart, 'C:/windows/system32/diskpart.exe')
       
@@ -54,7 +55,7 @@ module Rudy::Routines::Handlers;
         # object so we need to send rset as an argument. 
         rset.batch do
           # Windows EC2 instances have 2 disks by default (C: and D:)
-          index = Rudy::Huxtable.current_machine_os.to_s == 'win32' ? 2 : 0
+          index = Rudy::Huxtable.current_machine_os.to_s == 'windows' ? 2 : 0
           disks.each_pair do |path, props|
             # self contains the current instance of Rye::Box. 
             disk = Rudy::Disk.new(self.stash.position, path, props)
@@ -67,10 +68,20 @@ module Rudy::Routines::Handlers;
       
       Rye::Cmd.remove_command(:rudy_rm)
       Rye::Cmd.remove_command(:rudy_mkfs)
+      Rye::Cmd.remove_command(:rudy_blkid)
       Rye::Cmd.remove_command(:rudy_format)
       Rye::Cmd.remove_command(:rudy_diskpart)
       
       rset.switch_user original_user
+    end
+    
+    def fstype(rbox, disk, index)
+      
+      raise Rudy::Metadata::UnknownObject, disk.name unless disk.exists?
+      disk.refresh!
+      
+      p rbox.rudy_blkid :s, 'TYPE', :o, 'value', disk.device
+      
     end
     
     
@@ -147,7 +158,7 @@ module Rudy::Routines::Handlers;
       raise Rudy::Metadata::UnknownObject, disk.name unless disk.exists?
       disk.refresh!
       
-      if rbox.stash.win32?
+      if rbox.stash.windows?
         Rudy::Huxtable.li "Skipping for Windows"
         return 
       end
@@ -184,7 +195,7 @@ module Rudy::Routines::Handlers;
       
       puts "Unmounting #{disk.path}... "
       
-      unless rbox.stash.win32?
+      unless rbox.stash.windows?
         rbox.umount(disk.path)
       end
       
@@ -212,9 +223,9 @@ module Rudy::Routines::Handlers;
       end
       
       print "Creating #{disk.fstype} filesystem for #{disk.path}... "
-      if rbox.stash.win32?
+      if rbox.stash.windows?
         puts "(index: #{index})"
-        win32_diskpart_partition rbox, disk, index
+        windows_diskpart_partition rbox, disk, index
         disk.mounted = true
       else
         puts $/
@@ -229,7 +240,7 @@ module Rudy::Routines::Handlers;
       raise Rudy::Metadata::UnknownObject, disk.name unless disk.exists?
       disk.refresh!
         
-      umount rbox,disk,index if disk.mounted? && !rbox.stash.win32?
+      umount rbox,disk,index if disk.mounted? && !rbox.stash.windows?
       detach rbox,disk,index if disk.volume_attached?
       
       unless @@global.force
@@ -291,7 +302,7 @@ module Rudy::Routines::Handlers;
     
     private
     
-    def win32_diskpart_partition(rbox, disk, disk_num)
+    def windows_diskpart_partition(rbox, disk, disk_num)
       rbox.quietly { rudy_rm :f, 'diskpart-script' }
       rbox.file_append 'diskpart-script', %Q{
       select disk #{disk_num}

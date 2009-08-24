@@ -100,7 +100,7 @@ module Rudy
     end
     
     def get_password
-      unless win32?
+      unless windows?
         raise "Password support is Windows only (this is #{@os})" 
       end
       console = get_console
@@ -192,11 +192,11 @@ module Rudy
     end
     
     def default_fstype
-      win32? ? Rudy::DEFAULT_WIN32_FS : Rudy::DEFAULT_LINUX_FS
+      windows? ? Rudy::DEFAULT_WIN32_FS : Rudy::DEFAULT_LINUX_FS
     end
     
     def os?(v); @os.to_s == v.to_s; end
-    def win32?; os? 'win32'; end
+    def windows?; os? 'windows'; end
     def linux?; os? 'linux'; end
     def solaris?; os? 'solaris'; end
     

@@ -8,7 +8,7 @@ defaults do
   color true
   environment :test
   role :windows
-  region :'eu-west-1'
+  #zone :'eu-west-1a'
 end
 
 machines do
@@ -21,7 +21,7 @@ machines do
   end
   env :test do
     role :windows do
-      os :win32
+      os :windows
       user :Administrator
       disks do
         path "F:" do

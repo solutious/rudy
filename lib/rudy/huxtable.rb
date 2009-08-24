@@ -275,7 +275,7 @@ module Rudy
         end
         disks.each_pair do |path, props|
           unless disk_defs.has_key?(path)
-            li "#{path} is not defined. Check your #{action} machines config.".color(:red)
+            li "#{path} is not defined. Check your machines config.".color(:red)
             routine.disks[raction].delete(path) 
             next
           end

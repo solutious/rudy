@@ -302,6 +302,9 @@ module Rudy::Routines::Handlers;
     
     private
     
+    # See:
+    # * http://social.technet.microsoft.com/Forums/en-US/winserversetup/thread/2cfbaae1-6e33-4197-bb71-63434a34eb3c
+    # * http://technet.microsoft.com/en-us/library/cc766465(WS.10).aspx
     def windows_diskpart_partition(rbox, disk, disk_num)
       rbox.quietly { rudy_rm :f, 'diskpart-script' }
       rbox.file_append 'diskpart-script', %Q{

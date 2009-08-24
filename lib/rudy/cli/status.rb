@@ -24,7 +24,8 @@ module Rudy
         puts "  Instances".bright
         istatus = @option.all ? :any : :running
         (Rudy::AWS::EC2::Instances.list(istatus) || []).collect do |inst| 
-          puts "    %s (%s): %s; %s; %s" % [inst.awsid, inst.state, inst.dns_public || '[no dns]', inst.size, inst.created]
+          #puts "    %s (%s): %s; %s; %s" % [inst.awsid, inst.state, inst.dns_public || '[no dns]', inst.size, inst.created]
+          puts "    #{inst.to_s.noatt}"
         end
         
         puts "  Volumes".bright

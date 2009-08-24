@@ -161,8 +161,8 @@ class RudyCLI < Rudy::CLI::Base
   #option :p, :port, Integer, "Port"
   #command :open => Rudy::CLI::Candy
   
-  usage "rudy [-f config-file] config [param-name]"
   about "Check Rudy configuration."
+  usage "rudy [-f config-file] config [param-name]"
   option :l, :all, "Display all configs for all machines"
   option :commands, "Display commands configuration"
   option :defaults, "Display defaults configuration"
@@ -180,7 +180,22 @@ class RudyCLI < Rudy::CLI::Base
   command :print_global => Rudy::CLI::Config
   command_alias :print_global, :globals
   command_alias :print_global, :global
-   
+  
+  about "Create a machine image from a running instance (Windows only)"
+  usage "rudy -b BUCKET-NAME bundle IMAGE-NAME"
+  argv :name
+  command :bundle => Rudy::CLI::Images
+  
+  about "Check status of bundling process (Windows only)"
+  usage "rudy -b BUCKET-NAME bundle-status IMAGE-NAME"
+  argv :name
+  command :bundle_status => Rudy::CLI::Images
+  
+  about "Display machine images"
+  option :o, :owner, String, "Owner ID (default: self)"
+  command :images => Rudy::CLI::Images
+  command_alias :images, :im
+  
   about "Initialize Rudy configuration"
   command :init do |obj|
     

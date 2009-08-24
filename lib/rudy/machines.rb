@@ -55,7 +55,7 @@ module Rudy
     
     def restart
       group = list 
-      raise MachineGroupNotRunning, current_group_name if group.nil?
+      raise MachineGroupNotRunning, current_machine_group if group.nil?
       group.each do |inst|
         inst.restart
       end

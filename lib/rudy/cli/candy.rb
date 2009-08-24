@@ -12,7 +12,7 @@ module Rudy
           puts "No machines"
         end
       end
-      
+
     end
   end
 end

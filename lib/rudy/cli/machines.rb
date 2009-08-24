@@ -16,7 +16,7 @@ module Rudy
         mlist = Rudy::Machines.list(fields, less) || []
         if mlist.empty?
           if @@global.position.nil?
-            raise MachineGroupNotRunning, (@option.all ? nil : current_group_name)
+            raise MachineGroupNotRunning, (@option.all ? nil : current_machine_group)
           else
             raise MachineNotRunning, current_machine_name 
           end

@@ -8,7 +8,7 @@ defaults do
   color true
   environment :test
   role :windows
-  #zone :'eu-west-1a'
+  zone :'eu-west-1b'
 end
 
 machines do

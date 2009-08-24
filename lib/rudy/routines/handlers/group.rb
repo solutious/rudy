@@ -44,5 +44,14 @@ module Rudy; module Routines; module Handlers;
       Rudy::AWS::EC2::Groups.destroy name
     end
     
+    def get(name=nil)
+      name ||= current_group_name
+      Rudy::AWS::EC2::Groups.get name
+    end
+    
+    def list
+      Rudy::AWS::EC2::Groups.list
+    end
+    
   end
 end; end; end

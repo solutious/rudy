@@ -35,7 +35,7 @@ module Rudy::CLI
       @@global.auto ? Annoy.enable_skip : Annoy.disable_skip
       
       # ANSI codes look like garbage in DOS
-      if Rudy.sysinfo.os.to_s == 'win32'
+      if Rudy.sysinfo.os.to_s == 'windows'
         String.disable_color 
         raise Rudy::Error, 'Ruby 1.9 is not supported (yet)' if Rudy.sysinfo.ruby == [1,9,1]
       end

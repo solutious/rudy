@@ -191,7 +191,7 @@ module Rudy
           m.save :replace
         end
         
-        unless os.to_s == 'win32'
+        unless os.to_s == 'windows'
           puts "Updating hostnames for #{current_group_name}"
           Rudy::Routines::Handlers::Host.set_hostname rset
           puts rset.hostname.flatten
@@ -204,7 +204,7 @@ module Rudy
         mlist.each do |m|
           print "#{m.name}: "
           m.refresh!
-          port = m.win32? ? 3389 : 22
+          port = m.windows? ? 3389 : 22
           Rudy::Utils.waiter(2, 60, STDOUT, nil, 0) {
             Rudy::Utils.service_available?(m.dns_public, port)
           }
@@ -216,7 +216,7 @@ module Rudy
       
       
       def ssh_valid?
-        #raise "SSH not supported on Windows" if current_machine_os.to_s == 'win32'
+        #raise "SSH not supported on Windows" if current_machine_os.to_s == 'windows'
         true
       end
       
@@ -233,7 +233,7 @@ module Rudy
         rye_opts = { :user => current_machine_user, :debug => nil }
         if File.exists? pkey 
           #raise "Cannot find file #{pkey}" unless File.exists?(pkey)
-          if Rudy.sysinfo.os != :win32 && File.stat(pkey).mode != 33152
+          if Rudy.sysinfo.os != :windows && File.stat(pkey).mode != 33152
             raise InsecureKeyPermissions, pkey 
           end
           rye_opts[:keys] = pkey 

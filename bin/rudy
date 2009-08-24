@@ -107,6 +107,8 @@ class RudyCLI < Rudy::CLI::Base
   option :i, :internal, "Display only internal IP address"
   action :U, :update, "Update networks based on configuration"
   action :L, :local, "Show local network configuration"
+  action :A, :authorize, "Authorize a rule for a network security group"
+  action :R, :revoke, "Revoke a rule for a network security group"
   command :networks => Rudy::CLI::Networks
   command_alias :networks, :n
   

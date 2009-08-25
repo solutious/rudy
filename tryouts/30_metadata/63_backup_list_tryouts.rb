@@ -9,7 +9,7 @@ tryout "List Backups" do
   set :sample_time, Time.now.utc
   
   setup do
-    Rudy.enable_debug
+    #Rudy.enable_debug
     Rudy::Huxtable.update_config          # Read config files
     global = Rudy::Huxtable.global
     akey, skey, region = global.accesskey, global.secretkey, global.region

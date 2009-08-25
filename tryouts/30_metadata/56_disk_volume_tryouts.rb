@@ -7,7 +7,7 @@ tryout "Disk Volume API" do
   set :test_env, 'stage' << Rudy::Utils.strand(4)
   
   setup do
-    Rudy.enable_debug
+    #Rudy.enable_debug
     Rudy::Huxtable.global.offline = true
     Rudy::Huxtable.update_config          # Read config files
     global = Rudy::Huxtable.global

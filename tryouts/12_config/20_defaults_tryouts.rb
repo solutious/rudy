@@ -8,7 +8,7 @@ tryout "Defaults" do
     @@config.look_and_load   # looks for and loads config files
   end
   
-  drill "has some defaults", ["environment", "role", "zone"].sort do
+  drill "has some defaults", ["color", "environment", "role", "zone"].sort do
     # Sorted so we can add new keys without breaking the test
     @@config.defaults.keys.collect { |v| v.to_s }.sort
   end

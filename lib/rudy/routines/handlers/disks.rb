@@ -230,6 +230,8 @@ module Rudy::Routines::Handlers;
       
       disk.raw = false
       disk.save :replace
+      sleep 1
+      disk
     end
     
     def destroy(rbox, disk, index)

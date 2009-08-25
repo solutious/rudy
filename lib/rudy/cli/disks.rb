@@ -65,7 +65,7 @@ module Rudy
         raise "No machines" if @mlist.nil?
         
         raise "No path provided" unless @argv.first
-        if Rudy::Disks.exists? @argv.first
+        if !@@global.force && Rudy::Disks.exists?( @argv.first)
           raise "Disk exists" if Rudy::Disks.get(@argv.first).volume_attached?
         end
         raise "No size provided" unless @option.size

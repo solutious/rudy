@@ -8,7 +8,7 @@ tryout "Disk API" do
   set :test_env, 'stage' #'env_' << Rudy::Utils.strand(4)
   
   setup do
-    Rudy.enable_debug
+    #Rudy.enable_debug
     Rudy::Huxtable.global.offline = true
     Rudy::Huxtable.update_config          # Read config files
     global = Rudy::Huxtable.global
@@ -66,7 +66,9 @@ tryout "Disk API" do
   end
   
   drill "save disk metadata", true do
-    Rudy::Disk.new('/any/path').save
+    ret = Rudy::Disk.new('/any/path').save
+    sleep 1 # eventual consistency
+    ret
   end
   
   drill "knows when an object exists", true do

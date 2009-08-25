@@ -18,7 +18,7 @@ tryout "Rudy Initialization" do
   drill    "auto-yes is disabled", Rudy.auto?, false
   
   drill "debug can be enabled", true do
-    Rudy.enable_debug
+    #Rudy.enable_debug
     Rudy.debug?
   end
   

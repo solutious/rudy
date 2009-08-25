@@ -7,7 +7,7 @@ Gibbler.enable_debug if Tryouts.verbose > 3
 tryout "Disk API" do
   
   setup do
-    Rudy.enable_debug
+    #Rudy.enable_debug
     Rudy::Huxtable.update_config          # Read config files
     global = Rudy::Huxtable.global
     akey, skey, region = global.accesskey, global.secretkey, global.region

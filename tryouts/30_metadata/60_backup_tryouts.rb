@@ -9,7 +9,7 @@ tryout "Backup API" do
   set :test_env, :stage #'env_' << Rudy::Utils.strand(4)
   
   setup do
-    Rudy.enable_debug
+    #Rudy.enable_debug
     Rudy::Huxtable.global.offline = true
     Rudy::Huxtable.update_config          # Read config files
     global  =  Rudy::Huxtable.global
@@ -69,7 +69,9 @@ tryout "Backup API" do
   end
   
   drill "save metadata", true do
-    Rudy::Backup.new(1, '/any/path', :created => sample_time).save
+    ret = Rudy::Backup.new(1, '/any/path', :created => sample_time).save
+    sleep 1
+    ret
   end
   
   drill "knows when an object exists", true do

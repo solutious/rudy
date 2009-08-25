@@ -8,7 +8,7 @@ tryout "Rudy::Machine API" do
   set :test_env, 'stage' #'env_' << Rudy::Utils.strand(4)
 
   setup do
-    Rudy.enable_debug
+    #Rudy.enable_debug
     Rudy::Huxtable.global.offline = true
     Rudy::Huxtable.update_config          # Read config files
     global = Rudy::Huxtable.global
@@ -53,7 +53,9 @@ tryout "Rudy::Machine API" do
   
   dream :exception, Rudy::Metadata::DuplicateRecord
   drill "won't save over a machine with the same name" do
-    Rudy::Machine.new.save
+    ret = Rudy::Machine.new.save
+    sleep 1
+    ret
   end
   
   drill "will save over a disk with the same name if forced", true do
@@ -66,6 +68,7 @@ tryout "Rudy::Machine API" do
     m = Rudy::Machine.new
     m.save :replace
     m.size = :nothing
+    sleep 1
     m.refresh!
     m
   end

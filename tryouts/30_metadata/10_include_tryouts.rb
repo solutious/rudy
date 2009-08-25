@@ -32,7 +32,7 @@ tryouts "include Rudy::Metadata" do
     Rudy::Metadata.create_domain test_domain
   end
   
-  dream [:environment, :region, :role, :zone]
+  dream [:environment, :region, :role, :rtype, :zone]
   drill "can build a default criteria" do
     Rudy::Metadata.build_criteria(Rudy::Machines::RTYPE).keys.sort
   end

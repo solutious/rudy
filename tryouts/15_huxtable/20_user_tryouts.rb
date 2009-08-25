@@ -9,7 +9,7 @@ tryout "User related methods" do
   set :global, Rudy::Huxtable.global
   set :config, Rudy::Huxtable.config
   setup do
-    Rudy.enable_debug
+    #Rudy.enable_debug
     Rudy::Huxtable.update_config          # Read config files
     config.defaults[:keydir] = keydir
     Rudy::Huxtable.global.zone = 'us-east-1b'

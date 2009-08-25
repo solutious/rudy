@@ -7,7 +7,7 @@ Gibbler.enable_debug if Tryouts.verbose > 3
 tryout "Disk Backups" do
   
   setup do
-    Rudy.enable_debug
+    #Rudy.enable_debug
     Rudy::Huxtable.update_config          # Read config files
     global = Rudy::Huxtable.global
     akey, skey, region = global.accesskey, global.secretkey, global.region
@@ -51,11 +51,13 @@ tryout "Disk Backups" do
       success = (prev.created <= back.created)
       break unless success
     end
+    sleep 1
     success
   end
   
   drill "destroy all backups", false do
     Rudy::Backups.list.each { |b| b.destroy }
+    sleep 1
     Rudy::Backups.any?
   end
   

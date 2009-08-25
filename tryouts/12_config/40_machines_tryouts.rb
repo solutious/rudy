@@ -13,7 +13,7 @@ tryout "Machines" do
   end
   
   dream :class, Rudy::Config::Machines
-  dream :gibbler, "b44ba542bd2aa382cf77fa64ffc610e5e992609a" 
+  dream :gibbler, "16073d994b669dc51a7109f5165364dce516e707" 
   drill "has instance of Rudy::Config::Machines" do
     @@config.machines
   end

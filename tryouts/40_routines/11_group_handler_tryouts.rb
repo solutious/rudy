@@ -7,7 +7,7 @@ tryout "Group Handler" do
   set :config, Rudy::Huxtable.config
   set :test_env, 'env_' << Rudy::Utils.strand
   setup do
-    Rudy.enable_debug
+    #Rudy.enable_debug
     Rudy::Huxtable.update_config          # Read config files
     akey, skey, region = global.accesskey, global.secretkey, global.region
     Rudy::Metadata.connect akey, skey, region

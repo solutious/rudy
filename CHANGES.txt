@@ -18,6 +18,8 @@ RUDY, CHANGES
 * ADDED: Rudy::Machine#windows?, Rudy::Machine#linux?, Rudy::Machine#solaris?, Rudy::Machine#os?
 * ADDED: "rudy m -console" and "rudy m --password"
 * ADDED: "rudy keypairs"
+* ADDED: "rudy networks --authorize"
+* ADDED: "rudy networks --revoke"
 * ADDED: Support for attaching and formating disks in Windows. 
 
 

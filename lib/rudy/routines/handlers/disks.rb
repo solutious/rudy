@@ -141,6 +141,13 @@ module Rudy::Routines::Handlers;
         raise Rudy::Disks::AlreadyAttached, disk.name if disk.volume_attached?
       end
       
+      devices = rbox.stash.attached_volumes.collect { |v| v.device }
+      if devices.member? disk.device
+        li "Device ID #{disk.device} is taken. Using #{devices.sort.last.succ}"
+        disk.device = devices.sort.last.succ 
+        disk.save :replace
+      end
+      
       msg = "Attaching #{disk.volid} to #{rbox.stash.instid}... "
       disk.volume_attach(rbox.stash.instid)
       Rudy::Utils.waiter(3, 30, STDOUT, msg) { 

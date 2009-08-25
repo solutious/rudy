@@ -45,7 +45,7 @@ module Rudy
       
       opts = {
         :size => 1,
-        :device => '/dev/sdh'
+        :device => current_machine_os.to_s == 'windows' ? DEFAULT_WINDOWS_DEVICE : DEFAULT_LINUX_DEVICE
       }.merge opts
       
       super Rudy::Disks::RTYPE, opts  # Rudy::Metadata#initialize
@@ -83,7 +83,7 @@ module Rudy
     end
     
     def create(size=nil, zone=nil, snapshot=nil)
-      raise DuplicateRecord, self.name if exists?
+      raise DuplicateRecord, self.name if exists? && !@@global.force
       vol = Rudy::AWS::EC2::Volumes.create(size || @size, zone || @zone, snapshot) 
       #vol = Rudy::AWS::EC2::Volumes.list(:available).first   # debugging
       @volid, @raw = vol.awsid, true

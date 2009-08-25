@@ -33,9 +33,9 @@ machines do
           size 2
           device 'xvde'
         end
-        path 'P:' do
+        path 'L:' do
           size 3
-          device 'xvdp'
+          device 'xvdl'
         end
       end
     end
@@ -52,11 +52,10 @@ end
 
 routines do
   
-  create do
-
+  startup do
     disks do
-      create "F:"
-      #create "P:"
+      create "L:"
+      #create "F:"
       #create "E:"
     end
     
@@ -64,8 +63,8 @@ routines do
   
   shutdown do
     disks do
-      destroy "F:"
-      #destroy "P:"
+      destroy "L:"
+      #destroy "F:"
       #destroy "E:"
     end
       

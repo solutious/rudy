@@ -201,7 +201,9 @@ module RudyCLI_EC2
   command_alias :zones, :zone
   command_alias :zones, :z
   
-
+  about "Display existing environment objects"  
+  option :l, :all, "Include all regions"
+  command :info => Rudy::CLI::AWS::EC2::Info
   
 end
 

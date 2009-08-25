@@ -26,6 +26,7 @@ RUDY, CHANGES
 * ADDED: "rudy disks --destroy"
 * ADDED: "rudy backups --create"
 * ADDED: Support for attaching and formating disks in Windows. 
+* ADDED: "rudy-ec2 info"
 
 
 #### 0.9.1 (2009-08-05) ###########################

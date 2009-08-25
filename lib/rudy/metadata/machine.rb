@@ -177,6 +177,12 @@ module Rudy
       Rudy::AWS::EC2::Instances.restart(@instid) if instance_running?
     end
     
+    def attached_volumes
+      volumes = []
+      return volumes if @instid.nil?
+      Rudy::AWS::EC2::Volumes.list_by_instance @instid
+    end
+    
     def refresh!(metadata=true)
       ## Updating the metadata isn't necessary
       super() if metadata # update metadata

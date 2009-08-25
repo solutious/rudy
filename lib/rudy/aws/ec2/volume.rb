@@ -140,7 +140,14 @@ module Rudy::AWS
         volumes = nil if volumes.empty?
         volumes
       end
-    
+      
+      def list_by_instance(instid, &each_vol)
+        instid = instid.awsid if instid.is_a? Rudy::AWS::EC2::Instance
+        volumes = list(:attached, &each_vol)
+        volumes &&= volumes.select { |v| v.instid == instid }
+        volumes
+      end
+      
       def any?(state=nil,vol_id=[])
         vols = list(state, vol_id)
         !vols.nil?

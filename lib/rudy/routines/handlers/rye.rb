@@ -15,7 +15,7 @@ module Rudy::Routines::Handlers;
        opts = {
          :info => (@@global.verbose >= 3),  # rudy -vvv
          :debug => false,
-         :user => :root, 
+         :user => current_machine_user, 
          :ostype => current_machine_os || :unix,
          :impltype => :linux
        }.merge opts

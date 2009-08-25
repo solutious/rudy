@@ -10,7 +10,7 @@ module Rudy; module Routines;
                          
     def init(*args)
       @machines = Rudy::Machines.list || []
-      @@rset = create_rye_set @machines unless defined?(@@rset)
+      @@rset = Rudy::Routines::Handlers::RyeTools.create_set @machines unless defined?(@@rset)
       @routine ||= {}
     end
     

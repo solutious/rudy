@@ -20,7 +20,7 @@ require 'rudy/cli'
 # Command-line interface for /bin/rudy
 class RudyCLI < Rudy::CLI::Base
   
-  debug :off
+  debug :on
   
   default :machines       # when no command is provided
   trawler :passthrough    # unknown command names will forward here.
@@ -73,6 +73,12 @@ class RudyCLI < Rudy::CLI::Base
   about "View Disks"
   usage "rudy disks"
   usage "rudy disks -l"
+  usage "rudy disks -C -s 1 /path/2/mount"
+  option :s, :size, Integer, "Volume size (GB)"
+  option :d, :device, String, "Device ID"
+  option :f, :fstype, String, "Filesystem type"
+  action :C, :create, "Create disk"
+  action :D, :destroy, "Destroy disk"
   action :W, :wash, "Wash disk metadata"
   option :b, :backups, "Display backups"
   option :l, :all, "Display all disks"

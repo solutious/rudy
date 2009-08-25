@@ -84,6 +84,11 @@ module Rudy
       [self.name.bright, self.instid, self.dns_public].join '; '
     end
     
+    def rbox
+      r = Rye::Box.new self.name, 
+    end
+    
+    
     def get_instance
       Rudy::AWS::EC2::Instances.get @instid
     end

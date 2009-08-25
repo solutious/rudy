@@ -12,7 +12,7 @@ module Rudy; module Routines;
     def init(*args)
       @routine ||= {}
       @machines = Rudy::Machines.list
-      @@rset = create_rye_set @machines unless defined?(@@rset)
+      @@rset = Rudy::Routines::Handlers::RyeTools.create_set @machines unless defined?(@@rset)
     end
     
     # Startup routines run in the following order:

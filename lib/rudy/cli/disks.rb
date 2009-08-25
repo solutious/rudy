@@ -60,6 +60,23 @@ module Rudy
         
       end
       
+      def disks_create_valid?
+        raise "No path provided" unless @argv.first
+        raise "No size provided" unless @option.size
+        
+        @mlist = Rudy::Machines.list
+        raise "No machines" if @mlist.nil?
+        true
+      end
+      
+      
+      def disks_create
+        @mlist.each do |m|  
+          p Rudy::Routines::Handlers::RyeTools.create_box m
+        end
+      end
+      
+      
     end
   end
 end

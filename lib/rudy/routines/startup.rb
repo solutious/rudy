@@ -59,7 +59,7 @@ module Rudy; module Routines;
       # NOTE: Expect errors if there are no machines.
       Rudy::Routines.rescue {
         @machines = run? ? Rudy::Machines.create : Rudy::Machines.list
-        @@rset = create_rye_set @machines unless defined?(@@rset)
+        @@rset = Rudy::Routines::Handlers::RyeTools.create_set @machines unless defined?(@@rset)
       }
       
       Rudy::Routines.rescue {

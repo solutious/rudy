@@ -114,7 +114,6 @@ module Rudy
       extend self
       extend Rudy::Huxtable
       
-      # TODO: MOVE TO Rudy:Disks etc...
       def list(fields={}, less=[], &block)
         fields = Rudy::Metadata.build_criteria self::RTYPE, fields, less
         records_raw, records = Rudy::Metadata.select(fields), []

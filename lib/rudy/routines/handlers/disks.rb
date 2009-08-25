@@ -109,11 +109,13 @@ module Rudy::Routines::Handlers;
       raise Rudy::Metadata::UnknownObject, disk.name unless disk.exists?
       disk.refresh!
       
-      raise Rudy::Disks::NotAttached, disk.name unless disk.volume_attached?
+      unless @@global.force
+        raise Rudy::Disks::NotAttached, disk.name unless disk.volume_attached?
+      end
       
       umount rbox, disk, index if disk.mounted?
       raise Rudy::Disks::InUse, disk.name if disk.mounted?
-
+      
       msg = "Detaching #{disk.volid}..."
       disk.volume_detach 
       Rudy::Utils.waiter(2, 60, STDOUT, msg) { 
@@ -135,7 +137,9 @@ module Rudy::Routines::Handlers;
       raise Rudy::Metadata::UnknownObject, disk.name unless disk.exists?
       disk.refresh!
       
-      raise Rudy::Disks::AlreadyAttached, disk.name if disk.volume_attached?
+      unless @@global.force
+        raise Rudy::Disks::AlreadyAttached, disk.name if disk.volume_attached?
+      end
       
       msg = "Attaching #{disk.volid} to #{rbox.stash.instid}... "
       disk.volume_attach(rbox.stash.instid)
@@ -180,14 +184,14 @@ module Rudy::Routines::Handlers;
       raise Rudy::Metadata::UnknownObject, disk.name unless disk.exists?
       disk.refresh!
       
-      raise Rudy::Disks::NotAttached, disk.name if !disk.volume_attached?
-      if @@global.force
+      unless @@global.force
+        raise Rudy::Disks::NotAttached, disk.name if !disk.volume_attached?
         raise Rudy::Disks::NotMounted, disk.name if !disk.mounted?
       end
       
       puts "Unmounting #{disk.path}... "
       
-      unless rbox.stash.windows?
+      unless rbox.nil? || rbox.stash.windows?
         rbox.umount(disk.path)
       end
       
@@ -232,7 +236,7 @@ module Rudy::Routines::Handlers;
       raise Rudy::Metadata::UnknownObject, disk.name unless disk.exists?
       disk.refresh!
         
-      umount rbox,disk,index if disk.mounted? && !rbox.stash.windows?
+      umount rbox,disk,index if disk.mounted? && !rbox.nil? && !rbox.stash.windows?
       detach rbox,disk,index if disk.volume_attached?
       
       unless @@global.force

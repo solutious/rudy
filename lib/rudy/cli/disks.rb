@@ -111,8 +111,8 @@ module Rudy
           end
         else
           @dlist.each do |d|
-            puts "Destroying disk: #{d.name}"
-            d.destroy
+            li "Destroying disk: #{d.name}"
+            Rudy::Routines::Handlers::Disks.destroy nil, d, 0
           end
         end
       end

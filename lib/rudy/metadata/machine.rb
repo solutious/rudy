@@ -180,7 +180,7 @@ module Rudy
     def attached_volumes
       volumes = []
       return volumes if @instid.nil?
-      Rudy::AWS::EC2::Volumes.list_by_instance @instid
+      Rudy::AWS::EC2::Volumes.list_by_instance( @instid) || []
     end
     
     def refresh!(metadata=true)
@@ -207,8 +207,13 @@ module Rudy
     end
     
     def default_fstype
-      windows? ? Rudy::DEFAULT_WIN32_FS : Rudy::DEFAULT_LINUX_FS
+      windows? ? Rudy::DEFAULT_WINDOWS_FS : Rudy::DEFAULT_LINUX_FS
     end
+    
+    def default_device
+      windows? ? Rudy::DEFAULT_WINDOWS_DEVICE : Rudy::DEFAULT_LINUX_DEVICE
+    end
+    
     
     def os?(v); @os.to_s == v.to_s; end
     def windows?; os? 'windows'; end

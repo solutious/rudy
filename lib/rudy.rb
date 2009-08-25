@@ -72,8 +72,11 @@ module Rudy
     DEFAULT_EC2_HOST = "ec2.amazonaws.com"
     DEFAULT_EC2_PORT = 443
     
-    DEFAULT_WIN32_FS = 'ntfs'
+    DEFAULT_WINDOWS_FS = 'ntfs'
     DEFAULT_LINUX_FS = 'ext3'
+    
+    DEFAULT_WINDOWS_DEVICE = '/dev/sdh'
+    DEFAULT_LINUX_DEVICE = 'xvdf'
     
     MAX_INSTANCES = 5.freeze
     

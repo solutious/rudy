@@ -13,7 +13,7 @@ module Rudy::Routines::Handlers;
     Rye::Cmd.add_command(:rudy_mkfs, 'mkfs')
     Rye::Cmd.add_command(:rudy_blkid, 'blkid')
     Rye::Cmd.add_command(:rudy_format, 'C:/windows/system32/format.com')
-    Rye::Cmd.add_command(:rudy_diskpart, 'C:/windows/system32/diskpart.exe')
+    Rye::Cmd.add_command(:rudy_diskpart, 'diskpart')
     
     def raise_early_exceptions(type, batch, rset, lbox, argv=nil)
       
@@ -297,8 +297,7 @@ module Rudy::Routines::Handlers;
 
     end
     
-    
-    private
+  private
     
     # See:
     # * http://social.technet.microsoft.com/Forums/en-US/winserversetup/thread/2cfbaae1-6e33-4197-bb71-63434a34eb3c
@@ -317,7 +316,7 @@ module Rudy::Routines::Handlers;
       rbox.quietly { rudy_rm :f, 'diskpart-script' }
       rbox.rudy_format disk.path, '/V:RUDY', "/FS:#{disk.fstype}", '/Q', '/Y'
     end
-    
+
     
   end
 end

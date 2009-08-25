@@ -69,8 +69,13 @@ module Rudy
           disk = Rudy::Disk.new m.position, @argv.first
           disk.device = @option.device if @option.device
           disk.size = @option.size if @option.size
+          disk.refresh! if disk.exists?  # We need the volume ID if available
           li "Creating disk: #{disk.name}"
-          Rudy::Routines::Handlers::Disks.create rbox, disk, 0
+          volumes = m.attached_volumes
+          # don't include the current disk in the count. 
+          volumes.reject! { |v| v.awsid == disk.volid } if disk.volid && disk.volume_attached?
+          disk_index = volumes.size + 2
+          Rudy::Routines::Handlers::Disks.create rbox, disk, disk_index
         end
       end
       

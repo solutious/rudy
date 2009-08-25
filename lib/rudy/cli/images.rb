@@ -38,6 +38,8 @@ module Rudy
             puts "Bundling can take up to 60 minutes."
             puts "Check the status with the following command:"
             puts Rudy::Huxtable.generate_rudy_command('bundle-status').bright
+            puts $/, "When complete, register the image with the command:"
+            puts Rudy::Huxtable.generate_rudy_command('images', '-R', @argv.name).bright
           end
           
           ret = Rye.shell cmd, args

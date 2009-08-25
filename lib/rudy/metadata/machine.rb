@@ -179,7 +179,7 @@ module Rudy
     
     def refresh!(metadata=true)
       ## Updating the metadata isn't necessary
-      ##super if metadata # update metadata
+      super() if metadata # update metadata
       @instance = get_instance
       if @instance.is_a?(Rudy::AWS::EC2::Instance)
         @dns_public, @dns_private = @instance.dns_public, @instance.dns_private

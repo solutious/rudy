@@ -74,7 +74,7 @@ routines do
       file_upload File.expand_path('~/.rudy/config'), '.rudy/'
       ls :l, '.rudy/config'
       rudy :v, :v, 'init'
-      rudy 'status', :l
+      rudy 'info', :l
     end
   end
   

@@ -15,6 +15,7 @@ RUDY, CHANGES
 * CHANGE: Rudy::Routines::Handlers::Disks.attach now creates a volume if the disk doesn't already have one. 
 * CHANGE: Standardized CLI outut for rudy-ec2 (except groups b/c of weird YAML error)
 * CHANGE: Windows "os" is now referred to by :windows rather than :win32 (SysInfo 0.7)
+* CHANGE: Renamed "rudy status" to "rudy info"
 * ADDED: Rudy::Machine#get_console, Rudy::Machine#get_password
 * ADDED: Rudy::Machine#windows?, Rudy::Machine#linux?, Rudy::Machine#solaris?, Rudy::Machine#os?
 * ADDED: "rudy m -console" and "rudy m --password"

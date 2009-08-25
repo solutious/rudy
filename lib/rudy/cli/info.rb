@@ -2,9 +2,9 @@
 
 module Rudy
   module CLI
-    class Status < Rudy::CLI::CommandBase
+    class Info < Rudy::CLI::CommandBase
 
-      def status
+      def info
         process_region @@global.region
         oregions = Rudy::AWS::VALID_REGIONS - [@@global.region.to_sym]
         if @option.all

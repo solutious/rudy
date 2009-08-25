@@ -55,7 +55,7 @@ routines do
   create do
 
     disks do
-      #create "F:"
+      create "F:"
       #create "P:"
       #create "E:"
     end
@@ -64,7 +64,7 @@ routines do
   
   shutdown do
     disks do
-      #destroy "F:"
+      destroy "F:"
       #destroy "P:"
       #destroy "E:"
     end

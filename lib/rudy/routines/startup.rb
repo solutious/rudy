@@ -62,6 +62,8 @@ module Rudy; module Routines;
         @@rset = Rudy::Routines::Handlers::RyeTools.create_set @machines unless defined?(@@rset)
       }
       
+      sleep 1  # SimpleDB eventual consistency 
+      
       Rudy::Routines.rescue {
         if !Rudy::Routines::Handlers::Host.is_running? @@rset
           a = @@rset.boxes.select { |box| !box.stash.instance_running? }

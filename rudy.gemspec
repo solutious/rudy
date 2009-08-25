@@ -82,6 +82,7 @@
   lib/rudy/cli/config.rb
   lib/rudy/cli/disks.rb
   lib/rudy/cli/execbase.rb
+  lib/rudy/cli/images.rb
   lib/rudy/cli/keypairs.rb
   lib/rudy/cli/machines.rb
   lib/rudy/cli/metadata.rb
@@ -112,6 +113,7 @@
   lib/rudy/routines/handlers/host.rb
   lib/rudy/routines/handlers/keypair.rb
   lib/rudy/routines/handlers/machines.rb
+  lib/rudy/routines/handlers/rye.rb
   lib/rudy/routines/handlers/script.rb
   lib/rudy/routines/handlers/user.rb
   lib/rudy/routines/passthrough.rb

@@ -4,23 +4,6 @@ module Rudy
   module CLI
     class Backups < Rudy::CLI::CommandBase
 
-      def get_backups
-        # Rudy::Disks.list takes two optional args for adding or 
-        # removing metadata attributes to modify the select query. 
-        # When all is specified we want to find disks in every env
-        # environment and role to we remove these attributes from
-        # the select. 
-        fields, less = { }, []
-        if @option.all
-          less = Rudy::Metadata::COMMON_FIELDS 
-        else
-          fields[:path] = @argv.first if @argv.first
-        end
-        
-        dlist = Rudy::Backups.list(fields, less) || []
-      end
-      private :get_backups
-      
       
       def backups
         blist = get_backups

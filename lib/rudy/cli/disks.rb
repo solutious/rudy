@@ -3,19 +3,6 @@
 module Rudy
   module CLI
     class Disks < Rudy::CLI::CommandBase
-
-      def get_disks
-        # Rudy::Disks.list takes two optional args for adding or 
-        # removing metadata attributes to modify the select query. 
-        # When all is specified we want to find disks in every env
-        # environment and role to we remove these attributes from
-        # the select. 
-        fields, less = {}, []
-        less = Rudy::Metadata::COMMON_FIELDS if @option.all
-        
-        dlist = Rudy::Disks.list(fields, less) || []
-      end
-      private :get_disks
       
       def disks
         disk_list = get_disks

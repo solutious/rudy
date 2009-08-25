@@ -114,6 +114,48 @@ module Rudy::CLI
     def machine_separator(name, awsid)
       ('%s %-50s awsid: %s ' % [$/, name, awsid]).att(:reverse)
     end
-
+    
+    
+  private 
+  
+    # See get_metadata
+    def get_machines(fields={}, less=[])
+      list = get_metadata Rudy::Machines, fields, less
+      if list.empty?
+        if @@global.position.nil?
+          raise Rudy::MachineGroupNotRunning, (@option.all ? nil : current_machine_group)
+        else
+          raise Rudy::MachineNotRunning, current_machine_name 
+        end
+      end
+      list
+    end
+    
+    # See get_metadata
+    def get_disks(fields={}, less=[])
+      get_metadata Rudy::Disks, fields, less
+    end
+   
+    # See get_metadata
+    def get_backups(fields={}, less=[])
+      get_metadata Rudy::Backups, fields, less
+    end
+    
+    # * +klass+ a Rudy::Metadata class. e.g. Rudy::Machines
+    #
+    # This method takes two optional args for adding or 
+    # removing metadata attributes to modify the select query. 
+    # When all is specified we want to find disks in every env
+    # environment and role to we remove these attributes from
+    # the select.
+    def get_metadata(klass, fields={}, less=[])
+      if @option.all
+        # Don't remove keys specified in fields
+        less += (Rudy::Metadata::COMMON_FIELDS - fields.keys)
+      end
+      klass.list(fields, less) || []
+    end
+    
+    
   end
 end

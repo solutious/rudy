@@ -4,27 +4,6 @@ module Rudy
   module CLI
     class Machines < Rudy::CLI::CommandBase
       
-      def get_machines
-        # Rudy::Machines.list takes two optional args for adding or 
-        # removing metadata attributes to modify the select query. 
-        # When all is specified we want to find machines in every
-        # environment and role to we remove these attributes from
-        # the select. 
-        fields, less = {}, []
-        less = Rudy::Metadata::COMMON_FIELDS if @option.all
-        
-        mlist = Rudy::Machines.list(fields, less) || []
-        if mlist.empty?
-          if @@global.position.nil?
-            raise MachineGroupNotRunning, (@option.all ? nil : current_machine_group)
-          else
-            raise MachineNotRunning, current_machine_name 
-          end
-        end
-        mlist
-      end
-      private :get_machines
-      
       def machines
         mlist = get_machines
         print_stobjects mlist

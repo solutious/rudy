@@ -38,9 +38,11 @@ module Rudy; module Routines; module Handlers;
     def is_available?(rset, port=22)
       raise NoMachines if rset.boxes.empty?
       rset.boxes.each do |rbox|
-        port = 3389 if rbox.stash.windows?
         msg = "Waiting for port #{port} on #{rbox.nickname} ..."
-        Rudy::Utils.waiter(2, 60, STDOUT, msg, 0) {
+        port = 3389 if rbox.stash.windows?
+        multi = rbox.stash.windows? ? 3 : 2
+        interval, max = 1*multi, 30*multi
+        Rudy::Utils.waiter(interval, max, STDOUT, msg, 0) {
           Rudy::Utils.service_available?(rbox.stash.dns_public, port)
         }
       end

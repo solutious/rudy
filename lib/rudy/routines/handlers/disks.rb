@@ -53,12 +53,15 @@ module Rudy::Routines::Handlers;
         # object so we need to send rset as an argument. 
         rset.batch do
           # Windows EC2 instances have 2 disks by default (C: and D:)
-          index = Rudy::Huxtable.current_machine_os.to_s == 'windows' ? 2 : 0
+          volumes = self.stash.attached_volumes
           disks.each_pair do |path, props|
             # self contains the current instance of Rye::Box. 
             disk = Rudy::Disk.new(self.stash.position, path, props)
-            Rudy::Routines::Handlers::Disks.send(action, self, disk, index)
-            index += 1
+            disk.refresh! if disk.exists?  # We need the volume ID if available
+            # don't include the current disk in the count. 
+            volumes.reject! { |v| v.awsid == disk.volid } if disk.volid && disk.volume_attached?
+            disk_index = volumes.size + 2
+            Rudy::Routines::Handlers::Disks.send(action, self, disk, disk_index)
           end
         end
 

@@ -45,17 +45,14 @@ end
 
 
 commands do
-  allow :dir
-  allow :format, 'C:/windows/system32/format.com'
-  allow :diskpart, 'C:/windows/system32/diskpart.exe'
   allow :rm
 end
 
 routines do
   
-  startup do
+  create_disks do
     disks do
-      create "L:"
+      create "F:"
       #create "F:"
       #create "E:"
     end

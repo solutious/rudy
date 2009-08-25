@@ -89,23 +89,31 @@ module Rudy
       
       
       def disks_destroy_valid?
+        @dlist = Rudy::Disks.list
+        raise "No disks" if @dlist.nil?
+        
         @mlist = Rudy::Machines.list
-        raise "No machines" if @mlist.nil?
+        raise "No machines" if @mlist.nil? && !@@global.force
         
         raise "No path provided" unless @argv.first
         raise "Disk does not exist" unless Rudy::Disks.exists? @argv.first
-
         true
       end
       
       def disks_destroy
-        @mlist.each do |m|  
-          puts machine_separator m.name, m.instid
-          rbox = Rudy::Routines::Handlers::RyeTools.create_box m
-          rbox.stash = m
-          disk = Rudy::Disk.new m.position, @argv.first
-          li "Destroying disk: #{disk.name}"
-          Rudy::Routines::Handlers::Disks.destroy rbox, disk, 0
+        if @mlist
+          @mlist.each do |m|  
+            rbox = Rudy::Routines::Handlers::RyeTools.create_box m
+            rbox.stash = m
+            disk = Rudy::Disk.new m.position, @argv.first
+            li "Destroying disk: #{disk.name}"
+            Rudy::Routines::Handlers::Disks.destroy rbox, disk, 0
+          end
+        else
+          @dlist.each do |d|
+            puts "Destroying disk: #{d.name}"
+            d.destroy
+          end
         end
       end
     end

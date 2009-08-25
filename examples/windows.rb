@@ -17,7 +17,7 @@ machines do
     size 'm1.small'
   end
   region :'eu-west-1' do
-    ami 'ami-f98fa78d'               # Rudy Windows (EU)
+    ami 'ami-4e96be3a'               # Rudy Windows 2009-08-24 (EU)
   end
   env :test do
     role :windows do

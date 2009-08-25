@@ -61,9 +61,9 @@ module Rudy
       end
       
       def register_images_valid?
-        unless @argv.first
-          raise "Must supply a valid manifest path (bucket/ami-name.manifest.xml)"
-        end
+        raise "No S3 bucket provided. See rudy bundle -h" unless @@global.bucket
+        raise "No image name provided. See rudy bundle -h" unless @argv.name
+        
         true
       end
       def register_images
@@ -71,7 +71,15 @@ module Rudy
         puts Rudy::AWS::EC2::Images.register(name)
       end
       
-      
+      def deregister_images_valid?
+        unless @argv.first && Rudy::Utils.is_id?(:image, @argv.first)  
+          raise "Must supply an AMI ID. See rudy images -h" 
+        end
+        true
+      end
+      def deregister_images
+        puts Rudy::AWS::EC2::Images.deregister(@argv.ami) ? "Done" : "Unknown error"
+      end
       
       def images
         @option.owner ||= 'self'

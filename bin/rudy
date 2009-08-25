@@ -192,7 +192,14 @@ class RudyCLI < Rudy::CLI::Base
   command :bundle_status => Rudy::CLI::Images
   
   about "Display machine images"
+  usage "rudy images"
+  usage "rudy images -o amazon"
+  usage "rudy -b BUCKET-NAME images -R IMAGE-NAME"
+  usage "rudy images -D AMI"
   option :o, :owner, String, "Owner ID (default: self)"
+  action :R, :register, "Register a machine image"
+  action :D, :deregister, "De-register a machine image (does not delete from S3)"
+  argv :name
   command :images => Rudy::CLI::Images
   command_alias :images, :im
   

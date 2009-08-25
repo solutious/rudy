@@ -9,6 +9,12 @@ module Rudy::Routines::Handlers;
     
     Rudy::Routines.add_handler :disks, self
     
+    Rye::Cmd.add_command(:rudy_rm, 'rm')
+    Rye::Cmd.add_command(:rudy_mkfs, 'mkfs')
+    Rye::Cmd.add_command(:rudy_blkid, 'blkid')
+    Rye::Cmd.add_command(:rudy_format, 'C:/windows/system32/format.com')
+    Rye::Cmd.add_command(:rudy_diskpart, 'C:/windows/system32/diskpart.exe')
+    
     def raise_early_exceptions(type, batch, rset, lbox, argv=nil)
       
     end
@@ -37,14 +43,6 @@ module Rudy::Routines::Handlers;
       rset.add_key user_keypairpath(current_machine_user)
       rset.switch_user current_machine_user
       
-      # We need to add mkfs since it's not enabled by default. 
-      # We prepend the command with rudy_ so we can delete it. 
-      Rye::Cmd.add_command(:rudy_rm, 'rm')
-      Rye::Cmd.add_command(:rudy_mkfs, 'mkfs')
-      Rye::Cmd.add_command(:rudy_blkid, 'blkid')
-      Rye::Cmd.add_command(:rudy_format, 'C:/windows/system32/format.com')
-      Rye::Cmd.add_command(:rudy_diskpart, 'C:/windows/system32/diskpart.exe')
-      
       routine.each_pair do |action, disks|
         unless respond_to?(action.to_sym)  
           Rudy::Huxtable.le %Q(DiskHelper: unknown action "#{action}")
@@ -65,12 +63,6 @@ module Rudy::Routines::Handlers;
         end
 
       end
-      
-      Rye::Cmd.remove_command(:rudy_rm)
-      Rye::Cmd.remove_command(:rudy_mkfs)
-      Rye::Cmd.remove_command(:rudy_blkid)
-      Rye::Cmd.remove_command(:rudy_format)
-      Rye::Cmd.remove_command(:rudy_diskpart)
       
       rset.switch_user original_user
     end

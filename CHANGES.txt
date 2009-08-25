@@ -20,6 +20,8 @@ RUDY, CHANGES
 * ADDED: "rudy keypairs"
 * ADDED: "rudy networks --authorize"
 * ADDED: "rudy networks --revoke"
+* ADDED: "rudy disks --create"
+* ADDED: "rudy disks --destroy"
 * ADDED: Support for attaching and formating disks in Windows. 
 
 

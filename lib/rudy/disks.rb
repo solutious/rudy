@@ -21,5 +21,9 @@ module Rudy
       Rudy::Disk.from_hash h
     end
     
+    def exists?(path)
+      !get(path).nil?
+    end
+    
   end
 end

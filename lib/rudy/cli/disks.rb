@@ -61,22 +61,53 @@ module Rudy
       end
       
       def disks_create_valid?
-        raise "No path provided" unless @argv.first
-        raise "No size provided" unless @option.size
-        
         @mlist = Rudy::Machines.list
         raise "No machines" if @mlist.nil?
+        
+        raise "No path provided" unless @argv.first
+        if Rudy::Disks.exists? @argv.first
+          raise "Disk exists" if Rudy::Disks.get(@argv.first).volume_attached?
+        end
+        raise "No size provided" unless @option.size
+        
         true
       end
       
       
       def disks_create
         @mlist.each do |m|  
-          p Rudy::Routines::Handlers::RyeTools.create_box m
+          puts machine_separator m.name, m.instid
+          rbox = Rudy::Routines::Handlers::RyeTools.create_box m
+          rbox.stash = m
+          disk = Rudy::Disk.new m.position, @argv.first
+          disk.device = @option.device if @option.device
+          disk.size = @option.size if @option.size
+          li "Creating disk: #{disk.name}"
+          Rudy::Routines::Handlers::Disks.create rbox, disk, 0
         end
       end
       
       
+      def disks_destroy_valid?
+        @mlist = Rudy::Machines.list
+        raise "No machines" if @mlist.nil?
+        
+        raise "No path provided" unless @argv.first
+        raise "Disk does not exist" unless Rudy::Disks.exists? @argv.first
+
+        true
+      end
+      
+      def disks_destroy
+        @mlist.each do |m|  
+          puts machine_separator m.name, m.instid
+          rbox = Rudy::Routines::Handlers::RyeTools.create_box m
+          rbox.stash = m
+          disk = Rudy::Disk.new m.position, @argv.first
+          li "Destroying disk: #{disk.name}"
+          Rudy::Routines::Handlers::Disks.destroy rbox, disk, 0
+        end
+      end
     end
   end
 end

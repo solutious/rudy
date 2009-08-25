@@ -85,7 +85,7 @@ module Rudy
     end
     
     def rbox
-      r = Rye::Box.new self.name, 
+      r = Rudy::Routines::Handlers::RyeTools.create_box self
     end
     
     

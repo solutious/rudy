@@ -15,16 +15,21 @@ module Rudy::Routines::Handlers;
        opts = {
          :info => (@@global.verbose >= 3),  # rudy -vvv
          :debug => false,
-         :user => Rudy.sysinfo.user, 
+         :user => :root, 
          :ostype => current_machine_os || :unix,
          :impltype => :linux
        }.merge opts
        
-       hostname = hostname.name if hostname.kind_of? Rudy::Machine
+       nickname = hostname
+       if hostname.kind_of? Rudy::Machine
+         hostname, nickname = hostname.dns_public, hostname.name
+       end
        
        box = ::Rye::Box.new hostname, opts
-
-
+       box.nickname = nickname
+       
+       box.add_key user_keypairpath(opts[:user])
+       
        # We define hooks so we can still print each command and its output
        # when running the command blocks. NOTE: We only print this in
        # verbosity mode. 

@@ -42,6 +42,8 @@ module Rudy
             puts Rudy::Huxtable.generate_rudy_command('images', '-R', @argv.name).bright
           end
           
+          execute_check(:medium)
+          
           ret = Rye.shell cmd, args
           puts ret.stderr, ret.stdout
         end
@@ -79,6 +81,7 @@ module Rudy
         true
       end
       def deregister_images
+        execute_check(:low)
         puts Rudy::AWS::EC2::Images.deregister(@argv.ami) ? "Done" : "Unknown error"
       end
       

@@ -93,6 +93,7 @@ module Rudy
       end
       
       def disks_destroy
+        execute_check(:medium)
         if @mlist
           @mlist.each do |m|  
             rbox = Rudy::Routines::Handlers::RyeTools.create_box m

@@ -88,6 +88,10 @@ module Rudy
       r = Rudy::Routines::Handlers::RyeTools.create_box self
     end
     
+    def disks
+      Rudy::Disks.list
+    end
+    
     
     def get_instance
       Rudy::AWS::EC2::Instances.get @instid

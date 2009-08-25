@@ -77,19 +77,21 @@ class RudyCLI < Rudy::CLI::Base
   option :s, :size, Integer, "Volume size (GB)"
   option :d, :device, String, "Device ID"
   option :f, :fstype, String, "Filesystem type"
+  option :b, :backups, "Display backups"
+  option :l, :all, "Display all disks"
   action :C, :create, "Create disk"
   action :D, :destroy, "Destroy disk"
   action :W, :wash, "Wash disk metadata"
-  option :b, :backups, "Display backups"
-  option :l, :all, "Display all disks"
   command :disks => Rudy::CLI::Disks
   command_alias :disks, :d
 
   about "View Backups"
   usage "rudy backups"
   usage "rudy backups -l"
-  action :W, :wash, "Wash backup metadata"
+  usage "rudy backups -C /disk/mount/point"
   option :l, :all, "Display all backups"
+  action :W, :wash, "Wash backup metadata"
+  action :C, :create, "Create backup"
   command :backups => Rudy::CLI::Backups
   command_alias :backups, :b
 

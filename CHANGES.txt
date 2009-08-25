@@ -22,6 +22,7 @@ RUDY, CHANGES
 * ADDED: "rudy networks --revoke"
 * ADDED: "rudy disks --create"
 * ADDED: "rudy disks --destroy"
+* ADDED: "rudy backups --create"
 * ADDED: Support for attaching and formating disks in Windows. 
 
 

@@ -288,6 +288,12 @@ module Rudy
       routine
     end
     
+    def self.generate_rudy_command(name, *args)
+      cmd = "rudy "
+      cmd << "-C " << @@global.config.join(' -C ') if @@global.config 
+      "#{cmd} #{name}" << args.join(' ')
+    end
+    
     # Is +action+ a valid routine for the current machine group?
     def valid_routine?(action)
       !fetch_routine_config(action).nil?

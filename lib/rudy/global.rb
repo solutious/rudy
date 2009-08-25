@@ -70,7 +70,7 @@ module Rudy
         # value from the defaults config. 
         # WARNING: Don't add bucket either or any machines configuration param 
         # TODO: investigate removing this apply_config method
-        %w[region zone environment role position 
+        %w[region zone environment role position bucket
            localhost nocolor quiet auto force parallel].each do |name|
           curval, defval = self.send(name), config.defaults.send(name)
           if curval.nil? && !defval.nil?

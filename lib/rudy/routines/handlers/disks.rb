@@ -83,6 +83,8 @@ module Rudy::Routines::Handlers;
         disk.refresh!          
       end
       
+      disk.index = index  # Needed for windows
+      
       unless @@global.force
         raise Rudy::Disks::AlreadyAttached, disk.name if disk.volume_attached?
       end

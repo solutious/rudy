@@ -9,6 +9,7 @@ defaults do
   environment :test
   role :windows
   zone :'eu-west-1b'
+  bucket 'rudy-ami-eu'
 end
 
 machines do

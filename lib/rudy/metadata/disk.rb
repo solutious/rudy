@@ -16,6 +16,9 @@ module Rudy
     field :size
     field :fstype
     
+    field :name    # Windows, used for label
+    field :index   # Windows, used for diskpart
+    
     #field :backups => Array
     
     # Is the associated volume formatted? One of: true, false

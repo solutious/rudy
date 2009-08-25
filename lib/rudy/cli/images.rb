@@ -17,7 +17,7 @@ module Rudy
       end
       
       def bundle
-        
+
         @machines.each do |m|
           puts machine_separator(m.name, m.instid)
 
@@ -37,12 +37,11 @@ module Rudy
           unless @@global.quiet
             puts "Bundling can take up to 60 minutes."
             puts "Check the status with the following command:"
-            puts %Q{rudy -b #{@@global.bucket} bundle-status #{@argv.name}}.bright
+            puts Rudy::Huxtable.generate_rudy_command('bundle-status').bright
           end
           
           ret = Rye.shell cmd, args
           puts ret.stderr, ret.stdout
-
         end
       end
       

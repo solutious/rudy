@@ -177,7 +177,6 @@ class Rudy::Config
     chill :xremote                   
         
     forced_hash :network
-    chill :network
        
     # Startup, Shutdown, Reboot routines
     forced_hash :before_local

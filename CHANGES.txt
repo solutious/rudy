@@ -29,6 +29,7 @@ RUDY, CHANGES
 * ADDED: "rudy backups --create"
 * ADDED: Support for attaching and formating disks in Windows. 
 * ADDED: "rudy-ec2 info"
+* ADDED: Re-enabled networks action to routines config (see examples/jira.rb)
 
 
 #### 0.9.1 (2009-08-05) ###########################
@@ -125,7 +126,7 @@ NOTE: This is a significant re-write from 0.8 (primarily the routines, metadata)
 
 #### 0.8.5 (2009-06-08) ###############################
 
-* FIXED: Bug in DiskHelper. mount method tried to attach when already attached. 
+* FIXED: Bug in DiskHandler. mount method tried to attach when already attached. 
 * CHANGE: rudy config now displays account info (but keeps secret key hidden)
 * CHANGE: defaults configuration has been removed from the default ~/.rudy/config. 
   It is now recommended to put it in the same place as machines, routines config.

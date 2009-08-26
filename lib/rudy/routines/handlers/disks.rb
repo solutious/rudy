@@ -45,7 +45,7 @@ module Rudy::Routines::Handlers;
       
       routine.each_pair do |action, disks|
         unless respond_to?(action.to_sym)  
-          Rudy::Huxtable.le %Q(DiskHelper: unknown action "#{action}")
+          Rudy::Huxtable.le %Q(DiskHandler: unknown action "#{action}")
           next
         end
         # A quick hack to take advantage of the threading in Rye::Set.

@@ -45,37 +45,37 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000261">query</a></li>
-              <li><a href="#M000260">query_valid?</a></li>
+              <li><a href="#M000246">query</a></li>
+              <li><a href="#M000245">query_valid?</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000261'>
-                <a name='M000261'>      </a>
+              <div class='public-instance method' id='method-M000246'>
+                <a name='M000246'>      </a>
                 <div class='synopsis'>
                   <span class='name'>query</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000261-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000246-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000261-source'>    <span class="ruby-comment cmt"># File lib/rudy/cli/aws/sdb/select.rb, line 12</span>&#x000A;12:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">query</span>&#x000A;13:       <span class="ruby-ivar">@sdb</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">SDB</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">accesskey</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">secretkey</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">region</span>)&#x000A;14:       <span class="ruby-identifier">results</span> = <span class="ruby-ivar">@sdb</span>.<span class="ruby-identifier">select</span> <span class="ruby-ivar">@argv</span>.<span class="ruby-identifier">query</span> &#x000A;15:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">results</span>.<span class="ruby-identifier">nil?</span>&#x000A;16:       <span class="ruby-identifier">results</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>&#x000A;17:         <span class="ruby-identifier">p</span> <span class="ruby-identifier">r</span>&#x000A;18:       <span class="ruby-keyword kw">end</span>&#x000A;19:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000246-source'>    <span class="ruby-comment cmt"># File lib/rudy/cli/aws/sdb/select.rb, line 12</span>&#x000A;12:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">query</span>&#x000A;13:       <span class="ruby-ivar">@sdb</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">SDB</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">accesskey</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">secretkey</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">region</span>)&#x000A;14:       <span class="ruby-identifier">results</span> = <span class="ruby-ivar">@sdb</span>.<span class="ruby-identifier">select</span> <span class="ruby-ivar">@argv</span>.<span class="ruby-identifier">query</span> &#x000A;15:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">results</span>.<span class="ruby-identifier">nil?</span>&#x000A;16:       <span class="ruby-identifier">results</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>&#x000A;17:         <span class="ruby-identifier">p</span> <span class="ruby-identifier">r</span>&#x000A;18:       <span class="ruby-keyword kw">end</span>&#x000A;19:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000260'>
-                <a name='M000260'>      </a>
+              <div class='public-instance method' id='method-M000245'>
+                <a name='M000245'>      </a>
                 <div class='synopsis'>
                   <span class='name'>query_valid?</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000260-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000245-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000260-source'>    <span class="ruby-comment cmt"># File lib/rudy/cli/aws/sdb/select.rb, line 7</span>&#x000A; 7:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">query_valid?</span>&#x000A; 8:       <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;No select query supplied&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@argv</span>.<span class="ruby-identifier">empty?</span>&#x000A; 9:       <span class="ruby-keyword kw">true</span>&#x000A;10:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000245-source'>    <span class="ruby-comment cmt"># File lib/rudy/cli/aws/sdb/select.rb, line 7</span>&#x000A; 7:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">query_valid?</span>&#x000A; 8:       <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;No select query supplied&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@argv</span>.<span class="ruby-identifier">empty?</span>&#x000A; 9:       <span class="ruby-keyword kw">true</span>&#x000A;10:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

@@ -45,99 +45,99 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000154">attached?</a></li>
-              <li><a href="#M000151">available?</a></li>
-              <li><a href="#M000152">creating?</a></li>
-              <li><a href="#M000153">deleting?</a></li>
-              <li><a href="#M000155">in_use?</a></li>
-              <li><a href="#M000148">postprocess</a></li>
-              <li><a href="#M000150">state</a></li>
-              <li><a href="#M000149">to_s</a></li>
+              <li><a href="#M000139">attached?</a></li>
+              <li><a href="#M000136">available?</a></li>
+              <li><a href="#M000137">creating?</a></li>
+              <li><a href="#M000138">deleting?</a></li>
+              <li><a href="#M000140">in_use?</a></li>
+              <li><a href="#M000133">postprocess</a></li>
+              <li><a href="#M000135">state</a></li>
+              <li><a href="#M000134">to_s</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000154'>
-                <a name='M000154'>      </a>
+              <div class='public-instance method' id='method-M000139'>
+                <a name='M000139'>      </a>
                 <div class='synopsis'>
                   <span class='name'>attached?</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000154-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000139-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000154-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/volume.rb, line 35</span>&#x000A;35:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">attached?</span>; (<span class="ruby-identifier">status</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">status</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;attached&quot;</span>); <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000139-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/volume.rb, line 35</span>&#x000A;35:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">attached?</span>; (<span class="ruby-identifier">status</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">status</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;attached&quot;</span>); <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000151'>
-                <a name='M000151'>      </a>
+              <div class='public-instance method' id='method-M000136'>
+                <a name='M000136'>      </a>
                 <div class='synopsis'>
                   <span class='name'>available?</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000151-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000136-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000151-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/volume.rb, line 32</span>&#x000A;32:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">available?</span>; (<span class="ruby-identifier">status</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">status</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;available&quot;</span>); <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000136-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/volume.rb, line 32</span>&#x000A;32:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">available?</span>; (<span class="ruby-identifier">status</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">status</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;available&quot;</span>); <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000152'>
-                <a name='M000152'>      </a>
+              <div class='public-instance method' id='method-M000137'>
+                <a name='M000137'>      </a>
                 <div class='synopsis'>
                   <span class='name'>creating?</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000152-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000137-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000152-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/volume.rb, line 33</span>&#x000A;33:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">creating?</span>; (<span class="ruby-identifier">status</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">status</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;creating&quot;</span>); <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000137-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/volume.rb, line 33</span>&#x000A;33:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">creating?</span>; (<span class="ruby-identifier">status</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">status</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;creating&quot;</span>); <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000153'>
-                <a name='M000153'>      </a>
+              <div class='public-instance method' id='method-M000138'>
+                <a name='M000138'>      </a>
                 <div class='synopsis'>
                   <span class='name'>deleting?</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000153-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000138-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000153-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/volume.rb, line 34</span>&#x000A;34:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">deleting?</span>; (<span class="ruby-identifier">status</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">status</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;deleting&quot;</span>); <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000138-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/volume.rb, line 34</span>&#x000A;34:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">deleting?</span>; (<span class="ruby-identifier">status</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">status</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;deleting&quot;</span>); <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000155'>
-                <a name='M000155'>      </a>
+              <div class='public-instance method' id='method-M000140'>
+                <a name='M000140'>      </a>
                 <div class='synopsis'>
                   <span class='name'>in_use?</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000155-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000140-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000155-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/volume.rb, line 36</span>&#x000A;36:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">in_use?</span>; (<span class="ruby-identifier">status</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">status</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;in-use&quot;</span>); <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000140-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/volume.rb, line 36</span>&#x000A;36:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">in_use?</span>; (<span class="ruby-identifier">status</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">status</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;in-use&quot;</span>); <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000148'>
-                <a name='M000148'>      </a>
+              <div class='public-instance method' id='method-M000133'>
+                <a name='M000133'>      </a>
                 <div class='synopsis'>
                   <span class='name'>postprocess</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000148-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000133-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000148-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/volume.rb, line 18</span>&#x000A;18:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">postprocess</span>&#x000A;19:         <span class="ruby-ivar">@zone</span> <span class="ruby-operator">&amp;&amp;=</span> <span class="ruby-ivar">@zone</span>.<span class="ruby-identifier">to_sym</span>&#x000A;20:         <span class="ruby-ivar">@size</span> <span class="ruby-operator">&amp;&amp;=</span> <span class="ruby-ivar">@size</span>.<span class="ruby-identifier">to_i</span>&#x000A;21:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000133-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/volume.rb, line 18</span>&#x000A;18:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">postprocess</span>&#x000A;19:         <span class="ruby-ivar">@zone</span> <span class="ruby-operator">&amp;&amp;=</span> <span class="ruby-ivar">@zone</span>.<span class="ruby-identifier">to_sym</span>&#x000A;20:         <span class="ruby-ivar">@size</span> <span class="ruby-operator">&amp;&amp;=</span> <span class="ruby-ivar">@size</span>.<span class="ruby-identifier">to_i</span>&#x000A;21:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000150'>
-                <a name='M000150'>      </a>
+              <div class='public-instance method' id='method-M000135'>
+                <a name='M000135'>      </a>
                 <div class='synopsis'>
                   <span class='name'>state</span>
                   <span class='arguments'>()</span>
@@ -148,23 +148,23 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000150-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000135-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000150-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/volume.rb, line 28</span>&#x000A;28:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">state</span>&#x000A;29:         <span class="ruby-identifier">status</span>&#x000A;30:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000135-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/volume.rb, line 28</span>&#x000A;28:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">state</span>&#x000A;29:         <span class="ruby-identifier">status</span>&#x000A;30:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000149'>
-                <a name='M000149'>      </a>
+              <div class='public-instance method' id='method-M000134'>
+                <a name='M000134'>      </a>
                 <div class='synopsis'>
                   <span class='name'>to_s</span>
                   <span class='arguments'>(*args)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000149-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000134-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000149-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/volume.rb, line 23</span>&#x000A;23:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;24:         [<span class="ruby-ivar">@awsid</span>.<span class="ruby-identifier">bright</span>, <span class="ruby-ivar">@zone</span>, <span class="ruby-ivar">@size</span>, <span class="ruby-ivar">@created</span>, <span class="ruby-ivar">@instid</span>, <span class="ruby-ivar">@snapid</span>].<span class="ruby-identifier">join</span> <span class="ruby-value str">'; '</span>&#x000A;25:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000134-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/volume.rb, line 23</span>&#x000A;23:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;24:         [<span class="ruby-ivar">@awsid</span>.<span class="ruby-identifier">bright</span>, <span class="ruby-ivar">@zone</span>, <span class="ruby-ivar">@size</span>, <span class="ruby-ivar">@created</span>, <span class="ruby-ivar">@instid</span>, <span class="ruby-ivar">@snapid</span>].<span class="ruby-identifier">join</span> <span class="ruby-value str">'; '</span>&#x000A;25:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

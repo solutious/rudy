@@ -47,9 +47,9 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000334">exists?</a></li>
-              <li><a href="#M000333">from_hash</a></li>
-              <li><a href="#M000332">get</a></li>
+              <li><a href="#M000319">exists?</a></li>
+              <li><a href="#M000318">from_hash</a></li>
+              <li><a href="#M000317">get</a></li>
             </ol>
           </div>
           <div id='context'>
@@ -85,43 +85,43 @@
             </div>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000334'>
-                <a name='M000334'>      </a>
+              <div class='public-instance method' id='method-M000319'>
+                <a name='M000319'>      </a>
                 <div class='synopsis'>
                   <span class='name'>exists?</span>
                   <span class='arguments'>(path)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000334-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000319-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000334-source'>    <span class="ruby-comment cmt"># File lib/rudy/disks.rb, line 24</span>&#x000A;24:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">path</span>)&#x000A;25:       <span class="ruby-operator">!</span><span class="ruby-identifier">get</span>(<span class="ruby-identifier">path</span>).<span class="ruby-identifier">nil?</span>&#x000A;26:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000319-source'>    <span class="ruby-comment cmt"># File lib/rudy/disks.rb, line 24</span>&#x000A;24:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">path</span>)&#x000A;25:       <span class="ruby-operator">!</span><span class="ruby-identifier">get</span>(<span class="ruby-identifier">path</span>).<span class="ruby-identifier">nil?</span>&#x000A;26:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000333'>
-                <a name='M000333'>      </a>
+              <div class='public-instance method' id='method-M000318'>
+                <a name='M000318'>      </a>
                 <div class='synopsis'>
                   <span class='name'>from_hash</span>
                   <span class='arguments'>(h)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000333-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000318-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000333-source'>    <span class="ruby-comment cmt"># File lib/rudy/disks.rb, line 20</span>&#x000A;20:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">h</span>)&#x000A;21:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Disk</span>.<span class="ruby-identifier">from_hash</span> <span class="ruby-identifier">h</span>&#x000A;22:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000318-source'>    <span class="ruby-comment cmt"># File lib/rudy/disks.rb, line 20</span>&#x000A;20:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">h</span>)&#x000A;21:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Disk</span>.<span class="ruby-identifier">from_hash</span> <span class="ruby-identifier">h</span>&#x000A;22:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000332'>
-                <a name='M000332'>      </a>
+              <div class='public-instance method' id='method-M000317'>
+                <a name='M000317'>      </a>
                 <div class='synopsis'>
                   <span class='name'>get</span>
                   <span class='arguments'>(path)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000332-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000317-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000332-source'>    <span class="ruby-comment cmt"># File lib/rudy/disks.rb, line 13</span>&#x000A;13:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get</span>(<span class="ruby-identifier">path</span>)&#x000A;14:       <span class="ruby-identifier">tmp</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Disk</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">path</span>&#x000A;15:       <span class="ruby-identifier">record</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Metadata</span>.<span class="ruby-identifier">get</span> <span class="ruby-identifier">tmp</span>.<span class="ruby-identifier">name</span>&#x000A;16:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">record</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>)&#x000A;17:       <span class="ruby-identifier">tmp</span>.<span class="ruby-identifier">from_hash</span> <span class="ruby-identifier">record</span>&#x000A;18:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000317-source'>    <span class="ruby-comment cmt"># File lib/rudy/disks.rb, line 13</span>&#x000A;13:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get</span>(<span class="ruby-identifier">path</span>)&#x000A;14:       <span class="ruby-identifier">tmp</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Disk</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">path</span>&#x000A;15:       <span class="ruby-identifier">record</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Metadata</span>.<span class="ruby-identifier">get</span> <span class="ruby-identifier">tmp</span>.<span class="ruby-identifier">name</span>&#x000A;16:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">record</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>)&#x000A;17:       <span class="ruby-identifier">tmp</span>.<span class="ruby-identifier">from_hash</span> <span class="ruby-identifier">record</span>&#x000A;18:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

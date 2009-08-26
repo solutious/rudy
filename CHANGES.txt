@@ -9,6 +9,7 @@ RUDY, CHANGES
 * FIXED: "rudy machines -T" now checks port 3389 for Windows instances. Closes GH-21
 * FIXED: "rudy disks -l" doesn't display disks from a different zone. Closes GH-24
 * FIXED: Rudy::Machine#refresh! now correctly refreshes metadata
+* FIXED: startup, shutdown, and reboot routines don't run correctly as dependencies. Closes GH-25
 * CHANGE: Increased AWS timeout to 30 seconds. Closes GH-19
 * CHANGE: Increased boot wait time for windows instances to 500 seconds.
 * CHANGE: Module names have changed from EC2 to AWS::EC2 in amazon-ec2 0.5 [Dominic Cleal]

@@ -52,7 +52,7 @@ routines do
   
   create_disks do
     disks do
-      create "F:"
+      create "L:"
       #create "F:"
       #create "E:"
     end

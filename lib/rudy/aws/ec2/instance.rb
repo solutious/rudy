@@ -278,6 +278,7 @@ module Rudy::AWS
       # +inst_id+ is an instance ID
       # Returns an Instance object
       def get(inst_id)
+        return nil if inst_id.nil?
         inst_id = inst_id.awsid if inst_id.is_a?(Rudy::AWS::EC2::Instance)
         inst = list(:any, inst_id) 
         inst &&= inst.first

@@ -20,7 +20,7 @@ module Rudy; module Routines;
     # * all other actions
     # * after dependencies
     def execute
-      ld "Executing routine: #{@name}"
+      li "Executing routine: #{@name}"
       ld "[this is a generic routine]" if @routine.empty?
       
       
@@ -59,7 +59,7 @@ module Rudy; module Routines;
       # NOTE: Expect errors if there are no machines.
       Rudy::Routines.rescue {
         @machines = run? ? Rudy::Machines.create : Rudy::Machines.list
-        @@rset = Rudy::Routines::Handlers::RyeTools.create_set @machines unless defined?(@@rset)
+        @@rset = Rudy::Routines::Handlers::RyeTools.create_set @machines
       }
       
       sleep 1  # SimpleDB eventual consistency 

@@ -142,6 +142,10 @@ module Rudy
       
       Rudy::Huxtable.ld "OPTS: #{opts.inspect}"
       
+      #@dns_public = @dns_private = nil
+      #inst = Rudy::AWS::EC2::Instances.list(:running).first
+      #@instid = inst.awsid
+      
       Rudy::AWS::EC2::Instances.create(opts) do |inst|
         @instid = inst.awsid
         @created = @started = Time.now
@@ -164,6 +168,7 @@ module Rudy
           STDERR.puts ex.backtrace if Rudy.debug?
         end
       end
+      
       self.save
       self
     end

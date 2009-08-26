@@ -4,11 +4,11 @@ module Rudy; module Routines;
     
     def init(*args)
       @machines = Rudy::Machines.list || []
-      @@rset = Rudy::Routines::Handlers::RyeTools.create_set @machines unless defined?(@@rset)
+      @@rset = Rudy::Routines::Handlers::RyeTools.create_set @machines
     end
     
     def execute
-      ld "Executing routine: #{@name}"
+      li "Executing routine: #{@name}"
       return @machines unless run?
       Rudy::Routines::Handlers::Depends.execute_all @before
       Rudy::Routines.runner(@routine, @@rset, @@lbox, @argv)

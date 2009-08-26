@@ -12,7 +12,7 @@ module Rudy; module Routines;
     def init(*args)
       @routine ||= {}
       @machines = Rudy::Machines.list
-      @@rset = Rudy::Routines::Handlers::RyeTools.create_set @machines unless defined?(@@rset)
+      @@rset = Rudy::Routines::Handlers::RyeTools.create_set @machines
     end
     
     # Startup routines run in the following order:
@@ -24,7 +24,7 @@ module Rudy; module Routines;
     # * all other actions
     # * after dependencies
     def execute
-      ld "Executing routine: #{@name}"
+      li "Executing routine: #{@name}"
       ld "[this is a generic routine]" if @routine.empty?
       
       if run?

@@ -81,10 +81,11 @@ module Rudy::Routines::Handlers;
            m.refresh! if m.dns_public.nil? || m.dns_public.empty?
            if m.dns_public.nil? || m.dns_public.empty?
              ld "Cannot find public DNS for #{m.name} (continuing...)"
-             ##next
+             rbox = self.create_box('nohost', opts) 
+           else
+             ld [:dns_public, m.dns_public, m.instid]
+             rbox = self.create_box(m.dns_public, opts) 
            end
-           ld [:dns_public, m.dns_public, m.instid]
-           rbox = self.create_box(m.dns_public, opts) 
            rbox.stash = m   # Store the machine instance in the stash
            rbox.nickname = m.name
          else

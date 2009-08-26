@@ -10,7 +10,7 @@ module Rudy; module Routines;
                          
     def init(*args)
       @machines = Rudy::Machines.list || []
-      @@rset = Rudy::Routines::Handlers::RyeTools.create_set @machines unless defined?(@@rset)
+      @@rset = Rudy::Routines::Handlers::RyeTools.create_set @machines
       @routine ||= {}
     end
     
@@ -21,7 +21,7 @@ module Rudy; module Routines;
     # * after_local (if present)
     # * after dependencies
     def execute
-      ld "Executing routine: #{@name}"
+      li "Executing routine: #{@name}"
       ld "[this is a generic routine]" if @routine.empty?
       
       # We need to remove after_local so the runner doesn't see it

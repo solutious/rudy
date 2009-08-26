@@ -27,7 +27,9 @@ module Rudy::Routines::Handlers;
        
        box = ::Rye::Box.new hostname, opts
        box.nickname = nickname
-       
+      
+       local_keys = Rye.keys
+       box.add_keys local_keys if local_keys.is_a?(Array)
        box.add_key user_keypairpath(opts[:user])
        
        # We define hooks so we can still print each command and its output

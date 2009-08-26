@@ -209,14 +209,19 @@ module Rudy
         end
         
         # Options to be sent to Rye::Box
-        rye_opts = { :user => current_machine_user, :debug => nil }
+        rye_opts = { :user => current_machine_user, :keys => [], :debug => nil }
         if File.exists? pkey 
           #raise "Cannot find file #{pkey}" unless File.exists?(pkey)
           if Rudy.sysinfo.os != :windows && File.stat(pkey).mode != 33152
             raise InsecureKeyPermissions, pkey 
           end
-          rye_opts[:keys] = pkey 
+          rye_opts[:keys] << pkey 
         end
+        
+        local_keys = Rye.keys
+        rye_opts[:keys] += local_keys if local_keys.is_a?(Array)
+        
+        puts "# SSH OPTS", rye_opts.to_yaml if @@global.verbose > 3
         
         # The user specified a command to run. We won't create an interactive
         # session so we need to prepare the command and its arguments

@@ -66,6 +66,7 @@
   lib/rudy/cli/aws/ec2/candy.rb
   lib/rudy/cli/aws/ec2/groups.rb
   lib/rudy/cli/aws/ec2/images.rb
+  lib/rudy/cli/aws/ec2/info.rb
   lib/rudy/cli/aws/ec2/instances.rb
   lib/rudy/cli/aws/ec2/keypairs.rb
   lib/rudy/cli/aws/ec2/snapshots.rb
@@ -83,12 +84,12 @@
   lib/rudy/cli/disks.rb
   lib/rudy/cli/execbase.rb
   lib/rudy/cli/images.rb
+  lib/rudy/cli/info.rb
   lib/rudy/cli/keypairs.rb
   lib/rudy/cli/machines.rb
   lib/rudy/cli/metadata.rb
   lib/rudy/cli/networks.rb
   lib/rudy/cli/routines.rb
-  lib/rudy/cli/status.rb
   lib/rudy/config.rb
   lib/rudy/config/objects.rb
   lib/rudy/disks.rb

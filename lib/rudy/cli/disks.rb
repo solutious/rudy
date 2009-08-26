@@ -63,7 +63,7 @@ module Rudy
       
       def disks_create
         @mlist.each do |m|  
-          puts machine_separator m.name, m.instid
+          puts machine_separator(m.name, m.instid)
           rbox = Rudy::Routines::Handlers::RyeTools.create_box m
           rbox.stash = m
           disk = Rudy::Disk.new m.position, @argv.first

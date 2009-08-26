@@ -75,7 +75,7 @@ module Rudy::Routines::Handlers;
       raise Rudy::Metadata::UnknownObject, disk.name unless disk.exists?
       disk.refresh!
       
-      p rbox.rudy_blkid :s, 'TYPE', :o, 'value', disk.device
+      #p rbox.rudy_blkid :s, 'TYPE', :o, 'value', disk.device
       
     end
     

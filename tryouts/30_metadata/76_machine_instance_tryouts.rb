@@ -16,9 +16,14 @@ tryout "Rudy::Machine Instance API" do
     akey, skey, region = global.accesskey, global.secretkey, global.region
     Rudy::Metadata.connect akey, skey, region
     Rudy::AWS::EC2.connect akey, skey, region
+    Rudy::Routines::Handlers::Keypair.create
+    Rudy::Routines::Handlers::Group.create
   end
   
   clean do
+    Rudy::Routines::Handlers::Keypair.unregister
+    Rudy::Routines::Handlers::Keypair.delete_pkey
+    Rudy::Routines::Handlers::Group.destroy
     if Rudy.debug?
       puts $/, "Rudy Debugging:"
       Rudy::Huxtable.logger.rewind
@@ -36,6 +41,9 @@ tryout "Rudy::Machine Instance API" do
   drill "create machine with instance" do
     mach = Rudy::Machine.new '02'
     mach.create
+    Rudy::Utils.waiter {
+      mach.instance_running? 
+    }
     mach.instid
   end
   
@@ -43,7 +51,7 @@ tryout "Rudy::Machine Instance API" do
   drill "refresh machine" do
     mach = Rudy::Machine.new '02'
     mach.refresh!
-    mach.instid
+    mach.dns_public
   end
   
   dream [true, true]
@@ -57,7 +65,11 @@ tryout "Rudy::Machine Instance API" do
   drill "destroy machine with instance" do
     mach = Rudy::Machine.new '02'
     mach.refresh!
-    mach.destroy
+    ret = mach.destroy
+    Rudy::Utils.waiter {
+      !mach.instance_running? 
+    }
+    ret
   end
   
   

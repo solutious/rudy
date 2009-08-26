@@ -2,14 +2,15 @@ group "Routines"
 library :rudy, 'lib'
   
 tryout "Keypair Handler" do
+  Rudy::Huxtable.update_config          # Read config files
+  
   set :user, Rudy::Utils.strand(4)
   set :keydir, '/tmp'
   set :global, Rudy::Huxtable.global
   set :config, Rudy::Huxtable.config
   set :test_env, 'env_' << Rudy::Utils.strand
   setup do
-    #Rudy.enable_debug
-    Rudy::Huxtable.update_config          # Read config files
+    #Rudy.enable_debug  
     akey, skey, region = global.accesskey, global.secretkey, global.region
     Rudy::Metadata.connect akey, skey, region
     Rudy::AWS::EC2.connect akey, skey, region
@@ -29,12 +30,12 @@ tryout "Keypair Handler" do
     Rudy::Routines::Handlers::Keypair.pkey? '/path/2/' << user
   end
   
-  dream "#{keydir}/key-us-east-1b-#{test_env}-app-#{user}"
+  dream "#{keydir}/key-#{Rudy::Huxtable.global.zone}-#{test_env}-app-#{user}"
   drill "determine keypair path (#{user})" do
-    Rudy::Routines::Handlers::Keypair.pkey user
+    ret = Rudy::Routines::Handlers::Keypair.pkey user
   end
   
-  dream "#{keydir}/key-us-east-1b-#{test_env}-app"
+  dream "#{keydir}/key-#{Rudy::Huxtable.global.zone}-#{test_env}-app"
   drill "determine root keypair path" do
     Rudy::Routines::Handlers::Keypair.pkey :root
   end

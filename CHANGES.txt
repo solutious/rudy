@@ -1,6 +1,14 @@
 RUDY, CHANGES 
 
 
+#### 0.9.3 (2009-08-26) ###########################
+
+* FIXED: Updated dependencies in gemspec (Rye)
+* FIXED: Local SSH pubkeys are now included when creating remote SSH
+  connections. This resolves the issues with creating and authorizing
+  a remote user then getting an authentication error. 
+  
+
 #### 0.9.2 (2009-08-25) ###########################
 
 * FIXED: Threading error in Net::HTTP by forcing a mutex during AWS::EC2 requests

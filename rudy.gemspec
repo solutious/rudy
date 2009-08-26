@@ -16,7 +16,7 @@
   
   s.executables = %w[rudy rudy-ec2 rudy-sdb rudy-s3]
   
-  s.add_dependency 'rye',        '>= 0.8.7'
+  s.add_dependency 'rye',        '>= 0.8.9'
   s.add_dependency 'attic',      '>= 0.4.0'
   s.add_dependency 'annoy',      '>= 0.5.5'
   s.add_dependency 'drydock',    '>= 0.6.6'

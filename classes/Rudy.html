@@ -34,10 +34,10 @@
             <a href="../files/lib/rudy/aws/ec2_rb.html">lib/rudy/aws/ec2.rb</a>
           </li>
           <li class='other'>
-            <a href="../files/lib/rudy/aws/sdb/error_rb.html">lib/rudy/aws/sdb/error.rb</a>
+            <a href="../files/lib/rudy/aws/sdb_rb.html">lib/rudy/aws/sdb.rb</a>
           </li>
           <li class='other'>
-            <a href="../files/lib/rudy/aws/sdb_rb.html">lib/rudy/aws/sdb.rb</a>
+            <a href="../files/lib/rudy/aws/sdb/error_rb.html">lib/rudy/aws/sdb/error.rb</a>
           </li>
           <li class='other'>
             <a href="../files/lib/rudy/aws_rb.html">lib/rudy/aws.rb</a>
@@ -58,10 +58,13 @@
             <a href="../files/lib/rudy/cli/aws/ec2/images_rb.html">lib/rudy/cli/aws/ec2/images.rb</a>
           </li>
           <li class='other'>
-            <a href="../files/lib/rudy/cli/aws/ec2/keypairs_rb.html">lib/rudy/cli/aws/ec2/keypairs.rb</a>
+            <a href="../files/lib/rudy/cli/aws/ec2/info_rb.html">lib/rudy/cli/aws/ec2/info.rb</a>
           </li>
           <li class='other'>
             <a href="../files/lib/rudy/cli/aws/ec2/instances_rb.html">lib/rudy/cli/aws/ec2/instances.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/cli/aws/ec2/keypairs_rb.html">lib/rudy/cli/aws/ec2/keypairs.rb</a>
           </li>
           <li class='other'>
             <a href="../files/lib/rudy/cli/aws/ec2/snapshots_rb.html">lib/rudy/cli/aws/ec2/snapshots.rb</a>
@@ -100,6 +103,15 @@
             <a href="../files/lib/rudy/cli/disks_rb.html">lib/rudy/cli/disks.rb</a>
           </li>
           <li class='other'>
+            <a href="../files/lib/rudy/cli/images_rb.html">lib/rudy/cli/images.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/cli/info_rb.html">lib/rudy/cli/info.rb</a>
+          </li>
+          <li class='other'>
+            <a href="../files/lib/rudy/cli/keypairs_rb.html">lib/rudy/cli/keypairs.rb</a>
+          </li>
+          <li class='other'>
             <a href="../files/lib/rudy/cli/machines_rb.html">lib/rudy/cli/machines.rb</a>
           </li>
           <li class='other'>
@@ -107,9 +119,6 @@
           </li>
           <li class='other'>
             <a href="../files/lib/rudy/cli/networks_rb.html">lib/rudy/cli/networks.rb</a>
-          </li>
-          <li class='other'>
-            <a href="../files/lib/rudy/cli/status_rb.html">lib/rudy/cli/status.rb</a>
           </li>
           <li class='other'>
             <a href="../files/lib/rudy/cli/routines_rb.html">lib/rudy/cli/routines.rb</a>
@@ -187,10 +196,10 @@
             <a href="../files/lib/rudy/routines/shutdown_rb.html">lib/rudy/routines/shutdown.rb</a>
           </li>
           <li class='other'>
-            <a href="../files/lib/rudy/routines/startup_rb.html">lib/rudy/routines/startup.rb</a>
+            <a href="../files/lib/rudy/routines_rb.html">lib/rudy/routines.rb</a>
           </li>
           <li class='other'>
-            <a href="../files/lib/rudy/routines_rb.html">lib/rudy/routines.rb</a>
+            <a href="../files/lib/rudy/routines/startup_rb.html">lib/rudy/routines/startup.rb</a>
           </li>
           <li class='other'>
             <a href="../files/lib/rudy/utils_rb.html">lib/rudy/utils.rb</a>
@@ -225,20 +234,20 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000006">auto?</a></li>
-              <li><a href="#M000009">debug?</a></li>
-              <li><a href="#M000008">disable_auto</a></li>
-              <li><a href="#M000011">disable_debug</a></li>
-              <li><a href="#M000005">disable_quiet</a></li>
-              <li><a href="#M000007">enable_auto</a></li>
-              <li><a href="#M000010">enable_debug</a></li>
-              <li><a href="#M000004">enable_quiet</a></li>
-              <li><a href="#M000003">quiet?</a></li>
-              <li><a href="#M000012">sysinfo</a></li>
+              <li><a href="#M000021">auto?</a></li>
+              <li><a href="#M000024">debug?</a></li>
+              <li><a href="#M000023">disable_auto</a></li>
+              <li><a href="#M000026">disable_debug</a></li>
+              <li><a href="#M000020">disable_quiet</a></li>
+              <li><a href="#M000022">enable_auto</a></li>
+              <li><a href="#M000025">enable_debug</a></li>
+              <li><a href="#M000019">enable_quiet</a></li>
+              <li><a href="#M000018">quiet?</a></li>
+              <li><a href="#M000027">sysinfo</a></li>
             </ol>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000013">sysinfo</a></li>
+              <li><a href="#M000028">sysinfo</a></li>
             </ol>
           </div>
           <div id='section'>
@@ -345,6 +354,26 @@
                     <td class='context-item-value'>443</td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>DEFAULT_WINDOWS_FS</td>
+                    <td>=</td>
+                    <td class='context-item-value'>'ntfs'</td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>DEFAULT_LINUX_FS</td>
+                    <td>=</td>
+                    <td class='context-item-value'>'ext3'</td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>DEFAULT_WINDOWS_DEVICE</td>
+                    <td>=</td>
+                    <td class='context-item-value'>'xvdf'</td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>DEFAULT_LINUX_DEVICE</td>
+                    <td>=</td>
+                    <td class='context-item-value'>'/dev/sdh'</td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
                     <td class='context-item-name'>MAX_INSTANCES</td>
                     <td>=</td>
                     <td class='context-item-value'>5.freeze</td>
@@ -359,148 +388,148 @@
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='public-class method' id='method-M000006'>
-                <a name='M000006'>      </a>
+              <div class='public-class method' id='method-M000021'>
+                <a name='M000021'>      </a>
                 <div class='synopsis'>
                   <span class='name'>auto?</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000006-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000021-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000006-source'>     <span class="ruby-comment cmt"># File lib/rudy.rb, line 103</span>&#x000A;103:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">auto?</span>; <span class="ruby-ivar">@@auto</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">true</span>; <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000021-source'>     <span class="ruby-comment cmt"># File lib/rudy.rb, line 109</span>&#x000A;109:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">auto?</span>; <span class="ruby-ivar">@@auto</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">true</span>; <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-class method' id='method-M000009'>
-                <a name='M000009'>      </a>
+              <div class='public-class method' id='method-M000024'>
+                <a name='M000024'>      </a>
                 <div class='synopsis'>
                   <span class='name'>debug?</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000009-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000024-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000009-source'>     <span class="ruby-comment cmt"># File lib/rudy.rb, line 107</span>&#x000A;107:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">debug?</span>; <span class="ruby-ivar">@@debug</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">true</span>; <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000024-source'>     <span class="ruby-comment cmt"># File lib/rudy.rb, line 113</span>&#x000A;113:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">debug?</span>; <span class="ruby-ivar">@@debug</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">true</span>; <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-class method' id='method-M000008'>
-                <a name='M000008'>      </a>
+              <div class='public-class method' id='method-M000023'>
+                <a name='M000023'>      </a>
                 <div class='synopsis'>
                   <span class='name'>disable_auto</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000008-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000023-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000008-source'>     <span class="ruby-comment cmt"># File lib/rudy.rb, line 105</span>&#x000A;105:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">disable_auto</span>; <span class="ruby-ivar">@@auto</span> = <span class="ruby-keyword kw">false</span>; <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000023-source'>     <span class="ruby-comment cmt"># File lib/rudy.rb, line 111</span>&#x000A;111:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">disable_auto</span>; <span class="ruby-ivar">@@auto</span> = <span class="ruby-keyword kw">false</span>; <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-class method' id='method-M000011'>
-                <a name='M000011'>      </a>
+              <div class='public-class method' id='method-M000026'>
+                <a name='M000026'>      </a>
                 <div class='synopsis'>
                   <span class='name'>disable_debug</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000011-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000026-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000011-source'>     <span class="ruby-comment cmt"># File lib/rudy.rb, line 109</span>&#x000A;109:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">disable_debug</span>; <span class="ruby-ivar">@@debug</span> = <span class="ruby-keyword kw">false</span>; <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000026-source'>     <span class="ruby-comment cmt"># File lib/rudy.rb, line 115</span>&#x000A;115:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">disable_debug</span>; <span class="ruby-ivar">@@debug</span> = <span class="ruby-keyword kw">false</span>; <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-class method' id='method-M000005'>
-                <a name='M000005'>      </a>
+              <div class='public-class method' id='method-M000020'>
+                <a name='M000020'>      </a>
                 <div class='synopsis'>
                   <span class='name'>disable_quiet</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000005-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000020-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000005-source'>     <span class="ruby-comment cmt"># File lib/rudy.rb, line 101</span>&#x000A;101:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">disable_quiet</span>; <span class="ruby-ivar">@@quiet</span> = <span class="ruby-keyword kw">false</span>; <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000020-source'>     <span class="ruby-comment cmt"># File lib/rudy.rb, line 107</span>&#x000A;107:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">disable_quiet</span>; <span class="ruby-ivar">@@quiet</span> = <span class="ruby-keyword kw">false</span>; <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-class method' id='method-M000007'>
-                <a name='M000007'>      </a>
+              <div class='public-class method' id='method-M000022'>
+                <a name='M000022'>      </a>
                 <div class='synopsis'>
                   <span class='name'>enable_auto</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000007-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000022-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000007-source'>     <span class="ruby-comment cmt"># File lib/rudy.rb, line 104</span>&#x000A;104:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">enable_auto</span>; <span class="ruby-ivar">@@auto</span> = <span class="ruby-keyword kw">true</span>; <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000022-source'>     <span class="ruby-comment cmt"># File lib/rudy.rb, line 110</span>&#x000A;110:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">enable_auto</span>; <span class="ruby-ivar">@@auto</span> = <span class="ruby-keyword kw">true</span>; <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-class method' id='method-M000010'>
-                <a name='M000010'>      </a>
+              <div class='public-class method' id='method-M000025'>
+                <a name='M000025'>      </a>
                 <div class='synopsis'>
                   <span class='name'>enable_debug</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000010-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000025-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000010-source'>     <span class="ruby-comment cmt"># File lib/rudy.rb, line 108</span>&#x000A;108:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">enable_debug</span>; <span class="ruby-ivar">@@debug</span> = <span class="ruby-keyword kw">true</span>; <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000025-source'>     <span class="ruby-comment cmt"># File lib/rudy.rb, line 114</span>&#x000A;114:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">enable_debug</span>; <span class="ruby-ivar">@@debug</span> = <span class="ruby-keyword kw">true</span>; <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-class method' id='method-M000004'>
-                <a name='M000004'>      </a>
+              <div class='public-class method' id='method-M000019'>
+                <a name='M000019'>      </a>
                 <div class='synopsis'>
                   <span class='name'>enable_quiet</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000004-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000019-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000004-source'>     <span class="ruby-comment cmt"># File lib/rudy.rb, line 100</span>&#x000A;100:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">enable_quiet</span>; <span class="ruby-ivar">@@quiet</span> = <span class="ruby-keyword kw">true</span>; <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000019-source'>     <span class="ruby-comment cmt"># File lib/rudy.rb, line 106</span>&#x000A;106:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">enable_quiet</span>; <span class="ruby-ivar">@@quiet</span> = <span class="ruby-keyword kw">true</span>; <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-class method' id='method-M000003'>
-                <a name='M000003'>      </a>
+              <div class='public-class method' id='method-M000018'>
+                <a name='M000018'>      </a>
                 <div class='synopsis'>
                   <span class='name'>quiet?</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000003-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000018-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000003-source'>    <span class="ruby-comment cmt"># File lib/rudy.rb, line 99</span>&#x000A;99:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">quiet?</span>; <span class="ruby-ivar">@@quiet</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">true</span>; <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000018-source'>     <span class="ruby-comment cmt"># File lib/rudy.rb, line 105</span>&#x000A;105:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">quiet?</span>; <span class="ruby-ivar">@@quiet</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">true</span>; <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-class method' id='method-M000012'>
-                <a name='M000012'>      </a>
+              <div class='public-class method' id='method-M000027'>
+                <a name='M000027'>      </a>
                 <div class='synopsis'>
                   <span class='name'>sysinfo</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000012-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000027-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000012-source'>     <span class="ruby-comment cmt"># File lib/rudy.rb, line 112</span>&#x000A;112:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">sysinfo</span>; <span class="ruby-ivar">@@sysinfo</span>; <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000027-source'>     <span class="ruby-comment cmt"># File lib/rudy.rb, line 118</span>&#x000A;118:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">sysinfo</span>; <span class="ruby-ivar">@@sysinfo</span>; <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000013'>
-                <a name='M000013'>      </a>
+              <div class='public-instance method' id='method-M000028'>
+                <a name='M000028'>      </a>
                 <div class='synopsis'>
                   <span class='name'>sysinfo</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000013-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000028-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000013-source'>     <span class="ruby-comment cmt"># File lib/rudy.rb, line 113</span>&#x000A;113:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">sysinfo</span>; <span class="ruby-ivar">@@sysinfo</span>;  <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000028-source'>     <span class="ruby-comment cmt"># File lib/rudy.rb, line 119</span>&#x000A;119:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">sysinfo</span>; <span class="ruby-ivar">@@sysinfo</span>;  <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

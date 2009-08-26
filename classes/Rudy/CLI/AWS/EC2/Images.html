@@ -45,93 +45,93 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000204">destroy_images</a></li>
-              <li><a href="#M000203">destroy_images_valid?</a></li>
-              <li><a href="#M000202">images</a></li>
-              <li><a href="#M000201">images_valid?</a></li>
-              <li><a href="#M000206">register_images</a></li>
-              <li><a href="#M000205">register_images_valid?</a></li>
+              <li><a href="#M000210">destroy_images</a></li>
+              <li><a href="#M000209">destroy_images_valid?</a></li>
+              <li><a href="#M000208">images</a></li>
+              <li><a href="#M000207">images_valid?</a></li>
+              <li><a href="#M000212">register_images</a></li>
+              <li><a href="#M000211">register_images_valid?</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000204'>
-                <a name='M000204'>      </a>
+              <div class='public-instance method' id='method-M000210'>
+                <a name='M000210'>      </a>
                 <div class='synopsis'>
                   <span class='name'>destroy_images</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000204-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000210-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000204-source'>    <span class="ruby-comment cmt"># File lib/rudy/cli/aws/ec2/images.rb, line 36</span>&#x000A;36:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">destroy_images</span>&#x000A;37:      <span class="ruby-identifier">puts</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Images</span>.<span class="ruby-identifier">deregister</span>(<span class="ruby-ivar">@argv</span>.<span class="ruby-identifier">ami</span>) <span class="ruby-operator">?</span> <span class="ruby-value str">&quot;Done&quot;</span> <span class="ruby-operator">:</span> <span class="ruby-value str">&quot;Unknown error&quot;</span>&#x000A;38:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000210-source'>    <span class="ruby-comment cmt"># File lib/rudy/cli/aws/ec2/images.rb, line 33</span>&#x000A;33:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">destroy_images</span>&#x000A;34:      <span class="ruby-identifier">puts</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Images</span>.<span class="ruby-identifier">deregister</span>(<span class="ruby-ivar">@argv</span>.<span class="ruby-identifier">ami</span>) <span class="ruby-operator">?</span> <span class="ruby-value str">&quot;Done&quot;</span> <span class="ruby-operator">:</span> <span class="ruby-value str">&quot;Unknown error&quot;</span>&#x000A;35:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000203'>
-                <a name='M000203'>      </a>
+              <div class='public-instance method' id='method-M000209'>
+                <a name='M000209'>      </a>
                 <div class='synopsis'>
                   <span class='name'>destroy_images_valid?</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000203-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000209-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000203-source'>    <span class="ruby-comment cmt"># File lib/rudy/cli/aws/ec2/images.rb, line 30</span>&#x000A;30:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">destroy_images_valid?</span>&#x000A;31:       <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@argv</span>.<span class="ruby-identifier">ami</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Utils</span>.<span class="ruby-identifier">is_id?</span>(<span class="ruby-identifier">:image</span>, <span class="ruby-ivar">@argv</span>.<span class="ruby-identifier">ami</span>)  &#x000A;32:         <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;Must supply an AMI ID (ami-XXXXXXX)&quot;</span> &#x000A;33:       <span class="ruby-keyword kw">end</span>&#x000A;34:       <span class="ruby-keyword kw">true</span>&#x000A;35:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000209-source'>    <span class="ruby-comment cmt"># File lib/rudy/cli/aws/ec2/images.rb, line 27</span>&#x000A;27:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">destroy_images_valid?</span>&#x000A;28:       <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@argv</span>.<span class="ruby-identifier">ami</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Utils</span>.<span class="ruby-identifier">is_id?</span>(<span class="ruby-identifier">:image</span>, <span class="ruby-ivar">@argv</span>.<span class="ruby-identifier">ami</span>)  &#x000A;29:         <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;Must supply an AMI ID (ami-XXXXXXX)&quot;</span> &#x000A;30:       <span class="ruby-keyword kw">end</span>&#x000A;31:       <span class="ruby-keyword kw">true</span>&#x000A;32:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000202'>
-                <a name='M000202'>      </a>
+              <div class='public-instance method' id='method-M000208'>
+                <a name='M000208'>      </a>
                 <div class='synopsis'>
                   <span class='name'>images</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000202-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000208-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000202-source'>    <span class="ruby-comment cmt"># File lib/rudy/cli/aws/ec2/images.rb, line 16</span>&#x000A;16:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">images</span>&#x000A;17:       &#x000A;18:       <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@option</span>.<span class="ruby-identifier">all</span>&#x000A;19:         <span class="ruby-ivar">@option</span>.<span class="ruby-identifier">owner</span> <span class="ruby-operator">||=</span> <span class="ruby-value str">'amazon'</span> &#x000A;20:         <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Images owned by #{@option.owner.bright}&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@argv</span>.<span class="ruby-identifier">awsid</span>&#x000A;21:       <span class="ruby-keyword kw">end</span>&#x000A;22:       &#x000A;23:       <span class="ruby-identifier">images</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Images</span>.<span class="ruby-identifier">list</span>(<span class="ruby-ivar">@option</span>.<span class="ruby-identifier">owner</span>, <span class="ruby-ivar">@argv</span>) <span class="ruby-operator">||</span> []&#x000A;24:       <span class="ruby-identifier">images</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">img</span><span class="ruby-operator">|</span>&#x000A;25:         <span class="ruby-identifier">puts</span> <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">verbose</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">img</span>.<span class="ruby-identifier">inspect</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">img</span>.<span class="ruby-identifier">dump</span>(<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">format</span>)&#x000A;26:       <span class="ruby-keyword kw">end</span>&#x000A;27:       <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;No images&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">images</span>.<span class="ruby-identifier">empty?</span>&#x000A;28:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000208-source'>    <span class="ruby-comment cmt"># File lib/rudy/cli/aws/ec2/images.rb, line 16</span>&#x000A;16:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">images</span>&#x000A;17:       &#x000A;18:       <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@option</span>.<span class="ruby-identifier">all</span>&#x000A;19:         <span class="ruby-ivar">@option</span>.<span class="ruby-identifier">owner</span> <span class="ruby-operator">||=</span> <span class="ruby-value str">'amazon'</span> &#x000A;20:         <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Images owned by #{@option.owner.bright}&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@argv</span>.<span class="ruby-identifier">awsid</span>&#x000A;21:       <span class="ruby-keyword kw">end</span>&#x000A;22:       &#x000A;23:       <span class="ruby-identifier">images</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Images</span>.<span class="ruby-identifier">list</span>(<span class="ruby-ivar">@option</span>.<span class="ruby-identifier">owner</span>, <span class="ruby-ivar">@argv</span>) <span class="ruby-operator">||</span> []&#x000A;24:       <span class="ruby-identifier">print_stobjects</span> <span class="ruby-identifier">images</span>&#x000A;25:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000201'>
-                <a name='M000201'>      </a>
+              <div class='public-instance method' id='method-M000207'>
+                <a name='M000207'>      </a>
                 <div class='synopsis'>
                   <span class='name'>images_valid?</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000201-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000207-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000201-source'>    <span class="ruby-comment cmt"># File lib/rudy/cli/aws/ec2/images.rb, line 8</span>&#x000A; 8:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">images_valid?</span>&#x000A; 9:       <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@option</span>.<span class="ruby-identifier">owner</span> <span class="ruby-operator">==</span> <span class="ruby-value str">'self'</span>&#x000A;10:         <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;AWS_ACCOUNT_NUMBER not set&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">accountnum</span> &#x000A;11:         <span class="ruby-ivar">@option</span>.<span class="ruby-identifier">owner</span> = <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">accountnum</span> &#x000A;12:       <span class="ruby-keyword kw">end</span>&#x000A;13:       &#x000A;14:       <span class="ruby-keyword kw">true</span>  &#x000A;15:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000207-source'>    <span class="ruby-comment cmt"># File lib/rudy/cli/aws/ec2/images.rb, line 8</span>&#x000A; 8:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">images_valid?</span>&#x000A; 9:       <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@option</span>.<span class="ruby-identifier">owner</span> <span class="ruby-operator">==</span> <span class="ruby-value str">'self'</span>&#x000A;10:         <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;AWS_ACCOUNT_NUMBER not set&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">accountnum</span> &#x000A;11:         <span class="ruby-ivar">@option</span>.<span class="ruby-identifier">owner</span> = <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">accountnum</span> &#x000A;12:       <span class="ruby-keyword kw">end</span>&#x000A;13:       &#x000A;14:       <span class="ruby-keyword kw">true</span>  &#x000A;15:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000206'>
-                <a name='M000206'>      </a>
+              <div class='public-instance method' id='method-M000212'>
+                <a name='M000212'>      </a>
                 <div class='synopsis'>
                   <span class='name'>register_images</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000206-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000212-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000206-source'>    <span class="ruby-comment cmt"># File lib/rudy/cli/aws/ec2/images.rb, line 46</span>&#x000A;46:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">register_images</span>&#x000A;47:       <span class="ruby-identifier">puts</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Images</span>.<span class="ruby-identifier">register</span>(<span class="ruby-ivar">@argv</span>.<span class="ruby-identifier">first</span>)&#x000A;48:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000212-source'>    <span class="ruby-comment cmt"># File lib/rudy/cli/aws/ec2/images.rb, line 43</span>&#x000A;43:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">register_images</span>&#x000A;44:       <span class="ruby-identifier">puts</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Images</span>.<span class="ruby-identifier">register</span>(<span class="ruby-ivar">@argv</span>.<span class="ruby-identifier">first</span>)&#x000A;45:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000205'>
-                <a name='M000205'>      </a>
+              <div class='public-instance method' id='method-M000211'>
+                <a name='M000211'>      </a>
                 <div class='synopsis'>
                   <span class='name'>register_images_valid?</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000205-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000211-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000205-source'>    <span class="ruby-comment cmt"># File lib/rudy/cli/aws/ec2/images.rb, line 40</span>&#x000A;40:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">register_images_valid?</span>&#x000A;41:       <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@argv</span>.<span class="ruby-identifier">first</span>&#x000A;42:         <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;Must supply a valid manifest path (bucket/ami-name.manifest.xml)&quot;</span>&#x000A;43:       <span class="ruby-keyword kw">end</span>&#x000A;44:       <span class="ruby-keyword kw">true</span>&#x000A;45:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000211-source'>    <span class="ruby-comment cmt"># File lib/rudy/cli/aws/ec2/images.rb, line 37</span>&#x000A;37:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">register_images_valid?</span>&#x000A;38:       <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@argv</span>.<span class="ruby-identifier">first</span>&#x000A;39:         <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;Must supply a valid manifest path (bucket/ami-name.manifest.xml)&quot;</span>&#x000A;40:       <span class="ruby-keyword kw">end</span>&#x000A;41:       <span class="ruby-keyword kw">true</span>&#x000A;42:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

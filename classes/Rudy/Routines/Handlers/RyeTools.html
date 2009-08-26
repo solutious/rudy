@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>: Rudy::Routines::Handlers::RyeTools [Rudy: Not your grandparents' EC2 deployment tool.]</title>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <link href='../../../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>Module</span>
+          Rudy::Routines::Handlers::RyeTools
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a href="../../../../files/lib/rudy/routines/handlers/rye_rb.html">lib/rudy/routines/handlers/rye.rb</a>
+          </li>
+        </ol>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>public instance</h3>
+            <ol>
+              <li><a href="#M000461">create_box</a></li>
+              <li><a href="#M000462">create_set</a></li>
+            </ol>
+          </div>
+          <div id='context'>
+            <div id='includes'>
+              <h2>Included modules</h2>
+              <ol>
+                <li><a href="Base.html">Rudy::Routines::Handlers::Base</a></li>
+              </ol>
+            </div>
+          </div>
+          <div id='section'>
+            <div id='methods'>
+              <h2>Public instance methods</h2>
+              <div class='public-instance method' id='method-M000461'>
+                <a name='M000461'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>create_box</span>
+                  <span class='arguments'>(hostname, opts={})</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Create an instance of Rye::Box for <tt>hostname</tt>. <tt>opts</tt> is an
+                  optional <a href="../../../Hash.html">Hash</a> of options. See
+                  Rye::Box.initialize
+                  </p>
+                  <p>
+                  This method should be used throughout the <a
+                  href="../../Routines.html">Rudy::Routines</a> namespace rather than
+                  creating instances manually b/c it applies some fancy pants defaults like
+                  command hooks.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000461-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000461-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/rye.rb, line 13</span>&#x000A;13:      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create_box</span>(<span class="ruby-identifier">hostname</span>, <span class="ruby-identifier">opts</span>={})&#x000A;14:        <span class="ruby-identifier">ld</span> [<span class="ruby-identifier">:hostname</span>, <span class="ruby-identifier">hostname</span>, <span class="ruby-identifier">opts</span>, <span class="ruby-identifier">caller</span>[<span class="ruby-value">0</span>]]&#x000A;15:        <span class="ruby-identifier">opts</span> = {&#x000A;16:          <span class="ruby-identifier">:info</span> =<span class="ruby-operator">&gt;</span> (<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">verbose</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-value">3</span>),  <span class="ruby-comment cmt"># rudy -vvv</span>&#x000A;17:          <span class="ruby-identifier">:debug</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword kw">false</span>,&#x000A;18:          <span class="ruby-identifier">:user</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">current_machine_user</span>, &#x000A;19:          <span class="ruby-identifier">:ostype</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">current_machine_os</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">:unix</span>,&#x000A;20:          <span class="ruby-identifier">:impltype</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">:linux</span>&#x000A;21:        }.<span class="ruby-identifier">merge</span> <span class="ruby-identifier">opts</span>&#x000A;22:        &#x000A;23:        <span class="ruby-identifier">nickname</span> = <span class="ruby-identifier">hostname</span>&#x000A;24:        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">hostname</span>.<span class="ruby-identifier">kind_of?</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machine</span>&#x000A;25:          <span class="ruby-identifier">hostname</span>, <span class="ruby-identifier">nickname</span> = <span class="ruby-identifier">hostname</span>.<span class="ruby-identifier">dns_public</span>, <span class="ruby-identifier">hostname</span>.<span class="ruby-identifier">name</span>&#x000A;26:        <span class="ruby-keyword kw">end</span>&#x000A;27:        &#x000A;28:        <span class="ruby-identifier">box</span> = <span class="ruby-operator">::</span><span class="ruby-constant">Rye</span><span class="ruby-operator">::</span><span class="ruby-constant">Box</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">hostname</span>, <span class="ruby-identifier">opts</span>&#x000A;29:        <span class="ruby-identifier">box</span>.<span class="ruby-identifier">nickname</span> = <span class="ruby-identifier">nickname</span>&#x000A;30:        &#x000A;31:        <span class="ruby-identifier">box</span>.<span class="ruby-identifier">add_key</span> <span class="ruby-identifier">user_keypairpath</span>(<span class="ruby-identifier">opts</span>[<span class="ruby-identifier">:user</span>])&#x000A;32:        &#x000A;33:        <span class="ruby-comment cmt"># We define hooks so we can still print each command and its output</span>&#x000A;34:        <span class="ruby-comment cmt"># when running the command blocks. NOTE: We only print this in</span>&#x000A;35:        <span class="ruby-comment cmt"># verbosity mode. </span>&#x000A;36:        <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">verbose</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">parallel</span>&#x000A;37:          <span class="ruby-comment cmt"># This block gets called for every command method call.</span>&#x000A;38:          <span class="ruby-identifier">box</span>.<span class="ruby-identifier">pre_command_hook</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">cmd</span>, <span class="ruby-identifier">user</span>, <span class="ruby-identifier">host</span>, <span class="ruby-identifier">nickname</span><span class="ruby-operator">|</span>&#x000A;39:            <span class="ruby-identifier">print_command</span> <span class="ruby-identifier">user</span>, <span class="ruby-identifier">nickname</span>, <span class="ruby-identifier">cmd</span>&#x000A;40:          <span class="ruby-keyword kw">end</span>&#x000A;41:        <span class="ruby-keyword kw">end</span>&#x000A;42: &#x000A;43:        <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">verbose</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>&#x000A;44:          <span class="ruby-comment cmt"># And this one gets called after each command method call.</span>&#x000A;45:          <span class="ruby-identifier">box</span>.<span class="ruby-identifier">post_command_hook</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ret</span><span class="ruby-operator">|</span>&#x000A;46:            <span class="ruby-identifier">print_response</span> <span class="ruby-identifier">ret</span>&#x000A;47:          <span class="ruby-keyword kw">end</span>&#x000A;48:        <span class="ruby-keyword kw">end</span>&#x000A;49: &#x000A;50:        <span class="ruby-identifier">box</span>.<span class="ruby-identifier">exception_hook</span>(<span class="ruby-operator">::</span><span class="ruby-constant">Rye</span><span class="ruby-operator">::</span><span class="ruby-constant">CommandError</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">rbox_exception_handler</span>)&#x000A;51:        <span class="ruby-identifier">box</span>.<span class="ruby-identifier">exception_hook</span>(<span class="ruby-constant">Exception</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">rbox_exception_handler</span>)&#x000A;52: &#x000A;53:        <span class="ruby-comment cmt">## It'd better for unknown commands to be handled elsewhere</span>&#x000A;54:        <span class="ruby-comment cmt">## because it doesn't make sense to retry a method that doesn't exist</span>&#x000A;55:        <span class="ruby-comment cmt">##box.exception_hook(Rye::CommandNotFound, &amp;rbox_exception_handler)</span>&#x000A;56: &#x000A;57:        <span class="ruby-identifier">box</span>&#x000A;58:      <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000462'>
+                <a name='M000462'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>create_set</span>
+                  <span class='arguments'>(hostnames, opts={})</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Create an instance of Rye::Set from a list of <tt>hostnames</tt>.
+                  <tt>hostnames</tt> can contain hostnames or <a
+                  href="../../Machine.html">Rudy::Machine</a> objects. <tt>opts</tt> is an
+                  optional <a href="../../../Hash.html">Hash</a> of options. See
+                  Rye::Box.initialize
+                  </p>
+                  <p>
+                  NOTE: Windows machines are skipped and not added to the set.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000462-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000462-source'>     <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/rye.rb, line 67</span>&#x000A; 67:      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create_set</span>(<span class="ruby-identifier">hostnames</span>, <span class="ruby-identifier">opts</span>={})&#x000A; 68:        <span class="ruby-identifier">hostnames</span> <span class="ruby-operator">||=</span> []&#x000A; 69: &#x000A; 70:        <span class="ruby-identifier">opts</span> = {&#x000A; 71:          <span class="ruby-identifier">:user</span> =<span class="ruby-operator">&gt;</span> (<span class="ruby-identifier">current_machine_user</span>).<span class="ruby-identifier">to_s</span>,&#x000A; 72:          <span class="ruby-identifier">:parallel</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">parallel</span>&#x000A; 73:        }.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">opts</span>)&#x000A; 74:        <span class="ruby-identifier">set</span> = <span class="ruby-operator">::</span><span class="ruby-constant">Rye</span><span class="ruby-operator">::</span><span class="ruby-constant">Set</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">current_machine_group</span>, <span class="ruby-identifier">opts</span> &#x000A; 75: &#x000A; 76:        <span class="ruby-identifier">opts</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">:parallel</span>)   <span class="ruby-comment cmt"># Not used by Rye::Box.new</span>&#x000A; 77: &#x000A; 78:        <span class="ruby-identifier">hostnames</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span> &#x000A; 79: &#x000A; 80:          <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machine</span>)&#x000A; 81:            <span class="ruby-identifier">m</span>.<span class="ruby-identifier">refresh!</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">dns_public</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">dns_public</span>.<span class="ruby-identifier">empty?</span>&#x000A; 82:            <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">dns_public</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">dns_public</span>.<span class="ruby-identifier">empty?</span>&#x000A; 83:              <span class="ruby-identifier">ld</span> <span class="ruby-node">&quot;Cannot find public DNS for #{m.name} (continuing...)&quot;</span>&#x000A; 84:              <span class="ruby-identifier">rbox</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">create_box</span>(<span class="ruby-value str">'nohost'</span>, <span class="ruby-identifier">opts</span>) &#x000A; 85:            <span class="ruby-keyword kw">else</span>&#x000A; 86:              <span class="ruby-identifier">ld</span> [<span class="ruby-identifier">:dns_public</span>, <span class="ruby-identifier">m</span>.<span class="ruby-identifier">dns_public</span>, <span class="ruby-identifier">m</span>.<span class="ruby-identifier">instid</span>]&#x000A; 87:              <span class="ruby-identifier">rbox</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">create_box</span>(<span class="ruby-identifier">m</span>.<span class="ruby-identifier">dns_public</span>, <span class="ruby-identifier">opts</span>) &#x000A; 88:            <span class="ruby-keyword kw">end</span>&#x000A; 89:            <span class="ruby-identifier">rbox</span>.<span class="ruby-identifier">stash</span> = <span class="ruby-identifier">m</span>   <span class="ruby-comment cmt"># Store the machine instance in the stash</span>&#x000A; 90:            <span class="ruby-identifier">rbox</span>.<span class="ruby-identifier">nickname</span> = <span class="ruby-identifier">m</span>.<span class="ruby-identifier">name</span>&#x000A; 91:          <span class="ruby-keyword kw">else</span>&#x000A; 92:            <span class="ruby-comment cmt"># Otherwise we assume it's a hostname</span>&#x000A; 93:            <span class="ruby-identifier">rbox</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">create_box</span>(<span class="ruby-identifier">m</span>)&#x000A; 94:          <span class="ruby-keyword kw">end</span>&#x000A; 95:          <span class="ruby-identifier">rbox</span>.<span class="ruby-identifier">add_key</span> <span class="ruby-identifier">user_keypairpath</span>(<span class="ruby-identifier">opts</span>[<span class="ruby-identifier">:user</span>])&#x000A; 96:          <span class="ruby-identifier">set</span>.<span class="ruby-identifier">add_box</span> <span class="ruby-identifier">rbox</span>&#x000A; 97:        <span class="ruby-keyword kw">end</span>&#x000A; 98: &#x000A; 99:        <span class="ruby-identifier">ld</span> <span class="ruby-value str">&quot;Machines Set: %s&quot;</span> <span class="ruby-operator">%</span> [<span class="ruby-identifier">set</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-value">? </span><span class="ruby-value str">'[empty]'</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">set</span>.<span class="ruby-identifier">inspect</span>]&#x000A;100: &#x000A;101:        <span class="ruby-identifier">set</span>&#x000A;102:      <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

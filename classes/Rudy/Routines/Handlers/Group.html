@@ -41,11 +41,15 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000402">authorize</a></li>
-              <li><a href="#M000401">create</a></li>
-              <li><a href="#M000404">destroy</a></li>
-              <li><a href="#M000403">exists?</a></li>
-              <li><a href="#M000400">raise_early_exceptions</a></li>
+              <li><a href="#M000442">authorize</a></li>
+              <li><a href="#M000441">create</a></li>
+              <li><a href="#M000445">destroy</a></li>
+              <li><a href="#M000440">execute</a></li>
+              <li><a href="#M000444">exists?</a></li>
+              <li><a href="#M000446">get</a></li>
+              <li><a href="#M000447">list</a></li>
+              <li><a href="#M000439">raise_early_exceptions</a></li>
+              <li><a href="#M000443">revoke</a></li>
             </ol>
           </div>
           <div id='context'>
@@ -59,75 +63,121 @@
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000402'>
-                <a name='M000402'>      </a>
+              <div class='public-instance method' id='method-M000442'>
+                <a name='M000442'>      </a>
                 <div class='synopsis'>
                   <span class='name'>authorize</span>
-                  <span class='arguments'>(name=nil, addresses=nil, ports=nil)</span>
+                  <span class='arguments'>(ports=nil, addresses=nil, name=nil)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000402-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000442-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000402-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/group.rb, line 21</span>&#x000A;21:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">authorize</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">addresses</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">ports</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;22:       <span class="ruby-identifier">name</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">current_group_name</span>&#x000A;23:       <span class="ruby-identifier">addresses</span> <span class="ruby-operator">||=</span> [<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Utils</span><span class="ruby-operator">::</span><span class="ruby-identifier">external_ip_address</span>]&#x000A;24:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">ports</span>.<span class="ruby-identifier">nil?</span>&#x000A;25:         <span class="ruby-identifier">ports</span> = <span class="ruby-identifier">current_machine_os</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">==</span> <span class="ruby-value str">'win32'</span> <span class="ruby-operator">?</span> [[<span class="ruby-value">3389</span>,<span class="ruby-value">3389</span>]] <span class="ruby-operator">:</span> [[<span class="ruby-value">22</span>,<span class="ruby-value">22</span>]]&#x000A;26:       <span class="ruby-keyword kw">end</span>&#x000A;27:       <span class="ruby-identifier">li</span> <span class="ruby-node">&quot;Authorizing ports #{ports.inspect} access for: #{addresses.join(', ')}&quot;</span>&#x000A;28:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Groups</span>.<span class="ruby-identifier">authorize</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">addresses</span>, <span class="ruby-identifier">ports</span>) &#x000A;29:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000442-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/group.rb, line 32</span>&#x000A;32:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">authorize</span>(<span class="ruby-identifier">ports</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">addresses</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">name</span>=<span class="ruby-keyword kw">nil</span>)      &#x000A;33:       <span class="ruby-identifier">modify</span>(<span class="ruby-identifier">:authorize</span>, <span class="ruby-identifier">ports</span>, <span class="ruby-identifier">addresses</span>, <span class="ruby-identifier">name</span>)&#x000A;34:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000401'>
-                <a name='M000401'>      </a>
+              <div class='public-instance method' id='method-M000441'>
+                <a name='M000441'>      </a>
                 <div class='synopsis'>
                   <span class='name'>create</span>
                   <span class='arguments'>(name=nil)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000401-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000441-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000401-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/group.rb, line 14</span>&#x000A;14:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;15:       <span class="ruby-identifier">name</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">current_group_name</span>&#x000A;16:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">exists?</span> <span class="ruby-identifier">name</span>&#x000A;17:       <span class="ruby-identifier">li</span> <span class="ruby-node">&quot;Creating group: #{name}&quot;</span>&#x000A;18:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Groups</span>.<span class="ruby-identifier">create</span> <span class="ruby-identifier">name</span>&#x000A;19:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000441-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/group.rb, line 25</span>&#x000A;25:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;26:       <span class="ruby-identifier">name</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">current_group_name</span>&#x000A;27:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">exists?</span> <span class="ruby-identifier">name</span>&#x000A;28:       <span class="ruby-identifier">li</span> <span class="ruby-node">&quot;Creating group: #{name}&quot;</span>&#x000A;29:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Groups</span>.<span class="ruby-identifier">create</span> <span class="ruby-identifier">name</span>&#x000A;30:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000404'>
-                <a name='M000404'>      </a>
+              <div class='public-instance method' id='method-M000445'>
+                <a name='M000445'>      </a>
                 <div class='synopsis'>
                   <span class='name'>destroy</span>
                   <span class='arguments'>(name=nil)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000404-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000445-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000404-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/group.rb, line 36</span>&#x000A;36:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">destroy</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;37:       <span class="ruby-identifier">name</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">current_group_name</span>&#x000A;38:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">exists?</span> <span class="ruby-identifier">name</span>&#x000A;39:       <span class="ruby-identifier">li</span> <span class="ruby-node">&quot;Destroying group: #{name}&quot;</span>&#x000A;40:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Groups</span>.<span class="ruby-identifier">destroy</span> <span class="ruby-identifier">name</span>&#x000A;41:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000445-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/group.rb, line 45</span>&#x000A;45:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">destroy</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;46:       <span class="ruby-identifier">name</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">current_group_name</span>&#x000A;47:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">exists?</span> <span class="ruby-identifier">name</span>&#x000A;48:       <span class="ruby-identifier">li</span> <span class="ruby-node">&quot;Destroying group: #{name}&quot;</span>&#x000A;49:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Groups</span>.<span class="ruby-identifier">destroy</span> <span class="ruby-identifier">name</span>&#x000A;50:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000403'>
-                <a name='M000403'>      </a>
+              <div class='public-instance method' id='method-M000440'>
+                <a name='M000440'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>execute</span>
+                  <span class='arguments'>(type, routine, rset, lbox, argv=nil)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000440-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000440-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/group.rb, line 14</span>&#x000A;14:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">execute</span>(<span class="ruby-identifier">type</span>, <span class="ruby-identifier">routine</span>, <span class="ruby-identifier">rset</span>, <span class="ruby-identifier">lbox</span>, <span class="ruby-identifier">argv</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;15:       <span class="ruby-identifier">routine</span>.<span class="ruby-identifier">each_pair</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">action</span>, <span class="ruby-identifier">definition</span><span class="ruby-operator">|</span>&#x000A;16:         <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">action</span>.<span class="ruby-identifier">to_sym</span>)  &#x000A;17:           <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Huxtable</span>.<span class="ruby-identifier">le</span> <span class="ruby-node">%Q(GroupHandler: unknown action &quot;#{action}&quot;)</span>&#x000A;18:           <span class="ruby-keyword kw">next</span>&#x000A;19:         <span class="ruby-keyword kw">end</span>&#x000A;20:         <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Huxtable</span>.<span class="ruby-identifier">ld</span> <span class="ruby-node">%Q(GroupHandler: &quot;#{action}&quot;)</span>&#x000A;21:         <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Routines</span><span class="ruby-operator">::</span><span class="ruby-constant">Handlers</span><span class="ruby-operator">::</span><span class="ruby-constant">Group</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">action</span>, <span class="ruby-identifier">definition</span>)&#x000A;22:       <span class="ruby-keyword kw">end</span>&#x000A;23:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000444'>
+                <a name='M000444'>      </a>
                 <div class='synopsis'>
                   <span class='name'>exists?</span>
                   <span class='arguments'>(name=nil)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000403-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000444-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000403-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/group.rb, line 31</span>&#x000A;31:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;32:       <span class="ruby-identifier">name</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">current_group_name</span>&#x000A;33:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Groups</span>.<span class="ruby-identifier">exists?</span> <span class="ruby-identifier">name</span>&#x000A;34:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000444-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/group.rb, line 40</span>&#x000A;40:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;41:       <span class="ruby-identifier">name</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">current_group_name</span>&#x000A;42:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Groups</span>.<span class="ruby-identifier">exists?</span> <span class="ruby-identifier">name</span>&#x000A;43:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000400'>
-                <a name='M000400'>      </a>
+              <div class='public-instance method' id='method-M000446'>
+                <a name='M000446'>      </a>
                 <div class='synopsis'>
-                  <span class='name'>raise_early_exceptions</span>
+                  <span class='name'>get</span>
                   <span class='arguments'>(name=nil)</span>
                 </div>
-                <div class='description'>
-                  <p>
-                  <a href="../../Routines.html#M000374">Rudy::Routines.add_handler</a>
-                  :machines, self
-                  </p>
-                </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000400-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000446-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000400-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/group.rb, line 10</span>&#x000A;10:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">raise_early_exceptions</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;11:       &#x000A;12:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000446-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/group.rb, line 52</span>&#x000A;52:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;53:       <span class="ruby-identifier">name</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">current_group_name</span>&#x000A;54:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Groups</span>.<span class="ruby-identifier">get</span> <span class="ruby-identifier">name</span>&#x000A;55:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000447'>
+                <a name='M000447'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>list</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000447-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000447-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/group.rb, line 57</span>&#x000A;57:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">list</span>&#x000A;58:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Groups</span>.<span class="ruby-identifier">list</span>&#x000A;59:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000439'>
+                <a name='M000439'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>raise_early_exceptions</span>
+                  <span class='arguments'>(type, batch, rset, lbox, argv=nil)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000439-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000439-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/group.rb, line 10</span>&#x000A;10:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">raise_early_exceptions</span>(<span class="ruby-identifier">type</span>, <span class="ruby-identifier">batch</span>, <span class="ruby-identifier">rset</span>, <span class="ruby-identifier">lbox</span>, <span class="ruby-identifier">argv</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;11:       &#x000A;12:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000443'>
+                <a name='M000443'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>revoke</span>
+                  <span class='arguments'>(ports=nil, addresses=nil, name=nil)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000443-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000443-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/group.rb, line 36</span>&#x000A;36:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">revoke</span>(<span class="ruby-identifier">ports</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">addresses</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">name</span>=<span class="ruby-keyword kw">nil</span>)      &#x000A;37:       <span class="ruby-identifier">modify</span>(<span class="ruby-identifier">:revoke</span>, <span class="ruby-identifier">ports</span>, <span class="ruby-identifier">addresses</span>, <span class="ruby-identifier">name</span>)&#x000A;38:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

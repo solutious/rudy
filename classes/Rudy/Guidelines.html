@@ -41,7 +41,7 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000326">inspect</a></li>
+              <li><a href="#M000364">inspect</a></li>
             </ol>
           </div>
           <div id='section'>
@@ -79,17 +79,17 @@
             </div>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000326'>
-                <a name='M000326'>      </a>
+              <div class='public-instance method' id='method-M000364'>
+                <a name='M000364'>      </a>
                 <div class='synopsis'>
                   <span class='name'>inspect</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000326-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000364-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000326-source'>    <span class="ruby-comment cmt"># File lib/rudy/guidelines.rb, line 11</span>&#x000A;11:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">inspect</span>&#x000A;12:       <span class="ruby-identifier">all</span> = <span class="ruby-constant">Guidelines</span>.<span class="ruby-identifier">constants</span>&#x000A;13:       <span class="ruby-identifier">g</span> = <span class="ruby-identifier">all</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span> <span class="ruby-value str">'%s=&quot;%s&quot;'</span> <span class="ruby-operator">%</span> [<span class="ruby-identifier">c</span>, <span class="ruby-identifier">const_get</span>(<span class="ruby-identifier">c</span>)] }&#x000A;14:       <span class="ruby-value str">%q{#&lt;Rudy::Guidelines:0x%s %s&gt;}</span> <span class="ruby-operator">%</span> [<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">object_id</span>, <span class="ruby-identifier">g</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">' '</span>)]&#x000A;15:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000364-source'>    <span class="ruby-comment cmt"># File lib/rudy/guidelines.rb, line 11</span>&#x000A;11:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">inspect</span>&#x000A;12:       <span class="ruby-identifier">all</span> = <span class="ruby-constant">Guidelines</span>.<span class="ruby-identifier">constants</span>&#x000A;13:       <span class="ruby-identifier">g</span> = <span class="ruby-identifier">all</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span> <span class="ruby-value str">'%s=&quot;%s&quot;'</span> <span class="ruby-operator">%</span> [<span class="ruby-identifier">c</span>, <span class="ruby-identifier">const_get</span>(<span class="ruby-identifier">c</span>)] }&#x000A;14:       <span class="ruby-value str">%q{#&lt;Rudy::Guidelines:0x%s %s&gt;}</span> <span class="ruby-operator">%</span> [<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">object_id</span>, <span class="ruby-identifier">g</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">' '</span>)]&#x000A;15:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

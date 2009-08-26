@@ -31,7 +31,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2009-08-07 16:26:59 -0400</span>
+          <span class='datetime'>2009-08-25 22:47:06 -0400</span>
         </div>
       </div>
       <div id='content'>
@@ -40,6 +40,113 @@
             <p>
             RUDY, CHANGES
             </p>
+            <p>
+            #### 0.9.2 (2009-08-25) ###########################
+            </p>
+            <ul>
+            <li>FIXED: Threading error in Net::HTTP by forcing a mutex during AWS::EC2
+            requests
+            
+            </li>
+            <li>FIXED: errors when washing backups
+            
+            </li>
+            <li>FIXED: Host.is_available? now checks port 3389 (Remote Desktop) for Windows
+            instances. Closes GH-16
+            
+            </li>
+            <li>FIXED: &#8220;rudy machines -T&#8221; now checks port 3389 for Windows
+            instances. Closes GH-21
+            
+            </li>
+            <li>FIXED: &#8220;rudy disks -l&#8221; doesn&#8217;t display disks from a
+            different zone. Closes GH-24
+            
+            </li>
+            <li>FIXED: <a
+            href="../classes/Rudy/Machine.html#M000599">Rudy::Machine#refresh!</a> now
+            correctly refreshes metadata
+            
+            </li>
+            <li>FIXED: startup, shutdown, and reboot routines don&#8217;t run correctly as
+            dependencies. Closes GH-25
+            
+            </li>
+            <li>FIXED: Rogue &#8220;No machines configuration&#8221; error when accessing
+            current_machine_address
+            
+            </li>
+            <li>CHANGE: Increased AWS timeout to 30 seconds. Closes GH-19
+            
+            </li>
+            <li>CHANGE: Increased boot wait time for windows instances to 500 seconds.
+            
+            </li>
+            <li>CHANGE: Module names have changed from EC2 to AWS::EC2 in amazon-ec2 0.5
+            [Dominic Cleal]
+            
+            </li>
+            <li>CHANGE: <a
+            href="../classes/Rudy/Routines/Handlers/Disks.html#M000431">Rudy::Routines::Handlers::Disks.attach</a>
+            now creates a volume if the disk doesn&#8217;t already have one.
+            
+            </li>
+            <li>CHANGE: Standardized CLI outut for rudy-ec2 (except groups b/c of weird
+            YAML error)
+            
+            </li>
+            <li>CHANGE: Windows &#8220;os&#8221; is now referred to by :windows rather than
+            :win32 (SysInfo 0.7)
+            
+            </li>
+            <li>CHANGE: Renamed &#8220;rudy status&#8221; to &#8220;rudy info&#8220;
+            
+            </li>
+            <li>ADDED: <a
+            href="../classes/Rudy/Machine.html#M000593">Rudy::Machine#get_console</a>,
+            <a
+            href="../classes/Rudy/Machine.html#M000594">Rudy::Machine#get_password</a>
+            
+            </li>
+            <li>ADDED: <a
+            href="../classes/Rudy/Machine.html#M000604">Rudy::Machine#windows?</a>, <a
+            href="../classes/Rudy/Machine.html#M000605">Rudy::Machine#linux?</a>, <a
+            href="../classes/Rudy/Machine.html#M000606">Rudy::Machine#solaris?</a>, <a
+            href="../classes/Rudy/Machine.html#M000603">Rudy::Machine#os?</a>
+            
+            </li>
+            <li>ADDED: &#8220;rudy m -console&#8221; and &#8220;rudy m
+            &#8212;password&#8220;
+            
+            </li>
+            <li>ADDED: &#8220;rudy keypairs&#8220;
+            
+            </li>
+            <li>ADDED: &#8220;rudy networks &#8212;authorize&#8220;
+            
+            </li>
+            <li>ADDED: &#8220;rudy networks &#8212;revoke&#8220;
+            
+            </li>
+            <li>ADDED: &#8220;rudy disks &#8212;create&#8220;
+            
+            </li>
+            <li>ADDED: &#8220;rudy disks &#8212;destroy&#8220;
+            
+            </li>
+            <li>ADDED: &#8220;rudy backups &#8212;create&#8220;
+            
+            </li>
+            <li>ADDED: Support for attaching and formating disks in Windows.
+            
+            </li>
+            <li>ADDED: &#8220;rudy-ec2 info&#8220;
+            
+            </li>
+            <li>ADDED: Re-enabled networks action to routines config (see examples/jira.rb)
+            
+            </li>
+            </ul>
             <p>
             #### 0.9.1 (2009-08-05) ###########################
             </p>
@@ -106,14 +213,14 @@
             
             </li>
             <li>FIXED: <a
-            href="../classes/Rudy/AWS/EC2.html#M000017">Rudy::AWS::EC2.connect</a> now
+            href="../classes/Rudy/AWS/EC2.html#M000032">Rudy::AWS::EC2.connect</a> now
             correctly reconnects when run for the second time
             
             </li>
             <li>FIXED: Global CLI option -R (region) was being ignored in lieu of -z (zone)
             
             </li>
-            <li>FIXED: <a href="../classes/Rudy/Disk.html#M000537">Rudy::Disk#archive</a>
+            <li>FIXED: <a href="../classes/Rudy/Disk.html#M000578">Rudy::Disk#archive</a>
             wasn&#8217;t storing size, fstype
             
             </li>
@@ -176,7 +283,7 @@
             
             </li>
             <li>CHANGE: Global config parameter processed differently (see <a
-            href="../classes/Rudy/Config.html#M000481">Rudy::Config#look_and_load</a>)
+            href="../classes/Rudy/Config.html#M000522">Rudy::Config#look_and_load</a>)
             
             </li>
             <li>ADDED: &#8220;rudy ssh&#8221; can now run commands in parallel
@@ -305,7 +412,7 @@
             #### 0.8.5 (2009-06-08) ###############################
             </p>
             <ul>
-            <li>FIXED: Bug in DiskHelper. mount method tried to attach when already
+            <li>FIXED: Bug in DiskHandler. mount method tried to attach when already
             attached.
             
             </li>
@@ -862,57 +969,6 @@
             </p>
             <ul>
             <li>Initial public release
-            
-            </li>
-            </ul>
-            <p>
-            #### TODO ###########################################
-            </p>
-            <ul>
-            <li>TODO: Supply dns values in machines config
-            
-            </li>
-            <li>TODO: Rudy::Routines::Arcade.
-            
-            <ul>
-            <li>install/uninstall: uses package management for the specific os impl
-            
-            </li>
-            <li>compile: from source.
-            
-            </li>
-            <li>e.g. rudy -a experimental install git (for ruby-unix-osx)
-            
-            </li>
-            <li>How to handle multiple package managers?
-            
-            </li>
-            <li>How to handle multiple app versions?
-            
-            </li>
-            </ul>
-            </li>
-            <li>TODO: <a
-            href="http://opensoul.org/2009/6/24/capistrano-git-and-ssh-keys">opensoul.org/2009/6/24/capistrano-git-and-ssh-keys</a>
-            
-            </li>
-            <li>TODO: look for config file in ./.rudy, then ../.rudy, etc... (git-like)
-            
-            </li>
-            <li>TODO: FIX: When shutting down, warns about disks even when they don&#8217;t
-            exist (CLI::Routines)
-            
-            </li>
-            <li>TODO: Investigate SSH daemon on Windows
-            
-            </li>
-            <li>TODO: Supply machines config to routines blocks with only the specific
-            machine group context
-            
-            </li>
-            <li>TODO: The output for rudy -v should become the default verbose level. -v
-            should print the command output without the header. -vv should print the
-            header. -vvv stays the same but also print full stack traces.
             
             </li>
             </ul>

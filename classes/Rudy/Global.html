@@ -54,15 +54,15 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000512">new</a></li>
+              <li><a href="#M000553">new</a></li>
             </ol>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000513">apply_config</a></li>
-              <li><a href="#M000516">region=</a></li>
-              <li><a href="#M000517">to_s</a></li>
-              <li><a href="#M000514">update</a></li>
-              <li><a href="#M000515">zone=</a></li>
+              <li><a href="#M000554">apply_config</a></li>
+              <li><a href="#M000557">region=</a></li>
+              <li><a href="#M000558">to_s</a></li>
+              <li><a href="#M000555">update</a></li>
+              <li><a href="#M000556">zone=</a></li>
             </ol>
           </div>
           <div id='section'>
@@ -80,83 +80,83 @@
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='public-class method' id='method-M000512'>
-                <a name='M000512'>      </a>
+              <div class='public-class method' id='method-M000553'>
+                <a name='M000553'>      </a>
                 <div class='synopsis'>
                   <span class='name'>new</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000512-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000553-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000512-source'>    <span class="ruby-comment cmt"># File lib/rudy/global.rb, line 47</span>&#x000A;47:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>&#x000A;48:       <span class="ruby-identifier">postprocess</span>&#x000A;49:       <span class="ruby-comment cmt"># These attributes MUST have values. </span>&#x000A;50:       <span class="ruby-ivar">@verbose</span> <span class="ruby-operator">||=</span> <span class="ruby-value">0</span>&#x000A;51:       <span class="ruby-ivar">@nocolor</span> = <span class="ruby-keyword kw">true</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@nocolor</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;false&quot;</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@nocolor</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">false</span>&#x000A;52:       <span class="ruby-ivar">@quiet</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword kw">false</span>&#x000A;53:       <span class="ruby-ivar">@parallel</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword kw">false</span>&#x000A;54:       <span class="ruby-ivar">@force</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword kw">false</span>&#x000A;55:       <span class="ruby-ivar">@format</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">:string</span> <span class="ruby-comment cmt"># as in, to_s</span>&#x000A;56:       <span class="ruby-ivar">@print_header</span> = <span class="ruby-keyword kw">true</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@print_header</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>&#x000A;57:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000553-source'>    <span class="ruby-comment cmt"># File lib/rudy/global.rb, line 47</span>&#x000A;47:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>&#x000A;48:       <span class="ruby-identifier">postprocess</span>&#x000A;49:       <span class="ruby-comment cmt"># These attributes MUST have values. </span>&#x000A;50:       <span class="ruby-ivar">@verbose</span> <span class="ruby-operator">||=</span> <span class="ruby-value">0</span>&#x000A;51:       <span class="ruby-ivar">@nocolor</span> = <span class="ruby-keyword kw">true</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@nocolor</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;false&quot;</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@nocolor</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">false</span>&#x000A;52:       <span class="ruby-ivar">@quiet</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword kw">false</span>&#x000A;53:       <span class="ruby-ivar">@parallel</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword kw">false</span>&#x000A;54:       <span class="ruby-ivar">@force</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword kw">false</span>&#x000A;55:       <span class="ruby-ivar">@format</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">:string</span> <span class="ruby-comment cmt"># as in, to_s</span>&#x000A;56:       <span class="ruby-ivar">@print_header</span> = <span class="ruby-keyword kw">true</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@print_header</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>&#x000A;57:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000513'>
-                <a name='M000513'>      </a>
+              <div class='public-instance method' id='method-M000554'>
+                <a name='M000554'>      </a>
                 <div class='synopsis'>
                   <span class='name'>apply_config</span>
                   <span class='arguments'>(config)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000513-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000554-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000513-source'>    <span class="ruby-comment cmt"># File lib/rudy/global.rb, line 59</span>&#x000A;59:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">apply_config</span>(<span class="ruby-identifier">config</span>)&#x000A;60: &#x000A;61:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">config</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Config</span>)&#x000A;62:       <span class="ruby-identifier">clear_system_defaults</span>  <span class="ruby-comment cmt"># temporarily unapply default values</span>&#x000A;63:       &#x000A;64:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">config</span>.<span class="ruby-identifier">defaults?</span>&#x000A;65:         <span class="ruby-comment cmt"># Apply the &quot;color&quot; default before &quot;nocolor&quot; so nocolor has presedence</span>&#x000A;66:         <span class="ruby-ivar">@nocolor</span> = <span class="ruby-operator">!</span><span class="ruby-identifier">config</span>.<span class="ruby-identifier">defaults</span>.<span class="ruby-identifier">color</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">config</span>.<span class="ruby-identifier">defaults</span>.<span class="ruby-identifier">color</span>.<span class="ruby-identifier">nil?</span>&#x000A;67:         <span class="ruby-comment cmt"># WARNING: Don't add user to this list. The global value should return</span>&#x000A;68:         <span class="ruby-comment cmt"># the value specified on the command line or nil. If it is nil, we can</span>&#x000A;69:         <span class="ruby-comment cmt"># check the value from the machines config. If that is nil, we use the</span>&#x000A;70:         <span class="ruby-comment cmt"># value from the defaults config. </span>&#x000A;71:         <span class="ruby-comment cmt"># WARNING: Don't add bucket either or any machines configuration param </span>&#x000A;72:         <span class="ruby-comment cmt"># TODO: investigate removing this apply_config method</span>&#x000A;73:         <span class="ruby-node">%w[region zone environment role position &#x000A;74:            localhost nocolor quiet auto force parallel]</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">name</span><span class="ruby-operator">|</span>&#x000A;75:           <span class="ruby-identifier">curval</span>, <span class="ruby-identifier">defval</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">name</span>), <span class="ruby-identifier">config</span>.<span class="ruby-identifier">defaults</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">name</span>)&#x000A;76:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">curval</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">defval</span>.<span class="ruby-identifier">nil?</span>&#x000A;77:             <span class="ruby-comment cmt"># Don't use the accessors. These are defaults so no Region  magic. </span>&#x000A;78:             <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">instance_variable_set</span>(<span class="ruby-node">&quot;@#{name}&quot;</span>, <span class="ruby-identifier">defval</span>) &#x000A;79:           <span class="ruby-keyword kw">end</span>&#x000A;80:         <span class="ruby-keyword kw">end</span>&#x000A;81:       <span class="ruby-keyword kw">end</span>&#x000A;82:       &#x000A;83:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">config</span>.<span class="ruby-identifier">accounts?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">config</span>.<span class="ruby-identifier">accounts</span>.<span class="ruby-identifier">aws</span>&#x000A;84:         <span class="ruby-node">%w[accesskey secretkey accountnum cert pkey]</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">name</span><span class="ruby-operator">|</span>&#x000A;85:           <span class="ruby-identifier">val</span> = <span class="ruby-identifier">config</span>.<span class="ruby-identifier">accounts</span>.<span class="ruby-identifier">aws</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">name</span>)&#x000A;86:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">send</span>(<span class="ruby-node">&quot;#{name}=&quot;</span>, <span class="ruby-identifier">val</span>) <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">val</span>.<span class="ruby-identifier">nil?</span>&#x000A;87:         <span class="ruby-keyword kw">end</span>&#x000A;88:       <span class="ruby-keyword kw">end</span>&#x000A;89:       <span class="ruby-identifier">postprocess</span>&#x000A;90:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000554-source'>    <span class="ruby-comment cmt"># File lib/rudy/global.rb, line 59</span>&#x000A;59:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">apply_config</span>(<span class="ruby-identifier">config</span>)&#x000A;60: &#x000A;61:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">config</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Config</span>)&#x000A;62:       <span class="ruby-identifier">clear_system_defaults</span>  <span class="ruby-comment cmt"># temporarily unapply default values</span>&#x000A;63:       &#x000A;64:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">config</span>.<span class="ruby-identifier">defaults?</span>&#x000A;65:         <span class="ruby-comment cmt"># Apply the &quot;color&quot; default before &quot;nocolor&quot; so nocolor has presedence</span>&#x000A;66:         <span class="ruby-ivar">@nocolor</span> = <span class="ruby-operator">!</span><span class="ruby-identifier">config</span>.<span class="ruby-identifier">defaults</span>.<span class="ruby-identifier">color</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">config</span>.<span class="ruby-identifier">defaults</span>.<span class="ruby-identifier">color</span>.<span class="ruby-identifier">nil?</span>&#x000A;67:         <span class="ruby-comment cmt"># WARNING: Don't add user to this list. The global value should return</span>&#x000A;68:         <span class="ruby-comment cmt"># the value specified on the command line or nil. If it is nil, we can</span>&#x000A;69:         <span class="ruby-comment cmt"># check the value from the machines config. If that is nil, we use the</span>&#x000A;70:         <span class="ruby-comment cmt"># value from the defaults config. </span>&#x000A;71:         <span class="ruby-comment cmt"># WARNING: Don't add bucket either or any machines configuration param </span>&#x000A;72:         <span class="ruby-comment cmt"># TODO: investigate removing this apply_config method</span>&#x000A;73:         <span class="ruby-node">%w[region zone environment role position bucket&#x000A;74:            localhost nocolor quiet auto force parallel]</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">name</span><span class="ruby-operator">|</span>&#x000A;75:           <span class="ruby-identifier">curval</span>, <span class="ruby-identifier">defval</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">name</span>), <span class="ruby-identifier">config</span>.<span class="ruby-identifier">defaults</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">name</span>)&#x000A;76:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">curval</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">defval</span>.<span class="ruby-identifier">nil?</span>&#x000A;77:             <span class="ruby-comment cmt"># Don't use the accessors. These are defaults so no Region  magic. </span>&#x000A;78:             <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">instance_variable_set</span>(<span class="ruby-node">&quot;@#{name}&quot;</span>, <span class="ruby-identifier">defval</span>) &#x000A;79:           <span class="ruby-keyword kw">end</span>&#x000A;80:         <span class="ruby-keyword kw">end</span>&#x000A;81:       <span class="ruby-keyword kw">end</span>&#x000A;82:       &#x000A;83:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">config</span>.<span class="ruby-identifier">accounts?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">config</span>.<span class="ruby-identifier">accounts</span>.<span class="ruby-identifier">aws</span>&#x000A;84:         <span class="ruby-node">%w[accesskey secretkey accountnum cert pkey]</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">name</span><span class="ruby-operator">|</span>&#x000A;85:           <span class="ruby-identifier">val</span> = <span class="ruby-identifier">config</span>.<span class="ruby-identifier">accounts</span>.<span class="ruby-identifier">aws</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">name</span>)&#x000A;86:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">send</span>(<span class="ruby-node">&quot;#{name}=&quot;</span>, <span class="ruby-identifier">val</span>) <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">val</span>.<span class="ruby-identifier">nil?</span>&#x000A;87:         <span class="ruby-keyword kw">end</span>&#x000A;88:       <span class="ruby-keyword kw">end</span>&#x000A;89:       <span class="ruby-identifier">postprocess</span>&#x000A;90:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000516'>
-                <a name='M000516'>      </a>
+              <div class='public-instance method' id='method-M000557'>
+                <a name='M000557'>      </a>
                 <div class='synopsis'>
                   <span class='name'>region=</span>
                   <span class='arguments'>(r)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000516-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000557-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000516-source'>     <span class="ruby-comment cmt"># File lib/rudy/global.rb, line 103</span>&#x000A;103:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">region=</span>(<span class="ruby-identifier">r</span>)&#x000A;104:       <span class="ruby-ivar">@region</span> = <span class="ruby-identifier">r</span>&#x000A;105:       <span class="ruby-ivar">@zone</span> = <span class="ruby-node">&quot;#{@region}b&quot;</span>.<span class="ruby-identifier">to_sym</span>&#x000A;106:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000557-source'>     <span class="ruby-comment cmt"># File lib/rudy/global.rb, line 103</span>&#x000A;103:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">region=</span>(<span class="ruby-identifier">r</span>)&#x000A;104:       <span class="ruby-ivar">@region</span> = <span class="ruby-identifier">r</span>&#x000A;105:       <span class="ruby-ivar">@zone</span> = <span class="ruby-node">&quot;#{@region}b&quot;</span>.<span class="ruby-identifier">to_sym</span>&#x000A;106:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000517'>
-                <a name='M000517'>      </a>
+              <div class='public-instance method' id='method-M000558'>
+                <a name='M000558'>      </a>
                 <div class='synopsis'>
                   <span class='name'>to_s</span>
                   <span class='arguments'>(*args)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000517-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000558-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000517-source'>     <span class="ruby-comment cmt"># File lib/rudy/global.rb, line 108</span>&#x000A;108:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;109:       <span class="ruby-keyword kw">super</span>()&#x000A;110:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000558-source'>     <span class="ruby-comment cmt"># File lib/rudy/global.rb, line 108</span>&#x000A;108:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;109:       <span class="ruby-keyword kw">super</span>()&#x000A;110:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000514'>
-                <a name='M000514'>      </a>
+              <div class='public-instance method' id='method-M000555'>
+                <a name='M000555'>      </a>
                 <div class='synopsis'>
                   <span class='name'>update</span>
                   <span class='arguments'>(ghash={})</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000514-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000555-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000514-source'>    <span class="ruby-comment cmt"># File lib/rudy/global.rb, line 92</span>&#x000A;92:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">update</span>(<span class="ruby-identifier">ghash</span>={})&#x000A;93:       <span class="ruby-identifier">ghash</span> = <span class="ruby-identifier">ghash</span>.<span class="ruby-identifier">marshal_dump</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">ghash</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">OpenStruct</span>) &#x000A;94:       <span class="ruby-identifier">ghash</span>.<span class="ruby-identifier">each_pair</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">n</span>,<span class="ruby-identifier">v</span><span class="ruby-operator">|</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">send</span>(<span class="ruby-node">&quot;#{n}=&quot;</span>, <span class="ruby-identifier">v</span>) } &#x000A;95:       <span class="ruby-identifier">postprocess</span>&#x000A;96:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000555-source'>    <span class="ruby-comment cmt"># File lib/rudy/global.rb, line 92</span>&#x000A;92:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">update</span>(<span class="ruby-identifier">ghash</span>={})&#x000A;93:       <span class="ruby-identifier">ghash</span> = <span class="ruby-identifier">ghash</span>.<span class="ruby-identifier">marshal_dump</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">ghash</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">OpenStruct</span>) &#x000A;94:       <span class="ruby-identifier">ghash</span>.<span class="ruby-identifier">each_pair</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">n</span>,<span class="ruby-identifier">v</span><span class="ruby-operator">|</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">send</span>(<span class="ruby-node">&quot;#{n}=&quot;</span>, <span class="ruby-identifier">v</span>) } &#x000A;95:       <span class="ruby-identifier">postprocess</span>&#x000A;96:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000515'>
-                <a name='M000515'>      </a>
+              <div class='public-instance method' id='method-M000556'>
+                <a name='M000556'>      </a>
                 <div class='synopsis'>
                   <span class='name'>zone=</span>
                   <span class='arguments'>(z)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000515-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000556-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000515-source'>     <span class="ruby-comment cmt"># File lib/rudy/global.rb, line 98</span>&#x000A; 98:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">zone=</span>(<span class="ruby-identifier">z</span>)&#x000A; 99:       <span class="ruby-ivar">@zone</span> = <span class="ruby-identifier">z</span>&#x000A;100:       <span class="ruby-ivar">@region</span> = <span class="ruby-ivar">@zone</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/[a-z]$/</span>, <span class="ruby-value str">''</span>).<span class="ruby-identifier">to_sym</span>&#x000A;101:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000556-source'>     <span class="ruby-comment cmt"># File lib/rudy/global.rb, line 98</span>&#x000A; 98:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">zone=</span>(<span class="ruby-identifier">z</span>)&#x000A; 99:       <span class="ruby-ivar">@zone</span> = <span class="ruby-identifier">z</span>&#x000A;100:       <span class="ruby-ivar">@region</span> = <span class="ruby-ivar">@zone</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/[a-z]$/</span>, <span class="ruby-value str">''</span>).<span class="ruby-identifier">to_sym</span>&#x000A;101:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

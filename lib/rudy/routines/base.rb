@@ -49,7 +49,10 @@ module Rudy; module Routines;
       end
       
       # Share one Rye::Box instance for localhost across all routines
-      @@lbox = Rudy::Routines::Handlers::RyeTools.create_box @@global.localhost unless defined?(@@lbox)
+      unless defined?(@@lbox)
+        host, opts = @@global.localhost, { :user => Rudy.sysinfo.user }
+        @@lbox = Rudy::Routines::Handlers::RyeTools.create_box host, opts
+      end
       
       disable_run if @@global.testrun
       

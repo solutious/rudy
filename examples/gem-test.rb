@@ -90,6 +90,8 @@ routines do
     end
   end
   
-  
+  startup do
+    after :sysupdate
+  end
 end
 

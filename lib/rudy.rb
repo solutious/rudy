@@ -75,8 +75,8 @@ module Rudy
     DEFAULT_WINDOWS_FS = 'ntfs'
     DEFAULT_LINUX_FS = 'ext3'
     
-    DEFAULT_WINDOWS_DEVICE = '/dev/sdh'
-    DEFAULT_LINUX_DEVICE = 'xvdf'
+    DEFAULT_WINDOWS_DEVICE = 'xvdf'
+    DEFAULT_LINUX_DEVICE = '/dev/sdh'
     
     MAX_INSTANCES = 5.freeze
     

@@ -177,8 +177,8 @@ module Rudy
     end
     
     def current_machine_address(position='01')
-      raise NoConfig unless @@config
-      raise NoMachinesConfig unless @@config.machines
+      #raise NoConfig unless @@config
+      #raise NoMachinesConfig unless @@config.machines
       raise "Position cannot be nil" if position.nil?
       addresses = [fetch_machine_param(:addresses)].flatten.compact
       addresses[position.to_i-1]

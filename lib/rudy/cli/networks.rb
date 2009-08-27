@@ -11,6 +11,15 @@ module Rudy
         end
       end
       
+      def create_networks
+        Rudy::Routines::Handlers::Group.create rescue nil
+        networks
+      end
+      
+      def destroy_networks
+        Rudy::Routines::Handlers::Group.destroy rescue nil
+      end
+      
       def update_networks
         Rudy::Routines::Handlers::Group.authorize rescue nil
         networks

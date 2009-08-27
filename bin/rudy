@@ -107,6 +107,8 @@ class RudyCLI < Rudy::CLI::Base
   
   about "View Network configuration"
   usage "rudy networks"
+  usage "rudy networks -C"
+  usage "rudy networks -D"
   usage "rudy networks -L"
   usage "rudy networks -L -i"
   usage "rudy networks -L -e"
@@ -124,6 +126,8 @@ class RudyCLI < Rudy::CLI::Base
   option :o, :owner, String, "Other group owner ID (account number). Use with -g!"
   action :U, :update, "Update networks based on configuration"
   action :L, :local, "Show local network configuration"
+  action :C, :create, "Create the network security group"
+  action :D, :destroy, "Create the network security group"
   action :A, :authorize, "Authorize a rule for a network security group"
   action :R, :revoke, "Revoke a rule for a network security group"
   command :networks => Rudy::CLI::Networks

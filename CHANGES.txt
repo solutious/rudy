@@ -6,6 +6,7 @@ RUDY, CHANGES
 * FIXED: NoMachines exception when running various dependency scenarios
 * CHANGE: All puts to STDOUT and STDERR now go through Rudy::Huxtable.li and Rudy::Huxtable.le. This resolves the issues with the output printing in quiet mode. 
 * CHANGE: Overhaul on output formatting. 
+* ADDED: "rudy networks --create" and "rudy networks --destroy"
 
 
 #### 0.9.3 (2009-08-26) ###########################

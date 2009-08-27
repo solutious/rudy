@@ -140,7 +140,7 @@ module Rudy
         :machine_data => self.generate_machine_data.to_yaml
       }
       
-      Rudy::Huxtable.ld "OPTS: #{opts.inspect}"
+      ld "OPTS: #{opts.inspect}"
       
       #@dns_public = @dns_private = nil
       #inst = Rudy::AWS::EC2::Instances.list(:running).first
@@ -157,19 +157,22 @@ module Rudy
           if @address
             # Make sure the address is associated to the current account
             if Rudy::AWS::EC2::Addresses.exists?(@address)
-              puts "Associating #{@address} to #{@instid}"
+              li "Associating #{@address} to #{@instid}"
               Rudy::AWS::EC2::Addresses.associate(@address, @instid)
             else
-              STDERR.puts "Unknown address: #{@address}"
+              le "Unknown address: #{@address}"
             end
           end
         rescue => ex
-          STDERR.puts "Error: #{ex.message}"
-          STDERR.puts ex.backtrace if Rudy.debug?
+          le "Error: #{ex.message}"
+          le ex.backtrace if Rudy.debug?
         end
       end
       
       self.save
+      
+      sleep 1 # Eventual consistency in SimpleDB
+      
       self
     end
     

@@ -44,13 +44,16 @@ module Rudy
         group = Array.new(size) do |i|
           m = Rudy::Machine.new(i + 1)
           m.create
+          li "Created: #{m.to_s}"
           m
         end
       else
         m = Rudy::Machine.new(Rudy::Huxtable.global.position)
         m.create
-        [m]
+        li "Created: #{m.to_s}"
+        group = [m]
       end
+      group
     end
     
     def restart

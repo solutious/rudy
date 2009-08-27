@@ -3,7 +3,9 @@ RUDY, CHANGES
 
 #### 0.9.4 (2009-08-27) ###########################
 
+* FIXED: NoMachines exception when running various dependency scenarios
 * CHANGE: All puts to STDOUT and STDERR now go through Rudy::Huxtable.li and Rudy::Huxtable.le. This resolves the issues with the output printing in quiet mode. 
+* CHANGE: Overhaul on output formatting. 
 
 
 #### 0.9.3 (2009-08-26) ###########################
@@ -13,7 +15,6 @@ RUDY, CHANGES
   connections. This resolves the issues with creating and authorizing
   a remote user then getting an authentication error. 
   
-
 #### 0.9.2 (2009-08-25) ###########################
 
 * FIXED: Threading error in Net::HTTP by forcing a mutex during AWS::EC2 requests

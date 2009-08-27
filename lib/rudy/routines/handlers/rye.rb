@@ -13,7 +13,7 @@ module Rudy::Routines::Handlers;
      def create_box(hostname, opts={})
        ld [:hostname, hostname, opts, caller[0]]
        opts = {
-         :info => (@@global.verbose >= 3),  # rudy -vvv
+         :info => (@@global.verbose >= 2),  # rudy -vv
          :debug => false,
          :user => current_machine_user, 
          :ostype => current_machine_os || :unix,
@@ -35,14 +35,14 @@ module Rudy::Routines::Handlers;
        # We define hooks so we can still print each command and its output
        # when running the command blocks. NOTE: We only print this in
        # verbosity mode. 
-       if @@global.verbose > 0 && !@@global.parallel
+       if !@@global.parallel && !@@global.quiet
          # This block gets called for every command method call.
          box.pre_command_hook do |cmd, user, host, nickname|
            print_command user, nickname, cmd
          end
        end
 
-       if @@global.verbose > 1
+       if @@global.verbose > 0 && !@@global.quiet
          # And this one gets called after each command method call.
          box.post_command_hook do |ret|
            print_response ret
@@ -68,7 +68,9 @@ module Rudy::Routines::Handlers;
      # NOTE: Windows machines are skipped and not added to the set. 
      def create_set(hostnames, opts={})
        hostnames ||= []
-
+       
+       ld "Creating set from:", hostnames.inspect
+       
        opts = {
          :user => (current_machine_user).to_s,
          :parallel => @@global.parallel
@@ -164,7 +166,7 @@ module Rudy::Routines::Handlers;
      else
        le prefix << "#{ex.class}: #{ex.message}".color(:red)
      end
-     le *ex.backtrace if @@global.verbose > 2
+     le ex.backtrace if @@global.verbose > 1
    end
 
 

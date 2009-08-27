@@ -126,6 +126,16 @@ module Rudy
       k.decrypt encrtypted_text
     end
     
+    def create_mock
+      refresh!
+      @dns_public = @dns_private = nil
+      inst = Rudy::AWS::EC2::Instances.list(:running).first
+      @instid = inst.awsid
+      self.save :replace
+      sleep 1
+      self
+    end
+    
     def create
       raise "#{name} is already running" if instance_running?
       
@@ -141,10 +151,6 @@ module Rudy
       }
       
       ld "OPTS: #{opts.inspect}"
-      
-      #@dns_public = @dns_private = nil
-      #inst = Rudy::AWS::EC2::Instances.list(:running).first
-      #@instid = inst.awsid
       
       Rudy::AWS::EC2::Instances.create(opts) do |inst|
         @instid = inst.awsid

@@ -62,14 +62,17 @@ module Rudy
     
     # Puts +msg+ to +@@logger+
     def self.li(*msg); msg.each { |m| @@logger.puts m } if !@@global.quiet; end
-    # Puts +msg+ to +@@logger+ if +Rudy.debug?+ returns true
-    def self.ld(*msg); msg.each { |m| @@logger.puts "D: #{m}" } if Rudy.debug?; end
     # Puts +msg+ to +@@logger+ with "ERROR: " prepended
-    def self.le(*msg); msg.each { |m| @@logger.puts "  #{m}" }; end
+    def self.le(*msg); @@logger.puts "  " << msg.join("#{$/}  "); end
+    # Puts +msg+ to +@@logger+ if +Rudy.debug?+ returns true
+    def self.ld(*msg)
+      return unless Rudy.debug?
+      @@logger.puts "D:  " << msg.join("#{$/}D:  ")
+    end
     
     def li(*msg); Rudy::Huxtable.li *msg; end
-    def ld(*msg); Rudy::Huxtable.ld *msg; end
     def le(*msg); Rudy::Huxtable.le *msg; end
+    def ld(*msg); Rudy::Huxtable.ld *msg; end
     
     def config_dirname
       raise "No config paths defined" unless @@config.is_a?(Rudy::Config) && @@config.paths.is_a?(Array)

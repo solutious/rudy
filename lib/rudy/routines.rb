@@ -87,7 +87,7 @@ module Rudy
     def self.runner(routine, rset, lbox, argv=nil)
       routine.each_pair do |name,definition| 
         handler = Rudy::Routines.get_handler name
-        Rudy::Huxtable.li "    " << name.bright
+        Rudy::Huxtable.li "  #{name}:".bright
         self.rescue {
           handler.execute(name, definition, rset, lbox, argv)
         }

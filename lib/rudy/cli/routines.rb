@@ -71,7 +71,7 @@ module Rudy; module CLI;
             
       machines = @rr.execute
       
-      if @global.verbose > 1 && !machines.empty?
+      if !@@global.quiet && !machines.empty?
         li $/, "The following machines were processed:"
         print_stobjects machines, :noverbose
       end

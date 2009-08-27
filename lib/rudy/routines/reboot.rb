@@ -11,8 +11,10 @@ module Rudy; module Routines;
                          
     def init(*args)
       @routine ||= {}
-      @machines = Rudy::Machines.list
-      @@rset = Rudy::Routines::Handlers::RyeTools.create_set @machines
+      Rudy::Routines.rescue {
+        @machines = Rudy::Machines.list || []
+        @@rset = Rudy::Routines::Handlers::RyeTools.create_set @machines
+      }
     end
     
     # Startup routines run in the following order:
@@ -24,10 +26,19 @@ module Rudy; module Routines;
     # * all other actions
     # * after dependencies
     def execute
-      li "Executing routine: #{@name}"
-      ld "[this is a generic routine]" if @routine.empty?
       
       if run?
+        Rudy::Routines::Handlers::Depends.execute_all @before
+        
+        li " Executing routine: #{@name} ".att(:reverse)
+        ld "[this is a generic routine]" if @routine.empty?
+        
+        # Re-retreive the machine set to reflect dependency changes
+        Rudy::Routines.rescue {
+          @machines = Rudy::Machines.list || []
+          @@rset = Rudy::Routines::Handlers::RyeTools.create_set @machines
+        }
+        
         Rudy::Routines.rescue {
           Rudy::Routines::Handlers::Group.authorize rescue nil
         }

@@ -3,14 +3,21 @@ module Rudy; module Routines;
   class Passthrough < Rudy::Routines::Base
     
     def init(*args)
-      @machines = Rudy::Machines.list || []
-      @@rset = Rudy::Routines::Handlers::RyeTools.create_set @machines
+      Rudy::Routines.rescue {
+        @machines = Rudy::Machines.list || []
+        @@rset = Rudy::Routines::Handlers::RyeTools.create_set @machines
+      }
     end
     
     def execute
-      li "Executing routine: #{@name}"
-      return @machines unless run?
       Rudy::Routines::Handlers::Depends.execute_all @before
+      li " Executing routine: #{@name} ".att(:reverse)
+      # Re-retreive the machine set to reflect dependency changes
+      Rudy::Routines.rescue {
+        @machines = Rudy::Machines.list || []
+        @@rset = Rudy::Routines::Handlers::RyeTools.create_set @machines
+      }
+      return @machines unless run?
       Rudy::Routines.runner(@routine, @@rset, @@lbox, @argv)
       Rudy::Routines::Handlers::Depends.execute_all @after
       @machines

@@ -20,13 +20,13 @@ module Rudy; module Routines;
     # * all other actions
     # * after dependencies
     def execute
-      li "Executing routine: #{@name}"
-      ld "[this is a generic routine]" if @routine.empty?
-      
       
       if run?
         Rudy::Routines::Handlers::Depends.execute_all @before
-      
+        
+        li " Executing routine: #{@name} ".att(:reverse)
+        ld "[this is a generic routine]" if @routine.empty?
+        
         if @routine.has_key? :before_local
           handler = Rudy::Routines.get_handler :local
           Rudy::Routines.rescue {
@@ -62,7 +62,6 @@ module Rudy; module Routines;
         @@rset = Rudy::Routines::Handlers::RyeTools.create_set @machines
       }
       
-      sleep 1  # SimpleDB eventual consistency 
       
       Rudy::Routines.rescue {
         if !Rudy::Routines::Handlers::Host.is_running? @@rset

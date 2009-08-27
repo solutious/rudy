@@ -9,9 +9,11 @@ module Rudy; module Routines;
                          :local, :remote, :after_local, :after]
                          
     def init(*args)
-      @machines = Rudy::Machines.list || []
-      @@rset = Rudy::Routines::Handlers::RyeTools.create_set @machines
       @routine ||= {}
+      Rudy::Routines.rescue {
+        @machines = Rudy::Machines.list || []
+        @@rset = Rudy::Routines::Handlers::RyeTools.create_set @machines
+      }
     end
     
     # Startup routines run in the following order:
@@ -21,8 +23,6 @@ module Rudy; module Routines;
     # * after_local (if present)
     # * after dependencies
     def execute
-      li "Executing routine: #{@name}"
-      ld "[this is a generic routine]" if @routine.empty?
       
       # We need to remove after_local so the runner doesn't see it
       after_local = @routine.delete(:after_local)
@@ -33,7 +33,16 @@ module Rudy; module Routines;
         }
         
         Rudy::Routines::Handlers::Depends.execute_all @before
-      
+        
+        li " Executing routine: #{@name} ".att(:reverse)
+        ld "[this is a generic routine]" if @routine.empty?
+        
+        # Re-retreive the machine set to reflect dependency changes
+        Rudy::Routines.rescue {
+          @machines = Rudy::Machines.list || []
+          @@rset = Rudy::Routines::Handlers::RyeTools.create_set @machines
+        }
+        
         # This is the meat of the sandwich
         Rudy::Routines.runner(@routine, @@rset, @@lbox, @argv)
         

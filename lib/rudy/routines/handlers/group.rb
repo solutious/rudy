@@ -70,7 +70,7 @@ module Rudy; module Routines; module Handlers;
       end
       
       ports.each do |port|
-        #li "Authorizing port #{port} access for: #{addresses.join(', ')}"
+        li "#{action} port #{port} access for: #{addresses.join(', ')}"
         Rudy::AWS::EC2::Groups.send(action, name, addresses, [[port, port]]) rescue nil
       end
     end

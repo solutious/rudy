@@ -17,7 +17,7 @@ module AWS; module EC2;
       
       unless @option.all
         @option.owner ||= 'amazon' 
-        puts "Images owned by #{@option.owner.bright}" unless @argv.awsid
+        li "Images owned by #{@option.owner.bright}" unless @argv.awsid
       end
       
       images = Rudy::AWS::EC2::Images.list(@option.owner, @argv) || []
@@ -31,7 +31,7 @@ module AWS; module EC2;
       true
     end
     def destroy_images
-     puts Rudy::AWS::EC2::Images.deregister(@argv.ami) ? "Done" : "Unknown error"
+     li Rudy::AWS::EC2::Images.deregister(@argv.ami) ? "Done" : "Unknown error"
     end 
     
     def register_images_valid?
@@ -41,7 +41,7 @@ module AWS; module EC2;
       true
     end
     def register_images
-      puts Rudy::AWS::EC2::Images.register(@argv.first)
+      li Rudy::AWS::EC2::Images.register(@argv.first)
     end
 
 

@@ -244,7 +244,6 @@ module Rudy::AWS
 
       def modify_rules(meth, name, addresses, ports, protocols, &each_group)
         list(name, &each_group) if each_group
-        
         ports = [[22,22],[80,80],[443,443]] if !ports || ports.empty?
         protocols = ["tcp"] if !protocols || protocols.empty?
         addresses = [Rudy::Utils::external_ip_address] if !addresses || addresses.empty?
@@ -257,7 +256,6 @@ module Rudy::AWS
           addresses.each do |address|
             ports.each do |port|
               port_lo, port_hi = port.is_a?(Array) ? [port[0], port[1]] : [port, port]
-              @logger.puts "#{meth} for ports #{port[0]}:#{port[1]} (#{protocol}) for #{addresses.join(', ')}" if @logger
               ret = modify_rule(meth, name, port[0].to_i, (port[1] || port[0]).to_i, protocol, address)
               raise "Unknown error during #{meth}" unless ret
             end

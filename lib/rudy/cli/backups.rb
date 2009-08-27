@@ -13,12 +13,12 @@ module Rudy
       def backups_wash
         dirt = (get_backups || []).select { |b| !b.snapshot_exists? }
         if dirt.empty?
-          puts "Nothing to wash in #{current_machine_group}"
+          li "Nothing to wash in #{current_machine_group}"
           return
         end
         
-        puts "The following backup metadata will be deleted:"
-        puts dirt.collect {|b| b.name }
+        li "The following backup metadata will be deleted:"
+        li dirt.collect {|b| b.name }
         
         execute_check(:medium)
 
@@ -38,9 +38,9 @@ module Rudy
       
       def backups_create
         @dlist.each do |d|
-          puts "Creating backup for #{d.name}"
+          li "Creating backup for #{d.name}"
           back = d.archive
-          puts back
+          li back
         end
       end
       

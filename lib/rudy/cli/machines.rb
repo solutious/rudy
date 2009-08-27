@@ -12,16 +12,16 @@ module Rudy
       def machines_console
         mlist = get_machines
         mlist.each do |machine|
-          puts machine_separator(machine.name, machine.instid)
-          puts machine.get_console
+          li machine_separator(machine.name, machine.instid)
+          li machine.get_console
         end
       end
       
       def machines_password
         mlist = get_machines
         mlist.each do |machine|
-          puts machine_separator(machine.name, machine.instid)
-          puts "Password for %s: %s" % [machine.dns_public, machine.get_password]
+          li machine_separator(machine.name, machine.instid)
+          li "Password for %s: %s" % [machine.dns_public, machine.get_password]
         end
         Rudy::Routines::Handlers::Group.authorize rescue nil
       end
@@ -31,12 +31,12 @@ module Rudy
         dirt = mlist.select { |m| !m.instance_running? }
         
         if dirt.empty?
-          puts "Nothing to wash in #{current_machine_group}"
+          li "Nothing to wash in #{current_machine_group}"
           return
         end
         
-        puts "The following machine metadata will be deleted:".bright
-        puts dirt.collect {|m| m.name.bright }
+        li "The following machine metadata will be deleted:".bright
+        li dirt.collect {|m| m.name.bright }
         execute_check(:medium)
         
         dirt.each do |m|
@@ -92,8 +92,8 @@ module Rudy
       
       def associate_machines 
         
-        puts "Assigning static IP addresses for:"
-        puts @mlist.collect { |m| m.name }
+        li "Assigning static IP addresses for:"
+        li @mlist.collect { |m| m.name }
         
         execute_check(:medium)
         
@@ -101,7 +101,7 @@ module Rudy
           next if @mlist_static.member?(m)
           address = @alist_unused.shift
           address ||= Rudy::AWS::EC2::Addresses.create.ipaddress
-          puts "Associating #{address} to #{m.name} (#{m.instid})"
+          li "Associating #{address} to #{m.name} (#{m.instid})"
           Rudy::AWS::EC2::Addresses.associate(address, m.instid)
           sleep 2
           m.refresh!
@@ -116,7 +116,7 @@ module Rudy
         
         unless @mlist_static.empty?
           @mlist_static.each do |m|
-            puts "%s: %s" % [m.name, m.dns_public]
+            li "%s: %s" % [m.name, m.dns_public]
           end
         end
       end
@@ -137,15 +137,15 @@ module Rudy
       
       def disassociate_machines
         if @mlist_static.empty?
-          puts "No machines in #{current_group_name} have static IP addresses"
+          li "No machines in #{current_group_name} have static IP addresses"
         else
-          puts "The following machines will be updated:"
-          puts @mlist_static.collect { |m| m.name }
-          puts "NOTE: Unassigned IP addresses are not removed from your account"
+          li "The following machines will be updated:"
+          li @mlist_static.collect { |m| m.name }
+          li "NOTE: Unassigned IP addresses are not removed from your account"
           execute_check(:medium)
           @mlist_static.each do |m|
             address = Resolv.getaddress m.dns_public
-            puts "Disassociating #{address} from #{m.name} (#{m.instid})"
+            li "Disassociating #{address} from #{m.name} (#{m.instid})"
             Rudy::AWS::EC2::Addresses.disassociate(address)
           end
         end
@@ -156,7 +156,7 @@ module Rudy
         rset = Rye::Set.new(current_group_name, :parallel => @@global.parallel, :user => 'root')
         os = current_machine_os
         mlist.each do |m|
-          puts "Updating #{m.name}"
+          li "Updating #{m.name}"
           m.refresh!
           rbox = Rye::Box.new(m.dns_public, :user => 'root')
           rbox.add_key user_keypairpath('root')
@@ -164,16 +164,16 @@ module Rudy
           rbox.stash = m
           rset.add_boxes rbox
           if m.os.to_s != os.to_s
-            puts "os: #{os}"
+            li "os: #{os}"
             m.os = os
           end
           m.save :replace
         end
         
         unless os.to_s == 'windows'
-          puts "Updating hostnames for #{current_group_name}"
+          li "Updating hostnames for #{current_group_name}"
           Rudy::Routines::Handlers::Host.set_hostname rset
-          puts rset.hostname.flatten
+          li rset.hostname.flatten
         end
         
       end
@@ -188,7 +188,7 @@ module Rudy
             Rudy::Utils.service_available?(m.dns_public, port)
           }
           available = Rudy::Utils.service_available?(m.dns_public, port)
-          puts available ? 'up' : 'down'
+          li available ? 'up' : 'down'
         end
         
       end
@@ -205,7 +205,7 @@ module Rudy
         # TODO: Give this method a good look over
         pkey = current_user_keypairpath
         unless pkey
-          puts "No private key configured for #{current_machine_user} in #{current_machine_group}"
+          li "No private key configured for #{current_machine_user} in #{current_machine_group}"
         end
         
         # Options to be sent to Rye::Box
@@ -221,7 +221,7 @@ module Rudy
         local_keys = Rye.keys
         rye_opts[:keys] += local_keys if local_keys.is_a?(Array)
         
-        puts "# SSH OPTS", rye_opts.to_yaml if @@global.verbose > 3
+        li "# SSH OPTS", rye_opts.to_yaml if @@global.verbose > 3
         
         # The user specified a command to run. We won't create an interactive
         # session so we need to prepare the command and its arguments
@@ -251,9 +251,9 @@ module Rudy
             if @@global.quiet
               print "You are #{rye_opts[:user].to_s.bright}. " if !checked # only the 1st
             else
-              puts machine_separator(machine.name, machine.instid)
-              puts "Connecting #{rye_opts[:user].to_s.bright}@#{machine.dns_public} "
-              puts
+              li machine_separator(machine.name, machine.instid)
+              li "Connecting #{rye_opts[:user].to_s.bright}@#{machine.dns_public} "
+              li
             end
           else
             unless @global.parallel

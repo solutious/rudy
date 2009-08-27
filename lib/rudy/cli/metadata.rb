@@ -23,7 +23,7 @@ module Rudy
         end
         
         objlist.each_pair do |k,o|
-          puts "#{k}: " << o.inspect
+          li "#{k}: " << o.inspect
         end
       end
       
@@ -38,7 +38,7 @@ module Rudy
         unless @@global.quiet
           msg = "NOTE: This will delete only the metadata and "
           msg << "not the EC2 object (volume, instance, etc...)"
-          puts msg
+          li msg
         end
         
         execute_check(:medium)

@@ -1,6 +1,11 @@
 RUDY, CHANGES 
 
 
+#### 0.9.4 (2009-08-27) ###########################
+
+* CHANGE: All puts to STDOUT and STDERR now go through Rudy::Huxtable.li and Rudy::Huxtable.le. This resolves the issues with the output printing in quiet mode. 
+
+
 #### 0.9.3 (2009-08-26) ###########################
 
 * FIXED: Updated dependencies in gemspec (Rye)

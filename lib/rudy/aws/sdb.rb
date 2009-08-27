@@ -190,10 +190,10 @@ module Rudy
           end
 
         rescue Timeout::Error => ex
-          STDERR.puts "Timeout (#{timeout}): #{ex.message}!"
+          Rudy::Huxtable.le "Timeout (#{timeout}): #{ex.message}!"
         rescue SocketError => ex
-          #STDERR.puts ex.message
-          #STDERR.puts ex.backtrace
+          #Rudy::Huxtable.le ex.message
+          #Rudy::Huxtable.le ex.backtrace
           raise SocketError, "Check your Internets!" unless Rudy::Huxtable.global.offline
         ensure
           response ||= default

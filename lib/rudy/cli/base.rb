@@ -26,8 +26,8 @@ module Rudy::CLI
       begin
         Rudy::Huxtable.update_config
       rescue Caesars::SyntaxError => ex
-        STDERR.puts ex.message
-        STDERR.puts ex.backtrace if @@global.verbose > 0
+        le ex.message
+        le ex.backtrace if @@global.verbose > 0
         exit 81
       end
       
@@ -41,13 +41,13 @@ module Rudy::CLI
       end
       
       unless @@global.accesskey && @@global.secretkey
-        STDERR.puts "No AWS credentials. Check your configs!"
-        STDERR.puts "Try: rudy init"
+        le "No AWS credentials. Check your configs!"
+        le "Try: rudy init"
         exit 1
       end
 
       if @@global.environment =~ /^prod/ && Rudy.debug?
-        puts Rudy::Utils.banner("PRODUCTION ACCESS IS DISABLED IN DEBUG MODE")
+        li Rudy::Utils.banner("PRODUCTION ACCESS IS DISABLED IN DEBUG MODE")
         exit 1
       end
 
@@ -55,7 +55,7 @@ module Rudy::CLI
         format = @@global.format == :json ? :json : :yaml
         gcopy = @@global.dup
         gcopy.secretkey = "[HIDDEN]"
-        puts "# GLOBALS: ", gcopy.dump(format)
+        li "# GLOBALS: ", gcopy.dump(format)
       end
       
       Rudy::Metadata.connect @@global.accesskey, @@global.secretkey, @@global.region
@@ -86,12 +86,12 @@ module Rudy::CLI
       # updated after initialization but before the command was executed
       Rudy::Huxtable.update_global @global
 
-      puts Rudy::CLI.generate_header(@@global, @@config) if @@global.print_header
+      li Rudy::CLI.generate_header(@@global, @@config) if @@global.print_header
 
       unless @@global.quiet
         if @@global.environment == "prod"
           msg = "YOU ARE PLAYING WITH PRODUCTION"
-          puts Rudy::Utils.banner(msg, :normal), $/
+          li Rudy::Utils.banner(msg, :normal), $/
         end
       end
     end
@@ -108,7 +108,7 @@ module Rudy::CLI
       format = @@global.format
       format = :yaml if @@global.verbose > 0 && @@global.format == :string
       format = :string if noverbose
-      puts obj.dump(format)
+      li obj.dump(format)
     end
     
     def machine_separator(name, awsid)

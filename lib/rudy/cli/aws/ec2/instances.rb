@@ -47,11 +47,11 @@ module AWS; module EC2;
         opts[n] = @option.send(n) if @option.send(n)
       end
       
-      puts "Creating #{opts[:size]} instance in #{@@global.zone}"
+      li "Creating #{opts[:size]} instance in #{@@global.zone}"
       
       unless opts[:keypair]
-        puts "You did not specify a keypair. Unless you've prepared a user account".bright
-        puts "on this image (#{opts[:ami]}) you will not be able to log in to it.".bright
+        li "You did not specify a keypair. Unless you've prepared a user account".bright
+        li "on this image (#{opts[:ami]}) you will not be able to log in to it.".bright
         exit unless Annoy.proceed?(:low)
       end
       
@@ -59,14 +59,14 @@ module AWS; module EC2;
       
       if instances && instances.size > 0
         instance_count = (instances.size == 1) ? 'is 1 instance' : "are #{instances.size} instances"
-        puts "There #{instance_count} running in the #{opts[:group]} group."
+        li "There #{instance_count} running in the #{opts[:group]} group."
         exit unless Annoy.proceed?(:low)
       end
       
       if @option.newaddress
         print "Creating address... "
         address = Rudy::AWS::EC2::Addresses.create
-        puts "#{address.ipaddress}"
+        li "#{address.ipaddress}"
         @option.address = address.ipaddress
       end
          
@@ -76,7 +76,7 @@ module AWS; module EC2;
         
           # Assign IP address to only the first instance
           if first_instance && @option.address
-            puts "Associating #{@option.address} to #{inst.awsid}"
+            li "Associating #{@option.address} to #{inst.awsid}"
             Rudy::AWS::EC2::Addresses.associate(@option.address, inst.awsid)
             first_instance = false
           end
@@ -128,7 +128,7 @@ module AWS; module EC2;
       opts[:id] &&= [opts[:id]].flatten
       
       lt = Rudy::AWS::EC2::Instances.list_group(opts[:group], :any, opts[:id]) do |inst|
-        puts instance_separator(inst.dns_public || inst.state, inst.awsid)
+        li instance_separator(inst.dns_public || inst.state, inst.awsid)
         console = Rudy::AWS::EC2::Instances.console(inst.awsid)
         output = console ? Base64.decode64(console) : "Unavailable"
         
@@ -137,20 +137,20 @@ module AWS; module EC2;
         # clear specifically. Otherwise the display is messed!
         output &&= output.noansi 
         
-        puts output 
+        li output 
         
         if output.match(/<Password>(.+)<\/Password>/m)  # /m, match multiple lines
-          puts
+          li
           if @@global.pkey
             encrtypted_text = ($1 || '').strip
             k = Rye::Key.from_file(@@global.pkey)
             pword = k.decrypt(encrtypted_text)
             answer = "%s: %s" % ['password', pword] 
             Annoy.timed_display(answer, STDERR, 10)
-            puts
+            li
           else
-            puts "Please supply a private key path to decode the administrator password"
-            puts "rudy-ec2 -k path/2/privatekey console [-g group] [instance ID]"
+            li "Please supply a private key path to decode the administrator password"
+            li "rudy-ec2 -k path/2/privatekey console [-g group] [instance ID]"
           end
         end
         
@@ -172,9 +172,9 @@ module AWS; module EC2;
 
       opts[:id] = @argv.instid if @argv.instid
       opts[:id] &&= [opts[:id]].flatten
-    
+      
       ilist = Rudy::AWS::EC2::Instances.list_group(opts[:group], opts[:state], opts[:id])
-      ilist.nil? ? puts( "No instances running" ) : print_stobjects(ilist)
+      ilist.nil? ? li( "No instances running" ) : print_stobjects(ilist)
     end
     alias :instances :status
 
@@ -198,7 +198,7 @@ module AWS; module EC2;
       
       print "#{action.to_s.capitalize} #{instance_count} (#{inst_names.join(', ')}) "
       print "in #{opts[:group]}" if opts[:group]
-      puts
+      li
       execute_check(:medium)
       
       execute_action("#{action.to_s.capitalize} Failed") { 

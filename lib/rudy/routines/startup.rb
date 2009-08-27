@@ -52,7 +52,7 @@ module Rudy; module Routines;
         
       end
       
-      ## puts Rudy::Routines.machine_separator(machine.name, machine.awsid)
+      ## li Rudy::Routines.machine_separator(machine.name, machine.awsid)
       
       # If this is a testrun we won't create new instances
       # we'll just grab the list of machines in this group. 

@@ -38,7 +38,10 @@ module Rudy
     end
 
     def self.update_global(ghash); @@global.update(ghash); end
-    def self.update_logger(logger);   @@logger = logger; end
+    def self.update_logger(logger)
+      return if logger.nil?
+      @@logger = logger 
+    end
     
     def self.reset_config; @@config = Rudy::Config.new; end
     def self.reset_global; @@global = Rudy::Global.new; end

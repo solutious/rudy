@@ -21,20 +21,20 @@ module AWS; module EC2;
       
       # TODO: Create Storable object
       if @@global.format == 'yaml'
-        puts ec2.to_yaml
+        li ec2.to_yaml
       elsif @@global.format == 'json'
         require 'json'
-        puts ec2.to_json
+        li ec2.to_json
       else
-        puts "#{ec2[:title]}"
-        puts "Updated: #{ec2[:pubdate]}"
+        li "#{ec2[:title]}"
+        li "Updated: #{ec2[:pubdate]}"
         (ec2[:items] || []).each do |i|
-          puts
-          puts '%s' % i[:title]
-          puts '  %s: %s' % [i[:pubdate], i[:description]]
+          li
+          li '%s' % i[:title]
+          li '  %s: %s' % [i[:pubdate], i[:description]]
         end
         if ec2.empty? || ec2[:items].empty?
-          puts "No announcements" 
+          li "No announcements" 
           return
         end
       end
@@ -76,7 +76,7 @@ module AWS; module EC2;
       # session so we need to prepare the command and its arguments
       if @argv.first
         command, command_args = @argv.shift, @argv || []
-        puts "#{command} #{command_args.join(' ')}" if @@global.verbose > 1
+        li "#{command} #{command_args.join(' ')}" if @@global.verbose > 1
       
       # otherwise, we'll open an ssh session or print command
       else
@@ -91,7 +91,7 @@ module AWS; module EC2;
           print "You are #{rye_opts[:user].bright}. " if !checked # only the 1st
         else
           print "Connecting #{rye_opts[:user].bright}@#{inst.dns_public} "
-          puts "(#{inst.awsid}, groups: #{inst.groups.join(', ')})"
+          li "(#{inst.awsid}, groups: #{inst.groups.join(', ')})"
         end
         
         # Make sure we want to run this command on all instances
@@ -103,7 +103,7 @@ module AWS; module EC2;
         # Open the connection and run the command
         rbox = Rye::Box.new(inst.dns_public, rye_opts)
         ret = rbox.send(command, command_args)
-        puts ret unless command == :interactive_ssh
+        li ret unless command == :interactive_ssh
       end
     end
 
@@ -162,7 +162,7 @@ module AWS; module EC2;
           print "You are #{rye_opts[:user].bright}. " if !checked # only the 1st
         else
           print "Connecting #{rye_opts[:user].bright}@#{inst.dns_public} "
-          puts "(#{inst.awsid}, groups: #{inst.groups.join(', ')})"
+          li "(#{inst.awsid}, groups: #{inst.groups.join(', ')})"
         end
         
         # Make sure we want to run this command on all instances
@@ -190,12 +190,12 @@ module AWS; module EC2;
         paths.each do |path|
           from_paths << "#{user}@#{host}:#{path} "
         end  
-        #puts "Copying FROM remote TO this machine", $/
+        #li "Copying FROM remote TO this machine", $/
 
       else
         to_path = "#{user}@#{host}:#{to_path}"
         from_paths = paths.join(' ')
-        #puts "Copying FROM this machine TO remote", $/
+        #li "Copying FROM this machine TO remote", $/
       end
 
 
@@ -203,8 +203,8 @@ module AWS; module EC2;
       cmd << "-i #{keypair}" if keypair
       cmd << " #{from_paths} #{to_path}"
 
-      puts cmd if verbose
-      printonly ? (puts cmd) : system(cmd)
+      li cmd if verbose
+      printonly ? (li cmd) : system(cmd)
     end
     
     

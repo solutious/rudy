@@ -82,7 +82,7 @@ module Rudy::Routines::Handlers;
     
     def create(rbox, disk, index)
       if disk.exists?
-        puts "Disk found: #{disk.name}"
+        li "Disk found: #{disk.name}"
         disk.refresh!          
       end
       
@@ -179,7 +179,7 @@ module Rudy::Routines::Handlers;
         raise Rudy::Disks::AlreadyMounted, disk.name if disk.mounted?
       end
       
-      puts "Mounting at #{disk.path}... "
+      li "Mounting at #{disk.path}... "
       
       
       rbox.mkdir(:p, disk.path)
@@ -201,7 +201,7 @@ module Rudy::Routines::Handlers;
         raise Rudy::Disks::NotMounted, disk.name if !disk.mounted?
       end
       
-      puts "Unmounting #{disk.path}... "
+      li "Unmounting #{disk.path}... "
       
       unless rbox.nil? || rbox.stash.windows?
         rbox.umount(disk.path)
@@ -232,11 +232,11 @@ module Rudy::Routines::Handlers;
       
       print "Creating #{disk.fstype} filesystem for #{disk.path}... "
       if rbox.stash.windows?
-        puts "(index: #{index})"
+        li "(index: #{index})"
         windows_diskpart_partition rbox, disk, index
         disk.mounted = true
       else
-        puts $/
+        li $/
         rbox.rudy_mkfs(:t, disk.fstype, :F, disk.device)
       end
       
@@ -257,7 +257,7 @@ module Rudy::Routines::Handlers;
         raise Rudy::Disks::InUse, disk.name if disk.volume_attached?
       end
       
-      puts "Destroying #{disk.name}"
+      li "Destroying #{disk.name}"
       disk.destroy
     end
     
@@ -268,13 +268,13 @@ module Rudy::Routines::Handlers;
       raise Rudy::Disks::NotAttached, disk.name if !disk.volume_attached?
       
       back = disk.archive
-      puts "Created backup: #{back.name}"
+      li "Created backup: #{back.name}"
     end
     
     def restore(rbox, disk, index)
 
       if disk.exists?
-        puts "Disk found: #{disk.name}"
+        li "Disk found: #{disk.name}"
         disk.refresh!       
       end
       
@@ -290,7 +290,7 @@ module Rudy::Routines::Handlers;
       
       disk.size, disk.fstype = latest_backup.size, latest_backup.fstype
       
-      puts "Backup found: #{latest_backup.name}"
+      li "Backup found: #{latest_backup.name}"
       
       unless disk.volume_exists?
         msg = "Creating volume... "

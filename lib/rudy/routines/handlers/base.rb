@@ -8,10 +8,10 @@ module Rudy; module Routines; module Handlers;
      begin
        ret = command.call if command
        return unless ret.is_a?(Rye::Rap)
-       puts '  ' << ret.stdout.join("#{$/}  ") if !ret.stdout.empty?
+       li '  ' << ret.stdout.join("#{$/}  ") if !ret.stdout.empty?
        print_response(ret)
      rescue IOError => ex
-       STDERR.puts "  Connection Error (#{ex.message})".color(:red)
+       le "  Connection Error (#{ex.message})".color(:red)
        choice = Annoy.get_user_input('(S)kip  (R)etry  (F)orce  (A)bort: ', nil, 3600) || ''
         if choice.match(/\AS/i)
           return
@@ -38,11 +38,11 @@ module Rudy; module Routines; module Handlers;
       colour = rap.exit_code != 0 ? :red : :normal
       [:stderr].each do |sumpin|
         next if rap.send(sumpin).empty?
-        STDERR.puts
-        STDERR.puts(("  #{sumpin.to_s.upcase}  " << '-'*38).color(colour).bright)
-        STDERR.puts "  " << rap.send(sumpin).join("#{$/}  ").color(colour)
+        le
+        le(("  #{sumpin.to_s.upcase}  " << '-'*38).color(colour).bright)
+        le "  " << rap.send(sumpin).join("#{$/}  ").color(colour)
       end
-      STDERR.puts "  Exit code: #{rap.exit_code}".color(colour) if rap.exit_code != 0
+      le "  Exit code: #{rap.exit_code}".color(colour) if rap.exit_code != 0
     end
   
   end

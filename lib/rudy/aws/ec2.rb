@@ -1,7 +1,7 @@
 
 module Rudy; module AWS
   module EC2
-#    include Rudy::Huxtable
+    include Rudy::Huxtable
     
     @@mutex = Mutex.new 
     
@@ -18,7 +18,6 @@ module Rudy; module AWS
       port ||= DEFAULT_EC2_PORT
       
       @@ec2 = ::AWS::EC2::Base.new(:port => port, :server=> host, :access_key_id => access_key, :secret_access_key => secret_key)
-      @@logger = logger
     end
     
   protected
@@ -50,10 +49,10 @@ module Rudy; module AWS
           raise Rudy::AWS::Error, ex.message
         
         rescue Timeout::Error => ex
-          STDERR.puts "Timeout (#{timeout}): #{ex.message}!"
+          Rudy::Huxtable.le "Timeout (#{timeout}): #{ex.message}!"
         rescue SocketError => ex
-          #STDERR.puts ex.message
-          #STDERR.puts ex.backtrace
+          #Rudy::Huxtable.le ex.message
+          #Rudy::Huxtable.le ex.backtrace
           raise SocketError, "Check your Internets!" unless @@global.offline
         ensure
           response ||= default

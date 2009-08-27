@@ -10,7 +10,7 @@ module Rudy
       end
       
       def keypairs_add 
-        puts current_group_name
+        li current_group_name
       end
       
       def keypairs_valid?
@@ -22,7 +22,7 @@ module Rudy
       end
       
       def keypairs
-        puts Rudy::AWS::EC2::Keypairs.get(current_user_keypairname)
+        li Rudy::AWS::EC2::Keypairs.get(current_user_keypairname)
       end
 
       def keypairs_show_valid?
@@ -32,9 +32,9 @@ module Rudy
       def keypairs_show
         content = File.read(@pkey)
         rkey = Rye::Key.new content
-        puts "# #{@pkey}"
-        puts content
-        puts rkey.public_key
+        li "# #{@pkey}"
+        li content
+        li rkey.public_key
       end
       
     end

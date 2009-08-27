@@ -20,8 +20,8 @@ module AWS; module EC2;
       address = Rudy::AWS::EC2::Addresses.get(@argv.ipaddress)
       raise "Could not fetch #{address.ipaddress}" unless address
       
-      puts "Destroying address: #{@argv.ipaddress}"
-      puts "NOTE: this IP address will become available to other EC2 customers.".bright
+      li "Destroying address: #{@argv.ipaddress}"
+      li "NOTE: this IP address will become available to other EC2 customers.".bright
       execute_check(:medium)
       execute_action { Rudy::AWS::EC2::Addresses.destroy(@argv.ipaddress) }
     end
@@ -37,7 +37,7 @@ module AWS; module EC2;
       if @option.newaddress
         print "Creating address... "
         tmp = Rudy::AWS::EC2::Addresses.create
-        puts "#{tmp.ipaddress}"
+        li "#{tmp.ipaddress}"
         address = tmp.ipaddress
       else
         address = @argv.ipaddress
@@ -53,7 +53,7 @@ module AWS; module EC2;
       instance_name = instance.dns_public
       instance_name = instance.awsid if !instance_name || instance_name.empty?
       
-      puts "Associating #{address} to #{instance_name} (#{instance.groups.join(', ')})"
+      li "Associating #{address} to #{instance_name} (#{instance.groups.join(', ')})"
       execute_check(:low)
       execute_action { Rudy::AWS::EC2::Addresses.associate(address, instance.awsid) }
       address = Rudy::AWS::EC2::Addresses.get(address)
@@ -71,7 +71,7 @@ module AWS; module EC2;
       address = Rudy::AWS::EC2::Addresses.get(@argv.ipaddress)
       instance = Rudy::AWS::EC2::Instances.get(address.instid)
       
-      puts "Disassociating #{address.ipaddress} from #{instance.awsid} (#{instance.groups.join(', ')})"
+      li "Disassociating #{address.ipaddress} from #{instance.awsid} (#{instance.groups.join(', ')})"
       execute_check(:medium)
       execute_action { Rudy::AWS::EC2::Addresses.disassociate(@argv.ipaddress) }
       address = Rudy::AWS::EC2::Addresses.get(@argv.ipaddress)

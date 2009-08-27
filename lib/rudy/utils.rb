@@ -23,7 +23,7 @@ module Rudy
           break if ip && !ip.empty?
         end
       rescue SocketError, Errno::ETIMEDOUT => ex
-        STDERR.puts "Connection Error. Check your internets!"
+        Rudy::Huxtable.le "Connection Error. Check your internets!"
       end
       ip
     end
@@ -297,7 +297,7 @@ module Rudy::Utils::RSSReader
     begin
       xmlstr = Net::HTTP.get(URI.parse(uri))
     rescue SocketError, Errno::ETIMEDOUT
-      STDERR.puts "Connection Error. Check your internets!"
+      Rudy::Huxtable.le "Connection Error. Check your internets!"
     end
     
     xml = REXML::Document.new xmlstr

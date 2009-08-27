@@ -24,7 +24,7 @@ module Rudy; module CLI;
       
       outform = @@global.format == :json ? :to_json : :to_yaml
       
-      puts routine.to_hash.send(outform)
+      li routine.to_hash.send(outform)
     end
     
     def startup_valid?
@@ -34,7 +34,7 @@ module Rudy; module CLI;
     end
     def startup
       machines = @rr.execute || []
-      puts $/, "The following machines are now available:" unless machines.empty?
+      li $/, "The following machines are now available:" unless machines.empty?
       print_stobjects machines, :noverbose
     end
     
@@ -45,7 +45,7 @@ module Rudy; module CLI;
     end
     def reboot
       machines = @rr.execute
-      puts $/, "The following machines have been restarted:"
+      li $/, "The following machines have been restarted:"
       print_stobjects machines, :noverbose
     end
     
@@ -72,7 +72,7 @@ module Rudy; module CLI;
       machines = @rr.execute
       
       if @global.verbose > 1 && !machines.empty?
-        puts $/, "The following machines were processed:"
+        li $/, "The following machines were processed:"
         print_stobjects machines, :noverbose
       end
       
@@ -86,11 +86,11 @@ module Rudy; module CLI;
     def shutdown
       routine = fetch_routine_config(:shutdown) rescue {}
       
-      puts "All machines in #{current_machine_group} will be shutdown".bright
+      li "All machines in #{current_machine_group} will be shutdown".bright
       if routine && routine.disks
         if routine.disks.destroy
-          puts "The following filesystems will be destroyed:".bright
-          puts routine.disks.destroy.keys.join($/).bright
+          li "The following filesystems will be destroyed:".bright
+          li routine.disks.destroy.keys.join($/).bright
         end
       end
       
@@ -98,9 +98,9 @@ module Rudy; module CLI;
       
       machines = @rr.execute
       
-      puts $/, "The following instances have been destroyed:"
+      li $/, "The following instances have been destroyed:"
       machines.each do |machine|
-        puts '%s %s ' % [machine.name.bright, machine.instid]
+        li '%s %s ' % [machine.name.bright, machine.instid]
       end
       
     end

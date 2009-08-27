@@ -57,7 +57,7 @@ module Rudy; module Routines;
       li "Rebooting #{current_group_name}..."
       @machines.each { |m| m.restart } if run?
       
-      15.times { print '.'; Kernel.sleep 2 }; puts $/  # Wait for 30 seconds
+      15.times { print '.'; Kernel.sleep 2 }; li $/  # Wait for 30 seconds
       
       Rudy::Routines.rescue {
         if !Rudy::Routines::Handlers::Host.is_running? @@rset

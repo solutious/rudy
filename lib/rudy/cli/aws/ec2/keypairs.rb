@@ -12,11 +12,11 @@ module AWS; module EC2;
     def create_keypairs
       kp = execute_action { Rudy::AWS::EC2::Keypairs.create(@argv.name) }
       if [:s, :string].member?(@@global.format)
-        puts "Name: #{kp.name}"
-        puts "Fingerprint: #{kp.fingerprint}", $/
-        puts "Copy the following private key data into a file."
-        puts "Set the permissions to 0600 and keep it safe.", $/
-        puts kp.private_key
+        li "Name: #{kp.name}"
+        li "Fingerprint: #{kp.fingerprint}", $/
+        li "Copy the following private key data into a file."
+        li "Set the permissions to 0600 and keep it safe.", $/
+        li kp.private_key
       else
          print_stobject kp
       end
@@ -29,7 +29,7 @@ module AWS; module EC2;
     def destroy_keypairs
       raise "Keypair #{@argv.name} does not exist" unless Rudy::AWS::EC2::Keypairs.exists?(@argv.name)
       kp = Rudy::AWS::EC2::Keypairs.get(@argv.name)
-      puts "Destroying: #{kp.name}"
+      li "Destroying: #{kp.name}"
       execute_check(:medium)
       execute_action { Rudy::AWS::EC2::Keypairs.destroy(kp.name) }
     end

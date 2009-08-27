@@ -12,12 +12,12 @@ module AWS; module EC2;
       true
     end
     def volumes_create
-      puts "Creating #{@option.size}GB volume in #{@@global.zone}"
+      li "Creating #{@option.size}GB volume in #{@@global.zone}"
       execute_check(:low)
       vol = execute_action("Create Failed") { 
         Rudy::AWS::EC2::Volumes.create(@option.size, @@global.zone, @option.snapshot) 
       }
-      puts @global.verbose > 1 ? vol.inspect : vol.dump(@@global.format)
+      li @global.verbose > 1 ? vol.inspect : vol.dump(@@global.format)
     end
 
 
@@ -39,13 +39,13 @@ module AWS; module EC2;
       raise "Volume #{@volume.awsid} is still attached" if @volume.attached?
       raise "Volume #{@volume.awsid} is not available (#{@volume.state})" unless @volume.available?
       
-      puts "Destroying #{@volume.awsid}"
+      li "Destroying #{@volume.awsid}"
       execute_check(:medium)
       execute_action("Destroy Failed") { Rudy::AWS::EC2::Volumes.destroy(@volume.awsid) }
       
       vol = Rudy::AWS::EC2::Volumes.get(@volume.awsid)
 
-      puts @global.verbose > 1 ? vol.inspect : vol.dump(@@global.format)
+      li @global.verbose > 1 ? vol.inspect : vol.dump(@@global.format)
     end
     
     
@@ -60,14 +60,14 @@ module AWS; module EC2;
       raise "Volume #{@argv.volid} is already attached" if Rudy::AWS::EC2::Volumes.attached?(@argv.volid)
       raise "Instance #{@option.instance} does not exist" unless Rudy::AWS::EC2::Instances.exists?(@option.instance)
       
-      puts "Attaching #{@argv.volid} to #{@option.instance} on #{@option.device}"
+      li "Attaching #{@argv.volid} to #{@option.instance} on #{@option.device}"
       execute_check(:low)
       execute_action("Attach Failed") { 
         Rudy::AWS::EC2::Volumes.attach(@argv.volid, @option.instance, @option.device) 
       }
       
       vol = Rudy::AWS::EC2::Volumes.get(@argv.volid)
-      puts @global.verbose > 1 ? vol.inspect : vol.dump(@@global.format)
+      li @global.verbose > 1 ? vol.inspect : vol.dump(@@global.format)
     end
     
     def volumes_detach_valid?
@@ -80,21 +80,21 @@ module AWS; module EC2;
       vol = Rudy::AWS::EC2::Volumes.get(@argv.volid)
       raise "Volume #{vol.awsid} is not attached" unless vol.attached?
       
-      puts "Detaching #{vol.awsid} from #{vol.instid}"
+      li "Detaching #{vol.awsid} from #{vol.instid}"
       execute_check(:medium)
       execute_action("Detach Failed") { Rudy::AWS::EC2::Volumes.detach(vol.awsid) }
       
       vol = Rudy::AWS::EC2::Volumes.get(vol.awsid)
-      puts @global.verbose > 1 ? vol.inspect : vol.dump(@@global.format)
+      li @global.verbose > 1 ? vol.inspect : vol.dump(@@global.format)
     end
     
     
     def volumes
       volumes = Rudy::AWS::EC2::Volumes.list || []
       volumes.each do |vol|
-        puts @global.verbose > 1 ? vol.inspect : vol.dump(@@global.format)
+        li @global.verbose > 1 ? vol.inspect : vol.dump(@@global.format)
       end
-      puts "No volumes" if volumes.empty?
+      li "No volumes" if volumes.empty?
     end
     
   end

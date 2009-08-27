@@ -99,8 +99,8 @@ module Rudy
       begin
         ret = bloc_party.call
       rescue NameError, ArgumentError, RuntimeError, Errno::ECONNREFUSED => ex
-        STDERR.puts "  #{ex.class}: #{ex.message}".color(:red)
-        STDERR.puts ex.backtrace if Rudy.debug?
+        Rudy::Huxtable.le "  #{ex.class}: #{ex.message}".color(:red)
+        Rudy::Huxtable.le ex.backtrace if Rudy.debug?
         unless Rudy::Huxtable.global.parallel
           choice = Annoy.get_user_input('(S)kip  (A)bort: ', nil, 3600) || ''
           if choice.match(/\AS/i)
@@ -110,7 +110,7 @@ module Rudy
           end
          end
       rescue Interrupt
-        puts "Aborting..."
+        li "Aborting..."
         exit 12
       end
       ret

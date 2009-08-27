@@ -50,23 +50,23 @@ module Rudy
         if @option.project
           rf = File.join(RUDY_HOME, 'Rudyfile')
           raise "Cannot find: #{rf}" unless File.exists?(rf)
-          puts File.read(rf)
+          li File.read(rf)
           
         elsif @option.script
           conf = fetch_script_config
-          puts conf.to_hash.send(outform) if conf
+          li conf.to_hash.send(outform) if conf
           
         else
-          #puts "# ACCOUNTS: [not displayed]" if types.delete(:accounts)
+          #li "# ACCOUNTS: [not displayed]" if types.delete(:accounts)
           types.each do |conftype|
-            puts "# #{conftype.to_s.upcase}"
+            li "# #{conftype.to_s.upcase}"
             next unless @@config[conftype]  # Nothing to output
             if conftype == :accounts
               skey = @@config[conftype][:aws][:secretkey]
               @@config[conftype][:aws][:secretkey] = hide_secret_key(skey)
             end
             
-            puts @@config[conftype].to_hash.send(outform)
+            li @@config[conftype].to_hash.send(outform)
           end
         end
         
@@ -81,7 +81,7 @@ module Rudy
         gtmp = @@global.clone
         gtmp.format = "yaml" if gtmp.format == :s || gtmp.format == :string
         gtmp.secretkey = hide_secret_key(gtmp.secretkey)
-        puts gtmp.dump(gtmp.format)
+        li gtmp.dump(gtmp.format)
       end
       
       private

@@ -59,8 +59,8 @@ module Rudy; module Routines; module Handlers;
             robj.switch_user user
             
           rescue Net::SSH::AuthenticationFailed, Net::SSH::HostKeyMismatch => ex  
-            STDERR.puts "Error connecting: #{ex.message}".color(:red)
-            STDERR.puts "Skipping user #{user}".color(:red)
+            le "Error connecting: #{ex.message}".color(:red)
+            le "Skipping user #{user}".color(:red)
             next
           end
         end

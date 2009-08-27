@@ -9,7 +9,7 @@ module Rudy
         if machines
           `open http://#{machines.first.dns_public}`
         else
-          puts "No machines"
+          li "No machines"
         end
       end
 

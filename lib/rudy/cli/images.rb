@@ -19,7 +19,7 @@ module Rudy
       def bundle
 
         @machines.each do |m|
-          puts machine_separator(m.name, m.instid)
+          li machine_separator(m.name, m.instid)
 
           cmd = "ec2-bundle-instance"
           args = [m.instid, "--region", @@global.region.to_s]
@@ -31,21 +31,21 @@ module Rudy
           args += ["--no-bucket-setup"] if @@global.region.to_s == 'eu-west-1'
           
           if @@global.verbose > 0
-            puts "Running: " << Rye.prepare_command(cmd, args), $/
+            li "Running: " << Rye.prepare_command(cmd, args), $/
           end
           
           unless @@global.quiet
-            puts "Bundling can take up to 60 minutes."
-            puts "Check the status with the following command:"
-            puts Rudy::Huxtable.generate_rudy_command('bundle-status').bright
-            puts $/, "When complete, register the image with the command:"
-            puts Rudy::Huxtable.generate_rudy_command('images', '-R', @argv.name).bright
+            li "Bundling can take up to 60 minutes."
+            li "Check the status with the following command:"
+            li Rudy::Huxtable.generate_rudy_command('bundle-status').bright
+            li $/, "When complete, register the image with the command:"
+            li Rudy::Huxtable.generate_rudy_command('images', '-R', @argv.name).bright
           end
           
           execute_check(:medium)
           
           ret = Rye.shell cmd, args
-          puts ret.stderr, ret.stdout
+          li ret.stderr, ret.stdout
         end
       end
       
@@ -55,11 +55,11 @@ module Rudy
         args += ["-K", @@global.pkey, "-C", @@global.cert]
         
         if @@global.verbose > 0
-          puts "Running: " << Rye.prepare_command(cmd, args), $/
+          li "Running: " << Rye.prepare_command(cmd, args), $/
         end
         
         ret = Rye.shell cmd, args
-        puts ret.stderr, ret.stdout
+        li ret.stderr, ret.stdout
           
       end
       
@@ -71,7 +71,7 @@ module Rudy
       end
       def register_images
         name = "#{@@global.bucket}/#{@argv.name}.manifest.xml"
-        puts Rudy::AWS::EC2::Images.register(name)
+        li Rudy::AWS::EC2::Images.register(name)
       end
       
       def deregister_images_valid?
@@ -82,7 +82,7 @@ module Rudy
       end
       def deregister_images
         execute_check(:low)
-        puts Rudy::AWS::EC2::Images.deregister(@argv.ami) ? "Done" : "Unknown error"
+        li Rudy::AWS::EC2::Images.deregister(@argv.ami) ? "Done" : "Unknown error"
       end
       
       def images

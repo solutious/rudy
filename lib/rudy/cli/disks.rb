@@ -22,7 +22,7 @@ module Rudy
           print_stobject d
           if @option.backups
             d.backups.each_with_index do |b, index|
-              puts '  %s' % b.name
+              li '  %s' % b.name
               ##break if @option.all.nil? && index >= 2 # display only 3, unless all
             end
           end
@@ -32,12 +32,12 @@ module Rudy
       def disks_wash
         dirt = (get_disks || []).select { |d| !d.volume_exists? }
         if dirt.empty?
-          puts "Nothing to wash in #{current_machine_group}"
+          li "Nothing to wash in #{current_machine_group}"
           return
         end
         
-        puts "The following disk metadata will be deleted:"
-        puts dirt.collect {|d| d.name }
+        li "The following disk metadata will be deleted:"
+        li dirt.collect {|d| d.name }
         
         execute_check(:medium)
 
@@ -63,7 +63,7 @@ module Rudy
       
       def disks_create
         @mlist.each do |m|  
-          puts machine_separator(m.name, m.instid)
+          li machine_separator(m.name, m.instid)
           rbox = Rudy::Routines::Handlers::RyeTools.create_box m
           rbox.stash = m
           disk = Rudy::Disk.new m.position, @argv.first

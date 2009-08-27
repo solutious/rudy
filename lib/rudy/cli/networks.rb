@@ -7,7 +7,7 @@ module Rudy
       def networks
         name = current_group_name
         Rudy::AWS::EC2::Groups.list(name).each do |group|
-          puts @@global.verbose > 0 ? group.inspect : group.dump(@@global.format)
+          li @@global.verbose > 0 ? group.inspect : group.dump(@@global.format)
         end
       end
       
@@ -20,11 +20,11 @@ module Rudy
         ea = Rudy::Utils::external_ip_address || '' 
         ia = Rudy::Utils::internal_ip_address || ''
         if @global.quiet
-          puts ia unless @option.external && !@option.internal
-          puts ea unless @option.internal && !@option.external
+          li ia unless @option.external && !@option.internal
+          li ea unless @option.internal && !@option.external
         else
-          puts "%10s: %s" % ['Internal', ia] unless @option.external && !@option.internal
-          puts "%10s: %s" % ['External', ea] unless @option.internal && !@option.external
+          li "%10s: %s" % ['Internal', ia] unless @option.external && !@option.internal
+          li "%10s: %s" % ['External', ea] unless @option.internal && !@option.external
         end
         @global.quiet = true  # don't print elapsed time
       end
@@ -60,12 +60,12 @@ module Rudy
         opts = check_options
         if (@option.group || @option.owner)
           g = [opts[:owner], opts[:group]].join(':')
-          puts "#{action.to_s.capitalize} access to #{group.bright} from #{g.bright}"
+          li "#{action.to_s.capitalize} access to #{group.bright} from #{g.bright}"
         else
           print "#{action.to_s.capitalize} access to #{group.bright}"
-           puts " from #{opts[:addresses].join(', ').bright}"
+           li " from #{opts[:addresses].join(', ').bright}"
           print "on #{opts[:protocols].join(', ').bright} "
-           puts "ports: #{opts[:ports].map { |p| "#{p.join(' to ').bright}" }.join(', ')}"
+           li "ports: #{opts[:ports].map { |p| "#{p.join(' to ').bright}" }.join(', ')}"
         end
         execute_check(:medium)
         execute_action { 

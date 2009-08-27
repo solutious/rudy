@@ -17,7 +17,7 @@ module AWS; module EC2;
         Rudy::AWS::EC2::Groups.create(@argv.name, @option.description, opts[:addresses], opts[:ports], opts[:protocols])
       }
       Rudy::AWS::EC2::Groups.list(@argv.name) do |group|
-        puts @@global.verbose > 0 ? group.inspect : group.dump(@@global.format)
+        li @@global.verbose > 0 ? group.inspect : group.dump(@@global.format)
       end
     end
     
@@ -29,7 +29,7 @@ module AWS; module EC2;
     end
     
     def destroy_groups
-      puts "Destroying group: #{@argv.name}"
+      li "Destroying group: #{@argv.name}"
       execute_check(:medium)
       execute_action { Rudy::AWS::EC2::Groups.destroy(@argv.name) }
       @argv.clear # so groups will print all other groups
@@ -45,7 +45,7 @@ module AWS; module EC2;
       opts = {}
       name = @option.all ? nil : @argv.name
       Rudy::AWS::EC2::Groups.list(name).each do |group|
-        puts @@global.verbose > 0 ? group.inspect : group.dump(@@global.format)
+        li @@global.verbose > 0 ? group.inspect : group.dump(@@global.format)
       end
     end
     
@@ -72,12 +72,12 @@ module AWS; module EC2;
       opts = check_options
       if (@option.group || @option.owner)
         g = [opts[:owner], opts[:group]].join(':')
-        puts "#{action.to_s.capitalize} access to #{@argv.name.bright} from #{g.bright}"
+        li "#{action.to_s.capitalize} access to #{@argv.name.bright} from #{g.bright}"
       else
         print "#{action.to_s.capitalize} access to #{@argv.name.bright}"
-         puts " from #{opts[:addresses].join(', ').bright}"
+         li " from #{opts[:addresses].join(', ').bright}"
         print "on #{opts[:protocols].join(', ').bright} "
-         puts "ports: #{opts[:ports].map { |p| "#{p.join(' to ').bright}" }.join(', ')}"
+         li "ports: #{opts[:ports].map { |p| "#{p.join(' to ').bright}" }.join(', ')}"
       end
       execute_check(:medium)
       execute_action { 

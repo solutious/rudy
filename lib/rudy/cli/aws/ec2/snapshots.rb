@@ -23,7 +23,7 @@ module AWS; module EC2;
       true
     end
     def destroy_snapshots
-      puts "Destroying: #{@snap.awsid}"
+      li "Destroying: #{@snap.awsid}"
       execute_check(:medium)
       execute_action { Rudy::AWS::EC2::Snapshots.destroy(@snap.awsid) }
     end

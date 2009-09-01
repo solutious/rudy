@@ -1,6 +1,12 @@
 RUDY, CHANGES 
 
 
+#### 0.9.5 (2009-09-01) ###########################
+
+* FIXED: Unknown method error, 'li' 
+* ADDED: Better error handling for disk routines
+
+
 #### 0.9.4 (2009-08-28) ###########################
 
 * FIXED: NoMachines exception when running various dependency scenarios

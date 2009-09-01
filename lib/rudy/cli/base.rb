@@ -46,10 +46,10 @@ module Rudy::CLI
         exit 1
       end
 
-      if @@global.environment =~ /^prod/ && Rudy.debug?
-        li Rudy::Utils.banner("PRODUCTION ACCESS IS DISABLED IN DEBUG MODE")
-        exit 1
-      end
+      #if @@global.environment =~ /^prod/ && Rudy.debug?
+      #  li Rudy::Utils.banner("PRODUCTION ACCESS IS DISABLED IN DEBUG MODE")
+      #  exit 1
+      #end
 
       if @@global.verbose >= 4    # -vvvv
         format = @@global.format == :json ? :json : :yaml

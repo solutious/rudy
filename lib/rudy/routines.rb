@@ -110,7 +110,7 @@ module Rudy
           end
          end
       rescue Interrupt
-        li "Aborting..."
+        Rudy::Huxtable.li "Aborting..."
         exit 12
       end
       ret

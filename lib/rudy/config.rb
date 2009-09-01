@@ -106,12 +106,12 @@ module Rudy
     def self.init_config_dir
       
       unless File.exists?(Rudy::CONFIG_DIR)
-        li "Creating #{Rudy::CONFIG_DIR}"
+        puts "Creating #{Rudy::CONFIG_DIR}"
         Dir.mkdir(Rudy::CONFIG_DIR, 0700)
       end
 
       unless File.exists?(Rudy::CONFIG_FILE)
-        li "Creating #{Rudy::CONFIG_FILE}"
+        puts "Creating #{Rudy::CONFIG_FILE}"
         rudy_config = Rudy::Utils.without_indent %Q`
           accounts {                           # Account Access Indentifiers
             aws {                              # amazon web services 

@@ -1,12 +1,12 @@
 @spec = Gem::Specification.new do |s|
-	s.name = "rudy"
+  s.name = "rudy"
   s.rubyforge_project = 'rudy'
-	s.version = "0.9.5"
-	s.summary = "Rudy: Not your grandparents' EC2 deployment tool."
-	s.description = s.summary
-	s.author = "Delano Mandelbaum"
-	s.email = "delano@solutious.com"
-	s.homepage = "http://solutious.com/projects/rudy/"
+  s.version = "0.9.5"
+  s.summary = "Rudy: Not your grandparents' EC2 deployment tool."
+  s.description = s.summary
+  s.author = "Delano Mandelbaum"
+  s.email = "delano@solutious.com"
+  s.homepage = "http://solutious.com/projects/rudy/"
   
   s.extra_rdoc_files = %w[README.rdoc Rudyfile LICENSE.txt CHANGES.txt]
   s.has_rdoc = true

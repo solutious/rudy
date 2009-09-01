@@ -88,22 +88,25 @@ module Rudy::Routines::Handlers;
       
       disk.index = index  # Needed for windows
       
-      unless @@global.force
-        raise Rudy::Disks::AlreadyAttached, disk.name if disk.volume_attached?
-      end
+      Rudy::Routines.rescue {
+        unless disk.volume_exists?
+          msg = "Creating volume... "
+          disk.create
+          Rudy::Utils.waiter(2, 60, STDOUT, msg) { 
+            disk.volume_available?
+          }
+        end
+      }
       
-      unless disk.volume_exists?
-        msg = "Creating volume... "
-        disk.create
-        Rudy::Utils.waiter(2, 60, STDOUT, msg) { 
-          disk.volume_available?
-        }
-      end
-      
-      attach rbox, disk, index unless disk.volume_attached?
-      format rbox, disk, index if disk.raw?
-      mount rbox, disk, index unless disk.mounted?
-
+      Rudy::Routines.rescue {
+        attach rbox, disk, index unless disk.volume_attached?
+      }
+      Rudy::Routines.rescue {
+        format rbox, disk, index if disk.raw?
+      }
+      Rudy::Routines.rescue {
+        mount rbox, disk, index unless disk.mounted?
+      }
       disk.save :replace
     end
     
@@ -121,23 +124,27 @@ module Rudy::Routines::Handlers;
       umount rbox, disk, index if disk.mounted?
       raise Rudy::Disks::InUse, disk.name if disk.mounted?
       
-      msg = "Detaching #{disk.volid}..."
-      disk.volume_detach 
-      Rudy::Utils.waiter(2, 60, STDOUT, msg) { 
-        disk.volume_available? 
+      Rudy::Routines.rescue {
+        msg = "Detaching #{disk.volid}..."
+        disk.volume_detach 
+        Rudy::Utils.waiter(2, 60, STDOUT, msg) { 
+          disk.volume_available? 
+        }
       }
-
+      
     end
     
     def attach(rbox, disk, index)
       
-      unless disk.volume_exists?
-        msg = "Creating volume... "
-        disk.create
-        Rudy::Utils.waiter(2, 60, STDOUT, msg) { 
-          disk.volume_available?
-        }
-      end
+      Rudy::Routines.rescue {
+        unless disk.volume_exists?
+          msg = "Creating volume... "
+          disk.create
+          Rudy::Utils.waiter(2, 60, STDOUT, msg) { 
+            disk.volume_available?
+          }
+        end
+      }
       
       raise Rudy::Metadata::UnknownObject, disk.name unless disk.exists?
       disk.refresh!
@@ -153,12 +160,13 @@ module Rudy::Routines::Handlers;
         disk.save :replace
       end
       
-      msg = "Attaching #{disk.volid} to #{rbox.stash.instid}... "
-      disk.volume_attach(rbox.stash.instid)
-      Rudy::Utils.waiter(3, 30, STDOUT, msg) { 
-        disk.volume_attached?
+      Rudy::Routines.rescue {
+        msg = "Attaching #{disk.volid} to #{rbox.stash.instid}... "
+        disk.volume_attach(rbox.stash.instid)
+        Rudy::Utils.waiter(3, 30, STDOUT, msg) { 
+          disk.volume_attached?
+        }
       }
-
     end
     
     def mount(rbox, disk, index)
@@ -180,7 +188,6 @@ module Rudy::Routines::Handlers;
       end
       
       li "Mounting at #{disk.path}... "
-      
       
       rbox.mkdir(:p, disk.path)
       rbox.mount(:t, disk.fstype, disk.device, disk.path) 
@@ -257,8 +264,10 @@ module Rudy::Routines::Handlers;
         raise Rudy::Disks::InUse, disk.name if disk.volume_attached?
       end
       
-      li "Destroying #{disk.name}"
-      disk.destroy
+      Rudy::Routines.rescue {
+        li "Destroying #{disk.name}"
+        disk.destroy
+      }
     end
     
     def archive(rbox, disk, index)
@@ -267,8 +276,10 @@ module Rudy::Routines::Handlers;
       
       raise Rudy::Disks::NotAttached, disk.name if !disk.volume_attached?
       
-      back = disk.archive
-      li "Created backup: #{back.name}"
+      Rudy::Routines.rescue {
+        li "Creating backup: #{back.name}"
+        back = disk.archive
+      }
     end
     
     def restore(rbox, disk, index)
@@ -292,15 +303,17 @@ module Rudy::Routines::Handlers;
       
       li "Backup found: #{latest_backup.name}"
       
-      unless disk.volume_exists?
-        msg = "Creating volume... "
-        disk.create latest_backup.size, latest_backup.zone, latest_backup.snapid
-        Rudy::Utils.waiter(2, 60, STDOUT, msg) { 
-          disk.volume_available?
-        }
-        disk.raw = false
-        disk.save :replace  
-      end
+      Rudy::Routines.rescue {
+        unless disk.volume_exists?
+          msg = "Creating volume... "
+          disk.create latest_backup.size, latest_backup.zone, latest_backup.snapid
+          Rudy::Utils.waiter(2, 60, STDOUT, msg) { 
+            disk.volume_available?
+          }
+          disk.raw = false
+          disk.save :replace  
+        end
+      }
       
       attach rbox, disk, index unless disk.volume_attached?
       mount rbox, disk, index unless disk.mounted?

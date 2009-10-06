@@ -1,0 +1,115 @@
+*Rudy 0.9 is not compatible with previous releases*. If you wish to upgrade, you will need to shutdown and relaunch machines and disks created with previous releases. There are several improvements to the configuration syntax and also disk backups will not be compatible between releases. If you rely on backups _you will need to make special arrangements_ (see Questions / Problems). 
+
+
+h2. The Process
+
+_This describes the process for upgrading from 0.8. If you are using an earlier version of Rudy, see Questions & Problems below._
+
+
+* Get everything you need off of your existing machines instances and disk volumes. 
+* Shutdown existing machines and destroy disks.
+* Install Rudy 0.9
+* Update your Rudy configuration.
+* Startup your new machines. 
+
+h3. Shutdown
+
+<pre><code>    $ rudy -V
+    Rudy version: 0.8.5
+    
+    $ rudy -vv shutdown
+    ...
+    
+    $ rudy machines
+    No Machines
+    $ rudy disks
+    No disks
+    
+    # Double check
+    $ rudy-ec2 instances
+    No instances running
+    $ rudy-ec2 volumes
+    No volumes
+</pre></code>
+    
+h3. Install 
+
+<pre><code>    $ sudo gem install rudy -V 
+    $ rudy -V
+    Rudy version 0.9.1
+</pre></code>
+
+h3. Configuration Changes
+
+You will need to make the following changes to your Rudy configuration:
+
+h4. SSH commands in routines
+
+The routine syntax has some minor improvements. The @before@ and @after@ keywords are now used exclusively for defining dependencies. Local and remote blocks are now simply, @local@ and @remote@. 
+
+*Old:*
+
+<pre><code>routines do
+  sysupdate do
+    script_local do
+      uptime
+    end
+    before :root do                  
+      apt_get 'update'               
+      apt_get 'install', 'build-essential'
+    end
+  end
+end </pre></code>
+
+*New:*
+
+<pre><code>routines do
+  sysupdate do
+    local do
+      uptime
+    end
+    remote :root do                  
+      apt_get 'update'               
+      apt_get 'install', 'build-essential'
+    end
+  end
+end</pre></code>
+
+For startup, shutdown, and reboot routines @before_remote@, @before_local@ and @after_remote@, @after_local@ are still available where appropriate (there's no @before_remote@ for startup).
+
+
+h4. config block in machines config
+
+This config block is no longer used. In 0.8 a YAML file containing this configuration would be uploaded to each machine during routines. This is also removed. However, it is now possible to upload any file you want inside the remote routine blocks. 
+
+*Old:*
+
+<pre><code>machines do
+  config do                 
+    dbmaster 'localhost'
+    newparam 573114
+  end
+end</pre></code>
+
+
+*New:*
+
+<pre><code>routines do
+  startup do
+  remote :root do
+    file_upload 'local/file/path', 'remote/path'
+  end
+end
+</pre></code>
+
+h4. Startup
+
+<pre><code>$ rudy startup
+</pre></code>
+
+
+h2. Questions / Problems
+
+If you have any questions or problems either before or after you upgrade to Rudy 0.9, feel free to use the "discussion group":http://groups.google.com/group/rudy-deployment or email me directly (note: if my response could help others I will post it to the discussion group). 
+
+-- Delano (@solutious.com)

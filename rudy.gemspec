@@ -38,6 +38,7 @@
   README.rdoc
   Rakefile
   Rudyfile
+  UPGRADING-0.9
   bin/rudy
   bin/rudy-ec2
   bin/rudy-s3
@@ -103,6 +104,7 @@
   lib/rudy/metadata/disk.rb
   lib/rudy/metadata/machine.rb
   lib/rudy/mixins.rb
+  lib/rudy/mixins/gibbler.rb
   lib/rudy/mixins/hash.rb
   lib/rudy/mixins/symbol.rb
   lib/rudy/routines.rb

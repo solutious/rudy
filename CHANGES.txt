@@ -1,6 +1,11 @@
 RUDY, CHANGES 
 
 
+#### 0.9.6 (2009-10-16) ###########################
+
+* FIXED: Include Gibbler for REXML
+
+
 #### 0.9.5 (2009-09-01) ###########################
 
 * FIXED: Unknown method error, 'li' 

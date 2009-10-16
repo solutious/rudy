@@ -4,8 +4,8 @@ unless defined?(RUDY_HOME)
   RUDY_LIB = File.join(File.dirname(__FILE__), '..', 'lib')
 end
 
-local_libs = %w{net-ssh net-scp aws-s3 caesars drydock rye storable sysinfo annoy gibbler}
-local_libs.each { |dir| $:.unshift File.join(RUDY_HOME, '..', dir, 'lib') }
+#local_libs = %w{net-ssh net-scp aws-s3 caesars drydock rye storable sysinfo annoy gibbler}
+#local_libs.each { |dir| $:.unshift File.join(RUDY_HOME, '..', dir, 'lib') }
 #require 'rubygems'
 
 begin; require 'json'; rescue LoadError; end # Silence!
@@ -13,20 +13,19 @@ begin; require 'json'; rescue LoadError; end # Silence!
 require 'digest/md5'
 require 'stringio'
 require 'ostruct'
-require 'yaml'
+autoload :YAML, 'yaml'
 require 'logger'
 require 'socket'
 require 'resolv'
 require 'timeout'
-require 'gibbler'
+autoload :Gibbler, 'gibbler/aliases'
 require 'tempfile'
 require 'rudy/mixins'
-require 'gibbler/aliases'
 require 'storable'
-require 'sysinfo'
+autoload :SysInfo, 'sysinfo'
 require 'attic'
 require 'annoy'
-require 'rye'
+autoload :Rye, 'rye'
 
 # = Rudy
 #
@@ -48,19 +47,25 @@ module Rudy
     def self.to_f; self.to_s.to_f; end
   end
   
+  def Rudy.sysinfo
+    @@sysinfo = SysInfo.new.freeze if @@sysinfo.nil?
+    @@sysinfo
+  end
+  def sysinfo; Rudy.sysinfo;  end
+    
   unless defined? Rudy::DOMAIN # We can assume all constants are defined
     
     @@quiet = false
     @@auto = false
     @@debug = false
-    @@sysinfo = SysInfo.new.freeze
+    @@sysinfo = nil
     
     # SimpleDB accepts dashes in the domain name on creation and with the query syntax. 
     # However, with select syntax it says: "The specified query expression syntax is not valid"
     DOMAIN = "rudy_state".freeze
     DELIM  = '-'.freeze
   
-    CONFIG_DIR = File.join(@@sysinfo.home, '.rudy').freeze
+    CONFIG_DIR = File.join(Rudy.sysinfo.home, '.rudy').freeze
     CONFIG_FILE = File.join(Rudy::CONFIG_DIR, 'config').freeze
     SSH_KEY_DIR = File.expand_path('~/.ssh').freeze
     
@@ -113,10 +118,6 @@ module Rudy
   def Rudy.debug?; @@debug == true; end
   def Rudy.enable_debug; @@debug = true; end
   def Rudy.disable_debug; @@debug = false; end
-  
-  
-  def Rudy.sysinfo; @@sysinfo; end
-  def sysinfo; @@sysinfo;  end
   
 end
 

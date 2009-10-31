@@ -1,7 +1,7 @@
 @spec = Gem::Specification.new do |s|
   s.name = "rudy"
   s.rubyforge_project = 'rudy'
-  s.version = "0.9.5"
+  s.version = "0.9.5.002"
   s.summary = "Rudy: Not your grandparents' EC2 deployment tool."
   s.description = s.summary
   s.author = "Delano Mandelbaum"
@@ -16,7 +16,7 @@
   
   s.executables = %w[rudy rudy-ec2 rudy-sdb rudy-s3]
   
-  s.add_dependency 'rye',        '>= 0.8.9'
+  s.add_dependency 'rye',        '>= 0.8.11'
   s.add_dependency 'attic',      '>= 0.4.0'
   s.add_dependency 'annoy',      '>= 0.5.5'
   s.add_dependency 'drydock',    '>= 0.6.6'

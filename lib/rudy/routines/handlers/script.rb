@@ -68,6 +68,9 @@ module Rudy; module Routines; module Handlers;
         ### EXECUTE THE COMMANDS BLOCK
         begin
           robj.batch(argv, &proc)
+        rescue Rye::CommandError => ex
+          # No need to bubble exception up when in parallel mode
+          raise ex unless Rye::Set == robj
         ensure
           robj.enable_safe_mode            # In case it was disabled
           robj.switch_user original_user   # Return to the user it was provided with          
@@ -76,8 +79,6 @@ module Rudy; module Routines; module Handlers;
         end
         
       end
-      
-      
       
       
     end

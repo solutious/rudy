@@ -51,7 +51,7 @@ module Rudy::Routines::Handlers;
 
        box.exception_hook(::Rye::CommandError, &rbox_exception_handler)
        box.exception_hook(Exception, &rbox_exception_handler)
-
+       
        ## It'd better for unknown commands to be handled elsewhere
        ## because it doesn't make sense to retry a method that doesn't exist
        ##box.exception_hook(Rye::CommandNotFound, &rbox_exception_handler)
@@ -166,7 +166,7 @@ module Rudy::Routines::Handlers;
      else
        le prefix << "#{ex.class}: #{ex.message}".color(:red)
      end
-     le ex.backtrace if @@global.verbose > 1
+     le ex.backtrace if Rudy.debug?
    end
 
 

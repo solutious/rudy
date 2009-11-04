@@ -42,7 +42,7 @@ module Rudy
       MAJOR = 0.freeze
       MINOR = 9.freeze
       TINY  = 5.freeze
-      PATCH  = '002'.freeze
+      PATCH  = '003'.freeze
     end
     def self.to_s; [MAJOR, MINOR, TINY, PATCH].join('.'); end
     def self.to_f; self.to_s.to_f; end

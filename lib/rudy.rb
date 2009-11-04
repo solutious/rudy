@@ -84,7 +84,7 @@ module Rudy
     DEFAULT_WINDOWS_DEVICE = 'xvdf'
     DEFAULT_LINUX_DEVICE = '/dev/sdh'
     
-    MAX_INSTANCES = 5.freeze
+    MAX_INSTANCES = 20.freeze
     
     ID_MAP = {
       :instance    => 'i',

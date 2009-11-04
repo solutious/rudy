@@ -17,6 +17,7 @@ module Rudy; module Routines;
         @machines = Rudy::Machines.list || []
         @@rset = Rudy::Routines::Handlers::RyeTools.create_set @machines
       }
+      
       return @machines unless run?
       Rudy::Routines.runner(@routine, @@rset, @@lbox, @argv)
       Rudy::Routines::Handlers::Depends.execute_all @after

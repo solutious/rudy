@@ -20,6 +20,15 @@ module Rudy; module CLI;
         routine = {}
         routine.merge! @@config.routines.find_deferred(@@global.environment, @@global.role) || {}
         routine.merge! @@config.routines.find(@@global.role) || {}
+        #envs, roles = @@global.environment || [], @@global.role || []
+        #envs.each do |env|
+        #  roles.each do |role|
+        #    routine.merge! @@config.routines.find_deferred(env, role) || {}
+        #  end
+        #end
+        #roles.each do |role|
+        #  routine.merge! @@config.routines.find(role) || {}
+        #end
       end
       
       outform = @@global.format == :json ? :to_json : :to_yaml

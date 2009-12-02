@@ -158,21 +158,6 @@ module Rudy
         @state = inst.state
         # We need to be safe when creating machines because if an exception is
         # raised, instances will have been created but the calling class won't know. 
-        begin
-          # Assign IP address only if we have one for that position
-          if @address
-            # Make sure the address is associated to the current account
-            if Rudy::AWS::EC2::Addresses.exists?(@address)
-              li "Associating #{@address} to #{@instid}"
-              Rudy::AWS::EC2::Addresses.associate(@address, @instid)
-            else
-              le "Unknown address: #{@address}"
-            end
-          end
-        rescue => ex
-          le "Error: #{ex.message}"
-          le ex.backtrace if Rudy.debug?
-        end
       end
       
       self.save

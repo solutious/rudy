@@ -13,19 +13,19 @@ begin; require 'json'; rescue LoadError; end # Silence!
 require 'digest/md5'
 require 'stringio'
 require 'ostruct'
-autoload :YAML, 'yaml'
+require 'yaml'
 require 'logger'
 require 'socket'
 require 'resolv'
 require 'timeout'
-autoload :Gibbler, 'gibbler/aliases'
+require 'gibbler/aliases'
 require 'tempfile'
 require 'rudy/mixins'
 require 'storable'
-autoload :SysInfo, 'sysinfo'
+require 'sysinfo'
 require 'attic'
 require 'annoy'
-autoload :Rye, 'rye'
+require 'rye'
 
 # = Rudy
 #

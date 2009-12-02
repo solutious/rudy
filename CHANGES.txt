@@ -4,6 +4,7 @@ RUDY, CHANGES
 #### 0.9.6 (2009-10-??) ###########################
 
 * FIXED: Include Gibbler for REXML
+* FIXED: Elastic IP binding on startup (GH-40)
 * CHANGE: Increased max instances from 5 to 20. 
 
 

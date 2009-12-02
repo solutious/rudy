@@ -65,7 +65,7 @@
             </div>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000394'>
+              <div class='method public-instance' id='method-M000394'>
                 <a name='M000394'>      </a>
                 <div class='synopsis'>
                   <span class='name'>create</span>
@@ -84,7 +84,7 @@
                   <pre id='M000394-source'>    <span class="ruby-comment cmt"># File lib/rudy/machines.rb, line 41</span>&#x000A;41:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create</span>(<span class="ruby-identifier">size</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;42:       <span class="ruby-keyword kw">if</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Huxtable</span>.<span class="ruby-identifier">global</span>.<span class="ruby-identifier">position</span>.<span class="ruby-identifier">nil?</span>&#x000A;43:         <span class="ruby-identifier">size</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">current_machine_count</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">||</span> <span class="ruby-value">1</span>&#x000A;44:         <span class="ruby-identifier">group</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">size</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span>&#x000A;45:           <span class="ruby-identifier">m</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machine</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">i</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>)&#x000A;46:           <span class="ruby-identifier">m</span>.<span class="ruby-identifier">create</span>&#x000A;47:           <span class="ruby-identifier">li</span> <span class="ruby-node">&quot;Created: #{m.to_s}&quot;</span>&#x000A;48:           <span class="ruby-identifier">m</span>&#x000A;49:         <span class="ruby-keyword kw">end</span>&#x000A;50:       <span class="ruby-keyword kw">else</span>&#x000A;51:         <span class="ruby-identifier">m</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machine</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Huxtable</span>.<span class="ruby-identifier">global</span>.<span class="ruby-identifier">position</span>)&#x000A;52:         <span class="ruby-identifier">m</span>.<span class="ruby-identifier">create</span>&#x000A;53:         <span class="ruby-identifier">li</span> <span class="ruby-node">&quot;Created: #{m.to_s}&quot;</span>&#x000A;54:         <span class="ruby-identifier">group</span> = [<span class="ruby-identifier">m</span>]&#x000A;55:       <span class="ruby-keyword kw">end</span>&#x000A;56:       <span class="ruby-identifier">group</span>&#x000A;57:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000392'>
+              <div class='method public-instance' id='method-M000392'>
                 <a name='M000392'>      </a>
                 <div class='synopsis'>
                   <span class='name'>exists?</span>
@@ -102,7 +102,7 @@
                   <pre id='M000392-source'>    <span class="ruby-comment cmt"># File lib/rudy/machines.rb, line 27</span>&#x000A;27:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">pos</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;28:       <span class="ruby-identifier">machines</span> = <span class="ruby-identifier">pos</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-value">? </span><span class="ruby-identifier">list</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">get</span>(<span class="ruby-identifier">pos</span>)&#x000A;29:       <span class="ruby-operator">!</span><span class="ruby-identifier">machines</span>.<span class="ruby-identifier">nil?</span>&#x000A;30:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000391'>
+              <div class='method public-instance' id='method-M000391'>
                 <a name='M000391'>      </a>
                 <div class='synopsis'>
                   <span class='name'>find_next_position</span>
@@ -115,7 +115,7 @@
                   <pre id='M000391-source'>    <span class="ruby-comment cmt"># File lib/rudy/machines.rb, line 19</span>&#x000A;19:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">find_next_position</span>&#x000A;20:       <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;reimplement by looking at position values&quot;</span>&#x000A;21:       <span class="ruby-identifier">list</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machines</span>.<span class="ruby-identifier">list</span>({}, [<span class="ruby-identifier">:position</span>]) <span class="ruby-operator">||</span> []&#x000A;22:       <span class="ruby-identifier">pos</span> = <span class="ruby-identifier">list</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>&#x000A;23:       <span class="ruby-identifier">pos</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">rjust</span>(<span class="ruby-value">2</span>, <span class="ruby-value str">'0'</span>)&#x000A;24:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000396'>
+              <div class='method public-instance' id='method-M000396'>
                 <a name='M000396'>      </a>
                 <div class='synopsis'>
                   <span class='name'>from_hash</span>
@@ -128,7 +128,7 @@
                   <pre id='M000396-source'>    <span class="ruby-comment cmt"># File lib/rudy/machines.rb, line 68</span>&#x000A;68:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">h</span>)&#x000A;69:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machine</span>.<span class="ruby-identifier">from_hash</span> <span class="ruby-identifier">h</span>&#x000A;70:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000390'>
+              <div class='method public-instance' id='method-M000390'>
                 <a name='M000390'>      </a>
                 <div class='synopsis'>
                   <span class='name'>get</span>
@@ -141,7 +141,7 @@
                   <pre id='M000390-source'>    <span class="ruby-comment cmt"># File lib/rudy/machines.rb, line 12</span>&#x000A;12:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get</span>(<span class="ruby-identifier">position</span>)&#x000A;13:       <span class="ruby-identifier">tmp</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machine</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">position</span>&#x000A;14:       <span class="ruby-identifier">record</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Metadata</span>.<span class="ruby-identifier">get</span> <span class="ruby-identifier">tmp</span>.<span class="ruby-identifier">name</span>&#x000A;15:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">record</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>)&#x000A;16:       <span class="ruby-identifier">tmp</span>.<span class="ruby-identifier">from_hash</span> <span class="ruby-identifier">record</span>&#x000A;17:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000395'>
+              <div class='method public-instance' id='method-M000395'>
                 <a name='M000395'>      </a>
                 <div class='synopsis'>
                   <span class='name'>restart</span>
@@ -154,7 +154,7 @@
                   <pre id='M000395-source'>    <span class="ruby-comment cmt"># File lib/rudy/machines.rb, line 59</span>&#x000A;59:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">restart</span>&#x000A;60:       <span class="ruby-identifier">group</span> = <span class="ruby-identifier">list</span> &#x000A;61:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">MachineGroupNotRunning</span>, <span class="ruby-identifier">current_machine_group</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">group</span>.<span class="ruby-identifier">nil?</span>&#x000A;62:       <span class="ruby-identifier">group</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">inst</span><span class="ruby-operator">|</span>&#x000A;63:         <span class="ruby-identifier">inst</span>.<span class="ruby-identifier">restart</span>&#x000A;64:       <span class="ruby-keyword kw">end</span>&#x000A;65:       <span class="ruby-identifier">group</span>&#x000A;66:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000393'>
+              <div class='method public-instance' id='method-M000393'>
                 <a name='M000393'>      </a>
                 <div class='synopsis'>
                   <span class='name'>running?</span>

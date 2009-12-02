@@ -71,7 +71,7 @@
           <div id='section'>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='public-class method' id='method-M000043'>
+              <div class='method public-class' id='method-M000043'>
                 <a name='M000043'>      </a>
                 <div class='synopsis'>
                   <span class='name'>from_hash</span>
@@ -100,7 +100,7 @@
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000040'>
+              <div class='method public-instance' id='method-M000040'>
                 <a name='M000040'>      </a>
                 <div class='synopsis'>
                   <span class='name'>any?</span>
@@ -113,7 +113,7 @@
                   <pre id='M000040-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 155</span>&#x000A;155:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">any?</span>&#x000A;156:         <span class="ruby-identifier">groups</span> = <span class="ruby-identifier">list</span> <span class="ruby-operator">||</span> []&#x000A;157:         <span class="ruby-operator">!</span><span class="ruby-identifier">groups</span>.<span class="ruby-identifier">empty?</span>&#x000A;158:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000033'>
+              <div class='method public-instance' id='method-M000033'>
                 <a name='M000033'>      </a>
                 <div class='synopsis'>
                   <span class='name'>authorise</span>
@@ -125,7 +125,7 @@
                   </p>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000036'>
+              <div class='method public-instance' id='method-M000036'>
                 <a name='M000036'>      </a>
                 <div class='synopsis'>
                   <span class='name'>authorise_group</span>
@@ -137,7 +137,7 @@
                   </p>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000032'>
+              <div class='method public-instance' id='method-M000032'>
                 <a name='M000032'>      </a>
                 <div class='synopsis'>
                   <span class='name'>authorize</span>
@@ -155,7 +155,7 @@
                   <pre id='M000032-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 110</span>&#x000A;110:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">authorize</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">addresses</span>=[], <span class="ruby-identifier">ports</span>=[], <span class="ruby-identifier">protocols</span>=[], <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;111:         <span class="ruby-identifier">modify_rules</span>(<span class="ruby-identifier">:authorize</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">addresses</span>, <span class="ruby-identifier">ports</span>, <span class="ruby-identifier">protocols</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;112:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000035'>
+              <div class='method public-instance' id='method-M000035'>
                 <a name='M000035'>      </a>
                 <div class='synopsis'>
                   <span class='name'>authorize_group</span>
@@ -168,7 +168,7 @@
                   <pre id='M000035-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 121</span>&#x000A;121:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">authorize_group</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">gname</span>, <span class="ruby-identifier">owner</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;122:         <span class="ruby-identifier">modify_group_rules</span>(<span class="ruby-identifier">:authorize</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">gname</span>, <span class="ruby-identifier">owner</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;123:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000030'>
+              <div class='method public-instance' id='method-M000030'>
                 <a name='M000030'>      </a>
                 <div class='synopsis'>
                   <span class='name'>create</span>
@@ -187,7 +187,7 @@
                   <pre id='M000030-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 93</span>&#x000A;93:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">desc</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">addresses</span>=[], <span class="ruby-identifier">ports</span>=[], <span class="ruby-identifier">protocols</span>=[], <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;94:         <span class="ruby-identifier">desc</span> <span class="ruby-operator">||=</span> <span class="ruby-node">&quot;Security Group #{name}&quot;</span>&#x000A;95:         <span class="ruby-identifier">ret</span> = <span class="ruby-ivar">@@ec2</span>.<span class="ruby-identifier">create_security_group</span>(<span class="ruby-identifier">:group_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">name</span>, <span class="ruby-identifier">:group_description</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">desc</span>)&#x000A;96:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">unless</span> (<span class="ruby-identifier">ret</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">ret</span>[<span class="ruby-value str">'return'</span>] <span class="ruby-operator">==</span> <span class="ruby-value str">'true'</span>)&#x000A;97:         <span class="ruby-identifier">authorize</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">addresses</span>, <span class="ruby-identifier">ports</span>, <span class="ruby-identifier">protocols</span>)&#x000A;98:         <span class="ruby-identifier">get</span>(<span class="ruby-identifier">name</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;99:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000031'>
+              <div class='method public-instance' id='method-M000031'>
                 <a name='M000031'>      </a>
                 <div class='synopsis'>
                   <span class='name'>destroy</span>
@@ -206,7 +206,7 @@
                   <pre id='M000031-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 103</span>&#x000A;103:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">destroy</span>(<span class="ruby-identifier">name</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;104:         <span class="ruby-identifier">list</span>(<span class="ruby-identifier">name</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">each_group</span>&#x000A;105:         <span class="ruby-identifier">ret</span> = <span class="ruby-ivar">@@ec2</span>.<span class="ruby-identifier">delete_security_group</span>(<span class="ruby-identifier">:group_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">name</span>)&#x000A;106:         (<span class="ruby-identifier">ret</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">ret</span>[<span class="ruby-value str">'return'</span>] <span class="ruby-operator">==</span> <span class="ruby-value str">'true'</span>)&#x000A;107:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000042'>
+              <div class='method public-instance' id='method-M000042'>
                 <a name='M000042'>      </a>
                 <div class='synopsis'>
                   <span class='name'>exists?</span>
@@ -224,7 +224,7 @@
                   <pre id='M000042-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 171</span>&#x000A;171:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">name</span>)&#x000A;172:         <span class="ruby-keyword kw">begin</span>&#x000A;173:           <span class="ruby-identifier">g</span> = <span class="ruby-identifier">list</span>([<span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_s</span>])&#x000A;174:         <span class="ruby-keyword kw">rescue</span> <span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">InvalidGroupNotFound</span>&#x000A;175:           <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> &#x000A;176:         <span class="ruby-keyword kw">end</span>&#x000A;177:       &#x000A;178:         <span class="ruby-operator">!</span><span class="ruby-identifier">g</span>.<span class="ruby-identifier">empty?</span>&#x000A;179:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000041'>
+              <div class='method public-instance' id='method-M000041'>
                 <a name='M000041'>      </a>
                 <div class='synopsis'>
                   <span class='name'>get</span>
@@ -244,7 +244,7 @@
                   <pre id='M000041-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 161</span>&#x000A;161:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get</span>(<span class="ruby-identifier">name</span>)&#x000A;162:         (<span class="ruby-identifier">list</span>([<span class="ruby-identifier">name</span>]) <span class="ruby-operator">||</span> []).<span class="ruby-identifier">first</span>&#x000A;163:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000038'>
+              <div class='method public-instance' id='method-M000038'>
                 <a name='M000038'>      </a>
                 <div class='synopsis'>
                   <span class='name'>list</span>
@@ -257,7 +257,7 @@
                   <pre id='M000038-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 130</span>&#x000A;130:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">list</span>(<span class="ruby-identifier">group_names</span>=[], <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;131:         <span class="ruby-identifier">group_names</span> <span class="ruby-operator">||=</span> []&#x000A;132:         <span class="ruby-identifier">groups</span> = <span class="ruby-identifier">list_as_hash</span>(<span class="ruby-identifier">group_names</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;133:         <span class="ruby-identifier">groups</span> <span class="ruby-operator">&amp;&amp;=</span> <span class="ruby-identifier">groups</span>.<span class="ruby-identifier">values</span>&#x000A;134:         <span class="ruby-identifier">groups</span>&#x000A;135:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000039'>
+              <div class='method public-instance' id='method-M000039'>
                 <a name='M000039'>      </a>
                 <div class='synopsis'>
                   <span class='name'>list_as_hash</span>
@@ -284,7 +284,7 @@
                   <pre id='M000039-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 141</span>&#x000A;141:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">list_as_hash</span>(<span class="ruby-identifier">group_names</span>=[], <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;142:         <span class="ruby-identifier">group_names</span> = [<span class="ruby-identifier">group_names</span>].<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">compact</span>&#x000A;143:         <span class="ruby-identifier">glist</span> = <span class="ruby-ivar">@@ec2</span>.<span class="ruby-identifier">describe_security_groups</span>(<span class="ruby-identifier">:group_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">group_names</span>) <span class="ruby-operator">||</span> {}&#x000A;144:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">glist</span>[<span class="ruby-value str">'securityGroupInfo'</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>)&#x000A;145:         <span class="ruby-identifier">groups</span> = {}&#x000A;146:         <span class="ruby-identifier">glist</span>[<span class="ruby-value str">'securityGroupInfo'</span>][<span class="ruby-value str">'item'</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">oldg</span><span class="ruby-operator">|</span> &#x000A;147:           <span class="ruby-identifier">g</span> = <span class="ruby-constant">Groups</span>.<span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">oldg</span>)&#x000A;148:           <span class="ruby-identifier">groups</span>[<span class="ruby-identifier">g</span>.<span class="ruby-identifier">name</span>] = <span class="ruby-identifier">g</span>&#x000A;149:         <span class="ruby-keyword kw">end</span>&#x000A;150:         <span class="ruby-identifier">groups</span>.<span class="ruby-identifier">each_value</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">g</span><span class="ruby-operator">|</span> <span class="ruby-identifier">each_group</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">g</span>) } <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">each_group</span>&#x000A;151:         <span class="ruby-identifier">groups</span> = <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">groups</span>.<span class="ruby-identifier">empty?</span>&#x000A;152:         <span class="ruby-identifier">groups</span>&#x000A;153:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000034'>
+              <div class='method public-instance' id='method-M000034'>
                 <a name='M000034'>      </a>
                 <div class='synopsis'>
                   <span class='name'>revoke</span>
@@ -303,7 +303,7 @@
                   <pre id='M000034-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/group.rb, line 117</span>&#x000A;117:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">revoke</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">addresses</span>=[], <span class="ruby-identifier">ports</span>=[], <span class="ruby-identifier">protocols</span>=[], <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;118:         <span class="ruby-identifier">modify_rules</span>(<span class="ruby-identifier">:revoke</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">addresses</span>, <span class="ruby-identifier">ports</span>, <span class="ruby-identifier">protocols</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">each_group</span>)&#x000A;119:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000037'>
+              <div class='method public-instance' id='method-M000037'>
                 <a name='M000037'>      </a>
                 <div class='synopsis'>
                   <span class='name'>revoke_group</span>

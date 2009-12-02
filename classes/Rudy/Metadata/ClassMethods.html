@@ -57,7 +57,7 @@
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000345'>
+              <div class='method public-instance' id='method-M000345'>
                 <a name='M000345'>      </a>
                 <div class='synopsis'>
                   <span class='name'>any?</span>
@@ -70,7 +70,7 @@
                   <pre id='M000345-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata.rb, line 139</span>&#x000A;139:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">any?</span>(<span class="ruby-identifier">fields</span>={}, <span class="ruby-identifier">less</span>=[])&#x000A;140:         <span class="ruby-operator">!</span><span class="ruby-identifier">list</span>(<span class="ruby-identifier">fields</span>, <span class="ruby-identifier">less</span>).<span class="ruby-identifier">nil?</span>&#x000A;141:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000343'>
+              <div class='method public-instance' id='method-M000343'>
                 <a name='M000343'>      </a>
                 <div class='synopsis'>
                   <span class='name'>list</span>
@@ -83,7 +83,7 @@
                   <pre id='M000343-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata.rb, line 117</span>&#x000A;117:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">list</span>(<span class="ruby-identifier">fields</span>={}, <span class="ruby-identifier">less</span>=[], <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;118:         <span class="ruby-identifier">fields</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Metadata</span>.<span class="ruby-identifier">build_criteria</span> <span class="ruby-keyword kw">self</span><span class="ruby-operator">::</span><span class="ruby-constant">RTYPE</span>, <span class="ruby-identifier">fields</span>, <span class="ruby-identifier">less</span>&#x000A;119:         <span class="ruby-identifier">records_raw</span>, <span class="ruby-identifier">records</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Metadata</span>.<span class="ruby-identifier">select</span>(<span class="ruby-identifier">fields</span>), []&#x000A;120:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">records_raw</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">records_raw</span>.<span class="ruby-identifier">empty?</span>&#x000A;121:         <span class="ruby-identifier">records_raw</span>.<span class="ruby-identifier">each_pair</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">p</span>, <span class="ruby-identifier">r</span><span class="ruby-operator">|</span>&#x000A;122:           <span class="ruby-identifier">obj</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">from_hash</span> <span class="ruby-identifier">r</span>&#x000A;123:           <span class="ruby-identifier">records</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">obj</span>&#x000A;124:         <span class="ruby-keyword kw">end</span>&#x000A;125:         <span class="ruby-identifier">records</span>.<span class="ruby-identifier">sort</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span>,<span class="ruby-identifier">b</span><span class="ruby-operator">|</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">&lt;=&gt;</span> <span class="ruby-identifier">b</span>.<span class="ruby-identifier">name</span> }&#x000A;126:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000344'>
+              <div class='method public-instance' id='method-M000344'>
                 <a name='M000344'>      </a>
                 <div class='synopsis'>
                   <span class='name'>list_as_hash</span>

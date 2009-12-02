@@ -46,19 +46,19 @@
             <a href="../../files/lib/rudy/routines/handlers/host_rb.html">lib/rudy/routines/handlers/host.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/rudy/routines/handlers/machines_rb.html">lib/rudy/routines/handlers/machines.rb</a>
+            <a href="../../files/lib/rudy/routines/handlers/keypair_rb.html">lib/rudy/routines/handlers/keypair.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/rudy/routines/handlers/keypair_rb.html">lib/rudy/routines/handlers/keypair.rb</a>
+            <a href="../../files/lib/rudy/routines/handlers/machines_rb.html">lib/rudy/routines/handlers/machines.rb</a>
           </li>
           <li class='other'>
             <a href="../../files/lib/rudy/routines/handlers/script_rb.html">lib/rudy/routines/handlers/script.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/rudy/routines/passthrough_rb.html">lib/rudy/routines/passthrough.rb</a>
+            <a href="../../files/lib/rudy/routines/handlers/user_rb.html">lib/rudy/routines/handlers/user.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/rudy/routines/handlers/user_rb.html">lib/rudy/routines/handlers/user.rb</a>
+            <a href="../../files/lib/rudy/routines/passthrough_rb.html">lib/rudy/routines/passthrough.rb</a>
           </li>
           <li class='other'>
             <a href="../../files/lib/rudy/routines/reboot_rb.html">lib/rudy/routines/reboot.rb</a>
@@ -130,7 +130,7 @@
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='public-class method' id='method-M000399'>
+              <div class='method public-class' id='method-M000399'>
                 <a name='M000399'>      </a>
                 <div class='synopsis'>
                   <span class='name'>add_handler</span>
@@ -148,7 +148,7 @@
                   <pre id='M000399-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines.rb, line 73</span>&#x000A;73:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">add_handler</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">klass</span>)&#x000A;74:       <span class="ruby-identifier">add_some_class</span> <span class="ruby-ivar">@@handler</span>, <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Routines</span><span class="ruby-operator">::</span><span class="ruby-constant">Handlers</span><span class="ruby-operator">::</span><span class="ruby-constant">Base</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">klass</span>&#x000A;75:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-class method' id='method-M000397'>
+              <div class='method public-class' id='method-M000397'>
                 <a name='M000397'>      </a>
                 <div class='synopsis'>
                   <span class='name'>add_routine</span>
@@ -179,7 +179,7 @@
                   <pre id='M000397-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines.rb, line 62</span>&#x000A;62:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">add_routine</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">klass</span>)&#x000A;63:       <span class="ruby-identifier">add_some_class</span> <span class="ruby-ivar">@@routine</span>, <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Routines</span><span class="ruby-operator">::</span><span class="ruby-constant">Base</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">klass</span>&#x000A;64:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-class method' id='method-M000400'>
+              <div class='method public-class' id='method-M000400'>
                 <a name='M000400'>      </a>
                 <div class='synopsis'>
                   <span class='name'>get_handler</span>
@@ -198,7 +198,7 @@
                   <pre id='M000400-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines.rb, line 79</span>&#x000A;79:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">get_handler</span>(<span class="ruby-identifier">name</span>)&#x000A;80:       <span class="ruby-identifier">get_some_class</span>(<span class="ruby-ivar">@@handler</span>, <span class="ruby-identifier">name</span>) <span class="ruby-operator">||</span> <span class="ruby-keyword kw">nil</span>&#x000A;81:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-class method' id='method-M000398'>
+              <div class='method public-class' id='method-M000398'>
                 <a name='M000398'>      </a>
                 <div class='synopsis'>
                   <span class='name'>get_routine</span>
@@ -218,7 +218,7 @@
                   <pre id='M000398-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines.rb, line 68</span>&#x000A;68:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">get_routine</span>(<span class="ruby-identifier">name</span>)&#x000A;69:       <span class="ruby-identifier">get_some_class</span>(<span class="ruby-ivar">@@routine</span>, <span class="ruby-identifier">name</span>) <span class="ruby-operator">||</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Routines</span><span class="ruby-operator">::</span><span class="ruby-constant">Passthrough</span>&#x000A;70:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-class method' id='method-M000402'>
+              <div class='method public-class' id='method-M000402'>
                 <a name='M000402'>      </a>
                 <div class='synopsis'>
                   <span class='name'>has_handler?</span>
@@ -231,7 +231,7 @@
                   <pre id='M000402-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines.rb, line 84</span>&#x000A;84:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">has_handler?</span>(<span class="ruby-identifier">name</span>);  <span class="ruby-ivar">@@handler</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-identifier">name</span>);  <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-class method' id='method-M000401'>
+              <div class='method public-class' id='method-M000401'>
                 <a name='M000401'>      </a>
                 <div class='synopsis'>
                   <span class='name'>has_routine?</span>
@@ -244,7 +244,7 @@
                   <pre id='M000401-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines.rb, line 83</span>&#x000A;83:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">has_routine?</span>(<span class="ruby-identifier">name</span>); <span class="ruby-ivar">@@routine</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-identifier">name</span>); <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-class method' id='method-M000405'>
+              <div class='method public-class' id='method-M000405'>
                 <a name='M000405'>      </a>
                 <div class='synopsis'>
                   <span class='name'>machine_separator</span>
@@ -254,10 +254,10 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000405-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000405-source'>     <span class="ruby-comment cmt"># File lib/rudy/routines.rb, line 119</span>&#x000A;119:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">machine_separator</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">awsid</span>)&#x000A;120:       (<span class="ruby-value str">'%s %-50s awsid: %s '</span> <span class="ruby-operator">%</span> [<span class="ruby-identifier">$/</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">awsid</span>]).<span class="ruby-identifier">att</span>(<span class="ruby-identifier">:reverse</span>)&#x000A;121:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000405-source'>     <span class="ruby-comment cmt"># File lib/rudy/routines.rb, line 120</span>&#x000A;120:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">machine_separator</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">awsid</span>)&#x000A;121:       (<span class="ruby-value str">'%s %-50s awsid: %s '</span> <span class="ruby-operator">%</span> [<span class="ruby-identifier">$/</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">awsid</span>]).<span class="ruby-identifier">att</span>(<span class="ruby-identifier">:reverse</span>)&#x000A;122:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-class method' id='method-M000404'>
+              <div class='method public-class' id='method-M000404'>
                 <a name='M000404'>      </a>
                 <div class='synopsis'>
                   <span class='name'>rescue</span>
@@ -267,10 +267,10 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000404-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000404-source'>     <span class="ruby-comment cmt"># File lib/rudy/routines.rb, line 97</span>&#x000A; 97:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-keyword kw">rescue</span>(<span class="ruby-identifier">ret</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">bloc_party</span>)&#x000A; 98: &#x000A; 99:       <span class="ruby-keyword kw">begin</span>&#x000A;100:         <span class="ruby-identifier">ret</span> = <span class="ruby-identifier">bloc_party</span>.<span class="ruby-identifier">call</span>&#x000A;101:       <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">NameError</span>, <span class="ruby-constant">ArgumentError</span>, <span class="ruby-constant">RuntimeError</span>, <span class="ruby-constant">Errno</span><span class="ruby-operator">::</span><span class="ruby-constant">ECONNREFUSED</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">ex</span>&#x000A;102:         <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Huxtable</span>.<span class="ruby-identifier">le</span> <span class="ruby-node">&quot;#{ex.class}: #{ex.message}&quot;</span>.<span class="ruby-identifier">color</span>(<span class="ruby-identifier">:red</span>)&#x000A;103:         <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Huxtable</span>.<span class="ruby-identifier">le</span> <span class="ruby-identifier">ex</span>.<span class="ruby-identifier">backtrace</span> <span class="ruby-keyword kw">if</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">debug?</span>&#x000A;104:         <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Huxtable</span>.<span class="ruby-identifier">global</span>.<span class="ruby-identifier">parallel</span>&#x000A;105:           <span class="ruby-identifier">choice</span> = <span class="ruby-constant">Annoy</span>.<span class="ruby-identifier">get_user_input</span>(<span class="ruby-value str">'(S)kip  (A)bort: '</span>, <span class="ruby-keyword kw">nil</span>, <span class="ruby-value">3600</span>) <span class="ruby-operator">||</span> <span class="ruby-value str">''</span>&#x000A;106:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">choice</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp re">/\AS/i</span>)&#x000A;107:             <span class="ruby-comment cmt"># do nothing</span>&#x000A;108:           <span class="ruby-keyword kw">else</span>&#x000A;109:             <span class="ruby-identifier">exit</span> <span class="ruby-value">12</span>&#x000A;110:           <span class="ruby-keyword kw">end</span>&#x000A;111:          <span class="ruby-keyword kw">end</span>&#x000A;112:       <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">Interrupt</span>&#x000A;113:         <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Huxtable</span>.<span class="ruby-identifier">li</span> <span class="ruby-value str">&quot;Aborting...&quot;</span>&#x000A;114:         <span class="ruby-identifier">exit</span> <span class="ruby-value">12</span>&#x000A;115:       <span class="ruby-keyword kw">end</span>&#x000A;116:       <span class="ruby-identifier">ret</span>&#x000A;117:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000404-source'>     <span class="ruby-comment cmt"># File lib/rudy/routines.rb, line 97</span>&#x000A; 97:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-keyword kw">rescue</span>(<span class="ruby-identifier">ret</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">bloc_party</span>)&#x000A; 98: &#x000A; 99:       <span class="ruby-keyword kw">begin</span>&#x000A;100:         <span class="ruby-identifier">ret</span> = <span class="ruby-identifier">bloc_party</span>.<span class="ruby-identifier">call</span>&#x000A;101:       <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">NameError</span>, <span class="ruby-constant">ArgumentError</span>, <span class="ruby-constant">RuntimeError</span>, <span class="ruby-constant">Errno</span><span class="ruby-operator">::</span><span class="ruby-constant">ECONNREFUSED</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">ex</span>&#x000A;102:         <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Huxtable</span>.<span class="ruby-identifier">le</span> <span class="ruby-node">&quot;#{ex.class}: #{ex.message}&quot;</span>.<span class="ruby-identifier">color</span>(<span class="ruby-identifier">:red</span>)&#x000A;103:         <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Huxtable</span>.<span class="ruby-identifier">le</span> <span class="ruby-identifier">ex</span>.<span class="ruby-identifier">backtrace</span> <span class="ruby-keyword kw">if</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">debug?</span>&#x000A;104:         &#x000A;105:         <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Huxtable</span>.<span class="ruby-identifier">global</span>.<span class="ruby-identifier">parallel</span>&#x000A;106:           <span class="ruby-identifier">choice</span> = <span class="ruby-constant">Annoy</span>.<span class="ruby-identifier">get_user_input</span>(<span class="ruby-value str">'(S)kip  (A)bort: '</span>, <span class="ruby-keyword kw">nil</span>, <span class="ruby-value">3600</span>) <span class="ruby-operator">||</span> <span class="ruby-value str">''</span>&#x000A;107:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">choice</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp re">/\AS/i</span>)&#x000A;108:             <span class="ruby-comment cmt"># do nothing</span>&#x000A;109:           <span class="ruby-keyword kw">else</span>&#x000A;110:             <span class="ruby-identifier">exit</span> <span class="ruby-value">12</span>&#x000A;111:           <span class="ruby-keyword kw">end</span>&#x000A;112:          <span class="ruby-keyword kw">end</span>&#x000A;113:       <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">Interrupt</span>&#x000A;114:         <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Huxtable</span>.<span class="ruby-identifier">li</span> <span class="ruby-value str">&quot;Aborting...&quot;</span>&#x000A;115:         <span class="ruby-identifier">exit</span> <span class="ruby-value">12</span>&#x000A;116:       <span class="ruby-keyword kw">end</span>&#x000A;117:       <span class="ruby-identifier">ret</span>&#x000A;118:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-class method' id='method-M000403'>
+              <div class='method public-class' id='method-M000403'>
                 <a name='M000403'>      </a>
                 <div class='synopsis'>
                   <span class='name'>runner</span>

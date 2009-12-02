@@ -61,10 +61,10 @@
             <a href="../../files/lib/rudy/aws/s3_rb.html">lib/rudy/aws/s3.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/rudy/aws/sdb/error_rb.html">lib/rudy/aws/sdb/error.rb</a>
+            <a href="../../files/lib/rudy/aws/sdb_rb.html">lib/rudy/aws/sdb.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/rudy/aws/sdb_rb.html">lib/rudy/aws/sdb.rb</a>
+            <a href="../../files/lib/rudy/aws/sdb/error_rb.html">lib/rudy/aws/sdb/error.rb</a>
           </li>
           <li class='other'>
             <a href="../../files/lib/rudy/aws_rb.html">lib/rudy/aws.rb</a>
@@ -107,7 +107,7 @@
             </div>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000015'>
+              <div class='method public-instance' id='method-M000015'>
                 <a name='M000015'>      </a>
                 <div class='synopsis'>
                   <span class='name'>escape</span>
@@ -126,7 +126,7 @@
                   <pre id='M000015-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws.rb, line 17</span>&#x000A;17:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">escape</span>(<span class="ruby-identifier">str</span>)&#x000A;18:       <span class="ruby-identifier">str</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">tr</span>(<span class="ruby-value str">&quot;[\0\n\r\032\\\\]&quot;</span>, <span class="ruby-value str">''</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/([\'\&quot;])/</span>, <span class="ruby-value str">'\\1\\1'</span>)&#x000A;19:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000016'>
+              <div class='method public-instance' id='method-M000016'>
                 <a name='M000016'>      </a>
                 <div class='synopsis'>
                   <span class='name'>escape!</span>
@@ -139,7 +139,7 @@
                   <pre id='M000016-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws.rb, line 20</span>&#x000A;20:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">escape!</span>(<span class="ruby-identifier">str</span>)&#x000A;21:       <span class="ruby-identifier">str</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">tr!</span>(<span class="ruby-value str">&quot;[\0\n\r\032\\\\]&quot;</span>, <span class="ruby-value str">''</span>).<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp re">/([\'\&quot;])/</span>, <span class="ruby-value str">'\\1\\1'</span>)&#x000A;22:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000014'>
+              <div class='method public-instance' id='method-M000014'>
                 <a name='M000014'>      </a>
                 <div class='synopsis'>
                   <span class='name'>valid_region?</span>

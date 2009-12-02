@@ -59,7 +59,7 @@
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000190'>
+              <div class='method public-instance' id='method-M000190'>
                 <a name='M000190'>      </a>
                 <div class='synopsis'>
                   <span class='name'>authorize_groups</span>
@@ -72,7 +72,7 @@
                   <pre id='M000190-source'>    <span class="ruby-comment cmt"># File lib/rudy/cli/aws/ec2/groups.rb, line 42</span>&#x000A;42:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">authorize_groups</span>; <span class="ruby-identifier">modify_group</span>(<span class="ruby-identifier">:authorize</span>); <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000189'>
+              <div class='method public-instance' id='method-M000189'>
                 <a name='M000189'>      </a>
                 <div class='synopsis'>
                   <span class='name'>authorize_groups_valid?</span>
@@ -85,7 +85,7 @@
                   <pre id='M000189-source'>    <span class="ruby-comment cmt"># File lib/rudy/cli/aws/ec2/groups.rb, line 41</span>&#x000A;41:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">authorize_groups_valid?</span>; <span class="ruby-identifier">modify_group_valid?</span>; <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000184'>
+              <div class='method public-instance' id='method-M000184'>
                 <a name='M000184'>      </a>
                 <div class='synopsis'>
                   <span class='name'>create_groups</span>
@@ -98,7 +98,7 @@
                   <pre id='M000184-source'>    <span class="ruby-comment cmt"># File lib/rudy/cli/aws/ec2/groups.rb, line 14</span>&#x000A;14:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create_groups</span>&#x000A;15:       <span class="ruby-identifier">opts</span> = <span class="ruby-identifier">check_options</span>&#x000A;16:       <span class="ruby-identifier">execute_action</span> { &#x000A;17:         <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Groups</span>.<span class="ruby-identifier">create</span>(<span class="ruby-ivar">@argv</span>.<span class="ruby-identifier">name</span>, <span class="ruby-ivar">@option</span>.<span class="ruby-identifier">description</span>, <span class="ruby-identifier">opts</span>[<span class="ruby-identifier">:addresses</span>], <span class="ruby-identifier">opts</span>[<span class="ruby-identifier">:ports</span>], <span class="ruby-identifier">opts</span>[<span class="ruby-identifier">:protocols</span>])&#x000A;18:       }&#x000A;19:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Groups</span>.<span class="ruby-identifier">list</span>(<span class="ruby-ivar">@argv</span>.<span class="ruby-identifier">name</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">group</span><span class="ruby-operator">|</span>&#x000A;20:         <span class="ruby-identifier">li</span> <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">verbose</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">group</span>.<span class="ruby-identifier">inspect</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">group</span>.<span class="ruby-identifier">dump</span>(<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">format</span>)&#x000A;21:       <span class="ruby-keyword kw">end</span>&#x000A;22:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000183'>
+              <div class='method public-instance' id='method-M000183'>
                 <a name='M000183'>      </a>
                 <div class='synopsis'>
                   <span class='name'>create_groups_valid?</span>
@@ -111,7 +111,7 @@
                   <pre id='M000183-source'>    <span class="ruby-comment cmt"># File lib/rudy/cli/aws/ec2/groups.rb, line 9</span>&#x000A; 9:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create_groups_valid?</span>&#x000A;10:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">Drydock</span><span class="ruby-operator">::</span><span class="ruby-constant">ArgError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'group name'</span>, <span class="ruby-ivar">@alias</span>) <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@argv</span>.<span class="ruby-identifier">name</span>&#x000A;11:       <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;Group #{@argv.name} alread exists&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Groups</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-ivar">@argv</span>.<span class="ruby-identifier">name</span>)&#x000A;12:       <span class="ruby-keyword kw">true</span>&#x000A;13:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000186'>
+              <div class='method public-instance' id='method-M000186'>
                 <a name='M000186'>      </a>
                 <div class='synopsis'>
                   <span class='name'>destroy_groups</span>
@@ -124,7 +124,7 @@
                   <pre id='M000186-source'>    <span class="ruby-comment cmt"># File lib/rudy/cli/aws/ec2/groups.rb, line 31</span>&#x000A;31:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">destroy_groups</span>&#x000A;32:       <span class="ruby-identifier">li</span> <span class="ruby-node">&quot;Destroying group: #{@argv.name}&quot;</span>&#x000A;33:       <span class="ruby-identifier">execute_check</span>(<span class="ruby-identifier">:medium</span>)&#x000A;34:       <span class="ruby-identifier">execute_action</span> { <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Groups</span>.<span class="ruby-identifier">destroy</span>(<span class="ruby-ivar">@argv</span>.<span class="ruby-identifier">name</span>) }&#x000A;35:       <span class="ruby-ivar">@argv</span>.<span class="ruby-identifier">clear</span> <span class="ruby-comment cmt"># so groups will print all other groups</span>&#x000A;36:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000185'>
+              <div class='method public-instance' id='method-M000185'>
                 <a name='M000185'>      </a>
                 <div class='synopsis'>
                   <span class='name'>destroy_groups_valid?</span>
@@ -137,7 +137,7 @@
                   <pre id='M000185-source'>    <span class="ruby-comment cmt"># File lib/rudy/cli/aws/ec2/groups.rb, line 25</span>&#x000A;25:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">destroy_groups_valid?</span>&#x000A;26:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">Drydock</span><span class="ruby-operator">::</span><span class="ruby-constant">ArgError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'group name'</span>, <span class="ruby-ivar">@alias</span>) <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@argv</span>.<span class="ruby-identifier">name</span>&#x000A;27:       <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;Group #{@argv.name} does not exist&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Groups</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-ivar">@argv</span>.<span class="ruby-identifier">name</span>)&#x000A;28:       <span class="ruby-keyword kw">true</span>&#x000A;29:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000191'>
+              <div class='method public-instance' id='method-M000191'>
                 <a name='M000191'>      </a>
                 <div class='synopsis'>
                   <span class='name'>groups</span>
@@ -150,7 +150,7 @@
                   <pre id='M000191-source'>    <span class="ruby-comment cmt"># File lib/rudy/cli/aws/ec2/groups.rb, line 44</span>&#x000A;44:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">groups</span>&#x000A;45:       <span class="ruby-identifier">opts</span> = {}&#x000A;46:       <span class="ruby-identifier">name</span> = <span class="ruby-ivar">@option</span>.<span class="ruby-identifier">all</span> <span class="ruby-value">? </span><span class="ruby-keyword kw">nil</span> <span class="ruby-operator">:</span> <span class="ruby-ivar">@argv</span>.<span class="ruby-identifier">name</span>&#x000A;47:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Groups</span>.<span class="ruby-identifier">list</span>(<span class="ruby-identifier">name</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">group</span><span class="ruby-operator">|</span>&#x000A;48:         <span class="ruby-identifier">li</span> <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">verbose</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">group</span>.<span class="ruby-identifier">inspect</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">group</span>.<span class="ruby-identifier">dump</span>(<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">format</span>)&#x000A;49:       <span class="ruby-keyword kw">end</span>&#x000A;50:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000188'>
+              <div class='method public-instance' id='method-M000188'>
                 <a name='M000188'>      </a>
                 <div class='synopsis'>
                   <span class='name'>revoke_groups</span>
@@ -163,7 +163,7 @@
                   <pre id='M000188-source'>    <span class="ruby-comment cmt"># File lib/rudy/cli/aws/ec2/groups.rb, line 39</span>&#x000A;39:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">revoke_groups</span>; <span class="ruby-identifier">modify_group</span>(<span class="ruby-identifier">:revoke</span>); <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000187'>
+              <div class='method public-instance' id='method-M000187'>
                 <a name='M000187'>      </a>
                 <div class='synopsis'>
                   <span class='name'>revoke_groups_valid?</span>

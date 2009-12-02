@@ -108,7 +108,7 @@
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='public-class method' id='method-M000574'>
+              <div class='method public-class' id='method-M000574'>
                 <a name='M000574'>      </a>
                 <div class='synopsis'>
                   <span class='name'>new</span>
@@ -158,7 +158,7 @@
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000586'>
+              <div class='method public-instance' id='method-M000586'>
                 <a name='M000586'>      </a>
                 <div class='synopsis'>
                   <span class='name'>attached_volumes</span>
@@ -168,10 +168,10 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000586-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000586-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 194</span>&#x000A;194:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">attached_volumes</span>&#x000A;195:       <span class="ruby-identifier">volumes</span> = []&#x000A;196:       <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">volumes</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@instid</span>.<span class="ruby-identifier">nil?</span>&#x000A;197:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Volumes</span>.<span class="ruby-identifier">list_by_instance</span>( <span class="ruby-ivar">@instid</span>) <span class="ruby-operator">||</span> []&#x000A;198:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000586-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 179</span>&#x000A;179:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">attached_volumes</span>&#x000A;180:       <span class="ruby-identifier">volumes</span> = []&#x000A;181:       <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">volumes</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@instid</span>.<span class="ruby-identifier">nil?</span>&#x000A;182:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Volumes</span>.<span class="ruby-identifier">list_by_instance</span>( <span class="ruby-ivar">@instid</span>) <span class="ruby-operator">||</span> []&#x000A;183:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000597'>
+              <div class='method public-instance' id='method-M000597'>
                 <a name='M000597'>      </a>
                 <div class='synopsis'>
                   <span class='name'>available?</span>
@@ -186,10 +186,10 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000597-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000597-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 241</span>&#x000A;241:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">available?</span>; <span class="ruby-ivar">@available</span>; <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000597-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 226</span>&#x000A;226:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">available?</span>; <span class="ruby-ivar">@available</span>; <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000583'>
+              <div class='method public-instance' id='method-M000583'>
                 <a name='M000583'>      </a>
                 <div class='synopsis'>
                   <span class='name'>create</span>
@@ -199,10 +199,10 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000583-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000583-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 139</span>&#x000A;139:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create</span>&#x000A;140:       <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;#{name} is already running&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">instance_running?</span>&#x000A;141:       &#x000A;142:       <span class="ruby-comment cmt"># Options for Rudy::AWS::EC2::Instances#create</span>&#x000A;143:       <span class="ruby-identifier">opts</span> = {&#x000A;144:         <span class="ruby-identifier">:min</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>,&#x000A;145:         <span class="ruby-identifier">:size</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@size</span>,&#x000A;146:         <span class="ruby-identifier">:ami</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@ami</span>,&#x000A;147:         <span class="ruby-identifier">:group</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@group</span>,&#x000A;148:         <span class="ruby-identifier">:keypair</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@keypair</span>, &#x000A;149:         <span class="ruby-identifier">:zone</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@zone</span>,&#x000A;150:         <span class="ruby-identifier">:machine_data</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">generate_machine_data</span>.<span class="ruby-identifier">to_yaml</span>&#x000A;151:       }&#x000A;152:       &#x000A;153:       <span class="ruby-identifier">ld</span> <span class="ruby-node">&quot;OPTS: #{opts.inspect}&quot;</span>&#x000A;154:       &#x000A;155:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Instances</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">opts</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">inst</span><span class="ruby-operator">|</span>&#x000A;156:         <span class="ruby-ivar">@instid</span> = <span class="ruby-identifier">inst</span>.<span class="ruby-identifier">awsid</span>&#x000A;157:         <span class="ruby-ivar">@created</span> = <span class="ruby-ivar">@started</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>&#x000A;158:         <span class="ruby-ivar">@state</span> = <span class="ruby-identifier">inst</span>.<span class="ruby-identifier">state</span>&#x000A;159:         <span class="ruby-comment cmt"># We need to be safe when creating machines because if an exception is</span>&#x000A;160:         <span class="ruby-comment cmt"># raised, instances will have been created but the calling class won't know. </span>&#x000A;161:         <span class="ruby-keyword kw">begin</span>&#x000A;162:           <span class="ruby-comment cmt"># Assign IP address only if we have one for that position</span>&#x000A;163:           <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@address</span>&#x000A;164:             <span class="ruby-comment cmt"># Make sure the address is associated to the current account</span>&#x000A;165:             <span class="ruby-keyword kw">if</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Addresses</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-ivar">@address</span>)&#x000A;166:               <span class="ruby-identifier">li</span> <span class="ruby-node">&quot;Associating #{@address} to #{@instid}&quot;</span>&#x000A;167:               <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Addresses</span>.<span class="ruby-identifier">associate</span>(<span class="ruby-ivar">@address</span>, <span class="ruby-ivar">@instid</span>)&#x000A;168:             <span class="ruby-keyword kw">else</span>&#x000A;169:               <span class="ruby-identifier">le</span> <span class="ruby-node">&quot;Unknown address: #{@address}&quot;</span>&#x000A;170:             <span class="ruby-keyword kw">end</span>&#x000A;171:           <span class="ruby-keyword kw">end</span>&#x000A;172:         <span class="ruby-keyword kw">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">ex</span>&#x000A;173:           <span class="ruby-identifier">le</span> <span class="ruby-node">&quot;Error: #{ex.message}&quot;</span>&#x000A;174:           <span class="ruby-identifier">le</span> <span class="ruby-identifier">ex</span>.<span class="ruby-identifier">backtrace</span> <span class="ruby-keyword kw">if</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">debug?</span>&#x000A;175:         <span class="ruby-keyword kw">end</span>&#x000A;176:       <span class="ruby-keyword kw">end</span>&#x000A;177:       &#x000A;178:       <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">save</span>&#x000A;179:       &#x000A;180:       <span class="ruby-identifier">sleep</span> <span class="ruby-value">1</span> <span class="ruby-comment cmt"># Eventual consistency in SimpleDB</span>&#x000A;181:       &#x000A;182:       <span class="ruby-keyword kw">self</span>&#x000A;183:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000583-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 139</span>&#x000A;139:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create</span>&#x000A;140:       <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;#{name} is already running&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">instance_running?</span>&#x000A;141:       &#x000A;142:       <span class="ruby-comment cmt"># Options for Rudy::AWS::EC2::Instances#create</span>&#x000A;143:       <span class="ruby-identifier">opts</span> = {&#x000A;144:         <span class="ruby-identifier">:min</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>,&#x000A;145:         <span class="ruby-identifier">:size</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@size</span>,&#x000A;146:         <span class="ruby-identifier">:ami</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@ami</span>,&#x000A;147:         <span class="ruby-identifier">:group</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@group</span>,&#x000A;148:         <span class="ruby-identifier">:keypair</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@keypair</span>, &#x000A;149:         <span class="ruby-identifier">:zone</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@zone</span>,&#x000A;150:         <span class="ruby-identifier">:machine_data</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">generate_machine_data</span>.<span class="ruby-identifier">to_yaml</span>&#x000A;151:       }&#x000A;152:       &#x000A;153:       <span class="ruby-identifier">ld</span> <span class="ruby-node">&quot;OPTS: #{opts.inspect}&quot;</span>&#x000A;154:       &#x000A;155:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Instances</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">opts</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">inst</span><span class="ruby-operator">|</span>&#x000A;156:         <span class="ruby-ivar">@instid</span> = <span class="ruby-identifier">inst</span>.<span class="ruby-identifier">awsid</span>&#x000A;157:         <span class="ruby-ivar">@created</span> = <span class="ruby-ivar">@started</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>&#x000A;158:         <span class="ruby-ivar">@state</span> = <span class="ruby-identifier">inst</span>.<span class="ruby-identifier">state</span>&#x000A;159:         <span class="ruby-comment cmt"># We need to be safe when creating machines because if an exception is</span>&#x000A;160:         <span class="ruby-comment cmt"># raised, instances will have been created but the calling class won't know. </span>&#x000A;161:       <span class="ruby-keyword kw">end</span>&#x000A;162:       &#x000A;163:       <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">save</span>&#x000A;164:       &#x000A;165:       <span class="ruby-identifier">sleep</span> <span class="ruby-value">1</span> <span class="ruby-comment cmt"># Eventual consistency in SimpleDB</span>&#x000A;166:       &#x000A;167:       <span class="ruby-keyword kw">self</span>&#x000A;168:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000582'>
+              <div class='method public-instance' id='method-M000582'>
                 <a name='M000582'>      </a>
                 <div class='synopsis'>
                   <span class='name'>create_mock</span>
@@ -215,7 +215,7 @@
                   <pre id='M000582-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 129</span>&#x000A;129:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create_mock</span>&#x000A;130:       <span class="ruby-identifier">refresh!</span>&#x000A;131:       <span class="ruby-ivar">@dns_public</span> = <span class="ruby-ivar">@dns_private</span> = <span class="ruby-keyword kw">nil</span>&#x000A;132:       <span class="ruby-identifier">inst</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Instances</span>.<span class="ruby-identifier">list</span>(<span class="ruby-identifier">:running</span>).<span class="ruby-identifier">first</span>&#x000A;133:       <span class="ruby-ivar">@instid</span> = <span class="ruby-identifier">inst</span>.<span class="ruby-identifier">awsid</span>&#x000A;134:       <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">save</span> <span class="ruby-identifier">:replace</span>&#x000A;135:       <span class="ruby-identifier">sleep</span> <span class="ruby-value">1</span>&#x000A;136:       <span class="ruby-keyword kw">self</span>&#x000A;137:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000590'>
+              <div class='method public-instance' id='method-M000590'>
                 <a name='M000590'>      </a>
                 <div class='synopsis'>
                   <span class='name'>default_device</span>
@@ -225,10 +225,10 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000590-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000590-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 227</span>&#x000A;227:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">default_device</span>&#x000A;228:       <span class="ruby-identifier">windows?</span> <span class="ruby-value">? </span><span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">DEFAULT_WINDOWS_DEVICE</span> <span class="ruby-operator">:</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">DEFAULT_LINUX_DEVICE</span>&#x000A;229:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000590-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 212</span>&#x000A;212:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">default_device</span>&#x000A;213:       <span class="ruby-identifier">windows?</span> <span class="ruby-value">? </span><span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">DEFAULT_WINDOWS_DEVICE</span> <span class="ruby-operator">:</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">DEFAULT_LINUX_DEVICE</span>&#x000A;214:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000589'>
+              <div class='method public-instance' id='method-M000589'>
                 <a name='M000589'>      </a>
                 <div class='synopsis'>
                   <span class='name'>default_fstype</span>
@@ -238,10 +238,10 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000589-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000589-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 223</span>&#x000A;223:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">default_fstype</span>&#x000A;224:       <span class="ruby-identifier">windows?</span> <span class="ruby-value">? </span><span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">DEFAULT_WINDOWS_FS</span> <span class="ruby-operator">:</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">DEFAULT_LINUX_FS</span>&#x000A;225:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000589-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 208</span>&#x000A;208:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">default_fstype</span>&#x000A;209:       <span class="ruby-identifier">windows?</span> <span class="ruby-value">? </span><span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">DEFAULT_WINDOWS_FS</span> <span class="ruby-operator">:</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">DEFAULT_LINUX_FS</span>&#x000A;210:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000584'>
+              <div class='method public-instance' id='method-M000584'>
                 <a name='M000584'>      </a>
                 <div class='synopsis'>
                   <span class='name'>destroy</span>
@@ -251,10 +251,10 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000584-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000584-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 185</span>&#x000A;185:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">destroy</span>&#x000A;186:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Instances</span>.<span class="ruby-identifier">destroy</span>(<span class="ruby-ivar">@instid</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">instance_running?</span>&#x000A;187:       <span class="ruby-keyword kw">super</span>&#x000A;188:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000584-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 170</span>&#x000A;170:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">destroy</span>&#x000A;171:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Instances</span>.<span class="ruby-identifier">destroy</span>(<span class="ruby-ivar">@instid</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">instance_running?</span>&#x000A;172:       <span class="ruby-keyword kw">super</span>&#x000A;173:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000578'>
+              <div class='method public-instance' id='method-M000578'>
                 <a name='M000578'>      </a>
                 <div class='synopsis'>
                   <span class='name'>disks</span>
@@ -267,7 +267,7 @@
                   <pre id='M000578-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 91</span>&#x000A;91:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">disks</span>&#x000A;92:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Disks</span>.<span class="ruby-identifier">list</span>&#x000A;93:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000596'>
+              <div class='method public-instance' id='method-M000596'>
                 <a name='M000596'>      </a>
                 <div class='synopsis'>
                   <span class='name'>dns_private?</span>
@@ -277,10 +277,10 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000596-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000596-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 238</span>&#x000A;238:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">dns_private?</span>; <span class="ruby-operator">!</span><span class="ruby-ivar">@dns_private</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@dns_private</span>.<span class="ruby-identifier">empty?</span>; <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000596-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 223</span>&#x000A;223:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">dns_private?</span>; <span class="ruby-operator">!</span><span class="ruby-ivar">@dns_private</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@dns_private</span>.<span class="ruby-identifier">empty?</span>; <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000595'>
+              <div class='method public-instance' id='method-M000595'>
                 <a name='M000595'>      </a>
                 <div class='synopsis'>
                   <span class='name'>dns_public?</span>
@@ -290,10 +290,10 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000595-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000595-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 237</span>&#x000A;237:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">dns_public?</span>;  <span class="ruby-operator">!</span><span class="ruby-ivar">@dns_public</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@dns_public</span>.<span class="ruby-identifier">empty?</span>;   <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000595-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 222</span>&#x000A;222:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">dns_public?</span>;  <span class="ruby-operator">!</span><span class="ruby-ivar">@dns_public</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@dns_public</span>.<span class="ruby-identifier">empty?</span>;   <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000588'>
+              <div class='method public-instance' id='method-M000588'>
                 <a name='M000588'>      </a>
                 <div class='synopsis'>
                   <span class='name'>generate_machine_data</span>
@@ -303,10 +303,10 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000588-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000588-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 215</span>&#x000A;215:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">generate_machine_data</span>&#x000A;216:       <span class="ruby-identifier">d</span> = {}&#x000A;217:       [<span class="ruby-identifier">:region</span>, <span class="ruby-identifier">:zone</span>, <span class="ruby-identifier">:environment</span>, <span class="ruby-identifier">:role</span>, <span class="ruby-identifier">:position</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">k</span><span class="ruby-operator">|</span>&#x000A;218:         <span class="ruby-identifier">d</span>[<span class="ruby-identifier">k</span>] = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">send</span> <span class="ruby-identifier">k</span>&#x000A;219:       <span class="ruby-keyword kw">end</span>&#x000A;220:       <span class="ruby-identifier">d</span>&#x000A;221:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000588-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 200</span>&#x000A;200:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">generate_machine_data</span>&#x000A;201:       <span class="ruby-identifier">d</span> = {}&#x000A;202:       [<span class="ruby-identifier">:region</span>, <span class="ruby-identifier">:zone</span>, <span class="ruby-identifier">:environment</span>, <span class="ruby-identifier">:role</span>, <span class="ruby-identifier">:position</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">k</span><span class="ruby-operator">|</span>&#x000A;203:         <span class="ruby-identifier">d</span>[<span class="ruby-identifier">k</span>] = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">send</span> <span class="ruby-identifier">k</span>&#x000A;204:       <span class="ruby-keyword kw">end</span>&#x000A;205:       <span class="ruby-identifier">d</span>&#x000A;206:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000580'>
+              <div class='method public-instance' id='method-M000580'>
                 <a name='M000580'>      </a>
                 <div class='synopsis'>
                   <span class='name'>get_console</span>
@@ -319,7 +319,7 @@
                   <pre id='M000580-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 100</span>&#x000A;100:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get_console</span>&#x000A;101:       <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;Instance not running&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">instance_running?</span>&#x000A;102:       <span class="ruby-identifier">raw</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Instances</span>.<span class="ruby-identifier">console</span> <span class="ruby-ivar">@instid</span>&#x000A;103:       <span class="ruby-identifier">console</span> = <span class="ruby-constant">Base64</span>.<span class="ruby-identifier">decode64</span>(<span class="ruby-identifier">raw</span>)&#x000A;104:       <span class="ruby-comment cmt"># The linux console can include ANSI escape codes for color, </span>&#x000A;105:       <span class="ruby-comment cmt"># clear screen etc... We strip them out to get rid of the </span>&#x000A;106:       <span class="ruby-comment cmt"># clear specifically. Otherwise the display is messed!</span>&#x000A;107:       <span class="ruby-identifier">console</span> <span class="ruby-operator">&amp;&amp;=</span> <span class="ruby-identifier">console</span>.<span class="ruby-identifier">noansi</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">console</span>.<span class="ruby-identifier">respond_to?</span> <span class="ruby-identifier">:noansi</span>&#x000A;108:       <span class="ruby-identifier">console</span>&#x000A;109:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000579'>
+              <div class='method public-instance' id='method-M000579'>
                 <a name='M000579'>      </a>
                 <div class='synopsis'>
                   <span class='name'>get_instance</span>
@@ -332,7 +332,7 @@
                   <pre id='M000579-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 96</span>&#x000A;96:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get_instance</span>&#x000A;97:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Instances</span>.<span class="ruby-identifier">get</span> <span class="ruby-ivar">@instid</span>&#x000A;98:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000581'>
+              <div class='method public-instance' id='method-M000581'>
                 <a name='M000581'>      </a>
                 <div class='synopsis'>
                   <span class='name'>get_password</span>
@@ -345,7 +345,7 @@
                   <pre id='M000581-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 111</span>&#x000A;111:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get_password</span>&#x000A;112:       <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">windows?</span>&#x000A;113:         <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;Password support is Windows only (this is #{@os})&quot;</span> &#x000A;114:       <span class="ruby-keyword kw">end</span>&#x000A;115:       <span class="ruby-identifier">console</span> = <span class="ruby-identifier">get_console</span>&#x000A;116:       &#x000A;117:       <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;Console output not yet available. Please wait.&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">console</span>.<span class="ruby-identifier">nil?</span>&#x000A;118:       &#x000A;119:       <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">console</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp re">/&lt;Password&gt;(.+)&lt;\/Password&gt;/</span><span class="ruby-identifier">m</span>)  &#x000A;120:         <span class="ruby-comment cmt"># /m, match multiple lines</span>&#x000A;121:         <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;Password not yet available. Is this a custom AMI?&quot;</span>&#x000A;122:       <span class="ruby-keyword kw">end</span>  &#x000A;123:       &#x000A;124:       <span class="ruby-identifier">encrtypted_text</span> = (<span class="ruby-identifier">$1</span> <span class="ruby-operator">||</span> <span class="ruby-value str">''</span>).<span class="ruby-identifier">strip</span>&#x000A;125:       <span class="ruby-identifier">k</span> = <span class="ruby-constant">Rye</span><span class="ruby-operator">::</span><span class="ruby-constant">Key</span>.<span class="ruby-identifier">from_file</span> <span class="ruby-identifier">root_keypairpath</span>&#x000A;126:       <span class="ruby-identifier">k</span>.<span class="ruby-identifier">decrypt</span> <span class="ruby-identifier">encrtypted_text</span>&#x000A;127:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000593'>
+              <div class='method public-instance' id='method-M000593'>
                 <a name='M000593'>      </a>
                 <div class='synopsis'>
                   <span class='name'>linux?</span>
@@ -355,10 +355,10 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000593-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000593-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 234</span>&#x000A;234:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">linux?</span>; <span class="ruby-identifier">os?</span> <span class="ruby-value str">'linux'</span>; <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000593-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 219</span>&#x000A;219:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">linux?</span>; <span class="ruby-identifier">os?</span> <span class="ruby-value str">'linux'</span>; <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000591'>
+              <div class='method public-instance' id='method-M000591'>
                 <a name='M000591'>      </a>
                 <div class='synopsis'>
                   <span class='name'>os?</span>
@@ -368,10 +368,10 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000591-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000591-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 232</span>&#x000A;232:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">os?</span>(<span class="ruby-identifier">v</span>); <span class="ruby-ivar">@os</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">to_s</span>; <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000591-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 217</span>&#x000A;217:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">os?</span>(<span class="ruby-identifier">v</span>); <span class="ruby-ivar">@os</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">to_s</span>; <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000575'>
+              <div class='method public-instance' id='method-M000575'>
                 <a name='M000575'>      </a>
                 <div class='synopsis'>
                   <span class='name'>postprocess</span>
@@ -384,7 +384,7 @@
                   <pre id='M000575-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 78</span>&#x000A;78:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">postprocess</span>&#x000A;79:       <span class="ruby-ivar">@position</span> <span class="ruby-operator">&amp;&amp;=</span> <span class="ruby-ivar">@position</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">rjust</span>(<span class="ruby-value">2</span>, <span class="ruby-value str">'0'</span>)&#x000A;80:       <span class="ruby-ivar">@os</span> <span class="ruby-operator">&amp;&amp;=</span> <span class="ruby-ivar">@os</span>.<span class="ruby-identifier">to_sym</span>&#x000A;81:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000577'>
+              <div class='method public-instance' id='method-M000577'>
                 <a name='M000577'>      </a>
                 <div class='synopsis'>
                   <span class='name'>rbox</span>
@@ -397,7 +397,7 @@
                   <pre id='M000577-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 87</span>&#x000A;87:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">rbox</span>&#x000A;88:       <span class="ruby-identifier">r</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Routines</span><span class="ruby-operator">::</span><span class="ruby-constant">Handlers</span><span class="ruby-operator">::</span><span class="ruby-constant">RyeTools</span>.<span class="ruby-identifier">create_box</span> <span class="ruby-keyword kw">self</span>&#x000A;89:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000587'>
+              <div class='method public-instance' id='method-M000587'>
                 <a name='M000587'>      </a>
                 <div class='synopsis'>
                   <span class='name'>refresh!</span>
@@ -407,10 +407,10 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000587-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000587-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 200</span>&#x000A;200:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">refresh!</span>(<span class="ruby-identifier">metadata</span>=<span class="ruby-keyword kw">true</span>)&#x000A;201:       <span class="ruby-comment cmt">## Updating the metadata isn't necessary</span>&#x000A;202:       <span class="ruby-keyword kw">super</span>() <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">metadata</span> <span class="ruby-comment cmt"># update metadata</span>&#x000A;203:       <span class="ruby-ivar">@instance</span> = <span class="ruby-identifier">get_instance</span>&#x000A;204:       <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@instance</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Instance</span>)&#x000A;205:         <span class="ruby-ivar">@dns_public</span>, <span class="ruby-ivar">@dns_private</span> = <span class="ruby-ivar">@instance</span>.<span class="ruby-identifier">dns_public</span>, <span class="ruby-ivar">@instance</span>.<span class="ruby-identifier">dns_private</span>&#x000A;206:         <span class="ruby-ivar">@state</span> = <span class="ruby-ivar">@instance</span>.<span class="ruby-identifier">state</span>&#x000A;207:         <span class="ruby-identifier">save</span> <span class="ruby-identifier">:replace</span>&#x000A;208:       <span class="ruby-keyword kw">elsif</span> <span class="ruby-ivar">@instance</span>.<span class="ruby-identifier">nil?</span>&#x000A;209:         <span class="ruby-ivar">@awsid</span> = <span class="ruby-ivar">@dns_public</span> = <span class="ruby-ivar">@dns_private</span> = <span class="ruby-keyword kw">nil</span>&#x000A;210:         <span class="ruby-ivar">@state</span> = <span class="ruby-value str">'rogue'</span>&#x000A;211:         <span class="ruby-comment cmt"># Don't save it b/c it's possible the EC2 server is just down. </span>&#x000A;212:       <span class="ruby-keyword kw">end</span>&#x000A;213:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000587-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 185</span>&#x000A;185:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">refresh!</span>(<span class="ruby-identifier">metadata</span>=<span class="ruby-keyword kw">true</span>)&#x000A;186:       <span class="ruby-comment cmt">## Updating the metadata isn't necessary</span>&#x000A;187:       <span class="ruby-keyword kw">super</span>() <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">metadata</span> <span class="ruby-comment cmt"># update metadata</span>&#x000A;188:       <span class="ruby-ivar">@instance</span> = <span class="ruby-identifier">get_instance</span>&#x000A;189:       <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@instance</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Instance</span>)&#x000A;190:         <span class="ruby-ivar">@dns_public</span>, <span class="ruby-ivar">@dns_private</span> = <span class="ruby-ivar">@instance</span>.<span class="ruby-identifier">dns_public</span>, <span class="ruby-ivar">@instance</span>.<span class="ruby-identifier">dns_private</span>&#x000A;191:         <span class="ruby-ivar">@state</span> = <span class="ruby-ivar">@instance</span>.<span class="ruby-identifier">state</span>&#x000A;192:         <span class="ruby-identifier">save</span> <span class="ruby-identifier">:replace</span>&#x000A;193:       <span class="ruby-keyword kw">elsif</span> <span class="ruby-ivar">@instance</span>.<span class="ruby-identifier">nil?</span>&#x000A;194:         <span class="ruby-ivar">@awsid</span> = <span class="ruby-ivar">@dns_public</span> = <span class="ruby-ivar">@dns_private</span> = <span class="ruby-keyword kw">nil</span>&#x000A;195:         <span class="ruby-ivar">@state</span> = <span class="ruby-value str">'rogue'</span>&#x000A;196:         <span class="ruby-comment cmt"># Don't save it b/c it's possible the EC2 server is just down. </span>&#x000A;197:       <span class="ruby-keyword kw">end</span>&#x000A;198:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000585'>
+              <div class='method public-instance' id='method-M000585'>
                 <a name='M000585'>      </a>
                 <div class='synopsis'>
                   <span class='name'>restart</span>
@@ -420,10 +420,10 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000585-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000585-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 190</span>&#x000A;190:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">restart</span>&#x000A;191:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Instances</span>.<span class="ruby-identifier">restart</span>(<span class="ruby-ivar">@instid</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">instance_running?</span>&#x000A;192:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000585-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 175</span>&#x000A;175:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">restart</span>&#x000A;176:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Instances</span>.<span class="ruby-identifier">restart</span>(<span class="ruby-ivar">@instid</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">instance_running?</span>&#x000A;177:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000594'>
+              <div class='method public-instance' id='method-M000594'>
                 <a name='M000594'>      </a>
                 <div class='synopsis'>
                   <span class='name'>solaris?</span>
@@ -433,10 +433,10 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000594-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000594-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 235</span>&#x000A;235:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">solaris?</span>; <span class="ruby-identifier">os?</span> <span class="ruby-value str">'solaris'</span>; <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000594-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 220</span>&#x000A;220:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">solaris?</span>; <span class="ruby-identifier">os?</span> <span class="ruby-value str">'solaris'</span>; <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000576'>
+              <div class='method public-instance' id='method-M000576'>
                 <a name='M000576'>      </a>
                 <div class='synopsis'>
                   <span class='name'>to_s</span>
@@ -449,7 +449,7 @@
                   <pre id='M000576-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 83</span>&#x000A;83:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;84:       [<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">name</span>.<span class="ruby-identifier">bright</span>, <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">instid</span>, <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">dns_public</span>].<span class="ruby-identifier">join</span> <span class="ruby-value str">'; '</span>&#x000A;85:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000592'>
+              <div class='method public-instance' id='method-M000592'>
                 <a name='M000592'>      </a>
                 <div class='synopsis'>
                   <span class='name'>windows?</span>
@@ -459,7 +459,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000592-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000592-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 233</span>&#x000A;233:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">windows?</span>; <span class="ruby-identifier">os?</span> <span class="ruby-value str">'windows'</span>; <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000592-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/machine.rb, line 218</span>&#x000A;218:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">windows?</span>; <span class="ruby-identifier">os?</span> <span class="ruby-value str">'windows'</span>; <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

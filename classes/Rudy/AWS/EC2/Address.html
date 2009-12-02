@@ -53,7 +53,7 @@
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000111'>
+              <div class='method public-instance' id='method-M000111'>
                 <a name='M000111'>      </a>
                 <div class='synopsis'>
                   <span class='name'>associated?</span>
@@ -66,7 +66,7 @@
                   <pre id='M000111-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/address.rb, line 20</span>&#x000A;20:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">associated?</span>&#x000A;21:         <span class="ruby-operator">!</span><span class="ruby-ivar">@instid</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@instid</span>.<span class="ruby-identifier">empty?</span>&#x000A;22:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000109'>
+              <div class='method public-instance' id='method-M000109'>
                 <a name='M000109'>      </a>
                 <div class='synopsis'>
                   <span class='name'>liner_note</span>
@@ -79,7 +79,7 @@
                   <pre id='M000109-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/address.rb, line 11</span>&#x000A;11:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">liner_note</span>&#x000A;12:         <span class="ruby-identifier">info</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">associated?</span> <span class="ruby-value">? </span><span class="ruby-ivar">@instid</span> <span class="ruby-operator">:</span> <span class="ruby-value str">&quot;available&quot;</span>&#x000A;13:         <span class="ruby-value str">&quot;%s (%s)&quot;</span> <span class="ruby-operator">%</span> [<span class="ruby-ivar">@ipaddress</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">bright</span>, <span class="ruby-identifier">info</span>]&#x000A;14:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000110'>
+              <div class='method public-instance' id='method-M000110'>
                 <a name='M000110'>      </a>
                 <div class='synopsis'>
                   <span class='name'>to_s</span>

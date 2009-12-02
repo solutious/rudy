@@ -60,7 +60,7 @@
           <div id='section'>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='public-class method' id='method-M000143'>
+              <div class='method public-class' id='method-M000143'>
                 <a name='M000143'>      </a>
                 <div class='synopsis'>
                   <span class='name'>new</span>
@@ -74,7 +74,7 @@
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000149'>
+              <div class='method public-instance' id='method-M000149'>
                 <a name='M000149'>      </a>
                 <div class='synopsis'>
                   <span class='name'>bucket_exists?</span>
@@ -96,7 +96,7 @@
                   <pre id='M000149-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/s3.rb, line 56</span>&#x000A;56:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">bucket_exists?</span>(<span class="ruby-identifier">name</span>)&#x000A;57:       <span class="ruby-identifier">b</span> = <span class="ruby-identifier">find_bucket</span>(<span class="ruby-identifier">name</span>)&#x000A;58:       <span class="ruby-operator">!</span><span class="ruby-identifier">b</span>.<span class="ruby-identifier">nil?</span>&#x000A;59:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000145'>
+              <div class='method public-instance' id='method-M000145'>
                 <a name='M000145'>      </a>
                 <div class='synopsis'>
                   <span class='name'>create_bucket</span>
@@ -109,7 +109,7 @@
                   <pre id='M000145-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/s3.rb, line 32</span>&#x000A;32:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create_bucket</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">location</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;33:       <span class="ruby-identifier">opts</span> = {}&#x000A;34:       <span class="ruby-identifier">opts</span>[<span class="ruby-identifier">:location</span>] = <span class="ruby-identifier">location</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">upcase</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">location</span>&#x000A;35:       <span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">S3</span><span class="ruby-operator">::</span><span class="ruby-constant">Bucket</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">opts</span>)&#x000A;36:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000146'>
+              <div class='method public-instance' id='method-M000146'>
                 <a name='M000146'>      </a>
                 <div class='synopsis'>
                   <span class='name'>destroy_bucket</span>
@@ -122,7 +122,7 @@
                   <pre id='M000146-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/s3.rb, line 38</span>&#x000A;38:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">destroy_bucket</span>(<span class="ruby-identifier">name</span>)&#x000A;39:       <span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">S3</span><span class="ruby-operator">::</span><span class="ruby-constant">Bucket</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">name</span>)&#x000A;40:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000147'>
+              <div class='method public-instance' id='method-M000147'>
                 <a name='M000147'>      </a>
                 <div class='synopsis'>
                   <span class='name'>find_bucket</span>
@@ -135,7 +135,7 @@
                   <pre id='M000147-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/s3.rb, line 42</span>&#x000A;42:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">find_bucket</span>(<span class="ruby-identifier">name</span>)&#x000A;43:       <span class="ruby-identifier">blist</span> = <span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">S3</span><span class="ruby-operator">::</span><span class="ruby-constant">Service</span>.<span class="ruby-identifier">buckets</span>&#x000A;44:       <span class="ruby-identifier">blist</span>.<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">bobj</span><span class="ruby-operator">|</span> <span class="ruby-identifier">bobj</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">name</span> }.<span class="ruby-identifier">first</span>&#x000A;45:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000148'>
+              <div class='method public-instance' id='method-M000148'>
                 <a name='M000148'>      </a>
                 <div class='synopsis'>
                   <span class='name'>list_bucket_objects</span>
@@ -148,7 +148,7 @@
                   <pre id='M000148-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/s3.rb, line 47</span>&#x000A;47:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">list_bucket_objects</span>(<span class="ruby-identifier">name</span>)&#x000A;48:       <span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">S3</span><span class="ruby-operator">::</span><span class="ruby-constant">Bucket</span>.<span class="ruby-identifier">objects</span>(<span class="ruby-identifier">name</span>)&#x000A;49:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='public-instance method' id='method-M000144'>
+              <div class='method public-instance' id='method-M000144'>
                 <a name='M000144'>      </a>
                 <div class='synopsis'>
                   <span class='name'>list_buckets</span>

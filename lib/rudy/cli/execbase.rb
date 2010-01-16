@@ -47,7 +47,10 @@ module Rudy::CLI
       puts "Rudy version: #{Rudy::VERSION}"
       exit 0
     end
-    
+    global :D, :debug, "Enable debug mode" do
+      Drydock.debug true
+      Rudy.enable_debug
+    end
     
   end
 

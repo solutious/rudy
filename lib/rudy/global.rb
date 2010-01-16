@@ -17,6 +17,7 @@ module Rudy
     field :user
     field :pkey
     
+    field :debug
     field :nocolor
     field :quiet
     field :verbose

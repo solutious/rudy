@@ -19,6 +19,10 @@ module Rudy
     def from_hash(h)
       Rudy::Backup.from_hash h
     end
+    
+    class NoDisk < Rudy::Error; end
+    class NoBackup < Rudy::Error; end
+    
   end
   
 end

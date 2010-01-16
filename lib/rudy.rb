@@ -10,22 +10,25 @@ end
 
 begin; require 'json'; rescue LoadError; end # Silence!
 
+autoload :YAML, 'yaml'
+autoload :Tempfile, 'tempfile'
+autoload :Annoy, 'annoy'
+autoload :Rye, 'rye'
+autoload :Timeout, 'timeout'
+
 require 'digest/md5'
 require 'stringio'
 require 'ostruct'
-require 'yaml'
 require 'logger'
 require 'socket'
 require 'resolv'
-require 'timeout'
+
 require 'gibbler/aliases'
-require 'tempfile'
 require 'rudy/mixins'
 require 'storable'
 require 'sysinfo'
 require 'attic'
-require 'annoy'
-require 'rye'
+
 
 # = Rudy
 #
@@ -119,6 +122,18 @@ module Rudy
   def Rudy.debug?; @@debug == true; end
   def Rudy.enable_debug; @@debug = true; end
   def Rudy.disable_debug; @@debug = false; end
+
+  require 'rudy/exceptions'
+  require 'rudy/utils'                      # The
+  require 'rudy/global'                     # order    
+  require 'rudy/config'                     # of 
+  require 'rudy/huxtable'                   # requires
+  autoload :AWS, 'rudy/aws'                 # is
+  autoload :Metadata, 'rudy/metadata'       # super
+  autoload :Machines, 'rudy/machines'       # important.
+  autoload :Backups, 'rudy/backups'
+  autoload :Disks, 'rudy/disks'
+  autoload :Routines, 'rudy/routines'
   
 end
 
@@ -130,14 +145,3 @@ if Rudy.sysinfo.vm == :java
   end
 end
 
-require 'rudy/exceptions'
-require 'rudy/utils'               # The
-require 'rudy/global'              # order    
-require 'rudy/config'              # of 
-require 'rudy/huxtable'            # requires
-require 'rudy/aws'                 # is
-require 'rudy/metadata'            # super
-require 'rudy/machines'            # important.
-require 'rudy/backups'
-require 'rudy/disks'
-require 'rudy/routines'

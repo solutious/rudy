@@ -233,7 +233,9 @@ module Rudy
     end
     
   end
+  autoload :Backup, 'rudy/metadata/backup'
+  autoload :Disk, 'rudy/metadata/disk'
+  autoload :Machine, 'rudy/metadata/machine'
 end
 
-Rudy::Utils.require_glob(RUDY_LIB, 'rudy', 'metadata', '*.rb')
 

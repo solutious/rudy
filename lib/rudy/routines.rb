@@ -139,10 +139,26 @@ module Rudy
       routine_name &&= routine_name.to_sym
       store[routine_name]
     end
-
+    
+    autoload :Passthrough, 'rudy/routines/passthrough'
+    autoload :Reboot, 'rudy/routines/reboot'
+    autoload :Shutdown, 'rudy/routines/shutdown'
+    autoload :Startup, 'rudy/routines/startup'
+    
+    module Handlers
+      autoload :Host, 'rudy/routines/handlers/host'
+      autoload :Keypair, 'rudy/routines/handlers/keypair'
+      autoload :Machines, 'rudy/routines/handlers/machines'
+      autoload :RyeTools, 'rudy/routines/handlers/rye'
+      # The following can't be autoloaded because they call
+      # Rudy::Routines.add_handler when they're loaded. 
+      require 'rudy/routines/handlers/depends'
+      require 'rudy/routines/handlers/disks'
+      require 'rudy/routines/handlers/group'
+      require 'rudy/routines/handlers/script'
+      require 'rudy/routines/handlers/user'
+    end
   end
 end
 
-Rudy::Utils.require_glob(RUDY_LIB, 'rudy', 'routines', '*.rb')
-Rudy::Utils.require_glob(RUDY_LIB, 'rudy', 'routines', 'handlers', '*.rb')
 

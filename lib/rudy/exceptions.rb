@@ -68,32 +68,5 @@ module Rudy
   
   class NotImplemented < Rudy::Error; end
   
-
-  module Metadata
-    class UnknownRecordType < Rudy::Error
-      def message; "Unknown record type: #{@obj}"; end
-    end
-    class UnknownObject < Rudy::Error
-      def message; "Unknown object: #{@obj}"; end
-    end
-    # Raised when trying to save a record with a key that already exists
-    class DuplicateRecord < Rudy::Error; end
-    
-  end
-  
-  module Disks
-    class NotAttached < Rudy::Error; end
-    class NotFormatted < Rudy::Error; end
-    class AlreadyFormatted < Rudy::Error; end
-    class AlreadyMounted < Rudy::Error; end
-    class AlreadyAttached < Rudy::Error; end
-    class NotMounted < Rudy::Error; end
-    class InUse < Rudy::Error; end
-  end
-  
-  module Backups
-    class NoDisk < Rudy::Error; end
-    class NoBackup < Rudy::Error; end
-  end
   
 end

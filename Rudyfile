@@ -45,8 +45,12 @@ machines do
     user :root                       # User to connect as
     size 'm1.small'                  # EC2 machine type for all machines
                                      # in the 'stage' environment
-    role :app do
-      positions 2                    # 2 machines in stage-app
+
+    role :app do                     # stage-app is the default                                     
+    end                              # machine group. 
+    
+    role :db do  
+      positions 1                    # 2 machines in stage-app
       #addresses '11.22.33.44'       # Define an elastic IP to reuse
       
       disks do                       # Define EBS volumes 
@@ -55,13 +59,13 @@ machines do
           device '/dev/sdr'          # Devices must be unique too.
         end
       end
-    end
+                    
+    end                              
     
-    role :db do                      # You can define as many roles
+    role :balancer do                # You can define as many roles
     end                              # as you like. These are just 
-    role :balancer do                # a couple examples.
-    end
-    
+                                     # a couple examples.
+                                     
     users do                         # Specify existing private keys per user
       #rudy do                       
       #  keypair '/path/2/private-key'
@@ -97,8 +101,8 @@ end
 # To run a routine, specify its name on the command-line: rudy startup
 routines do
   
-  env :stage, :prod do               # We'll define routines for the stage-app
-    role :app do                     # and prod-app machine groups.
+  env :stage, :prod do               # We'll define routines for the stage-db
+    role :db do                      # and prod-db machine groups.
       
       user :root                     # The default remote user
       
@@ -145,10 +149,11 @@ routines do
   # install essential libraries. 
   # See http://github.com/rudy/arcade
   sysupdate do                       # $ rudy sysupdate
+    adduser :rudy
     remote :root do                  
       apt_get 'update'               # Update debian / ubuntu 
       apt_get 'install', 'build-essential', 'sqlite3', 'libsqlite3-dev'
-      apt_get 'install', 'apache2-prefork-dev', 'libapr1-dev'
+      apt_get 'install', 'apache2-prefork-dev', 'libapr1-dev', 'rubygems'
       gem_install 'rudy'
     end
   end

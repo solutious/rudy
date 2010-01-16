@@ -25,5 +25,14 @@ module Rudy
       !get(path).nil?
     end
     
+    
+    class NotAttached < Rudy::Error; end
+    class NotFormatted < Rudy::Error; end
+    class AlreadyFormatted < Rudy::Error; end
+    class AlreadyMounted < Rudy::Error; end
+    class AlreadyAttached < Rudy::Error; end
+    class NotMounted < Rudy::Error; end
+    class InUse < Rudy::Error; end
+    
   end
 end

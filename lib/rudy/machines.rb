@@ -69,6 +69,18 @@ module Rudy
       Rudy::Machine.from_hash h
     end
     
+    
+    
+
+    class UnknownRecordType < Rudy::Error
+      def message; "Unknown record type: #{@obj}"; end
+    end
+    class UnknownObject < Rudy::Error
+      def message; "Unknown object: #{@obj}"; end
+    end
+    # Raised when trying to save a record with a key that already exists
+    class DuplicateRecord < Rudy::Error; end
+
   end
   
 end

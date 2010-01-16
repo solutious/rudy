@@ -2,6 +2,8 @@
 ## CONSIDER: http://docs.rackspacecloud.com/servers/api/v1.0/cs-devguide-20090713.pdf
 ##++
 
+  
+  
 module Rudy
   class Machine < Storable 
     include Rudy::Metadata

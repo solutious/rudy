@@ -10,12 +10,6 @@ end
 
 begin; require 'json'; rescue LoadError; end # Silence!
 
-autoload :YAML, 'yaml'
-autoload :Tempfile, 'tempfile'
-autoload :Annoy, 'annoy'
-autoload :Rye, 'rye'
-autoload :Timeout, 'timeout'
-
 require 'digest/md5'
 require 'stringio'
 require 'ostruct'
@@ -29,6 +23,11 @@ require 'storable'
 require 'sysinfo'
 require 'attic'
 
+require 'rye'
+require 'annoy'
+require 'tempfile'
+require 'timeout'
+require 'yaml'
 
 # = Rudy
 #

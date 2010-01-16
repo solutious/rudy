@@ -104,9 +104,6 @@
   lib/rudy/metadata/disk.rb
   lib/rudy/metadata/machine.rb
   lib/rudy/mixins.rb
-  lib/rudy/mixins/gibbler.rb
-  lib/rudy/mixins/hash.rb
-  lib/rudy/mixins/symbol.rb
   lib/rudy/routines.rb
   lib/rudy/routines/base.rb
   lib/rudy/routines/handlers/base.rb
@@ -115,7 +112,6 @@
   lib/rudy/routines/handlers/group.rb
   lib/rudy/routines/handlers/host.rb
   lib/rudy/routines/handlers/keypair.rb
-  lib/rudy/routines/handlers/machines.rb
   lib/rudy/routines/handlers/rye.rb
   lib/rudy/routines/handlers/script.rb
   lib/rudy/routines/handlers/user.rb

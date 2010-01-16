@@ -94,7 +94,6 @@ module AWS; module EC2;
       volumes.each do |vol|
         li @global.verbose > 1 ? vol.inspect : vol.dump(@@global.format)
       end
-      li "No volumes" if volumes.empty?
     end
     
   end

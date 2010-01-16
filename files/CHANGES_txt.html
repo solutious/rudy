@@ -31,7 +31,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>2009-12-02 13:16:08 -0500</span>
+          <span class='datetime'>2010-01-16 18:57:33 -0500</span>
         </div>
       </div>
       <div id='content'>
@@ -41,7 +41,7 @@
             RUDY, CHANGES
             </p>
             <p>
-            #### 0.9.6 (2009-10-??) ###########################
+            #### 0.9.6 (2010-01-16) ###########################
             </p>
             <ul>
             <li>FIXED: Include Gibbler for <a href="../classes/REXML.html">REXML</a>
@@ -50,7 +50,16 @@
             <li>FIXED: Elastic IP binding on startup (GH-40)
             
             </li>
+            <li>FIXED: rudy-ec2 volumes should be quiet!
+            
+            </li>
             <li>CHANGE: Increased max instances from 5 to 20.
+            
+            </li>
+            <li>CHANGE: Maximum autoloads
+            
+            </li>
+            <li>ADDED: Debug mode global option -D
             
             </li>
             </ul>
@@ -73,8 +82,8 @@
             
             </li>
             <li>CHANGE: All puts to STDOUT and STDERR now go through <a
-            href="../classes/Rudy/Huxtable.html#M000363">Rudy::Huxtable.li</a> and <a
-            href="../classes/Rudy/Huxtable.html#M000364">Rudy::Huxtable.le</a>. This
+            href="../classes/Rudy/Huxtable.html#M000334">Rudy::Huxtable.li</a> and <a
+            href="../classes/Rudy/Huxtable.html#M000335">Rudy::Huxtable.le</a>. This
             resolves the issues with the output printing in quiet mode.
             
             </li>
@@ -123,7 +132,7 @@
             
             </li>
             <li>FIXED: <a
-            href="../classes/Rudy/Machine.html#M000587">Rudy::Machine#refresh!</a> now
+            href="../classes/Rudy/Machine.html#M000586">Rudy::Machine#refresh!</a> now
             correctly refreshes metadata
             
             </li>
@@ -162,16 +171,16 @@
             
             </li>
             <li>ADDED: <a
-            href="../classes/Rudy/Machine.html#M000580">Rudy::Machine#get_console</a>,
+            href="../classes/Rudy/Machine.html#M000579">Rudy::Machine#get_console</a>,
             <a
-            href="../classes/Rudy/Machine.html#M000581">Rudy::Machine#get_password</a>
+            href="../classes/Rudy/Machine.html#M000580">Rudy::Machine#get_password</a>
             
             </li>
             <li>ADDED: <a
-            href="../classes/Rudy/Machine.html#M000592">Rudy::Machine#windows?</a>, <a
-            href="../classes/Rudy/Machine.html#M000593">Rudy::Machine#linux?</a>, <a
-            href="../classes/Rudy/Machine.html#M000594">Rudy::Machine#solaris?</a>, <a
-            href="../classes/Rudy/Machine.html#M000591">Rudy::Machine#os?</a>
+            href="../classes/Rudy/Machine.html#M000591">Rudy::Machine#windows?</a>, <a
+            href="../classes/Rudy/Machine.html#M000592">Rudy::Machine#linux?</a>, <a
+            href="../classes/Rudy/Machine.html#M000593">Rudy::Machine#solaris?</a>, <a
+            href="../classes/Rudy/Machine.html#M000590">Rudy::Machine#os?</a>
             
             </li>
             <li>ADDED: &#8220;rudy m -console&#8221; and &#8220;rudy m
@@ -279,7 +288,7 @@
             <li>FIXED: Global CLI option -R (region) was being ignored in lieu of -z (zone)
             
             </li>
-            <li>FIXED: <a href="../classes/Rudy/Disk.html#M000565">Rudy::Disk#archive</a>
+            <li>FIXED: <a href="../classes/Rudy/Disk.html#M000564">Rudy::Disk#archive</a>
             wasn&#8217;t storing size, fstype
             
             </li>
@@ -342,7 +351,7 @@
             
             </li>
             <li>CHANGE: Global config parameter processed differently (see <a
-            href="../classes/Rudy/Config.html#M000509">Rudy::Config#look_and_load</a>)
+            href="../classes/Rudy/Config.html#M000508">Rudy::Config#look_and_load</a>)
             
             </li>
             <li>ADDED: &#8220;rudy ssh&#8221; can now run commands in parallel

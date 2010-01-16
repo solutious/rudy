@@ -46,10 +46,44 @@ module Rudy
       header.read
     end
 
-
+    autoload :Backups, 'rudy/cli/backups'
+    autoload :Candy, 'rudy/cli/candy'
+    autoload :Config, 'rudy/cli/config'
+    autoload :Disks, 'rudy/cli/disks'
+    autoload :Images, 'rudy/cli/images'
+    autoload :Info, 'rudy/cli/info'
+    autoload :Keypairs, 'rudy/cli/keypairs'
+    autoload :Machines, 'rudy/cli/machines'
+    autoload :Metadata, 'rudy/cli/metadata'
+    autoload :Networks, 'rudy/cli/networks'
+    autoload :Routines, 'rudy/cli/routines'
+    
+    module AWS
+      module EC2
+        autoload :Info, 'rudy/cli/aws/ec2/info'
+        autoload :Candy, 'rudy/cli/aws/ec2/candy'
+        autoload :Addresses, 'rudy/cli/aws/ec2/addresses'
+        autoload :Addresses, 'rudy/cli/aws/ec2/addresses'
+        autoload :Groups, 'rudy/cli/aws/ec2/groups'
+        autoload :Images, 'rudy/cli/aws/ec2/images'
+        autoload :Instances, 'rudy/cli/aws/ec2/instances'
+        autoload :Keypairs, 'rudy/cli/aws/ec2/keypairs'
+        autoload :Snapshots, 'rudy/cli/aws/ec2/snapshots'
+        autoload :Volumes, 'rudy/cli/aws/ec2/volumes'
+        autoload :Zones, 'rudy/cli/aws/ec2/zones'
+      end
+      module SDB
+        autoload :Domains, 'rudy/cli/aws/sdb/domains'
+        autoload :Objects, 'rudy/cli/aws/sdb/objects'
+        autoload :Select, 'rudy/cli/aws/sdb/select'
+      end
+      module S3
+        autoload :Buckets, 'rudy/cli/aws/s3/buckets'
+        autoload :Store, 'rudy/cli/aws/s3/store'
+      end
+    end
   end
 end
 
-Rudy::Utils.require_glob(RUDY_LIB, 'rudy', 'cli', '**', '*.rb')
 
 

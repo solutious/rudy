@@ -3,7 +3,7 @@
 module Rudy; module CLI; 
 module AWS; module EC2;
   
-  class EC2::Keypairs < Rudy::CLI::CommandBase
+  class Keypairs < Rudy::CLI::CommandBase
     
     def create_keypairs_valid?
       raise Drydock::ArgError.new('name', @alias) unless @argv.name

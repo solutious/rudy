@@ -21,7 +21,7 @@ module Rudy
       str.to_s.tr!("[\0\n\r\032\\\\]", '').gsub!(/([\'\"])/, '\\1\\1')
     end
         
-    require 'rudy/aws/sdb'
+    #require 'rudy/aws/sdb'
     require 'rudy/aws/ec2'
     require 'rudy/aws/s3'
     

@@ -5,6 +5,7 @@ RUDY, CHANGES
 
 * FIXED: Include Gibbler for REXML
 * FIXED: Elastic IP binding on startup (GH-40)
+* FIXED: rudy-ec2 volumes should be quiet!
 * CHANGE: Increased max instances from 5 to 20. 
 * ADDED: Debug mode global option -D
 

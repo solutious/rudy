@@ -57,5 +57,8 @@ module Rudy::AWS
       b = find_bucket(name)
       !b.nil?
     end
+    
+    autoload :Error, 'rudy/aws/sdb/error'
+    
   end
 end

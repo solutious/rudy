@@ -189,7 +189,7 @@ module Rudy
         exit 7
       end
     end
-
+    
     # Checks whether something is listening to a socket. 
     # * +host+ A hostname
     # * +port+ The port to check

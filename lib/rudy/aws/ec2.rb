@@ -98,5 +98,21 @@ module Rudy; module AWS
     class NoDevice < Rudy::Error; end
     
     
+    autoload :Address, 'rudy/aws/ec2/address'
+    autoload :Addresses, 'rudy/aws/ec2/address'
+    autoload :Group, 'rudy/aws/ec2/group'
+    autoload :Groups, 'rudy/aws/ec2/group'
+    autoload :Image, 'rudy/aws/ec2/image'
+    autoload :Images, 'rudy/aws/ec2/image'
+    autoload :Instance, 'rudy/aws/ec2/instance'
+    autoload :Instances, 'rudy/aws/ec2/instance'
+    autoload :Keypair, 'rudy/aws/ec2/keypair'
+    autoload :Keypairs, 'rudy/aws/ec2/keypair'
+    autoload :Snapshot, 'rudy/aws/ec2/snapshot'
+    autoload :Snapshots, 'rudy/aws/ec2/snapshot'
+    autoload :Volume, 'rudy/aws/ec2/volume'
+    autoload :Volumes, 'rudy/aws/ec2/volume'
+    autoload :Zone, 'rudy/aws/ec2/zone'
+    autoload :Zones, 'rudy/aws/ec2/zone'
   end
 end; end

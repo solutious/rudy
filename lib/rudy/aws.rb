@@ -20,12 +20,10 @@ module Rudy
     def escape!(str)
       str.to_s.tr!("[\0\n\r\032\\\\]", '').gsub!(/([\'\"])/, '\\1\\1')
     end
-        
-    #require 'rudy/aws/sdb'
-    require 'rudy/aws/ec2'
-    require 'rudy/aws/s3'
     
-    Rudy::Utils.require_glob(RUDY_LIB, 'rudy', 'aws', '{ec2,s3,sdb}', "*.rb")
+    autoload :SDB, 'rudy/aws/sdb'
+    autoload :EC2, 'rudy/aws/ec2'
+    autoload :S3, 'rudy/aws/s3'
     
     class Error < ::AWS::Error; end
   end

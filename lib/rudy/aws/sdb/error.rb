@@ -1,7 +1,6 @@
 module Rudy
   module AWS
     class SDB
-
       class Error < RuntimeError ; end
 
       class RequestError < Error

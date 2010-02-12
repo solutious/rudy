@@ -1,5 +1,18 @@
 RUDY, CHANGES 
 
+* TODO: Warning in latest Ruby 1.9.1: httpclient/http.rb:367: warning: variable $KCODE
+* rudy create-disks
+ Executing routine: create-disks 
+  disks:
+  Timeout (30): execution expired!
+Creating volume... 
+  NameError: uninitialized constant Rudy::Metadata::UnknownObject
+(S)kip  (A)bort:
+
+
+#### 0.9.7 (2010-02-??) ###############################
+
+* CHANGE: Remove hanna dependency
 
 #### 0.9.6 (2010-01-16) ###########################
 

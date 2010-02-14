@@ -23,12 +23,13 @@
   s.add_dependency 'caesars',    '>= 0.7.3'
   s.add_dependency 'sysinfo',    '>= 0.7.0'
   s.add_dependency 'gibbler',    '>= 0.7.1'
-  s.add_dependency 'tryouts',    '>= 0.8.4'
   s.add_dependency 'storable',   '>= 0.5.8'
   
   s.add_dependency 'aws-s3',     '>= 0.6.1'
   s.add_dependency 'highline',   '>= 1.5.1'
   s.add_dependency 'amazon-ec2', '>= 0.5.0'
+
+  s.add_development_dependency 'tryouts',    '>= 0.8.4'
   
   # = MANIFEST =
   # git ls-files

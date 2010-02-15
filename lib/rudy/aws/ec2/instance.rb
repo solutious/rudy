@@ -80,7 +80,6 @@ module Rudy::AWS
           :group_id => [opts[:group]].flatten.compact,
           #:user_data => opts[:machine_data],  # Error: Invalid BASE64 encoding of user data ??
           :availability_zone => opts[:zone].to_s,
-          :addressing_type => opts[:private] ? 'private' : 'public',
           :instance_type => opts[:size].to_s,
           :kernel_id => nil
         }

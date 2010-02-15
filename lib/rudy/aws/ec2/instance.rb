@@ -77,7 +77,7 @@ module Rudy::AWS
           :min_count => opts[:min],
           :max_count => opts[:max] || opts[:min],
           :key_name => (opts[:keypair] || '').to_s,
-          :group_id => [opts[:group]].flatten.compact,
+          :security_group => [opts[:group]].flatten.compact,
           #:user_data => opts[:machine_data],  # Error: Invalid BASE64 encoding of user data ??
           :availability_zone => opts[:zone].to_s,
           :instance_type => opts[:size].to_s,

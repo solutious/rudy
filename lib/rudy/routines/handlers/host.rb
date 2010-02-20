@@ -36,7 +36,7 @@ module Rudy; module Routines; module Handlers;
       rset.boxes.each do |rbox|
         mach = rbox.stash
         # Assign IP address only if we have one for that position
-        if mach.address
+        if !mach.address.nil? && !mach.address.empty?
           begin
             # Make sure the address is associated to the current account
             if Rudy::AWS::EC2::Addresses.exists?(mach.address)

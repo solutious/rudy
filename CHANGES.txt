@@ -10,9 +10,14 @@ Creating volume...
 (S)kip  (A)bort:
 
 
-#### 0.9.7 (2010-02-??) ###############################
+#### 0.9.7 (2010-02-20) ###############################
 
-* CHANGE: Remove hanna dependency
+* FIXED: Replace the group_id parameter with security_group. [Diego Elio 'Flameeyes' Pettenò]
+* FIXED: Remote the addressing type option no longer supported by amazon-ec2. [Diego Elio 'Flameeyes' Pettenò]
+* FIXED: "Error associating address" message on startup
+* CHANGE: Don't make tryouts a runtime dependency, but a development dependency. [Diego Elio 'Flameeyes' Pettenò]
+* CHANGE: Remove hanna dependency. [Diego Elio 'Flameeyes' Pettenò]
+
 
 #### 0.9.6 (2010-01-16) ###########################
 

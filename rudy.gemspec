@@ -1,7 +1,7 @@
 @spec = Gem::Specification.new do |s|
   s.name = "rudy"
   s.rubyforge_project = 'rudy'
-  s.version = "0.9.6.002"
+  s.version = "0.9.7.001"
   s.summary = "Rudy: Not your grandparents' EC2 deployment tool."
   s.description = s.summary
   s.author = "Delano Mandelbaum"
@@ -17,19 +17,19 @@
   s.executables = %w[rudy rudy-ec2 rudy-sdb rudy-s3]
   
   s.add_dependency 'rye',        '>= 0.8.11'
-  s.add_dependency 'attic',      '>= 0.4.0'
-  s.add_dependency 'annoy',      '>= 0.5.5'
-  s.add_dependency 'drydock',    '>= 0.6.6'
-  s.add_dependency 'caesars',    '>= 0.7.3'
-  s.add_dependency 'sysinfo',    '>= 0.7.0'
-  s.add_dependency 'gibbler',    '>= 0.7.1'
-  s.add_dependency 'storable',   '>= 0.5.8'
+  s.add_dependency 'attic',      '>= 0.5.2'
+  s.add_dependency 'annoy',      '>= 0.5.6'
+  s.add_dependency 'drydock',    '>= 0.6.9'
+  s.add_dependency 'caesars',    '>= 0.7.4'
+  s.add_dependency 'sysinfo',    '>= 0.7.3'
+  s.add_dependency 'gibbler',    '>= 0.7.4'
+  s.add_dependency 'storable',   '>= 0.6.3'
   
   s.add_dependency 'aws-s3',     '>= 0.6.1'
   s.add_dependency 'highline',   '>= 1.5.1'
-  s.add_dependency 'amazon-ec2', '>= 0.5.0'
+  s.add_dependency 'amazon-ec2', '>= 0.9.4'
 
-  s.add_development_dependency 'tryouts',    '>= 0.8.4'
+  s.add_development_dependency 'tryouts',    '>= 0.8.8'
   
   # = MANIFEST =
   # git ls-files

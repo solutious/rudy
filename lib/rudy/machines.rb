@@ -16,6 +16,13 @@ module Rudy
       tmp.from_hash record
     end
     
+    def self.list(*args, &blk)
+      machs = super(*args, &blk) || []
+      manual = fetch_machine_param(:hostname) || []
+      manual.reject! { |m| m.is_a?(Symbol) }
+      machs.push *manual
+      machs
+    end
     def find_next_position
       raise "reimplement by looking at position values"
       list = Rudy::Machines.list({}, [:position]) || []

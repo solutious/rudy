@@ -10,6 +10,10 @@ Creating volume...
 (S)kip  (A)bort:
 
 
+#### 0.9.7.002 (2010-04-02) ###############################
+
+* ADDED: Support for specifying non-ec2 instances in machines config with hostname parameter
+
 #### 0.9.7 (2010-02-20) ###############################
 
 * FIXED: Replace the group_id parameter with security_group. [Diego Elio 'Flameeyes' Pettenò]

@@ -18,7 +18,7 @@ module Rudy
     
     def self.list(*args, &blk)
       machs = super(*args, &blk) || []
-      manual = fetch_machine_param(:hostname) || []
+      manual = [fetch_machine_param(:hostname)].flatten.compact
       manual.reject! { |m| m.is_a?(Symbol) }
       machs.push *manual
       machs

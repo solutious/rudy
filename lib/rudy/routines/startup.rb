@@ -24,7 +24,7 @@ module Rudy; module Routines;
       if run?
         Rudy::Routines::Handlers::Depends.execute_all @before
         
-        li " Executing routine: #{@name} ".att(:reverse)
+        li " Executing routine: #{@name} ".att(:reverse), ""
         ld "[this is a generic routine]" if @routine.empty?
         
         if @routine.has_key? :before_local

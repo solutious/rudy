@@ -11,7 +11,7 @@ module Rudy; module Routines;
     
     def execute
       Rudy::Routines::Handlers::Depends.execute_all @before
-      li " Executing routine: #{@name} ".att(:reverse)
+      li " Executing routine: #{@name} ".att(:reverse), ""
       # Re-retreive the machine set to reflect dependency changes
       Rudy::Routines.rescue {
         @machines = Rudy::Machines.list || []

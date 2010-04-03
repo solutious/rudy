@@ -34,7 +34,7 @@ module Rudy; module Routines;
         
         Rudy::Routines::Handlers::Depends.execute_all @before
         
-        li " Executing routine: #{@name} ".att(:reverse)
+        li " Executing routine: #{@name} ".att(:reverse), ""
         ld "[this is a generic routine]" if @routine.empty?
         
         # Re-retreive the machine set to reflect dependency changes

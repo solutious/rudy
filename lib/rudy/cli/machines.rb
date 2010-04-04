@@ -243,16 +243,24 @@ module Rudy
 
         rset = Rye::Set.new(current_machine_group, :parallel => @global.parallel)
         lt.each do |machine|
-          machine.refresh!  # make sure we have the latest DNS info
-          rbox = Rye::Box.new(machine.dns_public, rye_opts)
-          rbox.nickname = machine.name
+          if Rudy::Machine === machine 
+            machine.refresh! # make sure we have the latest DNS info 
+            rbox = Rye::Box.new(machine.dns_public, rye_opts)
+            rbox.nickname = machine.name
+            instid = machine.instid
+          else
+            rbox = Rye::Box.new(machine, rye_opts)
+            rbox.nickname = machine
+            instid = ''
+          end
+          
           if command == :interactive_ssh
             # Print header
             if @@global.quiet
               print "You are #{rye_opts[:user].to_s.bright}. " if !checked # only the 1st
             else
-              li machine_separator(machine.name, machine.instid)
-              li "Connecting #{rye_opts[:user].to_s.bright}@#{machine.dns_public} "
+              li machine_separator(rbox.nickname, instid)
+              li "Connecting #{rye_opts[:user].to_s.bright}@#{rbox.host} "
               li
             end
           else

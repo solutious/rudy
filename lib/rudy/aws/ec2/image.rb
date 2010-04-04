@@ -4,15 +4,15 @@ module Rudy::AWS
   class EC2::Image < Storable
     @@sformat = "   -> %8s; %12s; %12s; %12s; %8s"
     
-    field :awsid
-    field :owner
-    field :aki
-    field :ari
-    field :state
-    field :arch
-    field :visibility
-    field :location
-    field :kind
+    field :awsid => String
+    field :owner => String
+    field :aki => String
+    field :ari => String
+    field :state => String
+    field :arch => String
+    field :visibility => String
+    field :location => String
+    field :kind => String
         
     def to_s(with_title=false)
       [@awsid.bright, @arch, @visibility, @location].join '; '

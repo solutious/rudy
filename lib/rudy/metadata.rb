@@ -118,7 +118,7 @@ module Rudy
         fields = Rudy::Metadata.build_criteria self::RTYPE, fields, less
         records_raw, records = Rudy::Metadata.select(fields), []
         return nil if records_raw.nil? || records_raw.empty?
-        records_raw.each_pair do |p, r|
+        records_raw.each_pair do |key, r|
           obj = self.from_hash r
           records << obj
         end
@@ -231,6 +231,19 @@ module Rudy
     def exists?
       !Rudy::Metadata.get(self.name).nil?
     end
+    
+    
+    
+    
+
+    class UnknownRecordType < Rudy::Error
+      def message; "Unknown record type: #{@obj}"; end
+    end
+    class UnknownObject < Rudy::Error
+      def message; "Unknown object: #{@obj}"; end
+    end
+    # Raised when trying to save a record with a key that already exists
+    class DuplicateRecord < Rudy::Error; end
     
   end
   autoload :Backup, 'rudy/metadata/backup'

@@ -5,8 +5,8 @@ module Rudy::AWS
   module EC2
     
     class Address < Storable
-      field :ipaddress
-      field :instid
+      field :ipaddress => String
+      field :instid => String
       
       def liner_note
         info = self.associated? ? @instid : "available"
@@ -133,7 +133,7 @@ module Rudy::AWS
       # Returns true if the given address is assigned to the current account
       def exists?(address)
         address = address.ipaddress if address.is_a?(Rudy::AWS::EC2::Address)
-        list.each do |a|
+        (list || []).each do |a|
           return true if a.ipaddress == address
         end
         false
@@ -143,7 +143,7 @@ module Rudy::AWS
       # Returns true if the given address is associated to an instance
       def associated?(address)
         address = address.ipaddress if address.is_a?(Rudy::AWS::EC2::Address)
-        list.each do |a|
+        (list || []).each do |a|
           return true if a.ipaddress == address && a.instid
         end
         false

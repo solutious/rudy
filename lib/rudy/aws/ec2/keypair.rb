@@ -4,9 +4,9 @@ module Rudy::AWS
     
     class Keypair < Storable
       
-      field :name
-      field :fingerprint
-      field :private_key  
+      field :name => String
+      field :fingerprint => String
+      field :private_key   => String
       
       def to_s(titles=false)
         [@name.bright, @fingerprint].join '; '

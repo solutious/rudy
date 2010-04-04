@@ -4,20 +4,20 @@
 module Rudy::AWS
   class EC2::Instance < Storable
     @@sformat = "   -> %10s; %10s; %12s; %10s; groups: %s"
-    field :aki
-    field :ari
     field :launch_index => Time
-    field :created
-    field :keyname
-    field :size
-    field :ami
-    field :dns_private
-    field :dns_public
-    field :awsid
-    field :state
-    field :zone
-    field :reason
     field :groups => Array
+    field :aki => String
+    field :ari => String
+    field :created => String
+    field :keyname => String
+    field :size => String
+    field :ami => String
+    field :dns_private => String
+    field :dns_public => String
+    field :awsid => String
+    field :state => String
+    field :zone => String
+    field :reason => String
     
     def init
       @groups ||= []

@@ -9,6 +9,7 @@ module Rudy
   # be added to this class (optional: a default value in initialize).
   class Global < Storable
     
+    field :config => String
     field :region
     field :zone
     field :environment
@@ -41,7 +42,6 @@ module Rudy
     field :offline
     field :bucket
     
-    field :config => String
     
     attr_accessor :print_header
     

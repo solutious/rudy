@@ -41,7 +41,10 @@ module AWS; module EC2;
       
       li "Destroying #{@volume.awsid}"
       execute_check(:medium)
-      execute_action("Destroy Failed") { Rudy::AWS::EC2::Volumes.destroy(@volume.awsid) }
+      execute_action("Destroy Failed") { 
+        Rudy::AWS::EC2::Volumes.destroy(@volume.awsid) 
+        true
+      }
       
       vol = Rudy::AWS::EC2::Volumes.get(@volume.awsid)
 

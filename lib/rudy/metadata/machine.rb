@@ -9,30 +9,30 @@ module Rudy
     include Rudy::Metadata
     include Gibbler::Complex
     
-    field :rtype
-    field :instid
-
-    field :region
-    field :zone
-    field :environment
-    field :role
-    field :position
-    
-    field :size
-    field :ami
-    field :group
-    field :keypair
-    field :address
-    
     field :created => Time
     field :started => Time
     
-    field :dns_public
-    field :dns_private
-    field :state
+    field :rtype => String
+    field :instid => String
+
+    field :region => Symbol
+    field :zone => Symbol
+    field :environment => Symbol
+    field :role => Symbol
+    field :position => Integer
     
-    field :os
-    field :impl
+    field :size => String
+    field :ami => String
+    field :group => String
+    field :keypair => String
+    field :address => String
+    
+    field :dns_public => String
+    field :dns_private => String
+    field :state => String
+    
+    field :os => Symbol
+    field :impl => Symbol
     
     attr_reader :instance
     

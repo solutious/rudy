@@ -113,7 +113,7 @@ module Rudy; module Routines;
       if run? && !@@global.force
         if @@global.position.nil?
           raise MachineGroupAlreadyRunning, current_machine_group if Rudy::Machines.running?
-          raise MachineGroupMetadataExists, current_machine_group if Rudy::Machines.exists?
+          #raise MachineGroupMetadataExists, current_machine_group if Rudy::Machines.exists?
         else
           if Rudy::Machines.running? @@global.position
             m = Rudy::Machine.new @@global.position

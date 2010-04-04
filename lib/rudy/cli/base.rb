@@ -107,8 +107,8 @@ module Rudy::CLI
     def print_stobject(obj, noverbose=false)
       format = @@global.format
       format = :yaml if @@global.verbose > 0 && @@global.format == :string
-      format = :string if noverbose
-      li String === obj.dump ? obj.dump : obj.dump(format)
+      format = :string if noverbose || format.to_s == "s"
+      li String === obj ? obj.dump : obj.dump(format)
     end
     
     def machine_separator(name, awsid)

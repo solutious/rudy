@@ -5,13 +5,13 @@ module Rudy::AWS
     class Volume < Storable
       @@sformat = "%s  %10s;%4sGB;  %s  " # cram the terabyte
       
-      field :awsid
-      field :status
       field :size  => Integer
-      field :snapid
       field :zone  => Symbol
       field :created => Time
       field :attached => Time
+      field :awsid
+      field :status
+      field :snapid
       field :instid
       field :device
     

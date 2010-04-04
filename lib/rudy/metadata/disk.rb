@@ -5,26 +5,26 @@ module Rudy
     include Rudy::Metadata
     include Gibbler::Complex
     
-    field :rtype
-    field :volid
-    field :status
-    field :instid
+    field :created  => Time
+    field :rtype => String
+    field :volid => String
+    field :status => String
+    field :instid => String
 
-    field :path
+    field :path => String
 
-    field :device
-    field :size
-    field :fstype
+    field :device => String
+    field :size => String
+    field :fstype => String
     
-    field :name    # Windows, used for label
-    field :index   # Windows, used for diskpart
+    field :name     => String# Windows, used for label
+    field :index    => String# Windows, used for diskpart
     
     #field :backups => Array
     
     # Is the associated volume formatted? One of: true, false
-    field :raw
-    field :mounted
-    field :created  => Time
+    field :raw => String
+    field :mounted => String
     
     # If one argument is supplied:
     # * +path+ is a an absolute filesystem path

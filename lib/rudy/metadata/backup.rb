@@ -6,23 +6,23 @@ module Rudy
     include Rudy::Metadata
     include Gibbler::Complex
     
-    field :rtype
-    field :snapid
-    field :volid
-    
-    field :path
-    
     field :created => Time
-    field :year
-    field :month
-    field :day
-    field :hour
-    field :minute
-    field :second
+    field :rtype => String
+    field :snapid => String
+    field :volid => String
     
-    field :user
-    field :size
-    field :fstype
+    field :path => String
+    
+    field :year => String
+    field :month => String
+    field :day => String
+    field :hour => String
+    field :minute => String
+    field :second => String
+    
+    field :user => String
+    field :size => String
+    field :fstype => String
     
     # If one argument is supplied:
     # * +path+ is a an absolute filesystem path

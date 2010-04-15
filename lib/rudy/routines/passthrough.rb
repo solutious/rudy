@@ -2,6 +2,10 @@
 module Rudy; module Routines;
   class Passthrough < Rudy::Routines::Base
     
+    Rudy::Routines.add_routine :startup, Rudy::Routines::Startup
+    Rudy::Routines.add_routine :shutdown, Rudy::Routines::Shutdown
+    Rudy::Routines.add_routine :reboot, Rudy::Routines::Reboot
+    
     def init(*args)
       Rudy::Routines.rescue {
         @machines = Rudy::Machines.list || []

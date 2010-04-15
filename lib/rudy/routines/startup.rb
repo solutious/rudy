@@ -72,7 +72,7 @@ module Rudy; module Routines;
       
       # This is important b/c the machines will not 
       # have DNS info until after they are running. 
-      # This will also assigns elastic IP addresses. 
+      # This will also assign elastic IP addresses. 
       Rudy::Routines.rescue { Rudy::Routines::Handlers::Host.update_dns @@rset }
       
       Rudy::Routines.rescue {

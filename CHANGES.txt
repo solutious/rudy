@@ -10,7 +10,11 @@ Creating volume...
 (S)kip  (A)bort:
 
 
-#### 0.9.7.002 (2010-04-02) ###############################
+#### 0.9.8.002 (2010-04-??) ###############################
+
+* FIXED: Calling startup routine as before dependency
+
+#### 0.9.8.001 (2010-04-02) ###############################
 
 * ADDED: Support for specifying non-ec2 instances in machines config with hostname parameter
 

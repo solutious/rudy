@@ -1,5 +1,6 @@
 RUDY, CHANGES 
 
+* TODO: http://github.com/solutious/rudy/issues/#issue/43
 * TODO: Warning in latest Ruby 1.9.1: httpclient/http.rb:367: warning: variable $KCODE
 * rudy create-disks
  Executing routine: create-disks 
@@ -12,9 +13,10 @@ Creating volume...
 
 #### 0.9.8.002 (2010-05-14) ####################### 
 
+* FIXED: Calling startup routine as before dependency
 * CHANGE: only switch to root if the hostname requires changing [Matt Jackson]
 
-#### 0.9.7.002 (2010-04-02) #######################
+#### 0.9.8.001 (2010-04-02) #######################
 
 * ADDED: Support for specifying non-ec2 instances in machines config with hostname parameter
 

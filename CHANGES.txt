@@ -10,11 +10,15 @@ Creating volume...
 (S)kip  (A)bort:
 
 
-#### 0.9.7.002 (2010-04-02) ###############################
+#### 0.9.8.002 (2010-05-14) ####################### 
+
+* CHANGE: only switch to root if the hostname requires changing [Matt Jackson]
+
+#### 0.9.7.002 (2010-04-02) #######################
 
 * ADDED: Support for specifying non-ec2 instances in machines config with hostname parameter
 
-#### 0.9.7 (2010-02-20) ###############################
+#### 0.9.7 (2010-02-20) ###########################
 
 * FIXED: Replace the group_id parameter with security_group. [Diego Elio 'Flameeyes' Pettenò]
 * FIXED: Remote the addressing type option no longer supported by amazon-ec2. [Diego Elio 'Flameeyes' Pettenò]

@@ -1,5 +1,6 @@
 RUDY, CHANGES 
 
+* TODO: http://github.com/solutious/rudy/issues/#issue/43
 * TODO: Warning in latest Ruby 1.9.1: httpclient/http.rb:367: warning: variable $KCODE
 * rudy create-disks
  Executing routine: create-disks 

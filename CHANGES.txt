@@ -13,6 +13,8 @@ Creating volume...
 #### 0.9.8.004 (2010-05-19) ####################### 
 
 * FIXED: original_user and user_keypairpath errors when running "rudy machines -U"
+* FIXED: Silence redefining startup class message unless debug mode
+
 
 #### 0.9.8.003 (2010-05-19) ####################### 
 

@@ -126,7 +126,7 @@ module Rudy
     # See Rudy::Routines.add_routine
     def self.add_some_class(store, super_klass, name, klass)
       if store.has_key? name
-        Rudy::Huxtable.li "Redefining class for #{name}"
+        Rudy::Huxtable.ld "Redefining class for #{name}"
       end
       unless klass.ancestors.member? super_klass
         raise "#{klass} does not inherit #{super_klass}"

@@ -112,7 +112,7 @@ class Rudy::Config
         # We can allow existing commands to be overridden but we
         # print a message to STDERR so the user knows what's up.
         if Rye::Cmd.can?(cmd)
-          Rudy::Huxtable.le "Redefining #{cmd}" if Rudy::Huxtable.global.verbose > 2
+          Rudy::Huxtable.ld "Redefining #{cmd}" if Rudy::Huxtable.global.verbose > 2
         end
         
         if args.last.is_a?(Proc)

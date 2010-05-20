@@ -10,6 +10,11 @@ Creating volume...
   NameError: uninitialized constant Rudy::Metadata::UnknownObject
 (S)kip  (A)bort:
 
+#### 0.9.8.003 (2010-05-19) ####################### 
+
+* FIXED: Rye should be in quiet mode when Rudy.quiet?
+* FIXED: Print paths for files transferred in routines (via Rye 0.8.16)
+
 
 #### 0.9.8.002 (2010-05-14) ####################### 
 

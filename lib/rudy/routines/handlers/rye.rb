@@ -73,7 +73,8 @@ module Rudy::Routines::Handlers;
        
        opts = {
          :user => (current_machine_user).to_s,
-         :parallel => @@global.parallel
+         :parallel => @@global.parallel,
+         :quiet => Rudy.quiet?
        }.merge(opts)
        set = ::Rye::Set.new current_machine_group, opts 
 

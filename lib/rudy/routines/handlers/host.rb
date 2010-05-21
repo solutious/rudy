@@ -100,7 +100,7 @@ module Rudy; module Routines; module Handlers;
           if hn != :default
             original_user = rset.user
             rset.switch_user 'root'
-            rset.add_key Huxtable.user_keypairpath('root')
+            rset.add_key ::Rudy::Huxtable.user_keypairpath('root')
             hn = self.stash.name if hn == :rudy
             self.quietly { hostname(hn) }
             rset.switch_user original_user

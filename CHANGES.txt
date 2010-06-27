@@ -1,5 +1,6 @@
 RUDY, CHANGES 
 
+* TODO: http://github.com/solutious/rudy/issues/#issue/46
 * TODO: http://github.com/solutious/rudy/issues/#issue/43
 * TODO: Warning in latest Ruby 1.9.1: httpclient/http.rb:367: warning: variable $KCODE
 * rudy create-disks
@@ -9,6 +10,11 @@ RUDY, CHANGES
 Creating volume... 
   NameError: uninitialized constant Rudy::Metadata::UnknownObject
 (S)kip  (A)bort:
+
+#### 0.9.8.006 (2010-06-28) ####################### 
+
+* FIXED: In Ruby 1.9, the value for disk.position was being modified by refresh!
+
 
 #### 0.9.8.005 (2010-05-21) ####################### 
 

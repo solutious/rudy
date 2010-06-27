@@ -54,7 +54,7 @@ module Rudy
     end
     
     # Get a record from SimpleDB with the key +n+
-    def self.get(n)
+    def self.get(n) 
       Rudy::Huxtable.ld "GET: #{n}" if Rudy.debug?
       @@rsdb.get @@domain, n
     end

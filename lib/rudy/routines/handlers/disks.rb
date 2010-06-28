@@ -189,7 +189,7 @@ module Rudy::Routines::Handlers;
       
       li "Mounting at #{disk.path}... "
       
-      if rbox.user.to_s == 'root'
+      if rbox.root?
         rbox.mkdir(:p, disk.path)
         rbox.mount(:t, disk.fstype, disk.device, disk.path)
       else
@@ -217,7 +217,7 @@ module Rudy::Routines::Handlers;
       li "Unmounting #{disk.path}... "
       
       unless rbox.nil? || rbox.stash.windows?
-        if rbox.user.to_s == 'root'
+        if rbox.root?
           rbox.umount(disk.path)
         else
           rbox.sudo :umount, disk.path
@@ -255,7 +255,7 @@ module Rudy::Routines::Handlers;
       else
         li $/
         args = [:t, disk.fstype, :F, disk.device]
-        if rbox.user.to_s == 'root'
+        if rbox.root?
           rbox.rudy_mkfs *args
         else
           rbox.sudo 'mkfs', *args

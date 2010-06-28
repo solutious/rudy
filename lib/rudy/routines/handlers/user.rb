@@ -32,7 +32,7 @@ module Rudy; module Routines; module Handlers;
       # adduser can prompt for info which we don't want. 
       # useradd does not prompt (on Debian/Ubuntu at least). 
       # We need to specify bash b/c the default is /bin/sh
-      robj.useradd(args)
+      robj.root? ? robj.useradd(args) : robj.sudo( :useradd, args)
     end
     
     def authorize(user, robj)

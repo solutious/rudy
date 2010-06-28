@@ -98,12 +98,8 @@ module Rudy; module Routines; module Handlers;
       rset.batch(type) do |hn|
         unless self.stash.os == :windows
           if hn != :default
-            original_user = rset.user
-            rset.switch_user 'root'
-            rset.add_key ::Rudy::Huxtable.user_keypairpath('root')
             hn = self.stash.name if hn == :rudy
-            self.quietly { hostname(hn) }
-            rset.switch_user original_user
+            root? ? hostname(hn) : sudo(:hostname, hn)
           end
         end
       end

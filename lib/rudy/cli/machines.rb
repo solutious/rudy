@@ -157,11 +157,9 @@ module Rudy
         os = current_machine_os
         mlist.each do |m|
           li "Updating #{m.name}"
-          m.refresh!
-          rbox = Rye::Box.new(m.dns_public, :user => 'root')
-          rbox.add_key user_keypairpath('root')
-          rbox.nickname = m.name
+          rbox = Rudy::Routines::Handlers::RyeTools.create_box m
           rbox.stash = m
+          m.refresh!
           rset.add_boxes rbox
           if m.os.to_s != os.to_s
             li "os: #{os}"

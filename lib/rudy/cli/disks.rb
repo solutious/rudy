@@ -60,7 +60,6 @@ module Rudy
         true
       end
       
-      
       def disks_create
         @mlist.each do |m|  
           li machine_separator(m.name, m.instid)
@@ -79,7 +78,6 @@ module Rudy
         end
       end
       
-      
       def disks_destroy_valid?
         @dlist = Rudy::Disks.list
         raise "No disks" if @dlist.nil?
@@ -94,7 +92,7 @@ module Rudy
       
       def disks_destroy
         execute_check(:medium)
-        if @mlist
+        if !@mlist.empty?
           @mlist.each do |m|  
             rbox = Rudy::Routines::Handlers::RyeTools.create_box m
             rbox.stash = m
@@ -104,7 +102,7 @@ module Rudy
           end
         else
           @dlist.each do |d|
-            li "Destroying disk: #{d.name}"
+            li "Working on #{d.name}"
             Rudy::Routines::Handlers::Disks.destroy nil, d, 0
           end
         end

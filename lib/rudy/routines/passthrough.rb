@@ -14,7 +14,7 @@ module Rudy; module Routines;
     end
     
     def execute
-      Rudy::Routines::Handlers::Depends.execute_all @before
+      Rudy::Routines::Handlers::Depends.execute_all @before, @argv
       li " Executing routine: #{@name} ".att(:reverse), ""
       # Re-retreive the machine set to reflect dependency changes
       Rudy::Routines.rescue {
@@ -24,7 +24,7 @@ module Rudy; module Routines;
       
       return @machines unless run?
       Rudy::Routines.runner(@routine, @@rset, @@lbox, @argv)
-      Rudy::Routines::Handlers::Depends.execute_all @after
+      Rudy::Routines::Handlers::Depends.execute_all @after, @argv
       @machines
     end
     

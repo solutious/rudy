@@ -27,21 +27,21 @@ module Rudy; module Routines; module Handlers;
     # This method finds the handler for the given routine,
     # creates an instance, calls raise_early_exceptions,
     # and finally executes the routine.
-    def execute(routine_name)
+    def execute(routine_name, argv=[])
       routine_obj = Rudy::Routines.get_routine routine_name
-      ld "Executing dependency: #{routine_name} (#{routine_obj})"
-      routine = routine_obj.new routine_name
+      ld "Executing dependency: #{routine_name} (#{routine_obj}) (argv: #{argv})"
+      routine = routine_obj.new routine_name, {}, argv
       routine.raise_early_exceptions
       routine.execute
     end
     
     # Calls execute for each routine name in +depends+ (an Array).
     # Does nothing if given an empty Array or nil.
-    def execute_all(depends)
+    def execute_all(depends, argv=[])
       return if depends.nil? || depends.empty?
       depends = depends.flatten.compact
       ld "Found depenencies: #{depends.join(', ')}"
-      depends.each { |routine| execute(routine) }
+      depends.each { |routine| execute(routine, argv) }
     end
     
   end

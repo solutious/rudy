@@ -28,7 +28,7 @@ module Rudy; module Routines;
     def execute
       
       if run?
-        Rudy::Routines::Handlers::Depends.execute_all @before
+        Rudy::Routines::Handlers::Depends.execute_all @before, @argv
         
         li " Executing routine: #{@name} ".att(:reverse), ""
         ld "[this is a generic routine]" if @routine.empty?
@@ -96,7 +96,7 @@ module Rudy; module Routines;
         Rudy::Routines.runner @routine, @@rset, @@lbox, @argv
         
         Rudy::Routines.rescue {
-          Rudy::Routines::Handlers::Depends.execute_all @after
+          Rudy::Routines::Handlers::Depends.execute_all @after, @argv
         }
       end
       

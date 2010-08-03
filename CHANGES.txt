@@ -11,6 +11,11 @@ Creating volume...
   NameError: uninitialized constant Rudy::Metadata::UnknownObject
 (S)kip  (A)bort:
 
+
+#### 0.9.8.007 (2010-08-03) ####################### 
+
+* FIXED: Command-line arguments for routines are now passed to before and after dependencies.
+
 #### 0.9.8.007 (2010-06-28) ####################### 
 
 * FIXED: "rudy disks --destroy /path" was not working when all machines were shutdown.

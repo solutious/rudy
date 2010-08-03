@@ -32,7 +32,7 @@ module Rudy; module Routines;
           Rudy::Routines::Handlers::Group.authorize rescue nil
         }
         
-        Rudy::Routines::Handlers::Depends.execute_all @before
+        Rudy::Routines::Handlers::Depends.execute_all @before, @argv
         
         li " Executing routine: #{@name} ".att(:reverse), ""
         ld "[this is a generic routine]" if @routine.empty?
@@ -57,7 +57,7 @@ module Rudy; module Routines;
           }
         end
       
-        Rudy::Routines::Handlers::Depends.execute_all @after
+        Rudy::Routines::Handlers::Depends.execute_all @after, @argv
       end
       
       @machines

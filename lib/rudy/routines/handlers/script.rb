@@ -68,7 +68,7 @@ module Rudy; module Routines; module Handlers;
         ### EXECUTE THE COMMANDS BLOCK
         begin
           robj.batch(argv, &proc)
-        rescue Rye::CommandError => ex
+        rescue Rye::Err => ex
           # No need to bubble exception up when in parallel mode
           raise ex unless Rye::Set == robj
         ensure

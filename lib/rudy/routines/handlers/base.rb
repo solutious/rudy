@@ -35,14 +35,14 @@ module Rudy; module Routines; module Handlers;
 
   private 
     def print_response(rap)
-      colour = rap.exit_code != 0 ? :red : :normal
+      colour = rap.exit_status != 0 ? :red : :normal
       [:stderr].each do |sumpin|
         next if rap.send(sumpin).empty?
         le
         le(("  #{sumpin.to_s.upcase}  " << '-'*38).color(colour).bright)
         le "  " << rap.send(sumpin).join("#{$/}  ").color(colour)
       end
-      le "  Exit code: #{rap.exit_code}".color(colour) if rap.exit_code != 0
+      le "  Exit code: #{rap.exit_status}".color(colour) if rap.exit_status != 0
     end
   
   end

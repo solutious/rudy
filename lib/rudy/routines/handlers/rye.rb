@@ -17,7 +17,8 @@ module Rudy::Routines::Handlers;
          :debug => false,
          :user => current_machine_user, 
          :ostype => current_machine_os || :unix,
-         :impltype => :linux
+         :impltype => :linux, 
+         :info => STDOUT
        }.merge opts
        
        nickname = hostname
@@ -49,7 +50,7 @@ module Rudy::Routines::Handlers;
          end
        end
 
-       box.exception_hook(::Rye::CommandError, &rbox_exception_handler)
+       box.exception_hook(::Rye::Err, &rbox_exception_handler)
        box.exception_hook(Exception, &rbox_exception_handler)
        
        ## It'd better for unknown commands to be handled elsewhere
@@ -121,7 +122,7 @@ module Rudy::Routines::Handlers;
     def print_response(rap)
       # Non zero exit codes raise exceptions so  
       # the erorrs have already been handled. 
-      return if rap.exit_code != 0
+      return if rap.exit_status != 0
 
       if @@global.parallel
         cmd, user = cmd.to_s, user.to_s
@@ -132,7 +133,7 @@ module Rudy::Routines::Handlers;
         end
       else
         li '  ' << rap.stdout.join("#{$/}  ") if !rap.stdout.empty?
-        colour = rap.exit_code != 0 ? :red : :normal
+        colour = rap.exit_status != 0 ? :red : :normal
         unless rap.stderr.empty?
           le ("  STDERR  " << '-'*38).color(colour).bright
           le "  " << rap.stderr.join("#{$/}    ").color(colour)
@@ -145,14 +146,13 @@ module Rudy::Routines::Handlers;
      Proc.new do |ex, cmd, user, host, nickname|
        print_exception(user, host, cmd, nickname, ex)
        unless @@global.parallel
-         choice = Annoy.get_user_input('(S)kip  (R)etry  (F)orce  (A)bort: ', nil, 3600) || ''
+         choice = Annoy.get_user_input('(S)kip  (R)etry  (I)nteractive  (A)bort: ', nil, 3600) || ''
          if choice.match(/\AS/i)
            :skip
          elsif choice.match(/\AR/i)
            :retry   # Tells Rye::Box#run_command to retry
-         elsif choice.match(/\AF/i)
-           @@global.force = true
-           :retry
+         elsif choice.match(/\AI/i)
+           :interactive
          else
            exit 12
          end
@@ -162,7 +162,7 @@ module Rudy::Routines::Handlers;
 
    def print_exception(user, host, cmd, nickname, ex)
      prefix = @@global.parallel ? "#{nickname}: #{cmd}: " : ""
-     if ex.is_a?(::Rye::CommandError)
+     if ex.is_a?(::Rye::Err)
        le prefix << ex.message.color(:red)
      else
        le prefix << "#{ex.class}: #{ex.message}".color(:red)

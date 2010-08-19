@@ -207,7 +207,7 @@ module Rudy
         end
         
         # Options to be sent to Rye::Box
-        rye_opts = { :user => current_machine_user, :keys => [], :debug => nil }
+        rye_opts = { :user => current_machine_user, :keys => [], :debug => nil, :info => STDOUT }
         if File.exists? pkey 
           #raise "Cannot find file #{pkey}" unless File.exists?(pkey)
           if Rudy.sysinfo.os != :windows && File.stat(pkey).mode != 33152
@@ -305,7 +305,7 @@ module Rudy
       def print_response(rap)
         # Non zero exit codes raise exceptions so  
         # the erorrs have already been handled. 
-        return if rap.exit_code != 0
+        return if rap.exit_status != 0
 
         if @@global.parallel
           cmd, user = cmd.to_s, user.to_s
@@ -316,7 +316,7 @@ module Rudy
           end
         else
           li '  ' << rap.stdout.join("#{$/}  ") if !rap.stdout.empty?
-          colour = rap.exit_code != 0 ? :red : :normal
+          colour = rap.exit_status != 0 ? :red : :normal
           unless rap.stderr.empty?
             le ("  STDERR  " << '-'*38).color(colour).bright
             le "  " << rap.stderr.join("#{$/}    ").color(colour)

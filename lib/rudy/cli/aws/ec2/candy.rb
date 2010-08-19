@@ -64,7 +64,7 @@ module AWS; module EC2;
       opts[:id] = @option.instid if @option.instid
       
       # Options to be sent to Rye::Box
-      rye_opts = { :user => @global.user || Rudy.sysinfo.user, :debug => nil  }
+      rye_opts = { :user => @global.user || Rudy.sysinfo.user, :debug => nil, :info => STDOUT  }
       if @@global.pkey 
         raise "Cannot find file #{@@global.pkey}" unless File.exists?(@@global.pkey)
         raise InsecureKeyPermissions, @@global.pkey unless File.stat(@@global.pkey).mode == 33152

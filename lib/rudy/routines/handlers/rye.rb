@@ -44,6 +44,9 @@ module Rudy::Routines::Handlers;
        end
 
        if @@global.verbose > 0 && !@@global.quiet
+         box.stdout_hook do |content|
+           li content
+         end
          # And this one gets called after each command method call.
          box.post_command_hook do |ret|
            print_response ret
@@ -132,7 +135,6 @@ module Rudy::Routines::Handlers;
           le "#{rap.box.nickname}: " << rap.stderr.join("#{rap.box.nickname}: ")
         end
       else
-        li '  ' << rap.stdout.join("#{$/}  ") if !rap.stdout.empty?
         colour = rap.exit_status != 0 ? :red : :normal
         unless rap.stderr.empty?
           le ("  STDERR  " << '-'*38).color(colour).bright

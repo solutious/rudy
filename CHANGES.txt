@@ -12,6 +12,12 @@ Creating volume...
 (S)kip  (A)bort:
 
 
+#### 0.9.8.008 (2010-08-19) ####################### 
+
+* ADDED: Support for Rye 0.9
+* CHANGE: "rudy init" no longer authorizing SSH localhost
+ 
+
 #### 0.9.8.007 (2010-08-03) ####################### 
 
 * FIXED: Command-line arguments for routines are now passed to before and after dependencies.

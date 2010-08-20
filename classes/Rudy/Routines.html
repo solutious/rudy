@@ -55,10 +55,10 @@
             <a href="../../files/lib/rudy/routines/passthrough_rb.html">lib/rudy/routines/passthrough.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/rudy/routines/reboot_rb.html">lib/rudy/routines/reboot.rb</a>
+            <a href="../../files/lib/rudy/routines/handlers/user_rb.html">lib/rudy/routines/handlers/user.rb</a>
           </li>
           <li class='other'>
-            <a href="../../files/lib/rudy/routines/handlers/user_rb.html">lib/rudy/routines/handlers/user.rb</a>
+            <a href="../../files/lib/rudy/routines/reboot_rb.html">lib/rudy/routines/reboot.rb</a>
           </li>
           <li class='other'>
             <a href="../../files/lib/rudy/routines/shutdown_rb.html">lib/rudy/routines/shutdown.rb</a>
@@ -102,6 +102,7 @@
               <li><a href="#M000398">add_routine</a></li>
               <li><a href="#M000401">get_handler</a></li>
               <li><a href="#M000399">get_routine</a></li>
+              <li><a href="#M000407">get_some_class</a></li>
               <li><a href="#M000403">has_handler?</a></li>
               <li><a href="#M000402">has_routine?</a></li>
               <li><a href="#M000406">machine_separator</a></li>
@@ -213,6 +214,24 @@
                     [show source]
                   </a>
                   <pre id='M000399-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines.rb, line 68</span>&#x000A;68:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">get_routine</span>(<span class="ruby-identifier">name</span>)&#x000A;69:       <span class="ruby-identifier">get_some_class</span>(<span class="ruby-ivar">@@routine</span>, <span class="ruby-identifier">name</span>) <span class="ruby-operator">||</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Routines</span><span class="ruby-operator">::</span><span class="ruby-constant">Passthrough</span>&#x000A;70:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-class' id='method-M000407'>
+                <a name='M000407'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>get_some_class</span>
+                  <span class='arguments'>(store, routine_name)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  See <a href="Routines.html#M000399">Rudy::Routines.get_routine</a>
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000407-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000407-source'>     <span class="ruby-comment cmt"># File lib/rudy/routines.rb, line 138</span>&#x000A;138:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">get_some_class</span>(<span class="ruby-identifier">store</span>, <span class="ruby-identifier">routine_name</span>)&#x000A;139:       <span class="ruby-identifier">routine_name</span> <span class="ruby-operator">&amp;&amp;=</span> <span class="ruby-identifier">routine_name</span>.<span class="ruby-identifier">to_sym</span>&#x000A;140:       <span class="ruby-identifier">store</span>[<span class="ruby-identifier">routine_name</span>]&#x000A;141:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='method public-class' id='method-M000403'>

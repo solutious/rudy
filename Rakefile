@@ -37,6 +37,8 @@ task :release => [ "publish:gem", :clean, "publish:rdoc" ] do
   abort if Drydock.debug?
 end
 
+task :build => [ :package ]
+
 task :install => [ :rdoc, :package ] do
 	sh %{sudo gem install pkg/#{name}-#{version}.gem}
 end

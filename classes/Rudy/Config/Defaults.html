@@ -51,7 +51,7 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000515">postprocess</a></li>
+              <li><a href="#M000514">postprocess</a></li>
             </ol>
           </div>
           <div id='context'>
@@ -69,8 +69,8 @@
             </div>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='method public-instance' id='method-M000515'>
-                <a name='M000515'>      </a>
+              <div class='method public-instance' id='method-M000514'>
+                <a name='M000514'>      </a>
                 <div class='synopsis'>
                   <span class='name'>postprocess</span>
                   <span class='arguments'>()</span>
@@ -81,10 +81,10 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000515-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000514-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000515-source'>    <span class="ruby-comment cmt"># File lib/rudy/config/objects.rb, line 31</span>&#x000A;31:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">postprocess</span>&#x000A;32:       <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">k</span><span class="ruby-operator">|</span> &#x000A;33:         <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">k</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>)&#x000A;34:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">Defaults</span><span class="ruby-operator">::</span><span class="ruby-constant">DoubleDefined</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">:defaults</span>, <span class="ruby-identifier">k</span>)&#x000A;35:       <span class="ruby-keyword kw">end</span>&#x000A;36:       <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">keydir</span> <span class="ruby-operator">&amp;&amp;=</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">keydir</span>)&#x000A;37:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000514-source'>    <span class="ruby-comment cmt"># File lib/rudy/config/objects.rb, line 31</span>&#x000A;31:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">postprocess</span>&#x000A;32:       <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">k</span><span class="ruby-operator">|</span> &#x000A;33:         <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">k</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>)&#x000A;34:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">Defaults</span><span class="ruby-operator">::</span><span class="ruby-constant">DoubleDefined</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">:defaults</span>, <span class="ruby-identifier">k</span>)&#x000A;35:       <span class="ruby-keyword kw">end</span>&#x000A;36:       <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">keydir</span> <span class="ruby-operator">&amp;&amp;=</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">keydir</span>)&#x000A;37:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

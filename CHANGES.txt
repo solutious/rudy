@@ -12,13 +12,17 @@ Creating volume...
 (S)kip  (A)bort:
 
 
-#### 0.9.8.008 (2010-08-19) ####################### 
+#### 0.9.8.010 (2010-08-29) ####################### 
+
+* FIXED: Catch interrupts while loading requires
+
+#### 0.9.8.009 (2010-08-19) ####################### 
 
 * ADDED: Support for Rye 0.9
 * CHANGE: "rudy init" no longer authorizing SSH localhost
  
 
-#### 0.9.8.007 (2010-08-03) ####################### 
+#### 0.9.8.008 (2010-08-03) ####################### 
 
 * FIXED: Command-line arguments for routines are now passed to before and after dependencies.
 

@@ -7,15 +7,19 @@
 #
 #   See rudy -h for usage
 # 
-
+ 
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib') # Put our local lib in first place
 $:.unshift File.join(File.dirname(__FILE__), '..', '..', 'drydock', 'lib') 
 
 #$SAFE = 1   # require is unsafe in Ruby 1.9??
 
-require 'drydock'
-require 'rudy'
-require 'rudy/cli'
+begin
+  require 'drydock'
+  require 'rudy'
+  require 'rudy/cli'
+rescue Interrupt
+  exit
+end
 
 # Command-line interface for /bin/rudy
 class RudyCLI < Rudy::CLI::Base

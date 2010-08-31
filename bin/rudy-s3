@@ -11,9 +11,13 @@
 
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib') # Put our local lib in first place
 
-require 'drydock'
-require 'rudy'
-require 'rudy/cli'
+begin
+  require 'drydock'
+  require 'rudy'
+  require 'rudy/cli'
+rescue Interrupt
+  exit
+end
 
 # Command-line interface for bin/rudy-s3
 module RudyCLI_S3

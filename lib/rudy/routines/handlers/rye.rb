@@ -13,7 +13,6 @@ module Rudy::Routines::Handlers;
      def create_box(hostname, opts={})
        ld [:hostname, hostname, opts, caller[0]]
        opts = {
-         :info => (@@global.verbose >= 2),  # rudy -vv
          :debug => false,
          :user => current_machine_user, 
          :ostype => current_machine_os || :unix,

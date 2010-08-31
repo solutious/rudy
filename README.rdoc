@@ -167,6 +167,7 @@ We encourage people to find unique and interesting ways to break and extend rudy
 
 == Thanks
 
+* Evgeniy Tsvigun
 * Kalin Harvey for all the feedback
 * The Rilli.com[http://rilli.com] team
   * Adam Bognar
@@ -181,6 +182,7 @@ We encourage people to find unique and interesting ways to break and extend rudy
 * Glenn Rempe for amazon-ec2
 * Marcel Molina Jr. for aws-s3
 * Keshia Knight Pulliam
+
 
 == Credits
 

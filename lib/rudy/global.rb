@@ -41,6 +41,8 @@ module Rudy
     field :testrun
     field :offline
     field :bucket
+
+    field :positions
     
     
     attr_accessor :print_header

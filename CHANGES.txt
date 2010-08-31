@@ -12,6 +12,10 @@ Creating volume...
 (S)kip  (A)bort:
 
 
+#### 0.9.8.011 (2010-08-31) #######################
+
+* ADDED: Global --positions option to override positions variable through CLI
+
 #### 0.9.8.010 (2010-08-29) ####################### 
 
 * FIXED: Catch interrupts while loading requires

@@ -39,6 +39,8 @@ class RudyCLI < Rudy::CLI::Base
   global :t, :testrun, "Test run. Don't execute action (PARTIALLY SUPPORTED)."
   global :P, :parallel, "Execute remote commands in parallel (PARTIALLY SUPPORTED)."
   global :F, :force, "Force an action despite warnings"
+
+  global :positions, Integer, "Override positions number for the current role"
   
   
   # ------------------------------------------  RUDY OBJECTS  --------

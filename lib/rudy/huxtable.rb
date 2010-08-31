@@ -311,9 +311,11 @@ module Rudy
       return if !@@config.machines && default_machine_group?
       raise NoMachinesConfig if !@@config.machines
       raise NoGlobal unless @@global
-      top_level = @@config.machines.find(parameter)
-      mc = fetch_machine_config || {}
-      mc[parameter] || top_level || nil
+      parameter == :positions && @@global.positions || begin  #TODO remove hack
+        top_level = @@config.machines.find(parameter)
+        mc = fetch_machine_config || {}
+        mc[parameter] || top_level || nil
+      end
     end
     
     # Returns true if this is the default machine environment and role

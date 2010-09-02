@@ -35,6 +35,7 @@ module RudyCLI_SDB
   command_alias :domains, :domain
   
   about "Displays objects contained in a SimpleDB domain"
+  action :D, :destroy, "Remove a key from the domain (careful!)"
   argv :name, :key
   command :objects => Rudy::CLI::AWS::SDB::Objects
   command_alias :objects, :object

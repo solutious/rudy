@@ -7,7 +7,7 @@ module AWS; module SDB;
     
     
     def objects_valid?
-      raise "Must supply domain" if @argv.empty?
+      raise "Usage: rudy-sdb objects DOMAIN" if @argv.empty?
       true
     end
     def objects
@@ -25,6 +25,17 @@ module AWS; module SDB;
       items.each do |i|
         p i
       end
+    end
+    
+    def objects_destroy_valid?
+      raise "Usage: rudy-sdb objects -D DOMAIN OBJECTNAME" if @argv.size < 2
+      true
+    end
+    def objects_destroy
+      @sdb = Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey, @@global.region)
+      domain, name = @argv
+      puts "Deleteing #{name} from #{domain}"
+      @sdb.destroy domain, name
     end
     
   end

@@ -45,23 +45,23 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000562">new</a></li>
+              <li><a href="#M000587">new</a></li>
             </ol>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000567">archive</a></li>
-              <li><a href="#M000568">backups</a></li>
-              <li><a href="#M000566">create</a></li>
-              <li><a href="#M000570">descriptors</a></li>
-              <li><a href="#M000569">destroy</a></li>
-              <li><a href="#M000575">mounted?</a></li>
-              <li><a href="#M000565">name</a></li>
-              <li><a href="#M000563">postprocess</a></li>
-              <li><a href="#M000574">raw?</a></li>
-              <li><a href="#M000564">to_s</a></li>
-              <li><a href="#M000571">valid?</a></li>
-              <li><a href="#M000572">volume_attach</a></li>
-              <li><a href="#M000573">volume_detach</a></li>
+              <li><a href="#M000592">archive</a></li>
+              <li><a href="#M000593">backups</a></li>
+              <li><a href="#M000591">create</a></li>
+              <li><a href="#M000595">descriptors</a></li>
+              <li><a href="#M000594">destroy</a></li>
+              <li><a href="#M000600">mounted?</a></li>
+              <li><a href="#M000590">name</a></li>
+              <li><a href="#M000588">postprocess</a></li>
+              <li><a href="#M000599">raw?</a></li>
+              <li><a href="#M000589">to_s</a></li>
+              <li><a href="#M000596">valid?</a></li>
+              <li><a href="#M000597">volume_attach</a></li>
+              <li><a href="#M000598">volume_detach</a></li>
             </ol>
           </div>
           <div id='context'>
@@ -76,8 +76,8 @@
           <div id='section'>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='method public-class' id='method-M000562'>
-                <a name='M000562'>      </a>
+              <div class='method public-class' id='method-M000587'>
+                <a name='M000587'>      </a>
                 <div class='synopsis'>
                   <span class='name'>new</span>
                   <span class='arguments'>(position=nil, path=nil, opts={})</span>
@@ -128,106 +128,106 @@
                   </ul>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000562-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000587-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000562-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata/disk.rb, line 44</span>&#x000A;44:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">position</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">path</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">opts</span>={})&#x000A;45:       <span class="ruby-comment cmt"># Swap arg values if only one is supplied. </span>&#x000A;46:       <span class="ruby-identifier">path</span>, <span class="ruby-identifier">position</span> = <span class="ruby-identifier">position</span>, <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">position</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">path</span>.<span class="ruby-identifier">nil?</span>&#x000A;47:       <span class="ruby-identifier">position</span> <span class="ruby-operator">||=</span> <span class="ruby-value str">'01'</span>&#x000A;48:       &#x000A;49:       <span class="ruby-identifier">opts</span> = {&#x000A;50:         <span class="ruby-identifier">:size</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>,&#x000A;51:         <span class="ruby-identifier">:device</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">current_machine_os</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">==</span> <span class="ruby-value str">'windows'</span> <span class="ruby-operator">?</span> <span class="ruby-constant">DEFAULT_WINDOWS_DEVICE</span> <span class="ruby-operator">:</span> <span class="ruby-constant">DEFAULT_LINUX_DEVICE</span>&#x000A;52:       }.<span class="ruby-identifier">merge</span> <span class="ruby-identifier">opts</span>&#x000A;53:       &#x000A;54:       <span class="ruby-keyword kw">super</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Disks</span><span class="ruby-operator">::</span><span class="ruby-constant">RTYPE</span>, <span class="ruby-identifier">opts</span>  <span class="ruby-comment cmt"># Rudy::Metadata#initialize</span>&#x000A;55:       &#x000A;56:       <span class="ruby-ivar">@position</span>, <span class="ruby-ivar">@path</span> = <span class="ruby-identifier">position</span>, <span class="ruby-identifier">path</span>&#x000A;57:       &#x000A;58:       <span class="ruby-comment cmt"># Defaults:</span>&#x000A;59:       <span class="ruby-comment cmt">#datetime = Backup.format_timestamp(now).split(Rudy::DELIM)</span>&#x000A;60:       <span class="ruby-ivar">@created</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>.<span class="ruby-identifier">utc</span>&#x000A;61:       <span class="ruby-ivar">@mounted</span> = <span class="ruby-keyword kw">false</span>&#x000A;62:       <span class="ruby-identifier">postprocess</span>&#x000A;63: &#x000A;64:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000587-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata/disk.rb, line 44</span>&#x000A;44:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">position</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">path</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">opts</span>={})&#x000A;45:       <span class="ruby-comment cmt"># Swap arg values if only one is supplied. </span>&#x000A;46:       <span class="ruby-identifier">path</span>, <span class="ruby-identifier">position</span> = <span class="ruby-identifier">position</span>, <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">position</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">path</span>.<span class="ruby-identifier">nil?</span>&#x000A;47:       <span class="ruby-identifier">position</span> <span class="ruby-operator">||=</span> <span class="ruby-value str">'01'</span>&#x000A;48:       &#x000A;49:       <span class="ruby-identifier">opts</span> = {&#x000A;50:         <span class="ruby-identifier">:size</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>,&#x000A;51:         <span class="ruby-identifier">:device</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">current_machine_os</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">==</span> <span class="ruby-value str">'windows'</span> <span class="ruby-operator">?</span> <span class="ruby-constant">DEFAULT_WINDOWS_DEVICE</span> <span class="ruby-operator">:</span> <span class="ruby-constant">DEFAULT_LINUX_DEVICE</span>&#x000A;52:       }.<span class="ruby-identifier">merge</span> <span class="ruby-identifier">opts</span>&#x000A;53:       &#x000A;54:       <span class="ruby-keyword kw">super</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Disks</span><span class="ruby-operator">::</span><span class="ruby-constant">RTYPE</span>, <span class="ruby-identifier">opts</span>  <span class="ruby-comment cmt"># Rudy::Metadata#initialize</span>&#x000A;55:       &#x000A;56:       <span class="ruby-ivar">@position</span>, <span class="ruby-ivar">@path</span> = <span class="ruby-identifier">position</span>, <span class="ruby-identifier">path</span>&#x000A;57:       &#x000A;58:       <span class="ruby-comment cmt"># Defaults:</span>&#x000A;59:       <span class="ruby-comment cmt">#datetime = Backup.format_timestamp(now).split(Rudy::DELIM)</span>&#x000A;60:       <span class="ruby-ivar">@created</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>.<span class="ruby-identifier">utc</span>&#x000A;61:       <span class="ruby-ivar">@mounted</span> = <span class="ruby-keyword kw">false</span>&#x000A;62:       <span class="ruby-identifier">postprocess</span>&#x000A;63: &#x000A;64:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='method public-instance' id='method-M000567'>
-                <a name='M000567'>      </a>
+              <div class='method public-instance' id='method-M000592'>
+                <a name='M000592'>      </a>
                 <div class='synopsis'>
                   <span class='name'>archive</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000567-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000592-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000567-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/disk.rb, line 97</span>&#x000A; 97:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">archive</span>&#x000A; 98:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">VolumeNotAvailable</span>, <span class="ruby-ivar">@volid</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">volume_attached?</span>&#x000A; 99:       <span class="ruby-identifier">back</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Backup</span>.<span class="ruby-identifier">new</span> <span class="ruby-ivar">@position</span>, <span class="ruby-ivar">@path</span>, <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">descriptors</span>&#x000A;100:       <span class="ruby-identifier">back</span>.<span class="ruby-identifier">create</span>&#x000A;101:       <span class="ruby-identifier">back</span>.<span class="ruby-identifier">size</span>, <span class="ruby-identifier">back</span>.<span class="ruby-identifier">fstype</span> = <span class="ruby-ivar">@size</span>, <span class="ruby-ivar">@fstype</span>&#x000A;102:       <span class="ruby-identifier">back</span>.<span class="ruby-identifier">save</span> <span class="ruby-identifier">:replace</span>&#x000A;103:       <span class="ruby-identifier">back</span>&#x000A;104:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000592-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/disk.rb, line 97</span>&#x000A; 97:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">archive</span>&#x000A; 98:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">VolumeNotAvailable</span>, <span class="ruby-ivar">@volid</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">volume_attached?</span>&#x000A; 99:       <span class="ruby-identifier">back</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Backup</span>.<span class="ruby-identifier">new</span> <span class="ruby-ivar">@position</span>, <span class="ruby-ivar">@path</span>, <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">descriptors</span>&#x000A;100:       <span class="ruby-identifier">back</span>.<span class="ruby-identifier">create</span>&#x000A;101:       <span class="ruby-identifier">back</span>.<span class="ruby-identifier">size</span>, <span class="ruby-identifier">back</span>.<span class="ruby-identifier">fstype</span> = <span class="ruby-ivar">@size</span>, <span class="ruby-ivar">@fstype</span>&#x000A;102:       <span class="ruby-identifier">back</span>.<span class="ruby-identifier">save</span> <span class="ruby-identifier">:replace</span>&#x000A;103:       <span class="ruby-identifier">back</span>&#x000A;104:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000568'>
-                <a name='M000568'>      </a>
+              <div class='method public-instance' id='method-M000593'>
+                <a name='M000593'>      </a>
                 <div class='synopsis'>
                   <span class='name'>backups</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000568-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000593-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000568-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/disk.rb, line 106</span>&#x000A;106:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">backups</span>&#x000A;107:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Backups</span>.<span class="ruby-identifier">list</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">descriptors</span>&#x000A;108:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000593-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/disk.rb, line 106</span>&#x000A;106:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">backups</span>&#x000A;107:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Backups</span>.<span class="ruby-identifier">list</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">descriptors</span>&#x000A;108:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000566'>
-                <a name='M000566'>      </a>
+              <div class='method public-instance' id='method-M000591'>
+                <a name='M000591'>      </a>
                 <div class='synopsis'>
                   <span class='name'>create</span>
                   <span class='arguments'>(size=nil, zone=nil, snapshot=nil)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000566-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000591-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000566-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata/disk.rb, line 88</span>&#x000A;88:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create</span>(<span class="ruby-identifier">size</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">zone</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">snapshot</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;89:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">DuplicateRecord</span>, <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">name</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">exists?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">force</span>&#x000A;90:       <span class="ruby-identifier">vol</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Volumes</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">size</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@size</span>, <span class="ruby-identifier">zone</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@zone</span>, <span class="ruby-identifier">snapshot</span>) &#x000A;91:       <span class="ruby-comment cmt">#vol = Rudy::AWS::EC2::Volumes.list(:available).first   # debugging</span>&#x000A;92:       <span class="ruby-ivar">@volid</span>, <span class="ruby-ivar">@raw</span> = <span class="ruby-identifier">vol</span>.<span class="ruby-identifier">awsid</span>, <span class="ruby-keyword kw">true</span>&#x000A;93:       <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">save</span> <span class="ruby-identifier">:replace</span>&#x000A;94:       <span class="ruby-keyword kw">self</span>&#x000A;95:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000591-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata/disk.rb, line 88</span>&#x000A;88:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create</span>(<span class="ruby-identifier">size</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">zone</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">snapshot</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;89:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">DuplicateRecord</span>, <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">name</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">exists?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">force</span>&#x000A;90:       <span class="ruby-identifier">vol</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Volumes</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">size</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@size</span>, <span class="ruby-identifier">zone</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@zone</span>, <span class="ruby-identifier">snapshot</span>) &#x000A;91:       <span class="ruby-comment cmt">#vol = Rudy::AWS::EC2::Volumes.list(:available).first   # debugging</span>&#x000A;92:       <span class="ruby-ivar">@volid</span>, <span class="ruby-ivar">@raw</span> = <span class="ruby-identifier">vol</span>.<span class="ruby-identifier">awsid</span>, <span class="ruby-keyword kw">true</span>&#x000A;93:       <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">save</span> <span class="ruby-identifier">:replace</span>&#x000A;94:       <span class="ruby-keyword kw">self</span>&#x000A;95:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000570'>
-                <a name='M000570'>      </a>
+              <div class='method public-instance' id='method-M000595'>
+                <a name='M000595'>      </a>
                 <div class='synopsis'>
                   <span class='name'>descriptors</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000570-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000595-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000570-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/disk.rb, line 125</span>&#x000A;125:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">descriptors</span>&#x000A;126:       <span class="ruby-keyword kw">super</span> <span class="ruby-operator">:</span><span class="ruby-identifier">position</span>, <span class="ruby-identifier">:path</span>&#x000A;127:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000595-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/disk.rb, line 125</span>&#x000A;125:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">descriptors</span>&#x000A;126:       <span class="ruby-keyword kw">super</span> <span class="ruby-operator">:</span><span class="ruby-identifier">position</span>, <span class="ruby-identifier">:path</span>&#x000A;127:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000569'>
-                <a name='M000569'>      </a>
+              <div class='method public-instance' id='method-M000594'>
+                <a name='M000594'>      </a>
                 <div class='synopsis'>
                   <span class='name'>destroy</span>
                   <span class='arguments'>(force=false)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000569-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000594-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000569-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/disk.rb, line 111</span>&#x000A;111:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">destroy</span>(<span class="ruby-identifier">force</span>=<span class="ruby-keyword kw">false</span>)&#x000A;112:       <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@volid</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">volume_deleting?</span>&#x000A;113:         <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">force</span>&#x000A;114:           <span class="ruby-identifier">raise</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">VolumeNotAvailable</span>, <span class="ruby-ivar">@volid</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">volume_attached?</span>&#x000A;115:         <span class="ruby-keyword kw">else</span>&#x000A;116:           <span class="ruby-identifier">volume_detach</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">volume_exists?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">volume_attached?</span>&#x000A;117:           <span class="ruby-identifier">sleep</span> <span class="ruby-value">0</span><span class="ruby-value">.1</span>&#x000A;118:         <span class="ruby-keyword kw">end</span>&#x000A;119:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">VolumeNotAvailable</span>, <span class="ruby-ivar">@volid</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">volume_in_use?</span>&#x000A;120:         <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Volumes</span>.<span class="ruby-identifier">destroy</span>(<span class="ruby-ivar">@volid</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">volume_exists?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">volume_available?</span>&#x000A;121:       <span class="ruby-keyword kw">end</span>&#x000A;122:       <span class="ruby-keyword kw">super</span>() <span class="ruby-comment cmt"># quotes, otherwise Ruby will send this method's args</span>&#x000A;123:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000594-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/disk.rb, line 111</span>&#x000A;111:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">destroy</span>(<span class="ruby-identifier">force</span>=<span class="ruby-keyword kw">false</span>)&#x000A;112:       <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@volid</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">volume_deleting?</span>&#x000A;113:         <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">force</span>&#x000A;114:           <span class="ruby-identifier">raise</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">VolumeNotAvailable</span>, <span class="ruby-ivar">@volid</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">volume_attached?</span>&#x000A;115:         <span class="ruby-keyword kw">else</span>&#x000A;116:           <span class="ruby-identifier">volume_detach</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">volume_exists?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">volume_attached?</span>&#x000A;117:           <span class="ruby-identifier">sleep</span> <span class="ruby-value">0</span><span class="ruby-value">.1</span>&#x000A;118:         <span class="ruby-keyword kw">end</span>&#x000A;119:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">VolumeNotAvailable</span>, <span class="ruby-ivar">@volid</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">volume_in_use?</span>&#x000A;120:         <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Volumes</span>.<span class="ruby-identifier">destroy</span>(<span class="ruby-ivar">@volid</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">volume_exists?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">volume_available?</span>&#x000A;121:       <span class="ruby-keyword kw">end</span>&#x000A;122:       <span class="ruby-keyword kw">super</span>() <span class="ruby-comment cmt"># quotes, otherwise Ruby will send this method's args</span>&#x000A;123:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000575'>
-                <a name='M000575'>      </a>
+              <div class='method public-instance' id='method-M000600'>
+                <a name='M000600'>      </a>
                 <div class='synopsis'>
                   <span class='name'>mounted?</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000575-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000600-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000575-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/disk.rb, line 150</span>&#x000A;150:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">mounted?</span>&#x000A;151:       <span class="ruby-ivar">@mounted</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">true</span>&#x000A;152:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000600-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/disk.rb, line 150</span>&#x000A;150:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">mounted?</span>&#x000A;151:       <span class="ruby-ivar">@mounted</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">true</span>&#x000A;152:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000565'>
-                <a name='M000565'>      </a>
+              <div class='method public-instance' id='method-M000590'>
+                <a name='M000590'>      </a>
                 <div class='synopsis'>
                   <span class='name'>name</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000565-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000590-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000565-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata/disk.rb, line 78</span>&#x000A;78:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">name</span>&#x000A;79:       <span class="ruby-identifier">sep</span> = <span class="ruby-constant">File</span><span class="ruby-operator">::</span><span class="ruby-constant">SEPARATOR</span>&#x000A;80:       <span class="ruby-identifier">dirs</span> = <span class="ruby-ivar">@path</span>.<span class="ruby-identifier">split</span> <span class="ruby-identifier">sep</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@path</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@path</span>.<span class="ruby-identifier">empty?</span>&#x000A;81:       <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@path</span> <span class="ruby-operator">==</span> <span class="ruby-constant">File</span><span class="ruby-operator">::</span><span class="ruby-constant">SEPARATOR</span>&#x000A;82:         <span class="ruby-identifier">dirs</span>.<span class="ruby-identifier">shift</span> <span class="ruby-keyword kw">while</span> <span class="ruby-identifier">dirs</span> <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-identifier">dirs</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">dirs</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">empty?</span>)&#x000A;83:       <span class="ruby-keyword kw">end</span>&#x000A;84:       <span class="ruby-comment cmt"># Calls Rudy::Metadata#name with disk specific components</span>&#x000A;85:       <span class="ruby-keyword kw">super</span> <span class="ruby-operator">*</span><span class="ruby-identifier">dirs</span>  &#x000A;86:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000590-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata/disk.rb, line 78</span>&#x000A;78:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">name</span>&#x000A;79:       <span class="ruby-identifier">sep</span> = <span class="ruby-constant">File</span><span class="ruby-operator">::</span><span class="ruby-constant">SEPARATOR</span>&#x000A;80:       <span class="ruby-identifier">dirs</span> = <span class="ruby-ivar">@path</span>.<span class="ruby-identifier">split</span> <span class="ruby-identifier">sep</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@path</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@path</span>.<span class="ruby-identifier">empty?</span>&#x000A;81:       <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@path</span> <span class="ruby-operator">==</span> <span class="ruby-constant">File</span><span class="ruby-operator">::</span><span class="ruby-constant">SEPARATOR</span>&#x000A;82:         <span class="ruby-identifier">dirs</span>.<span class="ruby-identifier">shift</span> <span class="ruby-keyword kw">while</span> <span class="ruby-identifier">dirs</span> <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-identifier">dirs</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">dirs</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">empty?</span>)&#x000A;83:       <span class="ruby-keyword kw">end</span>&#x000A;84:       <span class="ruby-comment cmt"># Calls Rudy::Metadata#name with disk specific components</span>&#x000A;85:       <span class="ruby-keyword kw">super</span> <span class="ruby-operator">*</span><span class="ruby-identifier">dirs</span>  &#x000A;86:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000563'>
-                <a name='M000563'>      </a>
+              <div class='method public-instance' id='method-M000588'>
+                <a name='M000588'>      </a>
                 <div class='synopsis'>
                   <span class='name'>postprocess</span>
                   <span class='arguments'>()</span>
@@ -238,75 +238,75 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000563-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000588-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000563-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata/disk.rb, line 67</span>&#x000A;67:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">postprocess</span>&#x000A;68:       <span class="ruby-ivar">@position</span> = <span class="ruby-ivar">@position</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">rjust</span>(<span class="ruby-value">2</span>, <span class="ruby-value str">'0'</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@position</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>&#x000A;69:       <span class="ruby-ivar">@size</span> <span class="ruby-operator">&amp;&amp;=</span> <span class="ruby-ivar">@size</span>.<span class="ruby-identifier">to_i</span>&#x000A;70:       <span class="ruby-ivar">@raw</span> = <span class="ruby-keyword kw">true</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@raw</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;true&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@raw</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">TrueClass</span>)&#x000A;71:       <span class="ruby-ivar">@mounted</span> = (<span class="ruby-ivar">@mounted</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;true&quot;</span>) <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@mounted</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">TrueClass</span>)&#x000A;72:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000588-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata/disk.rb, line 67</span>&#x000A;67:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">postprocess</span>&#x000A;68:       <span class="ruby-ivar">@position</span> = <span class="ruby-ivar">@position</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">rjust</span>(<span class="ruby-value">2</span>, <span class="ruby-value str">'0'</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@position</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>&#x000A;69:       <span class="ruby-ivar">@size</span> <span class="ruby-operator">&amp;&amp;=</span> <span class="ruby-ivar">@size</span>.<span class="ruby-identifier">to_i</span>&#x000A;70:       <span class="ruby-ivar">@raw</span> = <span class="ruby-keyword kw">true</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@raw</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;true&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@raw</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">TrueClass</span>)&#x000A;71:       <span class="ruby-ivar">@mounted</span> = (<span class="ruby-ivar">@mounted</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;true&quot;</span>) <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@mounted</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">TrueClass</span>)&#x000A;72:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000574'>
-                <a name='M000574'>      </a>
+              <div class='method public-instance' id='method-M000599'>
+                <a name='M000599'>      </a>
                 <div class='synopsis'>
                   <span class='name'>raw?</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000574-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000599-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000574-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/disk.rb, line 146</span>&#x000A;146:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">raw?</span>&#x000A;147:       <span class="ruby-ivar">@raw</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">true</span>&#x000A;148:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000599-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/disk.rb, line 146</span>&#x000A;146:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">raw?</span>&#x000A;147:       <span class="ruby-ivar">@raw</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">true</span>&#x000A;148:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000564'>
-                <a name='M000564'>      </a>
+              <div class='method public-instance' id='method-M000589'>
+                <a name='M000589'>      </a>
                 <div class='synopsis'>
                   <span class='name'>to_s</span>
                   <span class='arguments'>(*args)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000564-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000589-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000564-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata/disk.rb, line 74</span>&#x000A;74:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;75:       [<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">name</span>.<span class="ruby-identifier">bright</span>, <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">volid</span>, <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">size</span>, <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">fstype</span>].<span class="ruby-identifier">join</span> <span class="ruby-value str">'; '</span>&#x000A;76:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000589-source'>    <span class="ruby-comment cmt"># File lib/rudy/metadata/disk.rb, line 74</span>&#x000A;74:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)&#x000A;75:       [<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">name</span>.<span class="ruby-identifier">bright</span>, <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">volid</span>, <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">size</span>, <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">fstype</span>].<span class="ruby-identifier">join</span> <span class="ruby-value str">'; '</span>&#x000A;76:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000571'>
-                <a name='M000571'>      </a>
+              <div class='method public-instance' id='method-M000596'>
+                <a name='M000596'>      </a>
                 <div class='synopsis'>
                   <span class='name'>valid?</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000571-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000596-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000571-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/disk.rb, line 131</span>&#x000A;131:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">valid?</span>&#x000A;132:       <span class="ruby-operator">!</span><span class="ruby-ivar">@path</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@path</span>.<span class="ruby-identifier">empty?</span>&#x000A;133:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000596-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/disk.rb, line 131</span>&#x000A;131:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">valid?</span>&#x000A;132:       <span class="ruby-operator">!</span><span class="ruby-ivar">@path</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@path</span>.<span class="ruby-identifier">empty?</span>&#x000A;133:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000572'>
-                <a name='M000572'>      </a>
+              <div class='method public-instance' id='method-M000597'>
+                <a name='M000597'>      </a>
                 <div class='synopsis'>
                   <span class='name'>volume_attach</span>
                   <span class='arguments'>(instid)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000572-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000597-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000572-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/disk.rb, line 136</span>&#x000A;136:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">volume_attach</span>(<span class="ruby-identifier">instid</span>)&#x000A;137:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>, <span class="ruby-value str">&quot;No volume id&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">volume_exists?</span>&#x000A;138:       <span class="ruby-identifier">vol</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Volumes</span>.<span class="ruby-identifier">attach</span>(<span class="ruby-ivar">@volid</span>, <span class="ruby-identifier">instid</span>, <span class="ruby-ivar">@device</span>)&#x000A;139:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000597-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/disk.rb, line 136</span>&#x000A;136:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">volume_attach</span>(<span class="ruby-identifier">instid</span>)&#x000A;137:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>, <span class="ruby-value str">&quot;No volume id&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">volume_exists?</span>&#x000A;138:       <span class="ruby-identifier">vol</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Volumes</span>.<span class="ruby-identifier">attach</span>(<span class="ruby-ivar">@volid</span>, <span class="ruby-identifier">instid</span>, <span class="ruby-ivar">@device</span>)&#x000A;139:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000573'>
-                <a name='M000573'>      </a>
+              <div class='method public-instance' id='method-M000598'>
+                <a name='M000598'>      </a>
                 <div class='synopsis'>
                   <span class='name'>volume_detach</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000573-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000598-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000573-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/disk.rb, line 141</span>&#x000A;141:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">volume_detach</span>&#x000A;142:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>, <span class="ruby-value str">&quot;No volume id&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">volume_exists?</span>&#x000A;143:       <span class="ruby-identifier">vol</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Volumes</span>.<span class="ruby-identifier">detach</span>(<span class="ruby-ivar">@volid</span>)&#x000A;144:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000598-source'>     <span class="ruby-comment cmt"># File lib/rudy/metadata/disk.rb, line 141</span>&#x000A;141:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">volume_detach</span>&#x000A;142:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>, <span class="ruby-value str">&quot;No volume id&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">volume_exists?</span>&#x000A;143:       <span class="ruby-identifier">vol</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Volumes</span>.<span class="ruby-identifier">detach</span>(<span class="ruby-ivar">@volid</span>)&#x000A;144:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

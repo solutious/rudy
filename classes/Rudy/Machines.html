@@ -41,17 +41,17 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
-              <li><a href="#M000364">list</a></li>
+              <li><a href="#M000365">list</a></li>
             </ol>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000368">create</a></li>
-              <li><a href="#M000366">exists?</a></li>
-              <li><a href="#M000365">find_next_position</a></li>
-              <li><a href="#M000370">from_hash</a></li>
-              <li><a href="#M000363">get</a></li>
-              <li><a href="#M000369">restart</a></li>
-              <li><a href="#M000367">running?</a></li>
+              <li><a href="#M000369">create</a></li>
+              <li><a href="#M000367">exists?</a></li>
+              <li><a href="#M000366">find_next_position</a></li>
+              <li><a href="#M000371">from_hash</a></li>
+              <li><a href="#M000364">get</a></li>
+              <li><a href="#M000370">restart</a></li>
+              <li><a href="#M000368">running?</a></li>
             </ol>
           </div>
           <div id='section'>
@@ -69,22 +69,22 @@
             </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='method public-class' id='method-M000364'>
-                <a name='M000364'>      </a>
+              <div class='method public-class' id='method-M000365'>
+                <a name='M000365'>      </a>
                 <div class='synopsis'>
                   <span class='name'>list</span>
                   <span class='arguments'>(*args, &amp;blk)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000364-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000365-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000364-source'>    <span class="ruby-comment cmt"># File lib/rudy/machines.rb, line 19</span>&#x000A;19:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">list</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">blk</span>)&#x000A;20:       <span class="ruby-identifier">machs</span> = <span class="ruby-keyword kw">super</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">blk</span>) <span class="ruby-operator">||</span> []&#x000A;21:       <span class="ruby-identifier">manual</span> = [<span class="ruby-identifier">fetch_machine_param</span>(<span class="ruby-identifier">:hostname</span>)].<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">compact</span>&#x000A;22:       <span class="ruby-identifier">manual</span>.<span class="ruby-identifier">reject!</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Symbol</span>) }&#x000A;23:       <span class="ruby-identifier">machs</span>.<span class="ruby-identifier">push</span> <span class="ruby-operator">*</span><span class="ruby-identifier">manual</span>&#x000A;24:       <span class="ruby-identifier">machs</span>&#x000A;25:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000365-source'>    <span class="ruby-comment cmt"># File lib/rudy/machines.rb, line 19</span>&#x000A;19:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">list</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">blk</span>)&#x000A;20:       <span class="ruby-identifier">machs</span> = <span class="ruby-keyword kw">super</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">blk</span>) <span class="ruby-operator">||</span> []&#x000A;21:       <span class="ruby-identifier">manual</span> = [<span class="ruby-identifier">fetch_machine_param</span>(<span class="ruby-identifier">:hostname</span>)].<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">compact</span>&#x000A;22:       <span class="ruby-identifier">manual</span>.<span class="ruby-identifier">reject!</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Symbol</span>) }&#x000A;23:       <span class="ruby-identifier">machs</span>.<span class="ruby-identifier">push</span> <span class="ruby-operator">*</span><span class="ruby-identifier">manual</span>&#x000A;24:       <span class="ruby-identifier">machs</span>&#x000A;25:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <h2>Public instance methods</h2>
-              <div class='method public-instance' id='method-M000368'>
-                <a name='M000368'>      </a>
+              <div class='method public-instance' id='method-M000369'>
+                <a name='M000369'>      </a>
                 <div class='synopsis'>
                   <span class='name'>create</span>
                   <span class='arguments'>(size=nil)</span>
@@ -96,14 +96,14 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000368-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000369-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000368-source'>    <span class="ruby-comment cmt"># File lib/rudy/machines.rb, line 48</span>&#x000A;48:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create</span>(<span class="ruby-identifier">size</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;49:       <span class="ruby-keyword kw">if</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Huxtable</span>.<span class="ruby-identifier">global</span>.<span class="ruby-identifier">position</span>.<span class="ruby-identifier">nil?</span>&#x000A;50:         <span class="ruby-identifier">size</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">current_machine_count</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">||</span> <span class="ruby-value">1</span>&#x000A;51:         <span class="ruby-identifier">group</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">size</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span>&#x000A;52:           <span class="ruby-identifier">m</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machine</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">i</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>)&#x000A;53:           <span class="ruby-identifier">m</span>.<span class="ruby-identifier">create</span>&#x000A;54:           <span class="ruby-identifier">li</span> <span class="ruby-node">&quot;Created: #{m.to_s}&quot;</span>&#x000A;55:           <span class="ruby-identifier">m</span>&#x000A;56:         <span class="ruby-keyword kw">end</span>&#x000A;57:       <span class="ruby-keyword kw">else</span>&#x000A;58:         <span class="ruby-identifier">m</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machine</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Huxtable</span>.<span class="ruby-identifier">global</span>.<span class="ruby-identifier">position</span>)&#x000A;59:         <span class="ruby-identifier">m</span>.<span class="ruby-identifier">create</span>&#x000A;60:         <span class="ruby-identifier">li</span> <span class="ruby-node">&quot;Created: #{m.to_s}&quot;</span>&#x000A;61:         <span class="ruby-identifier">group</span> = [<span class="ruby-identifier">m</span>]&#x000A;62:       <span class="ruby-keyword kw">end</span>&#x000A;63:       <span class="ruby-identifier">group</span>&#x000A;64:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000369-source'>    <span class="ruby-comment cmt"># File lib/rudy/machines.rb, line 48</span>&#x000A;48:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create</span>(<span class="ruby-identifier">size</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;49:       <span class="ruby-keyword kw">if</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Huxtable</span>.<span class="ruby-identifier">global</span>.<span class="ruby-identifier">position</span>.<span class="ruby-identifier">nil?</span>&#x000A;50:         <span class="ruby-identifier">size</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">current_machine_count</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">||</span> <span class="ruby-value">1</span>&#x000A;51:         <span class="ruby-identifier">group</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">size</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span>&#x000A;52:           <span class="ruby-identifier">m</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machine</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">i</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>)&#x000A;53:           <span class="ruby-identifier">m</span>.<span class="ruby-identifier">create</span>&#x000A;54:           <span class="ruby-identifier">li</span> <span class="ruby-node">&quot;Created: #{m.to_s}&quot;</span>&#x000A;55:           <span class="ruby-identifier">m</span>&#x000A;56:         <span class="ruby-keyword kw">end</span>&#x000A;57:       <span class="ruby-keyword kw">else</span>&#x000A;58:         <span class="ruby-identifier">m</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machine</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Huxtable</span>.<span class="ruby-identifier">global</span>.<span class="ruby-identifier">position</span>)&#x000A;59:         <span class="ruby-identifier">m</span>.<span class="ruby-identifier">create</span>&#x000A;60:         <span class="ruby-identifier">li</span> <span class="ruby-node">&quot;Created: #{m.to_s}&quot;</span>&#x000A;61:         <span class="ruby-identifier">group</span> = [<span class="ruby-identifier">m</span>]&#x000A;62:       <span class="ruby-keyword kw">end</span>&#x000A;63:       <span class="ruby-identifier">group</span>&#x000A;64:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000366'>
-                <a name='M000366'>      </a>
+              <div class='method public-instance' id='method-M000367'>
+                <a name='M000367'>      </a>
                 <div class='synopsis'>
                   <span class='name'>exists?</span>
                   <span class='arguments'>(pos=nil)</span>
@@ -114,66 +114,66 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000366-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000367-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000366-source'>    <span class="ruby-comment cmt"># File lib/rudy/machines.rb, line 34</span>&#x000A;34:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">pos</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;35:       <span class="ruby-identifier">machines</span> = <span class="ruby-identifier">pos</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-value">? </span><span class="ruby-identifier">list</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">get</span>(<span class="ruby-identifier">pos</span>)&#x000A;36:       <span class="ruby-operator">!</span><span class="ruby-identifier">machines</span>.<span class="ruby-identifier">nil?</span>&#x000A;37:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000367-source'>    <span class="ruby-comment cmt"># File lib/rudy/machines.rb, line 34</span>&#x000A;34:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">pos</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;35:       <span class="ruby-identifier">machines</span> = <span class="ruby-identifier">pos</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-value">? </span><span class="ruby-identifier">list</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">get</span>(<span class="ruby-identifier">pos</span>)&#x000A;36:       <span class="ruby-operator">!</span><span class="ruby-identifier">machines</span>.<span class="ruby-identifier">nil?</span>&#x000A;37:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000365'>
-                <a name='M000365'>      </a>
+              <div class='method public-instance' id='method-M000366'>
+                <a name='M000366'>      </a>
                 <div class='synopsis'>
                   <span class='name'>find_next_position</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000365-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000366-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000365-source'>    <span class="ruby-comment cmt"># File lib/rudy/machines.rb, line 26</span>&#x000A;26:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">find_next_position</span>&#x000A;27:       <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;reimplement by looking at position values&quot;</span>&#x000A;28:       <span class="ruby-identifier">list</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machines</span>.<span class="ruby-identifier">list</span>({}, [<span class="ruby-identifier">:position</span>]) <span class="ruby-operator">||</span> []&#x000A;29:       <span class="ruby-identifier">pos</span> = <span class="ruby-identifier">list</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>&#x000A;30:       <span class="ruby-identifier">pos</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">rjust</span>(<span class="ruby-value">2</span>, <span class="ruby-value str">'0'</span>)&#x000A;31:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000366-source'>    <span class="ruby-comment cmt"># File lib/rudy/machines.rb, line 26</span>&#x000A;26:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">find_next_position</span>&#x000A;27:       <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;reimplement by looking at position values&quot;</span>&#x000A;28:       <span class="ruby-identifier">list</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machines</span>.<span class="ruby-identifier">list</span>({}, [<span class="ruby-identifier">:position</span>]) <span class="ruby-operator">||</span> []&#x000A;29:       <span class="ruby-identifier">pos</span> = <span class="ruby-identifier">list</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>&#x000A;30:       <span class="ruby-identifier">pos</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">rjust</span>(<span class="ruby-value">2</span>, <span class="ruby-value str">'0'</span>)&#x000A;31:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000370'>
-                <a name='M000370'>      </a>
+              <div class='method public-instance' id='method-M000371'>
+                <a name='M000371'>      </a>
                 <div class='synopsis'>
                   <span class='name'>from_hash</span>
                   <span class='arguments'>(h)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000370-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000371-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000370-source'>    <span class="ruby-comment cmt"># File lib/rudy/machines.rb, line 75</span>&#x000A;75:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">h</span>)&#x000A;76:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machine</span>.<span class="ruby-identifier">from_hash</span> <span class="ruby-identifier">h</span>&#x000A;77:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000371-source'>    <span class="ruby-comment cmt"># File lib/rudy/machines.rb, line 75</span>&#x000A;75:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">h</span>)&#x000A;76:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machine</span>.<span class="ruby-identifier">from_hash</span> <span class="ruby-identifier">h</span>&#x000A;77:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000363'>
-                <a name='M000363'>      </a>
+              <div class='method public-instance' id='method-M000364'>
+                <a name='M000364'>      </a>
                 <div class='synopsis'>
                   <span class='name'>get</span>
                   <span class='arguments'>(position)</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000363-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000364-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000363-source'>    <span class="ruby-comment cmt"># File lib/rudy/machines.rb, line 12</span>&#x000A;12:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get</span>(<span class="ruby-identifier">position</span>)&#x000A;13:       <span class="ruby-identifier">tmp</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machine</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">position</span>&#x000A;14:       <span class="ruby-identifier">record</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Metadata</span>.<span class="ruby-identifier">get</span> <span class="ruby-identifier">tmp</span>.<span class="ruby-identifier">name</span>&#x000A;15:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">record</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>)&#x000A;16:       <span class="ruby-identifier">tmp</span>.<span class="ruby-identifier">from_hash</span> <span class="ruby-identifier">record</span>&#x000A;17:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000364-source'>    <span class="ruby-comment cmt"># File lib/rudy/machines.rb, line 12</span>&#x000A;12:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get</span>(<span class="ruby-identifier">position</span>)&#x000A;13:       <span class="ruby-identifier">tmp</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Machine</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">position</span>&#x000A;14:       <span class="ruby-identifier">record</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Metadata</span>.<span class="ruby-identifier">get</span> <span class="ruby-identifier">tmp</span>.<span class="ruby-identifier">name</span>&#x000A;15:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">record</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>)&#x000A;16:       <span class="ruby-identifier">tmp</span>.<span class="ruby-identifier">from_hash</span> <span class="ruby-identifier">record</span>&#x000A;17:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000369'>
-                <a name='M000369'>      </a>
+              <div class='method public-instance' id='method-M000370'>
+                <a name='M000370'>      </a>
                 <div class='synopsis'>
                   <span class='name'>restart</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000369-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000370-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000369-source'>    <span class="ruby-comment cmt"># File lib/rudy/machines.rb, line 66</span>&#x000A;66:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">restart</span>&#x000A;67:       <span class="ruby-identifier">group</span> = <span class="ruby-identifier">list</span> &#x000A;68:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">MachineGroupNotRunning</span>, <span class="ruby-identifier">current_machine_group</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">group</span>.<span class="ruby-identifier">nil?</span>&#x000A;69:       <span class="ruby-identifier">group</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">inst</span><span class="ruby-operator">|</span>&#x000A;70:         <span class="ruby-identifier">inst</span>.<span class="ruby-identifier">restart</span>&#x000A;71:       <span class="ruby-keyword kw">end</span>&#x000A;72:       <span class="ruby-identifier">group</span>&#x000A;73:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000370-source'>    <span class="ruby-comment cmt"># File lib/rudy/machines.rb, line 66</span>&#x000A;66:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">restart</span>&#x000A;67:       <span class="ruby-identifier">group</span> = <span class="ruby-identifier">list</span> &#x000A;68:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">MachineGroupNotRunning</span>, <span class="ruby-identifier">current_machine_group</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">group</span>.<span class="ruby-identifier">nil?</span>&#x000A;69:       <span class="ruby-identifier">group</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">inst</span><span class="ruby-operator">|</span>&#x000A;70:         <span class="ruby-identifier">inst</span>.<span class="ruby-identifier">restart</span>&#x000A;71:       <span class="ruby-keyword kw">end</span>&#x000A;72:       <span class="ruby-identifier">group</span>&#x000A;73:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000367'>
-                <a name='M000367'>      </a>
+              <div class='method public-instance' id='method-M000368'>
+                <a name='M000368'>      </a>
                 <div class='synopsis'>
                   <span class='name'>running?</span>
                   <span class='arguments'>(pos=nil)</span>
@@ -184,10 +184,10 @@
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000367-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000368-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000367-source'>    <span class="ruby-comment cmt"># File lib/rudy/machines.rb, line 40</span>&#x000A;40:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">running?</span>(<span class="ruby-identifier">pos</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;41:       <span class="ruby-identifier">group</span> = <span class="ruby-identifier">pos</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-value">? </span><span class="ruby-identifier">list</span> <span class="ruby-operator">:</span> [<span class="ruby-identifier">get</span>(<span class="ruby-identifier">pos</span>)].<span class="ruby-identifier">compact</span>&#x000A;42:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">group</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">group</span>.<span class="ruby-identifier">empty?</span>&#x000A;43:       <span class="ruby-identifier">group</span>.<span class="ruby-identifier">collect!</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">instance_running?</span> }&#x000A;44:       <span class="ruby-operator">!</span><span class="ruby-identifier">group</span>.<span class="ruby-identifier">member?</span>(<span class="ruby-keyword kw">false</span>)&#x000A;45:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000368-source'>    <span class="ruby-comment cmt"># File lib/rudy/machines.rb, line 40</span>&#x000A;40:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">running?</span>(<span class="ruby-identifier">pos</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;41:       <span class="ruby-identifier">group</span> = <span class="ruby-identifier">pos</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-value">? </span><span class="ruby-identifier">list</span> <span class="ruby-operator">:</span> [<span class="ruby-identifier">get</span>(<span class="ruby-identifier">pos</span>)].<span class="ruby-identifier">compact</span>&#x000A;42:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">group</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">group</span>.<span class="ruby-identifier">empty?</span>&#x000A;43:       <span class="ruby-identifier">group</span>.<span class="ruby-identifier">collect!</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">m</span><span class="ruby-operator">|</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">instance_running?</span> }&#x000A;44:       <span class="ruby-operator">!</span><span class="ruby-identifier">group</span>.<span class="ruby-identifier">member?</span>(<span class="ruby-keyword kw">false</span>)&#x000A;45:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

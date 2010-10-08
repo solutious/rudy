@@ -45,37 +45,37 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000237">store</a></li>
-              <li><a href="#M000236">store_valid?</a></li>
+              <li><a href="#M000232">store</a></li>
+              <li><a href="#M000231">store_valid?</a></li>
             </ol>
           </div>
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='method public-instance' id='method-M000237'>
-                <a name='M000237'>      </a>
+              <div class='method public-instance' id='method-M000232'>
+                <a name='M000232'>      </a>
                 <div class='synopsis'>
                   <span class='name'>store</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000237-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000232-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000237-source'>    <span class="ruby-comment cmt"># File lib/rudy/cli/aws/s3/store.rb, line 13</span>&#x000A;13:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">store</span>&#x000A;14:       <span class="ruby-identifier">s3</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">S3</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">accesskey</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">secretkey</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">region</span>)&#x000A;15:       <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;Success: %s&quot;</span> <span class="ruby-operator">%</span> <span class="ruby-identifier">s3</span>.<span class="ruby-identifier">store</span>(<span class="ruby-ivar">@argv</span>.<span class="ruby-identifier">path</span>, <span class="ruby-ivar">@option</span>.<span class="ruby-identifier">bucket</span>)&#x000A;16:       &#x000A;17:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000232-source'>    <span class="ruby-comment cmt"># File lib/rudy/cli/aws/s3/store.rb, line 13</span>&#x000A;13:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">store</span>&#x000A;14:       <span class="ruby-identifier">s3</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">S3</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">accesskey</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">secretkey</span>, <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">region</span>)&#x000A;15:       <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;Success: %s&quot;</span> <span class="ruby-operator">%</span> <span class="ruby-identifier">s3</span>.<span class="ruby-identifier">store</span>(<span class="ruby-ivar">@argv</span>.<span class="ruby-identifier">path</span>, <span class="ruby-ivar">@option</span>.<span class="ruby-identifier">bucket</span>)&#x000A;16:       &#x000A;17:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000236'>
-                <a name='M000236'>      </a>
+              <div class='method public-instance' id='method-M000231'>
+                <a name='M000231'>      </a>
                 <div class='synopsis'>
                   <span class='name'>store_valid?</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000236-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000231-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000236-source'>    <span class="ruby-comment cmt"># File lib/rudy/cli/aws/s3/store.rb, line 8</span>&#x000A; 8:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">store_valid?</span>&#x000A; 9:       <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;No path specified&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@argv</span>.<span class="ruby-identifier">path</span>&#x000A;10:       <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;No bucket specified&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@option</span>.<span class="ruby-identifier">bucket</span>&#x000A;11:       <span class="ruby-keyword kw">true</span>&#x000A;12:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000231-source'>    <span class="ruby-comment cmt"># File lib/rudy/cli/aws/s3/store.rb, line 8</span>&#x000A; 8:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">store_valid?</span>&#x000A; 9:       <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;No path specified&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@argv</span>.<span class="ruby-identifier">path</span>&#x000A;10:       <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;No bucket specified&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@option</span>.<span class="ruby-identifier">bucket</span>&#x000A;11:       <span class="ruby-keyword kw">true</span>&#x000A;12:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

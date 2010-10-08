@@ -12,7 +12,11 @@ Creating volume...
 (S)kip  (A)bort:
 
 
-#### 0.9.8.013 (2010-09-02) #######################
+#### 0.9.8.014 (2010-10-08) #######################
+
+* FIXED: bad delano!
+
+#### 0.9.8.013 (2010-10-08) #######################
 
 * ADDED: use default user instead of assuming root
 

@@ -92,7 +92,6 @@ module Rudy
     # name: <tt>key-ZONE-ENV-ROLE-USER</tt>. Or if this the user is 
     # root: <tt>key-ZONE-ENV-ROLE</tt>
     def user_keypairname(user=nil)
-      p default_user
       user ||= current_machine_user
       path = defined_keypairpath user
       if path

@@ -12,6 +12,10 @@ Creating volume...
 (S)kip  (A)bort:
 
 
+#### 0.9.8.013 (2010-09-02) #######################
+
+* ADDED: use default user instead of assuming root
+
 #### 0.9.8.012 (2010-09-02) #######################
 
 * ADDED: rudy-sdb objects --destroy

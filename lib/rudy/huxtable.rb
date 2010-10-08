@@ -81,6 +81,9 @@ module Rudy
       base_dir
     end
     
+    def default_user
+      @@config.defaults.user || 'root'
+    end
     
     # Returns the name of the current keypair for the given user. 
     # If there's a private key path in the config this will return
@@ -89,12 +92,13 @@ module Rudy
     # name: <tt>key-ZONE-ENV-ROLE-USER</tt>. Or if this the user is 
     # root: <tt>key-ZONE-ENV-ROLE</tt>
     def user_keypairname(user=nil)
+      p default_user
       user ||= current_machine_user
       path = defined_keypairpath user
       if path
         Huxtable.keypair_path_to_name(path)
       else
-        n = (user.to_s == 'root') ? '' : "-#{user}"
+        n = (user.to_s == default_user) ? '' : "-#{user}"
         "key-%s-%s%s" % [@@global.zone, current_machine_group, n]
       end    
     end

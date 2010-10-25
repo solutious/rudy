@@ -466,7 +466,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000360-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000360-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 201</span>&#x000A;201:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">current_machine_user</span>&#x000A;202:       <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">user</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">fetch_machine_param</span>(<span class="ruby-identifier">:user</span>) <span class="ruby-operator">||</span> <span class="ruby-ivar">@@config</span>.<span class="ruby-identifier">defaults</span>.<span class="ruby-identifier">user</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">sysinfo</span>.<span class="ruby-identifier">user</span>&#x000A;203:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000360-source'>     <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 201</span>&#x000A;201:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">current_machine_user</span>&#x000A;202:       <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">user</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">fetch_machine_param</span>(<span class="ruby-identifier">:user</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">default_user</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Rudy</span>.<span class="ruby-identifier">sysinfo</span>.<span class="ruby-identifier">user</span>&#x000A;203:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-M000346'>
@@ -505,7 +505,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000343-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000343-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 84</span>&#x000A;84:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">default_user</span>&#x000A;85:       <span class="ruby-ivar">@@config</span>.<span class="ruby-identifier">defaults</span>.<span class="ruby-identifier">user</span> <span class="ruby-operator">||</span> <span class="ruby-value str">'root'</span>&#x000A;86:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000343-source'>    <span class="ruby-comment cmt"># File lib/rudy/huxtable.rb, line 84</span>&#x000A;84:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">default_user</span>&#x000A;85:       <span class="ruby-ivar">@@config</span>.<span class="ruby-identifier">defaults</span>.<span class="ruby-identifier">user</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">||</span> <span class="ruby-value str">'root'</span>&#x000A;86:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-M000350'>

@@ -87,23 +87,28 @@ module Rudy; module Routines; module Handlers;
     
     def set_hostname(rset)
       raise NoMachines if rset.boxes.empty?
-
+      
       # Set the hostname if specified in the machines config. 
       # :rudy -> change to Rudy's machine name
       # :default -> leave the hostname as it is
       # Anything else other than nil -> change to that value
       # NOTE: This will set hostname every time a routine is
       # run so we may want to make this an explicit action.
-      type = current_machine_hostname || :rudy
-      rset.sudo(type) do |hn|
+      hntype = current_machine_hostname || :rudy
+      this_default_user = default_user
+      return if hntype.to_s.to_sym == :default
+      rset.batch do
         unless self.stash.os == :windows
-          if hn != :default
-            hn = self.stash.name if hn == :rudy
-            hostname(hn)
+          hn = hntype == :rudy ? self.stash.name : hntype
+          if self.user.to_s == this_default_user
+            hostname hn
+          else
+            sudo do
+              hostname hn
+            end
           end
         end
       end
-      
     end
     
   end

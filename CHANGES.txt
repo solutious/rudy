@@ -17,6 +17,9 @@ Creating volume...
 
 * FIXED: Don't try to sudo when setting hostname if already root
 * FIXED: Run rudy machines -U command as default_user (or root)
+* CHANGE: Update dependency Rye 0.9.2
+* CHANGE: Update dependency Gibbler 0.8.4
+
 
 #### 0.9.8.014 (2010-10-08) #######################
 

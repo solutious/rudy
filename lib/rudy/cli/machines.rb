@@ -239,7 +239,7 @@ module Rudy
         
         checked = false
         lt = get_machines
-
+        
         rset = Rye::Set.new(current_machine_group, :parallel => @global.parallel)
         lt.each do |machine|
           if Rudy::Machine === machine 

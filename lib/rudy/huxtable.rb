@@ -82,7 +82,7 @@ module Rudy
     end
     
     def default_user
-      @@config.defaults.user || 'root'
+      @@config.defaults.user.to_s || 'root'
     end
     
     # Returns the name of the current keypair for the given user. 
@@ -199,7 +199,7 @@ module Rudy
     end
     
     def current_machine_user
-      @@global.user || fetch_machine_param(:user) || @@config.defaults.user || Rudy.sysinfo.user
+      @@global.user || fetch_machine_param(:user) || default_user || Rudy.sysinfo.user
     end
     
     def current_machine_bucket

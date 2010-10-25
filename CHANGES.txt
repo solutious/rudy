@@ -12,6 +12,12 @@ Creating volume...
 (S)kip  (A)bort:
 
 
+
+#### 0.9.8.015 (2010-10-25) #######################
+
+* FIXED: Don't try to sudo when setting hostname if already root
+* FIXED: Run rudy machines -U command as default_user (or root)
+
 #### 0.9.8.014 (2010-10-08) #######################
 
 * FIXED: bad delano!

@@ -153,7 +153,8 @@ module Rudy
       
       def update_machines
         mlist = get_machines
-        rset = Rye::Set.new(current_group_name, :parallel => @@global.parallel, :user => 'root')
+        rset = Rye::Set.new(current_group_name, :parallel => @@global.parallel, :user => default_user)
+        rset.add_key user_keypairpath(default_user)
         os = current_machine_os
         mlist.each do |m|
           li "Updating #{m.name}"

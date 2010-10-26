@@ -17,7 +17,8 @@ module Rudy::Routines::Handlers;
          :user => current_machine_user, 
          :ostype => current_machine_os || :unix,
          :impltype => :linux, 
-         :info => STDOUT
+         :info => STDOUT,
+         :paranoid => false  # doesn't get passed through (Rye bug?)
        }.merge opts
        
        nickname = hostname
@@ -80,7 +81,7 @@ module Rudy::Routines::Handlers;
          :quiet => Rudy.quiet?
        }.merge(opts)
        set = ::Rye::Set.new current_machine_group, opts 
-
+       
        opts.delete(:parallel)   # Not used by Rye::Box.new
 
        hostnames.each do |m| 

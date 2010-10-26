@@ -1,4 +1,4 @@
-  
+
 
 
 module Rudy
@@ -81,9 +81,22 @@ module Rudy
       base_dir
     end
     
-    def default_user
-      @@config.defaults.user.to_s || 'root'
+    def default_root
+      (@@config.defaults.root || 'root').to_s
     end
+    
+    def default_user
+      (@@config.defaults.user || current_machine_root).to_s
+    end
+    
+    def current_machine_root
+      (fetch_machine_param(:root) || default_root).to_s
+    end
+    
+    def current_machine_user
+      (@@global.user || fetch_machine_param(:user) || default_user || Rudy.sysinfo.user).to_s
+    end
+    
     
     # Returns the name of the current keypair for the given user. 
     # If there's a private key path in the config this will return
@@ -97,15 +110,20 @@ module Rudy
       if path
         Huxtable.keypair_path_to_name(path)
       else
-        n = (user.to_s == default_user) ? '' : "-#{user}"
+        n = current_user_is_root?(user) ? '' : "-#{user}"
         "key-%s-%s%s" % [@@global.zone, current_machine_group, n]
       end    
     end
     def root_keypairname
-      user_keypairname :root
+      user_keypairname current_machine_root
     end
     def current_user_keypairname
       user_keypairname current_machine_user
+    end
+    
+    def current_user_is_root?(user=nil)
+      user ||= current_machine_user
+      user.to_s == current_machine_root
     end
     
     def user_keypairpath(name=nil)
@@ -123,7 +141,7 @@ module Rudy
       path
     end
     def root_keypairpath
-      user_keypairpath :root
+      user_keypairpath current_machine_root
     end
     def current_user_keypairpath
       user_keypairpath current_machine_user
@@ -197,11 +215,7 @@ module Rudy
     def current_machine_name
       [@@global.zone, current_machine_group, @@global.position].join(Rudy::DELIM)
     end
-    
-    def current_machine_user
-      @@global.user || fetch_machine_param(:user) || default_user || Rudy.sysinfo.user
-    end
-    
+
     def current_machine_bucket
       @@global.bucket || fetch_machine_param(:bucket) || nil
     end

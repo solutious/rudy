@@ -83,7 +83,7 @@ module Rudy; module Routines;
       ## it prevents shutting down.
       # Check private key after machine group, otherwise we could get an error
       # about there being no key which doesn't make sense if the group isn't running.
-      ##raise Rudy::PrivateKeyNotFound, root_keypairpath unless has_keypair?(:root)
+      ##raise Rudy::PrivateKeyNotFound, root_keypairpath unless has_keypair?(current_machine_root)
       if @routine
         bad = @routine.keys - @@allowed_actions
         raise UnsupportedActions.new(@name, bad) unless bad.empty?

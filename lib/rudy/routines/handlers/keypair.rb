@@ -7,7 +7,8 @@ module Rudy; module Routines; module Handlers;
     ##Rudy::Routines.add_handler :machines, self
     
     
-    def raise_early_exceptions(name=:root)
+    def raise_early_exceptions(name=nil)
+      name ||= current_machine_root
       keyname = user_keypairname name
       kp_file = pkey name
       if registered? keyname
@@ -20,7 +21,8 @@ module Rudy; module Routines; module Handlers;
       end 
     end
     
-    def create(name=:root)
+    def create(name=nil)
+      name ||= current_machine_root
       keyname = user_keypairname name
       kp_file = pkey name
 
@@ -53,32 +55,38 @@ module Rudy; module Routines; module Handlers;
       kp
     end
     
-    def unregister(name=:root)
+    def unregister(name=nil)
+      name ||= current_machine_root
       keyname = user_keypairname name
       raise "Keypair not registered: #{keyname}" unless registered?(name)
       Rudy::AWS::EC2::Keypairs.destroy keyname
     end
     
-    def delete_pkey(name=:root)
+    def delete_pkey(name=nil)
+      name ||= current_machine_root
       kp_file = pkey name
       raise PrivateKeyNotFound, kp_file unless pkey?(name)
       File.unlink kp_file
     end
     
-    def exists?(name=:root)
+    def exists?(name=nil)
+      name ||= current_machine_root
       registered?(name) && pkey?(name)
     end
     
-    def registered?(name=:root)
+    def registered?(name=nil)
+      name ||= current_machine_root
       keyname = user_keypairname name
       Rudy::AWS::EC2::Keypairs.exists?(keyname)
     end
     
-    def pkey(name=:root)
+    def pkey(name=nil)
+      name ||= current_machine_root
       user_keypairpath name
     end
     
-    def pkey?(name=:root)
+    def pkey?(name=nil)
+      name ||= current_machine_root
       File.exists? pkey(name)
     end
     

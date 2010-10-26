@@ -153,8 +153,8 @@ module Rudy
       
       def update_machines
         mlist = get_machines
-        rset = Rye::Set.new(current_group_name, :parallel => @@global.parallel, :user => default_user)
-        rset.add_key user_keypairpath(default_user)
+        rset = Rye::Set.new(current_group_name, :parallel => @@global.parallel, :user => current_machine_root)
+        rset.add_key user_keypairpath(current_machine_root)
         os = current_machine_os
         mlist.each do |m|
           li "Updating #{m.name}"
@@ -199,7 +199,7 @@ module Rudy
       end
       
       def ssh
-
+        
         
         # TODO: Give this method a good look over
         pkey = current_user_keypairpath
@@ -275,7 +275,7 @@ module Rudy
 
           # Make sure we want to run this command on all instances
           if !checked && command != :interactive_ssh 
-            execute_check(:low) if rye_opts[:user] == "root"
+            execute_check(:low) if current_machine_user == "root"
             checked = true
           end
           

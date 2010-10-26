@@ -95,12 +95,11 @@ module Rudy; module Routines; module Handlers;
       # NOTE: This will set hostname every time a routine is
       # run so we may want to make this an explicit action.
       hntype = current_machine_hostname || :rudy
-      this_default_user = default_user
       return if hntype.to_s.to_sym == :default
       rset.batch do
         unless self.stash.os == :windows
           hn = hntype == :rudy ? self.stash.name : hntype
-          if self.user.to_s == this_default_user
+          if self.user.to_s == 'root'  # ubuntu has a root user
             hostname hn
           else
             sudo do

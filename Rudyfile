@@ -72,6 +72,12 @@ machines do
       #end
     end
     
+    role :ubuntu do
+      ami 'ami-1a837773'
+      root 'ubuntu'
+      user 'ubuntu'
+    end
+    
   end  
 
 end
@@ -181,6 +187,7 @@ defaults do
   environment :stage
   role :app
   color true                         # Terminal colors? true/false
+  #root 'rootuser'                   # The "root" account (on Ubuntu, set to "ubuntu")
   #user 'someuser'                   # The default remote user
   #localhost 'hostname'              # A local hostname instead of localhost
   #auto true                         # Skip interactive confirmation?

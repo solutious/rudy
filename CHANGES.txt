@@ -1,16 +1,25 @@
 RUDY, CHANGES 
 
-* TODO: http://github.com/solutious/rudy/issues/#issue/46
-* TODO: http://github.com/solutious/rudy/issues/#issue/43
-* TODO: Warning in latest Ruby 1.9.1: httpclient/http.rb:367: warning: variable $KCODE
-* rudy create-disks
- Executing routine: create-disks 
-  disks:
-  Timeout (30): execution expired!
-Creating volume... 
-  NameError: uninitialized constant Rudy::Metadata::UnknownObject
-(S)kip  (A)bort:
+#### 0.9.8.016 (2010-10-26) #######################
 
+NOTE: If you're using Ubuntu you'll need to update your 
+configuration to use this release. 
+
+* ADDED: new config parameter: 'root'. In previous releases
+Rudy used the default user to determine which account to use
+when launching new instances with EC2. With this release, 
+you now need to use "root". Either in the defaults config or
+the machines config for you ubuntu instances:
+
+defaults do
+  root "ubuntu"
+end
+
+machines do
+  role :ubuntu
+    root "ubuntu"
+  end
+end
 
 
 #### 0.9.8.015 (2010-10-25) #######################
@@ -481,6 +490,4 @@ NOTE: This is a complete re-write from 0.1
 #### 0.1 (2009-02-06) ###############################
 
 * Initial public release
-
-
 

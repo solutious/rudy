@@ -114,16 +114,16 @@ module Rudy
         puts "Creating #{Rudy::CONFIG_FILE}"
         rudy_config = Rudy::Utils.without_indent %Q`
           accounts {                           # Account Access Indentifiers
-            aws {                              # amazon web services 
+            aws {                              # amazon web services
               name "Rudy Default"
               accountnum ""
               accesskey ""
               secretkey ""
-              pkey "~/path/2/pk-xxxx.pem" 
+              pkey "~/path/2/pk-xxxx.pem"
               cert "~/path/2/cert-xxxx.pem"
             }
           }
-        `
+`
         Rudy::Utils.write_to_file(Rudy::CONFIG_FILE, rudy_config, 'w', 0600)
       end
     end

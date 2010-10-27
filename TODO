@@ -1,0 +1,12 @@
+
+* TODO: http://github.com/solutious/rudy/issues/#issue/46
+* TODO: http://github.com/solutious/rudy/issues/#issue/43
+* TODO: Warning in latest Ruby 1.9.1: httpclient/http.rb:367: warning: variable $KCODE
+* rudy create-disks
+ Executing routine: create-disks 
+  disks:
+  Timeout (30): execution expired!
+Creating volume... 
+  NameError: uninitialized constant Rudy::Metadata::UnknownObject
+(S)kip  (A)bort:
+

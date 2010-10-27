@@ -41,14 +41,14 @@
             <h2>Methods</h2>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000444">create</a></li>
-              <li><a href="#M000446">delete_pkey</a></li>
-              <li><a href="#M000447">exists?</a></li>
-              <li><a href="#M000449">pkey</a></li>
-              <li><a href="#M000450">pkey?</a></li>
-              <li><a href="#M000443">raise_early_exceptions</a></li>
-              <li><a href="#M000448">registered?</a></li>
-              <li><a href="#M000445">unregister</a></li>
+              <li><a href="#M000447">create</a></li>
+              <li><a href="#M000449">delete_pkey</a></li>
+              <li><a href="#M000450">exists?</a></li>
+              <li><a href="#M000452">pkey</a></li>
+              <li><a href="#M000453">pkey?</a></li>
+              <li><a href="#M000446">raise_early_exceptions</a></li>
+              <li><a href="#M000451">registered?</a></li>
+              <li><a href="#M000448">unregister</a></li>
             </ol>
           </div>
           <div id='context'>
@@ -62,114 +62,114 @@
           <div id='section'>
             <div id='methods'>
               <h2>Public instance methods</h2>
-              <div class='method public-instance' id='method-M000444'>
-                <a name='M000444'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>create</span>
-                  <span class='arguments'>(name=:root)</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000444-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000444-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/keypair.rb, line 23</span>&#x000A;23:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create</span>(<span class="ruby-identifier">name</span>=<span class="ruby-identifier">:root</span>)&#x000A;24:       <span class="ruby-identifier">keyname</span> = <span class="ruby-identifier">user_keypairname</span> <span class="ruby-identifier">name</span>&#x000A;25:       <span class="ruby-identifier">kp_file</span> = <span class="ruby-identifier">pkey</span> <span class="ruby-identifier">name</span>&#x000A;26: &#x000A;27:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">registered?</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">force</span> &#x000A;28:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">PrivateKeyNotFound</span>, <span class="ruby-identifier">kp_file</span> <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">kp_file</span>)&#x000A;29:       <span class="ruby-keyword kw">end</span>&#x000A;30: &#x000A;31:       <span class="ruby-keyword kw">if</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Keypairs</span>.<span class="ruby-identifier">exists?</span> <span class="ruby-identifier">keyname</span>&#x000A;32:         <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">force</span>&#x000A;33:           <span class="ruby-identifier">li</span> <span class="ruby-node">&quot;Destroying existing keypair: #{keyname}&quot;</span>&#x000A;34:           <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Keypairs</span>.<span class="ruby-identifier">destroy</span> <span class="ruby-identifier">keyname</span>&#x000A;35:         <span class="ruby-keyword kw">else</span>&#x000A;36:           <span class="ruby-identifier">raise</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">KeypairAlreadyDefined</span>, <span class="ruby-identifier">keyname</span>&#x000A;37:         <span class="ruby-keyword kw">end</span>&#x000A;38:       <span class="ruby-keyword kw">end</span>&#x000A;39:       &#x000A;40:       <span class="ruby-keyword kw">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">kp_file</span>)&#x000A;41:         <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">force</span>&#x000A;42:           <span class="ruby-identifier">delete_pkey</span> <span class="ruby-identifier">name</span>&#x000A;43:         <span class="ruby-keyword kw">else</span>&#x000A;44:           <span class="ruby-identifier">raise</span> <span class="ruby-constant">PrivateKeyFileExists</span>, <span class="ruby-identifier">kp_file</span> &#x000A;45:         <span class="ruby-keyword kw">end</span>&#x000A;46:       <span class="ruby-keyword kw">end</span>&#x000A;47:       &#x000A;48:       <span class="ruby-identifier">li</span> <span class="ruby-node">&quot;Creating keypair: #{keyname}&quot;</span>&#x000A;49:       <span class="ruby-identifier">kp</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Keypairs</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">keyname</span>)&#x000A;50:       <span class="ruby-identifier">li</span> <span class="ruby-node">&quot;Saving #{kp_file}&quot;</span>&#x000A;51:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Utils</span>.<span class="ruby-identifier">write_to_file</span>(<span class="ruby-identifier">kp_file</span>, <span class="ruby-identifier">kp</span>.<span class="ruby-identifier">private_key</span>, <span class="ruby-value str">'w'</span>, <span class="ruby-value">0600</span>)&#x000A;52:       &#x000A;53:       <span class="ruby-identifier">kp</span>&#x000A;54:     <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='method public-instance' id='method-M000446'>
-                <a name='M000446'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>delete_pkey</span>
-                  <span class='arguments'>(name=:root)</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000446-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000446-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/keypair.rb, line 62</span>&#x000A;62:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">delete_pkey</span>(<span class="ruby-identifier">name</span>=<span class="ruby-identifier">:root</span>)&#x000A;63:       <span class="ruby-identifier">kp_file</span> = <span class="ruby-identifier">pkey</span> <span class="ruby-identifier">name</span>&#x000A;64:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">PrivateKeyNotFound</span>, <span class="ruby-identifier">kp_file</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">pkey?</span>(<span class="ruby-identifier">name</span>)&#x000A;65:       <span class="ruby-constant">File</span>.<span class="ruby-identifier">unlink</span> <span class="ruby-identifier">kp_file</span>&#x000A;66:     <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
               <div class='method public-instance' id='method-M000447'>
                 <a name='M000447'>      </a>
                 <div class='synopsis'>
-                  <span class='name'>exists?</span>
-                  <span class='arguments'>(name=:root)</span>
+                  <span class='name'>create</span>
+                  <span class='arguments'>(name=nil)</span>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000447-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000447-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/keypair.rb, line 68</span>&#x000A;68:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">name</span>=<span class="ruby-identifier">:root</span>)&#x000A;69:       <span class="ruby-identifier">registered?</span>(<span class="ruby-identifier">name</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">pkey?</span>(<span class="ruby-identifier">name</span>)&#x000A;70:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000447-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/keypair.rb, line 24</span>&#x000A;24:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;25:       <span class="ruby-identifier">name</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">current_machine_root</span>&#x000A;26:       <span class="ruby-identifier">keyname</span> = <span class="ruby-identifier">user_keypairname</span> <span class="ruby-identifier">name</span>&#x000A;27:       <span class="ruby-identifier">kp_file</span> = <span class="ruby-identifier">pkey</span> <span class="ruby-identifier">name</span>&#x000A;28: &#x000A;29:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">registered?</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">force</span> &#x000A;30:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">PrivateKeyNotFound</span>, <span class="ruby-identifier">kp_file</span> <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">kp_file</span>)&#x000A;31:       <span class="ruby-keyword kw">end</span>&#x000A;32: &#x000A;33:       <span class="ruby-keyword kw">if</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Keypairs</span>.<span class="ruby-identifier">exists?</span> <span class="ruby-identifier">keyname</span>&#x000A;34:         <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">force</span>&#x000A;35:           <span class="ruby-identifier">li</span> <span class="ruby-node">&quot;Destroying existing keypair: #{keyname}&quot;</span>&#x000A;36:           <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Keypairs</span>.<span class="ruby-identifier">destroy</span> <span class="ruby-identifier">keyname</span>&#x000A;37:         <span class="ruby-keyword kw">else</span>&#x000A;38:           <span class="ruby-identifier">raise</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">KeypairAlreadyDefined</span>, <span class="ruby-identifier">keyname</span>&#x000A;39:         <span class="ruby-keyword kw">end</span>&#x000A;40:       <span class="ruby-keyword kw">end</span>&#x000A;41:       &#x000A;42:       <span class="ruby-keyword kw">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">kp_file</span>)&#x000A;43:         <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@@global</span>.<span class="ruby-identifier">force</span>&#x000A;44:           <span class="ruby-identifier">delete_pkey</span> <span class="ruby-identifier">name</span>&#x000A;45:         <span class="ruby-keyword kw">else</span>&#x000A;46:           <span class="ruby-identifier">raise</span> <span class="ruby-constant">PrivateKeyFileExists</span>, <span class="ruby-identifier">kp_file</span> &#x000A;47:         <span class="ruby-keyword kw">end</span>&#x000A;48:       <span class="ruby-keyword kw">end</span>&#x000A;49:       &#x000A;50:       <span class="ruby-identifier">li</span> <span class="ruby-node">&quot;Creating keypair: #{keyname}&quot;</span>&#x000A;51:       <span class="ruby-identifier">kp</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Keypairs</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">keyname</span>)&#x000A;52:       <span class="ruby-identifier">li</span> <span class="ruby-node">&quot;Saving #{kp_file}&quot;</span>&#x000A;53:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">Utils</span>.<span class="ruby-identifier">write_to_file</span>(<span class="ruby-identifier">kp_file</span>, <span class="ruby-identifier">kp</span>.<span class="ruby-identifier">private_key</span>, <span class="ruby-value str">'w'</span>, <span class="ruby-value">0600</span>)&#x000A;54:       &#x000A;55:       <span class="ruby-identifier">kp</span>&#x000A;56:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-M000449'>
                 <a name='M000449'>      </a>
                 <div class='synopsis'>
-                  <span class='name'>pkey</span>
-                  <span class='arguments'>(name=:root)</span>
+                  <span class='name'>delete_pkey</span>
+                  <span class='arguments'>(name=nil)</span>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000449-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000449-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/keypair.rb, line 77</span>&#x000A;77:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">pkey</span>(<span class="ruby-identifier">name</span>=<span class="ruby-identifier">:root</span>)&#x000A;78:       <span class="ruby-identifier">user_keypairpath</span> <span class="ruby-identifier">name</span>&#x000A;79:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000449-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/keypair.rb, line 65</span>&#x000A;65:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">delete_pkey</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;66:       <span class="ruby-identifier">name</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">current_machine_root</span>&#x000A;67:       <span class="ruby-identifier">kp_file</span> = <span class="ruby-identifier">pkey</span> <span class="ruby-identifier">name</span>&#x000A;68:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">PrivateKeyNotFound</span>, <span class="ruby-identifier">kp_file</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">pkey?</span>(<span class="ruby-identifier">name</span>)&#x000A;69:       <span class="ruby-constant">File</span>.<span class="ruby-identifier">unlink</span> <span class="ruby-identifier">kp_file</span>&#x000A;70:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-M000450'>
                 <a name='M000450'>      </a>
                 <div class='synopsis'>
-                  <span class='name'>pkey?</span>
-                  <span class='arguments'>(name=:root)</span>
+                  <span class='name'>exists?</span>
+                  <span class='arguments'>(name=nil)</span>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000450-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000450-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/keypair.rb, line 81</span>&#x000A;81:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">pkey?</span>(<span class="ruby-identifier">name</span>=<span class="ruby-identifier">:root</span>)&#x000A;82:       <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span> <span class="ruby-identifier">pkey</span>(<span class="ruby-identifier">name</span>)&#x000A;83:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000450-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/keypair.rb, line 72</span>&#x000A;72:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;73:       <span class="ruby-identifier">name</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">current_machine_root</span>&#x000A;74:       <span class="ruby-identifier">registered?</span>(<span class="ruby-identifier">name</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">pkey?</span>(<span class="ruby-identifier">name</span>)&#x000A;75:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <div class='method public-instance' id='method-M000443'>
-                <a name='M000443'>      </a>
+              <div class='method public-instance' id='method-M000452'>
+                <a name='M000452'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>pkey</span>
+                  <span class='arguments'>(name=nil)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000452-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000452-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/keypair.rb, line 83</span>&#x000A;83:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">pkey</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;84:       <span class="ruby-identifier">name</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">current_machine_root</span>&#x000A;85:       <span class="ruby-identifier">user_keypairpath</span> <span class="ruby-identifier">name</span>&#x000A;86:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-M000453'>
+                <a name='M000453'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>pkey?</span>
+                  <span class='arguments'>(name=nil)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000453-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000453-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/keypair.rb, line 88</span>&#x000A;88:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">pkey?</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;89:       <span class="ruby-identifier">name</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">current_machine_root</span>&#x000A;90:       <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span> <span class="ruby-identifier">pkey</span>(<span class="ruby-identifier">name</span>)&#x000A;91:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-M000446'>
+                <a name='M000446'>      </a>
                 <div class='synopsis'>
                   <span class='name'>raise_early_exceptions</span>
-                  <span class='arguments'>(name=:root)</span>
+                  <span class='arguments'>(name=nil)</span>
                 </div>
                 <div class='description'>
                   <p>
-                  <a href="../../Routines.html#M000403">Rudy::Routines.add_handler</a>
+                  <a href="../../Routines.html#M000406">Rudy::Routines.add_handler</a>
                   :machines, self
                   </p>
                 </div>
                 <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000443-source'); return false">
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000446-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000443-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/keypair.rb, line 10</span>&#x000A;10:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">raise_early_exceptions</span>(<span class="ruby-identifier">name</span>=<span class="ruby-identifier">:root</span>)&#x000A;11:       <span class="ruby-identifier">keyname</span> = <span class="ruby-identifier">user_keypairname</span> <span class="ruby-identifier">name</span>&#x000A;12:       <span class="ruby-identifier">kp_file</span> = <span class="ruby-identifier">pkey</span> <span class="ruby-identifier">name</span>&#x000A;13:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">registered?</span> <span class="ruby-identifier">keyname</span>&#x000A;14:         <span class="ruby-comment cmt"># This means no keypair file can be found</span>&#x000A;15:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">PrivateKeyNotFound</span>, <span class="ruby-identifier">keyname</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">kp_file</span>.<span class="ruby-identifier">nil?</span>&#x000A;16:         <span class="ruby-comment cmt"># This means we found a keypair in the config but we cannot find the private key file. </span>&#x000A;17:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">PrivateKeyNotFound</span>, <span class="ruby-identifier">kp_file</span> <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">kp_file</span>)&#x000A;18:       <span class="ruby-keyword kw">else</span>&#x000A;19:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">PrivateKeyFileExists</span>, <span class="ruby-identifier">kp_file</span> <span class="ruby-keyword kw">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">kp_file</span>)&#x000A;20:       <span class="ruby-keyword kw">end</span> &#x000A;21:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000446-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/keypair.rb, line 10</span>&#x000A;10:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">raise_early_exceptions</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;11:       <span class="ruby-identifier">name</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">current_machine_root</span>&#x000A;12:       <span class="ruby-identifier">keyname</span> = <span class="ruby-identifier">user_keypairname</span> <span class="ruby-identifier">name</span>&#x000A;13:       <span class="ruby-identifier">kp_file</span> = <span class="ruby-identifier">pkey</span> <span class="ruby-identifier">name</span>&#x000A;14:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">registered?</span> <span class="ruby-identifier">keyname</span>&#x000A;15:         <span class="ruby-comment cmt"># This means no keypair file can be found</span>&#x000A;16:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">PrivateKeyNotFound</span>, <span class="ruby-identifier">keyname</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">kp_file</span>.<span class="ruby-identifier">nil?</span>&#x000A;17:         <span class="ruby-comment cmt"># This means we found a keypair in the config but we cannot find the private key file. </span>&#x000A;18:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">PrivateKeyNotFound</span>, <span class="ruby-identifier">kp_file</span> <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">kp_file</span>)&#x000A;19:       <span class="ruby-keyword kw">else</span>&#x000A;20:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">PrivateKeyFileExists</span>, <span class="ruby-identifier">kp_file</span> <span class="ruby-keyword kw">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">kp_file</span>)&#x000A;21:       <span class="ruby-keyword kw">end</span> &#x000A;22:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='method public-instance' id='method-M000451'>
+                <a name='M000451'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>registered?</span>
+                  <span class='arguments'>(name=nil)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000451-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000451-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/keypair.rb, line 77</span>&#x000A;77:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">registered?</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;78:       <span class="ruby-identifier">name</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">current_machine_root</span>&#x000A;79:       <span class="ruby-identifier">keyname</span> = <span class="ruby-identifier">user_keypairname</span> <span class="ruby-identifier">name</span>&#x000A;80:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Keypairs</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">keyname</span>)&#x000A;81:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-M000448'>
                 <a name='M000448'>      </a>
                 <div class='synopsis'>
-                  <span class='name'>registered?</span>
-                  <span class='arguments'>(name=:root)</span>
+                  <span class='name'>unregister</span>
+                  <span class='arguments'>(name=nil)</span>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000448-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000448-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/keypair.rb, line 72</span>&#x000A;72:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">registered?</span>(<span class="ruby-identifier">name</span>=<span class="ruby-identifier">:root</span>)&#x000A;73:       <span class="ruby-identifier">keyname</span> = <span class="ruby-identifier">user_keypairname</span> <span class="ruby-identifier">name</span>&#x000A;74:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Keypairs</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">keyname</span>)&#x000A;75:     <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
-              <div class='method public-instance' id='method-M000445'>
-                <a name='M000445'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>unregister</span>
-                  <span class='arguments'>(name=:root)</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000445-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000445-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/keypair.rb, line 56</span>&#x000A;56:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">unregister</span>(<span class="ruby-identifier">name</span>=<span class="ruby-identifier">:root</span>)&#x000A;57:       <span class="ruby-identifier">keyname</span> = <span class="ruby-identifier">user_keypairname</span> <span class="ruby-identifier">name</span>&#x000A;58:       <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;Keypair not registered: #{keyname}&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">registered?</span>(<span class="ruby-identifier">name</span>)&#x000A;59:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Keypairs</span>.<span class="ruby-identifier">destroy</span> <span class="ruby-identifier">keyname</span>&#x000A;60:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000448-source'>    <span class="ruby-comment cmt"># File lib/rudy/routines/handlers/keypair.rb, line 58</span>&#x000A;58:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">unregister</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword kw">nil</span>)&#x000A;59:       <span class="ruby-identifier">name</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">current_machine_root</span>&#x000A;60:       <span class="ruby-identifier">keyname</span> = <span class="ruby-identifier">user_keypairname</span> <span class="ruby-identifier">name</span>&#x000A;61:       <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;Keypair not registered: #{keyname}&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">registered?</span>(<span class="ruby-identifier">name</span>)&#x000A;62:       <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Keypairs</span>.<span class="ruby-identifier">destroy</span> <span class="ruby-identifier">keyname</span>&#x000A;63:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

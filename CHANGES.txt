@@ -4,6 +4,7 @@ RUDY, CHANGES
 #### 0.9.8.017 (2010-11-11) #######################
 
 * FIXED: adduser handler checks for root before using sudo
+* FIXED: Added us-west-1 and ap-southeast-1 regions to Rudy::AWS::VALID_REGIONS
 
 
 #### 0.9.8.016 (2010-10-26) #######################

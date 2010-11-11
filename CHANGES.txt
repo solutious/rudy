@@ -1,5 +1,11 @@
 RUDY, CHANGES 
 
+
+#### 0.9.8.017 (2010-11-11) #######################
+
+* FIXED: adduser handler checks for root before using sudo
+
+
 #### 0.9.8.016 (2010-10-26) #######################
 
 NOTE: If you're using Ubuntu you'll need to update your 

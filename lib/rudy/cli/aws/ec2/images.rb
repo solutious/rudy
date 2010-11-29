@@ -14,12 +14,10 @@ module AWS; module EC2;
       true  
     end
     def images
-      
       unless @option.all
         @option.owner ||= 'amazon' 
         li "Images owned by #{@option.owner.bright}" unless @argv.awsid
       end
-      
       images = Rudy::AWS::EC2::Images.list(@option.owner, @argv) || []
       print_stobjects images
     end
@@ -41,7 +39,27 @@ module AWS; module EC2;
       true
     end
     def register_images
-      li Rudy::AWS::EC2::Images.register(@argv.first)
+      if @option.snapshot
+        opts = {
+          :name => @argv.first,
+          :architecture => @option.arch || 'i386',
+          :description => @option.description || 'Made with Rudy',
+          :root_device_name => "/dev/sda1",
+          :block_device_mapping => [{
+            :device_name => "/dev/sda1",
+            :ebs_snapshot_id => @option.snapshot,
+            :ebs_delete_on_termination => true
+          }]
+        }
+        opts[:kernel_id] = @option.kernel if @option.kernel
+        opts[:ramdisk_id] = @option.ramdisk if @option.ramdisk
+      else
+        opts = {
+          :image_location => @argv.first
+        }
+      end
+      p opts if Rudy.debug?
+      li Rudy::AWS::EC2::Images.register(opts)
     end
 
 

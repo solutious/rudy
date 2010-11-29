@@ -108,6 +108,11 @@ module RudyCLI_EC2
   option :o, :owner, String, "Amazon Account Number or one of: amazon, self"
   option :l, :all, "Display all registered machine images (warning: slow)"
   #option :p, :private, "Private images only"
+  option :r, :ramdisk, String, "Ramdisk ID (EBS only)"
+  option :k, :kernel, String, "Kernel ID (EBS only)"
+  option :s, :snapshot, String, "Snapshot ID (EBS only)"
+  option :a, :arch, String, "Architecture. One of: i386, x86_64 (EBS only)"
+  option :d, :description, String, "A description of the image (EBS only)"
   action :R, :register, "Register an image"
   action :D, :destroy, "Deregister an image (does not remove image files from S3)"
   argv :ami

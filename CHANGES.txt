@@ -1,6 +1,10 @@
 RUDY, CHANGES 
 
 
+#### 0.9.8.018 (2010-11-27) #######################
+
+* ADDED: Support for registering EBS-based images. (See rudy-ec2 images -h)
+
 #### 0.9.8.017 (2010-11-11) #######################
 
 * FIXED: adduser handler checks for root before using sudo

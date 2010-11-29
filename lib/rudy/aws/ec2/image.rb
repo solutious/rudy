@@ -82,12 +82,25 @@ module Rudy::AWS
         true
       end
       
-      # +path+ the S3 path to the manifest (bucket/file.manifest.xml)
-      # Returns the AMI ID when successful, otherwise throws an exception.
-      def register(path)
-        opts = {
-          :image_location => path
-        }
+      # +opts+ can be the S3 path to the manifest (bucket/file.manifest.xml)
+      # or a hash containing the following options:
+      #
+      # [optional, String] :image_location ("") S3 URL for the XML manifest
+      # [optional, String] :name ("") Name of EBS image
+      # [optional, String] :description ("") Description of EBS image
+      # [optional, String] :architecture ("") Architecture of EBS image, currently 'i386' or 'x86_64'
+      # [optional, String] :kernel_id ("") Kernel ID of EBS image
+      # [optional, String] :ramdisk_id ("") Ramdisk ID of EBS image
+      # [optional, String] :root_device_name ("") Root device name of EBS image, eg '/dev/sda1'
+      # [optional, Array] :block_device_mapping ([]) An array of Hashes representing the elements of the block device mapping.  e.g. [{:device_name => '/dev/sdh', :virtual_name => '', :ebs_snapshot_id => '', :ebs_volume_size => '', :ebs_delete_on_termination => ''},{},...]
+      #                       i.e. 
+      #                        :block_device_mapping => [{
+      #                          :device_name => "/dev/sda1",
+      #                          :ebs_snapshot_id => "snap-01234567",
+      #                          :ebs_delete_on_termination => true,
+      #                        }]
+      def register(opts)
+        opts = Hash === opts ? opts : { :image_location => opts }
         ret = @@ec2.register_image(opts)
         return nil unless ret && ret.is_a?(Hash)
         ret['imageId']

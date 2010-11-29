@@ -81,7 +81,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000048-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000048-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/image.rb, line 105</span>&#x000A;105:       <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Images</span>.<span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">h</span>)&#x000A;106:         <span class="ruby-identifier">img</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Image</span>.<span class="ruby-identifier">new</span>&#x000A;107:         <span class="ruby-identifier">img</span>.<span class="ruby-identifier">owner</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'imageOwnerId'</span>]&#x000A;108:         <span class="ruby-identifier">img</span>.<span class="ruby-identifier">aki</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'kernelId'</span>]&#x000A;109:         <span class="ruby-identifier">img</span>.<span class="ruby-identifier">ari</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'ramdiskId'</span>]&#x000A;110:         <span class="ruby-identifier">img</span>.<span class="ruby-identifier">state</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'imageState'</span>]&#x000A;111:         <span class="ruby-identifier">img</span>.<span class="ruby-identifier">awsid</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'imageId'</span>]&#x000A;112:         <span class="ruby-identifier">img</span>.<span class="ruby-identifier">arch</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'architecture'</span>]&#x000A;113:         <span class="ruby-identifier">img</span>.<span class="ruby-identifier">visibility</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'isPublic'</span>] <span class="ruby-operator">==</span> <span class="ruby-value str">'true'</span> <span class="ruby-operator">?</span> <span class="ruby-value str">'public'</span> <span class="ruby-operator">:</span> <span class="ruby-value str">'private'</span>&#x000A;114:         <span class="ruby-identifier">img</span>.<span class="ruby-identifier">location</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'imageLocation'</span>]&#x000A;115:         <span class="ruby-identifier">img</span>.<span class="ruby-identifier">kind</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'imageType'</span>]&#x000A;116:         <span class="ruby-identifier">img</span>&#x000A;117:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000048-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/image.rb, line 118</span>&#x000A;118:       <span class="ruby-keyword kw">def</span> <span class="ruby-constant">Images</span>.<span class="ruby-identifier">from_hash</span>(<span class="ruby-identifier">h</span>)&#x000A;119:         <span class="ruby-identifier">img</span> = <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Image</span>.<span class="ruby-identifier">new</span>&#x000A;120:         <span class="ruby-identifier">img</span>.<span class="ruby-identifier">owner</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'imageOwnerId'</span>]&#x000A;121:         <span class="ruby-identifier">img</span>.<span class="ruby-identifier">aki</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'kernelId'</span>]&#x000A;122:         <span class="ruby-identifier">img</span>.<span class="ruby-identifier">ari</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'ramdiskId'</span>]&#x000A;123:         <span class="ruby-identifier">img</span>.<span class="ruby-identifier">state</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'imageState'</span>]&#x000A;124:         <span class="ruby-identifier">img</span>.<span class="ruby-identifier">awsid</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'imageId'</span>]&#x000A;125:         <span class="ruby-identifier">img</span>.<span class="ruby-identifier">arch</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'architecture'</span>]&#x000A;126:         <span class="ruby-identifier">img</span>.<span class="ruby-identifier">visibility</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'isPublic'</span>] <span class="ruby-operator">==</span> <span class="ruby-value str">'true'</span> <span class="ruby-operator">?</span> <span class="ruby-value str">'public'</span> <span class="ruby-operator">:</span> <span class="ruby-value str">'private'</span>&#x000A;127:         <span class="ruby-identifier">img</span>.<span class="ruby-identifier">location</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'imageLocation'</span>]&#x000A;128:         <span class="ruby-identifier">img</span>.<span class="ruby-identifier">kind</span> = <span class="ruby-identifier">h</span>[<span class="ruby-value str">'imageType'</span>]&#x000A;129:         <span class="ruby-identifier">img</span>&#x000A;130:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <h2>Public instance methods</h2>
@@ -134,20 +134,53 @@
                 <a name='M000047'>      </a>
                 <div class='synopsis'>
                   <span class='name'>register</span>
-                  <span class='arguments'>(path)</span>
+                  <span class='arguments'>(opts)</span>
                 </div>
                 <div class='description'>
                   <p>
-                  <tt>path</tt> the <a href="../S3.html">S3</a> path to the manifest
-                  (bucket/file.manifest.xml) Returns the AMI ID when successful, otherwise
-                  throws an exception.
+                  <tt>opts</tt> can be the <a href="../S3.html">S3</a> path to the manifest
+                  (bucket/file.manifest.xml) or a hash containing the following options:
                   </p>
+                  <dl>
+                  <dt>optional, String</dt><dd>:image_location (&#8220;&#8221;) <a href="../S3.html">S3</a> URL for the
+                  XML manifest
+                  
+                  </dd>
+                  <dt>optional, String</dt><dd>:name (&#8220;&#8221;) Name of EBS image
+                  
+                  </dd>
+                  <dt>optional, String</dt><dd>:description (&#8220;&#8221;) Description of EBS image
+                  
+                  </dd>
+                  <dt>optional, String</dt><dd>:architecture (&#8220;&#8221;) Architecture of EBS image, currently
+                  &#8216;i386&#8217; or &#8216;x86_64&#8216;
+                  
+                  </dd>
+                  <dt>optional, String</dt><dd>:kernel_id (&#8220;&#8221;) Kernel ID of EBS image
+                  
+                  </dd>
+                  <dt>optional, String</dt><dd>:ramdisk_id (&#8220;&#8221;) Ramdisk ID of EBS image
+                  
+                  </dd>
+                  <dt>optional, String</dt><dd>:root_device_name (&#8220;&#8221;) Root device name of EBS image, eg
+                  &#8216;/dev/sda1&#8216;
+                  
+                  </dd>
+                  <dt>optional, Array</dt><dd>:block_device_mapping ([]) An array of Hashes representing the elements of
+                  the block device mapping. e.g. [{:device_name => &#8216;/dev/sdh&#8217;,
+                  :virtual_name => &#8217;&#8217;, :ebs_snapshot_id => &#8217;&#8217;,
+                  :ebs_volume_size => &#8217;&#8217;, :ebs_delete_on_termination =>
+                  &#8217;&#8217;},{},&#8230;]
+                  
+                  <pre>i.e.&#x000A; :block_device_mapping =&gt; [{&#x000A;   :device_name =&gt; &quot;/dev/sda1&quot;,&#x000A;   :ebs_snapshot_id =&gt; &quot;snap-01234567&quot;,&#x000A;   :ebs_delete_on_termination =&gt; true,&#x000A; }]</pre>
+                  </dd>
+                  </dl>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000047-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000047-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/image.rb, line 87</span>&#x000A;87:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">register</span>(<span class="ruby-identifier">path</span>)&#x000A;88:         <span class="ruby-identifier">opts</span> = {&#x000A;89:           <span class="ruby-identifier">:image_location</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">path</span>&#x000A;90:         }&#x000A;91:         <span class="ruby-identifier">ret</span> = <span class="ruby-ivar">@@ec2</span>.<span class="ruby-identifier">register_image</span>(<span class="ruby-identifier">opts</span>)&#x000A;92:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">ret</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">ret</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>)&#x000A;93:         <span class="ruby-identifier">ret</span>[<span class="ruby-value str">'imageId'</span>]&#x000A;94:       <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000047-source'>     <span class="ruby-comment cmt"># File lib/rudy/aws/ec2/image.rb, line 102</span>&#x000A;102:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">register</span>(<span class="ruby-identifier">opts</span>)&#x000A;103:         <span class="ruby-identifier">opts</span> = <span class="ruby-constant">Hash</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">opts</span> <span class="ruby-value">? </span><span class="ruby-identifier">opts</span> <span class="ruby-operator">:</span> { <span class="ruby-identifier">:image_location</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts</span> }&#x000A;104:         <span class="ruby-identifier">ret</span> = <span class="ruby-ivar">@@ec2</span>.<span class="ruby-identifier">register_image</span>(<span class="ruby-identifier">opts</span>)&#x000A;105:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">ret</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">ret</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>)&#x000A;106:         <span class="ruby-identifier">ret</span>[<span class="ruby-value str">'imageId'</span>]&#x000A;107:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>

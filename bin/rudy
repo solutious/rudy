@@ -7,8 +7,11 @@
 #
 #   See rudy -h for usage
 # 
- 
-$:.unshift File.join(File.dirname(__FILE__), '..', 'lib') # Put our local lib in first place
+
+BASE_PATH = File.expand_path File.join(File.dirname(__FILE__), '..')
+lib_dir = File.join(BASE_PATH, 'lib')
+$:.unshift lib_dir
+
 $:.unshift File.join(File.dirname(__FILE__), '..', '..', 'drydock', 'lib') 
 
 #$SAFE = 1   # require is unsafe in Ruby 1.9??

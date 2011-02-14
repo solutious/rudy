@@ -7,9 +7,8 @@ module AWS; module EC2;
     
     def create_snapshots_valid?
       raise Drydock::ArgError.new('volume ID', @alias) unless @option.volume
-      @volume = Rudy::AWS::EC2::Volumes.get(@argv.volid)
-      raise "Volume #{@volume.awsid} does not exist" unless @volume
-      true
+      @volume = Rudy::AWS::EC2::Volumes.get(@option.volume)
+      !@volume.nil?
     end
     def create_snapshots
       snap = execute_action { Rudy::AWS::EC2::Snapshots.create(@volume.awsid) }

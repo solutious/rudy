@@ -40,10 +40,10 @@
             <a href="../../../files/lib/rudy/aws/ec2/image_rb.html">lib/rudy/aws/ec2/image.rb</a>
           </li>
           <li class='other'>
-            <a href="../../../files/lib/rudy/aws/ec2/instance_rb.html">lib/rudy/aws/ec2/instance.rb</a>
+            <a href="../../../files/lib/rudy/aws/ec2/keypair_rb.html">lib/rudy/aws/ec2/keypair.rb</a>
           </li>
           <li class='other'>
-            <a href="../../../files/lib/rudy/aws/ec2/keypair_rb.html">lib/rudy/aws/ec2/keypair.rb</a>
+            <a href="../../../files/lib/rudy/aws/ec2/instance_rb.html">lib/rudy/aws/ec2/instance.rb</a>
           </li>
           <li class='other'>
             <a href="../../../files/lib/rudy/aws/ec2/snapshot_rb.html">lib/rudy/aws/ec2/snapshot.rb</a>
@@ -69,9 +69,6 @@
             <h3>public class</h3>
             <ol>
               <li><a href="#M000017">connect</a></li>
-            </ol>
-            <h3>protected class</h3>
-            <ol>
               <li><a href="#M000018">execute_request</a></li>
             </ol>
           </div>
@@ -142,8 +139,7 @@
                   <pre id='M000017-source'>    <span class="ruby-comment cmt"># File lib/rudy/aws/ec2.rb, line 8</span>&#x000A; 8:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">connect</span>(<span class="ruby-identifier">access_key</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">secret_key</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">region</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">logger</span>=<span class="ruby-keyword kw">nil</span>)&#x000A; 9: &#x000A;10:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">region</span>&#x000A;11:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">InvalidRegion</span>, <span class="ruby-identifier">region</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">Rudy</span><span class="ruby-operator">::</span><span class="ruby-constant">AWS</span>.<span class="ruby-identifier">valid_region?</span>(<span class="ruby-identifier">region</span>)&#x000A;12:         <span class="ruby-identifier">host</span> = <span class="ruby-node">&quot;#{region}.ec2.amazonaws.com&quot;</span>&#x000A;13:       <span class="ruby-keyword kw">elsif</span> <span class="ruby-constant">ENV</span>[<span class="ruby-value str">'EC2_URL'</span>]&#x000A;14:         <span class="ruby-identifier">host</span> = <span class="ruby-constant">URL</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-constant">ENV</span>[<span class="ruby-value str">'EC2_URL'</span>]).<span class="ruby-identifier">host</span>&#x000A;15:       <span class="ruby-keyword kw">end</span>&#x000A;16:       &#x000A;17:       <span class="ruby-identifier">host</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">DEFAULT_EC2_HOST</span>&#x000A;18:       <span class="ruby-identifier">port</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">DEFAULT_EC2_PORT</span>&#x000A;19:       &#x000A;20:       <span class="ruby-ivar">@@ec2</span> = <span class="ruby-operator">::</span><span class="ruby-constant">AWS</span><span class="ruby-operator">::</span><span class="ruby-constant">EC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Base</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">:port</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">port</span>, <span class="ruby-identifier">:server=</span><span class="ruby-operator">&gt;</span> <span class="ruby-identifier">host</span>, <span class="ruby-identifier">:access_key_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">access_key</span>, <span class="ruby-identifier">:secret_access_key</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">secret_key</span>)&#x000A;21:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <h2>Protected class methods</h2>
-              <div class='method protected-class' id='method-M000018'>
+              <div class='method public-class' id='method-M000018'>
                 <a name='M000018'>      </a>
                 <div class='synopsis'>
                   <span class='name'>execute_request</span>

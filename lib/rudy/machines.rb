@@ -64,7 +64,7 @@ module Rudy
     end
     
     def from_spot_request(request)
-      instances = Rudy::AWS::EC2::Instances.list(:running, request.map(&:instid))
+      instances = Rudy::AWS::EC2::Instances.list(:any, request.map(&:instid))
       
       current_machine_positions.zip(instances).map do |position, instance|
         Rudy::Machine.new(position).tap do |machine|

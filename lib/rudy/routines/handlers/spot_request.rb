@@ -18,14 +18,14 @@ module Rudy; module Routines; module Handlers;
         :keypair => root_keypairname
       }
 
-      Rudy::AWS::EC2::SpotRequests.create(opts).tap do |request|
-        wait_for_fulfillment_of(request)
-      end
+      request = Rudy::AWS::EC2::SpotRequests.create(opts)
+      wait_for_fulfillment_of(request)
+      Rudy::AWS::EC2::SpotRequests.list(request)
     end
 
     def wait_for_fulfillment_of(spot_requests)
       msg = "Waiting for #{spot_requests.length} spot requests to be fulfilled"
-      Rudy::Utils.waiter(2, 90, Rudy::Huxtable.logger, msg, 2) {
+      Rudy::Utils.waiter(2, 180, Rudy::Huxtable.logger, msg, 2) {
         Rudy::AWS::EC2::SpotRequests.fulfilled?(spot_requests)
       }
     end

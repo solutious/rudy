@@ -68,8 +68,7 @@ module Rudy::AWS
       end
 
       def fulfilled?(requests)
-        fetched = list(requests)
-        fetched if fetched.all? { |r| r.fulfilled? }
+        list(requests).all? { |r| r.fulfilled? }
       end
 
       def self.from_hash(hash)

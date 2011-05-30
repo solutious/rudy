@@ -178,6 +178,14 @@ module Rudy
       fetch_machine_param(:positions) || 1
     end
     
+    def current_machine_positions
+      if @@global.position
+        Array(@@global.position)
+      else
+        Array.new(current_machine_count.to_i || 1) { |i| i + 1 }
+      end
+    end
+    
     def current_machine_hostname
       # NOTE: There is an issue with Caesars that a keyword that has been
       # defined as forced_array (or forced_hash, etc...) is like that for
@@ -201,6 +209,10 @@ module Rudy
     
     def current_machine_size
       fetch_machine_param(:size) || 'm1.small'
+    end
+    
+    def current_machine_pricing
+      fetch_machine_param(:pricing) || fetch_machine_param(:spot) || :on_demand
     end
     
     def current_machine_address(position='01')

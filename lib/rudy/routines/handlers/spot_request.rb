@@ -19,7 +19,7 @@ module Rudy; module Routines; module Handlers;
       }
 
       request = Rudy::AWS::EC2::SpotRequests.create(opts)
-      wait_for_fulfillment_of(request)
+      raise NoMachines unless wait_for_fulfillment_of(request)
       Rudy::AWS::EC2::SpotRequests.list(request)
     end
 

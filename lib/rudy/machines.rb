@@ -63,6 +63,20 @@ module Rudy
       group
     end
     
+    def from_spot_request(request)
+      instances = Rudy::AWS::EC2::Instances.list(:any, request.map(&:instid))
+      
+      current_machine_positions.zip(instances).map do |position, instance|
+        Rudy::Machine.new(position).tap do |machine|
+          machine.instid = instance.awsid
+          machine.created = machine.started = Time.now
+          machine.state = instance.state
+          machine.save
+          sleep 1 # Eventual consistency in SimpleDB
+        end
+      end
+    end
+    
     def restart
       group = list 
       raise MachineGroupNotRunning, current_machine_group if group.nil?

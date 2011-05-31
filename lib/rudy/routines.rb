@@ -150,6 +150,7 @@ module Rudy
       autoload :Keypair, 'rudy/routines/handlers/keypair'
       autoload :Machines, 'rudy/routines/handlers/machines'
       autoload :RyeTools, 'rudy/routines/handlers/rye'
+      autoload :SpotRequest, 'rudy/routines/handlers/spot_request'
       # The following can't be autoloaded because they call
       # Rudy::Routines.add_handler when they're loaded. 
       require 'rudy/routines/handlers/depends'

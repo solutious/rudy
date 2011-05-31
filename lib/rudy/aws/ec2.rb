@@ -114,5 +114,7 @@ module Rudy; module AWS
     autoload :Volumes, 'rudy/aws/ec2/volume'
     autoload :Zone, 'rudy/aws/ec2/zone'
     autoload :Zones, 'rudy/aws/ec2/zone'
+    autoload :SpotRequest, 'rudy/aws/ec2/spot_request'
+    autoload :SpotRequests, 'rudy/aws/ec2/spot_request'
   end
 end; end

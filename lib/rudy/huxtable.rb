@@ -58,7 +58,7 @@ module Rudy
     
     def self.domain
       name = @@global.project.to_s.gsub(/\W/, '_').downcase
-      [name, Rudy::DEFAULT_DOMAIN].join('_')
+      [name, Rudy::DEFAULT_DOMAIN].reject(&:empty?).join('_')
     end
     
     # Puts +msg+ to +@@logger+

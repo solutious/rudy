@@ -11,6 +11,7 @@ tryouts "Keypairs" do
     Rudy::Huxtable.update_config
     #Rudy::Huxtable.global.region = :'eu-west-1'
     Rudy::AWS::EC2.connect global.accesskey, global.secretkey, global.region
+    puts "NOTE: the test that deletes keypairs is disabled."
   end
   
   drill "no existing keypairs", false do
@@ -43,7 +44,7 @@ tryouts "Keypairs" do
     Rudy::AWS::EC2::Keypairs.list
   end
   
-  drill "destroy keypairs", nil do
+  xdrill "destroy keypairs", nil do
     keypairs = Rudy::AWS::EC2::Keypairs.list
     keypairs.each do |kp|
       Rudy::AWS::EC2::Keypairs.destroy kp.name

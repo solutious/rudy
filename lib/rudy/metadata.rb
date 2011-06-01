@@ -7,7 +7,7 @@ module Rudy
     COMMON_FIELDS = [:region, :zone, :environment, :role].freeze
     
     @@rsdb   = nil
-    @@domain = Rudy::DEFAULT_DOMAIN
+    @@domain = Rudy::Huxtable.domain
     
     #
     def self.get_rclass(rtype)

@@ -4,7 +4,7 @@ module Rudy
   module Metadata
     include Rudy::Huxtable
     
-    COMMON_FIELDS = [:region, :zone, :environment, :role].freeze
+    COMMON_FIELDS = [:region, :zone, :project, :environment, :role].freeze
     
     @@rsdb   = nil
     @@domain = Rudy::Huxtable.domain
@@ -182,8 +182,8 @@ module Rudy
     end
     
     def name(*other)
-      parts = [@rtype, @zone, @environment, @role, @position, *other].flatten
-      parts.join Rudy::DELIM
+      parts = [@rtype, @zone, @project, @environment, @role, @position, *other]
+      parts.compact.flatten.join Rudy::DELIM
     end
     
     def save(replace=false)

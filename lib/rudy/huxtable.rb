@@ -168,7 +168,7 @@ module Rudy
     
     
     def current_machine_group
-      [@@global.environment, @@global.role].join(Rudy::DELIM)
+      [@@global.project, @@global.environment, @@global.role].compact.join(Rudy::DELIM)
     end
     
     def current_group_name

@@ -4,10 +4,10 @@ module Rudy
   module Metadata
     include Rudy::Huxtable
     
-    COMMON_FIELDS = [:region, :zone, :environment, :role].freeze
+    COMMON_FIELDS = [:region, :zone, :project, :environment, :role].freeze
     
     @@rsdb   = nil
-    @@domain = Rudy::DOMAIN
+    @@domain = Rudy::Huxtable.domain
     
     #
     def self.get_rclass(rtype)
@@ -45,11 +45,11 @@ module Rudy
       @@domain = n if @@rsdb.create_domain n
     end
     
-    # Destroys a SimpleDB domain named +n+ and sets +@@domain+ to Rudy::DOMAIN
+    # Destroys a SimpleDB domain named +n+ and sets +@@domain+ to Rudy::DEFAULT_DOMAIN
     def self.destroy_domain(n)
       Rudy::Huxtable.ld "DESTROY: #{n}" if Rudy.debug?
       @@rsdb.destroy_domain n
-      @@domain = Rudy::DOMAIN
+      @@domain = Rudy::DEFAULT_DOMAIN
       true
     end
     
@@ -182,8 +182,8 @@ module Rudy
     end
     
     def name(*other)
-      parts = [@rtype, @zone, @environment, @role, @position, *other].flatten
-      parts.join Rudy::DELIM
+      parts = [@rtype, @zone, @project, @environment, @role, @position, *other]
+      parts.compact.flatten.join Rudy::DELIM
     end
     
     def save(replace=false)

@@ -48,16 +48,17 @@ module Rudy
     
     def self.create_domain
       @sdb = Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey, @@global.region)
-      @sdb.create_domain Rudy::DOMAIN
+      @sdb.create_domain self.domain
     end
     
     def self.domain_exists?
       @sdb = Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey, @@global.region)
-      (@sdb.list_domains || []).member? Rudy::DOMAIN
+      (@sdb.list_domains || []).member? self.domain
     end
     
     def self.domain
-      Rudy::DOMAIN
+      name = @@global.project.to_s.gsub(/\W/, '_').downcase
+      [name, Rudy::DEFAULT_DOMAIN].join('_')
     end
     
     # Puts +msg+ to +@@logger+
@@ -167,7 +168,7 @@ module Rudy
     
     
     def current_machine_group
-      [@@global.environment, @@global.role].join(Rudy::DELIM)
+      [@@global.project, @@global.environment, @@global.role].compact.join(Rudy::DELIM)
     end
     
     def current_group_name

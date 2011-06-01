@@ -43,6 +43,7 @@ module Rudy
     field :bucket
 
     field :positions
+    field :project
     
     
     attr_accessor :print_header
@@ -73,7 +74,7 @@ module Rudy
         # value from the defaults config. 
         # WARNING: Don't add bucket either or any machines configuration param 
         # TODO: investigate removing this apply_config method
-        %w[region zone environment role position bucket
+        %w[region zone environment role position bucket project
            localhost nocolor quiet auto force parallel].each do |name|
           curval, defval = self.send(name), config.defaults.send(name)
           if curval.nil? && !defval.nil?

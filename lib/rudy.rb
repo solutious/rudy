@@ -56,7 +56,7 @@ module Rudy
   end
   def sysinfo; Rudy.sysinfo;  end
     
-  unless defined? Rudy::DOMAIN # We can assume all constants are defined
+  unless defined? Rudy::DEFAULT_DOMAIN # We can assume all constants are defined
     
     @@quiet = false
     @@auto = false
@@ -65,7 +65,7 @@ module Rudy
     
     # SimpleDB accepts dashes in the domain name on creation and with the query syntax. 
     # However, with select syntax it says: "The specified query expression syntax is not valid"
-    DOMAIN = "rudy_state".freeze
+    DEFAULT_DOMAIN = "rudy_state".freeze
     DELIM  = '-'.freeze
   
     CONFIG_DIR = File.join(Rudy.sysinfo.home, '.rudy').freeze

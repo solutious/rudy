@@ -1,5 +1,4 @@
 
-
 module Rudy
   module CLI
     class Machines < Rudy::CLI::CommandBase

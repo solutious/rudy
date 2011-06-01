@@ -56,7 +56,7 @@ module Rudy
   end
   def sysinfo; Rudy.sysinfo;  end
     
-  unless defined? Rudy::DOMAIN # We can assume all constants are defined
+  unless defined? Rudy::DEFAULT_DOMAIN # We can assume all constants are defined
     
     @@quiet = false
     @@auto = false

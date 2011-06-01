@@ -4,7 +4,7 @@ library :rudy, 'lib'
 
 tryout "Disk API" do
   
-  set :test_domain, Rudy::DOMAIN #'test_' << Rudy::Utils.strand(4)
+  set :test_domain, Rudy::DEFAULT_DOMAIN #'test_' << Rudy::Utils.strand(4)
   set :test_env, 'stage' #'env_' << Rudy::Utils.strand(4)
   
   setup do

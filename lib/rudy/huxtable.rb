@@ -48,16 +48,16 @@ module Rudy
     
     def self.create_domain
       @sdb = Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey, @@global.region)
-      @sdb.create_domain Rudy::DOMAIN
+      @sdb.create_domain Rudy::DEFAULT_DOMAIN
     end
     
     def self.domain_exists?
       @sdb = Rudy::AWS::SDB.new(@@global.accesskey, @@global.secretkey, @@global.region)
-      (@sdb.list_domains || []).member? Rudy::DOMAIN
+      (@sdb.list_domains || []).member? Rudy::DEFAULT_DOMAIN
     end
     
     def self.domain
-      Rudy::DOMAIN
+      Rudy::DEFAULT_DOMAIN
     end
     
     # Puts +msg+ to +@@logger+

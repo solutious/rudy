@@ -12,7 +12,7 @@ tryouts "include Rudy::Metadata" do
     Rudy::Huxtable.global.offline = false
   end
   
-  drill "has default domain", Rudy::DOMAIN do
+  drill "has default domain", Rudy::DEFAULT_DOMAIN do
     Rudy::Metadata.domain
   end
   
@@ -28,7 +28,7 @@ tryouts "include Rudy::Metadata" do
   
   dream test_domain
   drill "can create test domain (automatically sets new internal domain)" do
-    Rudy::Metadata.domain = Rudy::DOMAIN
+    Rudy::Metadata.domain = Rudy::DEFAULT_DOMAIN
     Rudy::Metadata.create_domain test_domain
   end
   

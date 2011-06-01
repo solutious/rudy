@@ -238,6 +238,7 @@ class RudyCLI < Rudy::CLI::Base
   command :init do |obj|
     
     Rudy::Huxtable.update_config
+    Rudy::Huxtable.update_global obj.global # Pull in any command line globals
     
     unless File.exists? Rudy::CONFIG_FILE
       Rudy::Config.init_config_dir

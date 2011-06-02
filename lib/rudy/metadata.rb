@@ -182,7 +182,8 @@ module Rudy
     end
     
     def name(*other)
-      parts = [@rtype, @zone, @project, @environment, @role, @position, *other]
+      project = (@project && @project.first.empty?) ? nil : @project
+      parts = [@rtype, @zone, project, @environment, @role, @position, *other]
       parts.compact.flatten.join Rudy::DELIM
     end
     

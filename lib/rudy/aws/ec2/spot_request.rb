@@ -89,6 +89,11 @@ module Rudy::AWS
           end
         end
       end
+      
+      def cancel(requests)
+        opts = requests ? {:spot_instance_request_id => requests.map(&:id)} : {}
+        Rudy::AWS::EC2.execute_request({}) { @@ec2.cancel_spot_instance_requests(opts) }
+      end
 
       private
 

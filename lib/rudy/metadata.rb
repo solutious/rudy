@@ -88,6 +88,9 @@ module Rudy
     # Generates a default criteria for all metadata based on
     # region, zone, environment, and role. If a position has
     # been specified in the globals it will also be included.
+    # The project name will also be removed if empty, to
+    # maintain backwards compatability with metadata entries
+    # that do not contain a projet field.
     # * +rtype+ is the record type. One of: m, disk, or back.
     # * +fields+ replaces and adds values to this criteria
     # * +less+ removes keys from the default criteria. 
@@ -102,6 +105,7 @@ module Rudy
       mixer = names.zip(values).flatten
       criteria = Hash[*mixer].merge(fields)
       criteria.reject! { |n,v| less.member?(n) }
+      criteria.delete(:project) if criteria[:project].to_s.empty?
       Rudy::Huxtable.ld "CRITERIA: #{criteria.inspect}"
       criteria
     end

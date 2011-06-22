@@ -68,5 +68,7 @@ module Rudy
   
   class NotImplemented < Rudy::Error; end
   
+  class SpotRequestCancelled < Rudy::Error; end
+  
   
 end
